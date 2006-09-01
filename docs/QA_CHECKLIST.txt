@@ -1,0 +1,91 @@
+
+         Flyspray Quality Assurance
+         ==========================
+
+This file contains a list of things to check before release and after major
+changes in code.
+
+Please note that some tests may require having two users--more and less
+privileged--and two web browsers. These tests are marked with [2U].
+
+Some tests are meant to fail; these are marked with [F].
+
+Installation:
+* correctly detect or install ADOdb
+* detect if flyspray.conf.php is writeable
+* licence agreement displays correctly, and will not advance without acceptance
+* insert database tables using specified dbprefix
+* enable/disable address_rewriting based upon apache mod_rewrite availability
+* enable/disable reminder_daemon based upon cli php availability
+* set admin details
+* logs-in admin after install has finished
+
+Upgrade:
+* correctly detect or install ADOdb
+* detect if flyspray.conf.php is writeable
+* licence agreement displays correctly, and will not advance without acceptance
+* insert database upgrade tables
+* attachments are converted to comments + attachments
+
+Be sure to test everything below with address_rewriting both ON and OFF.
+
+Tasks:
+* create task
+* create task twice in a row with the same details [F]
+* find task using 'Show Task' box
+* show task details
+* show task details for non-existent task [F]
+* take ownership (when permissions allow)
+* take ownership (when permissions don't allow)
+* add comment without attachment
+* add comment with attachment
+* check history entries
+* assign task
+* close task
+* add dependency
+* add dependency on non-existent task [F]
+* search for tasks (check all conditions--developers, categories,
+  severities, etc.--separately)
+* show previous/next task using Prev / Next links
+* check permissions for project selector dropdown
+* mark task private, ensure it's treated as private [2U]
+* watch task, add comment, check notification [2U]
+* schedule reminder, check if it works
+* view/download attachment when permissions allow
+* view/download attachment when permissions don't allow [F]
+
+Users:
+* register as new user with confirmation code
+* register as new user without confirmation code
+* edit user details with myprofile.php
+
+Project Manager's Toolbox:
+* saving project prefs
+* define columns in tasks view
+* ensure project_id set correctly and respected when moving between tasks
+  (TODO: specify places to check)
+* project prefs respected everywhere (TODO: specify places to check)
+* add new groups
+* edit existing groups
+* move user between project groups
+* adding new list items
+* editing existing lists
+* deleting list items where available
+
+Administrator's toolbox:
+* saving preferences
+* adding new users
+* adding new groups
+* editing groups
+* move user between global groups
+* adding new list items
+* editing existing lists
+* deleting list items where available
+* add new project
+* add category without owner
+
+Code quality:
+* check php syntax:
+    for file in `find . -name '*.php'`; do php -l $file; done
+* search for 'TODO', 'FIXME' and 'release' strings:
+    grep -Er '(TODO|FIXME|release)' * | grep '.php:'

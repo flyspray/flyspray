@@ -1,0 +1,42 @@
+Flyspray -  A getting-started guide.
+
+===== Preparing for install =====
+  * Unpack the compressed package into a directory where your webserver can reach it.
+    It will extract into its own flyspray-version/ directory.
+    >  tar -xzvf flyspray-version.tar.gz flyspray/
+  * Flyspray depends on ADOdb to provide support for different types of databases.
+    If you don't already have ADOdb installed, Flyspray Setup can install it for you.
+    If you want Setup to install ADOdb, then you need to make the adodb/ directory writeable
+    by the webserver.
+  * Flyspray comes with an empty flyspray.conf.php that Flyspray Setup needs to write to.
+    Make it writeable by the webserver.
+  * Create a Mysql database for Flyspray to use:
+    >  mysqladmin -u root -p create flyspray;
+  * Or, create a PostgreSQL database for Flyspray to use:
+    >  createuser -ADP flyspray;
+    >  createdb -E UNICODE -O flyspray flyspray;
+  * If you would like to attach files to Flyspray tasks and comments, make the attachments/
+    directory writeable by the webserver.
+
+===== Installation =====
+  * Point your browser to http://yourserver/flyspray/ and follow along with Flyspray Setup.
+  * When Setup completes, you will be automatically logged-in, and taken to your user profile
+    where you can change  details such as your Real Name.
+  * If for some reason you can't use Flyspray Setup (or it doesn't work for you), then you could 
+    try installing without it <http://flyspray.rocks.cc/manual/hardcore_install>.
+
+If you would like to enable support for the Task Dependency Graphs feature <http://flyspray.rocks.cc/manual/dependencies%23task_dependency_graphs>,
+an optional additional package can be installed to enable it. Most operating systems have a package
+available for the free Graphviz <http://www.graphviz.org/> package, either in an OS-specific package
+or by download direct from the Graphviz site. This package is required for this feature until bug 612
+is implemented, after which your choice of an internet connection or the locally installed package
+are required. If you have installed this package, but it still isn't working, look at the top of the
+scripts/depends.php file in your Flyspray installation, and make sure the right path to the installed
+"dot" excutable is in place.
+(It is unknown if or how this feature works on Windows PCs, but bug 612 should make it accessible to those installations.)
+
+===== After installation =====
+  * Click the 'Manage Project' link to set up your project preferences, user groups and lists.
+  * Close the sample task, and start adding your own, real tasks.
+  * If you need help, read the documentation <http://flyspray.rocks.cc/manual/toc>,
+    faq <http://flyspray.rocks.cc/faq>, and support <http://flyspray.rocks.cc/support> pages.

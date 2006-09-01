@@ -1,0 +1,299 @@
+CREATE TABLE `flyspray_admin_requests` (
+  `request_id` mediumint(5) NOT NULL auto_increment,
+  `project_id` mediumint(5) NOT NULL default '0',
+  `task_id` mediumint(5) NOT NULL default '0',
+  `submitted_by` mediumint(5) NOT NULL default '0',
+  `request_type` mediumint(2) NOT NULL default '0',
+  `time_submitted` varchar(12) NOT NULL default '',
+  `resolved_by` mediumint(5) NOT NULL default '0',
+  `time_resolved` varchar(12) NOT NULL default '',
+  PRIMARY KEY  (`request_id`)
+) TYPE=MyISAM COMMENT='Pending requests for admins and PMs to attend to' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_attachments` (
+  `attachment_id` mediumint(5) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `orig_name` varchar(100) NOT NULL default '',
+  `file_name` varchar(30) NOT NULL default '',
+  `file_desc` varchar(100) NOT NULL default '',
+  `file_type` varchar(50) NOT NULL default '',
+  `file_size` mediumint(20) NOT NULL default '0',
+  `added_by` mediumint(3) NOT NULL default '0',
+  `date_added` varchar(12) NOT NULL default '',
+  PRIMARY KEY  (`attachment_id`)
+) TYPE=MyISAM COMMENT='List the names and locations of files attached to tasks' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_comments` (
+  `comment_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `date_added` varchar(12) NOT NULL default '',
+  `user_id` mediumint(3) NOT NULL default '0',
+  `comment_text` longtext NOT NULL,
+  PRIMARY KEY  (`comment_id`)
+) TYPE=MyISAM AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_dependencies` (
+  `depend_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `dep_task_id` mediumint(10) NOT NULL default '0',
+  PRIMARY KEY  (`depend_id`)
+) TYPE=MyISAM COMMENT='Task dependencies' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_groups` (
+  `group_id` mediumint(3) NOT NULL auto_increment,
+  `group_name` varchar(20) NOT NULL default '',
+  `group_desc` varchar(150) NOT NULL default '',
+  `belongs_to_project` mediumint(3) NOT NULL default '0',
+  `is_admin` mediumint(1) NOT NULL default '0',
+  `manage_project` mediumint(1) NOT NULL default '0',
+  `view_tasks` mediumint(1) NOT NULL default '0',
+  `open_new_tasks` mediumint(1) NOT NULL default '0',
+  `modify_own_tasks` mediumint(1) NOT NULL default '0',
+  `modify_all_tasks` mediumint(1) NOT NULL default '0',
+  `view_comments` mediumint(1) NOT NULL default '0',
+  `add_comments` mediumint(1) NOT NULL default '0',
+  `edit_comments` mediumint(1) NOT NULL default '0',
+  `delete_comments` mediumint(1) NOT NULL default '0',
+  `view_attachments` mediumint(1) NOT NULL default '0',
+  `create_attachments` mediumint(1) NOT NULL default '0',
+  `delete_attachments` mediumint(1) NOT NULL default '0',
+  `view_history` mediumint(1) NOT NULL default '0',
+  `close_own_tasks` mediumint(1) NOT NULL default '0',
+  `close_other_tasks` mediumint(1) NOT NULL default '0',
+  `assign_to_self` mediumint(1) NOT NULL default '0',
+  `assign_others_to_self` mediumint(1) NOT NULL default '0',
+  `view_reports` mediumint(1) NOT NULL default '0',
+  `group_open` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`group_id`)
+) TYPE=MyISAM COMMENT='User Groups for the Flyspray bug killer' AUTO_INCREMENT=7 ;
+
+INSERT INTO `flyspray_groups` VALUES (1, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `flyspray_groups` VALUES (2, 'Developers', 'Global Developers for all projects', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `flyspray_groups` VALUES (3, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+INSERT INTO `flyspray_groups` VALUES (4, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+INSERT INTO `flyspray_groups` VALUES (5, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `flyspray_groups` VALUES (6, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+
+CREATE TABLE `flyspray_history` (
+  `history_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `user_id` mediumint(3) NOT NULL default '0',
+  `event_date` text NOT NULL,
+  `event_type` mediumint(2) NOT NULL default '0',
+  `field_changed` text NOT NULL,
+  `old_value` text NOT NULL,
+  `new_value` text NOT NULL,
+  PRIMARY KEY  (`history_id`)
+) TYPE=MyISAM AUTO_INCREMENT=2 ;
+
+INSERT INTO `flyspray_history` VALUES (1, 1, 1, '1103430560', 1, '', '', '');
+
+CREATE TABLE `flyspray_list_category` (
+  `category_id` mediumint(3) NOT NULL auto_increment,
+  `project_id` mediumint(3) NOT NULL default '0',
+  `category_name` varchar(30) NOT NULL default '',
+  `list_position` mediumint(3) NOT NULL default '0',
+  `show_in_list` mediumint(1) NOT NULL default '0',
+  `category_owner` mediumint(3) NOT NULL default '0',
+  `parent_id` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`category_id`)
+) TYPE=MyISAM AUTO_INCREMENT=3 ;
+
+INSERT INTO `flyspray_list_category` VALUES (1, 1, 'Backend / Core', 1, 1, 0, 0);
+INSERT INTO `flyspray_list_category` VALUES (2, 1, 'User Interface', 2, 1, 0, 0);
+
+CREATE TABLE `flyspray_list_os` (
+  `os_id` mediumint(3) NOT NULL auto_increment,
+  `project_id` mediumint(3) NOT NULL default '0',
+  `os_name` varchar(20) NOT NULL default '',
+  `list_position` mediumint(3) NOT NULL default '0',
+  `show_in_list` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`os_id`)
+) TYPE=MyISAM COMMENT='Operating system list for the Flyspray bug killer' AUTO_INCREMENT=6 ;
+
+INSERT INTO `flyspray_list_os` VALUES (1, 1, 'All', 1, 1);
+INSERT INTO `flyspray_list_os` VALUES (2, 1, 'Windows', 2, 1);
+INSERT INTO `flyspray_list_os` VALUES (3, 1, 'Linux', 3, 1);
+INSERT INTO `flyspray_list_os` VALUES (4, 1, 'Mac OS', 4, 1);
+INSERT INTO `flyspray_list_os` VALUES (5, 1, 'UNIX', 4, 1);
+
+CREATE TABLE `flyspray_list_resolution` (
+  `resolution_id` mediumint(3) NOT NULL auto_increment,
+  `resolution_name` varchar(30) NOT NULL default '',
+  `list_position` mediumint(3) NOT NULL default '0',
+  `show_in_list` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`resolution_id`)
+) TYPE=MyISAM AUTO_INCREMENT=10 ;
+
+INSERT INTO `flyspray_list_resolution` VALUES (1, 'None', 1, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (2, 'Not a bug', 2, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (3, 'Won''t fix', 3, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (4, 'Won''t implement', 4, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (5, 'Works for me', 5, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (6, 'Duplicate', 6, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (7, 'Deferred', 7, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (8, 'Fixed', 8, 1);
+INSERT INTO `flyspray_list_resolution` VALUES (9, 'Implemented', 9, 1);
+
+CREATE TABLE `flyspray_list_tasktype` (
+  `tasktype_id` mediumint(3) NOT NULL auto_increment,
+  `tasktype_name` varchar(20) NOT NULL default '',
+  `list_position` mediumint(3) NOT NULL default '0',
+  `show_in_list` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`tasktype_id`)
+) TYPE=MyISAM COMMENT='List of task types for Flyspray the bug killer.' AUTO_INCREMENT=4 ;
+
+INSERT INTO `flyspray_list_tasktype` VALUES (1, 'Bug Report', 1, 1);
+INSERT INTO `flyspray_list_tasktype` VALUES (2, 'Feature Request', 2, 1);
+INSERT INTO `flyspray_list_tasktype` VALUES (3, 'Support Request', 3, 1);
+
+CREATE TABLE `flyspray_list_version` (
+  `version_id` mediumint(3) NOT NULL auto_increment,
+  `project_id` mediumint(3) NOT NULL default '0',
+  `version_name` varchar(20) NOT NULL default '',
+  `list_position` mediumint(3) NOT NULL default '0',
+  `show_in_list` mediumint(1) NOT NULL default '0',
+  `version_tense` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`version_id`)
+) TYPE=MyISAM AUTO_INCREMENT=3 ;
+
+INSERT INTO `flyspray_list_version` VALUES (1, 1, 'CVS', 1, 1, 2);
+INSERT INTO `flyspray_list_version` VALUES (2, 1, '1.0', 2, 1, 3);
+
+CREATE TABLE `flyspray_notifications` (
+  `notify_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `user_id` mediumint(5) NOT NULL default '0',
+  PRIMARY KEY  (`notify_id`)
+) TYPE=MyISAM COMMENT='Extra task notifications are stored here' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_prefs` (
+  `pref_id` mediumint(1) NOT NULL auto_increment,
+  `pref_name` varchar(20) NOT NULL default '',
+  `pref_value` varchar(100) NOT NULL default '',
+  `pref_desc` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`pref_id`)
+) TYPE=MyISAM COMMENT='Application preferences are set here' AUTO_INCREMENT=17 ;
+
+INSERT INTO `flyspray_prefs` VALUES (1, 'fs_ver', '0.9.7', 'Current Flyspray version');
+INSERT INTO `flyspray_prefs` VALUES (2, 'jabber_server', '', 'Jabber server');
+INSERT INTO `flyspray_prefs` VALUES (3, 'jabber_port', '5222', 'Jabber server port');
+INSERT INTO `flyspray_prefs` VALUES (4, 'jabber_username', '', 'Jabber username');
+INSERT INTO `flyspray_prefs` VALUES (5, 'jabber_password', '', 'Jabber password');
+INSERT INTO `flyspray_prefs` VALUES (6, 'anon_group', '4', 'Group for anonymous registrations');
+INSERT INTO `flyspray_prefs` VALUES (7, 'base_url', 'http://example.com/flyspray/', 'Base URL for this installation');
+INSERT INTO `flyspray_prefs` VALUES (8, 'user_notify', '1', 'Force task notifications as');
+INSERT INTO `flyspray_prefs` VALUES (9, 'admin_email', 'flyspray@example.com', 'Reply email address for notifications');
+INSERT INTO `flyspray_prefs` VALUES (10, 'assigned_groups', '1 2 3', 'Members of these groups can be assigned tasks');
+INSERT INTO `flyspray_prefs` VALUES (11, 'lang_code', 'en', 'Language');
+INSERT INTO `flyspray_prefs` VALUES (12, 'spam_proof', '1', 'Use confirmation codes for user registrations');
+INSERT INTO `flyspray_prefs` VALUES (13, 'default_project', '1', 'Default project id');
+INSERT INTO `flyspray_prefs` VALUES (14, 'dateformat', '', 'Default date format for new users and guests used in the task list');
+INSERT INTO `flyspray_prefs` VALUES (15, 'dateformat_extended', '', 'Default date format for new users and guests used in task details');
+INSERT INTO `flyspray_prefs` VALUES (16, 'anon_reg', '1', 'Allow new user registrations');
+
+CREATE TABLE `flyspray_projects` (
+  `project_id` mediumint(3) NOT NULL auto_increment,
+  `project_title` varchar(100) NOT NULL default '',
+  `theme_style` varchar(20) NOT NULL default '0',
+  `show_logo` mediumint(1) NOT NULL default '0',
+  `inline_images` mediumint(1) NOT NULL default '0',
+  `default_cat_owner` mediumint(3) NOT NULL default '0',
+  `intro_message` longtext NOT NULL,
+  `project_is_active` mediumint(1) NOT NULL default '0',
+  `visible_columns` varchar(255) NOT NULL default '',
+  `others_view` mediumint(1) NOT NULL default '0',
+  `anon_open` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`project_id`)
+) TYPE=MyISAM COMMENT='Details on multiple Flyspray projects' AUTO_INCREMENT=2 ;
+
+INSERT INTO `flyspray_projects` VALUES (1, 'Default Project', 'Bluey', 1, 0, 0, 'This message can be customised under the <b>Projects</b> admin menu...', 1, 'id category tasktype severity summary status progress', 1, 0);
+
+CREATE TABLE `flyspray_registrations` (
+  `reg_id` mediumint(10) NOT NULL auto_increment,
+  `reg_time` varchar(12) NOT NULL default '',
+  `confirm_code` varchar(20) NOT NULL default '',
+  `user_name` varchar(20) NOT NULL default '',
+  `real_name` varchar(100) NOT NULL default '',
+  `email_address` varchar(100) NOT NULL default '',
+  `jabber_id` varchar(100) NOT NULL default '',
+  `notify_type` mediumint(1) NOT NULL default '0',
+  `magic_url` varchar(40) NOT NULL default '',
+  PRIMARY KEY  (`reg_id`)
+) TYPE=MyISAM COMMENT='Storage for new user registration confirmation codes' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_related` (
+  `related_id` mediumint(10) NOT NULL auto_increment,
+  `this_task` mediumint(10) NOT NULL default '0',
+  `related_task` mediumint(10) NOT NULL default '0',
+  PRIMARY KEY  (`related_id`)
+) TYPE=MyISAM COMMENT='Related task entries' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_reminders` (
+  `reminder_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `to_user_id` mediumint(3) NOT NULL default '0',
+  `from_user_id` mediumint(3) NOT NULL default '0',
+  `start_time` varchar(12) NOT NULL default '0',
+  `how_often` mediumint(12) NOT NULL default '0',
+  `last_sent` varchar(12) NOT NULL default '0',
+  `reminder_message` longtext NOT NULL,
+  PRIMARY KEY  (`reminder_id`)
+) TYPE=MyISAM COMMENT='Scheduled reminders about tasks' AUTO_INCREMENT=1 ;
+
+CREATE TABLE `flyspray_tasks` (
+  `task_id` mediumint(10) NOT NULL auto_increment,
+  `attached_to_project` mediumint(3) NOT NULL default '0',
+  `task_type` mediumint(3) NOT NULL default '0',
+  `date_opened` varchar(12) NOT NULL default '',
+  `opened_by` mediumint(3) NOT NULL default '0',
+  `is_closed` mediumint(1) NOT NULL default '0',
+  `date_closed` varchar(12) NOT NULL default '',
+  `closed_by` mediumint(3) NOT NULL default '0',
+  `closure_comment` longtext NOT NULL,
+  `item_summary` varchar(100) NOT NULL default '',
+  `detailed_desc` longtext NOT NULL,
+  `item_status` mediumint(3) NOT NULL default '0',
+  `assigned_to` mediumint(3) NOT NULL default '0',
+  `resolution_reason` mediumint(3) NOT NULL default '1',
+  `product_category` mediumint(3) NOT NULL default '0',
+  `product_version` mediumint(3) NOT NULL default '0',
+  `closedby_version` mediumint(3) NOT NULL default '0',
+  `operating_system` mediumint(3) NOT NULL default '0',
+  `task_severity` mediumint(3) NOT NULL default '0',
+  `task_priority` mediumint(3) NOT NULL default '0',
+  `last_edited_by` mediumint(3) NOT NULL default '0',
+  `last_edited_time` varchar(12) NOT NULL default '0',
+  `percent_complete` mediumint(3) NOT NULL default '0',
+  `mark_private` mediumint(1) NOT NULL default '0',
+  PRIMARY KEY  (`task_id`)
+) TYPE=MyISAM COMMENT='Bugs and feature requests for the Flyspray bug killer' AUTO_INCREMENT=2 ;
+
+INSERT INTO `flyspray_tasks` VALUES (1, 1, 1, '1103430560', 1, 0, '', 1, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 0, 1, 1, 1, 0, 1, 1, 2, 0, '', 0, 0);
+
+CREATE TABLE `flyspray_users` (
+  `user_id` mediumint(3) NOT NULL auto_increment,
+  `user_name` varchar(20) NOT NULL default '',
+  `user_pass` varchar(30) NOT NULL default '',
+  `real_name` varchar(100) NOT NULL default '',
+  `group_in` mediumint(3) NOT NULL default '0',
+  `jabber_id` varchar(100) NOT NULL default '',
+  `email_address` varchar(100) NOT NULL default '',
+  `notify_type` mediumint(1) NOT NULL default '0',
+  `account_enabled` mediumint(1) NOT NULL default '0',
+  `dateformat` varchar(30) NOT NULL default '',
+  `dateformat_extended` varchar(30) NOT NULL default '',
+  `magic_url` varchar(40) NOT NULL default '',
+  PRIMARY KEY  (`user_id`)
+) TYPE=MyISAM COMMENT='Users for the Flyspray bug killer' AUTO_INCREMENT=2 ;
+
+INSERT INTO `flyspray_users` VALUES (1, 'super', '4tuKHcjxpFYag', 'Mr Super User', 1, 'super@example.com', 'super@example.com', 0, 1, '', '', '');
+
+CREATE TABLE `flyspray_users_in_groups` (
+  `record_id` mediumint(5) NOT NULL auto_increment,
+  `user_id` mediumint(5) NOT NULL default '0',
+  `group_id` mediumint(3) NOT NULL default '0',
+  PRIMARY KEY  (`record_id`)
+) TYPE=MyISAM COMMENT='Which users are in which groups' AUTO_INCREMENT=2 ;
+
+INSERT INTO `flyspray_users_in_groups` VALUES (1, 1, 1)

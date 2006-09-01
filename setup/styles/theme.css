@@ -1,0 +1,994 @@
+@media screen {
+
+html {
+  margin              : 0px;
+  padding             : 0px;
+}
+
+body {
+  margin              : 0px;
+  padding             : 0px;
+  background-color    : #F5F9FD;
+  color               : #000;
+  font-size           : 12px;
+  font-family         : Helvetica, Verdana, sans-serif;
+}
+
+img {
+   border               : none;
+}
+
+a {
+   text-decoration      : none;
+}
+
+a:link {
+   color                : #47617b;
+   background-color     : transparent;
+   font-weight          : bold;
+}
+
+a:visited {
+   color                : #47617b;
+   background-color     : transparent;
+   font-weight          : bold;
+}
+
+a:hover {
+   color                : #6395c8;
+   background-color     : transparent;
+   text-decoration      : none;
+}
+
+/* offsite is only used for the link to the Flyspray homepage */
+a.offsite:after {
+   content              : "\2197";
+}
+
+h1 {
+  /*text-align           : center;*/
+  font-size            : 150%;
+}
+
+/* the main title; h1 alone is also used in the popup windows. */
+h1#title {
+  margin               : 0px;
+  padding              : 1ex 0px;
+  background-color     : #47617b;
+  background-image     : url("title.png");
+  background-repeat    : no-repeat;
+  height               : 45px;
+}
+
+/* there is a span element within the h1 element to enable displaying
+   an image only and blanking out the span */
+h1 span {
+  display              : none;
+}
+
+h2 {  /* Heading for link to task list and details */
+  margin               : 0px;
+  padding              : 0px;
+  font-size            : 150%;
+}
+
+h4 {
+   padding              : 0px;
+   margin-bottom        : -10px;
+}
+
+p {
+  margin              : 1ex 0px;
+  padding             : 0.5ex 0.5em;
+}
+
+form {
+  margin              : 0px;
+  padding             : 0px;
+  display             : inline;
+}
+
+form p {
+  margin              : 0px;
+  padding             : 0px;
+}
+
+td {
+  vertical-align      : top;
+}
+
+th {
+  vertical-align      : top;
+}
+
+input, textarea, select, button {
+   background-color     : #eef7ff;
+   color                : #03008f;
+   border               : 1px ridge #000000;
+   margin               : 2px;
+   font-size            : 100%;
+}
+
+textarea {
+   width                : 95%;
+}
+
+/* labels are used nearly in every form */
+label {
+   text-align           : right;
+   display              : block;
+   margin-right         : 8px;
+   font-weight          : bold;
+   white-space          : nowrap;
+/*    padding              : 3px 0 0 0; */
+}
+
+label.inline {
+   display             : inline;
+}
+
+/* div.admin and p.admin is used for areas that only administrators can use
+   p.admin for instance for adding comments
+   table.admin serves the same purpose */
+/* table.login is the framework for the login form at the bottom of a page */
+/* table.userlist is found in the user&groups section */
+div.admin, p.admin, table.admin, table.userlist {
+   border               : 1px solid #ccc;
+   margin               : 1em 0px;
+   padding              : 0px;
+   margin-bottom        : 30px;
+   background-color     : #e6eef6;
+   color                : #000000;
+   font-family          : Helvetica, Verdana, sans-serif;
+}
+
+div#loginbox {
+  border              : 1px solid #ccc;
+  margin              : 0em 0px;
+  padding             : 0px;
+  background-color    : #e6eef6;
+  height              : 22px;
+}
+
+div#loginbox p {
+   padding           : 0px;
+   margin            : 0px;
+}
+
+div#loginbox em {
+   display              : none;
+}
+
+div#loginbox label, div#loginbox input.maintext, div#loginbox input.mainbutton {
+   display              : inline;
+   padding              : 0 3px 0 3px;
+/*    height               : 14px; */
+}
+
+div#loginbox a {
+   padding              : 0 0 0 13px;
+   text-align           : center;
+}
+
+div#loginbox span#links {
+   position             : absolute;
+   top                  : 5px;
+   right                : 5px;
+}
+
+div#loginbox span#links a {
+   color                : #ffffff;
+   background-color     : transparent;
+   font-weight          : normal;
+}
+
+/* The paragraph containing the main menu */
+p#menu {
+   border               : 1px solid #ccc;
+   margin               : 0em 0px;
+   padding              : 4px 0 0 0;
+   background-color     : #e6eef6;
+   height               : 18px;
+   vertical-align       : baseline;
+}
+
+p#menu a {
+   height               : 18px;
+   padding              : 3px 1px 3px 20px;
+   background-repeat    : no-repeat;
+   background-position  : 1px 1px;
+   font-size            : 12px;
+   font-weight          : normal;
+   vertical-align       : baseline;
+}
+
+p#menu a:hover {
+  color                 : #6395c8;
+  background-color      : transparent;
+  text-decoration       : none;
+}
+
+div#anonopen {
+   position             : absolute;
+   top                  : 30px;
+   right                : 5px;
+   padding              : 0px;
+}
+
+div#anonopen a {
+   color                : #ffffff;
+   background-color     : transparent;
+   padding              : 0px;
+   font-weight          : normal;
+}
+
+/* Links in menus */
+
+a#newtasklink {
+   background-image     : url(menu/newtask.png);
+}
+
+a#reportslink {
+   background-image     : url(menu/reports.png);
+}
+
+a#editmydetailslink {
+   background-image     : url(menu/editmydetails.png);
+}
+
+a#lastsearchlink {
+   background-image     : url(menu/search.png);
+}
+
+a#logoutlink {
+   background-image     : url(menu/logout.png);
+}
+
+a#optionslink {
+   background-image     : url(menu/options.png);
+}
+
+a#projectslink {
+   background-image     : url(menu/projectprefs.png);
+}
+
+/* For pending admin requests */
+a#attention {
+   color                : #ff0000;
+   background-color     : #fff000;
+}
+
+table.userlist td, table.userlist th {
+  border                : 1px solid #ccc;
+}
+
+/* p#showtask contains the form to search for a specific task number */
+p#showtask {
+   text-align           : right;
+   width                : 40%;
+   margin-left          : auto;
+   position             : relative;
+   top                  : -2em;
+}
+
+/* The paragraph containing the search form */
+div#search {
+   margin-bottom        : 1em;
+   border               : 1px solid #000000;
+   background-color     : #e6eef6;
+}
+
+div#search p {
+   padding           : 0px;
+   margin            : 0px;
+}
+
+div#search span#date_d {
+   min-width            : 20px;
+   margin               : 0px 5px 0px 5px;
+   padding              : 0px 5px 0px 5px;
+   display              : inline;
+   background-color     : #eef7ff;
+   color                : #03008f;
+   border               : 1px ridge #000000;
+   margin               : 2px;
+   font-size            : 100%;
+}
+
+div#search select {
+   background-color     : #eef7ff;
+   color                : #03008f;
+   border               : 1px ridge black;
+}
+
+div#search em {
+   float                : left;
+   display              : block;
+   padding              : 0.5ex;
+   height               : 2.5em;
+}
+
+div#tasklist {
+   width             : 100%;
+   border            : 1px solid #000000;
+   color             : #000000;
+   background-color  : #e6eef6;
+}
+
+/* The table listing tasks on the main page */
+div#tasklist table {
+   width                : 100%;
+   border-spacing       : 0px;
+   border-collapse      : collapse;
+}
+
+div#tasklist table th {
+   text-align           : left;
+   padding              : 2px 1em 2px 2px;
+   border-bottom        : 1px solid #cccccc;
+}
+
+div#tasklist table td {
+   border-bottom        : 1px solid #CCC;
+   padding              : 2px 1ex 2px 2px;
+}
+
+div#tasklist table td.taskid, div#tasklist table th.taskid {
+   text-align           : center;
+   padding              : 2px 1ex;
+}
+
+div#tasklist table td.taskdate {
+   text-align           : left;
+   white-space          : nowrap;
+}
+
+div#tasklist table td.progress {
+   vertical-align       : middle;
+   text-align           : center;
+}
+
+table#pagenumbers {
+   width                : 100%;
+}
+
+table#pagenumbers td#taskrange {
+   padding              : 0px 0px 0px 5px;
+ }
+
+table#pagenumbers td#numbers {
+   padding              : 0px 5px 0px 0px;
+   text-align           : right;
+}
+
+/* table.list is any table holding lists like resolutions, ... */
+table.list th, table.list td {
+   padding-right        :  2em;
+}
+
+table.list label, p#showtask label, p.admin label, form#formaddrelatedtask label {
+   display              : inline;
+}
+
+/* Area containing all details to a given task */
+div#taskdetails {
+   margin               : 2em 0px 1em 0px;
+   background-color     : #e6eef6;
+   border               : 1px solid #000000;
+}
+
+div#taskdetails h2 {
+   font-size            : 100%;
+   padding              : 0.3ex 1ex;
+   font-weight          : normal;
+}
+
+table.taskdetails td {
+}
+
+/* Task details are listed within a table */
+div#taskdetails table {
+   width                : 90%;
+}
+
+div#taskdetails table th {
+   text-align           : left;
+   font-weight          : bold;
+}
+
+/* div#content is a generic container for anything but the title and
+   the footer paragraph */
+div#content {
+/*   border               : 2px solid #948d94;*/
+   margin               : 5px;
+   padding              : 5px;
+/*   color                : #000000;
+   background-color     : #ffffff;
+   z-index              : -1;*/
+}
+
+div#content div, div#content fieldset {
+/*     -moz-border-radius   : 13px; */
+}
+
+div#content div h2 {
+/*    -moz-border-radius   : 15px; */
+}
+
+/* Powered by Flyspray */
+p#footer {
+   margin               : 0em 0em;
+   padding              : 5px;
+   background-color     : #47617b;
+   border               : 3px double white;
+   color                : #ffffff;
+   text-align           : center;
+   margin-top           :  15px;
+   clear                : both;
+}
+
+p#footer a:link {
+  color              : #ffffff;
+  background-color   : transparent;
+}
+
+p#footer a:visited {
+  color              : #ffffff;
+  background-color   : transparent;
+}
+
+p#footer a:hover {
+  color              : #ffffff;
+  background-color   : transparent;
+}
+
+/* used solely for several browsers do not support [type="submit"]
+   selectors. These are buttons and buttons only used by the admin */
+input.adminbutton, input.mainbutton, button {
+   background-color     : #838ab5;
+   color                : #ffffff;
+   background-image     : url(button.png);
+   background-repeat    : repeat-x;
+   border               : 1px ridge #000000;
+   font-weight          : bold;
+}
+
+input.adminbutton:hover, input.mainbutton:hover, button:hover {
+   cursor               : pointer;
+}
+
+/* div.redirectmessage is used in modify.inc.php when you change things and are redirected
+   to the index or details page */
+div.redirectmessage {
+   border               : 1px solid #CCC;
+   background-color     : #e6eef6;
+   padding              : 1ex;
+   text-align           : center;
+}
+
+/* form#registernewuser, form#chgpassword, form#newgroup are used in
+   the popup windows  */
+form#chgpassword h1, form#registernewuser h1, form#newgroup h1 {
+  font-size           : 110%;
+  margin              : 2px;
+  padding             : 0px;
+}
+
+/* .buttons used for table cells containing buttons */
+.buttons {
+  text-align          : center;
+}
+
+form#registernewuser strong, form#newgroup strong {
+  color               : red;
+}
+
+
+
+p#tabs {
+  margin              : 0px;
+  padding             : 0px;
+}
+
+p#tabs a {
+  background-image    : url("tab-notactive.png");
+  background-repeat   : no-repeat;
+  background-position : top left;
+  background-color    : #cad0d7;
+  border-right        : 1px solid #93989D;
+}
+
+p#tabs a.tabactive {
+  background-image    : url("tab-active.png");
+  background-repeat   : no-repeat;
+  background-position : top left;
+  background-color    : #e6eef6;
+  border-right        : 1px solid #CCC;
+  padding-bottom      : 2px;
+}
+
+div.tabentries {
+  background-color    : #e6eef6;
+  margin              : 0px 0px 1em 0px;
+  border              : 1px solid #CCC;
+  min-height          : 5em;
+}
+
+.tabentry {
+  margin              : 2px 1em;
+  border-bottom       : 1px solid #ccc;
+}
+
+/* This is the division that keeps the buttons to modify comments
+   (delete, edit) */
+div.modifycomment {
+  float: right;
+  width : 20em;
+  text-align : right;
+}
+
+div.modifycomment p {
+  display : inline;
+  margin  : 0px;
+  padding : 0px;
+}
+
+/* The tabs containing the links to comments, attachments, ...
+   in details.php */
+p#tabs a {
+  margin              : 2px 0px;
+  padding             : 0px 1em;
+  white-space         : nowrap;
+}
+
+/* separators between the links in the tabs */
+p#tabs small {
+  display             : none;
+}
+
+/* p.unregistered holds links to open new task when you're unregistered */
+p.unregistered {
+  margin              : 0px;
+  padding             : 0px;
+}
+
+/* Some generic classes; severity classes are used for colour
+   indication of severities
+   IE can't do hover on anything but A elements, so there is a
+   script in /javascript/ie_hover.js that fixes this with
+   javascript. That javascript only checks background-color and
+   color. If you want to change other properties during the hover
+   you'll have to adjust the javascript
+     */
+.severity1 {
+   background-color     : #fff5dd;
+   color                : #000000;
+    height                       : 1%;
+}
+
+.severity1:hover {
+   background-color     : #ffe9b4;
+   color                : #000000;
+   cursor               : pointer;
+}
+
+.severity2 {
+   background-color     : #ecdbb7;
+   color                : #000000;
+    height                       : 1%;
+}
+
+.severity2:hover {
+   background-color     : #efca80;
+   color                : #000000;
+   cursor               : pointer;
+}
+
+.severity3 {
+   background-color     : #ecd0b7;
+   color                : #000000;
+    height                       : 1%;
+}
+
+.severity3:hover {
+   background-color     : #edb98a;
+   color                : #000000;
+   cursor               : pointer;
+}
+
+.severity4 {
+   background-color     : #ffd5d1;
+   color                : #000000;
+    height                       : 1%;
+}
+
+.severity4:hover {
+   background-color     : #ffb2ac;
+   color                : #000000;
+   cursor               : pointer;
+}
+
+.severity5 {
+   background-color     : #f3a29b;
+   color                : #000000;
+    height                       : 1%;
+}
+
+.severity5:hover {
+   background-color     : #f3867e;
+   color                : #000000;
+   cursor               : pointer;
+}
+
+/* .fineprint is merely used for the details about when a task has
+   been created and changed (in the details pages) */
+div#fineprint {
+  font-size            : smaller;
+  border-bottom        : 1px solid #cccccc;
+  margin               : 0px 0px 10px 5px;
+  padding-bottom       : 10px;
+   height               : 1%;
+}
+
+table.history
+{
+  width                : 100%;
+  margin               : 1em 0px 1em 0px;
+  padding              : 0px 1em 0px 1em;
+  background-color     : #e6eef6;
+  color                : black;
+  font-family          : Helvetica, Verdana, Sans-Serif;
+}
+
+table.history td {
+  border-bottom        : 1px solid #ccc;
+  border-left          : 1px solid #ccc;
+  padding-left         : 5px;
+}
+
+table.history td.taskid {
+  text-align           : center;
+  padding              : 2px 1ex;
+}
+
+div#intromessage {
+   margin               : 1px;
+   margin-top           : -20px;
+   margin-bottom        : 10px;
+}
+
+map#formselecttasks {
+  margin               : 0em 0px 0em 0px;
+}
+
+a.closedtasklink {
+  text-decoration: line-through;
+}
+
+div#taskfields1 {
+  float: left;
+  width: 49%;
+  border-right: 1px solid #cccccc;
+  margin-bottom: 8px;
+}
+
+div#taskfields2 {
+  float: left;
+  width: 49%;
+  margin-bottom: 8px;
+}
+
+div#taskfields1 table td {
+  width: 50%;
+}
+
+div#taskfields2 table td {
+  width: 50%;
+}
+
+div#taskdetailsfull {
+   clear                : both;
+   width                : 99%;
+   margin-top           : 15px;
+   padding              : 15px 0px 15px 8px;
+   border-top           : 1px solid #cccccc;
+   border-bottom        : 1px solid #cccccc;
+   text-align           : left;
+}
+
+div#taskdetailsfull label {
+   text-align           : left;
+}
+
+div#deps {
+   padding              : 8px;
+   width                : 98%;
+   border-bottom        : 1px solid #cccccc;
+   min-height           : 50px;
+   float                : left;
+}
+
+div#taskdeps {
+  float: left;
+  width: 45%;
+  margin-bottom: 8px;
+}
+
+div#taskblocks {
+  float: left;
+  width: 50%;
+}
+
+div#actionbuttons {
+   clear                   : both;
+   padding                 : 5px;
+}
+
+div#actionbuttons a {
+   background-image        : url(button.png);
+   background-repeat       : repeat-x;
+   color                   : #ffffff;
+   background-color        : transparent;
+   border                  : 1px solid #000000;
+   margin                  : 0px 3px 0px 3px;
+   /* padding values: top, right, bottom, left */
+   padding                 : 2px 5px 2px 5px;
+}
+
+div#actionbuttons a#hideclosetask {
+   position                : absolute;
+   top                     : 3px;
+   right                   : 3px;
+   width                   : 16px;
+   height                  : 16px;
+   background-image        : url(cancel.png);
+   background-repeat       : no-repeat;
+   color                   : #000000;
+   background-color        : transparent;
+   border                  : none;
+}
+
+div#actionbuttons a#hideclosetask:hover {
+   position                : absolute;
+   top                     : 3px;
+   right                   : 3px;
+   width                   : 16px;
+   height                  : 16px;
+   background-image        : url(cancel-over.png);
+   background-repeat       : no-repeat;
+   color                   : #000000;
+   background-color        : transparent;
+   border                  : none;
+}
+
+div#massopsactions {
+   padding                 : 0px 0px 0px 3px;
+}
+
+div#closeform {
+   visibility              : hidden;
+   position                : absolute;
+   background-color        : #e6eef6;
+   color                   : #000000;
+   border                  : 3px ridge #000000;
+   padding                 : 5px 30px 5px 5px;
+   margin-top              : 5px;
+   display                 : block;
+   width                   : 300px;
+   height                  : auto;
+}
+
+div#closeform textarea {
+   width                   : 100%;
+   height                  : 100px;
+}
+
+div.denyform {
+   visibility              : hidden;
+   position                : absolute;
+   right                   : 12px;
+   background-color        : #e6eef6;
+   color                   : #000000;
+   border                  : 3px ridge #000000;
+   padding                 : 5px 30px 5px 5px;
+   margin-top              : 5px;
+   display                 : block;
+   width                   : 300px;
+   height                  : auto;
+}
+
+div#denyform textarea {
+   width                   : 100%;
+   height                  : 100px;
+}
+
+fieldset.admin {
+   margin-top              : 15px;
+   background-color        : #e6eef6;
+   color                   : #000000;
+   border                  : 1px solid #000000;
+}
+
+fieldset.admin legend {
+   border-bottom           : 1px solid #000000;
+   border-right            : 1px solid #000000;
+   padding                 : 2px;
+   font                    : 120% Helvetica, Verdana, sans-serif;
+   margin                  : 5px;
+   background-color        : #f5f9fd;
+   color                   : #000000;
+}
+
+div#errorbar {
+   width                   : 100%;
+   height                  : 20px;
+   color                   : yellow;
+   background-color        : red;
+   font-weight             : bold;
+   position                : fixed;
+   bottom                  : 0px;
+   background-image        : url(frown.png);
+   background-repeat       : no-repeat;
+   background-position     : 5px 0px;
+   padding-left            : 30px;
+}
+
+div#successbar {
+   width                   : 100%;
+   height                  : 20px;
+   color                   : #ffffff;
+   background-color        : green;
+   font-weight             : bold;
+   position                : fixed;
+   bottom                  : 0px;
+   background-image        : url(smile.png);
+   background-repeat       : no-repeat;
+   background-position     : 5px 0px;
+   padding-left            : 30px;
+}
+
+div#toolboxmenu  {
+   width                   : auto;
+   float                   : left;
+   margin-right            : 25px;
+   margin-top              : 15px;
+}
+
+div#toolboxmenu small {
+   display                 : none;
+}
+
+div#toolboxmenu a {
+   display                 : block;
+   border                  : 1px solid #000000;
+   padding-top             : 1em;
+   padding-bottom          : 1em;
+   width                   : 120px;
+   text-align              : center;
+}
+
+div#toolboxmenu a:hover {
+  color                 : #6395c8;
+  background-color      : #d7e9ff;
+}
+
+div#toolbox {
+   margin-left             : 150px;
+   min-height              : 350px;
+}
+
+a.grouptitle {
+   font-size               : 16px;
+}
+
+/* The new tabs stuff */
+/* colors */
+#submenu a, div.tab                 { color: #000000; background-color: #e6eef6; }
+
+#submenu a.active {
+   color                   : #000000;
+   border-bottom-color     : #cdc;
+}
+
+#submenu a:hover {
+   color                   : #000000;
+}
+
+#submenu a                          { color: #999;text-decoration: none; }
+#submenu a.active                   {  z-index:5;}
+
+/* margins */
+#submenu, #submenu *                { margin: 0; padding: 0; }
+#submenu a, div.tab                 { border: solid 1px black; }
+#submenu a                          { margin: auto auto -1px 1ex; padding: 2px 1ex; }
+* html #submenu                     { margin-bottom: -1em; }
+div.tab                             { margin: 0; padding: 1ex; padding-bottom: 1cm; margin-right: 1ex; margin-bottom: 10px;}
+
+/* flow */
+#submenu li                         { display: inline; width: 0; height: 0; }
+#submenu a                          { display: block; float: left; }
+div.tab h2                          { display: none; }
+div.tab                             { clear: left; }
+* html .tab div.clear               { clear: none; height: 14em; }
+
+div#permslink {
+   position                : absolute;
+   top                     : 5px;
+   right                   : 5px;
+   color                   : #ffffff;
+   background-color        : transparent;
+}
+
+div#permslink a {
+   color                   : #ffffff;
+   background-color        : transparent;
+}
+
+div#permissions {
+   visibility              : hidden;
+   position                : absolute;
+   top                     : 25px;
+   right                   : 5px;
+   padding                 : 5px;
+   margin-top              : none;
+   overflow                : auto;
+   z-index                 : 5;
+}
+
+div#permissions table {
+   color                   : #000000;
+   background-color        : #ffffff;
+   border                  : 1px dotted #000000;
+}
+
+div#permissions table td {
+   border                  : 0px;
+}
+
+div#fileupload {
+   margin                  : 20px 0px 20px 0px;
+}
+
+span#pendingreq {
+   margin               : 0px 0px 0px 9px;
+   display:             : block;
+   clear                : both;
+   font-size            : 120%;
+   font-weight          : bold;
+   float                : right;
+   color                : red;
+   background-color     : yellow;
+}
+
+/* container for the next/previous links in the task details */
+span#navigation {
+  position              : absolute;
+  right                 : 1em;
+}
+
+span#navigation a#next {
+   padding-right        : 20px;
+   background-image     : url(next.png);
+   background-repeat    : no-repeat;
+   background-position  : right;
+}
+
+span#navigation a#prev {
+   padding-left         : 20px;
+   background-image     : url(prev.png);
+   background-repeat    : no-repeat;
+   background-position  : left;
+}
+
+
+
+/* End of the @screen section */
+}
+
+@media print {
+p#menu {
+  display                  : none;
+}
+
+/* End of the @print section */
+}

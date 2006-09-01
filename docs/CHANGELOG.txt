@@ -1,0 +1,153 @@
+0.9.8 - Real Soon Now
+
+NEW - Full-featured installer
+NEW - Address rewriting for human-readable URLs
+NEW - Database table prefixes
+NEW - Background daemon to run the scheduler
+NEW - Due-by-date field, searchable
+NEW - Prev/Next task links
+NEW - Operations on multiple tasks from the tasklist
+NEW - 'Project' addresses that receive notifications for ALL changes in that
+      project
+NEW - Dropdown lists are now set globally and at Project level
+NEW - Uses class.jabber.php for Jabber notifications
+NEW - Uses class.phpmailer for email notifications
+NEW - SMTP for email notifications
+NEW - XML-RPC interface for opening/closing tasks, and retriving user details
+NEW - New user accounts use MD5 for passwords.
+NEW - Attaching multiple files to tasks and comments.
+
+IMPROVED - Reliability of Jabber notifications
+IMPROVED - Admin and Project Manager areas are more consistant and easy to
+           navigate
+IMPROVED - Layout and rendering
+IMPROVED - Speed of changing tabs (uses DHTML instead of a page-reload)
+IMPROVED - RSS feed
+IMPROVED - Much code has been moved to classes/functions (so is much more
+           re-usable)
+IMPROVED - Statusbar is now used for almost all updates, and fades in a
+           very pretty way.
+IMPROVED - Now formats dates using strftime() to achieve localised date strings
+
+FIXED - Permissions that were broken in last release
+FIXED - Now checks permissions before delivering attachments
+FIXED - Re-enabled Project Manager requests, adding a 'deny' link with
+        reason box
+
+
+0.9.7 - 22 January 2005
+
+NEW: Easy setup script
+NEW: User groups are now global AND project-level
+NEW: Group permissions now more fine-grained
+NEW: No more intermediate pages after submitting forms - new statusbar instead
+NEW: Task dependencies and blocks
+NEW: phpMarkdown used in project blurb, task details and comments areas
+     (allows document markup)
+NEW: Users can request a link to change their password
+NEW: Private tasks
+NEW: Icons.  Now using an iconset with a compatible licence.
+
+IMPROVED: Notifications no longer get sent to the user making the change
+IMPROVED: Method of sending registration confirmation codes
+IMPROVED: Anonymous browsing is now a project-level setting
+IMPROVED: Bluey theme layout and style.  It almost renders in IE!
+IMPROVED: Escaping of special characters in form selects
+IMPROVED: Detects php magic quotes setting for task display
+
+
+0.9.6 - 08 October 2004
+
+NEW: Config settings have been moved from header.php into flyspray.conf.php
+NEW: Closure comments
+NEW: Configurable date and time formats, global and per-user
+NEW: Sub-categories
+NEW: Priority
+NEW: Dropdown list to show only tasks assigned to me,
+       tasks opened by me, and
+       tasks I watch
+NEW: Locking tasks while editing, so no-one else can save over your
+       changes-in-progress
+NEW: Referring to a Flyspray task in the format - FS#123 - creates a hyperlink
+       to that task
+NEW: Versions are separated into past, present and future
+NEW: Per theme custom header.inc.php and footer.inc.php files
+NEW: Customisable columns in task list
+NEW: 'Remember login' option
+NEW: Secondary sort in task list
+NEW: Visual indicator on which column is sorted in task list
+NEW: Reports.  Only two so far, but more to come
+NEW: Task history tab
+NEW: Scheduled reminders tab
+NEW: Admins can change user's passwords for them
+NEW: Basic RSS feed script - /scripts/rss.php
+
+IMPROVED: Method of marking tasks 'closed'.
+IMPROVED: Task summary is now in notification subject lines
+IMPROVED: Admin lists are now one form per page instead of per row
+IMPROVED: Projects are now sorted alphabetically in the dropdown lists
+
+FIXED: Changing passwords now works if the cookie salt has been changed
+FIXED: Protection against opening duplicate tasks using your browser's
+         'back' button
+
+
+
+0.9.5 - 19 February 2004
+
+NEW: Multiple projects with different categories etc for each
+     Default owners, themes etc are now project-specific
+NEW: Multiple database support through ADODB
+NEW: Postgres port
+NEW: Protection from user-submitted data through regular expression filtering
+NEW: Attachment deleting
+NEW: Changing cookie 'salt' for protection against authentication spoofing
+NEW: Double-clicking task details enters Edit Mode
+
+FIXED: No more popup windows!
+FIXED: Sort columns by Task Type
+FIXED: Registration without confirmation code
+FIXED: Minor bugs in notifications
+FIXED: Minor CSS layout bugs
+
+0.9.4 - 20 August 2003
+
+NEW: Each task can now have unlimited related tasks,
+NEW: Notifications Tab for each task so that users can be notified when a
+     certain task has changed,
+NEW: Categories can now have 'owners' who get notified when a new task is
+     opened in that category,
+NEW: Options screen has default category owner for un-owned categories,
+NEW: Option to send a confirmation code for new user registrations - to prevent
+     script kiddies signing up multiple accounts for spamming the system,
+NEW: Page numbering for task list,
+NEW: Option to only allow registered users to view anything,
+NEW: Internationalisation support. English, French, German and Dutch translations
+     are included,
+NEW: Alternate stylesheet support for Mozilla users, showing all installed themes,
+NEW: Comments can now be edited and deleted by members of an Admin group,
+NEW: Severities has been moved out of the database into a translatable text file.
+     All user-added severities will be converted to Critical severity by the upgrade
+     script.
+NEW: List names are now editable in the admin areas.
+
+FIXED: Users & Groups admin page, which was rendering poorly in MSIE,
+FIXED: HTML output now validates as HTML 4.01 Transitional,
+FIXED: Scripts now check for empty summary and details prior to adding a task,
+FIXED: Some form buttons wouldn't submit when the browser had javascript turned off,
+FIXED: "Add another task after this one" didn't work.
+
+IMPROVED: Permissions on file uploads are now set non-executable,
+IMPROVED: Default theme stylesheet is much prettier,
+IMPROVED: Small layout fixes
+
+
+0.9.3.1 - 28 July 2003
+
+FIXED: A critical bug with setting/showing task status,
+FIXED: Sorting on column headers to include Task Type search results.
+
+
+0.9.3 - 25 July 2003
+
+Core features implemented, first public release.

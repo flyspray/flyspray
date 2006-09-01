@@ -1,0 +1,95 @@
+ALTER TABLE `flyspray_users` CHANGE `user_pass` `user_pass` varchar(40);
+ALTER TABLE `flyspray_list_category` CHANGE `parent_id` `parent_id` MEDIUMINT( 3 ) DEFAULT '0' NOT NULL;
+
+## Added on 07 March 05
+
+INSERT INTO `flyspray_prefs` ( `pref_id` , `pref_name` , `pref_value` , `pref_desc` )
+VALUES (
+'', 'global_theme', 'Bluey', 'Theme to use when viewing all projects'
+);
+
+INSERT INTO `flyspray_prefs` ( `pref_id` , `pref_name` , `pref_value` , `pref_desc` )
+VALUES (
+'', 'visible_columns', 'id project category tasktype severity summary status progress', 'Columns visible when viewing all projects'
+);
+
+ALTER TABLE `flyspray_list_tasktype` ADD `project_id` MEDIUMINT( 3 ) NOT NULL ;
+ALTER TABLE `flyspray_list_resolution` ADD `project_id` MEDIUMINT( 3 ) NOT NULL ;
+ALTER TABLE `flyspray_admin_requests` ADD `reason_given` LONGTEXT NOT NULL AFTER `request_type` ;
+
+# added 20050320 by Jamin W. Collins - CHANGED on 29 March 05
+
+CREATE TABLE IF NOT EXISTS `flyspray_notification_messages` (
+    `message_id`        mediumint(10)   NOT NULL    auto_increment,
+    `message_subject`   varchar(50)     NOT NULL DEFAULT '',
+    `message_body`      longtext        NOT NULL DEFAULT '',
+    `time_created`   varchar(20),
+    PRIMARY KEY (`message_id`)
+) TYPE=MyISAM COMMENT='Notification body and subject' AUTO_INCREMENT=2 ;
+
+CREATE TABLE IF NOT EXISTS `flyspray_notification_recipients` (
+    `recipient_id`                mediumint(10)   NOT NULL    auto_increment,
+    `message_id`   mediumint(10)   NOT NULL,
+    `notify_method`            varchar(1)      NOT NULL DEFAULT '',
+    `notify_address`           varchar(100)    NOT NULL DEFAULT '',
+    PRIMARY KEY (`recipient_id`)
+) TYPE=MyISAM COMMENT='Notification recipient list' AUTO_INCREMENT=2 ;
+
+# Added 27 March 05
+
+ALTER TABLE `flyspray_projects` ADD `notify_email` LONGTEXT NOT NULL DEFAULT '';
+ALTER TABLE `flyspray_projects` ADD `notify_email_when` MEDIUMINT( 1 ) NOT NULL DEFAULT 0;
+ALTER TABLE `flyspray_projects` ADD `notify_jabber` LONGTEXT NOT NULL DEFAULT '';
+ALTER TABLE `flyspray_projects` ADD `notify_jabber_when` MEDIUMINT( 1 ) NOT NULL DEFAULT 0;
+
+# Added 3 April 05
+
+INSERT INTO `flyspray_prefs` ( `pref_id` , `pref_name` , `pref_value` , `pref_desc` )
+VALUES
+('', 'smtp_server', '', 'Remote mail server'),
+('', 'smtp_user', '', 'Username to access the remote mail server'),
+('', 'smtp_pass', '', 'Password to access the remote mail server');
+
+# Added 5 April 05
+
+ALTER TABLE `flyspray_tasks` ADD `due_date` VARCHAR( 10 ) NOT NULL DEFAULT '';
+
+# Added 15 Apr 05
+
+ALTER TABLE `flyspray_admin_requests` ADD `deny_reason` VARCHAR( 255 ) NOT NULL DEFAULT '';
+
+
+# Added 14 May 05
+
+CREATE TABLE `flyspray_assigned` (
+`assigned_id` MEDIUMINT( 10 ) NOT NULL AUTO_INCREMENT ,
+`task_id` MEDIUMINT( 10 ) NOT NULL DEFAULT 0,
+`assignee_id` MEDIUMINT( 5 ) NOT NULL DEFAULT 0,
+`user_or_group` VARCHAR( 1 ) NOT NULL DEFAULT 0,
+PRIMARY KEY ( `assigned_id` )
+) COMMENT = 'Who is assigned what task';
+
+# Added 15 May 05
+
+ALTER TABLE `flyspray_attachments` ADD `comment_id` MEDIUMINT( 10 ) NOT NULL AFTER `task_id` ;
+
+# Added 19 Jul 05
+
+ALTER TABLE `flyspray_users` ADD `last_search` LONGTEXT NOT NULL ;
+DELETE FROM `flyspray_prefs` WHERE `pref_name` = 'anon_view' ;
+DELETE FROM `flyspray_prefs` WHERE `pref_name` = 'theme_style' ;
+DELETE FROM `flyspray_prefs` WHERE `pref_name` = 'base_url' ;
+DELETE FROM `flyspray_prefs` WHERE `pref_name` = 'project_title' ;
+DELETE FROM `flyspray_prefs` WHERE `pref_name` = 'default_cat_owner' ;
+ALTER TABLE `flyspray_users` DROP `group_in` ;
+ALTER TABLE `flyspray_users` ADD `tasks_perpage` MEDIUMINT( 3 ) NOT NULL ;
+UPDATE `flyspray_users` SET `tasks_perpage` = '25' ;
+
+# Added 21 Jul 05
+
+ALTER TABLE `flyspray_prefs` CHANGE `pref_value` `pref_value` VARCHAR( 250 ) NOT NULL ;
+
+# Added 20 August 05 by Jeffery Fernandez <developer@jefferyfernandez.id.au> for updating the Flyspray version.
+UPDATE `flyspray_prefs` SET `pref_value` = '0.9.8' WHERE `pref_name` = 'fs_ver';
+
+

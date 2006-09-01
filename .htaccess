@@ -1,0 +1,44 @@
+#############################################################################
+##### Flyspray .htaccess Config. To be used with Apache Server ###
+##### Check for Mod-Rewrite module ############################################
+###############################################################################
+<IfModule mod_rewrite.c>
+RewriteEngine on
+#RewriteBase /flyspray
+
+RewriteRule ^.*\?do=admin&area=prefs$ index.php?do=admin&area=prefs [L,QSA]
+
+RewriteRule ^([0-9]+)$ index.php?do=details&task_id=$1 [L,QSA]
+RewriteRule ^task/([0-9]+)$ index.php?do=details&task_id=$1 [L,QSA]
+RewriteRule ^task/([0-9]+)comment([0-9]+)$ index.php?do=details&task_id=$1comment$2 [L,QSA]
+RewriteRule ^task/([0-9]+)/depends$ index.php?do=depends&task_id=$1 [L,QSA]
+RewriteRule ^task/([0-9]+)/depends&prune=([0-9]+)$ index.php?do=depends&task_id=$1&prune=$2 [L,QSA]
+RewriteRule ^task/([0-9]+)/edit$ index.php?do=details&task_id=$1&edit=yep [L,QSA]
+
+RewriteRule ^newtask$ index.php?do=newtask [L,QSA]
+RewriteRule ^newtask/proj([0-9]+)$ index.php?do=newtask&project=$1 [L,QSA]
+
+RewriteRule ^reports$ index.php?do=reports [L,QSA]
+RewriteRule ^myprofile$ index.php?do=myprofile [L,QSA]
+RewriteRule ^user/([0-9]+)$ index.php?do=user&id=$1 [L,QSA]
+RewriteRule ^logout$ index.php?do=authenticate&logout=1 [L,QSA]
+
+RewriteRule ^admin/([a-zA-Z]+)$ index.php?do=admin&area=$1 [L,QSA]
+RewriteRule ^pm/proj([0-9]+)/([a-zA-Z]+)$ index.php?do=pm&project=$1&area=$2 [L,QSA]
+
+RewriteRule ^admin/editgroup/([0-9]+)$ index.php?do=admin&area=editgroup&id=$1 [L,QSA]
+RewriteRule ^pm/editgroup/([0-9]+)$ index.php?do=pm&area=editgroup&id=$1 [L,QSA]
+RewriteRule ^edituser/([0-9]+)$ index.php?do=admin&area=users&user_id=$1 [L,QSA]
+RewriteRule ^register$ index.php?do=register [L,QSA]
+RewriteRule ^lostpw$ index.php?do=lostpw [L,QSA]
+RewriteRule ^newtask$ index.php?do=newtask [L,QSA]
+RewriteRule ^roadmap$ index.php?do=roadmap [L,QSA]
+RewriteRule ^roadmap/proj([0-9]+)$ index.php?do=roadmap&project=$1 [L,QSA]
+RewriteRule ^toplevel$ index.php?do=toplevel [L,QSA]
+RewriteRule ^toplevel/proj([0-9]+)$ index.php?do=toplevel&project=$1 [L,QSA]
+RewriteRule ^index$ index.php?do=index [L,QSA]
+RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
+
+RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
+
+</IfModule>

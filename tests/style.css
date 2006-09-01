@@ -1,0 +1,36 @@
+.mytable {
+    /* The default table for document listings. Contains name, document types, m
+odification times etc in a file-browser-like fashion */
+    border-collapse: collapse;
+    border: 1px solid #8CACBB;
+    margin: .2em 0em 1em 0em;
+    font: icon;
+    clear: both;
+}
+
+.mytable thead {
+    background: #DEE7EC;
+    border-top: 1px solid #8CACBB;
+    border-bottom: 1px solid #8CACBB;
+    border-right: 1px solid #8CACBB;
+    color: #000000;
+    font-weight: bold;
+    padding: 0em 1em 0em 1em;
+    text-transform: lowercase;
+    white-space: nowrap;
+}
+.mytablehead {
+    background: #DEE7EC;
+    border-top: 1px solid #8CACBB;
+    border-bottom: 1px solid #8CACBB;
+    border-right: 1px solid #8CACBB;
+    color: #000000;
+    font-weight: bold;
+    padding: 0em 1em 0em 1em;
+    text-transform: lowercase;
+    white-space: nowrap;
+}
+.mytable td {
+  padding-left: .5em;
+  padding-right: .5em;
+}

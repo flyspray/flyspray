@@ -1,0 +1,107 @@
+ALTER TABLE `flyspray_groups` ADD `belongs_to_project` MEDIUMINT( 3 ) DEFAULT '0' NOT NULL AFTER `group_desc` ;
+ALTER TABLE `flyspray_groups` ADD `manage_project` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `is_admin` ;
+ALTER TABLE `flyspray_groups` ADD `view_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `manage_project` ;
+ALTER TABLE `flyspray_groups` ADD `modify_own_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `can_open_jobs` ;
+ALTER TABLE `flyspray_groups` CHANGE `can_modify_jobs` `modify_all_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_groups` CHANGE `can_open_jobs` `open_new_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_groups` ADD `view_comments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `modify_all_tasks` ;
+ALTER TABLE `flyspray_groups` ADD `edit_comments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `can_add_comments` ;
+ALTER TABLE `flyspray_groups` ADD `delete_comments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `edit_comments` ;
+ALTER TABLE `flyspray_groups` CHANGE `can_add_comments` `add_comments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_groups` ADD `view_attachments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `delete_comments` ;
+ALTER TABLE `flyspray_groups` CHANGE `can_attach_files` `create_attachments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_groups` ADD `delete_attachments` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `create_attachments` ;
+ALTER TABLE `flyspray_groups` ADD `view_history` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `delete_attachments` ;
+ALTER TABLE `flyspray_groups` CHANGE `can_vote` `close_own_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_groups` ADD `close_other_tasks` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `close_own_tasks` ;
+ALTER TABLE `flyspray_groups` ADD `assign_to_self` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `close_other_tasks` ;
+ALTER TABLE `flyspray_groups` ADD `assign_others_to_self` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `assign_to_self` ;
+ALTER TABLE `flyspray_groups` ADD `view_reports` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL AFTER `assign_others_to_self` ;
+UPDATE `flyspray_groups` SET `manage_project` = '1',
+`view_tasks` = '1',
+`modify_own_tasks` = '1',
+`view_comments` = '1',
+`edit_comments` = '1',
+`delete_comments` = '1',
+`view_attachments` = '1',
+`delete_attachments` = '1',
+`view_history` = '1',
+`close_other_tasks` = '1',
+`assign_to_self` = '1',
+`assign_others_to_self` = '1',
+`view_reports` = '1'
+WHERE `group_id` = '1' LIMIT 1 ;
+UPDATE `flyspray_groups` SET `view_tasks` = '1',
+`modify_own_tasks` = '1',
+`view_comments` = '1',
+`edit_comments` = '1',
+`delete_comments` = '1',
+`view_attachments` = '1',
+`delete_attachments` = '1',
+`view_history` = '1',
+`close_other_tasks` = '1',
+`assign_to_self` = '1',
+`assign_others_to_self` = '1'
+WHERE `group_id` = '2' LIMIT 1 ;
+UPDATE `flyspray_groups` SET `view_tasks` = '1',
+`modify_own_tasks` = '1',
+`view_comments` = '1',
+`view_attachments` = '1',
+`view_history` = '1',
+`assign_to_self` = '1'
+WHERE `group_id` = '3' LIMIT 1 ;
+UPDATE `flyspray_groups` SET `view_tasks` = '1',
+`view_comments` = '1',
+`add_comments` = '1',
+`view_attachments` = '1'
+WHERE `group_id` = '4' LIMIT 1 ;
+CREATE TABLE `flyspray_users_in_groups` (
+  `record_id` mediumint(5) NOT NULL auto_increment,
+  `user_id` mediumint(5) NOT NULL default '0',
+  `group_id` mediumint(3) NOT NULL default '0',
+  PRIMARY KEY  (`record_id`)
+) TYPE=MyISAM COMMENT='Which users are in which groups' AUTO_INCREMENT=1 ;
+ALTER TABLE `flyspray_projects` ADD `others_view` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+INSERT INTO `flyspray_groups` ( `group_id` , `group_name` , `group_desc` , `belongs_to_project` , `is_admin` , `manage_project` , `view_tasks` , `open_new_tasks` , `modify_own_tasks` , `modify_all_tasks` , `view_comments` , `add_comments` , `edit_comments` , `delete_comments` , `view_attachments` , `create_attachments` , `delete_attachments` , `view_history` , `close_own_tasks` , `close_other_tasks` , `assign_to_self` , `assign_others_to_self` , `view_reports` , `group_open` )
+VALUES (
+'', 'Basic', 'Members can login, relying upon Project permissions only', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1'
+);
+CREATE TABLE `flyspray_admin_requests` (
+  `request_id` mediumint(5) NOT NULL auto_increment,
+  `project_id` mediumint(5) NOT NULL default '0',
+  `task_id` mediumint(5) NOT NULL default '0',
+  `submitted_by` mediumint(5) NOT NULL default '0',
+  `request_type` mediumint(2) NOT NULL default '0',
+  `time_submitted` varchar(12) NOT NULL default '',
+  `resolved_by` mediumint(5) NOT NULL default '0',
+  `time_resolved` varchar(12) NOT NULL default '',
+  PRIMARY KEY  (`request_id`)
+) TYPE=MyISAM COMMENT='Pending requests for admins and PMs to attend to' AUTO_INCREMENT=1 ;
+CREATE TABLE `flyspray_dependencies` (
+  `depend_id` mediumint(10) NOT NULL auto_increment,
+  `task_id` mediumint(10) NOT NULL default '0',
+  `dep_task_id` mediumint(10) NOT NULL default '0',
+  PRIMARY KEY  (`depend_id`)
+) TYPE=MyISAM COMMENT='Task dependencies' AUTO_INCREMENT=2 ;
+ALTER TABLE `flyspray_users` ADD `magic_url` VARCHAR( 40 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `user_name` VARCHAR( 20 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `real_name` VARCHAR( 100 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `email_address` VARCHAR( 100 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `jabber_id` VARCHAR( 100 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `notify_type` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE `flyspray_registrations` ADD `magic_url` VARCHAR( 40 ) DEFAULT '' NOT NULL ;
+ALTER TABLE `flyspray_projects` ADD `anon_open` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL ;
+INSERT INTO `flyspray_prefs` ( `pref_id` , `pref_name` , `pref_value` , `pref_desc` )
+VALUES (
+'', 'anon_reg', '1', 'Allow new user registrations'
+);
+INSERT INTO `flyspray_prefs` ( `pref_id` , `pref_name` , `pref_value` , `pref_desc` )
+VALUES (
+'', 'fs_ver', '0.9.7', 'Current Flyspray Version'
+);
+DELETE FROM `flyspray_prefs` WHERE `pref_id` = '1' LIMIT 1 ;
+DELETE FROM `flyspray_prefs` WHERE `pref_id` = '2' LIMIT 1 ;
+DELETE FROM `flyspray_prefs` WHERE `pref_id` = '7' LIMIT 1 ;
+DELETE FROM `flyspray_prefs` WHERE `pref_id` = '13' LIMIT 1 ;
+DELETE FROM `flyspray_prefs` WHERE `pref_id` = '16' LIMIT 1 ;
+ALTER TABLE `flyspray_tasks` ADD `mark_private` MEDIUMINT( 1 ) DEFAULT '0' NOT NULL

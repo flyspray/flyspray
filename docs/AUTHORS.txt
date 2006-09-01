@@ -1,0 +1,54 @@
+Primary Developer:
+
+      Tony Collins
+      Canberra, Australia
+      http://tony.rocks.cc/
+
+The Development Team:
+
+      Konrad Roziewski (SQL, Postgres port, Polish translation)
+      Warsaw, Poland
+      http://www.suwalki.com.pl/~konrad/
+
+      Anders Betner (Javascript)
+      Patrick Dubbert (Code handyman, initial German translation)
+      Florian Schmitz (various coding)
+
+
+We would particularly like to thank:
+
+      Mac Newbold for extensive testing and bugfixing during leadup to the
+      0.9.8 release.
+
+
+Other contributors:
+
+      Installer by Jeffrey Fernandez
+
+      Much xml-rpc code by Angus Hardie
+      http://www.malcolmhardie.com/
+
+      Flyspray bottle logo designed by Robert Martinez
+      http://www.mray.de/
+
+      Some HTML rendering cleanups by Stefan Huber
+      http://stefan.huberdoc.at/
+
+      Tricky SQL queries and other miscellaneous help from Lance Conry
+      http://www.rhinosw.com/
+
+      Background scheduling of Jabber notifications and some database access
+      functions by Jamin Collins
+      http://asgardsrealm.net/
+
+      Funky page numbering by Nathan Fritz
+      http://www.netflint.net/
+
+      Regular expression filtering by Zeeshan Muhummad
+      http://www.new-frontier.info/
+
+      Configurable tasklist columns by Jonathan Oxer
+      http://oxer.com.au/
+
+      Bugfixes,installer improvements, PHP5 testing by Cristian Rodriguez
+	  http://www.onfocus.cl/

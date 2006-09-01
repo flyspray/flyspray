@@ -1,0 +1,325 @@
+/* +----------------------------------------------------------------------
+// | CSS Source
+// +----------------------------------------------------------------------
+// | Copyright (C) 2004
+// | Jeffery Fernandez <developer@jefferyfernandez.id.au>
+// +----------------------------------------------------------------------
+// |
+// | Copyright: See COPYING file that comes with this distribution
+// +----------------------------------------------------------------------
+//
+//
+// +----------------------------------------------------------------------
+// | Subversion Source Control Revision Headers
+// +----------------------------------------------------------------------
+// | Project:  Help Tickets
+// +----------------------------------------------------------------------
+// |
+// | $HeadURL$
+// | $LastChangedRevision$
+// | $LastChangedBy$
+// | $LastChangedDate$
+// +----------------------------------------------------------------------
+// +----------------------------------------------------------------------
+*/
+
+body {
+  background-color:#E6EEF6; color:#FFFFFF;
+  margin:0; padding:0; border:none;
+  font-family: Verdana, 'Avante Garde', sans-serif; font-size:13px;
+}
+#center{
+  text-align:center; padding-bottom:15px;
+}
+#container {
+  margin-top: 1em; margin-bottom:0; margin-left:auto; margin-right:auto; padding:0; border:1px solid #47617B;
+  width:740px;
+}
+#header {
+  background-color:#47617B; color:#1C450B; background-image:url(../images/title.png);
+  background-position: 0px 10px; background-repeat: no-repeat; background-attachment:scroll;
+  margin:0; padding:0; border-bottom:2px solid #688EB4;  border-top: 6px solid #688EB4;
+}
+#logo {
+  /*background-image:url(../../images/helptickets_logo.gif); */
+  background-position: 20px 10px; background-repeat: no-repeat; background-attachment:scroll;
+}
+#logo h1 {
+  padding:0; margin:0;
+  font-size:200%; line-height: 90px;
+  display: inline;
+}
+#logo h1 a, #header h1 a:hover {
+  display: block;
+  height: 90px; width: 100%;
+  text-decoration: none; color:#3AFF53; background-color:transparent;
+  border: 0; padding: 0; margin: 0 auto;
+}
+
+
+
+#navigation {
+  float: left;
+  width: 160px;
+  padding:0; margin:0; border: none;
+  background-color:transparent; color:#47617B ;
+}
+#navMenu{
+  padding:0; margin:40px 19px 10px 10px; border:none; /*1px solid #688EB4;*/
+  height:200px;
+}
+#navMenu ul {
+  margin: 0; padding: 0; border:none;
+  list-style-type: none;
+  font-size: 13px; text-align:left;
+}
+#navMenu li {
+  margin: 0 0 2px 0;
+}
+#navMenu a {
+  display: block;
+  padding: 3px 2px 3px 10px;
+  width: 119px;
+}
+
+#navMenu a:link, #navMenu a:visited {
+  background-color: #C1CD36; color: #554F1C;
+  text-decoration: none;
+}
+#navMenu a:hover, #navMenu a:active, #current a:link, #current a:visited, #current a:hover {
+  background-color: #688EB4; color: #FFF9BF;
+  background-image:  url(../images/navigation_hover.gif);
+  background-position: right top;
+  background-repeat: repeat-y;
+}
+
+#content {
+  padding:0; margin:0; border:none;
+  background-color:#F5F5F5; color:#47617B ;
+  text-align:left;
+}
+#bodyContent {
+  padding:5px; margin:0; border:none;
+}
+
+#footer {
+  clear: both;
+  background-color: #688EB4 ;
+  padding: 5px; margin:0;
+  border-top: 2px solid #47617B;border-right:1px solid #FFF;border-bottom:1px solid #FFF;border-left:1px solid #FFF;
+  text-align: right; font-size: 90%;
+}
+#footer img {
+  padding:0; margin:0; border-top:1px solid #FFF9BF; border-left:1px solid #FFF9BF; border-right:1px solid #47617B; border-bottom:1px solid #47617B;
+}
+#wrapper {
+  border: 0px; margin: 0px; margin-left: auto; margin-right: auto; padding: 0px;
+}
+
+#stepbar {
+  background-color: #F1F3F5; color: #000;
+  width: 170px;
+  text-align: left;
+  float: left;
+}
+
+#stepbar .step-on {
+  color: #3AFF53; background-color: #47617B;
+  font-weight: bold; font-size: 90%;
+  padding: 10px; border: 1px solid #688EB4; margin-bottom: 2px;
+  background-image:  url(../images/navigation_hover.gif); background-position: right top; background-repeat: repeat-y;
+}
+
+#stepbar div {
+  font-size: 90%;
+  color: #47617B; background-color: transparent;
+  font-weight: bold;
+  padding: 10px;
+  border: 1px solid #688EB4;
+  margin-bottom: 2px;
+}
+
+.navHeading {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  color: #2D006B;
+  padding: 5px;
+
+}
+
+#right {
+  float: right;
+  width: 505px;
+  border-left: 1px solid #688EB4;
+  padding-left: 10px;
+  height: auto; min-height:600px;
+}
+
+* html #right {height: 600px;}
+
+#break {
+  height: 20px;
+}
+
+.licensetext {
+  text-align: left;
+}
+
+.license {
+  padding: 0px;
+  width: 470px;
+  height: 350px;
+}
+
+.licenseForm {
+  float: left;
+  padding:0; margin:0; border:none;
+}
+
+.install {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+  margin-bottom: .5em;
+  padding: 10px;
+  border: 1px solid #688EB4;
+  width: 700px;
+  background-color: #F1F3F5;
+}
+
+
+.formBlock {
+  float:right;width:58%;
+  border: 1px solid #688EB4; padding:5px; margin:5px;
+  background: #E9ECEF; color:#000; font-size:80%;
+}
+.farRight {
+  width:auto; text-align:right;
+}
+
+.left {
+  position: relative;
+  text-align: left;
+  float: left;
+  width: 50%;
+}
+
+.right {
+  position: relative;
+  text-align: left;
+  float: right;
+  width: 50%;
+}
+
+.clr {
+    clear:both;
+    }
+
+.ctr {
+  text-align: center;
+}
+
+.button {
+  border:solid 1px #688EB4; padding: 2px; margin:0;
+  background: #E9ECEF; color : #688EB4;
+  font-weight : bold; font-size : 11px;
+}
+
+table.content {
+  width: 98%;
+}
+
+table.content td {
+  color : #333333;
+  font-size: 11px;
+}
+
+.heading {
+  font-weight: bold; text-align:left;
+}
+
+a {
+  color : #998900;
+  text-decoration : none;
+}
+a:hover {
+  color : #999999;
+  text-decoration : underline;
+}
+a:active {
+  color : #FF6600;
+  text-decoration : underline;
+}
+
+.inputbox {
+  font-size: 12px;
+}
+
+.small {
+  color : #333;
+  font-size : 10px;
+}
+
+.error {
+  color : #cc0000;
+  font-size : 12px;
+  font-weight : bold;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
+select.options, input.options {
+  font-size: 8pt;
+  border: 1px solid #999;
+}
+
+form {
+  margin: 0px;
+}
+
+.installheader {
+  color : #FFF;
+  font-size : 24px;
+}
+
+textarea {
+  color : #0000dd;
+  font-size : 11px;
+  border: 1px solid #999;
+}
+
+.red {
+  color:#FF0000;
+}
+.orange {
+  color:#FFA500;
+}
+.green {
+  color:#078843;
+}
+
+.install h1 {
+  color:#47617B; background-color:transparent; text-align:center;
+}
+.install h2 {
+  color:#688EB4; background-color:transparent;
+  border-bottom:1px solid #688EB4;
+}
+
+h1.error {
+  background-image: url(../images/exclamation.png); border:none;
+  text-indent: 45px; background-position: 0px 0px; background-repeat: no-repeat; text-align:left;
+}
+.box {
+  border-top: 10px solid #688EB4; border-right: 5px solid #688EB4; border-bottom: 5px solid #688EB4; border-left: 5px solid #688EB4;
+  padding:0; margin:0; width: 490px;
+  background-color: #F1F3F5; color: #47617B;
+}
+.box .shade {
+  border-top: 1px solid #000; border-left: 1px solid #000; padding: 5px; margin: 0;
+}
+iframe {
+  padding:0; margin:0; border:none;
+}

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Savant2_Plugin_verify_task</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Savant2_Plugin_verify_task</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Verifys that a task contains specified values</p>
+	<ul class="tags">
+				<li><span class="field">license:</span> LGPL</li>
+				<li><span class="field">author:</span> Anders Betnér</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_plugins_Savant2_Plugin_verify_task_php.html">/Savant2_Plugin_verify_task.php</a> (line <span class="field">17</span>)
+		</p>
+		
+				
+		<pre>Savant2_Plugin
+   |
+   --<a href="../Savant2/FlyspraySavant2Plugin.html">FlyspraySavant2Plugin</a>
+      |
+      --Savant2_Plugin_verify_task</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+									<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#plugin" title="details" class="method-name">plugin</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$taskId</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$opt</span>)
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+													<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodplugin" id="plugin"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">plugin</span> (line <span class="line-number">48</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Verifys that a task has the fields specified</p>
+<p class="description"><p>You can provide as many or few of the fields as you like. Selenium finds  the task by typing the task id in the &quot;Show task #&quot; box</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			plugin
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$taskId</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$opt</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$taskId</span><span class="var-description">: The id of the task to verify</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$opt</span><span class="var-description">: associative array of task fields to verify  <pre>
+ $task['summary']    = '';
+ $task['tasktype']   = '';
+ $task['category']   = '';
+ $task['status']     = '';
+ $task['assignedto'] = '';
+ $task['os']         = '';
+ $task['severity']   = '';
+ $task['priority']   = '';
+ $task['reportedversion'] = '';
+ $task['dueversion'] = '';
+ $task['due']        = ''; // use date format 19-oct-2005
+ $task['details']    = '';
+ </pre></span>			</li>
+				</ul>
+		
+		
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../Savant2/FlyspraySavant2Plugin.html">FlyspraySavant2Plugin</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../Savant2/FlyspraySavant2Plugin.html#method_createTR">FlyspraySavant2Plugin::_createTR()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 10 Oct 2005 22:32:34 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.2.3</a>
+	</p>
+	</div></body>
+</html>

@@ -1,0 +1,56 @@
+Upgrading from 0.9.7 to 0.9.8
+
+Point your browser at your Flyspray directory to launch to new setup script.
+
+
+Upgrading from 0.9.6 to 0.9.7
+
+Simply pointing your browser at your Flyspray directory should launch
+the upgrade script.  You might like to deny other people access to your
+Flyspray while you conduct the upgrade.  The upgrade script will use
+the settings in flyspray.conf.php to select the database type (mysql
+or postgresql), and upgrade your database accordingly.
+
+
+Upgrading from 0.9.5 to 0.9.6
+
+Configuration is no longer in header.php.  You now need to edit the
+flyspray.conf.php file to set your database config and miscellaneous
+other settings.
+
+You might like to place flyspray.conf.php in a directory where a web browser
+cannot reach it.  If you do this, you will need to edit header.php to point to
+the new location.
+
+MySQL users load the upgrade_0.9.5_to_0.9.6-mysql.php script in your browser,
+and follow the instructions.
+PostgreSQL users do the same, but use the upgrade_0.9.5_to_0.9.6-pgsql.php
+script instead.
+
+
+Upgrading from 0.9.4 to 0.9.5
+
+Install the ADODB database-abstraction software somewhere on your
+system and edit the new header.php to point to the adodb.inc.php file.
+Also enter your database configuration in the header.php file, as config.inc.php
+isn't used anymore. Load the upgrade_0.9.4_to_0.9.5-mysql.php script in your
+ browser and follow the instructions.
+
+
+Upgrading from 0.9.3.1 to 0.9.4
+
+Load the 'upgrade_0.9.3.1_to_0.9.4.php' script in your browser and follow the
+instructions.
+
+
+Upgrading from 0.9.3 to 0.9.3.1
+
+Simply unpack the new files into your old Flyspray directory.  If you overwrite
+config.inc.php, you will need to re-edit it.
+
+This bugfix release fixes the broken 'closed' status.  You will have previously
+noticed that closing your tasks set them to 'waiting for customer'.  If you have
+some tasks that are incorrectly set to that when you tried to close them, you are
+now able to close them properly.
+
+There are no database changes.
