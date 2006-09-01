@@ -6,7 +6,7 @@ h1 {
 	margin:0.5em 0;
 }
 
-div#menu,div#loginbox,
+div#menu,div#pm-menu,.caret,div#loginbox,
 div#projectselector,div#showtask,
 div#search,div#comments a img,
 input,div#permissions,
@@ -55,9 +55,8 @@ p#footer {
 }
 
 div#taskdetailsfull {
-	border:1px dotted gray;
-	border-width:1px 0;
-	margin:1em 0;
+	border-left:1px dotted gray;
+	margin:1em 0 1em -5px;
 	padding:0.5em;
 }
 
@@ -88,11 +87,11 @@ div#comments {
 	page-break-inside:auto;
 }
 
-div#taskfields1 table td,div#taskfields2 table td {
-	width:50%;
+div#taskfields {
+	border-right:1px dotted gray;
 }
 
-table#pagenumbers,div#taskfields1 table,div#taskfields2 table {
+table#pagenumbers {
 	width:100%;
 }
 

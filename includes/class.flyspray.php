@@ -620,7 +620,7 @@ class Flyspray
         if (is_null($time)) {
             $time = time()+60*60*24*30;
         }
-        return setcookie($name, $val, $time, $url['path']);
+        return setcookie($name, $val, $time, str_replace('%2F', '/', rawurlencode($url['path'])));
     } // }}}
     // Reminder daemon {{{
     /**
