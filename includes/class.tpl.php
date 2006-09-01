@@ -174,6 +174,16 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
         $summary = L('taskmadeprivate');
     }
     
+    if (is_null($text)) {
+        $text = 'FS#'.$task['task_id'].' - '.$summary;
+    } else {
+        $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
+    }
+    
+    if (!$task['task_id']) {
+        return $text;
+    }
+    
     $title_text = array();
 
     foreach($title as $info)
@@ -221,12 +231,6 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     }
     
     $title_text = implode(' | ', $title_text);
-
-    if (is_null($text)) {
-        $text = 'FS#'.$task['task_id'].' - '.$summary;
-    } else {
-        $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
-    }
     
     $params = array();
     
