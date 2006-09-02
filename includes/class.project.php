@@ -137,10 +137,12 @@ class Project
         $right = array();
         $cats = array();
         $g_cats = array();
+        $show = -1;
         
         // null = categories of current project + global project, int = categories of specific project
         if (is_null($project_id)) {
             $project_id = $this->id;
+            $show = 0;
             if ($this->id != 0) {
                 $g_cats = $this->listCategories(0);
             }
@@ -159,10 +161,10 @@ class Project
         $result = $db->Query('SELECT c.category_id, c.category_name, c.*, count(t.task_id) AS used_in_tasks
                                 FROM {list_category} c
                            LEFT JOIN {tasks} t ON (t.product_category = c.category_id)
-                               WHERE c.project_id = ? AND lft BETWEEN ? AND ?
+                               WHERE c.project_id = ? AND show_in_list > ? AND lft BETWEEN ? AND ?
                             GROUP BY ' . $groupby . '
                             ORDER BY lft ASC',
-                             array($project_id, intval($row['lft']), intval($row['rgt'])));
+                             array($project_id, $show, intval($row['lft']), intval($row['rgt'])));
 
         while ($row = $db->FetchRow($result)) {
            // only check stack if there is one
