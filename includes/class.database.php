@@ -294,6 +294,20 @@ class Database
     {
         return $this->dblink->qstr($string);
     }
+
+    /**
+     * fill_placeholders 
+     *  a convenience function to fill sql query placeholders
+     *  according to the number of columns to be used.
+     * @param array $cols 
+     * @access public
+     * @return string comma separated "?" placeholders
+     * @static
+     */
+    function fill_placeholders($cols)
+    {
+        return join(',', array_fill(0, count($cols), '?')); 
+    }
     // End of Database Class
 }
 

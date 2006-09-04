@@ -605,7 +605,7 @@ function closeTask($args)
       return new xmlrpcresp (0,PERMISSION_DENIED, 'You do not have permission to perform this function.');
    }
 
-   return Backend:close_task($task_id, $reason, $comment, $mark100);
+   return Backend::close_task($task_id, $reason, $comment, $mark100);
 
 // End of close task function
 }

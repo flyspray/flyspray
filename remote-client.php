@@ -235,13 +235,13 @@ else
          <table>
          <tr>
          <td>
-         <input type="hidden" name="debug" value="<?php echo $_REQUEST['debug']?>" />
+         <input type="hidden" name="debug" value="<?php echo htmlspecialchars($_REQUEST['debug'], ENT_QUOTES, 'utf-8')?>" />
          <input type="hidden" name="do" value="modify" />
          <input type="hidden" name="rpcAction" value="newTask" />
-         <input type="hidden" name="project_id" value="<?php echo $_REQUEST['projectid']?>" />
-         <input type="hidden" name="username" value="<?php echo $_REQUEST['username']?>">
-         <input type="hidden" name="password" value="<?php echo $_REQUEST['password']?>">
-         <input type="hidden" name="url" value="<?php echo $_REQUEST['url']?>">
+         <input type="hidden" name="project_id" value="<?php echo intval($_REQUEST['projectid'])?>" />
+         <input type="hidden" name="username" value="<?php echo htmlspecialchars($_REQUEST['username'], ENT_QUOTES, 'utf-8') ?>">
+         <input type="hidden" name="password" value="<?php echo htmlspecialchars($_REQUEST['password'], ENT_QUOTES, 'utf-8') ?>">
+         <input type="hidden" name="url" value="<?php echo htmlspecialchars($_REQUEST['url'], ENT_QUOTES, 'utf-8') ?> ">
          <label for="itemsummary">Summary</label>
             </td>
             <td><input id="itemsummary" type="text" class="text" name="item_summary" size="50" maxlength="100" />
