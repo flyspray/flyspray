@@ -305,8 +305,16 @@ class Database
      * @static
      */
     function fill_placeholders($cols)
-    {
-        return join(',', array_fill(0, count($cols), '?')); 
+    { 
+        if(is_array($cols) && count($cols)) {
+
+            return join(',', array_fill(0, count($cols), '?')); 
+        
+        } else {
+            //this is not an user error, is a programmer error.
+            trigger_error("data passed to fill_placeholders must by an array" 
+                           . gettype($cols) . ' given');
+        }
     }
     // End of Database Class
 }
