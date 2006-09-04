@@ -447,7 +447,7 @@ class Notifications {
 
          if (!empty($task_details['closure_comment']))
          {
-            $body .= L('closurecomment') . ' - ' . $task_details['closure_comment'] . "\n\n";
+            $body .= L('closurecomment') . ' ' . $task_details['closure_comment'] . "\n\n";
          }
 
          $body .= L('moreinfo') . "\n";

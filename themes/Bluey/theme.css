@@ -857,28 +857,6 @@ a.button:hover {
 	background:url(button-over.png);
 }
 
-div#actionbuttons a#hideclosetask {
-	position:absolute;
-	top:3px;
-	right:3px;
-	width:16px;
-	height:16px;
-	background:url(cancel.png) no-repeat transparent;
-	color:#000;
-	border:none;
-}
-
-div#actionbuttons a#hideclosetask:hover {
-	position:absolute;
-	top:3px;
-	right:3px;
-	width:16px;
-	height:16px;
-	background:url(cancel-over.png) no-repeat transparent;
-	color:#000;
-	border:none;
-}
-
 div#massopsactions {
 	padding:0 0 0 3px;
 }
@@ -893,6 +871,7 @@ div#closeform {
 	margin-top:10px;
 	width:300px;
 	height:auto;
+	padding-right:1em;
 }
 
 div#multiuserlist {

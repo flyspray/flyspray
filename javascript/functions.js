@@ -119,7 +119,7 @@ function adduserselect(url, user, selectid, error)
             
             opt = new Option(user_info[0], user_info[1]);
             try {
-                $('r' + selectid).add(opt, null);
+                $('r' + selectid).options[$('r' + selectid).options.length]=opt;
                 updateDualSelectValue(selectid);
             } catch(ex) {
                 return;
@@ -198,11 +198,10 @@ function dualSelect(from, to, id) {
     while (i < from.options.length) {
         if (from.options[i].selected) {
             opt = new Option(from.options[i].text, from.options[i].value);
-            try {
-                to.add(opt, null);
-            }
-            catch (ex) {
-                if (to) to.add(opt);
+            if (to && to.options) {
+              to.options[to.options.length]=opt
+            } else if (to) {
+              to.add(opt)
             }
             if (from.options.length > 1) {
                 try {
