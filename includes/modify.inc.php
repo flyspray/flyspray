@@ -446,7 +446,7 @@ switch ($action = Req::val('action'))
                 array_unshift($params, $proj->id);
                 
                 $db->Query("INSERT INTO  {groups} (project_id, ". join(',', $cols).")
-                                 VALUES  (?, ".join(',', array_fill(0, count($cols), '?')).")", $params);
+                                 VALUES  (". $db->fill_placeholders($cols, 1) .')', $params);
 
                 $_SESSION['SUCCESS'] = L('newgroupadded');
             }
@@ -522,7 +522,7 @@ switch ($action = Req::val('action'))
         $db->Query("INSERT INTO  {groups}
                                  ( group_name, group_desc, project_id,
                                    ".join(',', $cols).")
-                         VALUES  ( ?, ?, ?, ".join(',', array_fill(0, count($cols), '?')).")",
+                         VALUES  ( " . $db->fill_placeholders($cols, 3) .")",
                          $args);
 
         $db->Query("INSERT INTO  {list_category}

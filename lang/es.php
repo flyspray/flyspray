@@ -184,7 +184,7 @@ $translation = array(
 'reportedversion'         => 'Version reportada',
 'dueinversion'            => 'Agendada para version',
 'undecided'               => 'Sin decidir',
-'percentcomplete'         => 'Porcentaje compelto:',
+'percentcomplete'         => 'Porcentaje completo:',
 'details'                 => 'Detalles',
 'savedetails'             => 'Guardar detalles',
 'canceledit'              => 'Cancelar edicion',
@@ -563,6 +563,11 @@ $translation = array(
                              permita conexiones hacia el exterior o que haya ocurrido un problema de red.
                              Por favor visite el sitio web de flyspray para asegurarse que esta utilizando la 
                              version mas reciente',
+'votes'                   => 'Votos',
+'private'                 => 'Privada',
+'watching'                => 'Observando',
+'saveas'                  => 'guardar búsqueda como'
+
 );
 
 ?>

@@ -299,21 +299,21 @@ class Database
      * fill_placeholders 
      *  a convenience function to fill sql query placeholders
      *  according to the number of columns to be used.
-     * @param array $cols 
+     * @param array $cols
+     * @param integer $additional generate N additional placeholders
      * @access public
      * @return string comma separated "?" placeholders
      * @static
      */
-    function fill_placeholders($cols)
+    function fill_placeholders($cols, $additional=0)
     { 
-        if(is_array($cols) && count($cols)) {
+        if(is_array($cols) && count($cols) && is_int($additional)) {
 
-            return join(',', array_fill(0, count($cols), '?')); 
+            return join(',', array_fill(0, (count($cols) + $additional), '?')); 
         
         } else {
             //this is not an user error, is a programmer error.
-            trigger_error("data passed to fill_placeholders must by an array" 
-                           . gettype($cols) . ' given');
+            trigger_error("incorrect data passed to fill_placeholders", E_USER_ERROR);
         }
     }
     // End of Database Class

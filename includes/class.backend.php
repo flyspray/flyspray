@@ -666,7 +666,8 @@ class Backend
         }
         
         $sql_params = join(', ', $sql_params);
-        $sql_placeholder = join(', ', array_fill(1, count($sql_values), '?'));
+        // +1 for the task_id column;
+        $sql_placeholder = $db->fill_placeholders($sql_values, 1);
         
         $result = $db->Query('SELECT  max(task_id)+1
                                 FROM  {tasks}');
@@ -680,7 +681,7 @@ class Backend
                                    project_id, item_summary,
                                    detailed_desc, opened_by,
                                    percent_complete, $sql_params )
-                         VALUES  (?, $sql_placeholder)", $sql_values);
+                         VALUES  ($sql_placeholder)", $sql_values);
 
         // Log the assignments and send notifications to the assignees
         if (trim($args['assigned_to']))
