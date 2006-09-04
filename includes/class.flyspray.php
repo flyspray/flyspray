@@ -899,5 +899,11 @@ class Flyspray
             return intval($db->FetchOne($sql));
         }
     }
+    function check_email($email)
+    {
+        include_once dirname(__FILE__) . '/external/Validate.php';
+
+        return is_string($email) && Validate::email($email, array('use_rfc822'=>true));
+    }
 }
 ?>
