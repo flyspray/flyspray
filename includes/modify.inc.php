@@ -14,7 +14,7 @@ require_once BASEDIR . '/includes/class.notify.php';
 $notify = new Notifications;
 
 $lt = Post::isAlnum('list_type') ? Post::val('list_type') : '';
-if (!empty($lt) && is_string($lt)) {
+if (strlen($lt)) {
     $list_table_name  = '{list_'.$lt .'}';
     $list_column_name = $lt . '_name';
     $list_id = $lt . '_id';
@@ -251,12 +251,16 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $mailpattern = "/^[a-z0-9._\-']+(?:\+[a-z0-9._-]+)?@([a-z0-9.-]+\.)+[a-z]{2,4}+$/i";
-        if (Post::val('email_address') && !preg_match($mailpattern, Post::val('email_address'))) {
+        $email =  Post::val('email_address');
+        $jabber_id = Post::val('jabber_id');
+
+        //email is mandatory
+        if (!$email || !Flyspray::check_email($email)) {
             Flyspray::show_error(L('novalidemail'));
             break;
         }
-        if (Post::val('jabber_id') && !preg_match($mailpattern, Post::val('jabber_id'))) {
+        //jabber_id is optional
+        if ($jabber_id && !Flyspray::check_email($jabber_id)) {
             Flyspray::show_error(L('novalidjabber'));
             break;
         }
@@ -290,7 +294,7 @@ switch ($action = Req::val('action'))
         }
 
         $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE jabber_id = ? AND jabber_id != '' OR email_address = ? AND email_address != ''",
-                          array(Post::val('jabber_id', ''), Post::val('email_address', '')));
+                          array($jabber_id, $email));
         if ($db->fetchOne($sql)) {
             Flyspray::show_error(L('emailtaken'));
             break;
@@ -437,9 +441,12 @@ switch ($action = Req::val('action'))
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'view_attachments',
                         'assign_others_to_self', 'view_reports', 'group_open');
+
+                $params = array_map('Post_to0',$cols);
+                array_unshift($params, $proj->id);
+                
                 $db->Query("INSERT INTO  {groups} (project_id, ". join(',', $cols).")
-                                 VALUES  ({$proj->id}, ".join(',', array_fill(0, count($cols), '?')).")",
-                                     array_map('Post_to0', $cols));
+                                 VALUES  (?, ".join(',', array_fill(0, count($cols), '?')).")", $params);
 
                 $_SESSION['SUCCESS'] = L('newgroupadded');
             }
@@ -807,7 +814,7 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $position = intval(Post::val('list_position'));
+        $position = Post::num('list_position');
         if (!$position) {
             $position = $db->FetchOne($db->Query("SELECT max(list_position)+1
                                                     FROM $list_table_name
@@ -876,7 +883,7 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $position = intval(Post::val('list_position'));
+        $position = Post::num('list_position');
         if (!$position) {
             $position = $db->FetchOne($db->Query("SELECT max(list_position)+1
                                                     FROM $list_table_name
@@ -1056,13 +1063,19 @@ switch ($action = Req::val('action'))
         }
         
         $where = '';
+        
+        $params = array(Post::val('comment_text'), time(), 
+                        Post::val('comment_id'), $task['task_id']);
+
         if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
-            $where = ' AND user_id = ' . $user->id;
+            
+            $where = ' AND user_id = ?';
+            array_push($params, $user->id);
         }
+        
         $db->Query("UPDATE  {comments}
                        SET  comment_text = ?, last_edited_time = ?
-                     WHERE  comment_id = ? AND task_id = ? $where",
-                array(Post::val('comment_text'), time(), Post::val('comment_id'), $task['task_id']));
+                     WHERE  comment_id = ? AND task_id = ? $where", $params);
 
         Flyspray::logEvent($task['task_id'], 5, Post::val('comment_text'),
                 Post::val('previous_text'), Post::val('comment_id'));
@@ -1365,7 +1378,8 @@ switch ($action = Req::val('action'))
         }
 
         $user_details = $db->FetchRow($sql);
-        $magic_url    = md5(microtime());
+        //no microtime(), time,even with microseconds is predictable ;-)
+        $magic_url    = md5(uniqid(rand(), true));
 
         // Insert the random "magic url" into the user's profile
         $db->Query('UPDATE {users}
@@ -1384,7 +1398,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'lostpw.chpass':
         // Check that the user submitted both the fields, and they are the same
-        if (!Post::val('pass1') || !Post::val('magic_url')) {
+        if (!Post::val('pass1') || strlen(trim(Post::val('magic_url'))) !== 32) {
             Flyspray::show_error(L('erroronform'));
             break;
         }
@@ -1468,7 +1482,7 @@ if (!isset($_SESSION['SUCCESS']) && !isset($_SESSION['ERROR'])) {
 
 // in case an error occured
 if (isset($do)) {
-    require_once BASEDIR . "/scripts/$do.php";
+    include_once BASEDIR . "/scripts/$do.php";
 }
 
 ?>

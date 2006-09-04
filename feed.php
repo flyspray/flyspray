@@ -12,10 +12,10 @@ $page = new FSTpl();
 // Set up the basic XML head
 header ('Content-type: text/html; charset=utf-8');
 
-$max_items  = (intval(Req::val('num', 10)) == 10) ? 10 : 20;
+$max_items  = (Req::num('num', 10) == 10) ? 10 : 20;
 $sql_project = '';
 if ($proj->id) {
-    $sql_project = ' AND p.project_id = ' . $proj->id;
+    $sql_project = ' AND p.project_id = ' . $db->qstr($proj->id);
 }
 
 $feed_type  = Req::val('feed_type', 'rss2');

@@ -21,7 +21,7 @@ if ($conf['general']['reminder_daemon'] == '1') {
 $modes = array();
 $dir = dir(BASEDIR . '/scripts');
 while (($entry = $dir->read()) !== false) {
-    if ($entry{0} == '.') {
+    if ($entry{0} == '.' || $entry{0} == '..') {
         continue;
     }
     
@@ -30,6 +30,7 @@ while (($entry = $dir->read()) !== false) {
 
 $do = Req::enum('do', $modes, $proj->prefs['default_entry']);
 
+
 if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
     $do = 'pm';
 } elseif ($do == 'pm' && Req::has('switch') && Req::val('project') == '0') {
@@ -37,6 +38,8 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 } elseif (Req::has('show') || (Req::has('switch') && ($do == 'details'))) {
     $do = 'index';
 }
+
+
 
 /* permission stuff */
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -62,7 +65,7 @@ if (Get::val('getfile')) {
         echo 'File does not exist anymore.';
         exit();
     }
-    
+
     if ($user->perms('others_view', $proj_id) || $user->perms('view_attachments', $proj_id))
     {
         output_reset_rewrite_vars();

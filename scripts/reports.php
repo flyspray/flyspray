@@ -64,7 +64,7 @@ foreach (Req::val('events', array()) as $eventtype) {
 $where = '(' . implode(' OR ', $where) . ')';
 
 if ($proj->id) {
-    $where = ' (t.project_id = ' . $proj->id . ' OR h.event_type > 29) AND ' . $where;
+    $where = ' (t.project_id = ' . $db->qstr($proj->id) . ' OR h.event_type > 29) AND ' . $where;
 }
 
 if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {

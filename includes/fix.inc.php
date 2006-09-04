@@ -11,6 +11,36 @@ ini_set('display_errors', 1);
 
 error_reporting(E_ALL);
 
+// This to stop PHP being retarded and using the '&' char for session id delimiters
+ini_set('arg_separator.output','&amp;');
+
+// MySQLi driver is _useless_ if zend.ze1_compatibility_mode is enabled
+// in fact you should never use this setting,the damn thing does not work.
+
+ini_set('zend.ze1_compatibility_mode',0);
+
+
+//we don't want magic_quotes_runtime ..
+
+ini_set('magic_quotes_runtime',0);
+
+//this one too
+ini_set('magic_quotes_sybase',0);
+
+//see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
+ini_set('session.use_only_cookies',1);
+
+//no session auto start
+ini_set('session.auto_start',0);
+
+/*this stops most cookie attacks via XSS at the interpreter level
+* see http://msdn.microsoft.com/workshop/author/dhtml/httponly_cookies.asp
+* supported by IE 6 SP1, Safari, Konqueror, Opera, silently ignored by others
+* ( sadly, including firefox) available since PHP 5.2.0
+ */
+
+ini_set('session.cookie_httponly',1);
+
 // we live is register_globals Off world forever..
 //This code was written By Stefan Esser from the hardened PHP project (sesser@php.net)
 // it's now part of the PHP manual
@@ -79,34 +109,6 @@ if (extension_loaded('filter') && input_name_to_filter(ini_get('filter.default')
     }
 
 }
-
-//then we procede with our checks and stuff
-
-// Check PHP Version (Must Be at least 4.3)
-// For 0.9.9, this should redirect to the error page
-if (PHP_VERSION  < '4.3.0') {
-    die('Your version of PHP is not compatible with Flyspray, '
-            .'please upgrade to at least PHP version 4.3.0');
-}
-
-// This to stop PHP being retarded and using the '&' char for session id delimiters
-ini_set('arg_separator.output','&amp;');
-
-// MySQLi driver is _useless_ if zend.ze1_compatibility_mode is enabled
-// in fact you should never use this setting,the damn thing does not work.
-
-ini_set('zend.ze1_compatibility_mode',0);
-
-
-//we don't want magic_quotes_runtime ..
-
-ini_set('magic_quotes_runtime',0);
-
-//see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
-ini_set('session.use_only_cookies',1);
-
-//no session auto start
-ini_set('session.auto_start',0);
 
 // This is for retarded Windows servers not having REQUEST_URI
 

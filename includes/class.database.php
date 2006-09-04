@@ -9,13 +9,14 @@
  * @license http://opensource.org/licenses/lgpl-license.php Lesser GNU Public License
  * @package flyspray
  * @author Tony Collins
+ * @author Cristian Rodriguez
  */
 
 if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-require_once ($conf['general']['adodbpath']);
+require_once dirname(dirname(__FILE__)) . '/adodb/adodb.inc.php';
 
 class Database
 {
@@ -169,10 +170,18 @@ class Database
                 var_dump(debug_backtrace());
                 echo "</pre>";
             }
+            
+            $query_params = '';
+
+            if(is_array($inputarr) && count($inputarr)) {
+                
+                $query_params =  implode(',', array_map('htmlspecialchars', $inputarr));
+            
+            } 
 
             die (sprintf("Query {%s} with params {%s} Failed! (%s)",
-                        $sql, implode(', ', $inputarr),
-                        $this->dblink->ErrorMsg()));
+                    htmlspecialchars($sql, ENT_QUOTES, 'utf-8'), 
+                    $query_params, $this->dblink->ErrorMsg()));
         }
 
         if($this->dblink->hasTransactions === true) {

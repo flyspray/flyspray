@@ -237,10 +237,11 @@ class Backend
         $task = Flyspray::GetTaskDetails($task_id);
         
         if ($user->can_vote($task) > 0) { 
-            $db->Query("INSERT INTO {votes}
-                                (user_id, task_id, date_time)
-                         VALUES (?,?,?)", array($user->id, $task_id, time()));
-            return true;
+            
+            if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
+                           VALUES (?,?,?)", array($user->id, $task_id, time()))) {
+                return true;
+            }
         }
         return false;
     }
@@ -331,15 +332,12 @@ class Backend
             $tmp_name = $_FILES[$source]['tmp_name'][$key];
 
             // Then move the uploaded file and remove exe permissions
-            @move_uploaded_file($tmp_name, $path);
-            @chmod($path, 0644);
-
-            if (!is_file($path)) {
-                // there was an error ...
-                // file was not uploaded correctly
+            if(!@move_uploaded_file($tmp_name, $path)) {
+                //upload failed. continue    
                 continue;
             }
 
+            @chmod($path, 0644);
             $res = true;
             
             // Use a different MIME type
@@ -588,8 +586,12 @@ class Backend
                                      'from_user_id' => $user->id, 'start_time' => $start_time,
                                      'how_often' => $how_often, 'reminder_message' => $message),
                                 array('task_id', 'to_user_id', 'how_often', 'reminder_message'));
+            if(!$sql) {
+                // query has failed :( 
+                return false;
+            }
         }
-
+        // 2 = no record has found and was INSERT'ed correclty
         if (isset($sql) && $sql == 2) {
             Flyspray::logEvent($task_id, 17, $task_id);
         }
@@ -804,11 +806,11 @@ class Backend
         // duplicate
         if ($reason == 6) {
             preg_match("/\b(?:FS#|bug )(\d+)\b/", $comment, $dupe_of);
-            if (count($dupe_of)) {
+            if (count($dupe_of) >= 2) {
                 $existing = $db->Query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
                                             array($task_id, $dupe_of[1]));
                                        
-                if ($db->CountRows($existing) == 0) {  
+                if ($existing && $db->CountRows($existing) == 0) {  
                     $db->Query('INSERT INTO {related} (this_task, related_task, is_duplicate) VALUES(?, ?, 1)',
                                 array($task_id, $dupe_of[1]));
                 }

@@ -121,7 +121,11 @@ class Setup extends Flyspray
 
       // Initialise flag for proceeding to next step.
       $this->mProceed				= FALSE;
-      $this->mPhpRequired			= '4.3';
+      //according to the well known nexen.net survey, more
+      //than 74 % of the installations out there runs versions
+      //equal or mayor to 4.3.9 which is enough for us
+      //earlier versions are really buggy anyway.
+      $this->mPhpRequired			= '4.3.9';
 
       // If the database is supported in Flyspray, the function to check in PHP.
       $this->mSupportedDatabases	=
