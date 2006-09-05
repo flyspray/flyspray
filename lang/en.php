@@ -553,7 +553,7 @@ Regards,',
 'both'                    => 'Both',
 'notifyfrom'              => 'Notification from ',
 'donotreply'              => 'THIS IS AN AUTOMATED MESSAGE, DO NOT REPLY.',
-'disclaimer'              => 'You are receiving this message because you have requested it from the Flyspray bugtracking system.  You can be removed from future notifications by visiting the URL shown above.',
+'disclaimer'              => 'You are receiving this message because you have requested it from the Flyspray bugtracking system.  If you did not expect this message or don\'t want to receive mails in future, you can change your notification settings at the URL shown above.',
 'userwho'                 => 'User who did this',
 'moreinfo'                => 'More information can be found at the following URL:',
 'newtaskopened'           => 'A new Flyspray task has been opened.  Details are below.',
@@ -803,6 +803,7 @@ Regards,',
 'ordertip'                => 'The order these items will appear in the list',
 'showtip'                 => 'Show this item in the list',
 'deletetip'               => 'Delete this item from the list',
+'del'                     => 'del',
 ); 
 
 ?>

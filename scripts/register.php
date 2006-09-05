@@ -11,6 +11,10 @@ if (!defined('IN_FS')) {
 
 $page->setTitle($fs->prefs['page_title'] . L('registernewuser'));
 
+if (!$user->isAnon()) {
+    Flyspray::Redirect($baseurl);
+}
+
 if ($user->can_register()) {
     if (Req::has('magic_url')) {
         // If the user came here from their notification link

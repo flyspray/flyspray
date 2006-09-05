@@ -212,6 +212,26 @@ class Database
         return $result->GetArray();
     }
 
+    /**
+     * GroupBy 
+     * 
+     * This groups a result by a single column the way
+     * MySQL would do it. Postgre doesn't like the queries MySQL needs.
+     *
+     * @param object $result 
+     * @param string $column 
+     * @access public
+     * @return array process the returned array with foreach ($return as $row) {}
+     */
+    function GroupBy(&$result, $column)
+    {
+        $rows = array();
+        while ($row = $this->FetchRow($result)) {
+            $rows[$row[$column]] = $row;
+        }
+        return array_values($rows);
+    }
+    
     function GetColumnNames($table, $alt, $prefix)
     {
         global $conf;

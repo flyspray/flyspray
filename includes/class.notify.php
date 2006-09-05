@@ -552,8 +552,7 @@ class Notifications {
                . "{$arg1[0]}index.php?do=register&magic_url={$arg1[1]}\n\n"
                 // In case that spaces in the username have been removed
                . L('username') . ': '. $arg1[2] . "\n"
-               . L('confirmcodeis') . " $arg1[3] \n\n"
-               . L('disclaimer');
+               . L('confirmcodeis') . " $arg1[3] \n\n";
       } // }}}
       // {{{ Pending PM request
       if ($type == NOTIFY_PM_REQUEST)

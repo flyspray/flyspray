@@ -35,12 +35,12 @@ if (Req::val('edit') && $user->can_edit_task($task_details)) {
                             FROM {assigned} a, {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
-                           WHERE a.user_id = u.user_id AND task_id = ?
-                        GROUP BY u.user_id
+                           WHERE a.user_id = u.user_id AND task_id = ? AND (g.project_id = 0 OR g.project_id = ?)
                         ORDER BY g.project_id DESC',
-                          array($task_id));
+                          array($task_id, $proj->id));
+    $result = $db->GroupBy($result, 'user_id');
     $userlist = array();
-    while ($row = $db->FetchRow($result)) {
+    foreach ($result as $row) {
         $userlist[] = array(0 => $row['user_id'], 1 => "[{$row['group_name']}] {$row['user_name']} ({$row['real_name']})");
     }
 
@@ -212,6 +212,14 @@ else {
     $page->pushTpl('details.tabs.related.tpl');
 
     if ($user->perms('manage_project')) {
+        $page->pushTpl('details.tabs.notifs.tpl');
+        $page->pushTpl('details.tabs.remind.tpl');
+    }
+
+    $page->pushTpl('details.tabs.history.tpl');
+}
+?>
+) {
         $page->pushTpl('details.tabs.notifs.tpl');
         $page->pushTpl('details.tabs.remind.tpl');
     }

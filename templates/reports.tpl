@@ -23,7 +23,7 @@
             <div>
                 <label for="event_number">{L('show')}</label>
                 <select name="event_number" id="event_number">
-                 {!tpl_options(array(0 => L('all'), 10 => 10, 20 => 20, 50 => 50, 100 => 100, 200 => 200), Req::val('event_number', 20))}
+                 {!tpl_options(array(-1 => L('all'), 10 => 10, 20 => 20, 50 => 50, 100 => 100, 200 => 200), Req::val('event_number', 20))}
                 </select>
                 {L('events')}
             </div>

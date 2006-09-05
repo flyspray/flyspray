@@ -51,7 +51,7 @@ switch (Req::val('order')) {
         $orderby = "h.event_type {$sort}, h.event_date {$sort}";
         break;
     case 'user':
-        $orderby = "u.real_name {$sort}, h.event_date {$sort}";
+        $orderby = "user_id {$sort}, h.event_date {$sort}";
         break;
     case 'date': default:
         $orderby = "h.event_date {$sort}, h.event_type {$sort}";
@@ -83,16 +83,12 @@ if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
         }
 }
 
-if (Req::val('event_number')) {
-    $orderby .= ' LIMIT ' . Req::num('event_number');
-}
-
 if (count(Req::val('events'))) { 
     $histories = $db->Query("SELECT h.*
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
-                     ORDER BY $orderby");
+                     ORDER BY $orderby", array(), Req::val('event_number', -1));
              
     $histories = $db->FetchAllArray($histories);
 }
