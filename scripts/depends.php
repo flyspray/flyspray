@@ -222,10 +222,15 @@ if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
     $page->assign('remote', $remote = true);
     $page->assign('map',    array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.map');
 } else {
-    $cmd = "$path_to_dot -T $fmt -o \"" . BASEDIR . '/' . $file_name . '.' . $fmt . "\" $tname";
+
+    $dot = escapeshellcmd($path_to_dot);
+    $tname = escapeshellarg($tname);
+    $fmt = escapeshellarg($fmt);
+
+    $cmd = "$dot -T $fmt -o \"" . BASEDIR . '/' . escapeshellarg($file_name) . '.' . $fmt . "\" $tname";
     shell_exec($cmd);
 
-    $cmd = "$path_to_dot -T cmapx $tname";
+    $cmd = "$dot -T cmapx " . $tname;
     $data['map'] = shell_exec($cmd);
     
     $page->assign('remote', $remote = false);

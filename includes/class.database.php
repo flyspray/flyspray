@@ -145,6 +145,11 @@ class Database
 
     function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
+        //use transactions only for non SELECT statements.
+
+        $hastrans = ($this->dblink->hasTransactions && 
+                     strpos($sql , 'SELECT') === FALSE);
+
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
         // replace undef values (treated as NULL in SQL database) with empty
@@ -153,7 +158,7 @@ class Database
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 
-        if($this->dblink->hasTransactions === true) {
+        if($hastrans) {
             $this->dblink->StartTrans();
         }
 
@@ -163,7 +168,7 @@ class Database
            $result =  $this->dblink->Execute($sql, $inputarr);
         }
 
-        if (!$result) {
+        if (!$result || ($hastrans && !$this->dblink->CompleteTrans())) {
 
             if (function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
@@ -184,9 +189,6 @@ class Database
                     $query_params, $this->dblink->ErrorMsg()));
         }
 
-        if($this->dblink->hasTransactions === true) {
-           $this->dblink->CompleteTrans();
-        }
 
         return $result;
     }

@@ -219,11 +219,3 @@ else {
     $page->pushTpl('details.tabs.history.tpl');
 }
 ?>
-) {
-        $page->pushTpl('details.tabs.notifs.tpl');
-        $page->pushTpl('details.tabs.remind.tpl');
-    }
-
-    $page->pushTpl('details.tabs.history.tpl');
-}
-?>
