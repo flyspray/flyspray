@@ -498,12 +498,13 @@ switch ($action = Req::val('action'))
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
-                                   visible_columns, lang_code)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?)',
+                                   visible_columns, lang_code, notify_reply)
+                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
-                      Post::val('intro_message'), Post::val('others_view', 0),
-                      Post::val('anon_open', 0),
-                      'id tasktype severity summary status dueversion progress', Post::val('lang_code')));
+                        Post::val('intro_message'), Post::val('others_view', 0),
+                        Post::val('anon_open', 0),
+                        'id tasktype severity summary status dueversion progress',
+                        Post::val('lang_code'), ''));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         $pid = $db->fetchOne($sql);

@@ -4,7 +4,7 @@
       <tr>
         <td><label for="events[]">{L('events')}</label></td>
         <td>
-            <select name="events[]" multiple="multiple" id="events[]">
+            <select name="events[]" multiple="multiple" id="events[]" size="{count($events)+count($user_events)+2}">
             <optgroup label="{L('Tasks')}">
             {!tpl_options($events, Req::val('events'))}
             </optgroup>
@@ -15,7 +15,7 @@
         </td>
         <td>
             <div>
-                <label class="inline" for="datefrom">{L('from')}</label>
+                <label class="inline" for="fromdate">{L('from')}</label>
                 {!tpl_datepicker('fromdate')}
                 {!tpl_datepicker('todate', L('to'))}
             </div>
@@ -30,7 +30,6 @@
         </td>
       </tr>
     </table>
-
     
     <input type="hidden" name="project" value="{$proj->id}" />
     <input type="hidden" name="do" value="reports" />
@@ -61,10 +60,11 @@
     </tr>
    </thead>
     <?php foreach ($histories as $history): ?>
-    <tr>
       <?php if (isset($events[$history['event_type']])): ?>
+    <tr class="severity1"><?php /* just for different colors */ ?>
       <td>{$events[$history['event_type']]}</td>
       <?php else: ?>
+    <tr class="severity2">
       <td>{$user_events[$history['event_type']]}</td>
       <?php endif; ?>
       <td>{!tpl_userlink($history['user_id'])}</td>

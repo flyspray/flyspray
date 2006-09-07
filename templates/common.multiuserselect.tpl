@@ -1,6 +1,6 @@
 				<div id="multiuserlist" class="hide popup">
                    {!tpl_userselect('assigned_select', null, 'assigned_select')}
-                   <button type="button" onmouseup="adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{L('usernotexist')}')">
+                   <button type="button" onmouseup="adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{!addslashes(L('usernotexist'))}')">
                      {L('add')} &#8595;
                    </button>
                    <button type="button" onmouseup="dualSelect('r', '', 'assigned_to')">
