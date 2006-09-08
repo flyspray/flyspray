@@ -8,7 +8,6 @@
 // | Copyright: See COPYING file that comes with this distribution
 // +----------------------------------------------------------------------
 //
-// http://www.phpinfo.net/articles/article_php-coding-standard.html
 
 session_start();
 
@@ -99,6 +98,10 @@ class Setup extends Flyspray
    var $mAdminPassword;
    var $mCompleteAction;
    var $mPhpCliStatus;
+   /**
+    * @var object to store the adodb datadict object.
+    */
+   var $mdatadict;
 
    function Setup()
    {
@@ -120,7 +123,7 @@ class Setup extends Flyspray
       $this->mMinPasswordLength	= 8;
 
       // Initialise flag for proceeding to next step.
-      $this->mProceed				= FALSE;
+      $this->mProceed				= false;
       //according to the well known nexen.net survey, more
       //than 74 % of the installations out there runs versions
       //equal or mayor to 4.3.9 which is enough for us
@@ -130,9 +133,9 @@ class Setup extends Flyspray
       // If the database is supported in Flyspray, the function to check in PHP.
       $this->mSupportedDatabases	=
                            array(
-                                 'MySQL' => array(TRUE, 'mysql_connect', 'mysql'),
-                                 'MySQLi' => array(TRUE,'mysqli_connect','mysql'),
-                                 'Postgres' => array(TRUE, 'pg_connect', 'pgsql'),
+                                 'MySQL' => array(true, 'mysql_connect', 'mysql'),
+                                 'MySQLi' => array(true,'mysqli_connect','mysql'),
+                                 'Postgres' => array(true, 'pg_connect', 'pgsql'),
                               );
       $this->mAvailableDatabases	= array();
 
@@ -144,14 +147,6 @@ class Setup extends Flyspray
                                     // Only for testing3 => array ('Install 0.9.7' => '/sql/flyspray-0.9.7', 'dependency' => '', 'function' => 'InstallPointNineSeven'),
                                  );
 
-      $this->mServerSoftware		= (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache'))
-                           ? 'apache'
-                           : (
-                              (strstr($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS'))
-                              ? 'iis'
-                              : 'unknown'
-                             );
-
       // Process the page actions
       $this->ProcessActions();
    }
@@ -160,7 +155,7 @@ class Setup extends Flyspray
    * Function to scan include path and any additional paths for files
    * @param string $includeFile Name of file to scan for
    * @param string $additionalPath An additional path to scan for. eg Application path
-   * @return boolean/string FALSE/actual path of file
+   * @return boolean/string false/actual path of file
    */
    function ScanIncludePath($includeFile, $additionalPath = '')
    {
@@ -201,7 +196,7 @@ class Setup extends Flyspray
          }
       }
       // Return success of scan
-      return ($where_path) ? $where_path : FALSE;
+      return $where_path ? $where_path : false;
    }
 
    /**
@@ -250,13 +245,13 @@ class Setup extends Flyspray
 
       foreach ($this->mSupportedDatabases as $which => $database)
       {
-      // Checking if the database has libraries built into PHP. Returns TRUE/FALSE
+      // Checking if the database has libraries built into PHP. Returns true/false
       $this->mAvailableDatabases[$which]['status'] = function_exists($database[1]);
 
       // If the Application(Flyspray) supports the available database supported in PHP
       $this->mAvailableDatabases[$which]['supported'] = ($database[0] === $this->mAvailableDatabases[$which]['status'])
          ?  $this->mAvailableDatabases[$which]['status']
-         :  FALSE;
+         :  false;
 
       // Just transferring the value for ease of veryfying Database support.
       $status[] = $this->mAvailableDatabases[$which]['supported'];
@@ -270,16 +265,19 @@ class Setup extends Flyspray
 
       // Check if any one database support exists.
       // Update the status of database availability
-      $this->mDatabaseStatus = (in_array('1', $status)) ? TRUE : FALSE;
+      $this->mDatabaseStatus = in_array('1', $status);
    }
 
 
+   /**
+    * CheckPreStatus 
+    * we proceed or not ?
+    * @access public
+    * @return bool
+    */
    function CheckPreStatus()
    {
-      $this->mProceed =
-      ($this->mDatabaseStatus && $this->mPhpVersionStatus)
-      ?  TRUE
-      :  FALSE;
+      $this->mProceed = ($this->mDatabaseStatus && $this->mPhpVersionStatus);
 
       return $this->mProceed;
    }
@@ -293,8 +291,8 @@ class Setup extends Flyspray
    */
    function CheckPhpCompatibility()
    {
-      // Check the PHP version. Recommended version is 4.3 and above
-      $this->mPhpVersionStatus = (phpversion() >= $this->mPhpRequired) ? TRUE : FALSE;
+      // Check the PHP version. Recommended version is 4.3.9 and above
+      $this->mPhpVersionStatus = version_compare(PHP_VERSION,$this->mPhpRequired, '>=');
 
       // Return an html formated Yes/No string
       return $this->ReturnStatus($this->mPhpVersionStatus, $type = 'yes');
@@ -320,19 +318,19 @@ class Setup extends Flyspray
 
          if( @System::which($php_binary) ) {
 
-                $this->mPhpCliStatus = TRUE;
+                $this->mPhpCliStatus = true;
                 return $this->mPhpCliStatus;
 
          }
             // see: http://php.net/reserved.constants
         }elseif($executable_tester( PHP_BINDIR . DIRECTORY_SEPARATOR . $php_binary)) {
 
-			$this->mPhpCliStatus = TRUE;
+			$this->mPhpCliStatus = true;
 			return $this->mPhpCliStatus;
 
         } else {
 
-			return FALSE;
+			return false;
         }
    }
 
@@ -347,7 +345,7 @@ class Setup extends Flyspray
    {
 
       // Grab the posted data and trim it.
-      $data = array_filter($_POST, array($this, "TrimArgs"));
+      $data = array_filter($_POST, array(&$this, "TrimArgs"));
 
 
       // Loop through the required values and check data
@@ -357,7 +355,7 @@ class Setup extends Flyspray
          // If the data is Required and is empty or not set
          if (!isset($data[$key]) || empty($data[$key]))
          {
-            if ($expectedFields[$key][2] == TRUE)
+            if ($expectedFields[$key][2] == true)
             {
                // Acumulate error messages
                $_SESSION['page_message'][] = "<strong>{$expectedFields[$key][0]}</strong>  is required";
@@ -374,7 +372,7 @@ class Setup extends Flyspray
       if (isset($_SESSION['page_message']))
       {
          $_SESSION['page_heading'] = $pageHeading;
-         return FALSE;
+         return false;
       }
       else
       {
@@ -752,7 +750,7 @@ class Setup extends Flyspray
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -782,21 +780,19 @@ class Setup extends Flyspray
 
    function InstallPointNineEight($data)
    {
-      return TRUE;
+      return true;
    }
 
    function InstallPointNineSeven($data)
    {
-      return TRUE;
+      return true;
    }
-
-
 
 
    /**
    * Function to check if a particular folder/file is writeable.
    * @param string $fileSystem Path to check
-   * $return boolean TRUE/FALSE
+   * $return boolean true/false
    */
    function IsWriteable($fileSystem)
    {
@@ -804,9 +800,7 @@ class Setup extends Flyspray
       clearstatcache();
 
       // Return the status of the permission
-      return (is_writable($fileSystem))
-      ? TRUE
-      : FALSE;
+      return is_writable($fileSystem);
    }
 
    function MakePassword($passwordLength)
@@ -835,7 +829,7 @@ class Setup extends Flyspray
       $list = "<$list_type>";
       foreach ($list_array as $list_item)
       {
-         $list .= "<li>$list_item</li>";
+         $list .= '<li>' . $list_item .'</li>';
       }
       $list .= "</$list_type>";
 
@@ -865,7 +859,7 @@ class Setup extends Flyspray
             $required_data =
             array(
                   'agreecheck' => array(
-                                 'Licence Agreement', 'string', TRUE
+                                 'Licence Agreement', 'string', true
                                  )
                );
 
@@ -884,15 +878,15 @@ class Setup extends Flyspray
             // Prepare the required data
             $required_data =
             array(
-                  'db_hostname' => array('Database hostname', 'string', TRUE),
-                  'db_type' =>  array('Database type', 'string', TRUE),
-                  'db_username' => array('Database username', 'string', FALSE),
-                  'db_password' => array('Database password', 'string', FALSE),
-                  'db_name' => array('Database name', 'string', TRUE),
-                  'db_prefix' => array('Table prefix', 'string', TRUE),
-                  'db_delete' => array('Delete tables checkbox', 'string', FALSE),
-                  'db_backup' => array('Database backup checkbox', 'string', FALSE),
-                  'db_setup_options' => array('Database Setup Options', 'number', TRUE)
+                  'db_hostname' => array('Database hostname', 'string', true),
+                  'db_type' =>  array('Database type', 'string', true),
+                  'db_username' => array('Database username', 'string', false),
+                  'db_password' => array('Database password', 'string', false),
+                  'db_name' => array('Database name', 'string', true),
+                  'db_prefix' => array('Table prefix', 'string', true),
+                  'db_delete' => array('Delete tables checkbox', 'string', false),
+                  'db_backup' => array('Database backup checkbox', 'string', false),
+                  'db_setup_options' => array('Database Setup Options', 'number', true)
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Configuration Error'))
             {
@@ -921,18 +915,18 @@ class Setup extends Flyspray
             // Prepare the required data
             $required_data =
             array(
-               'db_hostname' => array('Database hostname', 'string', TRUE),
-               'db_type' =>  array('Database type', 'string', TRUE),
-               'db_username' => array('Database username', 'string', FALSE),
-               'db_password' => array('Database password', 'string', FALSE),
-               'db_name' => array('Database name', 'string', TRUE),
-               'db_prefix' => array('Table prefix', 'string', TRUE),
-               'db_setup_options' =>  array('Database type', 'number', TRUE),
-               'absolute_path' => array($this->mProductName . ' Absolute path must exist and', 'folder', TRUE),
+               'db_hostname' => array('Database hostname', 'string', true),
+               'db_type' =>  array('Database type', 'string', true),
+               'db_username' => array('Database username', 'string', false),
+               'db_password' => array('Database password', 'string', false),
+               'db_name' => array('Database name', 'string', true),
+               'db_prefix' => array('Table prefix', 'string', true),
+               'db_setup_options' =>  array('Database type', 'number', true),
+               'absolute_path' => array($this->mProductName . ' Absolute path must exist and', 'folder', true),
                'admin_username' => array('Administrator\'s username', 'string', ($this->mDatabaseSetup[$_POST['db_setup_options']]['dependency'] == '')),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', ($this->mDatabaseSetup[$_POST['db_setup_options']]['dependency'] == '')),
                'admin_email' => array('Administrator\'s email address', 'email address', ($this->mDatabaseSetup[$_POST['db_setup_options']]['dependency'] == '')),
-			   'reminder_daemon' => array('Reminder Daemon', 'option', FALSE),
+			   'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values'))
             {
@@ -980,18 +974,7 @@ class Setup extends Flyspray
       $config_intro	= str_replace("\t", "", $config_intro);
 
       // Create a random cookie salt
-      $cookiesalt = substr(md5(microtime()), 0, 2);
-
-	  // Check to see if running apache software and mod_rewrite is enabled (Can only check in PHP 4.3.2 and above)
-	  $re_writing	= 0;
-	  if ($this->mServerSoftware == 'apache' && function_exists('apache_get_modules'))
-	  {
-			$apache_modules	= apache_get_modules();
-			if ( ($apache_modules) && (in_array('mod_rewrite', $apache_modules)) )
-			{
-				$re_writing = 1;
-			}
-	  }
+      $cookiesalt = substr(md5(uniqid( rand(), true)), 0, 2);
 
 	  // check to see if to enable the Reminder Daemon.
       $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
@@ -1011,10 +994,9 @@ class Setup extends Flyspray
       $config[] = "\n";
       $config[] = '[general]';
       $config[] = "cookiesalt = \"$cookiesalt\"			; Randomisation value for cookie encoding";
-      $config[] = "adodbpath = \"{$this->mAdodbPath}\"	; Path to the main ADODB include file";
       $config[] = 'output_buffering = "on"				; Available options: "on" or "gzip"';
       $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\"";
-      $config[] = "address_rewriting = \"$re_writing\"	; Boolean. 0 = off, 1 = on.";
+      $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on.";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
       $config[] = "syntax_plugin = \"none\"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)";
@@ -1029,12 +1011,12 @@ class Setup extends Flyspray
       {
          fputs($fp, $config_text, strlen($config_text));
          fclose($fp);
-         $this->mConfigFileStatus = TRUE;
+         $this->mConfigFileStatus = true;
       }
       else
       {
          $this->mConfigText = $config_text;
-         $this->mConfigFileStatus = FALSE;
+         $this->mConfigFileStatus = false;
       }
 
 
@@ -1081,7 +1063,7 @@ class Setup extends Flyspray
          if (!$result)
          {
             $_SESSION['page_heading'][]	= 'Failed to update Admin users details.';
-            return FALSE;
+            return false;
          }
          else
          {
@@ -1097,7 +1079,7 @@ class Setup extends Flyspray
          $this->mCompleteAction	= 'do=myprofile';
          $this->SetUpgradeLogin($data, $cookiesalt);
       }
-      return TRUE;
+      return true;
    }
 
 
@@ -1124,7 +1106,7 @@ class Setup extends Flyspray
             // We are using the unknown error code(-1) because ADOdb library may not have the error defined.
             // It could be totally some weird error.
             $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg();
-            return FALSE;
+            return false;
             break;
 
             case '-24':
@@ -1132,7 +1114,7 @@ class Setup extends Flyspray
             $_SESSION['page_message'][] = 'Database ' . ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
             $_SESSION['page_message'][] = 'Usually the database host name is "localhost". In some occassions, it maybe an internal ip-address or another host name to your webserver.';
             $_SESSION['page_message'][] = 'Double check with your hosting provider or System Administrator.';
-            return FALSE;
+            return false;
             break;
 
             case '-26':
@@ -1140,12 +1122,12 @@ class Setup extends Flyspray
             $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
             $_SESSION['page_message'][] = "Obviously you haven't set up the right permissions for the database hostname provided.";
             $_SESSION['page_message'][] = 'Double check the provided credentials or contact your System Administrator for further assistance.';
-            return FALSE;
+            return false;
             break;
 
             default:
             $_SESSION['page_message'][] = "Please verify your username/password/database details (error=$error_number)";
-            return FALSE;
+            return false;
             break;
          }
       }
@@ -1153,6 +1135,8 @@ class Setup extends Flyspray
       {
            // Setting the Fetch mode of the database connection.
            $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
+            //creating the datadict object for further operations
+            $this->mdatadict = NewDataDictionary($this->mDbConnection);
 
            // Backup and delete tables if requested
            if ($this->BackupDeleteTables($data))
@@ -1162,7 +1146,7 @@ class Setup extends Flyspray
                  // Populate the database with the new tables and return the result (boolean)
                  if (!$this->PopulateDb($data))
                  {
-                    return FALSE;
+                    return false;
                  }
               }
               else
@@ -1173,22 +1157,22 @@ class Setup extends Flyspray
                     // Call the Upgrade function.
                     if (!$this->{$this->mDatabaseSetup[$_POST['db_setup_options']]['function']}($data))
                     {
-                       return FALSE;
+                       return false;
                     }
                  }
                  else
                  {
                     $_SESSION['page_message'][]	= "Function {$this->mDatabaseSetup[$_POST['db_setup_options']]['function']}() not defined!";
-                    return FALSE;
+                    return false;
                  }
               }
            }
            else
            {
-              return FALSE;
+              return false;
            }
       }
-      return TRUE;
+      return true;
    }
 
 
@@ -1205,19 +1189,10 @@ class Setup extends Flyspray
       foreach ($table_list as $table)
       {
          // Giving the backup table a new prefix based on the date & time of action
-         $bu_table = $db_bu_prefix . $table;
-
+         $bu_table = $this->mDbConnection->nameQuote . $db_bu_prefix . $table . $this->mDbConnection->nameQuote;
+         
          // Query to copy the existing table into a table with the new prefix
-         switch (strtolower($db_type))
-         {
-            case 'mysql':
-               $sql	= "CREATE TABLE $bu_table AS SELECT * FROM $table";
-            break;
-
-            case 'postgres':
-               $sql	= "CREATE TABLE \"$bu_table\" AS SELECT * FROM $table";
-            break;
-         }
+          $sql	= "CREATE TABLE $bu_table AS SELECT * FROM $table";
 
          $this->mDbConnection->Execute($sql);
 
@@ -1230,52 +1205,54 @@ class Setup extends Flyspray
       // Check for any error messages.
       if (isset($_SESSION['page_message']) && count($_SESSION['page_message']) > 0)
       {
-         return FALSE;
+         return false;
       }
       else
       {
-         return TRUE;
+         return true;
       }
    }
 
+   /**
+    * DeleteTables 
+    * 
+    * @param mixed $data 
+    * @param mixed $table_list 
+    * @access public
+    * @return void
+    */
+   
+   /* XXX : remove the $data parameter, not needed anymore */
+
    function DeleteTables($data, $table_list)
    {
-      extract($data);
-
       // Loop through the tables array
       foreach ($table_list as $table)
       {
-         $db_type	= strtolower($db_type);
-         // Prepare the query to drop the existing tables
-	 switch ($db_type)
-	 {
-	   case 'mysql':
-	     $sql = "DROP TABLE $table";
-	     break;
-	   case 'postgres':
-	     $sql = "DROP TABLE $table cascade";
-	     break;
-	 }
-         $this->mDbConnection->Execute($sql);
+            // Prepare the query to drop the existing tables
+            $drop_table = $this->mdatadict->DropTableSQL($table);
+
+            $this->mdatadict->ExecuteSQLArray($drop_table);
 
          // If any errors, record the error message in the array
          if ($error_number = $this->mDbConnection->MetaError())
          {
             $_SESSION['page_message'][] =  ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . " Error deleting: $sql";
-            return FALSE;
+            return false;
          }
       }
-      return TRUE;
+      return true;
    }
 
 
    function DeleteSequences($data)
    {
-      extract($data);
+       extract($data);
+       
       $db_type	= strtolower($db_type);
 
       if ($db_type != 'postgres') {
-	return TRUE;
+	return true;
       }
       $sql = "SELECT c.relname
 	FROM pg_catalog.pg_class c
@@ -1302,14 +1279,14 @@ class Setup extends Flyspray
 	if ($error_number = $this->mDbConnection->MetaError())
 	{
 	  $_SESSION['page_message'][] =  ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
-	  return FALSE;
+	  return false;
 	}
       }
 
-      return TRUE;
+      return true;
    }
 
-
+/*
    function BackupDeleteTables($data)
    {
       // Extract the data to local namespace
@@ -1317,44 +1294,16 @@ class Setup extends Flyspray
 
       if ((isset($db_delete)) || (isset($db_backup)))
       {
-         $db_type	= strtolower($db_type);
-         // Query to get a list of tables in the database
-         switch ($db_type)
-         {
-            case 'mysql':
-                $sql	= "SHOW TABLES FROM $db_name";
-                $params = false;
-            break;
-
-            case 'postgres':
-                $sql	= 'SELECT tablename from pg_tables where tableowner = ?';
-                $params = array($db_username);
-            break;
-         }
-
-         $result = $this->mDbConnection->Execute($sql, $params);
 
          $table_list = array();
-         if ($result)
-         {
-            while ($row = $result->FetchRow())
-            {
-               $table_list[] = $row[0];
-            }
-         }
-
+      }
          // Filter the tables we want to work with ..... relating it to the table prefix.
          // If the prefix given is the same as the prefix we have in the database
-         // If the prefix does not match.. we can't delete or backup the intended tables
-         $filtered_tables	= array();
-         foreach ($table_list as $table)
-         {
-            if (strpos($table, $db_prefix) === 0)
-            {
-               $filtered_tables[]	= $table;
-            }
-         }
-
+        // If the prefix does not match.. we can't delete or backup the intended tables
+        
+    
+        $filtered_tables = $this->mDbConnection->MetaTables('TABLES', false, $db_prefix);
+         
          // If it was requested to delete existing tables.
          if (isset($db_delete))
          {
@@ -1367,7 +1316,7 @@ class Setup extends Flyspray
                   $_SESSION['page_message'][] =  'Tables with provided prefix not found in database.';
                   $_SESSION['page_message'][] =  'Make sure you have the right table prefix for the database tables you intend to backup/delete';
                   $_SESSION['page_message'][] =  'You are safe to proceed into the setup without dropping tables as tables with the provided prefix don\'t exist!';
-                  return FALSE;
+                  return false;
                }
 
                // Drop/backup tables only if there are no dependancies. eg. Fresh Install
@@ -1376,14 +1325,14 @@ class Setup extends Flyspray
                   // Return error if Backup was not successful.
                   if (!$this->BackupTables($data, $filtered_tables))
                   {
-                     return FALSE;
+                     return false;
                   }
                }
                else
                {
                   $_SESSION['page_message'][] =  'Tables where not dropped because you are performing an UPGRADE.';
                   $_SESSION['page_message'][] =  'Unckeck the "delete" checkbox to proceed into the setup.';
-                  return FALSE;
+                  return false;
                }
 
 
@@ -1393,26 +1342,26 @@ class Setup extends Flyspray
                   // Return the status of deleting the tables if it was not successful.
 		 if (!$this->DeleteTables($data, $filtered_tables))
 		 {
-		   return FALSE;
+		   return false;
 		 }
 		 if (!$this->DeleteSequences($data)) {
-		   return FALSE;
+		   return false;
 		 }
                }
                else
                {
                   $_SESSION['page_message'][] =  'Tables where not dropped because you are performing an UPGRADE.';
                   $_SESSION['page_message'][] =  'Unckeck the "delete backup" checkbox to proceed into the setup.';
-                  return FALSE;
+                  return false;
                }
             }
             else
             {
                // Not dropping the tables unless the backup option is checked.
                $_SESSION['page_message'][] =  'Please select the "backup tables" checkbox in order to drop existing tables.';
-               return FALSE;
+               return false;
             }
-            return TRUE;
+            return true;
          }
 
 
@@ -1425,17 +1374,17 @@ class Setup extends Flyspray
                $_SESSION['page_message'][] =  'Tables with provided prefix not found in database.';
                $_SESSION['page_message'][] =  'Make sure you have the right table prefix for the database tables you intend to backup';
                $_SESSION['page_message'][] =  'It is safe to uncheck the "backup tables"';
-               return FALSE;
+               return false;
             }
 
             // Return error if Backup was not successful.
             if (!$this->BackupTables($data, $filtered_tables))
             {
-               return FALSE;
+               return false;
             }
          }
       }
-      return TRUE;
+      return true;
    }
 
    /**
@@ -1443,37 +1392,23 @@ class Setup extends Flyspray
    * @param array $data The actual database configuration values
    * @return boolean
    */
+
    function PopulateDb($data)
    {
       // Get the sql file name and set the path
-      list($file) = array_values($this->mDatabaseSetup[$_POST['db_setup_options']]);
 
-      $sql_file	= APPLICATION_PATH . "$file." . $this->mSupportedDatabases[$_POST['db_type']][2];
+      $sql_file	= APPLICATION_PATH . 'sql/' . $this->mUnixName . '-' . $this->mVersion . '.xml';
 
       // Check if the install/upgrade file exists
-      if (is_readable($sql_file))
-      {
+      if (!is_readable($sql_file)) {
+
+          $_SESSION['page_message'][] = 'SQL file required for importing structure and data is missing.';
+          return false;
+      }
          // Extract the variables to local namespace
          extract($data);
 
-         // Disable magic quotes runtime. Some bytes in binary files may be interpreted as
-         // \ (backslash), " (double quotes), ' (simple quote) or any "special" character
-         // that has a meaning for string processing.
-         $query = fread(fopen($sql_file, "rb"), filesize($sql_file));
-
-
-         // Get the sql queries
-         $sql_blocks  = $this->SplitSql($query, $db_type);
-
-         $sql_count = count($sql_blocks);
-         for ($i=0; $i < $sql_count; $i++)
-         {
-            $sql_blocks[$i] = trim($sql_blocks[$i]);
-            if(!empty($sql_blocks[$i]) && $sql_blocks[$i] != "#")
-            {
-               $sql_blocks[$i] = str_replace($this->mUnixName . "_", $db_prefix, $sql_blocks[$i]);
-
-               $this->mDbConnection->Execute($sql_blocks[$i]);
+         /* XXX: To be fiiled with xml schema processing */
 
                if (($error_no = $this->mDbConnection->MetaError()))
                {
@@ -1484,34 +1419,27 @@ class Setup extends Flyspray
                      $_SESSION['page_message'][] = 'Table ' .$this->mDbConnection->MetaErrorMsg($this->mDbConnection->MetaError());
                      $_SESSION['page_message'][] = 'There probably are tables in the database which have the same prefix you provided.';
                      $_SESSION['page_message'][] = 'It is advised to change the prefix provided or you can drop the existing tables if you don\'t need them. Make a backup if you are not certain.';
-                     return FALSE;
+                     return false;
                      break;
 
                      case '-1':
                      // We are using the unknown error code(-1) because ADOdb library may not have the error defined.
                      $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg();
-                     return FALSE;
+                     return false;
                      break;
 
                      default:
                      $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg() . ': ' . $this->mDbConnection->ErrorNo();
                      $_SESSION['page_message'][] = 'Unknown error, please notify Developer quoting the error number';
-                     return FALSE;
+                     return false;
                      break;
                   }
                }
-            }
-         }
-         //$_SESSION['page_message'][] = 'Successfully populated database with structure and data.';
-         return TRUE;
-      }
-      else
-      {
-         $_SESSION['page_message'][] = 'SQL file required for importing structure and data is missing.';
-         return FALSE;
-      }
+            
+                return true;      
    }
 
+ 
 
 
    /**
@@ -1591,85 +1519,6 @@ class Setup extends Flyspray
       $_SESSION['SUCCESS'] = 'Login successful.';
    }
 
-
-   /**
-   * Function to split the SQL queries from a SQL file into individual queries
-   * Thanks to Ben Balbo http://www.benbalbo.com for the code comments
-   * @param string $sql The sql queries which was grabbed from a SQL file
-   */
-   function SplitSql($sql, $db_type)
-   {
-      // Trim the SQL
-      $sql = trim($sql);
-	  switch (strtolower($db_type))
-	  {
-
-      	// Removes any lines that start with a # and --
-      	//$sql = ereg_replace("\n#[^\n]*\n", "\n", $sql); // Doesn't work as expected
-		case 'mysql':
-			$sql = ereg_replace("#[^\n]*\n", "\n", $sql);
-		break;
-
-		case 'postgres':
-			$sql = ereg_replace("--[^\n]*\n", "\n", $sql);
-		break;
-	  }
-      // This array only ever has 2 items [0] is previous character seen - [1] is current character
-      $buffer = array();
-
-      // Array for returning the SQL arrays
-      $sql_lists = array();
-
-      // Flag for defining whether we're parsing the innards of a string (i.e. we passed a " or ' recently
-      $in_string = FALSE;
-
-      // Loop through each character in the sql string
-      for($i = 0; $i < strlen($sql)-1; $i++)
-      {
-
-         // If the character is equal to a semi colon and the flag is false
-         // this is tru if the current char is a semicolon and it's not the first char in the string (i.e. $in_string contains something)
-         if($sql[$i] == ";" && !$in_string)
-         {
-            // Get the characters from the beginning of the sql string up until the semi-colon
-            $sql_lists[] = substr($sql, 0, $i);
-
-            // Re-set the sql string to start from the current character and the rest of the string
-            $sql = substr($sql, $i + 1);
-            // Re-set the counter
-            $i = 0;
-         }
-
-         // If we're flagged as being in a string (between '' or "") and we've just found what looks like a string terminator
-         // check to see if previous char was not a backslash, and if so, we're not in a string anymore.
-         // In other words, if we recently found a " and we've just found another ", we can consider ourselves not
-         // in the string anymore, unless the previous char was a backslash which would escape the " we just found.
-         if($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\")
-         {
-            $in_string = false;
-         }
-         elseif(!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\"))
-         // Catches the start of the string - if we've found a ' or " and the previous char
-         // wasn't a \ and we're not in a string, then we are now!
-         {
-            $in_string = $sql[$i];
-         }
-
-         // Scroll buffer. [0] is now equal to [1] if it had a value. current char is now in [1]
-         if(isset($buffer[1]))
-         {
-            $buffer[0] = $buffer[1];
-         }
-         $buffer[1] = $sql[$i];
-      }
-
-      if(!empty($sql))
-      {
-         $sql_lists[] = $sql;
-      }
-      return $sql_lists;
-   }
-
    /**
       * To verify if a string was empty or not.
       *
@@ -1677,7 +1526,7 @@ class Setup extends Flyspray
       * or just blank spaces, we need to trim of such empty data and see if
       * anything else is left after trimming. If there is data remaining, then
       * the return value will be greater than 0 else it will be 0 (zero) which
-      * equates to a TRUE/FALSE scenario
+      * equates to a true/false scenario
       *
       * @param string $arg The data to be checked
       *
@@ -1719,7 +1568,7 @@ class Setup extends Flyspray
             // Run the upgrade script.
             if (!$this->PopulateDb($data))
             {
-               return FALSE;
+               return false;
             }
             else
             {
@@ -1776,7 +1625,7 @@ class Setup extends Flyspray
 						$this->mDbConnection->Execute($update_attachments, array($comment['comment_id'], $row['attachment_id']));
 					}
 				}
-				return TRUE;
+				return true;
             }
          }
          else
@@ -1784,14 +1633,14 @@ class Setup extends Flyspray
             $_SESSION['page_message'][] = 'Upgrade not Successful!';
             $_SESSION['page_message'][] = "You are trying to upgrade from the wrong {$this->mProductName} version ({$row['pref_value']}).";
             $_SESSION['page_message'][] = "You need to be having a version 0.9.7 of {$this->mProductName} installed in order to proceed with the upgrade path you have choosen.";
-            return FALSE;
+            return false;
          }
       }
       else
       {
          $_SESSION['page_message'][] = 'Upgrade not Successful!';
          $_SESSION['page_message'][] = "Have you picked the right Upgrade path? Is your current version of {$this->mProductName}: 0.9.7 ?";
-         return FALSE;
+         return false;
       }
    }
 
@@ -1801,49 +1650,34 @@ class Setup extends Flyspray
       $message = '';
       switch($type)
       {
-         case 'string':
-            return (!is_string($value))
-            ? FALSE
-            : TRUE;
-         break;
+            case 'string':
+                return is_string($value);
+            break;
 
-         case 'number':
-            return (!strval(intval($value)))
-            ? FALSE
-            : TRUE;
-         break;
+            case 'number':
+                return is_numeric($value);
+            break;
 
-         case 'email address':
-            $email_pattern = '/^[^@\s<&>]+@([-a-z0-9]+\.)+[a-z]{2,}$/i';
+            case 'email address':
+             include_once OBJECTS_PATH . '/external/Validate.php'; 
+             return Validate::email($email_pattern, $value);
+             break;
 
-            if (preg_match($email_pattern, $value))
-            {
-               return TRUE;
-            }
-            return FALSE;
-         break;
+            case 'boolean':
+                return (bool) $value;
+            break;
 
-         case 'boolean':
-            return ($value)
-            ? TRUE
-            : FALSE;
-         break;
+            case 'password':
+                return (strlen($value) >= $this->mMinPasswordLength);
+            break;
 
-         case 'password':
-            return (strlen($value) >= $this->mMinPasswordLength)
-            ? TRUE
-            : FALSE;
-         break;
+		    case 'folder':
+		 	    return is_dir($value);
+		    break;
 
-		 case 'folder':
-		 	return (is_dir($value))
-			? TRUE
-			: FALSE;
-		 break;
-
-         default:
-         return TRUE;
-         break;
+            default:
+                return true;
+             break;
       }
    }
 
