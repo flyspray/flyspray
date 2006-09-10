@@ -9,8 +9,20 @@
 
 define('IN_FS', true);
 
+
 require_once 'header.php';
-require_once BASEDIR . '/includes/class.notify.php';
+
+//ok, the reminder deamon request includes a key , the sha1sum of flsypray.conf
+// which is unique to the installation.
+if(Get::has('key') && trim(Get::val('key')) == sha1_file(BASEDIR. '/flyspray.conf.php')) {
+
+//keep going, execute the script in the background
+ignore_user_abort(true);
+set_time_limit(0);
+
+include_once BASEDIR . '/includes/class.notify.php';
+
+touch(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
 
 $notify = new Notifications;
 $user = new User(0);
@@ -65,6 +77,13 @@ while ($row = $db->FetchRow($get_reminders)) {
 
 // send those stored notifications
 $notify->SendJabber();
+
+@register_shutdown_function('unlink', Flyspray::get_tmp_dir() . '/flysprayreminders.run');
+
+} else {
+
+    die("you are not authorized to start the remider daeamon");
+}
 
 ?>
 <html>
