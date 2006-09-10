@@ -55,7 +55,8 @@ class User
         if ($do == 'index') {
             if(!$this->didSearch() && $this->infos['last_search']) {
                 $arr = unserialize($this->infos['last_search']);
-                if (is_array($arr)) {
+                if (is_array($arr) && count($arr)) {
+                    // XXX: this is not a good idea¡¡ change me later ¡¡
                     $_GET = array_merge($_GET, $arr);
                 }
             }
@@ -187,7 +188,7 @@ class User
 
     function can_view_project($proj)
     {
-        if (is_array($proj)) {
+        if (is_array($proj) && isset($proj['project_id'])) {
             $proj = $proj['project_id'];
         }
         

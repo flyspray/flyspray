@@ -24,7 +24,7 @@ if (!$user->perms('view_history'))
     die();
 }
 
-if (is_numeric($details = Get::val('details'))) {
+if ($details = Get::num('details')) {
     $details = " AND h.history_id = $details";
 } else {
     $details = null;
@@ -33,16 +33,16 @@ if (is_numeric($details = Get::val('details'))) {
 $sql = get_events(Get::num('task_id'), $details);
 $histories = $db->fetchAllArray($sql);
 
-if ($details)
-{
+if ($details && count($histories)){
     event_description($histories[0]);
+    
     $html = '<table class="history">';
     $html .= '<tr>';
     $html .= '<th>' . L('previousvalue') . '</th>';
     $html .= '<th>' . L('newvalue') . '</th>';
     $html .= '</tr><tr>';
-    $html .= '<td>' . $GLOBALS['details_previous'] . '</td>';
-    $html .= '<td>' . $GLOBALS['details_new'] . '</td>';
+    $html .= '<td>' . htmlspecialchars($GLOBALS['details_previous'], ENT_QUOTES, 'utf-8') . '</td>';
+    $html .= '<td>' . htmlspecialchars($GLOBALS['details_new'], ENT_QUOTES, 'utf-8') . '</td>';
     $html .= '</tr></table>';
     
     echo $html;
@@ -55,13 +55,17 @@ $html .= '<th>' . L('eventdate') . '</th>';
 $html .= '<th>' . L('user') . '</th>';
 $html .= '<th>' . L('event') . '</th>';
 $html .= '</tr>';
-foreach($histories as $history)
-{
-    $html .= '<tr>';
-    $html .= '<td>' . formatDate($history['event_date'], false) . '</td>';
-    $html .= '<td>' . tpl_userlink($history['user_id']) . '</td>';
-    $html .= '<td>' . event_description($history) . '</td>';
-    $html .= '</tr>';
+
+if(count($histories)) {
+
+    foreach($histories as $history)
+    {
+        $html .= '<tr>';
+        $html .= '<td>' . formatDate($history['event_date'], false) . '</td>';
+        $html .= '<td>' . tpl_userlink($history['user_id']) . '</td>';
+        $html .= '<td>' . event_description($history) . '</td>';
+        $html .= '</tr>';
+    }
 }
 
 $html .= '</table>';

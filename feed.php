@@ -99,15 +99,16 @@ $content = $page->fetch('feed.'.$feed_type.'.tpl');
 if ($fs->prefs['cache_feeds'])
 {
     if ($fs->prefs['cache_feeds'] == '1') {
-        if (!is_writeable('cache') && !@chmod('cache', 0777))
+        if (!is_writeable('cache') || !@chmod('cache', 0777))
         {
             die('Error when caching the feed: cache/ is not writeable.');
         }
 
         // Remove old cached files
-        $handle = fopen('cache/'.$filename, 'w+b');
-        fwrite($handle, $content);
-        fclose($handle);
+        if($handle = fopen('cache/'.$filename, 'w+b')) {
+            fwrite($handle, $content);
+            fclose($handle);
+        }
     }
     else {
        /**
@@ -122,7 +123,7 @@ if ($fs->prefs['cache_feeds'])
 
         $keys = array('type','topic','project_id','max_items');
 
-        $db->Replace('{cache}', $fields, $keys);
+        $db->Replace('{cache}', $fields, $keys) or die ('error updating the database cache');
     }
 }
 

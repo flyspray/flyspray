@@ -298,42 +298,6 @@ class Setup extends Flyspray
       return $this->ReturnStatus($this->mPhpVersionStatus, $type = 'yes');
    }
 
-   function CheckPhpCli()
-   {
-    // is executable doesn't exist in windows before PHP 5.0.0
-   $executable_tester = (function_exists('is_executable')) ? 'is_executable' : 'is_file';
-
-   $php_binary = 'php' . (IS_MSWIN ? '.exe' : '');
-
-       /* Try to use PEAR::System __IF_AVAILABLE__(not an aditional
-         requirement for flyspray)
-         to _efectively_ locate the php binary */
-
-        if($this->ScanIncludePath('System.php')) {
-
-         include_once 'System.php';
-
-         /* if found in the system PATH an is_executable..returns the php binary path
-            if not, returns false */
-
-         if( @System::which($php_binary) ) {
-
-                $this->mPhpCliStatus = true;
-                return $this->mPhpCliStatus;
-
-         }
-            // see: http://php.net/reserved.constants
-        }elseif($executable_tester( PHP_BINDIR . DIRECTORY_SEPARATOR . $php_binary)) {
-
-			$this->mPhpCliStatus = true;
-			return $this->mPhpCliStatus;
-
-        } else {
-
-			return false;
-        }
-   }
-
    /**
    * Function to check the posted data from forms.
    * @param array $expectedFields Array of field names which needs processing
@@ -734,8 +698,7 @@ class Setup extends Flyspray
 	function GetReminderDaemonSelection($value)
 	{
 		$selection	= '';
-		if ($this->CheckPhpCli())
-		{
+
 			if ($value == 1)
 			{
 				$selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> Enable';
@@ -747,11 +710,7 @@ class Setup extends Flyspray
 				$selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
 			}
 			return $selection;
-		}
-		else
-		{
-			return false;
-		}
+	
 	}
 
 
@@ -1252,8 +1211,9 @@ class Setup extends Flyspray
       $db_type	= strtolower($db_type);
 
       if ($db_type != 'postgres') {
-	return true;
+            return true;
       }
+
       $sql = "SELECT c.relname
 	FROM pg_catalog.pg_class c
 	LEFT JOIN pg_catalog.pg_user u ON u.usesysid = c.relowner
@@ -1264,23 +1224,21 @@ class Setup extends Flyspray
 
       $result = $this->mDbConnection->Execute($sql);
       $sequence_list = array();
-      if ($result)
-      {
-	while ($row = $result->FetchRow())
-	{
-	  $sequence_list[] = $row[0];
-	}
+      
+      if ($result) {
+          while ($row = $result->FetchRow()) {
+              $sequence_list[] = $row[0];
+	     }
       }
 
       foreach ($sequence_list as $sequence) {
-	$sql = "DROP SEQUENCE $sequence";
-	$this->mDbConnection->Execute($sql);
-	// If any errors, record the error message in the array
-	if ($error_number = $this->mDbConnection->MetaError())
-	{
-	  $_SESSION['page_message'][] =  ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
-	  return false;
-	}
+          
+          $this->mDbConnection->DropSequence($sequence);
+	    // If any errors, record the error message in the array
+	    if ($error_number = $this->mDbConnection->MetaError()) {
+	        $_SESSION['page_message'][] =  ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
+	            return false;
+	    }
       }
 
       return true;
@@ -1517,6 +1475,8 @@ class Setup extends Flyspray
                         );
 
       $_SESSION['SUCCESS'] = 'Login successful.';
+
+      return true;
    }
 
    /**

@@ -922,10 +922,9 @@ class Flyspray
                 return $var;
             }
             return getenv('SystemRoot') . '\temp';
-        }
 
-        if ($var = isset($_ENV['TMPDIR']) ? $_ENV['TMPDIR'] : getenv('TMPDIR')) {
-            return $var;
+        } elseif ($var = isset($_ENV['TMPDIR']) ? $_ENV['TMPDIR'] : getenv('TMPDIR')) {
+             return $var;
         }
             return '/tmp';
     }
