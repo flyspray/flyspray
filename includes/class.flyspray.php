@@ -820,9 +820,6 @@ class Flyspray
     function function_disabled($func_name)
     {
         $disabled_functions = explode(',', ini_get('disable_functions'));
-        var_dump($disabled_functions);
-        var_dump($func_name);
-        var_dump(in_array($func_name, $disabled_functions));
         return in_array($func_name, $disabled_functions);
     }
 
