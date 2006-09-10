@@ -1,0 +1,6 @@
+The file POP3SMTP_.php deliberately ends with
+the underscore character so that Swift does not auto-load it.
+POP3 Before SMTP Authentication is not advertised by the SMTP server
+and the authenticator also needs constructor parameters.
+
+Load this file manually if you need POP Before SMTP authentication.

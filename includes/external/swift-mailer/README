@@ -1,0 +1,48 @@
+Swift Mailer is a basic PHP Mailer class intended to do nothing
+more than handle sending emails from PHP scripts.
+
+Please refer to the LICENSE file before copying this class
+or modifying it (it basically says you can do what you want
+with it).
+
+The Swift Mailer library can handle
+pretty much everything you'd want when sending emails.
+
+ * Attachments
+ * Multipart Messaging
+ * Basic, single part messaging
+ * Custom Headers
+ * Encoding
+ * Inline images
+ * Embedded files
+ * Redundant connections
+ * Rotating connections
+ * Silent recipient denied handling
+ * TLS Encryption
+ * Bcc Sending
+ * Batch Mailing
+ * Custom SMTP commands
+ * SSL Connections
+ * Pluggable SMTP Authentication
+ * Plugin Support with event handling features
+
+This library does NOT require the use of the mail() function
+which is blocked by many shared hosts.  Instead, it makes
+use of fsockopen() to establish a connection with an SMTP -
+server.  This connection can be used to perform as many
+tasks as required when when sending emails.
+
+The functionality built in to the class should comply with
+RFC 2821, and RFC 2554 which you can find under the docs/
+directory.
+
+For some examples of using Swift Mailer refer to the snippets at
+docs/examples/.
+
+You should refer to the online documentation to be sure you're
+reading the most up-to-date stuff: http://swiftmailer.org/documentation/
+
+For bugs and support (limited) please contact the author
+
+"Chris Corbyn" <chris@w3style.co.uk>
+

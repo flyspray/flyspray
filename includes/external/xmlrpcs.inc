@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2002
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.57 2006/03/20 13:48:25 ggiunta Exp $
+// $Id: xmlrpcs.inc,v 1.65 2006/08/23 14:52:33 ggiunta Exp $
 
 // Copyright (c) 1999,2000,2002 Edd Dumbill.
 // All rights reserved.
@@ -10,17 +10,17 @@
 // modification, are permitted provided that the following conditions
 // are met:
 //
-//		* Redistributions of source code must retain the above copyright
-//			notice, this list of conditions and the following disclaimer.
+//    * Redistributions of source code must retain the above copyright
+//      notice, this list of conditions and the following disclaimer.
 //
-//		* Redistributions in binary form must reproduce the above
-//			copyright notice, this list of conditions and the following
-//			disclaimer in the documentation and/or other materials provided
-//			with the distribution.
+//    * Redistributions in binary form must reproduce the above
+//      copyright notice, this list of conditions and the following
+//      disclaimer in the documentation and/or other materials provided
+//      with the distribution.
 //
-//		* Neither the name of the "XML-RPC for PHP" nor the names of its
-//			contributors may be used to endorse or promote products derived
-//			from this software without specific prior written permission.
+//    * Neither the name of the "XML-RPC for PHP" nor the names of its
+//      contributors may be used to endorse or promote products derived
+//      from this software without specific prior written permission.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -38,10 +38,14 @@
 	// XML RPC Server class
 	// requires: xmlrpc.inc
 
+
+	/* Functions that implement system.XXX methods of xmlrpc servers */
+
 	// listMethods: signature was either a string, or nothing.
 	// The useless string variant has been removed
 	$_xmlrpcs_listMethods_sig=array(array($GLOBALS['xmlrpcArray']));
 	$_xmlrpcs_listMethods_doc='This method lists all the methods that the XML-RPC server knows how to dispatch';
+	$_xmlrpcs_listMethods_sdoc=array(array('list of method names'));
 	function _xmlrpcs_listMethods($server, $m=null) // if called in plain php values mode, second param is missing
 	{
 
@@ -63,6 +67,7 @@
 
 	$_xmlrpcs_methodSignature_sig=array(array($GLOBALS['xmlrpcArray'], $GLOBALS['xmlrpcString']));
 	$_xmlrpcs_methodSignature_doc='Returns an array of known signatures (an array of arrays) for the method name passed. If no signatures are known, returns a none-array (test for type != array to detect missing signature)';
+	$_xmlrpcs_methodSignature_sdoc=array(array('list of known signatures, each sig being an array of xmlrpc type names', 'name of method to be described'));
 	function _xmlrpcs_methodSignature($server, $m)
 	{
 		// let accept as parameter both an xmlrpcval or string
@@ -75,7 +80,7 @@
 		{
 			$methName=$m;
 		}
-		if(ereg("^system\.", $methName))
+		if(strpos($methName, "system.") === 0)
 		{
 			$dmap=$GLOBALS['_xmlrpcs_dmap']; $sysCall=1;
 		}
@@ -83,7 +88,6 @@
 		{
 			$dmap=$server->dmap; $sysCall=0;
 		}
-		//	print "<!-- ${methName} -->\n";
 		if(isset($dmap[$methName]))
 		{
 			if(isset($dmap[$methName]['signature']))
@@ -116,6 +120,7 @@
 
 	$_xmlrpcs_methodHelp_sig=array(array($GLOBALS['xmlrpcString'], $GLOBALS['xmlrpcString']));
 	$_xmlrpcs_methodHelp_doc='Returns help text if defined for the method passed, otherwise returns an empty string';
+	$_xmlrpcs_methodHelp_sdoc=array(array('method description', 'name of the method to be described'));
 	function _xmlrpcs_methodHelp($server, $m)
 	{
 		// let accept as parameter both an xmlrpcval or string
@@ -128,7 +133,7 @@
 		{
 			$methName=$m;
 		}
-		if(ereg("^system\.", $methName))
+		if(strpos($methName, "system.") === 0)
 		{
 			$dmap=$GLOBALS['_xmlrpcs_dmap']; $sysCall=1;
 		}
@@ -136,7 +141,6 @@
 		{
 			$dmap=$server->dmap; $sysCall=0;
 		}
-		// print "<!-- ${methName} -->\n";
 		if(isset($dmap[$methName]))
 		{
 			if(isset($dmap[$methName]['docstring']))
@@ -157,7 +161,7 @@
 
 	$_xmlrpcs_multicall_sig = array(array($GLOBALS['xmlrpcArray'], $GLOBALS['xmlrpcArray']));
 	$_xmlrpcs_multicall_doc = 'Boxcar multiple RPC calls in one request. See http://www.xmlrpc.com/discuss/msgReader$1208 for details';
-
+	$_xmlrpcs_multicall_sdoc = array(array('list of response structs, where each struct has the usual members', 'list of calls, with each call being represented as a struct, with members "methodname" and "params"'));
 	function _xmlrpcs_multicall_error($err)
 	{
 		if(is_string($err))
@@ -289,7 +293,6 @@
 		}
 		else
 		{
-			//$calls = func_get_args();
 			$numCalls=count($m);
 			for($i = 0; $i < $numCalls; $i++)
 			{
@@ -304,20 +307,23 @@
 		'system.listMethods' => array(
 			'function' => '_xmlrpcs_listMethods',
 			'signature' => $_xmlrpcs_listMethods_sig,
-			'docstring' => $_xmlrpcs_listMethods_doc),
+			'docstring' => $_xmlrpcs_listMethods_doc,
+			'signature_docs' => $_xmlrpcs_listMethods_sdoc),
 		'system.methodHelp' => array(
 			'function' => '_xmlrpcs_methodHelp',
 			'signature' => $_xmlrpcs_methodHelp_sig,
-			'docstring' => $_xmlrpcs_methodHelp_doc),
+			'docstring' => $_xmlrpcs_methodHelp_doc,
+			'signature_docs' => $_xmlrpcs_methodHelp_sdoc),
 		'system.methodSignature' => array(
 			'function' => '_xmlrpcs_methodSignature',
 			'signature' => $_xmlrpcs_methodSignature_sig,
-			'docstring' => $_xmlrpcs_methodSignature_doc),
+			'docstring' => $_xmlrpcs_methodSignature_doc,
+			'signature_docs' => $_xmlrpcs_methodSignature_sdoc),
 		'system.multicall' => array(
 			'function' => '_xmlrpcs_multicall',
 			'signature' => $_xmlrpcs_multicall_sig,
-			'docstring' => $_xmlrpcs_multicall_doc
-		)
+			'docstring' => $_xmlrpcs_multicall_doc,
+			'signature_docs' => $_xmlrpcs_multicall_sdoc)
 	);
 
 	$GLOBALS['_xmlrpcs_occurred_errors'] = '';
@@ -333,6 +339,10 @@
 	*/
 	function _xmlrpcs_errorHandler($errcode, $errstring, $filename=null, $lineno=null, $context=null)
 	{
+		// obey the @ protocol
+		if (error_reporting() == 0)
+			return;
+
 		//if($errcode != E_NOTICE && $errcode != E_WARNING && $errcode != E_USER_NOTICE && $errcode != E_USER_WARNING)
 		if($errcode != 2048) // do not use E_STRICT by name, since on PHP 4 it will not be defined
 		{
@@ -389,7 +399,7 @@
 		/**
 		* Defines how functions in dmap will be invokde: either using an xmlrpc msg object
 		* or plain php values.
-		* valid strings are 'xmlrpcvals' or 'phpvals'
+		* valid strings are 'xmlrpcvals', 'phpvals' or 'epivals'
 		*/
 		var $functions_parameters_type='xmlrpcvals';
 		/// controls wether the server is going to echo debugging messages back to the client as comments in response body. valid values: 0,1,2,3
@@ -420,6 +430,8 @@
 		var $response_charset_encoding = '';
 		/// storage for internal debug info
 		var $debug_info = '';
+		/// extra data passed at runtime to method handling functions. Used only by EPI layer
+		var $user_data = null;
 
 		/**
 		* @param array $dispmap the dispatch map withd efinition of exposed services
@@ -469,6 +481,7 @@
 		* particular, triggering an USER_ERROR level error will not halt script
 		* execution anymore, but just end up logged in the xmlrpc response)
 		* Note that info added at elevel 2 and 3 will be base64 encoded
+		* @access public
 		*/
 		function setDebug($in)
 		{
@@ -488,7 +501,8 @@
 			// so we split it: system debug is base 64 encoded,
 			// user debug info should be encoded by the end user using the INTERNAL_ENCODING
 			$out = '';
-			if ($this->debug_info != '') {
+			if ($this->debug_info != '')
+			{
 				$out .= "<!-- SERVER DEBUG INFO (BASE64 ENCODED):\n".base64_encode($this->debug_info)."\n-->\n";
 			}
 			if($GLOBALS['_xmlrpc_debuginfo']!='')
@@ -505,12 +519,16 @@
 		/**
 		* Execute the xmlrpc request, printing the response
 		* @param string $data the request body. If null, the http POST request will be examined
+		* @return xmlrpcresp the response object (usually not used by caller...)
+		* @access public
 		*/
-		function service($data=null)
+		function service($data=null, $return_payload=false)
 		{
-			if ($data === null) {
+			if ($data === null)
+			{
 				$data = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
 			}
+			$raw_data = $data;
 
 			// reset internal debug info
 			$this->debug_info = '';
@@ -527,24 +545,21 @@
 				$r=$this->parseRequest($data, $req_charset);
 			}
 
+			// save full body of request into response, for more debugging usages
+			$r->raw_data = $raw_data;
+
 			if($this->debug > 2 && $GLOBALS['_xmlrpcs_occurred_errors'])
 			{
 				$this->debugmsg("+++PROCESSING ERRORS AND WARNINGS+++\n" .
 					$GLOBALS['_xmlrpcs_occurred_errors'] . "+++END+++");
 			}
 
-			//$payload='<?xml version="1.0" encoding="' . $GLOBALS['xmlrpc_defencoding'] . '"?' . '>' . "\n"
-
 			$payload=$this->xml_header($resp_charset);
 			if($this->debug > 0)
 			{
-
-				//$payload = $payload . "<methodResponse>\n" . $this->serializeDebug();
-				//$payload = $payload . substr($r->serialize(), 17);
 				$payload = $payload . $this->serializeDebug($resp_charset);
 			}
-			//else
-			//{
+
 			// G. Giunta 2006-01-27: do not create response serialization if it has
 			// already happened. Helps building json magic
 			if (empty($r->payload))
@@ -552,8 +567,11 @@
 				$r->serialize($resp_charset);
 			}
 			$payload = $payload . $r->payload;
-			//}
 
+			if ($return_payload)
+			{
+				return $payload;
+			}
 
 			// if we get a warning/error that has output some text before here, then we cannot
 			// add a new header. We cannot say we are sending xml, either...
@@ -564,32 +582,43 @@
 				// we have to tell him what we did
 				header("Vary: Accept-Charset");
 
-				// http compression of output
-				if($this->compress_response && function_exists('gzencode') && $resp_encoding != '')
+				// http compression of output: only
+				// if we can do it, and we want to do it, and client asked us to,
+				// and php ini settings do not force it already
+				$php_no_self_compress = ini_get('zlib.output_compression') == '' && (ini_get('output_handler') != 'ob_gzhandler');
+				if($this->compress_response && function_exists('gzencode') && $resp_encoding != ''
+					&& $php_no_self_compress)
 				{
-					if(strstr($resp_encoding, 'gzip'))
+					if(strpos($resp_encoding, 'gzip') !== false)
 					{
 						$payload = gzencode($payload);
 						header("Content-Encoding: gzip");
 						header("Vary: Accept-Encoding");
 					}
-					elseif (strstr($resp_encoding, 'deflate'))
+					elseif (strpos($resp_encoding, 'deflate') !== false)
 					{
-						$payload = gzdeflate($payload);
+						$payload = gzcompress($payload);
 						header("Content-Encoding: deflate");
 						header("Vary: Accept-Encoding");
 					}
 				}
 
-				header('Content-Length: ' . (int)strlen($payload));
+				// do not ouput content-length header if php is compressing output for us:
+				// it will mess up measurements
+				if($php_no_self_compress)
+				{
+					header('Content-Length: ' . (int)strlen($payload));
+				}
 			}
 			else
 			{
-				//print "Internal server error: headers sent before PHP response"
 				error_log('XML-RPC: xmlrpc_server::service: http headers already sent before response is fully generated. Check for php warning or error messages');
 			}
 
 			print $payload;
+
+			// return request, in case subclasses want it
+			return $r;
 		}
 
 		/**
@@ -598,14 +627,18 @@
 		* @param string $function the php function that will get invoked
 		* @param array $sig the array of valid method signatures
 		* @param string $doc method documentation
+		* @access public
 		*/
-		function add_to_map($methodname,$function,$sig,$doc='')
+		function add_to_map($methodname,$function,$sig=null,$doc='')
 		{
 			$this->dmap[$methodname] = array(
 				'function'	=> $function,
-				'signature' => $sig,
 				'docstring' => $doc
 			);
+			if ($sig)
+			{
+				$this->dmap[$methodname]['signature'] = $sig;
+			}
 		}
 
 		/**
@@ -623,11 +656,11 @@
 			}
 			else
 			{
-				$numParams = sizeof($in);
+				$numParams = count($in);
 			}
 			foreach($sig as $cursig)
 			{
-				if(sizeof($cursig)==$numParams+1)
+				if(count($cursig)==$numParams+1)
 				{
 					$itsOK=1;
 					for($n=0; $n<$numParams; $n++)
@@ -703,7 +736,7 @@
 
 			if(isset($_SERVER['HTTP_CONTENT_ENCODING']))
 			{
-				$content_encoding = $_SERVER['HTTP_CONTENT_ENCODING'];
+				$content_encoding = str_replace('x-', '', $_SERVER['HTTP_CONTENT_ENCODING']);
 			}
 			else
 			{
@@ -718,7 +751,7 @@
 					// if decoding works, use it. else assume data wasn't gzencoded
 					if(function_exists('gzinflate') && in_array($content_encoding, $this->accepted_compression))
 					{
-						if($content_encoding == 'deflate' && $degzdata = @gzinflate($data))
+						if($content_encoding == 'deflate' && $degzdata = @gzuncompress($data))
 						{
 							$data = $degzdata;
 							if($this->debug > 1)
@@ -757,7 +790,7 @@
 					// here we should check if we can match the client-requested encoding
 					// with the encodings we know we can generate.
 					/// @todo we should parse q=0.x preferences instead of getting first charset specified...
-					$client_accepted_charsets = split(',', strtoupper($_SERVER['HTTP_ACCEPT_CHARSET']));
+					$client_accepted_charsets = explode(',', strtoupper($_SERVER['HTTP_ACCEPT_CHARSET']));
 					// Give preference to internal encoding
 					$known_charsets = array($this->internal_encoding, 'UTF-8', 'ISO-8859-1', 'US-ASCII');
 					foreach ($known_charsets as $charset)
@@ -811,19 +844,20 @@
 			//	$data=$GLOBALS['HTTP_RAW_POST_DATA'];
 			//}
 
-
 			// G. Giunta 2005/02/13: we do NOT expect to receive html entities
 			// so we do not try to convert them into xml character entities
 			//$data = xmlrpc_html_entity_xlate($data);
 
 			$GLOBALS['_xh']=array();
-			$GLOBALS['_xh']['isf']=0;
-			$GLOBALS['_xh']['isf_reason']='';
-			$GLOBALS['_xh']['params']=array();
-			$GLOBALS['_xh']['pt']=array();
+			$GLOBALS['_xh']['ac']='';
 			$GLOBALS['_xh']['stack']=array();
 			$GLOBALS['_xh']['valuestack'] = array();
-			$GLOBALS['_xh']['method']='';
+			$GLOBALS['_xh']['params']=array();
+			$GLOBALS['_xh']['pt']=array();
+			$GLOBALS['_xh']['isf']=0;
+			$GLOBALS['_xh']['isf_reason']='';
+			$GLOBALS['_xh']['method']=false; // so we can check later if we got a methodname or not
+			$GLOBALS['_xh']['rt']='';
 
 			// decompose incoming XML into request structure
 			if ($req_encoding != '')
@@ -850,7 +884,7 @@
 			// the xml parser to give us back data in the expected charset
 			xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, $GLOBALS['xmlrpc_internalencoding']);
 
-			if ($this->functions_parameters_type == 'phpvals')
+			if ($this->functions_parameters_type != 'xmlrpcvals')
 				xml_set_element_handler($parser, 'xmlrpc_se', 'xmlrpc_ee_fast');
 			else
 				xml_set_element_handler($parser, 'xmlrpc_se', 'xmlrpc_ee');
@@ -876,7 +910,7 @@
 			else
 			{
 				xml_parser_free($parser);
-				if ($this->functions_parameters_type == 'phpvals')
+				if ($this->functions_parameters_type != 'xmlrpcvals')
 				{
 					if($this->debug > 1)
 					{
@@ -889,7 +923,7 @@
 					// build an xmlrpcmsg object with data parsed from xml
 					$m=&new xmlrpcmsg($GLOBALS['_xh']['method']);
 					// now add parameters in
-					for($i=0; $i<sizeof($GLOBALS['_xh']['params']); $i++)
+					for($i=0; $i<count($GLOBALS['_xh']['params']); $i++)
 					{
 						$m->addParam($GLOBALS['_xh']['params'][$i]);
 					}
@@ -911,6 +945,7 @@
 		* @param array $params array with method parameters as php types (if m is method name only)
 		* @param array $paramtypes array with xmlrpc types of method parameters (if m is method name only)
 		* @return xmlrpcresp
+		* @access private
 		*/
 		function execute($m, $params=null, $paramtypes=null)
 		{
@@ -922,7 +957,7 @@
 			{
 				$methName = $m;
 			}
-			$sysCall = $this->allow_system_funcs && ereg("^system\.", $methName);
+			$sysCall = $this->allow_system_funcs && (strpos($methName, "system.") === 0);
 			$dmap = $sysCall ? $GLOBALS['_xmlrpcs_dmap'] : $this->dmap;
 
 			if(!isset($dmap[$methName]['function']))
@@ -943,7 +978,7 @@
 				}
 				else
 				{
-				list($ok, $errstr) = $this->verifySignature($paramtypes, $sig);
+					list($ok, $errstr) = $this->verifySignature($paramtypes, $sig);
 				}
 				if(!$ok)
 				{
@@ -1004,7 +1039,7 @@
 							$GLOBALS['xmlrpcstr']['server_error'] . ": function does not return xmlrpcresp object"
 						);
 					}
-                }
+				}
 			}
 			else
 			{
@@ -1012,11 +1047,31 @@
 				if($sysCall)
 				{
 					array_unshift($params, $this);
-					$r = call_user_func_array($func,$params);
+					$r = call_user_func_array($func, $params);
 				}
 				else
 				{
-					$r = call_user_func_array($func, $params);
+					// 3rd API convention for method-handling functions: EPI-style
+					if ($this->functions_parameters_type == 'epivals')
+					{
+						$r = call_user_func_array($func, array($methName, $params, $this->user_data));
+						// mimic EPI behaviour: if we get an array that looks like an error, make it
+						// an eror response
+						if (is_array($r) && array_key_exists('faultCode', $r) && array_key_exists('faultString', $r))
+						{
+							$r =& new xmlrpcresp(0, (integer)$r['faultCode'], (string)$r['faultString']);
+						}
+						else
+						{
+							// functions using EPI api should NOT return resp objects,
+							// so make sure we encode the return type correctly
+							$r =& new xmlrpcresp(php_xmlrpc_encode($r, array('extension_api')));
+						}
+					}
+					else
+					{
+						$r = call_user_func_array($func, $params);
+					}
 				}
 				// the return type can be either an xmlrpcresp object or a plain php value...
 				if (!is_a($r, 'xmlrpcresp'))
@@ -1052,6 +1107,9 @@
 			$this->debug_info .= $string."\n";
 		}
 
+		/**
+		* @access private
+		*/
 		function xml_header($charset_encoding='')
 		{
 			if ($charset_encoding != '')

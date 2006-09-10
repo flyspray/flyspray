@@ -308,23 +308,35 @@ switch ($action = Req::val('action'))
         $confirm_code = crypt($randval, $conf['general']['cookiesalt']);
 
         // Generate a looonnnnggg random string to send as an URL to complete this registration
-        $magic_url = md5(microtime());
+        $magic_url = md5(uniqid(rand(), true));
 
-        // Insert everything into the database
-        $db->Query("INSERT INTO  {registrations}
+        //send the email first.
+
+        if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
+                        array(Post::val('email_address')), Post::num('notify_type'))) {
+        
+                //email sent succefully, now update the database.
+            $reg_values = array(time(), $confirm_code, $user_name, $real_name,
+                        Post::val('email_address'), Post::val('jabber_id'),
+                        Post::num('notify_type'), $magic_url, Post::num('time_zone')); 
+            // Insert everything into the database
+            $query = $db->Query("INSERT INTO  {registrations}
                                  ( reg_time, confirm_code, user_name, real_name,
                                    email_address, jabber_id, notify_type,
                                    magic_url, time_zone )
-                         VALUES  (?,?,?,?,?,?,?,?,?)",
-                    array(time(), $confirm_code, $user_name, $real_name,
-                        Post::val('email_address'), Post::val('jabber_id'),
-                        Post::num('notify_type'), $magic_url, Post::num('time_zone')));
+                         VALUES ( " . $db->fill_placeholders($reg_values) . ' )', $reg_values);
 
-        $notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-                        array(Post::val('email_address')), Post::num('notify_type'));
+                if($query) {
 
-        $_SESSION['SUCCESS'] = L('codesent');
-        Flyspray::Redirect('./');
+                    $_SESSION['SUCCESS'] = L('codesent');
+                    Flyspray::Redirect('./');
+                }
+         
+            } else {
+                Flyspray::show_error(L('codenotsent'));
+                break;
+          }
+
         break;
 
     // ##################

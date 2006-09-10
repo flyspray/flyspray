@@ -33,11 +33,16 @@ class Notifications {
       $msg = $this->GenerateMsg($type, $task_id, $info);
       
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
-          $this->SendEmail($to[0], $msg[0], $msg[1]);
+          if(!$this->SendEmail($to[0], $msg[0], $msg[1])) {
+              return false;
+          }
       }
       if ($ntype == NOTIFY_JABBER || $ntype == NOTIFY_BOTH) {
-          $this->StoreJabber($to[1], $msg[0], $msg[1]);
-      }
+          if(!$this->StoreJabber($to[1], $msg[0], $msg[1])) {
+              return false;
+          }
+      } 
+            return true;
 
    // End of Create() function
    } // }}}
@@ -227,7 +232,7 @@ class Notifications {
          $JABBER->Disconnect();
          debug_print("Disconnected from Jabber server");
 
-      return TRUE;
+      return true;
    } // }}}
    // {{{ Send email
    function SendEmail($to, $subject, $body)
@@ -239,15 +244,15 @@ class Notifications {
       }
 
       // Get the new email class
-      require_once('external/class.phpmailer.php');
+      require_once 'external/swift-mailer/class.phpmailer.php';
 
       // Define the class
       $mail = new PHPMailer();
 
-      $mail->From = $fs->prefs['admin_email'];
-      $mail->Sender = $fs->prefs['admin_email'];
+      $mail->From = trim($fs->prefs['admin_email']);
+      $mail->Sender = trim($fs->prefs['admin_email']);
       if ($proj->prefs['notify_reply']) {
-          $mail->AddReplyTo($proj->prefs['notify_reply']);
+          $mail->AddReplyTo(trim($proj->prefs['notify_reply']));
       }
       $mail->FromName = 'Flyspray';
       $mail->CharSet = 'UTF-8';
@@ -279,22 +284,25 @@ class Notifications {
          foreach ($to as $val)
          {
             // Unlike the docs say, it *does (appear to)* work with mail()
-            $mail->AddBcc($val);
+            $mail->AddBcc(trim($val));
          }
 
       } else {
-         $mail->AddAddress($to);
+         $mail->AddAddress(trim($to));
       }
 
       $mail->WordWrap = 70; // 70 characters
-      $mail->Subject = $subject;
+      $mail->Subject = trim($subject);
       $mail->Body = $body;
 
       if (!$mail->Send()) {
           Flyspray::show_error(21, false, $mail->ErrorInfo);
+          return false;
       }
 
-   } // }}}
+        return true;
+
+   } // }}} 
    // {{{ Create a message for any occasion
    function GenerateMsg($type, $task_id, $arg1='0')
    {
@@ -629,7 +637,7 @@ class Notifications {
           $body = L('messagefrom'). $arg1[0] . "\n\n"
                   . L('magicurlmessage')." \n"
                   . "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n";
-      } // }}}
+      } // } }}
       // {{{ New user
       if ($type == NOTIFY_NEW_USER)
       {
@@ -647,7 +655,7 @@ class Notifications {
       $body .= L('disclaimer');
       return array($subject, $body);
    
-   } // }}}
+   } // }}} 
    // {{{ Create an address list for specific users
    function SpecificAddresses($users, $ignoretype = false)
    {
