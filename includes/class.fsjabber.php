@@ -106,7 +106,8 @@ class fsJabber extends Jabber {
             $this->AddToLog("WARNING: TLS is not available: no SSL support in PHP");
             return true;
         }
-            return parent::_starttls();
+        return parent::_starttls();
+    }
  
     /**
      * _useSSL 
