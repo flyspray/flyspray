@@ -7,14 +7,19 @@ $conf    = @parse_ini_file(BASEDIR . '/flyspray.conf.php', true);
 
 // $baseurl
 // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
-if (!isset($webdir)) {
-    $webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
-    if (substr($webdir, -9) == 'index.php') {
-        $webdir = dirname($webdir);
+if (isset($conf['general']['baseurl']) && $conf['general']['baseurl'] != '') {
+    $baseurl = $conf['general']['baseurl'];
+} else {
+    if (!isset($webdir)) {
+        $webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
+        if (substr($webdir, -9) == 'index.php') {
+            $webdir = dirname($webdir);
+        }
     }
+    
+    $baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
 }
 
-$baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
 
 $path_to_plugin = BASEDIR . '/plugins/' . trim($conf['general']['syntax_plugin']) . '/' 
                   . trim($conf['general']['syntax_plugin']) . '_constants.inc.php';
