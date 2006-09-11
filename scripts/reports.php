@@ -58,13 +58,17 @@ switch (Req::val('order')) {
 }
 
 $where = array();
+$params = array();
+
 foreach (Req::val('events', array()) as $eventtype) {
-    $where[] = 'h.event_type = ' . intval($eventtype);
+    $where[] = 'h.event_type = ?'; 
+    $params[] = $eventtype;
 }
 $where = '(' . implode(' OR ', $where) . ')';
 
 if ($proj->id) {
-    $where = ' (t.project_id = ' . $db->qstr($proj->id) . ' OR h.event_type > 29) AND ' . $where;
+    $where = ' (t.project_id = ?  OR h.event_type > 29) AND ' . $where;
+    $params[] = $proj->id;
 }
 
 if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
@@ -74,12 +78,15 @@ if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
         $utodate   = strtotime($todate) + 86400;
         
         if ($fromdate) {
-            $where .= " h.event_date > {$ufromdate} ";
+            $where .= ' h.event_date > ?';
+            $params[] = $ufromdate;
         }
         if ($todate && $fromdate) {
-            $where .= " AND h.event_date < {$utodate} ";
+            $where .= ' AND h.event_date < ?';
+            $params[] = $utodate;
         } else if ($todate) {
-            $where .= " h.event_date < {$utodate} ";
+            $where .= ' h.event_date < ?';
+            $params[] = $utodate;
         }
 }
 
@@ -88,7 +95,7 @@ if (count(Req::val('events'))) {
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
-                     ORDER BY $orderby", array(), Req::val('event_number', -1));
+                     ORDER BY $orderby", $params, Req::num('event_number', -1));
              
     $histories = $db->FetchAllArray($histories);
 }

@@ -172,7 +172,4 @@ if (Flyspray::absoluteURI($_SERVER['REQUEST_URI']) != $baseurl || !isset($_SESSI
     $_SESSION['prev_page'] = $_SERVER['REQUEST_URI'];
 }
 
-if (!empty($conf['debug'])) {
-    include_once BASEDIR . '/includes/debug.inc.php';
-}
 ?>

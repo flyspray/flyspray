@@ -45,14 +45,6 @@ define('BASEDIR', dirname(__FILE__));
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf['general']['syntax_plugin'] = '';
 
-if (substr(PHP_OS, 0, 3) == 'WIN') {
-
-  define('IS_MSWIN', true);
-
-} else {
-
-  define('IS_MSWIN', false);
-}
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once(OBJECTS_PATH . '/class.flyspray.php');
 require_once(OBJECTS_PATH . '/class.tpl.php');
@@ -152,54 +144,6 @@ class Setup extends Flyspray
    }
 
    /**
-   * Function to scan include path and any additional paths for files
-   * @param string $includeFile Name of file to scan for
-   * @param string $additionalPath An additional path to scan for. eg Application path
-   * @return boolean/string false/actual path of file
-   */
-   function ScanIncludePath($includeFile, $additionalPath = '')
-   {
-      $where_path = '';
-
-      // Add the optional application path to the include_path
-      if (!empty($additionalPath))
-      {
-         ini_set('include_path', $additionalPath . PATH_SEPARATOR . ini_get('include_path'));
-      }
-
-
-      // Get the current include path settings from php config file
-      $paths = explode(PATH_SEPARATOR, ini_get('include_path'));
-
-
-      // Loop through the array of paths
-      foreach($paths as $path)
-      {
-         // Check to see if the last character of the path is a "directory separator"
-         if (substr($path, -1, 1) == DIRECTORY_SEPARATOR)
-         {
-            // If file exists, transfer the values and quit the foreach loop
-            if (is_file($path . $includeFile))
-            {
-               $where_path = $path . $includeFile;
-               break;
-            }
-         }
-         else
-         {
-            // Include the "directory separator" in the scan
-            if (is_readable($path . DIRECTORY_SEPARATOR . $includeFile))
-            {
-               $where_path = $path . DIRECTORY_SEPARATOR . $includeFile;
-               break;
-            }
-         }
-      }
-      // Return success of scan
-      return $where_path ? $where_path : false;
-   }
-
-   /**
    * Function to check the permission of the config file
    * @param void
    * @return string An html formatted boolean answer
@@ -292,7 +236,7 @@ class Setup extends Flyspray
    function CheckPhpCompatibility()
    {
       // Check the PHP version. Recommended version is 4.3.9 and above
-      $this->mPhpVersionStatus = version_compare(PHP_VERSION,$this->mPhpRequired, '>=');
+      $this->mPhpVersionStatus = version_compare(PHP_VERSION, $this->mPhpRequired, '>=');
 
       // Return an html formated Yes/No string
       return $this->ReturnStatus($this->mPhpVersionStatus, $type = 'yes');
@@ -699,16 +643,15 @@ class Setup extends Flyspray
 	{
 		$selection	= '';
 
-			if ($value == 1)
-			{
+        if ($value == 1) {
+
 				$selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> Enable';
 				$selection .= '<input type="radio" name="reminder_daemon" value="0" /> Disable';
-			}
-			else
-			{
+        } else {
+
 				$selection .= '<input type="radio" name="reminder_daemon" value="1" /> Enable';
 				$selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
-			}
+	    }
 			return $selection;
 	
 	}
@@ -933,7 +876,7 @@ class Setup extends Flyspray
       $config_intro	= str_replace("\t", "", $config_intro);
 
       // Create a random cookie salt
-      $cookiesalt = substr(md5(uniqid( rand(), true)), 0, 2);
+      $cookiesalt = substr(md5(uniqid(rand(), true)), 0, 2);
 
 	  // check to see if to enable the Reminder Daemon.
       $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )

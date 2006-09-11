@@ -54,5 +54,6 @@ define('STATUS_ASSIGNED',         3);
 
 // developers or advanced users only
 //define('DEBUG_SQL',true);
-
+//define('JABBER_DEBUG', true);
+//define('JABBER_DEBUG_FILE''/path/to/my/debug/file');
 ?>

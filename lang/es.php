@@ -466,6 +466,7 @@ $translation = array(
 'addressused'             => 'Esta direccion ha sido utilizada para registrar una cuenta Flyspray. Si ud. no estaba esperando este mensaje, simplemente ignorelo y eliminelo. Su Codigo de Confirmacion es:',
 'confirmcodeis'           => 'Su codigo de confirmacion es:',
 'codesent'                => 'Se envio el Codigo de Confirmacion. Por favor, siga las instrucciones contenidas en el mensaje.',
+'codenotsent'             => 'No fue posible enviar el codigo, intente mas tarde.',
 'realandnotify'           => 'Necesita rellenar los campos Nombre Real y alguno de los campos Email o Jabber ID.',
 'massopsuccess'           => 'Las multiples operaciones fueron satisfactorias',
 'usernotexist'            => 'Ese nombre de usuario no existe en esta instalacion Flyspray',

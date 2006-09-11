@@ -488,7 +488,7 @@ class Flyspray
                          VALUES (?, ?, ?, ?, ?, ?)',
                     array($project_id, $task_id, $submitter, $type, $reason, time()));
     } // }}}
-    // Check for an existing admin request for a task and event type {{{
+    // Check for an existing admin request for a task and event type {{{;
     /**
      * Checks whether or not there is an admin request for a task
      * @param integer $type 1: Task close, 2: Task re-open
@@ -579,6 +579,10 @@ class Flyspray
                             ORDER BY  g.group_id ASC", array($username, '0'));
 
         $auth_details = $db->FetchRow($result);
+
+        if(!$result || !count($auth_details)) {
+            return 0;
+        }
 
         //encrypt the password with the method used in the db
         switch (strlen($auth_details['user_pass'])) {
@@ -911,7 +915,7 @@ class Flyspray
         if(function_exists('sys_get_temp_dir')) {
             return sys_get_temp_dir();
             
-        } elseif (substr(PHP_OS, 0, 3) == 'WIN') {
+        } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP')) {
                 return $var;
             }

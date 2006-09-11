@@ -359,7 +359,7 @@ class Jabber
 
 	function Listen()
 	{
-		$incoming = '';
+		unset($incoming);
 
 		while ($line = $this->CONNECTOR->ReadFromSocket(4096))
 		{
@@ -1012,7 +1012,7 @@ class Jabber
 
 	function _listen_incoming()
 	{
-		$incoming = '';
+		unset($incoming);
 
 		while ($line = $this->CONNECTOR->ReadFromSocket(4096))
 		{
@@ -1183,7 +1183,6 @@ class Jabber
 
 
 	// _array_htmlspecialchars()
-    // MODIFICATION BY FLO, function wasn't actually working at all
 	// applies htmlspecialchars() to all values in an array
 
 	function _array_htmlspecialchars($array)
@@ -1194,11 +1193,11 @@ class Jabber
 			{
 				if (is_array($v))
 				{
-					$array[$k] = $this->_array_htmlspecialchars($v);
+					$v = $this->_array_htmlspecialchars($v);
 				}
 				else
 				{
-					$array[$k] = htmlspecialchars($v);
+					$v = htmlspecialchars($v);
 				}
 			}
 		}
@@ -1536,6 +1535,11 @@ class Jabber
 		}
 
 		$this->AddToLog("EVENT: jabber:iq:time (type $type) from $from");
+	}
+
+	function Handler_iq_error($packet)
+	{
+		// We'll do something with these later.  This is a placeholder so that errors don't bounce back and forth.
 	}
 
 
@@ -1945,7 +1949,6 @@ class CJP_StandardConnector
 
 	function OpenSocket($server, $port)
 	{
-        global $fs;
 		if (function_exists("dns_get_record"))
 		{
 			$record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
@@ -1955,10 +1958,6 @@ class CJP_StandardConnector
 				$port = $record[0]["port"];
 			}
 		}
-       
-        if ($fs->prefs['jabber_ssl']) {
-            $server = 'ssl://' . $server;
-        }
 
 		if ($this->active_socket = fsockopen($server, $port))
 		{
