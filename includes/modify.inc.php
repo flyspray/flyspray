@@ -458,7 +458,7 @@ switch ($action = Req::val('action'))
                 array_unshift($params, $proj->id);
                 
                 $db->Query("INSERT INTO  {groups} (project_id, ". join(',', $cols).")
-                                 VALUES  (". $db->fill_placeholders($cols, 1) .')', $params);
+                                 VALUES  (?, ".join(',', array_fill(0, count($cols), '?')).")", $params);
 
                 $_SESSION['SUCCESS'] = L('newgroupadded');
             }
@@ -535,7 +535,7 @@ switch ($action = Req::val('action'))
         $db->Query("INSERT INTO  {groups}
                                  ( group_name, group_desc, project_id,
                                    ".join(',', $cols).")
-                         VALUES  ( " . $db->fill_placeholders($cols, 3) .")",
+                         VALUES  ( ?, ?, ?, ".join(',', array_fill(0, count($cols), '?')).")",
                          $args);
 
         $db->Query("INSERT INTO  {list_category}
@@ -787,18 +787,17 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $listname     = Post::val('list_name');
+        $listnames    = Post::val('list_name');
         $listposition = Post::val('list_position');
         $listshow     = Post::val('show_in_list');
         $listdelete   = Post::val('delete');
-        $listid       = Post::val('id');
 
-        for($i = 0; $i < count($listname); $i++) {
-            if ($listname[$i] != '') {
+        foreach ($listnames as $id => $listname) {
+            if ($listname != '') {
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
-                                      array($listname[$i], intval($listposition[$i]), intval($listshow[$i]), $listid[$i], $proj->id));
+                                      array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id));
             } else {
                 Flyspray::show_error(L('fieldsmissing'));
             }
@@ -852,22 +851,20 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $listname     = Post::val('list_name');
+        $listnames    = Post::val('list_name');
         $listposition = Post::val('list_position');
         $listshow     = Post::val('show_in_list');
         $listtense    = Post::val('version_tense');
         $listdelete   = Post::val('delete');
-        $listid       = Post::val('id');
 
-        for($i = 0; $i < count($listname); $i++) {
-            if (is_numeric($listposition[$i])  && $listname[$i] != '') {
-
+        foreach ($listnames as $id => $listname) {
+            if (is_numeric($listposition[$id]) && $listnames[$id] != '') {
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
                                        WHERE  $list_id = ? AND project_id = ?",
-                        array($listname[$i], $listposition[$i],
-                            intval($listshow[$i]), intval($listtense[$i]), $listid[$i], $proj->id));
+                        array($listnames[$id], $listposition[$id],
+                            intval($listshow[$id]), intval($listtense[$id]), $id, $proj->id));
             } else {
                 Flyspray::show_error(L('fieldsmissing'));
             }
@@ -922,21 +919,21 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        $listname     = Post::val('list_name');
+        $listnames    = Post::val('list_name');
         $listshow     = Post::val('show_in_list');
-        $listid       = Post::val('id');
         $listdelete   = Post::val('delete');
         $listlft      = Post::val('lft');
         $listrgt      = Post::val('rgt');
+        $listowners   = Post::val('category_owner');
 
-        for ($i = 0; $i < count($listname); $i++) {
-            if ($listname[$i] != '') {
+        foreach ($listnames as $id => $listname) {
+            if ($listname != '') {
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
                                               show_in_list = ?, category_owner = ?,
                                               lft = ?, rgt = ?
                                        WHERE  category_id = ? AND project_id = ?',
-                                  array($listname[$i], intval($listshow[$i]), Flyspray::username_to_id(Post::val('category_owner' . $i)), $listlft[$i], $listrgt[$i], $listid[$i], $proj->id));
+                                  array($listname, intval($listshow[$id]), Flyspray::username_to_id($listowners[$id]), $listlft[$id], $listrgt[$id], $id, $proj->id));
             } else {
                 Flyspray::show_error(L('fieldsmissing'));
             }

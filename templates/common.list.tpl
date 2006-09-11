@@ -26,19 +26,18 @@
     $countlines++; ?>
     <tr>
       <td class="first">
-        <input type="hidden" name="id[]" value="{$row[$list_type.'_id']}" />
-        <input id="listname{$countlines}" class="text" type="text" size="15" maxlength="40" name="list_name[]"
+        <input id="listname{$countlines}" class="text" type="text" size="15" maxlength="40" name="list_name[{$row[$list_type.'_id']}]"
           value="{$row[$list_type.'_name']}" />
       </td>
       <td title="{L('ordertip')}">
-        <input id="listposition{$countlines}" class="text" type="text" size="3" maxlength="3" name="list_position[]" value="{$row['list_position']}" />
+        <input id="listposition{$countlines}" class="text" type="text" size="3" maxlength="3" name="list_position[{$row[$list_type.'_id']}]" value="{$row['list_position']}" />
       </td>
       <td title="{L('showtip')}">
-        {!tpl_checkbox('show_in_list['.$countlines.']', $row['show_in_list'], 'showinlist'.$countlines)}
+        {!tpl_checkbox('show_in_list[' . $row[$list_type.'_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines)}
       </td>
       <?php if ($list_type == 'version'): ?>
       <td title="{L('listtensetip')}">
-        <select id="tense{$countlines}" name="{$list_type}_tense[]">
+        <select id="tense{$countlines}" name="{$list_type}_tense[{$row[$list_type.'_id']}]">
           {!tpl_options(array(1=>L('past'), 2=>L('present'), 3=>L('future')), $row[$list_type.'_tense'])}
         </select>
       </td>

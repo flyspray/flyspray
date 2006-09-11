@@ -1,4 +1,14 @@
 <fieldset class="box"> <legend>{L('editgroup')}</legend>
+    <form action="{$baseurl}" method="get">
+        <div>
+            <label for="selectgroup">{L('editgroup')}</label>
+            <select name="id" id="selectgroup">{!tpl_options(Flyspray::ListGroups($proj->id), Req::num('id'))}</select>
+            <button type="submit">{L('edit')}</button>
+            <input type="hidden" name="do" value="{Req::val('do')}" />
+            <input type="hidden" name="area" value="editgroup" />
+        </div>
+    </form>
+    <hr />
   <?php $group_details = Flyspray::getGroupDetails(Req::num('id')); ?>
   <form action="{$baseurl}" method="post">
     <table class="box">

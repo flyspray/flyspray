@@ -35,18 +35,17 @@
         ?>
         <tr class="depth{$row['depth']}">
           <td class="first">
-            <input type="hidden" name="lft[]" value="{$row['lft']}" />
-            <input type="hidden" name="rgt[]" value="{$row['rgt']}" />
-            <input type="hidden" name="id[]" value="{$row['category_id']}" />
+            <input type="hidden" name="lft[{$row['category_id']}]" value="{$row['lft']}" />
+            <input type="hidden" name="rgt[{$row['category_id']}]" value="{$row['rgt']}" />
             <span class="depthmark">{!str_repeat('&rarr;', $row['depth'])}</span>
-            <input id="categoryname{$countlines}" class="text" type="text" size="15" maxlength="40" name="list_name[]" 
+            <input id="categoryname{$countlines}" class="text" type="text" size="15" maxlength="40" name="list_name[{$row['category_id']}]" 
               value="{$row['category_name']}" />
           </td>
           <td title="{L('categoryownertip')}">
-            {!tpl_userselect('category_owner' . $countlines, $row['category_owner'], 'categoryowner' . $countlines)}
+            {!tpl_userselect('category_owner[' . $row['category_id'] . ']' . $countlines, $row['category_owner'], 'categoryowner' . $countlines)}
           </td>
           <td title="{L('listshowtip')}">
-            {!tpl_checkbox('show_in_list['.$countlines.']', $row['show_in_list'], 'showinlist'.$countlines)}
+            {!tpl_checkbox('show_in_list[' . $row['category_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines)}
           </td>
           <td title="{L('listdeletetip')}">
             <input id="delete{$row['category_id']}" type="checkbox"

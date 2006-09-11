@@ -95,9 +95,9 @@ var TableControl = {
 				row[i].tree_right = 0;
 
 				for ( j = 0; j < input.length; j++ ) {
-					if ( input[j].name == 'lft[]' )
+					if ( input[j].name.substring(0,3) == 'lft' )
 						row[i].tree_left = input[j];
-					else if ( input[j].name == 'rgt[]' )
+					else if ( input[j].name.substring(0,3) == 'rgt' )
 						row[i].tree_right = input[j];
 				}
 
@@ -112,7 +112,7 @@ var TableControl = {
 			// initialize classical position values
 			else {
 				for ( j = 0; j < input.length; j++ ) {
-					if ( input[j].name == 'list_position[]' )
+					if ( input[j].name.substring(0,13) == 'list_position' )
 						row[i].list_position = input[j];
 				}
 			}
