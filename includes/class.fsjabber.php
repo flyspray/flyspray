@@ -91,13 +91,22 @@ class fsJabber extends Jabber {
     {
         if ($this->enable_logging) {
 
-            if ($this->log_filehandler) {
+            if (is_resource($this->log_filehandler)) {
                 @fwrite($this->log_filehandler, $string . "\n\n");
             }           
         } else {
                 $this->log_array[] = htmlspecialchars($string, ENT_QUOTES, 'utf-8');
         }
     }
+    
+    function _starttls()
+    {
+        if (!extension_loaded('openssl')) {
+
+            $this->AddToLog("WARNING: TLS is not available: no SSL support in PHP");
+            return true;
+        }
+            return parent::_starttls();
  
     /**
      * _useSSL 
