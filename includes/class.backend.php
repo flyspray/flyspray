@@ -1073,14 +1073,18 @@ class Backend
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
         $limit = array_get($args, 'limit', -1);
+        $task_count = 0;
         foreach ($tasks as $key => $task) {
             $id_list[] = $task['task_id'];
             if (!$user->can_view_task($task)) {
                 unset($tasks[$key]);
                 array_pop($id_list);
-            } elseif ($key < $offset || ($key > $offset - 1 + $perpage) || ($limit > 0 && $key >= $limit)) {
+                --$task_count;
+            } elseif (!is_null($perpage) && ($task_count < $offset || ($task_count > $offset - 1 + $perpage) || ($limit > 0 && $task_count >= $limit))) {
                 unset($tasks[$key]);
             }
+            
+            ++$task_count;
         }
 
         return array($tasks, $id_list);
