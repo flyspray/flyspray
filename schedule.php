@@ -9,6 +9,14 @@
 
 define('IN_FS', true);
 
+/**
+ * Developers warning :
+ * Be aware while debugging this, it actually daemonize ¡¡
+ * it runs **forever** in the background every ten minutes
+ * to simulate a real cron task, it WONT STOP if you click
+ * stop in your browser, it will only stop if you restart
+ * your webserver.
+ */
 
 require_once 'header.php';
 
@@ -22,7 +30,12 @@ set_time_limit(0);
 
 include_once BASEDIR . '/includes/class.notify.php';
 
+do {
+    //we touch the file on every single iteration to avoid
+    //the possible restart done by Startremiderdaemon method
+    //in class.flyspray.conf 
 touch(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
+    
 
 $notify = new Notifications;
 $user = new User(0);
@@ -77,6 +90,11 @@ while ($row = $db->FetchRow($get_reminders)) {
 
 // send those stored notifications
 $notify->SendJabber();
+//wait 10 minutes for the next loop.
+sleep(600);
+
+//forever ¡¡¡ ( oh well. a least will not stop unless killed or the server restarted)
+} while(true);
 
 @register_shutdown_function('unlink', Flyspray::get_tmp_dir() . '/flysprayreminders.run');
 
