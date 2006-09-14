@@ -11,17 +11,13 @@ privileged--and two web browsers. These tests are marked with [2U].
 Some tests are meant to fail; these are marked with [F].
 
 Installation:
-* correctly detect or install ADOdb
 * detect if flyspray.conf.php is writeable
 * licence agreement displays correctly, and will not advance without acceptance
 * insert database tables using specified dbprefix
-* enable/disable address_rewriting based upon apache mod_rewrite availability
-* enable/disable reminder_daemon based upon cli php availability
 * set admin details
 * logs-in admin after install has finished
 
 Upgrade:
-* correctly detect or install ADOdb
 * detect if flyspray.conf.php is writeable
 * licence agreement displays correctly, and will not advance without acceptance
 * insert database upgrade tables
@@ -89,3 +85,18 @@ Code quality:
     for file in `find . -name '*.php'`; do php -l $file; done
 * search for 'TODO', 'FIXME' and 'release' strings:
     grep -Er '(TODO|FIXME|release)' * | grep '.php:'
+
+Security :
+
+* If you added a new template function, make sure user submitted data is properly escaped and using the correct charset
+    ie . $foo = htmlspecialchars($bar, ENT_QUOTES, 'utf-8') o use the XXX:safe filters.
+* the template parser automatically escapes data only for plain variable templates, no action is required from your part.
+
+* Check if the sql queries are using prepared statements if the query contains **any kind** of variables
+* for table or column names make sure to check if they only contain numbers and letters.
+* *** Do not use eval() **
+* Do not use preg_replace with the "/e" modifier. if you need that, always use preg_replace_callback() it is faster, and  safer
+* Do not use include* or require* with variables.
+* Make sure the code includes fix.inc.php at some point.
+* Avoid using any kind function that permits self-modifing code like create_function().
+

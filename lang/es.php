@@ -1,5 +1,11 @@
 <?php
 
+/**
+* Esta traducciión es actualmente mantenida por 
+*  Cristian Rodriguez.
+*  Envia un mail con tus correcciones a judas_iscariote@imapmail.org
+*/
+
 $translation = array(
 'edituser'                => 'Editar usuario',
 'username'                => 'Nombre de Usuario',
@@ -212,7 +218,7 @@ $translation = array(
 'addmyself'               => 'Sumarme a la lista',
 'removemyself'            => 'Removerme de la lista',
 'theseusersnotify'        => 'Estos usuarios recibiran notificaciones detalladas cuando esta tarea cambie',
-'attachedtoproject'       => 'Adjuntado al Proyecto',
+'attachedtoproject'       => 'Pertenece al Proyecto',
 'reminders'               => 'Recordatorios',
 'system'                  => 'Sistema',
 'remindthisuser'          => 'Recordar a este usuario',
@@ -453,14 +459,14 @@ $translation = array(
 'saveanyway'              => 'Guardar mis cambios de todas formas',
 'nouserselected'          => 'No se selecciono un usuario. Seleccione al menos uno antes de intentar nuevamente.',
 'groupswitchupdated'      => 'Se modifico satisfactoriamente los Grupos de Usuario.',
-'takenownership'          => 'se asign� la siguiente tarea:',
+'takenownership'          => 'se asignó la siguiente tarea:',
 'adminrequestmade'        => 'Su pedido fue enviado a un Manager del Proyecto.',
 'newdepnotify'            => 'Se agrego nueva dependencia a la siguiente tarea:',
 'dependadded'             => 'Se agrego la dependencia de la tarea',
 'dependaddfailed'         => 'Ahora no puede agregar esa tarea como dependencia',
 'newdepis'                => 'La nueva dependencia es',
 'magicurlsent'            => 'Se envio un mensaje a su direccion de notificacion. Contiene un enlace que lo llevara a una pagina para completar esta tarea.',
-'changefspass'            => 'Cambiar la contrase&ntilde;a Flyspray',
+'changefspass'            => 'Cambiar la contraseña',
 'magicurlmessage'         => 'Por favor, siga el siguiente enlace de abajo para cambiar su contrase&ntilde;a Flyspray:',
 'erroronform'             => 'Ocurrio un problema con el envio del formulario',
 'addressused'             => 'Esta direccion ha sido utilizada para registrar una cuenta Flyspray. Si ud. no estaba esperando este mensaje, simplemente ignorelo y eliminelo. Su Codigo de Confirmacion es:',
@@ -567,8 +573,10 @@ $translation = array(
 'votes'                   => 'Votos',
 'private'                 => 'Privada',
 'watching'                => 'Observando',
-'saveas'                  => 'guardar búsqueda como'
-
+'saveas'                  => 'guardar búsqueda como',
+'preview'                 => 'Vista previa',
+'overview'                => 'Vista general',
+'logout'                  => 'Salir',
 );
 
 ?>

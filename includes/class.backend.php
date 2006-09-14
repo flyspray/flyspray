@@ -836,7 +836,7 @@ class Backend
     function get_task_list($args, $visible, $offset = 0, $perpage = 20)
     {
         global $proj, $db, $user, $conf;
-        /* build SQL statement {{{ */
+        /* build SQL statement {{{ */ 
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
         $select = '';
@@ -947,7 +947,7 @@ class Backend
                 $order_column[0], Filters::enum(array_get($args, 'sort', 'desc'), array('asc', 'desc')),
                 $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
 
-        /// process search-conditions {{{
+        /// process search-conditions {{{  
         $submits = array('type' => 'task_type', 'sev' => 'task_severity', 'due' => 'closedby_version', 'reported' => 'product_version',
                          'cat' => 'product_category', 'status' => 'item_status', 'percent' => 'percent_complete',
                          'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
@@ -979,7 +979,9 @@ class Backend
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
                         $temp .= ' a.user_id is NULL  OR';
                     } else {
-                        if (!is_numeric($val)) $val = '%' . $val . '%';
+                        if (!is_numeric($val)) {
+                            $val = '%' . $val . '%';
+                        }
                         foreach ($db_key as $value) {
                             $temp .= ' ' . $value . ' LIKE ?  OR';
                             $sql_params[] = $val;
@@ -1006,7 +1008,9 @@ class Backend
                 }
             }
 
-            if ($temp) $where[] = '(' . substr($temp, 0, -3) . ')';
+            if ($temp) {
+                $where[] = '(' . substr($temp, 0, -3) . ')';
+            }
         }
         /// }}}
 

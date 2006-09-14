@@ -22,6 +22,9 @@ require_once 'header.php';
 
 //ok, the reminder deamon request includes a key , the sha1sum of flsypray.conf
 // which is unique to the installation.
+// this does not intened to be a password or a real security measure, since the key
+// will be logged with the request.
+
 if(Get::has('key') && trim(Get::val('key')) == sha1_file(BASEDIR. '/flyspray.conf.php')) {
 
 //keep going, execute the script in the background
@@ -104,17 +107,3 @@ sleep(600);
 }
 
 ?>
-<html>
-<head>
-<title>Scheduled Reminders</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head>
-
-<body>
-<h1>Scheduled Reminders</h1>
-This is a backend script that really isn't meant to be displayed in your browser.
-To enable scheduled reminders, you set up some sort of background program to
-activate this script regularly.  The unix utility 'cron' can be used in conjunction
-with 'wget' to do this.
-</body>
-</html>

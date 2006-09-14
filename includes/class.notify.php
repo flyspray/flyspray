@@ -101,6 +101,13 @@ class Notifications {
       }
 
       $JABBER = new fsJabber;
+        
+      //in the strange case the user can't use
+      // the really basic jabber features, run away..
+      
+      if(!$JABBER->jinfo->can_use_jabber) {
+            return false;
+      }
 
       $JABBER->server      = $fs->prefs['jabber_server'];
       $JABBER->port        = $fs->prefs['jabber_port'];

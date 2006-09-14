@@ -108,8 +108,8 @@ class Tpl
         
         // XXX: if you find a clever way to remove the evil here,
         // send us a patch, thanks.. we don't want this..really ;)
-        eval( '?>'. $_tpl_data );
 
+        eval( '?>'. $_tpl_data );
     } // }}}
 
     function render()
@@ -169,13 +169,13 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     }
 
     if ($user->can_view_task($task)) {
-        $summary = htmlspecialchars(utf8_substr($task['item_summary'], 0, 64), ENT_QUOTES, 'utf-8');
+        $summary = utf8_substr($task['item_summary'], 0, 64);
     } else {
         $summary = L('taskmadeprivate');
     }
     
     if (is_null($text)) {
-        $text = 'FS#'.$task['task_id'].' - '.$summary;
+        $text = 'FS#'. (int) $task['task_id'] . ' - '. htmlspecialchars($summary, ENT_QUOTES, 'utf-8');
     } else {
         $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
     }
@@ -242,7 +242,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     }
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
     $link  = sprintf('<a href="%s" title="%s" %s>%s</a>',
-            $url, $title_text, join_attrs($attrs), $text);
+            $url, htmlspecialchars($title_text, ENT_QUOTES, 'utf-8'), join_attrs($attrs), $text);
 
     if ($task['is_closed']) {
         $link = '<del>&#160;' . $link . '&#160;</del>';

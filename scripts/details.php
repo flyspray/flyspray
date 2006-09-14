@@ -50,11 +50,11 @@ if (Req::val('edit') && $user->can_edit_task($task_details)) {
 else {
     $prev_id = $next_id = 0;
 
-    if (($id_list = @$_SESSION['tasklist'])
+    if (isset($_SESSION['tasklist']) && ($id_list = $_SESSION['tasklist'])
             && ($i = array_search($task_id, $id_list)) !== false)
     {
-        $prev_id = @$id_list[$i - 1];
-        $next_id = @$id_list[$i + 1];
+        $prev_id = isset($id_list[$i - 1]) ? $id_list[$i - 1] : '';
+        $next_id = isset($id_list[$i + 1]) ? $id_list[$i + 1] : '';
     }
     
     // Parent categories
@@ -142,10 +142,10 @@ else {
     
     // Comments + cache
     $sql = $db->Query('  SELECT * FROM {comments} c
-                      LEFT JOIN {cache} ca ON (c.comment_id = ca.topic AND ca.type = \'comm\' AND c.last_edited_time <= ca.last_updated)
+                      LEFT JOIN {cache} ca ON (c.comment_id = ca.topic AND ca.type = ? AND c.last_edited_time <= ca.last_updated)
                           WHERE task_id = ?
                        ORDER BY date_added ASC',
-                           array($task_id));
+                           array('comm', $task_id));
 
     $page->assign('comments', $db->fetchAllArray($sql));
 

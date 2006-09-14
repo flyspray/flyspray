@@ -7,7 +7,7 @@
 * @author Marcus Baker
 * @package Doku
 * @subpackage Lexer
-* @version $Id: lexer.php,v 1.1 2005/03/23 23:14:09 harryf Exp $
+* @version $Id$
 */
 
 /**

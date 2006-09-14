@@ -112,8 +112,9 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function Redirect($url, $exit = true, $rfc2616 = true)
+    function Redirect($url, $exit = true, $rfc2616 = true, $local_only= true)
     {
+
         @ob_clean();
 
         if (count($_SESSION)) {
@@ -127,10 +128,25 @@ class Flyspray
 
         $url = FlySpray::absoluteURI($url);
 
+        if($local_only) {
+
+            $check_url = parse_url($url);
+            
+            if($check_url['host'] != $_SERVER['HTTP_HOST']) {
+
+                /* We are redirecting to other place
+                * which is not flyspray, or not this host
+                * we don't want that.
+                 */
+                return false;
+            }
+        }
+
         header('Location: '. $url);
 
         if ($rfc2616 && isset($_SERVER['REQUEST_METHOD']) &&
             $_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            $url = htmlspecialchars($url, ENT_QUOTES, 'utf-8');
             printf('%s to: <a href="%s">%s</a>.', L('Redirect'), $url, $url);
         }
         if ($exit) {
@@ -138,7 +154,7 @@ class Flyspray
         }
         
         return true;
-    } // }}}
+    } // }}} 
 
     /**
      * Absolute URI (This function is part of PEAR::HTTP licensed under the BSD) {{{
@@ -231,7 +247,7 @@ class Flyspray
         }
 
         return $server . $path . $url;
-    } // }}}
+    } // }}}  
 
     // Duplicate submission check {{{
     /**
@@ -464,10 +480,17 @@ class Flyspray
         // 30: New user registration
         // 31: User deletion
 
+        $query_params = array(intval($task_id), intval($user->id),
+                             ((is_null($time)) ? time() : $time), 
+                              $type, $field, $oldvalue, $newvalue); 
 
-        $db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed, old_value, new_value)
-                         VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    array(intval($task_id), intval($user->id), ( (is_null($time)) ? time() : $time ), $type, $field, $oldvalue, $newvalue));
+        if($db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed, 
+                       old_value, new_value) VALUES (?, ?, ?, ?, ?, ?, ?)', $query_params)) {
+
+                           return true;
+         }
+
+        return false;
     } // }}}
     // Log a request for an admin/project manager to do something {{{
     /**

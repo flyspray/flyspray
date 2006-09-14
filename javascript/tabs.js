@@ -1,5 +1,5 @@
 /*
- * $Id: tabs.js 805 2004-12-23 00:02:21Z cr $
+ * $Id$
  */
 addEvent(window, "load", initTabs);
 function addEvent(elm, evType, fn, useCapture)
