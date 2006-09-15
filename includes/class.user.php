@@ -150,7 +150,7 @@ class User
                 }
 
                 // nobody can upload files if uploads are disabled at the system level.. 
-                if (!$fs->max_file_size) {
+                if (!$fs->max_file_size || !is_writable(BASEDIR .'/attachments')) {
                     $this->perms[$proj_id]['create_attachments'] = 0;
                 }
             }
