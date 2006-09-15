@@ -470,7 +470,7 @@ class Backend
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                 WHERE g.group_id = 1');
             $notify->Create(NOTIFY_NEW_USER, null,
-                            array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto), $db->FetchAllArray($sql));
+                            array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto), $db->FetchAllArray($sql), NOTIFY_EMAIL);
         }
         
         return true;

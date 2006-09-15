@@ -200,7 +200,7 @@ function dualSelect(from, to, id) {
             opt = new Option(from.options[i].text, from.options[i].value);
             if (to && to.options) {
               to.options[to.options.length]=opt
-            } else if (to) {
+            } else if (to && to.add) {
               to.add(opt)
             }
             if (from.options.length > 1) {
