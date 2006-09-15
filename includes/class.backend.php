@@ -325,7 +325,7 @@ class Backend
             }
 
             $fname = $task_id.'_'.mt_rand();
-            while (is_file($path = 'attachments/'.$fname)) {
+            while (is_file($path = BASEDIR .'/attachments/'.$fname)) {
                 $fname = $task_id.'_'.mt_rand();
             }
 

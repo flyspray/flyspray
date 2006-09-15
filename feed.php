@@ -55,8 +55,8 @@ $most_recent = intval(max($db->fetchRow($sql)));
 /* test cache */
 if ($fs->prefs['cache_feeds']) {
     if ($fs->prefs['cache_feeds'] == '1') {
-        if (is_file('cache/'.$filename) && $most_recent <= filemtime('cache/'.$filename)) {
-            readfile('cache/'.$filename);
+        if (is_file(BASEDIR .'/cache/'.$filename) && $most_recent <= filemtime(BASEDIR . '/cache/'.$filename)) {
+            readfile(BASEDIR . '/cache/'.$filename);
             exit;
         }
     }

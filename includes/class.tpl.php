@@ -289,7 +289,8 @@ function join_attrs($attr = null) {
     if (is_array($attr)) {
         $arr = array();
         foreach ($attr as $key=>$val) {
-            $arr[] = $key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+            $arr[] = htmlspecialchars($key, ENT_QUOTES, 'utf-8') . '="'. 
+                     htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
         }
         return ' '.join(' ', $arr);
     }
