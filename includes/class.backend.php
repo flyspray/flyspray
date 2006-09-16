@@ -464,13 +464,15 @@ class Backend
         
         Flyspray::logEvent(0, 30, serialize(Flyspray::getUserDetails($uid)));
         
+        // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
             $sql = $db->Query('SELECT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                 WHERE g.group_id = 1');
             $notify->Create(NOTIFY_NEW_USER, null,
-                            array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto), $db->FetchAllArray($sql), NOTIFY_EMAIL);
+                            array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
+                            $db->FetchAllArray($sql), NOTIFY_EMAIL);
         }
         
         return true;
@@ -524,7 +526,7 @@ class Backend
         
         $tables = array('list_category', 'list_os', 'list_resolution', 'list_tasktype',
                         'list_status', 'list_version', 'admin_requests', 
-                        'cache', 'groups', 'projects', 'tasks');
+                        'cache', 'projects', 'tasks');
         
         foreach ($tables as $table) {
             if ($move_to && $table !== 'projects') {
@@ -545,6 +547,15 @@ class Backend
              //we need this for the next loop.
             unset($tp); 
         }
+        
+        // groups are only deleted, not moved (it is likely
+        // that the destination project already has all kinds
+        // of groups which are also used by the old project)
+        $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ?', array($pid));
+        while ($row = $db->FetchRow($sql)) {
+            $db->Query('DELETE FROM {users_in_groups} WHERE group_id = ?', array($row['project_id']));
+        }
+        $sql = $db->Query('DELETE FROM {groups} WHERE project_id = ?', array($pid));        
         
         //we have enough reasons ..  the process is OK. 
         return true;        
@@ -836,7 +847,7 @@ class Backend
     function get_task_list($args, $visible, $offset = 0, $perpage = 20)
     {
         global $proj, $db, $user, $conf;
-        /* build SQL statement {{{ */ 
+        /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
         $select = '';
@@ -947,7 +958,7 @@ class Backend
                 $order_column[0], Filters::enum(array_get($args, 'sort', 'desc'), array('asc', 'desc')),
                 $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
 
-        /// process search-conditions {{{  
+        /// process search-conditions {{{
         $submits = array('type' => 'task_type', 'sev' => 'task_severity', 'due' => 'closedby_version', 'reported' => 'product_version',
                          'cat' => 'product_category', 'status' => 'item_status', 'percent' => 'percent_complete',
                          'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
@@ -979,9 +990,7 @@ class Backend
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
                         $temp .= ' a.user_id is NULL  OR';
                     } else {
-                        if (!is_numeric($val)) {
-                            $val = '%' . $val . '%';
-                        }
+                        if (!is_numeric($val)) $val = '%' . $val . '%';
                         foreach ($db_key as $value) {
                             $temp .= ' ' . $value . ' LIKE ?  OR';
                             $sql_params[] = $val;
@@ -1008,9 +1017,7 @@ class Backend
                 }
             }
 
-            if ($temp) {
-                $where[] = '(' . substr($temp, 0, -3) . ')';
-            }
+            if ($temp) $where[] = '(' . substr($temp, 0, -3) . ')';
         }
         /// }}}
 
