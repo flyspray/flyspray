@@ -1455,7 +1455,7 @@ blockquote blockquote {
 
 span.autocomplete {
 	position: absolute;
-	width: 350px;
+	width: auto !important;
 	background-color:#eef7ff;
 	color:#03008f;
 	border:1px solid gray;
@@ -1477,6 +1477,7 @@ span.autocomplete ul li {
 	margin: 0;
 	padding:2px 4px;
 	height: 1.1em;
+	white-space:nowrap;
 }
 
 span.autocomplete ul li span.informal {

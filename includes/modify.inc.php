@@ -452,7 +452,7 @@ switch ($action = Req::val('action'))
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'view_attachments',
-                        'assign_others_to_self', 'view_reports', 'group_open');
+                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);

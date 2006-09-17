@@ -59,7 +59,7 @@
 			 <td><label>{L('assignedto')}</label></td>
 			 <td>
                 <?php if ($user->perms('edit_assignments')): ?>
-				<a href="#users" id="selectusers" class="button" onclick="remove_0val('rassigned_to');fill_userselect('{$baseurl}javascript/callbacks/useradd.php', 'assigned_to');showhidestuff('multiuserlist');">{L('selectusers')}</a>
+				
 				<input type="hidden" name="old_assigned" value="{$old_assigned}" />
                 <?php $this->display('common.multiuserselect.tpl'); ?>
                 <?php else: ?>

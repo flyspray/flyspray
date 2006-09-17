@@ -1,15 +1,14 @@
 <fieldset><legend>{L('createnewgroup')}</legend>
-<p><em>{L('requiredfields')}</em> <strong>*</strong></p>
 
 <form action="{$baseurl}" method="post" id="newgroup">
   <table class="box">
     <tr>
       <td><label for="groupname">{L('groupname')}</label></td>
-      <td><input id="groupname" class="text" type="text" value="{Req::val('group_name')}" name="group_name" size="20" maxlength="20" /> <strong>*</strong></td>
+      <td><input id="groupname" class="required text" type="text" value="{Req::val('group_name')}" name="group_name" size="20" maxlength="20" /></td>
     </tr>
     <tr>
       <td><label for="groupdesc">{L('description')}</label></td>
-      <td><input id="groupdesc" class="text" type="text" value="{Req::val('group_desc')}" name="group_desc" size="50" maxlength="100" /> <strong>*</strong></td>
+      <td><input id="groupdesc" class="text" type="text" value="{Req::val('group_desc')}" name="group_desc" size="50" maxlength="100" /></td>
     </tr>
     <tr>
       <td><label for="manageproject">{L('projectmanager')}</label></td>
@@ -40,20 +39,20 @@
       <td>{!tpl_checkbox('add_comments', Req::val('add_comments'), 'addcomments')}</td>
     </tr>
     <tr>
-      <td><label for="editcomments">{L('editcomments')}</label></td>
-      <td>{!tpl_checkbox('edit_comments', Req::val('edit_comments'), 'editcomments')}</td>
-    </tr>
-    <tr>
       <td><label for="editowncomments">{L('editowncomments')}</label></td>
       <td>{!tpl_checkbox('edit_own_comments', Req::val('edit_own_comments'), 'editowncomments')}</td>
     </tr>
     <tr>
-      <td><label for="viewattachments">{L('viewattachments')}</label></td>
-      <td>{!tpl_checkbox('view_attachments', Req::val('view_attachments'), 'viewattachments')}</td>
+      <td><label for="editcomments">{L('editcomments')}</label></td>
+      <td>{!tpl_checkbox('edit_comments', Req::val('edit_comments'), 'editcomments')}</td>
     </tr>
     <tr>
       <td><label for="deletecomments">{L('deletecomments')}</label></td>
       <td>{!tpl_checkbox('delete_comments', Req::val('delete_comments'), 'deletecomments')}</td>
+    </tr>
+    <tr>
+      <td><label for="viewattachments">{L('viewattachments')}</label></td>
+      <td>{!tpl_checkbox('view_attachments', Req::val('view_attachments'), 'viewattachments')}</td>
     </tr>
     <tr>
       <td><label for="createattachments">{L('createattachments')}</label></td>
@@ -82,6 +81,10 @@
     <tr>
       <td><label for="assignotherstoself">{L('assignotherstoself')}</label></td>
       <td>{!tpl_checkbox('assign_others_to_self', Req::val('assign_others_to_self'), 'assignotherstoself')}</td>
+    </tr>
+    <tr>
+      <td><label for="addtoassignees">{L('addtoassignees')}</label></td>
+      <td>{!tpl_checkbox('add_to_assignees', Req::val('add_to_assignees'), 'addtoassignees')}</td>
     </tr>
     <tr>
       <td><label for="viewreports">{L('viewreports')}</label></td>
