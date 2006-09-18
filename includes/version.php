@@ -54,7 +54,7 @@ class Version
     $this->mUnixName = 'flyspray';
     $this->mRelease = '0.9';
     $this->mDevStatus = 'devel';
-    $this->mDevLevel = '8';
+    $this->mDevLevel = '9';
     $this->mCodename = 'Karate Kid';
     $this->mRelDate = '26/08/2005';
     $this->mRelTime = '10:00';

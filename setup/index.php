@@ -3,6 +3,7 @@
 // | PHP Source
 // +----------------------------------------------------------------------
 // | Copyright (C) 2005 by Jeffery Fernandez <developer@jefferyfernandez.id.au>
+// | Copyright (C) 2006  by Cristian Rodriguez R <soporte@onfocus.cl>
 // +----------------------------------------------------------------------
 // |
 // | Copyright: See COPYING file that comes with this distribution
@@ -21,34 +22,36 @@ if ( is_readable ('../flyspray.conf.php') && (count($config = parse_ini_file('..
    die('Flyspray Already Installed. Delete the contents of flyspray.conf.php to run setup.');
 }
  */
-// ---------------------------------------------------------------------
-// Application information
-// ---------------------------------------------------------------------
-define('VALID_FLYSPRAY', 1 );
+
+// define basic stuff first.
+
+define('VALID_FLYSPRAY',1);
 define('IN_FS', 1 );
 define('APPLICATION_NAME', 'Flyspray');
+define('BASEDIR', dirname(__FILE__));
+define('APPLICATION_PATH', dirname(BASEDIR));
+define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
+define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
+
+// get the functionality right now
+
+require_once OBJECTS_PATH . '/fix.inc.php';
+require_once OBJECTS_PATH . '/class.flyspray.php';
+require_once OBJECTS_PATH . '/class.tpl.php';
+require_once OBJECTS_PATH . '/version.php';
+
 
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
-define('SERVER_WEB_ROOT', 'http://'.$_SERVER['SERVER_NAME']);
-define('APPLICATION_SETUP_FOLDER', dirname($_SERVER['PHP_SELF']));
-define('APPLICATION_SETUP_INDEX', SERVER_WEB_ROOT . APPLICATION_SETUP_FOLDER);
-define('APPLICATION_WEB_ROOT', str_replace('setup',"",APPLICATION_SETUP_INDEX));
-
+define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
+define('XMLS_DEBUG', true);
+define('XMLS_PREFIX_MAXLEN', 15);
 // ---------------------------------------------------------------------
 // Application file system locations
 // ---------------------------------------------------------------------
-define('APPLICATION_PATH', dirname(dirname(__FILE__)));
-define('OBJECTS_PATH', APPLICATION_PATH . '/includes' );
-define('BASEDIR', dirname(__FILE__));
-define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf['general']['syntax_plugin'] = '';
 
-require_once OBJECTS_PATH . '/fix.inc.php';
-require_once(OBJECTS_PATH . '/class.flyspray.php');
-require_once(OBJECTS_PATH . '/class.tpl.php');
-require_once(OBJECTS_PATH . '/version.php');
 
 class Setup extends Flyspray
 {
@@ -93,7 +96,9 @@ class Setup extends Flyspray
    /**
     * @var object to store the adodb datadict object.
     */
-   var $mdatadict;
+   var $mDataDict;
+
+   var $mXmlSchema;
 
    function Setup()
    {
@@ -101,12 +106,13 @@ class Setup extends Flyspray
       //$this->Flyspray();
 
       // Initialise Application values
-      $mApplication				= & new Version();
+      $mApplication				=  new Version();
       $this->mProductName	    = $mApplication->mProductName;
       $this->mVersion			= $mApplication->mVersion;
       $this->mCopyright			= $mApplication->mCopyright;
       $this->mUnixName			= $mApplication->mUnixName;
       $this->mAuthor			= $mApplication->mAuthor;
+      $this->mVersion2           = $mApplication->mRelease . '.'. $mApplication->mDevLevel;
       // Look for ADOdb
       $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
 
@@ -355,7 +361,7 @@ class Setup extends Flyspray
                                     'admin_password' => $this->mAdminPassword,
                                     'site_index' => dirname($_SERVER['REQUEST_URI']) . '/../',
                                     'complete_action' => $this->mCompleteAction,
-                                    'daemonise' => $this->CheckPhpCli(),
+                                    'daemonise' => true,
                                  ),
                      ),
 
@@ -638,7 +644,6 @@ class Setup extends Flyspray
       return $output;
    }
 
-
 	function GetReminderDaemonSelection($value)
 	{
 		$selection	= '';
@@ -657,6 +662,12 @@ class Setup extends Flyspray
 	}
 
 
+   /**
+    * GetSetupOptions 
+    * 
+    * @access public
+    * @return void
+    */
    function GetSetupOptions()
    {
       //print_r($this->mDatabaseSetup);
@@ -680,11 +691,25 @@ class Setup extends Flyspray
       return $setup_procedure;
    }
 
+   /**
+    * InstallPointNineEight 
+    * 
+    * @param mixed $data 
+    * @access public
+    * @return bool
+    */
    function InstallPointNineEight($data)
    {
       return true;
    }
 
+   /**
+    * InstallPointNineSeven 
+    * 
+    * @param mixed $data 
+    * @access public
+    * @return bool
+    */
    function InstallPointNineSeven($data)
    {
       return true;
@@ -1038,8 +1063,11 @@ class Setup extends Flyspray
            // Setting the Fetch mode of the database connection.
            $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
             //creating the datadict object for further operations
-            $this->mdatadict = NewDataDictionary($this->mDbConnection);
+           $this->mDataDict = & NewDataDictionary($this->mDbConnection);
 
+           include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
+
+            $this->mXmlSchema =  new adoSchema($this->mDbConnection);
            // Backup and delete tables if requested
            if ($this->BackupDeleteTables($data))
            {
@@ -1132,9 +1160,9 @@ class Setup extends Flyspray
       foreach ($table_list as $table)
       {
             // Prepare the query to drop the existing tables
-            $drop_table = $this->mdatadict->DropTableSQL($table);
+            $drop_table = $this->mDataDict->DropTableSQL($table);
 
-            $this->mdatadict->ExecuteSQLArray($drop_table);
+            $this->mDataDict->ExecuteSQLArray($drop_table);
 
          // If any errors, record the error message in the array
          if ($error_number = $this->mDbConnection->MetaError())
@@ -1155,7 +1183,7 @@ class Setup extends Flyspray
 
       if ($db_type != 'postgres') {
             return true;
-      }
+      } 
 
       $sql = "SELECT c.relname
 	FROM pg_catalog.pg_class c
@@ -1187,6 +1215,10 @@ class Setup extends Flyspray
       return true;
    }
 
+   function BackupDeleteTables($data)
+   {
+       return true;
+   }
 /*
    function BackupDeleteTables($data)
    {
@@ -1298,18 +1330,29 @@ class Setup extends Flyspray
    {
       // Get the sql file name and set the path
 
-      $sql_file	= APPLICATION_PATH . 'sql/' . $this->mUnixName . '-' . $this->mVersion . '.xml';
-
-      // Check if the install/upgrade file exists
+       $sql_file	= APPLICATION_PATH . '/sql/' . strtolower($this->mProductName) 
+                      . '-' . $this->mVersion2 . '.'  . 'xml';
+       
+       // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
 
           $_SESSION['page_message'][] = 'SQL file required for importing structure and data is missing.';
           return false;
       }
-         // Extract the variables to local namespace
-         extract($data);
 
-         /* XXX: To be fiiled with xml schema processing */
+       // Extract the variables to local namespace
+       extract($data);
+
+       if(is_numeric($db_prefix)) {
+           $_SESSION['page_message'][] = 'database prefix cannot be numeric only';
+           return false;
+       }
+       
+        // Set the prefix for database objects ( before parsing)
+      $this->mXmlSchema->setPrefix($db_prefix, true);
+      $this->mXmlSchema->ParseSchema($sql_file);
+      
+        $this->mXmlSchema->ExecuteSchema();
 
                if (($error_no = $this->mDbConnection->MetaError()))
                {
@@ -1563,7 +1606,7 @@ class Setup extends Flyspray
 
             case 'email address':
              include_once OBJECTS_PATH . '/external/Validate.php'; 
-             return Validate::email($email_pattern, $value);
+             return Validate::email($value);
              break;
 
             case 'boolean':

@@ -10,6 +10,10 @@
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
+// @version SVN $Id$
+//
+// this translation was last updated by Ceesjan Luiten on 09/15/2006
+//
 $translation = array(
 'edituser'                => 'Bewerk gebruiker',
 'username'                => 'Gebruikersnaam',
