@@ -111,6 +111,7 @@
       </td>
       <?php endif; ?>
       <td class="buttons">
+        <input type="hidden" name="project" value="{$proj->id}" />
         <button type="submit">{L('addnew')}</button>
       </td>
     </tr>
