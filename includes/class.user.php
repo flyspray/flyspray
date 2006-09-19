@@ -53,7 +53,7 @@ class User
         
         // Only logged in users get to use the 'last search' functionality     
         if ($do == 'index') {
-            if(!$this->didSearch() && $this->infos['last_search']) {
+            if(!$this->didSearch() && $this->infos['last_search'] && !Get::has('reset')) {
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
                     // XXX: this is not a good idea¡¡ change me later ¡¡
@@ -69,7 +69,7 @@ class User
             $db->Query('UPDATE  {users}
                            SET  last_search = ?
                          WHERE  user_id = ?',
-                        array(serialize($arr), $this->id));
+                        array(serialize( ((Get::has('reset')) ? array() : $arr) ), $this->id));
                         
             if (Get::val('search_name') && $this->didSearch()) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),

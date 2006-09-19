@@ -19,16 +19,12 @@ tr:hover td, tr:hover th { background : #e0e0e0; }
 </head>
 <body>
 <?php
-
 require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
-
   /*
   Usage: Open this file like .../.langdiff?lang=de in your browser.
          "de" represents your language code.
   */
-
-$lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
-
+    $lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
     if (!ctype_alnum($lang)) {
         die('Invalid language name.');
     }
@@ -45,8 +41,7 @@ $lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
         foreach ($language as $key => $val) {
             if (!isset($translation[$key])) {
                 echo '<tr class="line',($i%2),'"><th>',$key,'</th><td><pre>\'',$val,'\'</pre></td></tr>',"\n";
-                $i++;
-                $exportable[$key] = $val;
+		$i++;
             }
 	    
         }
@@ -55,23 +50,14 @@ $lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
 		echo '<p>',$i,' out of ',sizeof($language),' keys to translate.</p>';
 	echo '<h2>The following translations (keys) should be deleted in the translation:</h2>';
 	echo '<table cellspacing="0">';
-    $i = 0;
-    
-    $trans_no_obsoleted = $translation;
-
+	$i = 0;
 	foreach ($translation as $key => $val) {
 		if ( !isset($language[$key])) {
 			  echo '<tr class="line',($i%2),'"><th>',$key,'</th><td><pre>\'',$val,'\'</pre></td></tr>',"\n";
-              $i++;
-              unset($trans_no_obsoleted[$key]);
+			  $i++;
 		}
 	}
-    echo '</table>';
-    
-        echo '<textarea rows="' . (sizeof($exportable) + sizeof($trans_no_obsoleted)) . ' "cols=100>';
-        var_export(array_merge($trans_no_obsoleted,$exportable));
-        echo "</textarea>";
-    echo '<body> </html>'; 
+	echo '</table>';
     } else {
         die('Translation does not exist.');
     }

@@ -28,6 +28,13 @@ $offset = $perpage * ($pagenum - 1);
 // Get the visibility state of all columns
 $visible = explode(' ', trim($proj->id ? $proj->prefs['visible_columns'] : $fs->prefs['visible_columns']));
 
+if (Get::has('reset')) {
+    foreach ($user->search_keys as $key) {
+        unset($_GET[$key]);
+    }
+    unset($_GET['reset']);
+}
+
 list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
 $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');

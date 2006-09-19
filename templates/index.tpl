@@ -16,13 +16,17 @@
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <div id="search">
   <map id="projectsearchform" name="projectsearchform">
-    <form action="index.php" method="get">
+    <form action="{$baseurl}" method="get">
       <div>
         <input type="hidden" name="project" value="{Get::num('project', 0)}" />
         <?php if (!$user->isAnon()): ?>
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
         <input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />
-        &nbsp;<button onclick="savesearch('{$_SERVER['QUERY_STRING']}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button></span>
+        &nbsp;<button onclick="savesearch('{$_SERVER['QUERY_STRING']}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
+        <?php if ($user->didSearch()): ?>
+        <button type="submit" name="reset" value="1">{L('reset')}</button>
+        <?php endif; ?>
+        </span>
         <?php endif; ?>
         
         <button type="submit">{L('searchthisproject')}</button>
