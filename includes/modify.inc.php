@@ -169,7 +169,7 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', true));
+        Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
         Flyspray::Redirect(CreateURL('details', $task['task_id']));
