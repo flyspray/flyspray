@@ -439,6 +439,7 @@ div#search {
 	border:1px solid gray;
 	background-color:#e6eef6;
 	padding:0.4em 0.5em;
+	position:relative;
 }
 
 div#search input.text,div#search button {
@@ -493,7 +494,8 @@ div.dateselect {
 }
 
 span.save_search {
-	float:right;
+	position:absolute;
+	right:0.5em;
 }
 
 div#tasklist {

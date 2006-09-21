@@ -18,6 +18,10 @@
   <map id="projectsearchform" name="projectsearchform">
     <form action="{$baseurl}" method="get">
       <div>
+        <button type="submit">{L('searchthisproject')}</button>
+        <input class="text" id="searchtext" name="string" type="text" size="20"
+               maxlength="100" value="{Get::val('string')}" accesskey="q" />
+        
         <input type="hidden" name="project" value="{Get::num('project', 0)}" />
         <?php if (!$user->isAnon()): ?>
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
@@ -28,10 +32,6 @@
         <?php endif; ?>
         </span>
         <?php endif; ?>
-        
-        <button type="submit">{L('searchthisproject')}</button>
-        <input class="text" id="searchtext" name="string" type="text" size="20"
-        maxlength="100" value="{Get::val('string')}" accesskey="q" />
         
         <span id="searchstate" style="cursor:pointer">
         <a onclick="toggleSearchBox('{$this->themeUrl()}');return false;" href="{CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))}"><span id="advancedsearchstate" class="showstate">
