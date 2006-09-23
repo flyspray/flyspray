@@ -67,7 +67,7 @@ foreach (Req::val('events', array()) as $eventtype) {
 $where = '(' . implode(' OR ', $where) . ')';
 
 if ($proj->id) {
-    $where = ' (t.project_id = ?  OR h.event_type > 29) AND ' . $where;
+    $where = $where . 'AND (t.project_id = ?  OR h.event_type > 29) ';
     $params[] = $proj->id;
 }
 
@@ -96,7 +96,7 @@ if (count(Req::val('events'))) {
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
                      ORDER BY $orderby", $params, Req::num('event_number', -1));
-             
+
     $histories = $db->FetchAllArray($histories);
 }
 

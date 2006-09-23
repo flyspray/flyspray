@@ -6,8 +6,8 @@ class User
     var $perms = array();
     var $infos = array();
     var $searches = array();
-    var $search_keys = array('string','type','sev','due','dev','cat','status','order','sort', 'percent', 'changedfrom',
-                             'opened', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched',
+    var $search_keys = array('string','type','sev','due','dev','cat','status','order','sort', 'percent', 'changedfrom', 'closedfrom',
+                             'opened', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
                              'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
 
     function User($uid = 0)

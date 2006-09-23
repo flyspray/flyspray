@@ -31,6 +31,7 @@ $visible = explode(' ', trim($proj->id ? $proj->prefs['visible_columns'] : $fs->
 if (Get::has('reset')) {
     foreach ($user->search_keys as $key) {
         unset($_GET[$key]);
+        unset($_REQUEST[$key]); // datepickers use $_REQUEST
     }
     unset($_GET['reset']);
 }
