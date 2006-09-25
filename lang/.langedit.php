@@ -32,6 +32,9 @@
  * !!!
  */
 
+
+require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
+
 /**
  * Replace fprintf()
  *

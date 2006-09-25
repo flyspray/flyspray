@@ -9,7 +9,14 @@
 
 ini_set('display_errors', 1);
 
+// html errors will mess the layout
+ini_set('html_errors', 0);
+
 error_reporting(E_ALL);
+
+// our default charset
+
+ini_set('default_charset','utf-8');
 
 // This to stop PHP being retarded and using the '&' char for session id delimiters
 ini_set('arg_separator.output','&amp;');
@@ -26,6 +33,10 @@ ini_set('magic_quotes_runtime',0);
 
 //this one too
 ini_set('magic_quotes_sybase',0);
+
+// no transparent session id improperly configured servers
+
+ini_set('session.use_trans_sid', 0);
 
 //see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
 ini_set('session.use_only_cookies',1);
