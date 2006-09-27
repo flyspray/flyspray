@@ -20,12 +20,9 @@ define('IN_FS', true);
 
 require_once 'header.php';
 
-//ok, the reminder deamon request includes a key , the sha1sum of flsypray.conf
-// which is unique to the installation.
-// this does not intened to be a password or a real security measure, since the key
-// will be logged with the request.
 
-if(Get::has('key') && trim(Get::val('key')) == sha1_file(BASEDIR. '/flyspray.conf.php')) {
+if((isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') &&
+    (isset($conf['general']['reminder_daemon']) && $conf['general']['reminder_daemon'] == '1')) {
 
 //keep going, execute the script in the background
 ignore_user_abort(true);
@@ -103,7 +100,7 @@ sleep(600);
 
 } else {
 
-    die("you are not authorized to start the remider daeamon");
+    die("you are not authorized to start the remider daemon");
 }
 
 ?>

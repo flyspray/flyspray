@@ -127,6 +127,7 @@ class Validate
      * @access  private
      */
     function __stringToUtf7($string) {
+        $return = '';
         $utf7 = array(
                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
                         'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -137,7 +138,6 @@ class Validate
                     );
 
         $state = 0;
-        $return = '';
         if (!empty($string)) {
             $i = 0;
             while ($i <= strlen($string)) {
@@ -285,7 +285,7 @@ class Validate
          @(((\[)?                     #3 domain, 4 as IPv4, 5 optionally bracketed
          (?:(?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\.){3}
                (?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))))(?(5)\])|
-         ((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*[a-z](?:[-a-z0-9]*[a-z0-9])?)  #6 domain as hostname
+         ((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*[a-z0-9](?:[-a-z0-9]*[a-z0-9])?)  #6 domain as hostname
          \.((?:([^-])[-a-z]*[-a-z])?)) #7 ICANN domain names 
          $&xi';
 

@@ -225,11 +225,17 @@ class Flyspray
 
         $server = $protocol .'://'. $host . (isset($port) ? ':'. $port : '');
 
-        if (!strlen($url)) {
-            $url = isset($_SERVER['REQUEST_URI']) ?
-                $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
-        }
 
+        if (!strlen($url) || $url{0} == '?' || $url{0} == '#') {
+            $uri = isset($_SERVER['REQUEST_URI']) ? 
+                $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+            if ($url && $url{0} == '?' && false !== ($q = strpos($uri, '?'))) {
+                $url = substr($uri, 0, $q) . $url;
+            } else {
+                $url = $uri . $url;
+            }
+        }
+ 
         if ($url{0} == '/') {
             return $server . $url;
         }
@@ -666,7 +672,6 @@ class Flyspray
            
             $include = 'schedule.php';
             $host = parse_url($baseurl);
-            $key = sha1_file(BASEDIR . '/flyspray.conf.php');
         
         /* "localhost" is on **purpose** not a mistake ¡¡ 
          * almost any server accepts requests to itself in localhost ;)
@@ -676,7 +681,7 @@ class Flyspray
           $daemon = @fsockopen('localhost', $_SERVER['SERVER_PORT'], $errno, $errstr, 5);
         
             if ($daemon) {
-                fwrite($daemon, "GET {$host['path']}{$include}?key={$key} HTTP/1.0\r\n");
+                fwrite($daemon, "GET {$host['path']}{$include} HTTP/1.0\r\n");
                 fwrite($daemon, "Host: {$_SERVER['HTTP_HOST']}\r\n\r\n");
                 fclose($daemon);
             }
@@ -717,6 +722,8 @@ class Flyspray
                 $sessname = $_SESSION['SESSNAME'];
                 break;
             }
+
+            $_SESSION = array();
             session_destroy();
             setcookie(session_name(), '', time()-60, '/');
         }
@@ -735,7 +742,7 @@ class Flyspray
     /**
      * Generate a long random number
      * @access public static
-     * @return void
+     * @return float
      * @version 1.0
      */
     function make_seed()

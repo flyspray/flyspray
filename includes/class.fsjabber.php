@@ -90,7 +90,7 @@ class fsJabber extends Jabber {
     }
  
     /**
-     * replaces upstream AddToLog 
+     * Overload upstream AddToLog 
      * 
      * @param mixed $string 
      * @access public
@@ -108,6 +108,12 @@ class fsJabber extends Jabber {
         }
     }
     
+    /**
+     * _starttls 
+     * 
+     * @access protected
+     * @return bool
+     */
     function _starttls()
     {
         if (!$this->jinfo->has_tls) {
@@ -173,10 +179,24 @@ class fsJabberConnector extends CJP_StandardConnector {
             socket_set_timeout($this->active_socket, 31536000);
 
             return true;
-        
-        } else {
+        }
 
            return false;
-        }
-    }    
+        
+    }
+    
+    /**
+     * ReadFromSocket 
+     * 
+     * Overloads buggy base class method
+     * magic_quotes_rumtime is different from magic_quotes_gpc ¡¡
+     * and flyspray actually do not use that ugly things ¡¡
+     * @param int $chunksize 
+     * @access public
+     * @return mixed string or false 
+     */
+    function ReadFromSocket($chunksize)
+    {
+        return fread($this->active_socket, $chunksize);
+    }
 }

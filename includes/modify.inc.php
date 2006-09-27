@@ -1023,7 +1023,7 @@ switch ($action = Req::val('action'))
     // Removing a related task entry
     // ##################
     case 'remove_related':
-        if (!$user->can_edit_task($task)) {
+        if (!$user->can_edit_task($task)  || !is_array(Post::val('related_id'))) {
             break;
         }
 
@@ -1162,7 +1162,7 @@ switch ($action = Req::val('action'))
     // removing a reminder
     // ##################
     case 'deletereminder':
-        if (!$user->perms('manage_project')) {
+        if (!$user->perms('manage_project') || !is_array(Post::val('reminder_id'))) {
             break;
         }
         
@@ -1172,7 +1172,7 @@ switch ($action = Req::val('action'))
             $reminder = $db->fetchOne($sql);
             $db->Query('DELETE FROM {reminders} WHERE reminder_id = ? AND task_id = ?',
                        array($reminder_id, $task['task_id']));
-            if ($db->affectedRows()) {
+            if ($db && $db->affectedRows()) {
                 Flyspray::logEvent($task['task_id'], 18, $reminder);
             }
         }
@@ -1194,7 +1194,7 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        if (!$user->perms('manage_project', $old_pr)) {
+        if (!$user->perms('manage_project', $old_pr) || !is_array(Post::val('users'))) {
             break;
         }
         
