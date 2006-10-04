@@ -88,7 +88,7 @@ class Tpl
         // compilation part
         $_tpl_data = preg_split('!(<\?php.*\?>)!sU', $_tpl_data, -1,
                 PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-        array_walk($_tpl_data, array($this, 'compile'));
+        array_walk($_tpl_data, array(&$this, 'compile'));
         $_tpl_data = join('', $_tpl_data);
 
         $from = array('&lbrace;','&rbrace;');
@@ -145,7 +145,7 @@ class FSTpl extends Tpl
         $extensions = array('.png', '.gif', '.jpg', '.ico');
 
         foreach ($extensions as $ext) {
-            if (file_exists(BASEDIR . '/' . $link . $name . $ext)) {
+            if (is_file(BASEDIR . '/' . $link . $name . $ext)) {
                 return ($base) ? ($baseurl . $link . $name . $ext) : ($link . $name . $ext);
             }
         }
@@ -304,7 +304,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
         if (!ctype_digit($value)) {
             $value = strtotime($value);
         }
-        $date = date('Y-m-d', $value);
+        $date = strftime('Y-m-d', $value);
     } else {
         $date = Req::val($name, '');
     }

@@ -204,10 +204,11 @@ $dotgraph .= "}\n";
 // All done with the graph. Save it to a temp file (new name if the data has changed)
 $file_name = 'cache/fs_depends_dot_' . $id . '_' . md5($dotgraph) . '.dot';
 $tname = BASEDIR . '/' . $file_name;
-$tmp   = fopen($tname, 'wb');
+
+if($tmp = fopen($tname, 'wb')){
 fwrite($tmp, $dotgraph);
 fclose($tmp);
-
+}
 // Now run dot on it:
 if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
     if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {

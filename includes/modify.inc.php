@@ -14,6 +14,10 @@ require_once BASEDIR . '/includes/class.notify.php';
 $notify = new Notifications;
 
 $lt = Post::isAlnum('list_type') ? Post::val('list_type') : '';
+$list_table_name = null;
+$list_column_name = null;
+$list_id = null;
+
 if (strlen($lt)) {
     $list_table_name  = '{list_'.$lt .'}';
     $list_column_name = $lt . '_name';
@@ -21,6 +25,7 @@ if (strlen($lt)) {
 }
 
 function Post_to0($key) { return Post::val($key, 0); }
+
 if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
@@ -1133,7 +1138,7 @@ switch ($action = Req::val('action'))
             $db->Query("DELETE from {attachments} WHERE attachment_id = ?",
                     array($attachment['attachment_id']));
 
-            @unlink('attachments/' . $attachment['file_name']);
+            @unlink(BASEDIR .'/attachments/' . $attachment['file_name']);
 
             Flyspray::logEvent($attachment['task_id'], 8, $attachment['orig_name']);
         }

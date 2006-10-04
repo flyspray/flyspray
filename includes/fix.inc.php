@@ -6,7 +6,6 @@
  * correctly.
  *
  */
-
 ini_set('display_errors', 1);
 
 // html errors will mess the layout
@@ -96,26 +95,26 @@ unregister_GLOBALS();
 * the BSD license, but has been slightly  modified for Flyspray.
 */
 
-if (extension_loaded('filter') && input_name_to_filter(ini_get('filter.default')) !== FILTER_UNSAFE_RAW) {
+if (PHP_VERSION >= 5.2 && extension_loaded('filter') && filter_id(ini_get('filter.default')) !== FILTER_UNSAFE_RAW) {
 
     if(count($_GET)) {
         foreach ($_GET as $key => $value) {
-            $_GET[$key] = input_get(INPUT_GET, $key, FILTER_UNSAFE_RAW);
+            $_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
         }
     }
     if(count($_POST)) {
         foreach ($_POST as $key => $value) {
-            $_POST[$key] = input_get(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+            $_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
         }
     }
     if(count($_COOKIE)) {
         foreach ($_COOKIE as $key => $value) {
-            $_COOKIE[$key] = input_get(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
+            $_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
         }
     }
     if(isset($_SESSION) && is_array($_SESSION) && count($_SESSION)) {
         foreach ($_SESSION as $key => $value) {
-            $_SESSION[$key] = input_get(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
+            $_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
         }
     }
 

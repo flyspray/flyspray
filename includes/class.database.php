@@ -36,6 +36,14 @@ class Database
     var $cache = array();
 
     /**
+     * dblink 
+     * adodb handler object
+     * @var object
+     * @access public
+     */
+    var $dblink = null;
+
+    /**
      * Open a connection to the database quickly
      * @param array $conf connection data
      * @return void
