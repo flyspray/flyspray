@@ -249,7 +249,7 @@ class Notifications {
       }
 
       // Get the new email class
-      require_once 'external/swift-mailer/class.phpmailer.php';
+      require_once dirname(__FILE__) .'/external/swift-mailer/class.phpmailer.php';
 
       // Define the class
       $mail = new PHPMailer();

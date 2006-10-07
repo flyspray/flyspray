@@ -164,7 +164,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
         $task = Flyspray::GetTaskDetails( ((is_array($task)) ? $task['task_id'] : $task), true);
     }
 
-    if ($strict && !$user->can_view_task($task)) {
+    if ($strict === true && !$user->can_view_task($task)) {
         return '';
     }
 
@@ -176,8 +176,11 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     
     if (is_null($text)) {
         $text = 'FS#'. (int) $task['task_id'] . ' - '. htmlspecialchars($summary, ENT_QUOTES, 'utf-8');
-    } else {
+    } elseif(is_string($text)) {
         $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
+    }else {
+        //we can't handle non-string stuff here.
+        return '';
     }
     
     if (!$task['task_id']) {
@@ -240,9 +243,10 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     if (Get::val('pagenum')) {
         $params['pagenum'] = Get::val('pagenum');
     }
+
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
-    $link  = sprintf('<a href="%s" title="%s" %s>%s</a>',
-            $url, htmlspecialchars($title_text, ENT_QUOTES, 'utf-8'), join_attrs($attrs), $text);
+    $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8'); 
+    $link  = sprintf('<a href="%s" title="%s" %s>%s</a>',$url, $title_text, join_attrs($attrs), $text);
 
     if ($task['is_closed']) {
         $link = '<del>&#160;' . $link . '&#160;</del>';
@@ -298,16 +302,30 @@ function join_attrs($attr = null) {
 }
 // {{{ Datepicker
 function tpl_datepicker($name, $label = '', $value = 0) {
-    global $user;
-    
+    //global $user;
+
+    $date = '';
+
     if ($value) {
-        if (!ctype_digit($value)) {
+        if (!is_numeric($value)) {
             $value = strtotime($value);
         }
-        $date = strftime('Y-m-d', $value);
-    } else {
-        $date = Req::val($name, '');
+        $date = date('Y-m-d', intval($value));
+
+    //it must "look" as a date..
+    } elseif(Req::has($name)) {
+
+        //strtotime sadly returns -1 on faliure in php < 5.1 instead of false
+        $ts = strtotime(Req::val($name));
+
+        foreach(array('m','d','Y') as $period) {
+            //checkdate only accepts arguments of type integer
+            $$period = intval(date($period, $ts));
+        }
+        // $ts has to be > 0 to get around php behavior change
+        $date = ($ts > 0 && checkdate($m, $d, $Y)) ? Req::val($name) : '';
     }
+
        
     $page = new FSTpl;
     $page->assign('name', $name);

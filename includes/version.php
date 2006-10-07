@@ -55,7 +55,7 @@ class Version
     $this->mRelease = '0.9';
     $this->mDevStatus = 'devel';
     $this->mDevLevel = '9';
-    $this->mCodename = 'Karate Kid';
+    $this->mCodename = 'Fly Flapper';
     $this->mRelDate = '26/08/2005';
     $this->mRelTime = '10:00';
     $this->mRelTimeZone = 'GMT +10';
