@@ -1,6 +1,6 @@
 <?php
 /*
-V4.92a 29 Aug 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+V4.93 10 Oct 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -129,24 +129,19 @@ class ADODB_mysql extends ADOConnection {
 	}
 
 	
-	// if magic quotes disabled, use mysql_real_escape_string()
+    // Quotes a string to be inserted to the database
+    // if $maqic_quotes is true then revert the effects
+    // bacause magic_quotes is not multibyte safe.
+
 	function qstr($s,$magic_quotes=false)
 	{
-		if (!$magic_quotes) {
+        $s = $magic_quotes ? stripslashes($s) : $s;
 		
-			if (ADODB_PHPVER >= 0x4300) {
-				if (is_resource($this->_connectionID))
-					return "'".mysql_real_escape_string($s,$this->_connectionID)."'";
-			}
-			if ($this->replaceQuote[0] == '\\'){
-				$s = adodb_str_replace(array('\\',"\0"),array('\\\\',"\\\0"),$s);
-			}
-			return  "'".str_replace("'",$this->replaceQuote,$s)."'"; 
-		}
-		
-		// undo magic quotes for "
-		$s = str_replace('\\"','"',$s);
-		return "'$s'";
+			if (ADODB_PHPVER >= 0x4300 && is_resource($this->_connectionID)) {
+                    return "'". mysql_real_escape_string($s, $this->_connectionID) . "'";
+            } else {
+                    return "'" . mysql_escape_string($s) . "'";
+           }
 	}
 	
 	function _insertid()
@@ -481,13 +476,14 @@ class ADODB_mysql extends ADOConnection {
 	function &SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs=0)
 	{
 		$offsetStr =($offset>=0) ? ((integer)$offset)."," : '';
-		// jason judge, see http://phplens.com/lens/lensforum/msgs.php?id=9220
+        // jason judge, see http://phplens.com/lens/lensforum/msgs.php?id=9220
+        $nrows = intval($nrows);
 		if ($nrows < 0) $nrows = '18446744073709551615'; 
 		
 		if ($secs)
-			$rs =& $this->CacheExecute($secs,$sql." LIMIT $offsetStr".((integer)$nrows),$inputarr);
+			$rs =& $this->CacheExecute($secs,$sql." LIMIT $offsetStr". $nrows,$inputarr);
 		else
-			$rs =& $this->Execute($sql." LIMIT $offsetStr".((integer)$nrows),$inputarr);
+			$rs =& $this->Execute($sql." LIMIT $offsetStr". $nrows, $inputarr);
 		return $rs;
 	}
 	

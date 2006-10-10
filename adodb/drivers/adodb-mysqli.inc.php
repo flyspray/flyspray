@@ -1,6 +1,6 @@
 <?php
 /*
-V4.92a 29 Aug 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+V4.93 10 Oct 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -14,7 +14,7 @@ Based on adodb 3.40
 */ 
 
 // security - hide paths
-//if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) die();
 
 if (! defined("_ADODB_MYSQLI_LAYER")) {
  define("_ADODB_MYSQLI_LAYER", 1 );
@@ -183,29 +183,16 @@ class ADODB_mysqli extends ADOConnection {
 		return !empty($rs); 
 	}
 	
-	// if magic quotes disabled, use mysql_real_escape_string()
-	// From readme.htm:
-	// Quotes a string to be sent to the database. The $magic_quotes_enabled
-	// parameter may look funny, but the idea is if you are quoting a 
-	// string extracted from a POST/GET variable, then 
-	// pass get_magic_quotes_gpc() as the second parameter. This will 
-	// ensure that the variable is not quoted twice, once by qstr and once 
-	// by the magic_quotes_gpc.
-	//
-	//Eg. $s = $db->qstr(_GET['name'],get_magic_quotes_gpc());
+	
+	// Quotes a string to be sent to the database. if the $magic_quotes
+    // paraemter is set to true, it assumes magic_quotes is enabled, and revert
+    // it's effects because magic_quotes is **not** multibyte safe.
+
 	function qstr($s, $magic_quotes = false)
-	{
-		if (!$magic_quotes) {
-	    	if (PHP_VERSION >= 5)
-	      		return "'" . mysqli_real_escape_string($this->_connectionID, $s) . "'";   
-	    
-		if ($this->replaceQuote[0] == '\\')
-			$s = adodb_str_replace(array('\\',"\0"),array('\\\\',"\\\0"),$s);
-	    return  "'".str_replace("'",$this->replaceQuote,$s)."'"; 
-	  }
-	  // undo magic quotes for "
-	  $s = str_replace('\\"','"',$s);
-	  return "'$s'";
+    {
+        $s = $magic_quotes ? stripslashes($s) : $s;
+
+        return "'" . $this->_connectionID->real_escape_string($s) . "'";
 	}
 	
 	function _insertid()
@@ -229,10 +216,10 @@ class ADODB_mysqli extends ADOConnection {
   
  	// See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
 	// Reference on Last_Insert_ID on the recommended way to simulate sequences
- 	var $_genIDSQL = "update %s set id=LAST_INSERT_ID(id+1);";
-	var $_genSeqSQL = "create table %s (id int not null)";
-	var $_genSeq2SQL = "insert into %s values (%s)";
-	var $_dropSeqSQL = "drop table %s";
+ 	var $_genIDSQL = 'update %s set id=LAST_INSERT_ID(id+1);';
+	var $_genSeqSQL = 'create table %s (id int not null)';
+	var $_genSeq2SQL = 'insert into %s values (%s)';
+	var $_dropSeqSQL = 'drop table %s';
 	
 	function CreateSequence($seqname='adodbseq',$startID=1)
 	{
@@ -590,7 +577,10 @@ class ADODB_mysqli extends ADOConnection {
 			      $arg3 = false,
 			      $secs = 0)
 	{
-		$offsetStr = ($offset >= 0) ? "$offset," : '';
+        $offsetStr = ($offset >= 0) ? intval($offset) . ',' : '';
+        
+        $nrows = intval($nrows);
+
 		if ($nrows < 0) $nrows = '18446744073709551615';
 		
 		if ($secs)
