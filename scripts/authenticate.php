@@ -14,7 +14,7 @@ if (Req::val('logout')) {
     Flyspray::Redirect($baseurl);
 }
 
-if (Req::val('user_name') && Req::val('password')) {
+if (Req::val('user_name') != '' && Req::val('password') != '') {
     // Otherwise, they requested login.  See if they provided the correct credentials...
     $username = Req::val('user_name');
     $password = Req::val('password');

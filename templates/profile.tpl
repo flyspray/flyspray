@@ -38,7 +38,7 @@
         {!tpl_options(array_merge($project_groups, array(0 => array('group_name' => L('none'), 0 => 0, 'group_id' => 0, 1 => L('none')))), $sel)}
       </select>
       <input type="hidden" name="old_project_id" value="{$theuser->perms('project_group')}" />
-      <input type="hidden" name="action" value="edituser" />
+      <input type="hidden" name="action" value="admin.edituser" />
       <input type="hidden" name="user_id" value="{$theuser->id}" />
       <input type="hidden" name="onlypmgroup" value="1" />
 
