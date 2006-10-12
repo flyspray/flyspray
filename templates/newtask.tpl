@@ -1,7 +1,7 @@
 <h3>{$proj->prefs['project_title']} :: {L('newtask')}</h3>
 
 <div id="taskdetails">
-    <form enctype="multipart/form-data" action="{$baseurl}" method="post">
+    <form enctype="multipart/form-data" action="index.php" method="post">
     <h2 class="severity{Req::val('task_severity', 2)} summary" id="edit_summary">
       <label for="itemsummary">{L('summary')}</label>
       <input id="itemsummary" class="text severity{Req::val('task_severity', 2)}" type="text" value="{Req::val('item_summary')}"

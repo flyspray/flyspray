@@ -16,7 +16,7 @@
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <div id="search">
   <map id="projectsearchform" name="projectsearchform">
-    <form action="{$baseurl}" method="get">
+    <form action="index.php" method="get">
       <div>
         <button type="submit">{L('searchthisproject')}</button>
         <input class="text" id="searchtext" name="string" type="text" size="20"

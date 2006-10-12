@@ -2,7 +2,7 @@
   <h3>{L('admintoolboxlong')} :: {L('createnewproject')}</h3>
   <fieldset class="box">
     <legend>{L('newproject')}</legend>
-    <form action="{$baseurl}" method="post">
+    <form action="index.php" method="post">
       <div>
         <input type="hidden" name="action" value="admin.newproject" />
         <input type="hidden" name="area" value="newproject" />

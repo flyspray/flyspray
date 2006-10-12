@@ -35,11 +35,11 @@
           <?php if ($req['request_type'] == 1) : ?>
           <a class="button" href="{CreateUrl('details', $req['task_id'], null, array('showclose' => 1))}#formclosetask">{L('accept')}</a>
           <?php elseif ($req['request_type'] == 2) : ?>
-          <a class="button" href="{$baseurl}?action=reopen&task_id={$req['task_id']}">{L('accept')}</a>
+          <a class="button" href="index.php?action=reopen&task_id={$req['task_id']}">{L('accept')}</a>
           <?php endif; ?>
           <a href="#" class="button" onclick="showhidestuff('denyform{$req['request_id']}');">{L('deny')}</a>
           <div id="denyform{$req['request_id']}" class="denyform">
-            <form action="{$baseurl}" method="post">
+            <form action="index.php" method="post">
               <div>
                 <input type="hidden" name="action" value="denypmreq" />
                 <input type="hidden" name="req_id" value="{$req['request_id']}" />

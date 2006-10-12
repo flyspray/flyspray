@@ -121,7 +121,7 @@ class Database
                     $arr[$i] = '';
                 }
                 // This line safely escapes sql before it goes to the db
-                $this->dblink->qstr($arr[$i]);
+                $this->dblink->qstr($arr[$i], false);
             }
         }
         return $arr;
@@ -322,7 +322,7 @@ class Database
      */
     function qstr($string)
     {
-        return $this->dblink->qstr($string);
+        return $this->dblink->qstr($string, false);
     }
 
     /**

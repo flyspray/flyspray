@@ -323,6 +323,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
             $$period = intval(date($period, $ts));
         }
         // $ts has to be > 0 to get around php behavior change
+        // false is casted to 0 (php 5.1 or later)
         $date = ($ts > 0 && checkdate($m, $d, $Y)) ? Req::val($name) : '';
     }
 

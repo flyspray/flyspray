@@ -8,7 +8,7 @@
     </div>
 </div>
 <?php endif; ?>
-<form action="{$baseurl}" method="post">
+<form action="index.php" method="post">
   <table class="list" id="listTable">
    <thead>
      <tr>
@@ -81,7 +81,7 @@
       </script>
 </form>
 <hr />
-<form action="{$baseurl}" method="post">
+<form action="index.php" method="post">
   <table class="list">
     <tr>
       <td>

@@ -1,5 +1,5 @@
 <fieldset class="box"> <legend>{L('editgroup')}</legend>
-    <form action="{$baseurl}" method="get">
+    <form action="index.php" method="get">
         <div>
             <label for="selectgroup">{L('editgroup')}</label>
             <select name="id" id="selectgroup">{!tpl_options(Flyspray::ListGroups($proj->id), Req::num('id'))}</select>
@@ -10,7 +10,7 @@
     </form>
     <hr />
   <?php $group_details = Flyspray::getGroupDetails(Req::num('id')); ?>
-  <form action="{$baseurl}" method="post">
+  <form action="index.php" method="post">
     <table class="box">
       <tr>
         <td>
@@ -152,7 +152,7 @@
   
   <hr />
 
-  <form action="{$baseurl}" method="post">
+  <form action="index.php" method="post">
    <div>
     <h3>{L('groupmembers')}</h3>
     <table id="manage_users_in_groups" class="userlist">

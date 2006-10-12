@@ -1,5 +1,5 @@
 <fieldset id="events"><legend>{L('eventlog')}</legend>
-  <form action="{$baseurl}index.php" method="get">
+  <form action="index.php" method="get">
     <table id="event1">
       <tr>
         <td><label for="events[]">{L('events')}</label></td>

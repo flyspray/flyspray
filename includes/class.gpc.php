@@ -152,10 +152,12 @@ class Filters {
      * @param mixed $data
      * @return int
      * @access public static
+     * @notes changed before 0.9.9 to avoid strange results
+     * with arrays and objects
      */
     function num($data)
     {
-         return (int) $data;
+         return is_numeric($data) ? intval($data) : 0;
     }
     
     /**
@@ -176,10 +178,17 @@ class Filters {
      * @param string $data string value to check
      * @return bool
      * @access public static
+     * @notes unfortunately due to a bug in PHP < 5.1 
+     * http://bugs.php.net/bug.php?id=30945 ctype_alnum
+     * returned true on empty string, that's the reason why
+     * we have to use strlen too.
+     * 
+     * Be aware: $data MUST be an string, integers or any other
+     * type is evaluated to FALSE
      */
     function isAlnum($data)
     {
-        return ctype_alnum($data);
+        return ctype_alnum($data) && strlen($data);
     }
 
     /**

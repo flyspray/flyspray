@@ -3,12 +3,12 @@
   <?php foreach ($notifications as $row): ?>
   <p>
     {!tpl_userlink($row['user_id'])} &mdash;
-    <a href="{$baseurl}?action=remove_notification&amp;ids={$task_details['task_id']}&amp;user_id={$row['user_id']}">{L('remove')}</a>
+    <a href="index.php?action=remove_notification&amp;ids={$task_details['task_id']}&amp;user_id={$row['user_id']}">{L('remove')}</a>
   </p>
   <?php endforeach; ?>
 
   <?php if ($user->perms('manage_project')): ?>
-  <form action="{$baseurl}#notify" method="get">
+  <form action="index.php#notify" method="get">
     <p>
         <label class="default multisel" for="notif_user_id">{L('addusertolist')}</label>
         {!tpl_userselect('user_id', Req::val('user_id'), 'notif_user_id')}

@@ -1,7 +1,7 @@
 <fieldset class="box">
 <legend>{L('registernewuser')}</legend>
 
-<form action="{$baseurl}index.php" method="post" id="registernewuser">
+<form action="index.php" method="post" id="registernewuser">
   <table class="box">
     <tr>
       <td>

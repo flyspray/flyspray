@@ -3,7 +3,7 @@
 
     <p>{L('lostpwexplain')}</p>
 
-    <form action="{$baseurl}index.php" method="post">
+    <form action="index.php" method="post">
         <p><b>{L('username')}</b>
 
         <input type="hidden" name="action" value="lostpw.sendmagic" />

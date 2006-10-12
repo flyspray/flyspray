@@ -10,7 +10,7 @@
     </p>
 
     <div class="groupedit">
-    <form action="{$baseurl}" method="get">
+    <form action="index.php" method="get">
         <div>
             <label for="selectgroup">{L('editgroup')}</label>
             <select name="id" id="selectgroup">{!tpl_options(Flyspray::ListGroups())}</select>
@@ -20,7 +20,7 @@
         </div>
     </form>
     
-    <form action="{$baseurl}" method="get">
+    <form action="index.php" method="get">
         <div>
             <label for="edit_user">{L('edituser')}</label>
             {!tpl_userselect('user_id', '', 'edit_user')}       

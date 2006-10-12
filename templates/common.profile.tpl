@@ -1,4 +1,4 @@
-  <form action="{$baseurl}" method="post">
+  <form action="index.php" method="post">
     <table class="box">
       <tr>
         <td><label for="realname">{L('realname')}</label></td>

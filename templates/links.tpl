@@ -36,7 +36,7 @@
 <div id="pm-menu">
 
 <div id="projectselector">
-    <form id="projectselectorform" action="{$baseurl}index.php" method="get">
+    <form id="projectselectorform" action="index.php" method="get">
        <div>
         <select name="project">
           {!tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id)}

@@ -1,7 +1,7 @@
 <?php if (!$task_details['is_closed']): ?>
   <div id="remind" class="tab">
   
-  <form method="post" action="{$baseurl}" >
+  <form method="post" action="index.php" >
     <table id="reminders" class="userlist">
     <tr>
       <th>
@@ -44,7 +44,7 @@
   </form>
 
   <fieldset><legend>{L('addreminder')}</legend>
-  <form action="{$baseurl}#remind" method="post" id="formaddreminder">
+  <form action="index.php#remind" method="post" id="formaddreminder">
     <div>
       <input type="hidden" name="action" value="details.addreminder" />
       <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
