@@ -9,14 +9,14 @@ class Project
     {
         global $db, $fs;
 
-        if ($id) {
+        if (is_numeric($id)) {
             $sql = $db->Query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
                                  FROM {projects} p
                             LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
                                 WHERE p.project_id = ?", array($id));
             if ($db->countRows($sql)) {
                 $this->prefs = $db->FetchRow($sql);
-                $this->id    = $this->prefs['project_id'];
+                $this->id    = (int) $this->prefs['project_id'];
                 return;
             }
         }
@@ -43,15 +43,21 @@ class Project
     /* cached list functions {{{ */
 
     // helpers {{{
-
+    
     function _pm_list_sql($type, $join)
     {
-        global $db, $conf;
+        global $db;
+        
+        // deny the possibility of shooting ourselves in the foot.
+        // although there is no risky usage atm, the api should never do unexpected things.
+        if(preg_match('![^A-Za-z0-9_]!', $type)) {
+            return '';
+        }
         //Get the column names of list tables for the group by statement
         $groupby = $db->GetColumnNames('{list_' . $type . '}',  'l.' . $type . '_id', 'l.');
 
-        settype($join, 'array');
         $join = 't.'.join(" = l.{$type}_id OR t.", $join)." = l.{$type}_id";
+        
         return "SELECT  l.*, count(t.task_id) AS used_in_tasks
                   FROM  {list_{$type}} l
              LEFT JOIN  {tasks}        t  ON ($join)
@@ -61,8 +67,23 @@ class Project
               ORDER BY  list_position";
     }
 
+    /**
+     * _list_sql 
+     * 
+     * @param mixed $type 
+     * @param mixed $where 
+     * @access protected
+     * @return string
+     * @notes The $where parameter is dangerous, think twice what you pass there..
+     */
+
     function _list_sql($type, $where = null)
     {
+        // sanity check.
+        if(preg_match('![^A-Za-z0-9_]!', $type)) {
+            return '';
+        }
+
         return "SELECT  {$type}_id, {$type}_name
                   FROM  {list_{$type}}
                  WHERE  show_in_list = 1 AND ( project_id = ? OR project_id = 0 )
@@ -79,7 +100,7 @@ class Project
         if ($pm) {
             return $db->cached_query(
                     'pm_task_types',
-                    $this->_pm_list_sql('tasktype', 'task_type'),
+                    $this->_pm_list_sql('tasktype', array('task_type')),
                     array($this->id));
         } else {
             return $db->cached_query(
@@ -93,7 +114,7 @@ class Project
         if ($pm) {
             return $db->cached_query(
                     'pm_os',
-                    $this->_pm_list_sql('os', 'operating_system'),
+                    $this->_pm_list_sql('os', array('operating_system')),
                     array($this->id));
         } else {
             return $db->cached_query('os', $this->_list_sql('os'),
@@ -104,27 +125,32 @@ class Project
     function listVersions($pm = false, $tense = null, $reported_version = null)
     {
         global $db;
+        
+        $params = array($this->id);
+
         if (is_null($tense)) {
             $where = '';
         } else {
-            $where = 'AND version_tense = ' . $db->qstr($tense);
+            $where = 'AND version_tense = ?';
+            $params[] = $tense;
         }
         
         if ($pm) {
             return $db->cached_query(
                     'pm_version',
                     $this->_pm_list_sql('version', array('product_version', 'closedby_version')),
-                    array($this->id));
+                    array($params[0]));
         } elseif (is_null($reported_version)) {
             return $db->cached_query(
                     'version_'.$tense,
                     $this->_list_sql('version', $where),
-                    array($this->id));
+                    $params);
         } else {
+            $params[] = $reported_version;
             return $db->cached_query(
                     'version_'.$tense,
-                    $this->_list_sql('version', $where . ' OR version_id = '. $db->qstr($reported_version) ),
-                    array($this->id));
+                    $this->_list_sql('version', $where . ' OR version_id = ?'),
+                    $params);
         }
     }
     
@@ -205,7 +231,7 @@ class Project
         if ($pm) {
             return $db->cached_query(
                     'pm_resolutions',
-                    $this->_pm_list_sql('resolution', 'resolution_reason'),
+                    $this->_pm_list_sql('resolution', array('resolution_reason')),
                     array($this->id));
         } else {
             return $db->cached_query('resolution',
@@ -219,7 +245,7 @@ class Project
         if ($pm) {
             return $db->cached_query(
                     'pm_statuses',
-                    $this->_pm_list_sql('status', 'item_status'),
+                    $this->_pm_list_sql('status', array('item_status')),
                     array($this->id));
         } else {
             return $db->cached_query('status',
@@ -233,7 +259,7 @@ class Project
     {
         global $db;
         return $db->cached_query(
-                'users_in'.$group_id,
+                'users_in'.(is_null($group_id) ? $group_id : intval($group_id)),
                 "SELECT  u.*
                    FROM  {users}           u
              INNER JOIN  {users_in_groups} uig ON u.user_id = uig.user_id
@@ -247,7 +273,7 @@ class Project
     {
         global $db;
         return $db->cached_query(
-                'attach_'.$cid,
+                'attach_'.intval($cid),
                 "SELECT  *
                    FROM  {attachments}
                   WHERE  comment_id = ?
@@ -259,7 +285,7 @@ class Project
     {
         global $db;
         return $db->cached_query(
-                'attach_'.$tid,
+                'attach_'.intval($tid),
                 "SELECT  *
                    FROM  {attachments}
                   WHERE  task_id = ? AND comment_id = 0

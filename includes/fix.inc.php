@@ -51,6 +51,7 @@ ini_set('session.auto_start',0);
 
 ini_set('session.cookie_httponly',1);
 
+
 // we live is register_globals Off world forever..
 //This code was written By Stefan Esser from the hardened PHP project (sesser@php.net)
 // it's now part of the PHP manual
@@ -79,6 +80,15 @@ function unregister_GLOBALS()
 
    foreach ($input as $k => $v) {
        if (!in_array($k, $noUnset) && isset($GLOBALS[$k])) {
+
+           unset($GLOBALS[$k]);
+           /* no, this is not a bug, we use double unset() .. it is to circunvent 
+           /* this PHP critical vulnerability 
+            * http://www.hardened-php.net/hphp/zend_hash_del_key_or_index_vulnerability.html
+            * this is intended to minimize the catastrophic effects that has on systems with
+            * register_globals on.. users with register_globals off are still vulnerable but
+            * afaik,there is nothing we can do for them.
+            */
            unset($GLOBALS[$k]);
        }
    }
@@ -227,5 +237,21 @@ if (!function_exists('array_intersect_key')) {
         return call_user_func_array('php_compat_array_intersect_key', $args);   
     }
 }
+
+//for reasons outside flsypray, the PHP core may throw Exceptions in PHP5
+// for a good example see this article
+// http://ilia.ws/archives/107-Another-unserialize-abuse.html
+
+if(PHP_VERSION >= 5) {
+
+function flyspray_exception_handler($exception) {
+
+  die("Completely unexpected exception: " .  $exception->getMessage() . "<br/>" .
+      "This should <strong> never </strong> happend, please inform Flyspray Developers");
+
+}
+    set_exception_handler('flyspray_exception_handler');
+}
+
 
 ?>

@@ -168,9 +168,20 @@ class Filters {
      */
     function noXSS($data)
     {
-        return (is_string($data) && strlen($data)) 
-                ? htmlspecialchars($data, ENT_QUOTES , 'utf-8')
-                : '';
+        switch(gettype($data)) {
+
+        case 'string':
+            return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
+            break;
+        case 'integer':
+        case 'double':
+        case 'NULL':
+            return $data;
+            break;
+        default:
+            return '';
+            break;
+        }
     }
     
     /**

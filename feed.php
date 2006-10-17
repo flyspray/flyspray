@@ -48,7 +48,7 @@ $sql = $db->Query("SELECT  MAX(t.date_opened), MAX(t.date_closed), MAX(t.last_ed
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
                     WHERE  t.is_closed <> ? $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1' ", array($closed));
-$most_recent = intval(max($db->fetchRow($sql)));
+$most_recent = max($db->fetchRow($sql));
 
 // }}}
 
@@ -99,13 +99,13 @@ $content = $page->fetch('feed.'.$feed_type.'.tpl');
 if ($fs->prefs['cache_feeds'])
 {
     if ($fs->prefs['cache_feeds'] == '1') {
-        if (!is_writeable('cache') || !@chmod('cache', 0777))
+        if (!is_writeable(BASEDIR .'/cache') || !@chmod(BASEDIR . '/cache', 0700))
         {
             die('Error when caching the feed: cache/ is not writeable.');
         }
 
         // Remove old cached files
-        if($handle = fopen('cache/'.$filename, 'w+b')) {
+        if($handle = fopen(BASEDIR . '/cache/'.$filename, 'w+b')) {
             fwrite($handle, $content);
             fclose($handle);
         }

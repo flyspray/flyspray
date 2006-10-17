@@ -266,7 +266,7 @@ class Flyspray
     function requestDuplicated()
     {
         // garbage collection -- clean entries older than 6 hrs
-        $now = time();
+        $now = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time();
         if (!empty($_SESSION['requests_hash'])) {
             foreach ($_SESSION['requests_hash'] as $key => $val) {
                 if ($val < $now-6*60*60) {
@@ -307,6 +307,12 @@ class Flyspray
 
         if (isset($cache[$task_id]) && $cache_enabled) {
             return $cache[$task_id];
+        }
+
+        //for some reason, task_id is not here
+        // run away inmediately..
+        if(!is_numeric($task_id)) {
+            return false;
         }
 
         $get_details = $db->Query('SELECT t.*, p.*,
@@ -821,7 +827,7 @@ class Flyspray
         }
 
         return $assignees;
-    } /// }}}
+    } /// }}} 
 
     // {{{
     /**
@@ -842,7 +848,7 @@ class Flyspray
             }
     	}
     	return $ret;
-    } /// }}}
+    } /// }} }
     
     /**
      * Checks if a function is disabled
@@ -961,6 +967,39 @@ class Flyspray
              return $var;
         }
             return '/tmp';
+    }
+
+    /**
+     * check_mime_type 
+     * 
+     * @param string $fname path to filename
+     * @access public
+     * @return string the mime type of the offended file.
+     * @notes DO NOT use this function for any security related
+     * task (i.e limiting file uploads by type)
+     * it wasn't designed for that purpose but to UI related tasks.
+     */
+    function check_mime_type($fname) {
+
+        $type = '';
+
+        if (extension_loaded('fileinfo') && class_exists('finfo')) {
+
+            $info = $info = new finfo(FILEINFO_MIME);                 
+            $type = $info->file($fname);
+        
+        } elseif(function_exists('mime_content_type')) {
+            
+            $type = mime_content_type($fname);
+        // I hope we don't have to...
+        } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+
+               $uglytype = @explode('; ', @exec(trim('file -bi ' . escapeshellarg($fname))));
+               $type = $uglytype ? $uglytype[0] : '';     
+        }
+                // if wasn't possible to determine , return empty string so
+                // we can use the browser reported mime-type (probably fake) 
+                return $type;
     }
     
 
