@@ -18,7 +18,7 @@
     </div>
   </div>
   <?php endif; ?>
-    <form action="index.php" method="post">
+    <form action="{$_SERVER['PHP_SELF']}" method="post">
       <table class="list" id="catTable">
          <thead>
          <tr>
@@ -84,7 +84,7 @@
     <hr />
 
     <!-- Form to add a new category to the list -->
-    <form action="index.php" method="post">
+    <form action="{$_SERVER['PHP_SELF']}" method="post">
       <table class="list">
         <tr>
           <td>

@@ -8,7 +8,7 @@
     </div>
 </div>
 <?php endif; ?>
-<form action="index.php" method="post">
+<form action="{$_SERVER['PHP_SELF']}" method="post">
   <table class="list" id="listTable">
    <thead>
      <tr>
@@ -81,7 +81,7 @@
       </script>
 </form>
 <hr />
-<form action="index.php" method="post">
+<form action="{$_SERVER['PHP_SELF']}" method="post">
   <table class="list">
     <tr>
       <td>

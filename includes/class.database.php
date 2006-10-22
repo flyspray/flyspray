@@ -105,28 +105,6 @@ class Database
         $this->dblink->Close();
     }
 
-    /**
-     * Replace undef values (treated as NULL in SQL database) with empty
-     * strings.
-     * @param array input array or false
-     * @return array SQL safe array (without undefined values)
-     */
-    function dbUndefToEmpty($arr)
-    {
-        if (is_array($arr)) {
-            $c = count($arr);
-
-            for($i=0; $i<$c; $i++) {
-                if (!isset($arr[$i])) {
-                    $arr[$i] = '';
-                }
-                // This line safely escapes sql before it goes to the db
-                $this->dblink->qstr($arr[$i], false);
-            }
-        }
-        return $arr;
-    }
-
     function CountRows(&$result)
     {
         return (int) $result->RecordCount();
@@ -160,9 +138,6 @@ class Database
 
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
-        // replace undef values (treated as NULL in SQL database) with empty
-        // strings
-        $inputarr = $this->dbUndefToEmpty($inputarr);
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 

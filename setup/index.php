@@ -34,6 +34,8 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
 // get the functionality right now
+$conf['general']['syntax_plugin'] = '';
+
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.flyspray.php';
@@ -47,10 +49,7 @@ require_once OBJECTS_PATH . '/version.php';
 define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
 define('XMLS_DEBUG', true);
 define('XMLS_PREFIX_MAXLEN', 15);
-// ---------------------------------------------------------------------
-// Application file system locations
-// ---------------------------------------------------------------------
-$conf['general']['syntax_plugin'] = '';
+
 
 
 class Setup extends Flyspray

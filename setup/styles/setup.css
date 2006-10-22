@@ -220,12 +220,6 @@ body {
   text-align: center;
 }
 
-.button {
-  border:solid 1px #688EB4; padding: 2px; margin:0;
-  background: #E9ECEF; color : #688EB4;
-  font-weight : bold; font-size : 11px;
-}
-
 table.content {
   width: 98%;
 }

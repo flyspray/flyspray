@@ -1,7 +1,7 @@
 <div id="toolbox">
   <h3>{L('admintoolboxlong')} :: {L('preferences')}</h3>
 
-  <form action="index.php" method="post">
+  <form action="{$_SERVER['PHP_SELF']}" method="post">
   <ul id="submenu">
    <li><a href="#general">{L('general')}</a></li>
    <li><a href="#userregistration">{L('userregistration')}</a></li>

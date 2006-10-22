@@ -221,7 +221,7 @@
 		<?php endif; ?>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<form action="index.php" method="post">
+		<form action="{$_SERVER['PHP_SELF']}" method="post">
 		  <div>
 			 <input type="hidden" name="action" value="details.newdep" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
@@ -268,7 +268,7 @@
 	 <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');">
 		{L('reopenrequest')}</a>
 	 <div id="closeform" class="popup hide">
-		<form name="form3" action="index.php" method="post" id="formclosetask">
+		<form name="form3" action="{$_SERVER['PHP_SELF']}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="requestreopen" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
@@ -286,7 +286,7 @@
 	 <a href="{CreateUrl('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))}" id="closetask" class="button" accesskey="y" onclick="showhidestuff('closeform');return false;">
 		{L('closetask')}</a>
      <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
-		<form action="index.php" method="post" id="formclosetask">
+		<form action="{$_SERVER['PHP_SELF']}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="details.close" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
@@ -307,7 +307,7 @@
 	 <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');">
 		{L('requestclose')}</a>
 	 <div id="closeform" class="popup hide">
-		<form name="form3" action="index.php" method="post" id="formclosetask">
+		<form name="form3" action="{$_SERVER['PHP_SELF']}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="requestclose" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />

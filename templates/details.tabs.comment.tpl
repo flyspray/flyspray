@@ -43,7 +43,7 @@
 
   <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
   <fieldset><legend>{L('addcomment')}</legend>
-  <form enctype="multipart/form-data" action="index.php" method="post">
+  <form enctype="multipart/form-data" action="{$_SERVER['PHP_SELF']}" method="post">
     <div>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <div class="hide preview" id="preview"></div>

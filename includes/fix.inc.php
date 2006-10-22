@@ -35,7 +35,7 @@ ini_set('magic_quotes_sybase',0);
 
 // no transparent session id improperly configured servers
 
-ini_set('session.use_trans_sid', 0);
+@ini_set('session.use_trans_sid', 0); // might cause error in setup
 
 //see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
 ini_set('session.use_only_cookies',1);
