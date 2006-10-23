@@ -168,20 +168,12 @@ class Filters {
      */
     function noXSS($data)
     {
-        switch(gettype($data)) {
-
-        case 'string':
-            return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
-            break;
-        case 'integer':
-        case 'double':
-        case 'NULL':
+        if(empty($data) || is_numeric($data)) {
             return $data;
-            break;
-        default:
-            return '';
-            break;
+        } elseif(is_string($data)) {
+            return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
         }
+        return '';
     }
     
     /**

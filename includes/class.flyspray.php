@@ -117,7 +117,7 @@ class Flyspray
 
         @ob_clean();
 
-        if (count($_SESSION)) {
+        if (isset($_SESSION) && count($_SESSION)) {
             session_write_close();
         }
 
@@ -538,7 +538,7 @@ class Flyspray
 
         $check = $db->Query("SELECT *
                                FROM {admin_requests}
-                              WHERE request_type = ? AND task_id = ? AND resolved_by = '0'",
+                              WHERE request_type = ? AND task_id = ? AND resolved_by = 0",
                             array($type, $task_id));
         return (bool)($db->CountRows($check));
     } // }}}
@@ -775,7 +775,7 @@ class Flyspray
         $changes = array();
         foreach ($old as $key => $value)
         {
-            if (!in_array($key, $comp) || ($key == 'due_date' && intval($old[$key]) == intval($new[$key]))) {
+            if (!in_array($key, $comp) || ($key === 'due_date' && intval($old[$key]) === intval($new[$key]))) {
                 continue;
             }
 

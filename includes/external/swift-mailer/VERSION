@@ -1,5 +1,5 @@
- Swift Mailer 2.1.16
- 9th September 2006
+ Swift Mailer 2.1.17
+ 18th October 2006
  
  ---------------------------
  
@@ -182,3 +182,7 @@
 
  9th September 2006: 2.1.16
  More tweaking of message structure with MIME parts/attachments.
+
+ 18th October 2006: 2.1.17
+ Fixed bug with detectUTF8() [array given when string expected..]
+ Added setHeaderEncoding() method

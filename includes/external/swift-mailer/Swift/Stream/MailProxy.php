@@ -366,7 +366,7 @@ class Swift_Stream_MailProxy
 		@ini_set('sendmail_from', $this->from);
 		$extra = "-oi -f ".$this->from;
 		$sent = @mail(
-		  implode(', ', array_map('trim', $this->getTo($string))),
+		  implode(', ', $this->getTo($string)),
 		  $this->getSubject($string),
 		  $this->getBody($string),
 		  $this->getHeaders($string),

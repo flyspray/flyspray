@@ -28,9 +28,9 @@
  *  * Loadable plugin support with event handling features
  *
  * @package	Swift
- * @version	2.1.16-php4
+ * @version	2.1.17-php4
  * @author	Chris Corbyn
- * @date	9th September 2006
+ * @date	18th October 2006
  * @license http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
  *
  * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
@@ -61,7 +61,7 @@
  *
  */
 
-if (!defined('SWIFT_VERSION')) define('SWIFT_VERSION', '2.1.16');
+if (!defined('SWIFT_VERSION')) define('SWIFT_VERSION', '2.1.17');
 
 /**
  * Swift Mailer Class.
@@ -268,6 +268,11 @@ class Swift
 	 * Number of commands skipped thus far
 	 */
 	var $skippedCommands = 0;
+	/**
+	 * The encoding mode to use in headers (default base64)
+	 * @var char mode
+	 */
+	var $headerEncoding = 'B';
 	
 	/**
 	 * Swift Constructor
@@ -385,6 +390,23 @@ class Swift
 			break;
 			case 3: default:
 			$this->addHeaders("X-Priority: $level\r\nX-MSMail-Priority: Normal");
+		}
+	}
+	/**
+	 * Set the encoding to use in headers
+	 * @param string mode
+	 */
+	function setHeaderEncoding($mode='B')
+	{
+		switch (strtoupper($mode))
+		{
+			case 'Q':
+			case 'QP':
+			case 'QUOTED-PRINTABLE':
+			$this->headerEncoding = 'Q';
+			break;
+			default:
+			$this->headerEncoding = 'B';
 		}
 	}
 	/**
@@ -1133,7 +1155,11 @@ class Swift
 	{
 		foreach ((array)$string_in as $string)
 		{
-			if (preg_match('%(?:
+			if (is_array($string))
+			{
+				if ($this->detectUTF8($string)) return true;
+			}
+			elseif (preg_match('%(?:
 			[\xC2-\xDF][\x80-\xBF]				# non-overlong 2-byte
 			|\xE0[\xA0-\xBF][\x80-\xBF]			# excluding overlongs
 			|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}	# straight 3-byte
@@ -1231,9 +1257,15 @@ class Swift
 					//... and remove it from the string
 					$string = substr($string, 0, $address_start);
 				}
-				$encoded = trim(chunk_split($this->encode($string, 'base64')));
+				
+				if ($this->headerEncoding == 'B') $encoded = trim(chunk_split($this->encode($string, 'base64')));
+				else
+				{
+					$this->headerEncoding = 'Q';
+					$encoded = trim($this->encode($string, 'quoted-printable'));
+				}
 				$lines = explode("\r\n", $encoded);
-				return  '=?'.$this->charset.'?B?'.implode("?=\r\n =?{$this->charset}?B?", $lines).'?= '.$address;
+				return  '=?'.$this->charset.'?'.$this->headerEncoding.'?'.implode("?=\r\n =?{$this->charset}?{$this->headerEncoding}?", $lines).'?= '.$address;
 			}
 		}
 		else

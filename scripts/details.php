@@ -83,7 +83,7 @@ else {
     // Check for pending PM requests
     $get_pending  = $db->Query("SELECT  *
                                   FROM  {admin_requests}
-                                 WHERE  task_id = ?  AND resolved_by = '0'",
+                                 WHERE  task_id = ?  AND resolved_by = 0",
                                  array($task_id));
 
     // Get info on the dependencies again

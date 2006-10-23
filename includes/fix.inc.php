@@ -141,7 +141,7 @@ if (!isset($_SERVER['REQUEST_URI']))
         $_SERVER['REQUEST_URI'] = $_SERVER['PHP_SELF'];
     }
 
-    if ($_SERVER['QUERY_STRING']) {
+    if (isset($_SERVER['QUERY_STRING'])) {
         $_SERVER['REQUEST_URI'] .=  '?'.$_SERVER['QUERY_STRING'];
     }
 }
@@ -246,7 +246,8 @@ if(PHP_VERSION >= 5) {
 
 function flyspray_exception_handler($exception) {
 
-  die("Completely unexpected exception: " .  $exception->getMessage() . "<br/>" .
+    die("Completely unexpected exception: " .  
+        htmlspecialchars($exception->getMessage(),ENT_QUOTES, 'utf-8')  . "<br/>" .
       "This should <strong> never </strong> happend, please inform Flyspray Developers");
 
 }

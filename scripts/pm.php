@@ -22,7 +22,7 @@ switch ($area = Req::val('area', 'prefs')) {
                              FROM  {admin_requests} ar
                         LEFT JOIN  {tasks} t ON ar.task_id = t.task_id
                         LEFT JOIN  {users} u ON ar.submitted_by = u.user_id
-                            WHERE  ar.project_id = ? AND resolved_by = '0'
+                            WHERE  ar.project_id = ? AND resolved_by = 0
                          ORDER BY  ar.time_submitted ASC", array($proj->id));
 
         $page->assign('pendings', $db->fetchAllArray($sql));
