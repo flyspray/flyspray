@@ -9,7 +9,9 @@
  *
  * @license http://opensource.org/licenses/lgpl-license.php Lesser GNU Public License
  * @package flyspray
- * @author Tony Collins, Florian Schmitz
+ * @author Tony Collins
+ * @author Florian Schmitz
+ * @author Cristian Rodriguez
  */
 
 class Flyspray
@@ -493,7 +495,7 @@ class Flyspray
         // 31: User deletion
 
         $query_params = array(intval($task_id), intval($user->id),
-                             ((is_null($time)) ? time() : $time), 
+                             ((!is_numeric($time)) ? time() : $time), 
                               $type, $field, $oldvalue, $newvalue); 
 
         if($db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed, 
@@ -923,14 +925,11 @@ class Flyspray
     function username_to_id($name)
     {
         global $db;
+
+        $sql = $db->Query('SELECT user_id FROM {users} WHERE ' .
+                          (is_numeric($name) ? 'user_id' : 'user_name') . ' = ?', array($name));
         
-        if (is_numeric($name)) {
-            $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array($name));
-            return intval($db->FetchOne($sql));
-        } else {
-            $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
-            return intval($db->FetchOne($sql));
-        }
+        return intval($db->FetchOne($sql));
     }
     /**
      * check_email 
@@ -946,6 +945,12 @@ class Flyspray
         return is_string($email) && Validate::email($email, array('use_rfc822'=>true));
     }
 
+    /**
+     * get_tmp_dir 
+     * Based on PEAR System::tmpdir() by Tomas V.V.Cox.
+     * @access public
+     * @return void
+     */
     function get_tmp_dir()
     {
         if(function_exists('sys_get_temp_dir')) {
