@@ -30,6 +30,7 @@
     <script type="text/javascript" src="{$baseurl}javascript/tabs.js"></script>
     <script type="text/javascript" src="{$baseurl}javascript/functions.js"></script>
     <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar-setup_stripped.js"> </script> 
     <script type="text/javascript" src="{$baseurl}javascript/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
     <!--[if IE]>
     <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
