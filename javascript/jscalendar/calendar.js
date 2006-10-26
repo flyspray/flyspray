@@ -552,6 +552,12 @@ Calendar.dayMouseOver = function(ev) {
 		Calendar.addClass(el, "hilite");
 		if (el.caldate) {
 			Calendar.addClass(el.parentNode, "rowhilite");
+			var cal = el.calendar;
+			if (cal && cal.getDateToolTip) {
+				var d = el.caldate;
+				window.status = d;
+				el.title = cal.getDateToolTip(d, d.getFullYear(), d.getMonth(), d.getDate());
+			}
 		}
 	}
 	return Calendar.stopEvent(ev);
@@ -567,7 +573,7 @@ Calendar.dayMouseOut = function(ev) {
 			removeClass(el.parentNode, "rowhilite");
 		if (el.calendar)
 			el.calendar.tooltips.innerHTML = _TT["SEL_DATE"];
-		return stopEvent(ev);
+		// return stopEvent(ev);
 	}
 };
 
@@ -592,7 +598,7 @@ Calendar.cellClick = function(el, ev) {
 		cal.date.setDateOnly(el.caldate);
 		date = cal.date;
 		var other_month = !(cal.dateClicked = !el.otherMonth);
-		if (!other_month && !cal.currentDateEl)
+		if (!other_month && !cal.currentDateEl && cal.multiple)
 			cal._toggleMultipleDate(new Date(date));
 		else
 			newdate = !el.disabled;
@@ -1149,11 +1155,6 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 				dates[date.print("%Y%m%d")] = cell;
 			if (this.getDateStatus) {
 				var status = this.getDateStatus(date, year, month, iday);
-				if (this.getDateToolTip) {
-					var toolTip = this.getDateToolTip(date, year, month, iday);
-					if (toolTip)
-						cell.title = toolTip;
-				}
 				if (status === true) {
 					cell.className += " disabled";
 					cell.disabled = true;
