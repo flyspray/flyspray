@@ -135,6 +135,7 @@
         </fieldset>
 
        </div>
+       <input type="hidden" name="do" value="index" />
       </div>
     </form>
   </map>
