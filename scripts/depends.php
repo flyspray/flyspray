@@ -226,9 +226,8 @@ if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
 
     $dot = escapeshellcmd($path_to_dot);
     $tname = escapeshellarg($tname);
-    $fmt = escapeshellarg($fmt);
 
-    $cmd = "$dot -T $fmt -o \"" . BASEDIR . '/' . escapeshellarg($file_name) . '.' . $fmt . "\" $tname";
+    $cmd = "$dot -T $fmt -o \"" . BASEDIR . '/' . escapeshellarg($file_name . '.' . $fmt) . "\" $tname";
     shell_exec($cmd);
 
     $cmd = "$dot -T cmapx " . $tname;
