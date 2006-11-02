@@ -140,7 +140,7 @@ switch ($action = Req::val('action'))
 
         if (Post::val('old_assigned') != trim(Post::val('assigned_to')) ) {
             // Log to task history
-            Flyspray::logEvent($task['task_id'], 14, trim(Post::val('assigned_to')), Post::val('old_assigned'), null, $time);
+            Flyspray::logEvent($task['task_id'], 14, trim(Post::val('assigned_to')), Post::val('old_assigned'), '', $time);
 
             // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
             if (Post::val('assigned_to') != '') {
