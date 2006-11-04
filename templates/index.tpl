@@ -72,7 +72,7 @@
         
         <label class="default multisel" for="due">{L('dueversion')}</label>
         <select name="due[]" id="due" multiple="multiple" size="5">
-          {!tpl_options(array('' => L('dueanyversion'), 0 => L('unassigned')) + $proj->listVersions(false), Get::val('due', ''))}
+          {!tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', ''))}
         </select>
         
         <label class="default multisel" for="reported">{L('reportedversion')}</label>
