@@ -140,9 +140,9 @@
       </tr>
       <tr>
         <td colspan="2" class="buttons">
+          <input type="hidden" name="project_id" value="{$proj->id}" />
           <input type="hidden" name="action" value="{Req::val('action', $do . '.editgroup')}" />
           <input type="hidden" name="area" value="editgroup" />
-          <input type="hidden" name="id" value="{Req::val('id')}" />
           <input type="hidden" name="group_id" value="{$group_details['group_id']}" />
           <button type="submit">{L('updatedetails')}</button>
         </td>
