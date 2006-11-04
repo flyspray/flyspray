@@ -158,6 +158,8 @@ foreach (array("edge_list", "rvrs_list", "node_list") as $l) {
     }
 }
 
+$use_public = Flyspray::function_disabled('shell_exec') || !$path_to_dot;
+
 // Now we've got everything we need... let's draw the pretty pictures
 
 //Open the graph, and print global options
@@ -174,7 +176,7 @@ foreach ($node_list as $n => $r) {
     $x = dechex(255-($r['pct']+10));
     $col = "#$x$x$x";
     // Make sure label terminates in \n!
-    $label = "FS#$n \n".
+    $label = "FS#$n \n". ((!$use_public) ? utf8_substr($r['sum'], 0, 15) . "\n" : '') .
         ($r['clsd'] ? L('closed') :
          "$r[pct]% ".L('complete'));
     $tooltip =
@@ -203,14 +205,14 @@ $dotgraph .= "}\n";
 
 // All done with the graph. Save it to a temp file (new name if the data has changed)
 $file_name = 'cache/fs_depends_dot_' . $id . '_' . md5($dotgraph) . '.dot';
-$tname = BASEDIR . '/' . $file_name;
+$tname = $unlink = BASEDIR . '/' . $file_name;
 
-if($tmp = fopen($tname, 'wb')){
-fwrite($tmp, $dotgraph);
-fclose($tmp);
+if ($tmp = fopen($tname, 'wb')) {
+    fwrite($tmp, $dotgraph);
+    fclose($tmp);
 }
 // Now run dot on it:
-if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
+if ($use_public) {
     if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {
         $data = file_get_contents(array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.' . $fmt);
         $f = fopen(BASEDIR . '/' . $file_name . '.' . $fmt, 'wb');
@@ -219,7 +221,7 @@ if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
     } else {
         $data = file_get_contents(BASEDIR . '/' . $file_name . '.' . $fmt);
     }
-    
+
     $page->assign('remote', $remote = true);
     $page->assign('map',    array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.map');
 } else {
@@ -235,6 +237,9 @@ if (Flyspray::function_disabled('shell_exec') || !$path_to_dot) {
     
     $page->assign('remote', $remote = false);
     $page->assign('map',    $data['map']);
+    // Remove files so that they are not exposed to the public
+    unlink($unlink);
+    unlink(BASEDIR . '/' . $file_name . '.' . $fmt);    
 }
 
 $page->assign('image', $baseurl . $file_name . '.' . $fmt);
