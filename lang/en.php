@@ -272,7 +272,7 @@ $language = array(
 'requestclose'            => 'Request closure',
 'ownershiptaken'          => 'User took ownership',
 'closerequestmade'        => 'Requested task closure',
-'reopenrequestmade'       => 'Requested task be re-opened',
+'reopenrequestmade'       => 'Requested task to be re-opened',
 'taskdependson'           => 'This task depends upon',
 'taskblocks'              => 'This task blocks these from closing',
 'depadded'                => 'Dependency added:',
@@ -294,7 +294,7 @@ $language = array(
 'stopwatching'            => 'stop watching',
 'commentlink'             => 'Link to this comment',
 'submitreq'               => 'Submit request',
-'reasonforreq'            => 'Reason for this request',
+'reasonforreq'            => 'Reason for request',
 'pmreqdenied'             => 'Project Manager denied request',
 'taskpendingreq'          => 'Project Manager action pending.  See the History tab for details.',
 'previoustask'            => 'Previous task',
@@ -805,6 +805,8 @@ Regards,',
 'showtip'                 => 'Show this item in the list',
 'deletetip'               => 'Delete this item from the list',
 'del'                     => 'del',
+'request1'                => 'A task closure has been requested.',
+'request2'                => 'A request to re-open the task has been made.',
 ); 
 
 ?>

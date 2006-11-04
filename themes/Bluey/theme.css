@@ -1081,12 +1081,10 @@ div#fileupload {
 }
 
 span.pendingreq {
-	font-size:120%;
-	font-weight:700;
-	color:red;
-	background:url(em.png) no-repeat left;
+	border:solid 1px red;
+	background:url(em.png) white no-repeat 3px 50%;
 	margin:0 0 0 9px;
-	padding:2px 0 2px 17px;
+	padding:3px 3px 3px 23px;
 }
 
 a.pendingreq {

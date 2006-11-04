@@ -338,7 +338,11 @@
 
 	 <?php endif; ?>
 	 <?php if (count($penreqs)): ?>
-     <span class="pendingreq">{L('taskpendingreq')}</span>
+     <span class="pendingreq"><strong>{formatDate($penreqs[0]['time_submitted'])}: {L('request'.$penreqs[0]['request_type'])}</strong>
+     <?php if ($penreqs[0]['reason_given']): ?>
+     {L('reasonforreq')}: {$penreqs[0]['reason_given']}
+     <?php endif; ?>
+     </span>
      <?php endif; ?>
   </div>
 </div>
