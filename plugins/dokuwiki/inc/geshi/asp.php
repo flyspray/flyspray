@@ -4,17 +4,19 @@
  * --------
  * Author: Amit Gupta (http://blog.igeek.info/)
  * Copyright: (c) 2004 Amit Gupta (http://blog.igeek.info/), Nigel McNie (http://qbnz.com/highlighter)
- * Release Version: 1.0.7.3
- * CVS Revision Version: $Revision: 1.4 $
+ * Release Version: 1.0.7.15
+ * CVS Revision Version: $Revision: 1.14.2.4 $
  * Date Started: 2004/08/13
- * Last Modified: $Date: 2005/09/22 01:30:09 $
+ * Last Modified: $Date: 2006/09/23 02:05:46 $
  *
  * ASP language file for GeSHi.
  *
  * CHANGES
  * -------
+ * 2005/12/30 (1.0.3)
+ *   -  Strings only delimited by ", comments by '
  * 2004/11/27 (1.0.2)
- *  -  Added support for multiple object splitters
+ *   -  Added support for multiple object splitters
  * 2004/10/27 (1.0.1)
  *   -  Added support for URLs
  * 2004/08/13 (1.0.0)
@@ -49,7 +51,7 @@ $language_data = array (
 	'COMMENT_SINGLE' => array(1 => "'", 2 => '//'),
 	'COMMENT_MULTI' => array('/*' => '*/'),
 	'CASE_KEYWORDS' => 0,
-	'QUOTEMARKS' => array("'", '"'),
+	'QUOTEMARKS' => array('"'),
 	'ESCAPE_CHAR' => '\\',
 	'KEYWORDS' => array(
 		1 => array(

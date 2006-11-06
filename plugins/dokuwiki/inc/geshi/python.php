@@ -4,10 +4,10 @@
  * ----------
  * Author: Roberto Rossi (rsoftware@altervista.org)
  * Copyright: (c) 2004 Roberto Rossi (http://rsoftware.altervista.org), Nigel McNie (http://qbnz.com/highlighter)
- * Release Version: 1.0.7.3
- * CVS Revision Version: $Revision: 1.5 $
+ * Release Version: 1.0.7.15
+ * CVS Revision Version: $Revision: 1.14.2.5 $
  * Date Started: 2004/08/30
- * Last Modified: $Date: 2005/09/22 01:41:46 $
+ * Last Modified: $Date: 2006/09/23 02:05:47 $
  *
  * Python language file for GeSHi.
  *
@@ -172,7 +172,10 @@ $language_data = array (
 		),
 	'CASE_SENSITIVE' => array(
 		GESHI_COMMENTS => true,
-		1 => true
+		1 => true,
+        2 => true,
+        3 => true,
+        4 => true
 		),
 	'STYLES' => array(
 		'KEYWORDS' => array(

@@ -4,15 +4,17 @@
  * --------
  * Author: Nigel McNie (oracle.shinoda@gmail.com)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
- * Release Version: 1.0.7.3
- * CVS Revision Version: $Revision: 1.7 $
+ * Release Version: 1.0.7.15
+ * CVS Revision Version: $Revision: 1.19.2.5 $
  * Date Started: 2004/07/10
- * Last Modified: $Date: 2005/09/22 01:35:22 $
+ * Last Modified: $Date: 2006/09/23 02:05:47 $
  *
  * Java language file for GeSHi.
  *
  * CHANGES
  * -------
+ * 2005/12/28 (1.0.4)
+ *   -  Added instanceof keyword
  * 2004/11/27 (1.0.3)
  *   -  Added support for multiple object splitters
  * 2004/08/05 (1.0.2)
@@ -58,7 +60,7 @@ $language_data = array (
 	'ESCAPE_CHAR' => '\\',
 	'KEYWORDS' => array(
 		1 => array(
-			'for', 'foreach', 'if', 'elseif', 'else', 'while', 'do',
+			'for', 'foreach', 'if', 'else', 'while', 'do',
 			'switch', 'case'
 			),
 		2 => array(
@@ -66,7 +68,9 @@ $language_data = array (
 			'private', 'protected', 'extends', 'break', 'class',
 			'new', 'try', 'catch', 'throws', 'finally', 'implements',
 			'interface', 'throw', 'native', 'synchronized', 'this',
-            'abstract', 'transient'
+            'abstract', 'transient', 'instanceof', 'assert', 'continue',
+            'default', 'enum', 'package', 'static', 'strictfp', 'super',
+            'volatile', 'const', 'goto'
 			),
 		3 => array(
 			'AbstractAction', 'AbstractBorder', 'AbstractButton', 'AbstractCellEditor',
@@ -1315,7 +1319,7 @@ $language_data = array (
 			'_Remote_Stub '
 			),
 		4 => array(
-			'static', 'void', 'double', 'int', 'real', 'boolean', 'byte', 'short', 'long', 'single'
+			'void', 'double', 'int', 'boolean', 'byte', 'short', 'long', 'char', 'float'
 			)
 		),
 	'SYMBOLS' => array(
@@ -1367,13 +1371,12 @@ $language_data = array (
 	'URLS' => array(
 		1 => '',
 		2 => '',
-		3 => 'http://www.google.com/search?q=allinurl%3A{FNAME}+java.sun.com&amp;bntl=1',
+		3 => 'http://www.google.com/search?hl=en&amp;q=allinurl%3A{FNAME}+java.sun.com&amp;bntI=I%27m%20Feeling%20Lucky',
 		4 => ''
 		),
 	'OOLANG' => true,
 	'OBJECT_SPLITTERS' => array(
-		1 => '.',
-		2 => '::'
+		1 => '.'
 		),
 	'REGEXPS' => array(
 		),
