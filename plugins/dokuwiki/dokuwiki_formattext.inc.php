@@ -16,6 +16,7 @@ class dokuwiki_TextFormatter
         }
         require_once(BASEDIR . '/plugins/dokuwiki/inc/common.php');
         require_once(BASEDIR . '/plugins/dokuwiki/inc/parser/xhtml.php');
+        
 
         // Create a renderer
         $Renderer = & new Doku_Renderer_XHTML();
@@ -33,12 +34,7 @@ class dokuwiki_TextFormatter
                 $Parser->addMode($mode['mode'], $mode['obj']);
             }
             $instructions = $Parser->parse($text);
-            for ($i = 0; $i < count($instructions); ++$i) {
-                if ($instructions[$i][0] == 'code' && isset($instructions[$i][1][1])) {
-                    $instructions[$i][1] = call_user_func_array(array(&$Renderer, $instructions[$i][0]), $instructions[$i][1]);
-                    $instructions[$i][0] = 'geshi_cached';
-                }
-            }
+
             
             // Cache the parsed text
             if (!is_null($type) && !is_null($id)) {
@@ -59,7 +55,8 @@ class dokuwiki_TextFormatter
         $Renderer->interwiki = getInterwiki();
 
         $conf = $fs_conf;
-
+        $conf['cachedir'] = BASEDIR . '/cache/dokuwiki'; // for dokuwiki
+        
         // Loop through the instructions
         foreach ($instructions as $instruction) {
             // Execute the callback against the Renderer

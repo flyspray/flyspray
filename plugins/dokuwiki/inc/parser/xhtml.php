@@ -394,7 +394,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
     }
     
-    function geshi_cached($text) {
+    function geshi_cached($text = '') {
           $this->doc .= $text;
     }
 

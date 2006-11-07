@@ -78,7 +78,7 @@ $conf['canonical']   = 0;                //Should all URLs use full canonical ht
 $conf['autoplural']  = 0;                //try (non)plural form of nonexisting files?
 $conf['compression'] = 'gz';             //compress old revisions: (0: off) ('gz': gnuzip) ('bz2': bzip)
                                          //  bz2 generates smaller files, but needs more cpu-power
-$conf['cachetime']   = 60*60*24;         //maximum age for cachefile in seconds (defaults to a day)
+$conf['cachetime']   = 60*60*24*10;      //maximum age for cachefile in seconds (defaults to a day)
 $conf['locktime']    = 15*60;            //maximum age for lockfiles (defaults to 15 minutes)
 $conf['fetchsize']   = 0;                //maximum size (bytes) fetch.php may download from extern, disabled by default
 $conf['notify']      = '';               //send change info to this email (leave blank for nobody)
