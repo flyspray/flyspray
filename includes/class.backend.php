@@ -531,12 +531,12 @@ class Backend
             return false;
         }
         
-        $tables = array('list_os', 'list_resolution', 'list_tasktype',
+        $tables = array('list_category', 'list_os', 'list_resolution', 'list_tasktype',
                         'list_status', 'list_version', 'admin_requests', 
                         'cache', 'projects', 'tasks');
         
         foreach ($tables as $table) {
-            if ($move_to && $table !== 'projects') {
+            if ($move_to && $table !== 'projects' && $table !== 'list_category') {
                 $action = 'UPDATE ';
                 $sql_params = array($move_to, $pid);
             } else {

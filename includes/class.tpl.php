@@ -822,7 +822,7 @@ class Url {
 		foreach ($vars as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $valuei) {
-                    if ($valuei) $append .= rawurlencode($key) . '[]=' . rawurlencode($valuei) . '&';
+                    $append .= rawurlencode($key) . '[]=' . rawurlencode($valuei) . '&';
                 }
             } else {
                 $append .= rawurlencode($key) . '=' . rawurlencode($value) . '&';
