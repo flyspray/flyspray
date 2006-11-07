@@ -81,7 +81,7 @@ class User
             }
         }
         
-        $sql = $db->Query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY time DESC', array($this->id));
+        $sql = $db->Query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY name ASC', array($this->id));
         $this->searches = $db->FetchAllArray($sql);
     }
     
