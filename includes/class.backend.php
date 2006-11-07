@@ -531,7 +531,7 @@ class Backend
             return false;
         }
         
-        $tables = array('list_category', 'list_os', 'list_resolution', 'list_tasktype',
+        $tables = array('list_os', 'list_resolution', 'list_tasktype',
                         'list_status', 'list_version', 'admin_requests', 
                         'cache', 'projects', 'tasks');
         

@@ -178,7 +178,7 @@ class Project
                                WHERE category_name = 'root' AND lft = 1 AND project_id = ?",
                              array($project_id));
         $row = $db->FetchRow($result);
-        
+
         $groupby = $db->GetColumnNames('{list_category}', 'c.category_id', 'c.');
 
         // now, retrieve all descendants of the root node
@@ -195,12 +195,9 @@ class Project
                 continue;
             }
             
-           // only check stack if there is one
-           if (count($right) > 0) {
-               // check if we should remove a node from the stack
-               while ($right[count($right)-1] < $row['rgt']) {
-                   array_pop($right);
-               }
+           // check if we should remove a node from the stack
+           while (count($right) > 0 && $right[count($right)-1] < $row['rgt']) {
+               array_pop($right);
            }
            $cats[] = $row + array('depth' => count($right)-1);
 
