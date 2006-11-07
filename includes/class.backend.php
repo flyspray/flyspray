@@ -990,7 +990,7 @@ class Backend
                 } elseif ($key == 'status') {
                     $temp .= " is_closed <> '1' AND";
                 }
-                if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == '8')) {
+                if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == 'closed')) {
                     $temp .= ' ' . $db_key . ' = ?  OR';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
