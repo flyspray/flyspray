@@ -18,7 +18,7 @@ define('HTTP_NL',"\r\n");
  * @author Andreas Goetz <cpuidle@gmx.de>
  */
 class DokuHTTPClient extends HTTPClient {
-    
+
     /**
      * Constructor.
      *
@@ -54,11 +54,12 @@ class HTTPClient {
     //set these if you like
     var $agent;         // User agent
     var $http;          // HTTP version defaults to 1.0
-    var $timeout;       
+    var $timeout;       // read timeout (seconds)
     var $cookies;
     var $referer;
     var $max_redirect;
     var $max_bodysize;  // abort if the response body is bigger than this
+    var $header_regexp; // if set this RE must match against the headers, else abort
     var $headers;
     var $debug;
 
@@ -99,6 +100,7 @@ class HTTPClient {
         $this->http         = '1.0';
         $this->debug        = false;
         $this->max_bodysize = 0;
+        $this->header_regexp= '';
         if(extension_loaded('zlib')) $this->headers['Accept-encoding'] = 'gzip';
         $this->headers['Accept'] = 'text/xml,application/xml,application/xhtml+xml,'.
                                    'text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
@@ -111,10 +113,13 @@ class HTTPClient {
      *
      * Returns the wanted page or false on an error;
      *
+     * @param  string $url       The URL to fetch
+     * @param  bool   $sloppy304 Return body on 304 not modified
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function get($url){
+    function get($url,$sloppy304=false){
         if(!$this->sendRequest($url)) return false;
+        if($this->status == 304 && $sloppy304) return $this->resp_body;
         if($this->status != 200) return false;
         return $this->resp_body;
     }
@@ -150,13 +155,13 @@ class HTTPClient {
         if(!empty($uri['query'])) $path .= '?'.$uri['query'];
         $port = $uri['port'];
         if($uri['user']) $this->user = $uri['user'];
-        if($uri['pass']) $this->user = $uri['pass'];
+        if($uri['pass']) $this->pass = $uri['pass'];
 
         // proxy setup
         if($this->proxy_host){
             $request_url = $url;
-            $server      = $config['proxy_host'];
-            $port        = $config['proxy_port'];
+            $server      = $this->proxy_host;
+            $port        = $this->proxy_port;
             if (empty($port)) $port = 8080;
         }else{
             $request_url = $path;
@@ -174,7 +179,7 @@ class HTTPClient {
         $headers['Referer']    = $this->referer;
         $headers['Connection'] = 'Close';
         if($method == 'POST'){
-            $post = _postEncode($data);
+            $post = $this->_postEncode($data);
             $headers['Content-Type']   = 'application/x-www-form-urlencoded';
             $headers['Content-Length'] = strlen($post);
         }
@@ -185,13 +190,18 @@ class HTTPClient {
             $headers['Proxy-Authorization'] = 'BASIC '.base64_encode($this->proxy_user.':'.$this->proxy_pass);
         }
 
+        // stop time
+        $start = time();
+
         // open socket
         $socket = @fsockopen($server,$port,$errno, $errstr, $this->timeout);
         if (!$socket){
             $resp->status = '-100';
             $this->error = "Could not connect to $server:$port\n$errstr ($errno)";
-            return $false;
+            return false;
         }
+        //set non blocking
+        stream_set_blocking($socket,0);
 
         // build request
         $request  = "$method $request_url HTTP/".$this->http.HTTP_NL;
@@ -204,55 +214,29 @@ class HTTPClient {
 
         // send request
         fputs($socket, $request);
-
         // read headers from socket
         $r_headers = '';
         do{
+            if(time()-$start > $this->timeout){
+                $this->status = -100;
+                $this->error = 'Timeout while reading headers';
+                return false;
+            }
+            if(feof($socket)){
+                $this->error = 'Premature End of File (socket)';
+                return false;
+            }
             $r_headers .= fread($socket,1); #FIXME read full lines here?
         }while(!preg_match('/\r\n\r\n$/',$r_headers));
 
-        //read body (with chunked encoding if needed)
-        $r_body    = '';
-        if(preg_match('/transfer\-(en)?coding:\s+chunked\r\n/i',$r_header)){
-            do {
-                unset($chunk_size);
-                do {
-                    $byte = fread($socket,1);
-                    $chunk_size .= $byte;
-                } while (preg_match('/[a-zA-Z0-9]/',$byte)); // read chunksize including \r
-
-                $byte = fread($socket,1);     // readtrailing \n
-                $chunk_size = hexdec($chunk_size);
-                $this_chunk = fread($socket,$chunk_size);
-                $r_body    .= $this_chunk;
-                if ($chunk_size) $byte = fread($socket,2); // read trailing \r\n
-
-                if($this->max_bodysize && strlen($r_body) > $this->max_bodysize){
-                    $this->error = 'Allowed response size exceeded';
-                    return false;
-                }
-            } while ($chunk_size);
-        }else{
-            // read entire socket
-            while (!feof($socket)) {
-                $r_body .= fread($socket,4096);
-                if($this->max_bodysize && strlen($r_body) > $this->max_bodysize){
-                    $this->error = 'Allowed response size exceeded';
-                    return false;
-                }
-            }
-        }
-        
-        // close socket
-        $status = socket_get_status($socket);
-        fclose($socket);
-
         $this->_debug('response headers',$r_headers);
 
-        // check for timeout
-        if ($status['timed_out']){
-            $this->error = "Connection timed out";
-            return false;
+        // check if expected body size exceeds allowance
+        if($this->max_bodysize && preg_match('/\r\nContent-Length:\s*(\d+)\r\n/i',$r_headers,$match)){
+            if($match[1] > $this->max_bodysize){
+                $this->error = 'Reported content length exceeds allowed response size';
+                return false;
+            }
         }
 
         // get Status
@@ -265,7 +249,7 @@ class HTTPClient {
         // handle headers and cookies
         $this->resp_headers = $this->_parseHeaders($r_headers);
         if(isset($this->resp_headers['set-cookie'])){
-            foreach ($this->resp_headers['set-cookie'] as $c){ 
+            foreach ((array) $this->resp_headers['set-cookie'] as $c){
                 list($key, $value, $foo) = split('=', $cookie);
                 $this->cookies[$key] = $value;
             }
@@ -292,6 +276,62 @@ class HTTPClient {
                 return $this->sendRequest($this->resp_headers['location'],array(),'GET');
             }
         }
+
+        // check if headers are as expected
+        if($this->header_regexp && !preg_match($this->header_regexp,$r_headers)){
+            $this->error = 'The received headers did not match the given regexp';
+            return false;
+        }
+
+        //read body (with chunked encoding if needed)
+        $r_body    = '';
+        if(preg_match('/transfer\-(en)?coding:\s*chunked\r\n/i',$r_header)){
+            do {
+                unset($chunk_size);
+                do {
+                    if(feof($socket)){
+                        $this->error = 'Premature End of File (socket)';
+                        return false;
+                    }
+                    if(time()-$start > $this->timeout){
+                        $this->status = -100;
+                        $this->error = 'Timeout while reading chunk';
+                        return false;
+                    }
+                    $byte = fread($socket,1);
+                    $chunk_size .= $byte;
+                } while (preg_match('/[a-zA-Z0-9]/',$byte)); // read chunksize including \r
+
+                $byte = fread($socket,1);     // readtrailing \n
+                $chunk_size = hexdec($chunk_size);
+                $this_chunk = fread($socket,$chunk_size);
+                $r_body    .= $this_chunk;
+                if ($chunk_size) $byte = fread($socket,2); // read trailing \r\n
+
+                if($this->max_bodysize && strlen($r_body) > $this->max_bodysize){
+                    $this->error = 'Allowed response size exceeded';
+                    return false;
+                }
+            } while ($chunk_size);
+        }else{
+            // read entire socket
+            while (!feof($socket)) {
+                if(time()-$start > $this->timeout){
+                    $this->status = -100;
+                    $this->error = 'Timeout while reading response';
+                    return false;
+                }
+                $r_body .= fread($socket,4096);
+                if($this->max_bodysize && strlen($r_body) > $this->max_bodysize){
+                    $this->error = 'Allowed response size exceeded';
+                    return false;
+                }
+            }
+        }
+
+        // close socket
+        $status = socket_get_status($socket);
+        fclose($socket);
 
         // decode gzip if needed
         if($this->resp_headers['content-encoding'] == 'gzip'){
@@ -368,14 +408,14 @@ class HTTPClient {
      * @author Andreas Goetz <cpuidle@gmx.de>
      */
     function _getCookies(){
-        foreach ($this->cookies as $key => $val){           
+        foreach ($this->cookies as $key => $val){
             if ($headers) $headers .= '; ';
             $headers .= $key.'='.$val;
-        }             
-            
+        }
+
         if ($headers) $headers = "Cookie: $headers".HTTP_NL;
         return $headers;
-    } 
+    }
 
     /**
      * Encode data for posting
@@ -384,7 +424,7 @@ class HTTPClient {
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function _postEncode($data){
-        foreach($params as $key => $val){
+        foreach($data as $key => $val){
             if($url) $url .= '&';
             $url .= $key.'='.urlencode($val);
         }

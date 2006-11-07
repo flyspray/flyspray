@@ -1,7 +1,7 @@
 <?php
 /**
  * Utilities for handling pagenames
- * 
+ *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  * @todo       Combine similar functions like {wiki,media,meta}FN()
@@ -13,24 +13,25 @@
  * Uses either standard $_REQUEST variable or extracts it from
  * the full request URI when userewrite is set to 2
  *
- * For $param='id' $conf['start'] is returned if no id was found
- * and the returned ID will be cleaned. For other params the
- * cleaning has to be done outside this function
- * 
+ * For $param='id' $conf['start'] is returned if no id was found.
+ * If the second parameter is true (default) the ID is cleaned.
+ *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getID($param='id'){
+function getID($param='id',$clean=true){
   global $conf;
 
-  $id = $_REQUEST[$param];
+  $id = isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
 
-  if($param == 'id') $id = cleanID($id);
-  
   //construct page id from request URI
   if(empty($id) && $conf['userewrite'] == 2){
     //get the script URL
     if($conf['basedir']){
-      $script = $conf['basedir'].basename($_SERVER['SCRIPT_FILENAME']);
+      $relpath = '';
+      if($param != 'id') {
+        $relpath = 'lib/exe/';
+      }
+      $script = $conf['basedir'].$relpath.basename($_SERVER['SCRIPT_FILENAME']);
     }elseif($_SERVER['DOCUMENT_ROOT'] && $_SERVER['SCRIPT_FILENAME']){
       $script = preg_replace ('/^'.preg_quote($_SERVER['DOCUMENT_ROOT'],'/').'/','',
                               $_SERVER['SCRIPT_FILENAME']);
@@ -48,8 +49,10 @@ function getID($param='id'){
       $id = preg_replace ('/\?.*/','',$match[1]);
     }
     $id = urldecode($id);
-    $id = cleanID($id);
+    //strip leading slashes
+    $id = preg_replace('!^/+!','',$id);
   }
+  if($clean) $id = cleanID($id);
   if(empty($id) && $param=='id') $id = $conf['start'];
 
   return $id;
@@ -62,17 +65,27 @@ function getID($param='id'){
  * converted to unaccented ones
  *
  * @author Andreas Gohr <andi@splitbrain.org>
+ * @param  string  $raw_id    The pageid to clean
+ * @param  boolean $ascii     Force ASCII
  */
-function cleanID($id){
+function cleanID($raw_id,$ascii=false){
   global $conf;
   global $lang;
   static $sepcharpat = null;
-  
+
+  global $cache_cleanid;
+  $cache = & $cache_cleanid;
+
+  // check if it's already in the memory cache
+  if (isset($cache[$raw_id])) {
+    return $cache[$raw_id];
+	}
+
   $sepchar = $conf['sepchar'];
   if($sepcharpat == null) // build string only once to save clock cycles
     $sepcharpat = '#\\'.$sepchar.'+#';
 
-  $id = trim($id);
+  $id = trim($raw_id);
   $id = utf8_strtolower($id);
 
   //alternative namespace seperator
@@ -83,10 +96,13 @@ function cleanID($id){
     $id = strtr($id,'/',$sepchar);
   }
 
-  if($conf['deaccent']) $id = utf8_deaccent($id,-1);
+  if($conf['deaccent'] == 2 || $ascii) $id = utf8_romanize($id);
+  if($conf['deaccent'] || $ascii) $id = utf8_deaccent($id,-1);
 
   //remove specials
-  $id = utf8_stripspecials($id,$sepchar);
+  $id = utf8_stripspecials($id,$sepchar,'\*');
+
+  if($ascii) $id = utf8_strip($id);
 
   //clean up
   $id = preg_replace($sepcharpat,$sepchar,$id);
@@ -94,6 +110,7 @@ function cleanID($id){
   $id = trim($id,':._-');
   $id = preg_replace('#:[:\._\-]+#',':',$id);
 
+  $cache[$raw_id] = $id;
   return($id);
 }
 
@@ -103,10 +120,11 @@ function cleanID($id){
  * @author Andreas Gohr <andi@splitbrain.org>
  */
 function getNS($id){
- if(strpos($id,':')!==false){
-   return substr($id,0,strrpos($id,':'));
- }
- return false;
+  $pos = strrpos($id,':');
+  if($pos!==false){
+    return substr($id,0,$pos);
+  }
+  return false;
 }
 
 /**
@@ -114,8 +132,13 @@ function getNS($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function noNS($id){
-  return preg_replace('/.*:/','',$id);
+function noNS($id) {
+  $pos = strrpos($id, ':');
+  if ($pos!==false) {
+    return substr($id, $pos+1);
+  } else {
+    return $id;
+  }
 }
 
 /**
@@ -126,21 +149,52 @@ function noNS($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function wikiFN($id,$rev=''){
+function wikiFN($raw_id,$rev='',$clean=true){
   global $conf;
-  $id = cleanID($id);
+
+  global $cache_wikifn;
+  $cache = & $cache_wikifn;
+
+  if (isset($cache[$raw_id]) && isset($cache[$raw_id][$rev])) {
+    return $cache[$raw_id][$rev];
+  }
+
+  $id = $raw_id;
+
+  if ($clean) $id = cleanID($id);
   $id = str_replace(':','/',$id);
   if(empty($rev)){
     $fn = $conf['datadir'].'/'.utf8_encodeFN($id).'.txt';
   }else{
     $fn = $conf['olddir'].'/'.utf8_encodeFN($id).'.'.$rev.'.txt';
-    if($conf['usegzip'] && !@file_exists($fn)){
-      //return gzip if enabled and plaintext doesn't exist
-      $fn .= '.gz';
+    if($conf['compression']){
+      //test for extensions here, we want to read both compressions
+       if (@file_exists($fn . '.gz')){
+          $fn .= '.gz';
+       }else if(@file_exists($fn . '.bz2')){
+          $fn .= '.bz2';
+       }else{
+          //file doesnt exist yet, so we take the configured extension
+          $fn .= '.' . $conf['compression'];
+       }
     }
   }
+
+  if (!isset($cache[$raw_id])) { $cache[$raw_id] = array(); }
+  $cache[$raw_id][$rev] = $fn;
   return $fn;
 }
+
+/**
+ * Returns the full path to the file for locking the page while editing.
+ *
+ * @author Ben Coburn <btcoburn@silicodon.net>
+ */
+function wikiLockFN($id) {
+  global $conf;
+  return $conf['lockdir'].'/'.md5(cleanID($id)).'.lock';
+}
+
 
 /**
  * returns the full path to the meta file specified by ID and extension
@@ -210,24 +264,58 @@ function localeFN($id){
 }
 
 /**
+ * Resolve relative paths in IDs
+ *
+ * Do not call directly use resolve_mediaid or resolve_pageid
+ * instead
+ *
+ * Partyly based on a cleanPath function found at
+ * http://www.php.net/manual/en/function.realpath.php#57016
+ *
+ * @author <bart at mediawave dot nl>
+ */
+function resolve_id($ns,$id,$clean=true){
+  // if the id starts with a dot we need to handle the
+  // relative stuff
+  if($id{0} == '.'){
+    // normalize initial dots without a colon
+    $id = preg_replace('/^(\.+)(?=[^:\.])/','\1:',$id);
+    // prepend the current namespace
+    $id = $ns.':'.$id;
+
+    // cleanup relatives
+    $result = array();
+    $pathA  = explode(':', $id);
+    if (!$pathA[0]) $result[] = '';
+    foreach ($pathA AS $key => $dir) {
+      if ($dir == '..') {
+        if (end($result) == '..') {
+          $result[] = '..';
+        } elseif (!array_pop($result)) {
+          $result[] = '..';
+        }
+      } elseif ($dir && $dir != '.') {
+        $result[] = $dir;
+      }
+    }
+    if (!end($pathA)) $result[] = '';
+    $id = implode(':', $result);
+  }elseif($ns !== false && strpos($id,':') === false){
+    //if link contains no namespace. add current namespace (if any)
+    $id = $ns.':'.$id;
+  }
+
+  if($clean) $id = cleanID($id);
+  return $id;
+}
+
+/**
  * Returns a full media id
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
 function resolve_mediaid($ns,&$page,&$exists){
-  global $conf;
-
-  //if links starts with . add current namespace
-  if($page{0} == '.'){
-    $page = $ns.':'.substr($page,1);
-  }
-
-  //if link contains no namespace. add current namespace (if any)
-  if($ns !== false && strpos($page,':') === false){
-    $page = $ns.':'.$page;
-  }
-
-  $page   = cleanID($page);
+  $page   = resolve_id($ns,$page);
   $file   = mediaFN($page);
   $exists = @file_exists($file);
 }
@@ -241,39 +329,57 @@ function resolve_pageid($ns,&$page,&$exists){
   global $conf;
   $exists = false;
 
-  //if links starts with . add current namespace
-  if($page{0} == '.'){
-    $page = $ns.':'.substr($page,1);
-  }
-
-  //if link contains no namespace. add current namespace (if any)
-  if($ns !== false && strpos($page,':') === false){
-    $page = $ns.':'.$page;
-  }
-
   //keep hashlink if exists then clean both parts
-  list($page,$hash) = split('#',$page,2);
-  $page = cleanID($page);
+  if (strpos($page,'#')) {
+    list($page,$hash) = split('#',$page,2);
+  } else {
+    $hash = '';
+  }
   $hash = cleanID($hash);
+  $page = resolve_id($ns,$page,false); // resolve but don't clean, yet
 
+  // get filename (calls clean itself)
   $file = wikiFN($page);
 
-  //check alternative plural/nonplural form
-  if(!@file_exists($file)){
-    if( $conf['autoplural'] ){
-      if(substr($page,-1) == 's'){
-        $try = substr($page,0,-1);
-      }else{
-        $try = $page.'s';
-      }
-      if(@file_exists(wikiFN($try))){
-        $page   = $try;
-        $exists = true;
-      }
+  // if ends with colon we have a namespace link
+  if(substr($page,-1) == ':'){
+    if(@file_exists(wikiFN($page.$conf['start']))){
+      // start page inside namespace
+      $page = $page.$conf['start'];
+      $exists = true;
+    }elseif(@file_exists(wikiFN($page.noNS(cleanID($page))))){
+      // page named like the NS inside the NS
+      $page = $page.noNS(cleanID($page));
+      $exists = true;
+    }elseif(@file_exists(wikiFN($page))){
+      // page like namespace exists
+      $page = $page;
+      $exists = true;
+    }else{
+      // fall back to default
+      $page = $page.$conf['start'];
     }
   }else{
-    $exists = true;
+    //check alternative plural/nonplural form
+    if(!@file_exists($file)){
+      if( $conf['autoplural'] ){
+        if(substr($page,-1) == 's'){
+          $try = substr($page,0,-1);
+        }else{
+          $try = $page.'s';
+        }
+        if(@file_exists(wikiFN($try))){
+          $page   = $try;
+          $exists = true;
+        }
+      }
+    }else{
+      $exists = true;
+    }
   }
+
+  // now make sure we have a clean page
+  $page = cleanID($page);
 
   //add hash if any
   if(!empty($hash)) $page .= '#'.$hash;
@@ -296,6 +402,77 @@ function getCacheName($data,$ext=''){
   $file = $conf['cachedir'].'/'.$md5{0}.'/'.$md5.$ext;
   io_makeFileDir($file);
   return $file;
+}
+
+/**
+ * Checks a pageid against $conf['hidepages']
+ *
+ * @author Andreas Gohr <gohr@cosmocode.de>
+ */
+function isHiddenPage($id){
+  global $conf;
+  if(empty($conf['hidepages'])) return false;
+
+  if(preg_match('/'.$conf['hidepages'].'/ui',':'.$id)){
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Reverse of isHiddenPage
+ *
+ * @author Andreas Gohr <gohr@cosmocode.de>
+ */
+function isVisiblePage($id){
+  return !isHiddenPage($id);
+}
+
+/**
+ * Checks and sets HTTP headers for conditional HTTP requests
+ *
+ * @author   Simon Willison <swillison@gmail.com>
+ * @link     http://simon.incutio.com/archive/2003/04/23/conditionalGet
+ * @param    timestamp $timestamp lastmodified time of the cache file
+ * @returns  void or void with previously header() commands executed
+ */
+function http_conditionalRequest($timestamp){
+  // A PHP implementation of conditional get, see
+  //   http://fishbowl.pastiche.org/archives/001132.html
+  $last_modified = substr(date('r', $timestamp), 0, -5).'GMT';
+  $etag = '"'.md5($last_modified).'"';
+  // Send the headers
+  header("Last-Modified: $last_modified");
+  header("ETag: $etag");
+  // See if the client has provided the required headers
+  if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
+    $if_modified_since = stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']);
+  }else{
+    $if_modified_since = false;
+  }
+
+  if (isset($_SERVER['HTTP_IF_NONE_MATCH'])){
+    $if_none_match = stripslashes($_SERVER['HTTP_IF_NONE_MATCH']);
+  }else{
+    $if_none_match = false;
+  }
+
+  if (!$if_modified_since && !$if_none_match){
+    return;
+  }
+
+  // At least one of the headers is there - check them
+  if ($if_none_match && $if_none_match != $etag) {
+    return; // etag is there but doesn't match
+  }
+
+  if ($if_modified_since && $if_modified_since != $last_modified) {
+    return; // if-modified-since is there but doesn't match
+  }
+
+  // Nothing has changed since their last request - serve a 304 and exit
+  header('HTTP/1.0 304 Not Modified');
+  exit;
 }
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

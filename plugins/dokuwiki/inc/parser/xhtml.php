@@ -19,18 +19,22 @@ if ( !defined('DOKU_TAB') ) {
 }
 
 require_once DOKU_INC . 'inc/parser/renderer.php';
+require_once DOKU_INC . 'inc/html.php';
 
 /**
- * The Renderer 
+ * The Renderer
  */
 class Doku_Renderer_xhtml extends Doku_Renderer {
 
-    var $doc = '';
-    
+    // @access public
+    var $doc = '';        // will contain the whole document
+    var $toc = array();   // will contain the Table of Contents
+
+
     var $headers = array();
-    
+
     var $footnotes = array();
-    
+
     var $acronyms = array();
     var $smileys = array();
     var $badwords = array();
@@ -42,38 +46,38 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     var $store = '';
 
     function document_start() {
+        //reset some internals
+        $this->toc     = array();
+        $this->headers = array();
     }
-    
+
     function document_end() {
-        // add button for last section if any and more than one
-        if($this->lastsec > 1) $this->_secedit($this->lastsec,'');
-        
         if ( count ($this->footnotes) > 0 ) {
             $this->doc .= '<div class="footnotes">'.DOKU_LF;
 
             $id = 0;
             foreach ( $this->footnotes as $footnote ) {
                 $id++;   // the number of the current footnote
-                
+
                 // check its not a placeholder that indicates actual footnote text is elsewhere
                 if (substr($footnote, 0, 5) != "@@FNT") {
 
                     // open the footnote and set the anchor and backlink
                     $this->doc .= '<div class="fn">';
-                    $this->doc .= '<a href="#fnt'.$id.'" id="fn'.$id.'" name="fn'.$id.'" class="fn_bot">';
+                    $this->doc .= '<a href="#fnt__'.$id.'" id="fn__'.$id.'" name="fn__'.$id.'" class="fn_bot">';
                     $this->doc .= $id.')</a> '.DOKU_LF;
-                    
+
                     // get any other footnotes that use the same markup
                     $alt = array_keys($this->footnotes, "@@FNT$id");
-                    
+
                     if (count($alt)) {
                       foreach ($alt as $ref) {
                         // set anchor and backlink for the other footnotes
-                        $this->doc .= ', <a href="#fnt'.($ref+1).'" id="fn'.($ref+1).'" name="fn'.($ref+1).'" class="fn_bot">';
-                        $this->doc .= ($ref+1).')</a> '.DOKU_LF;                  
+                        $this->doc .= ', <a href="#fnt__'.($ref+1).'" id="fn__'.($ref+1).'" name="fn__'.($ref+1).'" class="fn_bot">';
+                        $this->doc .= ($ref+1).')</a> '.DOKU_LF;
                       }
                     }
-                    
+
                     // add footnote markup and close this footnote
                     $this->doc .= $footnote;
                     $this->doc .= '</div>' . DOKU_LF;
@@ -81,147 +85,163 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             }
             $this->doc .= '</div>'.DOKU_LF;
         }
+
+        // prepend the TOC
+        if($this->info['toc']){
+            $this->doc = $this->render_TOC().$this->doc;
+        }
+
+        // make sure there are no empty paragraphs
+        $this->doc = preg_replace('#<p>\s*</p>#','',$this->doc);
     }
 
-    function toc_open() {
+    /**
+     * Return the TOC rendered to XHTML
+     *
+     * @author Andreas Gohr <andi@splitbrain.org>
+     */
+    function render_TOC(){
+        if(count($this->toc) < 3) return '';
         global $lang;
-        $this->doc .= '<div class="toc">'.DOKU_LF;
-        $this->doc .= '<div class="tocheader">';
-        $this->doc .= ' <script type="text/javascript">showTocToggle("+","-")</script>';
-        $this->doc .= $lang['toc'];
-        $this->doc .= '</div>'.DOKU_LF;
-        $this->doc .= '<div id="tocinside">'.DOKU_LF;
+        $out  = '<div class="toc">'.DOKU_LF;
+        $out .= '<div class="tocheader toctoggle" id="toc__header">';
+        $out .= $lang['toc'];
+        $out .= '</div>'.DOKU_LF;
+        $out .= '<div id="toc__inside">'.DOKU_LF;
+        $out .= html_buildlist($this->toc,'toc',array($this,'_tocitem'));
+        $out .= '</div>'.DOKU_LF.'</div>'.DOKU_LF;
+        return $out;
     }
-    
-    function tocbranch_open($level) {
-        $this->doc .= '<ul class="toc">'.DOKU_LF;
+
+    /**
+     * Callback for html_buildlist
+     */
+    function _tocitem($item){
+        return '<span class="li"><a href="#'.$item['hid'].'" class="toc">'.
+               $this->_xmlEntities($item['title']).'</a></span>';
     }
-    
-    function tocitem_open($level, $empty = FALSE) {
-        if ( !$empty ) {
-            $this->doc .= '<li class="level'.$level.'">';
-        } else {
-            $this->doc .= '<li class="clear">';
-        }
-    }
-    
-    function tocelement($level, $title) {
-        $this->doc .= '<span class="li"><a href="#'.$this->_headerToLink($title).'" class="toc">';
-        $this->doc .= $this->_xmlEntities($title);
-        $this->doc .= '</a></span>';
-    }
-    
-    function tocitem_close($level) {
-        $this->doc .= '</li>'.DOKU_LF;
-    }
-    
-    function tocbranch_close($level) {
-        $this->doc .= '</ul>'.DOKU_LF;
-    }
-    
-    function toc_close() {
-        $this->doc .= '</div>'.DOKU_LF.'</div>'.DOKU_LF;
-    }
-    
+
     function header($text, $level, $pos) {
         global $conf;
-        //handle section editing 
-        if($level <= $conf['maxseclevel']){
-            // add button for last section if any
-            if($this->lastsec) $this->_secedit($this->lastsec,$pos-1);
-            // remember current position
-            $this->lastsec = $pos;
+
+        // create a unique header id
+        $hid = $this->_headerToLink($text,'true');
+
+        //handle TOC
+        if($level >= $conf['toptoclevel'] && $level <= $conf['maxtoclevel']){
+            // the TOC is one of our standard ul list arrays ;-)
+            $this->toc[] = array( 'hid'   => $hid,
+                                  'title' => $text,
+                                  'type'  => 'ul',
+                                  'level' => $level-$conf['toptoclevel']+1);
         }
 
-        $this->doc .= DOKU_LF.'<a name="'.$this->_headerToLink($text).'"></a><h'.$level.'>';
+        // write the header
+        $this->doc .= DOKU_LF.'<h'.$level.'><a name="'.$hid.'" id="'.$hid.'">';
         $this->doc .= $this->_xmlEntities($text);
-        $this->doc .= "</h$level>".DOKU_LF;
+        $this->doc .= "</a></h$level>".DOKU_LF;
     }
-    
+
+     /**
+     * Section edit marker is replaced by an edit button when
+     * the page is editable. Replacement done in 'inc/html.php#html_secedit'
+     *
+     * @author Andreas Gohr <andi@splitbrain.org>
+     * @author Ben Coburn   <btcoburn@silicodon.net>
+     */
+    function section_edit($start, $end, $level, $name) {
+        global $conf;
+
+        if ($start!=-1 && $level<=$conf['maxseclevel']) {
+            $name = str_replace('"', '', $name);
+            $this->doc .= '<!-- SECTION "'.$name.'" ['.$start.'-'.(($end===0)?'':$end).'] -->';
+        }
+    }
+
     function section_open($level) {
         $this->doc .= "<div class=\"level$level\">".DOKU_LF;
     }
-    
+
     function section_close() {
         $this->doc .= DOKU_LF.'</div>'.DOKU_LF;
     }
-    
+
     function cdata($text) {
         $this->doc .= $this->_xmlEntities($text);
     }
-    
+
     function p_open() {
         $this->doc .= DOKU_LF.'<p>'.DOKU_LF;
     }
-    
+
     function p_close() {
         $this->doc .= DOKU_LF.'</p>'.DOKU_LF;
     }
-    
+
     function linebreak() {
         $this->doc .= '<br/>'.DOKU_LF;
     }
-    
+
     function hr() {
-        $this->doc .= '<hr noshade="noshade" size="1" />'.DOKU_LF;
+        $this->doc .= '<hr />'.DOKU_LF;
     }
-    
+
     function strong_open() {
         $this->doc .= '<strong>';
     }
-    
+
     function strong_close() {
         $this->doc .= '</strong>';
     }
-    
+
     function emphasis_open() {
         $this->doc .= '<em>';
     }
-    
+
     function emphasis_close() {
         $this->doc .= '</em>';
     }
-    
+
     function underline_open() {
-        $this->doc .= '<u>';
+        $this->doc .= '<em class="u">';
     }
-    
+
     function underline_close() {
-        $this->doc .= '</u>';
+        $this->doc .= '</em>';
     }
-    
+
     function monospace_open() {
         $this->doc .= '<code>';
     }
-    
+
     function monospace_close() {
         $this->doc .= '</code>';
     }
-    
+
     function subscript_open() {
         $this->doc .= '<sub>';
     }
-    
+
     function subscript_close() {
         $this->doc .= '</sub>';
     }
-    
+
     function superscript_open() {
         $this->doc .= '<sup>';
     }
-    
+
     function superscript_close() {
         $this->doc .= '</sup>';
     }
-    
+
     function deleted_open() {
         $this->doc .= '<del>';
     }
-    
+
     function deleted_close() {
         $this->doc .= '</del>';
     }
-    
+
     /**
      * Callback for footnote start syntax
      *
@@ -237,7 +257,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $this->store = $this->doc;
         $this->doc   = '';
     }
-    
+
     /**
      * Callback for footnote end syntax
      *
@@ -252,10 +272,10 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $footnote = $this->doc;
         $this->doc = $this->store;
         $this->store = '';
-        
+
         // check to see if this footnote has been seen before
         $i = array_search($footnote, $this->footnotes);
-        
+
         if ($i === false) {
             // its a new footnote, add it to the $footnotes array
             $id = count($this->footnotes)+1;
@@ -268,45 +288,45 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
 
         // output the footnote reference and link, incl. onmouseover for insitu footnote popup
-        $this->doc .= '<a href="#fn'.$id.'" name="fnt'.$id.'" class="fn_top" onmouseover="fnt(\''.$id.'\', this, event);">'.$id.')</a>';
+        $this->doc .= '<a href="#fn__'.$id.'" name="fnt__'.$id.'" id="fnt__'.$id.'" class="fn_top" onmouseover="fnt(\''.$id.'\', this, event);">'.$id.')</a>';
     }
-    
+
     function listu_open() {
         $this->doc .= '<ul>'.DOKU_LF;
     }
-    
+
     function listu_close() {
         $this->doc .= '</ul>'.DOKU_LF;
     }
-    
+
     function listo_open() {
         $this->doc .= '<ol>'.DOKU_LF;
     }
-    
+
     function listo_close() {
         $this->doc .= '</ol>'.DOKU_LF;
     }
-    
+
     function listitem_open($level) {
         $this->doc .= '<li class="level'.$level.'">';
     }
-    
+
     function listitem_close() {
         $this->doc .= '</li>'.DOKU_LF;
     }
-    
+
     function listcontent_open() {
         $this->doc .= '<div class="li">';
     }
-    
+
     function listcontent_close() {
         $this->doc .= '</div>'.DOKU_LF;
     }
-     
+
     function unformatted($text) {
         $this->doc .= $this->_xmlEntities($text);
     }
-    
+
     /**
      * Execute PHP code if allowed
      *
@@ -323,7 +343,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $this->file($text);
         }
     }
-    
+
     /**
      * Insert HTML if allowed
      *
@@ -337,27 +357,23 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
           $this->file($text);
         }
     }
-    
-    function geshi_cached($text) {
-          $this->doc .= $text;
-    }
-    
+
     function preformatted($text) {
         $this->doc .= '<pre class="code">' . $this->_xmlEntities($text) . '</pre>'. DOKU_LF;
     }
-    
+
     function file($text) {
         $this->doc .= '<pre class="file">' . $this->_xmlEntities($text). '</pre>'. DOKU_LF;
     }
-    
+
     function quote_open() {
-        $this->doc .= '<blockquote>'.DOKU_LF;
+        $this->doc .= '<blockquote><div class="no">'.DOKU_LF;
     }
-    
+
     function quote_close() {
-        $this->doc .= '</blockquote>'.DOKU_LF;
+        $this->doc .= '</div></blockquote>'.DOKU_LF;
     }
-    
+
     /**
      * Callback for code text
      *
@@ -367,51 +383,46 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      */
     function code($text, $language = NULL) {
         global $conf;
-    
+
         if ( is_null($language) ) {
             $this->preformatted($text);
         } else {
-            //strip leading blank line
+            //strip leading and trailing blank line
             $text = preg_replace('/^\s*?\n/','',$text);
-            // Handle with Geshi here
-            require_once(DOKU_INC . 'inc/geshi.php');
-            $geshi = new GeSHi($text, strtolower($language), DOKU_INC . 'inc/geshi');
-            $geshi->set_encoding('utf-8');
-            $geshi->enable_classes();
-            $geshi->set_header_type(GESHI_HEADER_PRE);
-            $geshi->set_overall_class("code $language");
-            $geshi->set_link_target($conf['target']['extern']);
-            
-            $text = $geshi->parse_code();
-            return $text;
+            $text = preg_replace('/\s*?\n$/','',$text);
+            $this->doc .= p_xhtml_cached_geshi($text, $language);
         }
     }
     
+    function geshi_cached($text) {
+          $this->doc .= $text;
+    }
+
     function acronym($acronym) {
-        
+
         if ( array_key_exists($acronym, $this->acronyms) ) {
-            
+
             $title = $this->_xmlEntities($this->acronyms[$acronym]);
-            
+
             $this->doc .= '<acronym title="'.$title
                 .'">'.$this->_xmlEntities($acronym).'</acronym>';
-                
+
         } else {
             $this->doc .= $this->_xmlEntities($acronym);
         }
     }
-    
+
     function smiley($smiley) {
         if ( array_key_exists($smiley, $this->smileys) ) {
             $title = $this->_xmlEntities($this->smileys[$smiley]);
             $this->doc .= '<img src="'.DOKU_BASE.'lib/images/smileys/'.$this->smileys[$smiley].
-                '" align="middle" alt="'.
+                '" class="middle" alt="'.
                     $this->_xmlEntities($smiley).'" />';
         } else {
             $this->doc .= $this->_xmlEntities($smiley);
         }
     }
-    
+
     /*
     * not used
     function wordblock($word) {
@@ -422,7 +433,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
     }
     */
-    
+
     function entity($entity) {
         if ( array_key_exists($entity, $this->entities) ) {
             $this->doc .= $this->entities[$entity];
@@ -430,33 +441,33 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $this->doc .= $this->_xmlEntities($entity);
         }
     }
-    
+
     function multiplyentity($x, $y) {
         $this->doc .= "$x&times;$y";
     }
-    
+
     function singlequoteopening() {
         $this->doc .= "&lsquo;";
     }
-    
+
     function singlequoteclosing() {
         $this->doc .= "&rsquo;";
     }
-    
+
     function doublequoteopening() {
         $this->doc .= "&ldquo;";
     }
-    
+
     function doublequoteclosing() {
         $this->doc .= "&rdquo;";
     }
-    
+
     /**
     */
     function camelcaselink($link) {
-      $this->internallink($link,$link); 
+      $this->internallink($link,$link);
     }
-    
+
 
     function locallink($hash, $name = NULL){
         global $ID;
@@ -493,10 +504,10 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         } else {
             $class='media';
         }
-       
+
         //keep hash anchor
-        list($id,$hash) = split('#',$id,2);
- 
+        list($id,$hash) = explode('#',$id,2);
+
         //prepare for formating
         $link['target'] = $conf['target']['wiki'];
         $link['style']  = '';
@@ -507,7 +518,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $link['pre']    = '<span class="curid">';
             $link['suf']    = '</span>';
         }
-        $link['more']   = 'onclick="return svchk()" onkeypress="return svchk()"';
+        $link['more']   = '';
         $link['class']  = $class;
         $link['url']    = wl($id);
         $link['name']   = $name;
@@ -515,7 +526,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //add search string
         if($search){
             ($conf['userewrite']) ? $link['url'].='?s=' : $link['url'].='&amp;s=';
-            $link['url'] .= urlencode($search);
+            $link['url'] .= rawurlencode($search);
         }
 
         //keep hash
@@ -528,7 +539,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $this->doc .= $this->_formatLink($link);
         }
     }
-    
+
     function externallink($url, $name = NULL) {
         global $conf;
 
@@ -537,21 +548,22 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         // add protocol on simple short URLs
         if(substr($url,0,3) == 'ftp' && (substr($url,0,6) != 'ftp://')) $url = 'ftp://'.$url;
         if(substr($url,0,3) == 'www') $url = 'http://'.$url;
-        
+
         if ( !$isImage ) {
             $class='urlextern';
         } else {
             $class='media';
         }
-        
+
         //prepare for formating
         $link['target'] = $conf['target']['extern'];
         $link['style']  = '';
         $link['pre']    = '';
         $link['suf']    = '';
-        $link['more']   = 'onclick="return svchk()" onkeypress="return svchk()"';
+        $link['more']   = '';
         $link['class']  = $class;
         $link['url']    = $url;
+
         $link['name']   = $name;
         $link['title']  = $this->_xmlEntities($url);
         if($conf['relnofollow']) $link['more'] .= ' rel="nofollow"';
@@ -559,24 +571,18 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //output formatted
         $this->doc .= $this->_formatLink($link);
     }
-    
+
     /**
     */
     function interwikilink($match, $name = NULL, $wikiName, $wikiUri) {
         global $conf;
-        
+
         $link = array();
         $link['target'] = $conf['target']['interwiki'];
         $link['pre']    = '';
         $link['suf']    = '';
-        $link['more']   = 'onclick="return svchk()" onkeypress="return svchk()"';
+        $link['more']   = '';
         $link['name']   = $this->_getLinkTitle($name, $wikiUri, $isImage);
-
-        if ( !$isImage ) {
-            $link['class'] = 'interwiki';
-        } else {
-            $link['class'] = 'media';
-        }
 
         //get interwiki URL
         if ( isset($this->interwiki[$wikiName]) ) {
@@ -586,14 +592,12 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $url = 'http://www.google.com/search?q={URL}&amp;btnI=lucky';
             $wikiName = 'go';
         }
-       
-        if(!$isImage){
-            //if ico exists set additional style
-            if(@file_exists(DOKU_INC.'lib/images/interwiki/'.$wikiName.'.png')){
-                $link['style']='background-image: url('.DOKU_BASE.'lib/images/interwiki/'.$wikiName.'.png)';
-            }elseif(@file_exists(DOKU_INC.'lib/images/interwiki/'.$wikiName.'.gif')){
-                $link['style']='background-image: url('.DOKU_BASE.'lib/images/interwiki/'.$wikiName.'.gif)';
-            }
+
+        if ( !$isImage ) {
+            $class = preg_replace('/[^_\-a-z0-9]+/i','_',$wikiName);
+            $link['class'] = "interwiki iw_$class";
+        } else {
+            $link['class'] = 'media';
         }
 
         //do we stay at the same server? Use local target
@@ -607,7 +611,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //replace placeholder
         if(preg_match('#\{(URL|NAME|SCHEME|HOST|PORT|PATH|QUERY)\}#',$url)){
             //use placeholders
-            $url = str_replace('{URL}',urlencode($wikiUri),$url);
+            $url = str_replace('{URL}',rawurlencode($wikiUri),$url);
             $url = str_replace('{NAME}',$wikiUri,$url);
             $parsed = parse_url($wikiUri);
             if(!$parsed['port']) $parsed['port'] = 80;
@@ -619,16 +623,16 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $link['url'] = $url;
         }else{
             //default
-            $link['url'] = $url.urlencode($wikiUri);
+            $link['url'] = $url.rawurlencode($wikiUri);
         }
-        if($hash) $link['url'] .= '#'.urlencode($hash);
+        if($hash) $link['url'] .= '#'.rawurlencode($hash);
 
         $link['title'] = htmlspecialchars($link['url']);
 
         //output formatted
         $this->doc .= $this->_formatLink($link);
     }
-    
+
     /**
      */
     function windowssharelink($url, $name = NULL) {
@@ -661,7 +665,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //output formatted
         $this->doc .= $this->_formatLink($link);
     }
-    
+
     function emaillink($address, $name = NULL) {
         global $conf;
         //simple setup
@@ -671,32 +675,35 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['suf']   = '';
         $link['style']  = '';
         $link['more']   = '';
-  
-        //we just test for image here - we need to encode the title our self
-        $this->_getLinkTitle($name, $address, $isImage);
+
+        $name = $this->_getLinkTitle($name, $address, $isImage);
         if ( !$isImage ) {
-            $link['class']='mail';
+            $link['class']='mail JSnocheck';
         } else {
-            $link['class']='media';
+            $link['class']='media JSnocheck';
         }
 
         $address = $this->_xmlEntities($address);
         $address = obfuscate($address);
         $title   = $address;
+
         if(empty($name)){
             $name = $address;
-        }else{
-            $name = $this->_xmlEntities($name);
         }
-        
-        $link['url']   = 'mailto:'.rawurlencode($address);
+#elseif($isImage{
+#            $name = $this->_xmlEntities($name);
+#        }
+
+        if($conf['mailguard'] == 'visible') $address = rawurlencode($address);
+
+        $link['url']   = 'mailto:'.$address;
         $link['name']  = $name;
         $link['title'] = $title;
 
         //output formatted
         $this->doc .= $this->_formatLink($link);
     }
-    
+
     function internalmedia ($src, $title=NULL, $align=NULL, $width=NULL,
                             $height=NULL, $cache=NULL, $linking=NULL) {
         global $conf;
@@ -708,28 +715,21 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['style']  = '';
         $link['pre']    = '';
         $link['suf']    = '';
-        $link['more']   = 'onclick="return svchk()" onkeypress="return svchk()"';
+        $link['more']   = '';
         $link['target'] = $conf['target']['media'];
+        $noLink = false;
 
         $link['title']  = $this->_xmlEntities($src);
         list($ext,$mime) = mimetype($src);
         if(substr($mime,0,5) == 'image'){
-             // link only jpeg images
-             // if ($ext != 'jpg' && $ext != 'jpeg') $noLink = TRUE;
              $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),($linking=='direct'));
          }elseif($mime == 'application/x-shockwave-flash'){
              // don't link flash movies
              $noLink = TRUE;
          }else{
              // add file icons
-             $link['class'] = 'urlextern';
-             if(@file_exists(DOKU_INC.'lib/images/fileicons/'.$ext.'.png')){
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$ext.'.png)';
-             }elseif(@file_exists(DOKU_INC.'lib/images/fileicons/'.$ext.'.gif')){
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$ext.'.gif)';
-             }else{
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/file.gif)';
-             }
+             $class = preg_replace('/[^_\-a-z0-9]+/i','_',$ext);
+             $link['class'] .= ' mediafile mf_'.$class;
              $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),true);
          }
          $link['name']   = $this->_media ($src, $title, $align, $width, $height, $cache);
@@ -738,7 +738,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
          if ($linking == 'nolink' || $noLink) $this->doc .= $link['name'];
          else $this->doc .= $this->_formatLink($link);
     }
-    
+
     /**
      * @todo don't add link for flash
      */
@@ -751,13 +751,13 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['style']  = '';
         $link['pre']    = '';
         $link['suf']    = '';
-        $link['more']   = 'onclick="return svchk()" onkeypress="return svchk()"';
+        $link['more']   = '';
         $link['target'] = $conf['target']['media'];
 
         $link['title']  = $this->_xmlEntities($src);
         $link['url']    = ml($src,array('cache'=>$cache));
         $link['name']   = $this->_media ($src, $title, $align, $width, $height, $cache);
-
+        $noLink = false;
 
         list($ext,$mime) = mimetype($src);
         if(substr($mime,0,5) == 'image'){
@@ -768,14 +768,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
              $noLink = TRUE;
         }else{
              // add file icons
-             $link['class'] = 'urlextern';
-             if(@file_exists(DOKU_INC.'lib/images/fileicons/'. $ext.'.png')){
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$ext.'.png)';
-             }elseif(@file_exists(DOKU_INC.'lib/images/fileicons/'.$ext.'.gif')){
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$ext.'.gif)';
-             }else{
-                 $link['style']='background-image: url('.DOKU_BASE.'lib/images/fileicons/file.gif)';
-             }
+             $link['class'] .= ' mediafile mf_'.$ext;
          }
 
         //output formatted
@@ -784,34 +777,71 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     }
 
     /**
-     * Renders an RSS feed using Magpie
-     * 
+     * Renders an RSS feed
+     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function rss ($url){
+    function rss ($url,$params){
         global $lang;
-        define('MAGPIE_CACHE_ON', false); //we do our own caching
-        define('MAGPIE_DIR', DOKU_INC.'inc/magpie/');
-        define('MAGPIE_OUTPUT_ENCODING','UTF-8'); //return all feeds as UTF-8
-        require_once(MAGPIE_DIR.'/rss_fetch.inc');
+        global $conf;
+
+        require_once(DOKU_INC.'inc/FeedParser.php');
+        $feed = new FeedParser();
+        $feed->feed_url($url);
 
         //disable warning while fetching
-        $elvl = error_reporting(E_ERROR);
-        $rss  = fetch_rss($url);
-        error_reporting($elvl);
+        if (!defined('DOKU_E_LEVEL')) { $elvl = error_reporting(E_ERROR); }
+        $rc = $feed->init();
+        if (!defined('DOKU_E_LEVEL')) { error_reporting($elvl); }
+
+        //decide on start and end
+        if($params['reverse']){
+            $mod = -1;
+            $start = $feed->get_item_quantity()-1;
+            $end   = $start - ($params['max']);
+            $end   = ($end < -1) ? -1 : $end;
+        }else{
+            $mod   = 1;
+            $start = 0;
+            $end   = $feed->get_item_quantity();
+            $end   = ($end > $params['max']) ? $params['max'] : $end;;
+        }
 
         $this->doc .= '<ul class="rss">';
-        if($rss){
-            foreach ($rss->items as $item ) {
-                $this->doc .= '<li>';
-                $this->externallink($item['link'],$item['title']);
-                $this->doc .= '</li>';
+        if($rc){
+            for ($x = $start; $x != $end; $x += $mod) {
+                $item = $feed->get_item($x);
+                $this->doc .= '<li><div class="li">';
+                $this->externallink($item->get_permalink(),
+                                    $item->get_title());
+                if($params['author']){
+                    $author = $item->get_author(0);
+                    if($author){
+                        $name = $author->get_name();
+                        if(!$name) $name = $author->get_email();
+                        if($name) $this->doc .= ' '.$lang['by'].' '.$name;
+                    }
+                }
+                if($params['date']){
+                    $this->doc .= ' ('.$item->get_date($conf['dformat']).')';
+                }
+                if($params['details']){
+                    $this->doc .= '<div class="detail">';
+                    if($htmlok){
+                        $this->doc .= $item->get_description();
+                    }else{
+                        $this->doc .= strip_tags($item->get_description());
+                    }
+                    $this->doc .= '</div>';
+                }
+
+                $this->doc .= '</div></li>';
             }
         }else{
-            $this->doc .= '<li>';
+            $this->doc .= '<li><div class="li">';
             $this->doc .= '<em>'.$lang['rssfailed'].'</em>';
             $this->externallink($url);
-            $this->doc .= '</li>';
+            $this->doc .= '</div></li>';
         }
         $this->doc .= '</ul>';
     }
@@ -820,19 +850,19 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     function table_open($maxcols = NULL, $numrows = NULL){
         $this->doc .= '<table class="inline">'.DOKU_LF;
     }
-    
+
     function table_close(){
-        $this->doc .= '</table>'.DOKU_LF.'<br />'.DOKU_LF;
+        $this->doc .= '</table>'.DOKU_LF;
     }
-    
+
     function tablerow_open(){
         $this->doc .= DOKU_TAB . '<tr>' . DOKU_LF . DOKU_TAB . DOKU_TAB;
     }
-    
+
     function tablerow_close(){
         $this->doc .= DOKU_LF . DOKU_TAB . '</tr>' . DOKU_LF;
     }
-    
+
     function tableheader_open($colspan = 1, $align = NULL){
         $this->doc .= '<th';
         if ( !is_null($align) ) {
@@ -843,11 +873,11 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
         $this->doc .= '>';
     }
-    
+
     function tableheader_close(){
         $this->doc .= '</th>';
     }
-    
+
     function tablecell_open($colspan = 1, $align = NULL){
         $this->doc .= '<td';
         if ( !is_null($align) ) {
@@ -858,11 +888,11 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
         $this->doc .= '>';
     }
-    
+
     function tablecell_close(){
         $this->doc .= '</td>';
     }
-    
+
     //----------------------------------------------------------
     // Utils
 
@@ -890,11 +920,11 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $ret  = '';
         $ret .= $link['pre'];
         $ret .= '<a href="'.$link['url'].'"';
-        if($link['class'])  $ret .= ' class="'.$link['class'].'"';
-        if($link['target']) $ret .= ' target="'.$link['target'].'"';
-        if($link['title'])  $ret .= ' title="'.$link['title'].'"';
-        if($link['style'])  $ret .= ' style="'.$link['style'].'"';
-        if($link['more'])   $ret .= ' '.$link['more'];
+        if(!empty($link['class']))  $ret .= ' class="'.$link['class'].'"';
+        if(!empty($link['target'])) $ret .= ' target="'.$link['target'].'"';
+        if(!empty($link['title']))  $ret .= ' title="'.$link['title'].'"';
+        if(!empty($link['style']))  $ret .= ' style="'.$link['style'].'"';
+        if(!empty($link['more']))   $ret .= ' '.$link['more'];
         $ret .= '>';
         $ret .= $link['name'];
         $ret .= '</a>';
@@ -911,20 +941,27 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     function _simpleTitle($name){
         global $conf;
 
+        //if there is a hash we use the ancor name only
+        list($name,$hash) = explode('#',$name,2);
+        if($hash) return $hash;
+
+        //trim colons of a namespace link
+        $name = rtrim($name,':');
+
         if($conf['useslash']){
             $nssep = '[:;/]';
         }else{
             $nssep = '[:;]';
         }
         $name = preg_replace('!.*'.$nssep.'!','',$name);
-        //if there is a hash we use the ancor name only
-        $name = preg_replace('!.*#!','',$name);
+
+        if(!$name) return $this->_simpleTitle($conf['start']);
         return $name;
     }
 
     /**
      * Renders internal and external media
-     * 
+     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function _media ($src, $title=NULL, $align=NULL, $width=NULL,
@@ -937,7 +974,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             //add image tag
             $ret .= '<img src="'.ml($src,array('w'=>$width,'h'=>$height,'cache'=>$cache)).'"';
             $ret .= ' class="media'.$align.'"';
-        
+
             if (!is_null($title)) {
                 $ret .= ' title="'.$this->_xmlEntities($title).'"';
                 $ret .= ' alt="'.$this->_xmlEntities($title).'"';
@@ -953,14 +990,14 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             }else{
                 $ret .= ' alt=""';
             }
-            
+
             if ( !is_null($width) )
                 $ret .= ' width="'.$this->_xmlEntities($width).'"';
-        
+
             if ( !is_null($height) )
                 $ret .= ' height="'.$this->_xmlEntities($height).'"';
 
-            $ret .= ' />'; 
+            $ret .= ' />';
 
         }elseif($mime == 'application/x-shockwave-flash'){
             $ret .= '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'.
@@ -988,27 +1025,36 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
 
         return $ret;
     }
-    
+
     function _xmlEntities($string) {
         return htmlspecialchars($string);
     }
-    
-    function _headerToLink($title) {
-        return str_replace(':','',cleanID($title));
-    }
 
     /**
-     * Adds code for section editing button
+     * Creates a linkid from a headline
      *
-     * This is just aplaceholder and gets replace by the button if
-     * section editing is allowed
-     * 
+     * @param string  $title   The headline title
+     * @param boolean $create  Create a new unique ID?
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _secedit($f, $t){
-        $this->doc .= '<!-- SECTION ['.$f.'-'.$t.'] -->';
+    function _headerToLink($title,$create=false) {
+        $title = str_replace(':','',cleanID($title));
+        $title = ltrim($title,'0123456789._-');
+        if(empty($title)) $title='section';
+
+        if($create){
+            // make sure tiles are unique
+            $num = '';
+            while(in_array($title.$num,$this->headers)){
+                ($num) ? $num++ : $num = 1;
+            }
+            $title = $title.$num;
+            $this->headers[] = $title;
+        }
+
+        return $title;
     }
-   
+
     /**
      * Construct a title and handle images in titles
      *
@@ -1033,7 +1079,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             return $this->_imageTitle($title);
         }
     }
-    
+
     /**
      * Returns an HTML code for images used in link titles
      *

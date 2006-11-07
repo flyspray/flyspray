@@ -1,7 +1,7 @@
 <?php
 /**
  * Utilities for collecting data from config files
- * 
+ *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Harry Fuecks <hfuecks@gmail.com>
  */
@@ -116,6 +116,23 @@ function getInterwiki() {
 }
 
 /**
+ * returns array of wordblock patterns
+ *
+ */
+function getWordblocks() {
+  static $wordblocks = NULL;
+  if ( !$wordblocks ) {
+    $wordblocks = file(DOKU_CONF.'wordblock.conf');
+    if (@file_exists(DOKU_CONF.'wordblock.local.conf')) {
+      $local = file(DOKU_CONF.'wordblock.local.conf');
+      $wordblocks = array_merge($wordblocks, $local);
+    }
+  }
+  return $wordblocks;
+}
+
+
+/**
  * Builds a hash from a configfile
  *
  * If $lower is set to true all hash keys are converted to
@@ -131,7 +148,7 @@ function confToHash($file,$lower=false) {
 
   foreach ( $lines as $line ) {
     //ignore comments
-    $line = preg_replace('/[^&]?#.*$/','',$line);
+    $line = preg_replace('/(?<!&)#.*$/','',$line);
     $line = trim($line);
     if(empty($line)) continue;
     $line = preg_split('/\s+/',$line,2);
@@ -142,8 +159,30 @@ function confToHash($file,$lower=false) {
       $conf[$line[0]] = $line[1];
     }
   }
-    
+
   return $conf;
+}
+
+/**
+ * check if the given action was disabled in config
+ *
+ * @author Andreas Gohr <andi@splitbrain.org>
+ * @returns boolean true if enabled, false if disabled
+ */
+function actionOK($action){
+  static $disabled = null;
+  if(is_null($disabled)){
+    global $conf;
+
+    // prepare disabled actions array and handle legacy options
+    $disabled = explode(',',$conf['disableactions']);
+    $disabled = array_map('trim',$disabled);
+    if(isset($conf['openregister']) && !$conf['openregister']) $disabled[] = 'register';
+    if(isset($conf['resendpasswd']) && !$conf['resendpasswd']) $disabled[] = 'resendpwd';
+    $disabled = array_unique($disabled);
+  }
+
+  return !in_array($action,$disabled);
 }
 
 

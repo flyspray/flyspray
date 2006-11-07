@@ -5,8 +5,9 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
+// must be run within Dokuwiki
+if(!defined('DOKU_INC')) die();
 
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../').'/');
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_INC.'inc/parser/parser.php');
 
@@ -17,8 +18,10 @@ require_once(DOKU_INC.'inc/parser/parser.php');
 class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
 
     var $allowedModesSetup = false;
-    var $localised = false;            // set to true by setupLocale() after loading language dependent strings
+    var $localised = false;         // set to true by setupLocale() after loading language dependent strings
     var $lang = array();            // array to hold language dependent strings, best accessed via ->getLang()
+    var $configloaded = false;      // set to true by loadConfig() after loading plugin configuration variables
+    var $conf = array();            // array to hold plugin settings, best accessed via ->getConf()
 
     /**
      * General Info
@@ -130,8 +133,11 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
             foreach($allowedModeTypes as $mt) {
                 $this->allowedModes = array_merge($this->allowedModes, $PARSER_MODES[$mt]);
             }        
-                
-            unset($this->allowedModes[array_search(substr(get_class($this), 7), $this->allowedModes)]);
+
+            $idx = array_search(substr(get_class($this), 7), $this->allowedModes);
+            if ($idx !== false) {
+              unset($this->allowedModes[$idx]);
+            }
             $this->allowedModesSetup = true;
         }
         
@@ -171,7 +177,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      * @return  string  parsed contents of the wiki page in xhtml format
      */
     function locale_xhtml($id) {
-      return p_cached_xhtml($this->localFN($id));
+      return p_cached_output($this->localFN($id));
     }
     
     /**
@@ -180,9 +186,9 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      * plugin equivalent of localFN()
      */
     function localFN($id) {
-      global $doku_conf;
+      global $conf;
       $plugin = $this->getPluginName();
-      $file = DOKU_PLUGIN.$plugin.'/lang/'.$doku_conf['lang'].'/'.$id.'.txt';
+      $file = DOKU_PLUGIN.$plugin.'/lang/'.$conf['lang'].'/'.$id.'.txt';
       if(!@file_exists($file)){
         //fall back to english
         $file = DOKU_PLUGIN.$plugin.'/lang/en/'.$id.'.txt';
@@ -198,16 +204,67 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
     function setupLocale() {
         if ($this->localised) return;
     
-      global $doku_conf;            // definitely don't invoke "global $lang"
+      global $conf;            // definitely don't invoke "global $lang"
       $path = DOKU_PLUGIN.$this->getPluginName().'/lang/';
       
       // don't include once, in case several plugin components require the same language file
       @include($path.'en/lang.php');    
-      if ($doku_conf['lang'] != 'en') @include($path.$doku_conf['lang'].'/lang.php');
+      if ($conf['lang'] != 'en') @include($path.$conf['lang'].'/lang.php');
       
       $this->lang = $lang;
       $this->localised = true;
     }
- 
+    
+  // configuration methods
+  /**
+   * getConf($setting)
+   * 
+   * use this function to access plugin configuration variables
+   */
+  function getConf($setting){
+
+    if (!$this->configloaded){ $this->loadConfig(); }
+
+    return $this->conf[$setting];
+  }
+  
+  /**
+   * loadConfig()
+   * merges the plugin's default settings with any local settings
+   * this function is automatically called through getConf()
+   */
+  function loadConfig(){
+    global $conf;
+
+    $defaults = $this->readDefaultSettings();
+    $plugin = $this->getPluginName();
+
+    foreach ($defaults as $key => $value) {
+      if (isset($conf['plugin'][$plugin][$key])) continue;
+      $conf['plugin'][$plugin][$key] = $value;
+    }
+
+    $this->configloaded = true;
+    $this->conf =& $conf['plugin'][$plugin];    
+  }
+
+  /**
+   * read the plugin's default configuration settings from conf/default.php
+   * this function is automatically called through getConf()
+   *
+   * @return    array    setting => value
+   */
+  function readDefaultSettings() {
+
+    $path = DOKU_PLUGIN.$this->getPluginName().'/conf/';
+    $conf = array();
+
+    if (@file_exists($path.'default.php')) {
+      include($path.'default.php');
+    }
+
+    return $conf;
+  }
+
 }
 //Setup VIM: ex: et ts=4 enc=utf-8 :

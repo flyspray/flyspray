@@ -1,68 +1,38 @@
 <?php
 /**
  * Utilities for handling plugins
- * 
+ *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
-
-/**
- * prints needed HTML to include plugin CSS and JS files
- */
-function plugin_printCSSJS(){
-    global $conf;
-    
-    if (isset($conf['pluginmanager']) && $conf['pluginmanager']  && 
-        // implicit check that plugin manager has setup the aggregated files - it has styles of its own
-        @file_exists(DOKU_INC.'lib/plugins/plugin_style.css'))  {
-        // individual plugin instances of the files swept into one file each
-        $dir = "lib/plugins/plugin_";
-        if(@file_exists(DOKU_INC.$dir.'style.css')){
-            print '  <link rel="stylesheet" type="text/css" href="'.DOKU_BASE.$dir.'style.css" />'."\n";
-        }
-        if(@file_exists(DOKU_INC.$dir.'screen.css')){
-            print '  <link rel="stylesheet" media="screen" type="text/css" href="'.DOKU_BASE.$dir.'screen.css" />'."\n";
-        }
-        if(@file_exists(DOKU_INC.$dir.'print.css')){
-            print '  <link rel="stylesheet" media="print" type="text/css" href="'.DOKU_BASE.$dir.'print.css" />'."\n";
-        }
-        if(@file_exists(DOKU_INC.$dir.'script.js')){
-            print '  <script type="text/javascript" language="javascript" charset="utf-8" src="'.DOKU_BASE.$dir.'script.js"></script>'."\n";
-        }
-    } else {
-        // no plugin manager (or aggregate files not setup) so individual instances of these files for any plugin that uses them
-        $plugins = plugin_list();
-        foreach ($plugins as $p){
-            $dir = "lib/plugins/$p/";
-            if(@file_exists(DOKU_INC.$dir.'style.css')){
-                print '  <link rel="stylesheet" type="text/css" href="'.DOKU_BASE.$dir.'style.css" />'."\n";
-            }
-            if(@file_exists(DOKU_INC.$dir.'screen.css')){
-                print '  <link rel="stylesheet" media="screen" type="text/css" href="'.DOKU_BASE.$dir.'screen.css" />'."\n";
-            }
-            if(@file_exists(DOKU_INC.$dir.'print.css')){
-                print '  <link rel="stylesheet" media="print" type="text/css" href="'.DOKU_BASE.$dir.'print.css" />'."\n";
-            }
-            if(@file_exists(DOKU_INC.$dir.'script.js')){
-                print '  <script type="text/javascript" language="javascript" charset="utf-8" src="'.DOKU_BASE.$dir.'script.js"></script>'."\n";
-            }
-        }
-    }
-} 
-
+ 
+// plugin related constants
+if(!defined('DOKU_PLUGIN'))  define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
+$plugin_types = array('admin','syntax','action');
+ 
 /**
  * Returns a list of available plugins of given type
  *
- * Returns all plugins if no type given
+ * @param $type  string, plugin_type name; 
+ *               the type of plugin to return, 
+ *               use empty string for all types
+ * @param $all   bool; 
+ *               false to only return enabled plugins,
+ *               true to return both enabled and disabled plugins
+ *
+ * @return       array of plugin names
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function plugin_list($type=''){
+function plugin_list($type='',$all=false){
   $plugins = array();
   if ($dh = opendir(DOKU_PLUGIN)) {
     while (false !== ($plugin = readdir($dh))) {
       if ($plugin == '.' || $plugin == '..' || $plugin == 'tmp') continue;
       if (is_file(DOKU_PLUGIN.$plugin)) continue;
+			
+			// if required, skip disabled plugins
+			if (!$all && plugin_isdisabled($plugin)) continue;
 
       if ($type=='' || @file_exists(DOKU_PLUGIN."$plugin/$type.php")){
           $plugins[] = $plugin;
@@ -98,12 +68,12 @@ function &plugin_load($type,$name){
 
 
   //plugin already loaded?
-  if($DOKU_PLUGINS[$type][$name] != null){
+  if(!empty($DOKU_PLUGINS[$type][$name])){
     return $DOKU_PLUGINS[$type][$name];
   }
 
   //try to load the wanted plugin file
-  if (file_exists(DOKU_PLUGIN."$name/$type.php")){
+  if (@file_exists(DOKU_PLUGIN."$name/$type.php")){
     include_once(DOKU_PLUGIN."$name/$type.php");
   }else{
     list($plugin, $component) = preg_split("/_/",$name, 2);
@@ -112,10 +82,14 @@ function &plugin_load($type,$name){
     }
   }
 
-  //construct class and instanciate
+  //construct class and instantiate
   $class = $type.'_plugin_'.$name;
   if (!class_exists($class)) return null;
-  
+
   $DOKU_PLUGINS[$type][$name] = new $class;
   return $DOKU_PLUGINS[$type][$name];
 }
+
+function plugin_isdisabled($name) { return @file_exists(DOKU_PLUGIN.$name.'/disabled'); }
+function plugin_enable($name) { return @unlink(DOKU_PLUGIN.$name.'/disabled'); }
+function plugin_disable($name) { return @touch(DOKU_PLUGIN.$name.'/disabled'); }
