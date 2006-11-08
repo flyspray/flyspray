@@ -78,7 +78,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     
     $new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
     $html = sprintf('<a title="%s" href="%s">%s</a>',
-            L('sortthiscolumn'), CreateUrl('index', $proj->id, null, array_merge($_GET, $new_order)), $html);
+            L('sortthiscolumn'), htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, $new_order))), $html);
 
     return sprintf($format, $class, $html);
 }

@@ -5,7 +5,7 @@
   <table class="box">
     <tr>
       <td><label for="username">{L('username')}</label></td>
-      <td><input class="required text" value="{Req::val('user_name')}" id="username" name="user_name" type="text" size="20" maxlength="32" onblur="checkname(this.value);" /> {L('validusername')}<br><strong><span id="errormessage"></span></strong></td>
+      <td><input class="required text" value="{Req::val('user_name')}" id="username" name="user_name" type="text" size="20" maxlength="32" onblur="checkname(this.value);" /> {L('validusername')}<br /><strong><span id="errormessage"></span></strong></td>
     </tr>
     <tr>
       <td><label for="realname">{L('realname')}</label></td>

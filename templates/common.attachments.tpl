@@ -1,8 +1,8 @@
   <?php
-  if ($attachments && ($user->perms('view_attachments') || $proj->prefs['others_view'])): ?>
+  if ($attachments && $user->can_view_task($task_details)): ?>
   <div class="attachments">
   <?php foreach ($attachments as $attachment): ?>
-    <a href="index.php?getfile={$attachment['attachment_id']}" title="{$attachment['file_type']}">
+    <a href="?getfile={$attachment['attachment_id']}" title="{$attachment['file_type']}">
       <?php
       // Strip the mimetype to get the icon image name
       list($main) = explode('/', $attachment['file_type']);

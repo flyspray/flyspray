@@ -132,9 +132,9 @@
 			</tr>
             <?php if ($user->can_change_private($task_details)): ?>
             <tr>
-              <th id="private">{L('private')}</th>
-              <td headers="private">
-                {!tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']))}
+              <td><label for="private">{L('private')}</label></td>
+              <td>
+                {!tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private')}
               </td>
             </tr>
             <?php endif; ?>

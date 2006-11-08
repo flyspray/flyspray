@@ -456,7 +456,7 @@ switch ($action = Req::val('action'))
                         'modify_all_tasks', 'view_comments', 'add_comments', 'edit_assignments',
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
-                        'close_other_tasks', 'assign_to_self', 'view_attachments',
+                        'close_other_tasks', 'assign_to_self',
                         'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
 
                 $params = array_map('Post_to0',$cols);
@@ -528,7 +528,7 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'manage_project', 'view_tasks', 'open_new_tasks',
                 'modify_own_tasks', 'modify_all_tasks', 'view_comments',
-                'add_comments', 'edit_comments', 'delete_comments', 'view_attachments',
+                'add_comments', 'edit_comments', 'delete_comments',
                 'create_attachments', 'delete_attachments', 'view_history', 'add_votes',
                 'close_own_tasks', 'close_other_tasks', 'assign_to_self', 'edit_own_comments',
                 'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
@@ -765,7 +765,7 @@ switch ($action = Req::val('action'))
                                 array('manage_project', 'view_tasks', 'edit_own_comments', 
                                   'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks',
                                   'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-                                  'view_attachments', 'create_attachments', 'delete_attachments',
+                                  'create_attachments', 'delete_attachments',
                                   'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
                                   'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
                                   'add_votes', 'group_open'));
@@ -832,10 +832,10 @@ switch ($action = Req::val('action'))
         
         $position = Post::num('list_position');
         if (!$position) {
-            $position = $db->FetchOne($db->Query("SELECT max(list_position)+1
+            $position = intval($db->FetchOne($db->Query("SELECT max(list_position)+1
                                                     FROM $list_table_name
                                                    WHERE project_id = ?",
-                                                 array($proj->id)));
+                                                 array($proj->id))));
         }
         
         $db->Query("INSERT INTO  $list_table_name

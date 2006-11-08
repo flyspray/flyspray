@@ -20,11 +20,13 @@
           <td>{!tpl_tasklink($row)}</td>
         </tr>
         <?php endforeach; ?>
-        <td colspan="2">
+        <tr>
+          <td colspan="2">
             <input type="hidden" name="action" value="remove_related" />
             <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
             <button type="submit">{L('remove')}</button>
-        </td>
+          </td>
+        </tr>
         </table>
     </form>
     </td><td>

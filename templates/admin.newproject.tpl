@@ -29,7 +29,7 @@
           </td>
         </tr>
         <tr>
-          <td><label for="intro_message">{L('intromessage')}</label></td>
+          <td><label for="intromesg">{L('intromessage')}</label></td>
           <td>
             <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
             <div class="hide preview" id="preview"></div>

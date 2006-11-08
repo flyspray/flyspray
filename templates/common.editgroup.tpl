@@ -68,10 +68,6 @@
         <td>{!tpl_checkbox('delete_comments', Req::val('delete_comments', !Req::val('action') && $group_details['delete_comments']), 'deletecomments')}</td>
       </tr>
       <tr>
-        <td><label for="viewattachments">{L('viewattachments')}</label></td>
-        <td>{!tpl_checkbox('view_attachments', Req::val('view_attachments', !Req::val('action') && $group_details['view_attachments']), 'viewattachments')}</td>
-      </tr>
-      <tr>
         <td><label for="createattachments">{L('createattachments')}</label></td>
         <td>{!tpl_checkbox('create_attachments', Req::val('create_attachments', !Req::val('action') && $group_details['create_attachments']), 'createattachments')}</td>
       </tr>
@@ -119,7 +115,7 @@
       <?php if (!$proj->id): ?>
       <tr>
         <td><label for="groupopen">{L('groupenabled')}</label></td>
-        <td>{!tpl_checkbox('group_open', Req::val('group_open', !Req::val('action') && $group_details['group_open']), 'group_open')}</td>
+        <td>{!tpl_checkbox('group_open', Req::val('group_open', !Req::val('action') && $group_details['group_open']), 'groupopen')}</td>
       </tr>
       <?php endif; ?>
       <?php endif; ?>

@@ -93,7 +93,7 @@
                         $proj->listTaskStatuses(), Get::val('status', 'open'))}
         </select>
         
-        <label class="default multisel" for="cat">{L('percentcomplete')}</label>
+        <label class="default multisel" for="percent">{L('percentcomplete')}</label>
         <select name="percent[]" id="percent" multiple="multiple" size="5">
           <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
           {!tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', ''))}

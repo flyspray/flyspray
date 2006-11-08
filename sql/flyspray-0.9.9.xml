@@ -245,10 +245,6 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="view_attachments" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
     <field name="create_attachments" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>

@@ -413,3 +413,6 @@ ALTER TABLE `flyspray_users` ADD `time_zone` SMALLINT DEFAULT '0' NOT NULL ;
 ALTER TABLE `flyspray_registrations` ADD `time_zone` SMALLINT DEFAULT '0' NOT NULL ;
 UPDATE flyspray_prefs SET pref_value = '%Y-%m-%d' WHERE pref_id = 14;
 UPDATE flyspray_prefs SET pref_value = '%A, %d %B %Y, %H:%M %GMT' WHERE pref_id = 15;
+
+-- Florian Schmitz, 8 November 2006
+ALTER TABLE `flyspray_groups` DROP `view_attachments`;

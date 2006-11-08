@@ -52,12 +52,13 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
-    $result = $db->Query("SELECT  t.task_id, t.project_id,
-                                  a.orig_name, a.file_name, a.file_type
+    $result = $db->Query("SELECT  t.project_id,
+                                  a.orig_name, a.file_name, a.file_type, t.*
                             FROM  {attachments} a
                       INNER JOIN  {tasks}       t ON a.task_id = t.task_id
                            WHERE  attachment_id = ?", array(Get::val('getfile')));
-    list($task_id, $proj_id, $orig_name, $file_name, $file_type) = $db->FetchRow($result);
+    $task = $db->FetchRow($result);
+    list($proj_id, $orig_name, $file_name, $file_type) = $task;
 
     // Check if file exists, and user permission to access it!
     if (!is_file(BASEDIR . "/attachments/$file_name")) {
@@ -66,7 +67,7 @@ if (Get::val('getfile')) {
         exit();
     }
 
-    if ($user->perms('others_view', $proj_id) || $user->perms('view_attachments', $proj_id))
+    if ($user->can_view_task($task))
     {
         output_reset_rewrite_vars();
         $path = BASEDIR . "/attachments/$file_name";

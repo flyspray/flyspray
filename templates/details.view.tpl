@@ -158,8 +158,8 @@
         </tr>
         <?php if (!$user->isAnon()): ?>
         <tr>
-		  <th id="votes">{L('watching')}</th>
-		  <td headers="votes">
+		  <th id="watching">{L('watching')}</th>
+		  <td headers="watching">
               <?php if ($watched): ?>
               {L('yes')}
               <?php else: ?>

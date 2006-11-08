@@ -5,6 +5,8 @@
 
     <meta name="description" content="Flyspray, a Bug Tracking System written in PHP." />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
 
     <link rel="icon" type="image/png" href="{$this->get_image('favicon')}" />
     <?php foreach ($fs->projects as $project): ?>

@@ -593,7 +593,7 @@ function tpl_draw_perms($perms)
     $perm_fields = array('is_admin', 'manage_project', 'view_tasks',
             'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks', 'edit_assignments',
             'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-            'view_attachments', 'create_attachments', 'delete_attachments',
+            'create_attachments', 'delete_attachments',
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
             'add_votes', 'edit_own_comments');
@@ -750,10 +750,10 @@ function pagenums($pagenum, $perpage, $totalcount)
         $finish = min($start + 4, $pages);
 
         if ($start > 1)
-            $output .= '<a href="' . CreateUrl('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1))) . '">&lt;&lt;' . L('first') . ' </a>';
+            $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . L('first') . ' </a>';
 
         if ($pagenum > 1)
-            $output .= '<a id="previous" accesskey="p" href="' . CreateUrl('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1))) . '">&lt; ' . L('previous') . '</a> - ';
+            $output .= '<a id="previous" accesskey="p" href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . L('previous') . '</a> - ';
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
             if ($pagelink != $start)
@@ -762,14 +762,14 @@ function pagenums($pagenum, $perpage, $totalcount)
             if ($pagelink == $pagenum) {
                 $output .= '<strong>' . $pagelink . '</strong>';
             } else {
-                $output .= '<a href="' . CreateUrl('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink))) . '">' . $pagelink . '</a>';
+                $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))) . '">' . $pagelink . '</a>';
             }
         }
 
         if ($pagenum < $pages)
-            $output .= ' - <a id="next" accesskey="n" href="' . CreateUrl('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1))) . '">' . L('next') . ' &gt;</a>';
+            $output .= ' - <a id="next" accesskey="n" href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . L('next') . ' &gt;</a>';
         if ($finish < $pages)
-            $output .= '<a href="' . CreateUrl('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages))) . '"> ' . L('last') . ' &gt;&gt;</a>';
+            $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . L('last') . ' &gt;&gt;</a>';
         $output .= '</span>';
     }
 
