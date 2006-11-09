@@ -168,7 +168,7 @@ class Filters {
      */
     function noXSS($data)
     {
-        if(empty($data) || ctype_digit((string)$data)) {
+        if(empty($data) || is_numeric($data)) {
             return $data;
         } elseif(is_string($data)) {
             return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
