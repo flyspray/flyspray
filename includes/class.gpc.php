@@ -157,7 +157,7 @@ class Filters {
      */
     function num($data)
     {
-         return is_numeric($data) ? intval($data) : 0;
+         return ctype_digit((string)$data) ? intval($data) : 0;
     }
     
     /**
@@ -168,7 +168,7 @@ class Filters {
      */
     function noXSS($data)
     {
-        if(empty($data) || is_numeric($data)) {
+        if(empty($data) || ctype_digit((string)$data)) {
             return $data;
         } elseif(is_string($data)) {
             return htmlspecialchars($data, ENT_QUOTES, 'utf-8');

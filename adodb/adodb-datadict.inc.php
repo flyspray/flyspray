@@ -33,7 +33,7 @@ print "</pre>";
 
 if (!function_exists('ctype_alnum')) {
 	function ctype_alnum($text) {
-		return preg_match('/^[a-z0-9]*$/i', $text);
+		return preg_match('/^[a-z0-9]+$/iD', $text);
 	}
 }
 

@@ -41,8 +41,7 @@ class Tpl
 
     function themeUrl()
     {
-        global $baseurl;
-        return $baseurl.'themes/'.$this->_theme;
+        return $GLOBALS['baseurl'] . 'themes/'.$this->_theme;
     }
 
     function compile(&$item)
@@ -50,7 +49,7 @@ class Tpl
         if (strncmp($item, '<?', 2)) {
             $item = preg_replace( '/{!([^\s&][^{}]*)}(\n?)/', '<?php echo \1; ?>\2\2', $item);
             $item = preg_replace( '/{([^\s&][^{}]*)}(\n?)/',
-                    '<?php echo htmlspecialchars(\1, ENT_QUOTES, "utf-8"); ?>\2\2', $item);
+                    '<?php echo Filters::noXSS(\1); ?>\2\2', $item);
         }
     }
     // {{{ Display page
@@ -156,7 +155,7 @@ class FSTpl extends Tpl
 
 function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $title = array('status','summary','percent_complete'))
 {
-    global $user, $db, $proj;
+    global $user;
     
     $params = array();
 
@@ -290,7 +289,7 @@ function tpl_fast_tasklink($arr)
 // {{{ some useful plugins
 
 function join_attrs($attr = null) {
-    if (is_array($attr)) {
+    if (is_array($attr) && count($attr)) {
         $arr = array();
         foreach ($attr as $key=>$val) {
             $arr[] = htmlspecialchars($key, ENT_QUOTES, 'utf-8') . '="'. 
@@ -312,7 +311,17 @@ function tpl_datepicker($name, $label = '', $value = 0) {
         }
         $date = date('Y-m-d', intval($value));
 
-    //it must "look" as a date..
+     /* It must "look" as a date..
+      * XXX : do not blindly copy this code to validate other dates
+      * this is mostly a tongue-in-cheek validation
+      * 1. it will fail on 32 bit systems on dates < 1970
+      * 2. it will produce different results bewteen 32 and 64 bit systems for years < 1970
+      * 3. it will not work when year > 2038 on 32 bit systems (see http://en.wikipedia.org/wiki/Year_2038_problem)
+      *
+      * Fortunately tasks are never opened to be dated on 1970 and maybe our sons or the future flyspray
+      * coders may be willing to fix the 2038 issue ( in the strange case 32 bit systems are still used by that year) :-)
+      */
+
     } elseif(Req::has($name)) {
 
         //strtotime sadly returns -1 on faliure in php < 5.1 instead of false
@@ -323,7 +332,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
             $$period = intval(date($period, $ts));
         }
         // $ts has to be > 0 to get around php behavior change
-        // false is casted to 0 (php 5.1 or later)
+        // false is casted to 0 by the ZE
         $date = ($ts > 0 && checkdate($m, $d, $Y)) ? Req::val($name) : '';
     }
 
@@ -370,8 +379,10 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 
     // force $selected to be an array.
     // this allows multi-selects to have multiple selected options.
-    settype($selected, 'array');
-    settype($options, 'array');
+
+    // operate by value ..
+    $selected = is_array($selected) ? $selected : (array) $selected;
+    $options = is_array($options) ? $options : (array) $options;
 
     foreach ($options as $value=>$label)
     {
@@ -424,7 +435,7 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
 
     $opt1 = '';
     foreach ($options as $value => $label) {
-        if (is_array($label)) {
+        if (is_array($label) && count($label) >= 2) {
             $value = $label[0];
             $label = $label[1];
         }
@@ -473,7 +484,7 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
 function tpl_img($src, $alt)
 {
     global $baseurl;
-    if (file_exists(dirname(dirname(__FILE__)).'/'.$src)) {
+    if (is_file(dirname(dirname(__FILE__)).'/'.$src)) {
         return '<img src="'.$baseurl
             .htmlspecialchars($src, ENT_QUOTES,'utf-8').'" alt="'
             .htmlspecialchars($alt, ENT_QUOTES,'utf-8').'" />';
@@ -610,7 +621,8 @@ function tpl_draw_perms($perms)
 
     foreach ($perms[$proj->id] as $key => $val) {
         if (!is_numeric($key) && in_array($key, $perm_fields)) {
-            $html .= '<tr><th>' . htmlspecialchars(str_replace('_', ' ', $key), ENT_QUOTES, 'utf-8') . '</th>';
+            $display_key = htmlspecialchars(str_replace( '_', ' ', $key), ENT_QUOTES, 'utf-8');
+            $html .= '<tr><th>' . $display_key . '</th>';
             $html .= $yesno[ ($val || $perms[0]['is_admin']) ].'</tr>';
         }
     }
@@ -750,10 +762,10 @@ function pagenums($pagenum, $perpage, $totalcount)
         $finish = min($start + 4, $pages);
 
         if ($start > 1)
-            $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . L('first') . ' </a>';
+            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . L('first') . ' </a>';
 
         if ($pagenum > 1)
-            $output .= '<a id="previous" accesskey="p" href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . L('previous') . '</a> - ';
+            $output .= '<a id="previous" accesskey="p" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . L('previous') . '</a> - ';
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
             if ($pagelink != $start)
@@ -762,14 +774,14 @@ function pagenums($pagenum, $perpage, $totalcount)
             if ($pagelink == $pagenum) {
                 $output .= '<strong>' . $pagelink . '</strong>';
             } else {
-                $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))) . '">' . $pagelink . '</a>';
+                $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))) . '">' . $pagelink . '</a>';
             }
         }
 
         if ($pagenum < $pages)
-            $output .= ' - <a id="next" accesskey="n" href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . L('next') . ' &gt;</a>';
+            $output .= ' - <a id="next" accesskey="n" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . L('next') . ' &gt;</a>';
         if ($finish < $pages)
-            $output .= '<a href="' . htmlspecialchars(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . L('last') . ' &gt;&gt;</a>';
+            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . L('last') . ' &gt;&gt;</a>';
         $output .= '</span>';
     }
 
