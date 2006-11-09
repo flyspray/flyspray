@@ -163,9 +163,11 @@ class Project
         $right = array();
         $cats = array();
         $g_cats = array();
+        $project_set = true;
         
         // null = categories of current project + global project, int = categories of specific project
         if (is_null($project_id)) {
+            $project_set = false;
             $project_id = $this->id;
             if ($this->id != 0) {
                 $g_cats = $this->listCategories(0);
@@ -191,7 +193,7 @@ class Project
                              array($project_id, intval($row['lft']), intval($row['rgt'])));
 
         while ($row = $db->FetchRow($result)) {
-            if (is_null($project_id) && !$row['show_in_list']) {
+            if (!$project_set && !$row['show_in_list']) {
                 continue;
             }
             
