@@ -130,9 +130,9 @@ class Backend
      */
     function assign_to_me($user_id, $tasks)
     {
-        global $db, $notify, $user;
+        global $db, $notify;
         
-        if ($user_id != $user->id) {
+        if ($user_id != $GLOBALS['user']->id) {
             $user = new User($user_id);
         }
 
@@ -183,9 +183,9 @@ class Backend
      */
     function add_to_assignees($user_id, $tasks, $do = false)
     {
-        global $db, $notify, $user;
+        global $db, $notify;
 
-        if ($user_id != $user->id) {
+        if ($user_id != $GLOBALS['user']->id) {
             $user = new User($user_id);
         }
 
@@ -211,7 +211,7 @@ class Backend
                 $notify->Create(NOTIFY_ADDED_ASSIGNEES, $row['task_id']);
             }
             
-            if ($task['item_status'] == STATUS_UNCONFIRMED || $task['item_status'] == STATUS_NEW) {
+            if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
                 $db->Query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
                 Flyspray::logEvent($row['task_id'], 3, 3, 1, 'item_status');
             }
@@ -228,9 +228,9 @@ class Backend
      */
     function add_vote($user_id, $task_id)
     {
-        global $db, $user;
+        global $db;
         
-        if ($user_id != $user->id) {
+        if ($user_id != $GLOBALS['user']->id) {
             $user = new User($user_id);
         }
         
@@ -698,7 +698,7 @@ class Backend
                          VALUES  ($sql_placeholder)", $sql_values);
 
         // Log the assignments and send notifications to the assignees
-        if (trim($args['assigned_to']))
+        if (isset($args['assigned_to']) && trim($args['assigned_to']))
         {
             // Convert assigned_to and store them in the 'assigned' table
             foreach (Flyspray::int_explode(' ', trim($args['assigned_to'])) as $key => $val)
@@ -707,12 +707,11 @@ class Backend
             }
             // Log to task history
             Flyspray::logEvent($task_id, 14, trim($args['assigned_to']));
-        }
-
-
-        // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
-        $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null,
-                        $notify->SpecificAddresses(Flyspray::int_explode(' ', $args['assigned_to'])));
+            
+            // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
+            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null,
+                            $notify->SpecificAddresses(Flyspray::int_explode(' ', $args['assigned_to'])));
+        }        
                     
         // Log that the task was opened
         Flyspray::logEvent($task_id, 1);
