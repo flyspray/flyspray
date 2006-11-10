@@ -1,7 +1,45 @@
 #############################################################################
 ##### Flyspray .htaccess Config. To be used with Apache Server ###
 ##### Check for Mod-Rewrite module ############################################
+#### rename this file to .htaccess to use these features
 ###############################################################################
+
+AddDefaultCharset utf-8
+
+# php5 as  apache 1/2 module 
+<IfModule mod_php5.c>
+php_flag register_globals Off
+php_flag magic_quotes_gpc Off
+php_flag session.use_trans_sid 0
+php_flag short_open_tag off
+php_flag register_argc_argv Off
+</IfModule>
+
+# php4 as **apache 1** module
+<IfModule mod_php4.c>
+php_flag register_globals Off
+php_flag magic_quotes_gpc Off
+php_flag session.use_trans_sid 0
+php_flag short_open_tag off
+php_flag register_argc_argv Off
+</IfModule>
+
+#php4 as **apache 2** module
+
+<IfModule sapi_apache2.c>
+
+php_flag register_globals Off
+php_flag magic_quotes_gpc Off
+php_flag session.use_trans_sid 0
+php_flag short_open_tag off
+php_flag register_argc_argv Off
+</IfModule>
+
+# We only use POST GET and HEAD (implicit)
+<LimitExcept POST GET>
+	Deny From All
+</LimitExcept>
+
 <IfModule mod_rewrite.c>
 RewriteEngine on
 #RewriteBase /flyspray

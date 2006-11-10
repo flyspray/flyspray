@@ -345,12 +345,8 @@ class Backend
             if (isset($conf['attachments'][$extension])) {
                 $_FILES[$source]['type'][$key] = $conf['attachments'][$extension];
             //actually, try really hard to get the real filetype, not what the browser reports.    
-            } elseif(function_exists('mime_content_type') && ($type = mime_content_type($path))) {
+            } elseif($type = Flyspray::check_mime_type($path)) {
              $_FILES[$source]['type'][$key] = $type; 
-            }elseif (class_exists('finfo')) {
-                $info = $info = new finfo(FILEINFO_MIME);
-                $type = $info->file($path);
-                $_FILES[$source]['type'][$key] = $type ? $type : $_FILES[$source]['type'][$key];
             }// we can try even more, however, far too much code is needed.
 
             $db->Query("INSERT INTO  {attachments}
