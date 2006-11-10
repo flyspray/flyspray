@@ -200,7 +200,7 @@ class Backend
                           array($tasks));
 
         while ($row = $db->FetchRow($sql)) {
-            if (!$user->can_add_to_assignees($row) || $do) {
+            if (!$user->can_add_to_assignees($row) && !$do) {
                 continue;
             }
             
