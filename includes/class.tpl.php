@@ -325,7 +325,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
       * coders may be willing to fix the 2038 issue ( in the strange case 32 bit systems are still used by that year) :-)
       */
 
-    } elseif(Req::has($name)) {
+    } elseif(Req::has($name) && strlen(Req::val($name))) {
 
         //strtotime sadly returns -1 on faliure in php < 5.1 instead of false
         $ts = strtotime(Req::val($name));
