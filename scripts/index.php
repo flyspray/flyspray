@@ -49,10 +49,9 @@ $page->assign('total', count($id_list));
 function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
     global $proj, $page;
-
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
-    $html    = L($colname);
+    $html    = Filters::noXSS(L($colname));
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
@@ -111,7 +110,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'dateclosed' => 'date_closed',
             'progress'   => '',
             'os'         => 'os_name',
-    );
+        );
+
+    //must be an array , must contain elements and be alphanumeric (permitted  "_")
+    if(!is_array($task) || empty($task) || !ctype_alnum(str_replace('_','', $colname))) {
+        //run away..
+        return '';
+    }
 
     switch ($colname) {
         case 'id':
@@ -164,7 +169,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
     return sprintf($format, 'task_'.$colname, $value);
 }
 
-// }}}
+// } }}
 
 // Javascript replacement
 if (Get::val('toggleadvanced')) {

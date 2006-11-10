@@ -148,7 +148,9 @@ class FSTpl extends Tpl
                 return ($base) ? ($baseurl . $link . $name . $ext) : ($link . $name . $ext);
             }
         }
-	}
+        return '';
+    }
+
 }
 
 // {{{ costful templating functions, TODO: optimize them
@@ -160,7 +162,8 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     $params = array();
 
     if (!is_array($task) || !isset($task['status_name'])) {
-        $task = Flyspray::GetTaskDetails( ((is_array($task)) ? $task['task_id'] : $task), true);
+        $td_id = (is_array($task) && isset($task['task_id'])) ? $task['task_id'] : $task;
+        $task = Flyspray::GetTaskDetails($td_id, true);
     }
 
     if ($strict === true && !$user->can_view_task($task)) {
@@ -264,7 +267,7 @@ function tpl_userlink($uid)
     } elseif (empty($cache[$uid])) {
         $sql = $db->Query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
                            array(intval($uid)));
-        if ($db->countRows($sql)) {
+        if ($sql && $db->countRows($sql)) {
             list($uname, $rname) = $db->fetchRow($sql);
         }
     }
@@ -484,11 +487,12 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
 function tpl_img($src, $alt)
 {
     global $baseurl;
-    if (is_file(dirname(dirname(__FILE__)).'/'.$src)) {
+    if (is_file(BASEDIR .'/'.$src)) {
         return '<img src="'.$baseurl
             .htmlspecialchars($src, ENT_QUOTES,'utf-8').'" alt="'
             .htmlspecialchars($alt, ENT_QUOTES,'utf-8').'" />';
     }
+    return '';
 } // }}}
 // {{{ Text formatting
 $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';
