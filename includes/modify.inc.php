@@ -545,7 +545,7 @@ switch ($action = Req::val('action'))
         $db->Query("INSERT INTO  {list_category}
                                  ( project_id, category_name,
                                    show_in_list, category_owner, lft, rgt)
-                         VALUES  ( ?, ?, 0, 0, 1, 4)", array($pid, 'root'));
+                         VALUES  ( ?, ?, 1, 0, 1, 4)", array($pid, 'root'));
                          
         $db->Query("INSERT INTO  {list_category}
                                  ( project_id, category_name,
@@ -938,6 +938,14 @@ switch ($action = Req::val('action'))
                                               lft = ?, rgt = ?
                                        WHERE  category_id = ? AND project_id = ?',
                                   array($listname, intval($listshow[$id]), Flyspray::username_to_id($listowners[$id]), $listlft[$id], $listrgt[$id], $id, $proj->id));
+                // Correct visibility for sub categories
+                if ($listshow[$id] == 0) {
+                    foreach ($listnames as $key => $value) {
+                        if ($listlft[$key] > $listlft[$id] && $listrgt[$key] < $listrgt[$id]) {
+                            $listshow[$key] = 0;
+                        }
+                    }
+                }
             } else {
                 Flyspray::show_error(L('fieldsmissing'));
             }
