@@ -60,31 +60,50 @@
         </fieldset>
 
         <fieldset><legend>{L('taskproperties')}</legend>
+        
+        <div class="search_select">
         <label class="default multisel" for="type">{L('tasktype')}</label>
         <select name="type[]" id="type" multiple="multiple" size="5">
           {!tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', ''))}
         </select>
+        </div>
         
+        <div class="search_select">
         <label class="default multisel" for="sev">{L('severity')}</label>
         <select name="sev[]" id="sev" multiple="multiple" size="5">
           {!tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', ''))}
         </select>
+        </div>
         
+        <div class="search_select">
+        <label class="default multisel" for="pri">{L('priority')}</label>
+        <select name="pri[]" id="pri" multiple="multiple" size="5">
+          {!tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', ''))}
+        </select>
+        </div>
+        
+        <div class="search_select">
         <label class="default multisel" for="due">{L('dueversion')}</label>
         <select name="due[]" id="due" multiple="multiple" size="5">
           {!tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', ''))}
         </select>
+        </div>
         
+        <div class="search_select">
         <label class="default multisel" for="reported">{L('reportedversion')}</label>
         <select name="reported[]" id="reported" multiple="multiple" size="5">
           {!tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', ''))}
         </select>
+        </div>
         
+        <div class="search_select">
         <label class="default multisel" for="cat">{L('category')}</label>
         <select name="cat[]" id="cat" multiple="multiple" size="5">
           {!tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', ''))}
         </select>
+        </div>
 
+        <div class="search_select">
         <label class="default multisel" for="status">{L('status')}</label>
         <select name="status[]" id="status" multiple="multiple" size="5">
           {!tpl_options(array('' => L('allstatuses')) +
@@ -92,12 +111,16 @@
                         array('closed' => L('allclosedtasks')) +
                         $proj->listTaskStatuses(), Get::val('status', 'open'))}
         </select>
+        </div>
         
+        <div class="search_select">
         <label class="default multisel" for="percent">{L('percentcomplete')}</label>
         <select name="percent[]" id="percent" multiple="multiple" size="5">
           <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
           {!tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', ''))}
         </select>
+        </div>
+        <div class="clear"></div>
         </fieldset>
 
         <fieldset><legend>{L('users')}</legend>

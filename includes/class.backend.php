@@ -132,7 +132,8 @@ class Backend
     {
         global $db, $notify;
         
-        if ($user_id != $GLOBALS['user']->id) {
+        $user = $GLOBALS['user'];
+        if ($user_id != $user->id) {
             $user = new User($user_id);
         }
 
@@ -184,8 +185,9 @@ class Backend
     function add_to_assignees($user_id, $tasks, $do = false)
     {
         global $db, $notify;
-
-        if ($user_id != $GLOBALS['user']->id) {
+        
+        $user = $GLOBALS['user'];
+        if ($user_id != $user->id) {
             $user = new User($user_id);
         }
 
@@ -230,7 +232,8 @@ class Backend
     {
         global $db;
         
-        if ($user_id != $GLOBALS['user']->id) {
+        $user = $GLOBALS['user'];
+        if ($user_id != $user->id) {
             $user = new User($user_id);
         }
         
@@ -962,7 +965,7 @@ class Backend
 
         /// process search-conditions {{{
         $submits = array('type' => 'task_type', 'sev' => 'task_severity', 'due' => 'closedby_version', 'reported' => 'product_version',
-                         'cat' => 'product_category', 'status' => 'item_status', 'percent' => 'percent_complete',
+                         'cat' => 'product_category', 'status' => 'item_status', 'percent' => 'percent_complete', 'pri' => 'task_priority',
                          'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
                          'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
                          'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));

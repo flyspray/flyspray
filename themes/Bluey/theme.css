@@ -450,7 +450,11 @@ div#search label.multisel {
 	position:absolute;
 	margin-left:-0.3em;
 }
-	
+
+div.search_select {
+	float:left;
+}
+
 div#search input.users {
 	margin-top:1.2em;
 }
@@ -482,7 +486,7 @@ span#searchstate a {
 }
 
 div#search select {
-	margin-top:1.2em;
+	margin-top:1.3em;
 }
 
 div#search fieldset legend {
