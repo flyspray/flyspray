@@ -714,7 +714,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'admin':     $return = $url . '&area=' . $arg1; break;
             case 'edittask':  $return = $url . '&task_id=' . $arg1 . '&edit=yep'; break;
             case 'pm':        $return = $url . '&area=' . $arg1 . '&project=' . $arg2; break;
-            case 'user':      $return = $baseurl . '?do=admin&area=users&id=' . $arg1; break;
+            case 'user':      $return = $baseurl . '?do=user&area=users&id=' . $arg1; break;
             case 'edituser':  $return = $baseurl . '?do=admin&area=users&user_id=' . $arg1; break;
             case 'logout':    $return = $baseurl . '?do=authenticate&logout=1'; break;
 
