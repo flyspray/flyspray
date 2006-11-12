@@ -321,7 +321,7 @@ CREATE TABLE `flyspray_users` (
   PRIMARY KEY  (`user_id`)
 ) TYPE=MyISAM COMMENT='Users for the Flyspray bug killer' AUTO_INCREMENT=2 ;
 
-INSERT INTO `flyspray_users` VALUES (1, 'super', '4tuKHcjxpFYag', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, '', '', '', '', 25);
+INSERT INTO `flyspray_users` VALUES (1, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, '', '', '', '', 25);
 
 CREATE TABLE `flyspray_users_in_groups` (
   `record_id` mediumint(5) NOT NULL auto_increment,
