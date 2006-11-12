@@ -470,6 +470,17 @@ class Backend
         
         Flyspray::logEvent(0, 30, serialize(Flyspray::getUserDetails($uid)));
         
+        // Now give him his default searches
+        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+                         VALUES (?, \'Tasks I watch\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";N;s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";N;s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";s:1:"1";}\', ' . time() . ')',
+                    array($uid));
+        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+                         VALUES (?, \'Tasks assigned to me\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";s:' . strlen($uid) . ':"' . $uid .'";s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";N;s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";N;}\', ' . time() . ')',
+                    array($uid));
+        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+                         VALUES (?, \'Tasks I opened\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";N;s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";s:' . strlen($uid) . ':"' . $uid .'";s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";N;}\', ' . time() . ')',
+                    array($uid));
+        
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
             $sql = $db->Query('SELECT email_address

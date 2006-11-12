@@ -8,6 +8,10 @@ body {
 	padding:0;
 }
 
+table {
+	font-size:1em !Important;
+}
+
 img {
 	border:none;
 }
@@ -1323,6 +1327,8 @@ div#updatemsg {
 	padding:5px;
 	font-weight:bold;
 }
+table {
+	font-size
 
 /* Dokuwiki {{{ */
 .code a {
