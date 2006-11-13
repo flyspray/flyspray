@@ -41,7 +41,7 @@ $translation = array(
 'resolutionlist'          => 'Lista de Resoluções',
 'versionlist'             => 'Lista de Versões',
 'severitylist'            => 'Lista de Severidades',
-'listnote'                => 'Nota:  Desmarcando a caixa "exibir" pode modificar algumas tarefas quando no modo de edição.  Alterando o campo "Nome" modificará todas as tarefas com esse nome.',
+'listnote'                => 'Nota:  Desmarcando a caixa "exibir" pode modificar algumas tarefas quando no modo de edição.  Alterando o campo "Nome" modificará todas as tarefas com esse nome. Itens que não podem ser apagados ou são protegidos para o correto funcionamento ou estão sendo usados em tarefas.',
 'name'                    => 'Nome',
 'order'                   => 'Ordem',
 'back'                    => 'Voltar',
@@ -381,7 +381,7 @@ $translation = array(
 'votes'                   => 'Votos',
 'allclosedtasks'          => 'Todas as Tarefas Fechadas',
 'password'                => 'Senha',
-'login'                   => 'Usuário!',
+'login'                   => 'Conectar-se!',
 'rememberme'              => 'Me lembrar',
 'lostpassword'            => 'Esqueceu a senha?',
 'lostpwforfs'             => 'Senha esquecida para o Flyspray',
@@ -426,6 +426,7 @@ Atenciosamente,',
                                  ou você não tem permissão para ver esta pagina.<br /><br />
                                  Você pode estar tentando usar uma URL inválida
                                  ou fazendo o que não deveria.',
+                                 
 'permissionsforproject'   => 'Permissiões para ',
 'switchto'                => 'Alternar para',
 'lastsearch'              => 'Ultima busca',
@@ -702,7 +703,10 @@ Atenciosamente,',
 'userdeleted'             => 'Usuário apagado',
 'autoassign'              => 'Auto atribuir uma tarefa ao dono da categoria',
 'ssl'                     => 'SSL',
-'updatewrong'             => 'Você tem a verificação de atualizações habilitada, mas um erro ocorroeu ao tentar acessar o servidor de atualizações, ou o seu host não permite acesso a conexões externas, ou o erro foi causado por uma falha na rede. Por gentileza, visite o site do FlySpray para assegurar-se de que está utilizando a última versão.',
+'updatewrong'             => 'Você tem a verificação de atualizações habilitada, mas um erro ocorroeu ao tentar 
+                             acessar o servidor de atualizações, ou o seu host não permite acesso a conexões externas,
+                             ou o erro foi causado por uma falha na rede. 
+                             Por gentileza, visite o site do FlySpray para assegurar-se de que está utilizando a última versão.',
 'deleteproject'           => 'Apagar este projeto e mover seus dados para',
 'projectdeleted'          => 'Projeto apagado com sucesso',
 'feedforall'              => 'Fornecido para todos os projetos',
@@ -810,7 +814,9 @@ Atenciosamente,',
 'showtip'                 => 'Mostrar este item na lista',
 'deletetip'               => 'Apagar este item da lista',
 'del'                     => 'apagar',
-'csvexport'               => 'Exportar CVS',
+'request1'                => 'O fechamento de uma tarefa foi solicitado.',
+'request2'                => 'Um pedido para reabertura da tarefa foi feito.',
+'allpriorities'           => 'Todas Prioridades',
 ); 
 
 ?>
