@@ -1006,6 +1006,22 @@ class Flyspray
                 // we can use the browser reported mime-type (probably fake) 
                 return $type;
     }
+
+    function getSvnRev()
+    {
+        if(is_file(BASEDIR. '/VERSION')) {
+
+            return 'r' . intval(file_get_contents(BASEDIR .'/VERSION'));
+        }
+
+        if(!FlySpray::function_disabled('exec') && is_dir(BASEDIR . '/.svn')) {
+
+            $ret = intval(@exec('svnversion ' . escapeshellarg(BASEDIR)));
+
+            return $ret ? 'r' . $ret : '';
+        }
+        return '';
+    }
     
 
 }
