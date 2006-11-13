@@ -999,8 +999,8 @@ class Flyspray
         // I hope we don't have to...
         } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 
-               $uglytype = @explode('; ', @exec(trim('file -bi ' . escapeshellarg($fname))));
-               $type = $uglytype ? $uglytype[0] : '';     
+               $type = @explode('; ', @exec(trim('file -bi ' . escapeshellarg($fname))));
+                    
         }
                 // if wasn't possible to determine , return empty string so
                 // we can use the browser reported mime-type (probably fake) 
@@ -1009,17 +1009,11 @@ class Flyspray
 
     function getSvnRev()
     {
-        if(is_file(BASEDIR. '/VERSION')) {
+        if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
 
-            return 'r' . intval(file_get_contents(BASEDIR .'/VERSION'));
+            return 'r' . intval(file_get_contents(BASEDIR .'/REVISION'));
         }
-
-        if(!FlySpray::function_disabled('exec') && is_dir(BASEDIR . '/.svn')) {
-
-            $ret = intval(@exec('svnversion ' . escapeshellarg(BASEDIR)));
-
-            return $ret ? 'r' . $ret : '';
-        }
+        
         return '';
     }
     
