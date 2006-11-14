@@ -5,18 +5,19 @@ function tasklistInit() {
 }
 var Caret = {
   init: function () {
-    var task = Cookie.getVar('current_task');
-    if ('bottom' == task) {
-      var rows = $('tasklist_table').getElementsByTagName('tbody')[0].getElementsByTagName('tr');  
-      Caret.currentRow = rows[rows.length-1];
-      Cookie.removeVar('current_task');
-    } else if (task && $('task'+task)) {
-      Caret.currentRow = $('task'+task);
-    } else {
-      Caret.currentRow = $('tasklist_table').getElementsByTagName('tbody')[0].getElementsByTagName('tr')[0];
+    var task = Cookie.getVar('current_task') || 'top';
+    if (task == 'bottom' || task == 'top') {
+      var tab = $('tasklist_table');
+      var rows = tab ? tab.getElementsByTagName('tbody')[0].getElementsByTagName('tr') : [];
+      Caret.currentRow = (task == 'top' || rows.length == 0) ? rows[0] : rows[rows.length-1];
     }
-    Element.addClassName(Caret.currentRow,'current_row');
-    Event.observe(document,'keydown',Caret.keypress);
+    else {
+      Caret.currentRow = $('task'+task);
+    }
+    if (Caret.currentRow) {
+      Element.addClassName(Caret.currentRow,'current_row');
+      Event.observe(document,'keydown',Caret.keypress);
+    }
   },
   keypress: function (e) {
     var src = Event.element(e);
