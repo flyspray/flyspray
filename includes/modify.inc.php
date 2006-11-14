@@ -512,6 +512,11 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        $viscols =    $fs->prefs['visible_columns'] 
+                    ? $fs->prefs['visible_columns'] 
+                    : 'id tasktype severity summary status dueversion progress';
+
+
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
@@ -520,7 +525,7 @@ switch ($action = Req::val('action'))
                   array(Post::val('project_title'), Post::val('theme_style'),
                         Post::val('intro_message'), Post::val('others_view', 0),
                         Post::val('anon_open', 0),
-                        'id tasktype severity summary status dueversion progress',
+                        $viscols,
                         Post::val('lang_code'), ''));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
