@@ -161,7 +161,6 @@ function updateDualSelectValue(id)
 {
     var rt  = $('r'+id);
     var val = $('v'+id);
-
     val.value = '';
 
     var i;
@@ -173,7 +172,7 @@ function remove_0val(id) {
     el = $(id);
     for (i = 0; i < el.options.length; i++) {
         if (el.options[i].value == '0') {
-            el.remove(i);
+	    el.removeChild(el.options[i]);
         }
     }
 }
@@ -186,37 +185,26 @@ function fill_userselect(url, id) {
 
 function dualSelect(from, to, id) {
     if (typeof(from) == 'string') {
-        from = $(from+id);
+	from = $(from+id);
     }
     if (typeof(to) == 'string') {
-        to = $(to+id);
+        var to_el = $(to+id);
+	// if (!to_el) alert("no element with id '" + (to+id) + "'");
+	to = to_el;
     }
 
-    var i = 0;
-    var opt;
-
-    while (i < from.options.length) {
-        if (from.options[i].selected) {
-            opt = new Option(from.options[i].text, from.options[i].value);
-            if (to && to.options) {
-              to.options[to.options.length]=opt
-            } else if (to && to.add) {
-              to.add(opt)
-            }
-            if (from.options.length > 1) {
-                try {
-                    from.options[i-1].selected = true;
-                } catch(ex) {
-                    from.options[i+1].selected = true;
-                    from.remove(i);
-                    ++i;
-                    continue;
-                }                
-            }
-            from.remove(i);
-            continue;
-        }
-        i++;
+    var i;
+    var len = from.options.length;
+    for(i=0;i<len;++i) {
+	if (!from.options[i].selected) continue;
+	if (to && to.options)
+	    to.options.appendChild(from.options[i]);
+	else
+	    from.removeChild(from.options[i]);
+	// make the option that is slid down selected (if any)
+	if (len > 1)
+	    from.options[i == len - 1 ? len - 2 : i].selected = true;
+	break;
     }
     
     updateDualSelectValue(id);
@@ -232,18 +220,10 @@ function selectMove(id, step) {
             if (i+step < 0 || i+step > sel.options.length) {
                 return;
             }
-            var opt = new Option(sel.options[i].text, sel.options[i].value);
-            sel.remove(i);
-            try {
-                sel.add(opt, sel.options[i+step]);
-            }
-            catch (ex) {
-                sel.add(opt, i+step);
-            }
-
-            opt.selected = true;
-
-            updateDualSelectValue(id);
+	    if (i + step == sel.options.length)
+		sel.appendChild(sel.options[i]);
+	    else
+		sel.insertBefore(sel.options[i], sel.options[i+step]);
             return;
         }
         i++;
