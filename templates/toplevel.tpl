@@ -11,14 +11,14 @@
   <tr>
     <th><strong>{L('viewtasks')}</strong></th>
     <td>
-        <a href="index.php?do=index&amp;project={$project['project_id']}&amp;status[]=">{L('All')}</a> |
-        <a href="index.php?do=index&amp;project={$project['project_id']}&amp;status[]=open">{L('open')}</a> |
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;status[]=">{L('All')}</a> |
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;status[]=open">{L('open')}</a> |
         <?php if (!$user->isAnon()): ?>
-          <a href="index.php?do=index&amp;project={$project['project_id']}&amp;dev={$user->id}">{L('assignedtome')}</a> |
-          <a href="index.php?do=index&amp;project={$project['project_id']}&amp;only_watched=1">{L('taskswatched')}</a> |
-          <a href="index.php?do=index&amp;project={$project['project_id']}&amp;opened={$user->id}">{L('tasksireported')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;dev={$user->id}">{L('assignedtome')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;only_watched=1">{L('taskswatched')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;opened={$user->id}">{L('tasksireported')}</a> |
         <?php endif; ?>
-        <a href="index.php?do=index&amp;project={$project['project_id']}&amp;openedfrom=-1+week">{L('recentlyopened')}</a>
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;openedfrom=-1+week">{L('recentlyopened')}</a>
     </td>
   </tr>
   <tr>
@@ -49,15 +49,15 @@
   <tr>
     <th><strong>{L('feeds')}</strong></th>
     <td>
-        <b>{L('rss')} 1.0</b> <a href="feed.php?feed_type=rss1&amp;project={$project['project_id']}">{L('opened')}</a> - 
-        <a href="feed.php?feed_type=rss1&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> - 
-        <a href="feed.php?feed_type=rss1&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a> | 
+        <b>{L('rss')} 1.0</b> <a href="{$baseurl}feed.php?feed_type=rss1&amp;project={$project['project_id']}">{L('opened')}</a> - 
+        <a href="{$baseurl}feed.php?feed_type=rss1&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> - 
+        <a href="{$baseurl}feed.php?feed_type=rss1&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a> | 
         <b>{L('rss')} 2.0</b> <a href="feed.php?feed_type=rss2&amp;project={$project['project_id']}">{L('opened')}</a> - 
-        <a href="feed.php?feed_type=rss2&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> -
-        <a href="feed.php?feed_type=rss2&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a> |
+        <a href="{$baseurl}feed.php?feed_type=rss2&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> -
+        <a href="{$baseurl}feed.php?feed_type=rss2&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a> |
         <b>{L('atom')}</b> <a href="feed.php?feed_type=atom&amp;project={$project['project_id']}">{L('opened')}</a> -
-        <a href="feed.php?feed_type=atom&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> -
-        <a href="feed.php?feed_type=atom&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a>
+        <a href="{$baseurl}feed.php?feed_type=atom&amp;topic=edit&amp;project={$project['project_id']}">{L('edited')}</a> -
+        <a href="{$baseurl}feed.php?feed_type=atom&amp;topic=clo&amp;project={$project['project_id']}">{L('closed')}</a>
     </td>
   </tr>
 </table>

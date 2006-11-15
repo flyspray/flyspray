@@ -100,7 +100,7 @@
           </td>
         </tr>
         <?php endif; ?>
-        <?php if ($user->can_change_private($task_details)): ?>
+        <?php if ($user->perms('manage_project')): ?>
             <tr>
               <td><label for="private">{L('private')}</label></td>
               <td>

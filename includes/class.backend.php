@@ -678,7 +678,7 @@ class Backend
         }
 
         $sql_params[] = 'mark_private';
-        $sql_values[] = intval($user->can_change_private($task) && Post::val('mark_private'));
+        $sql_values[] = intval($user->perms('manage_project') && Post::val('mark_private'));
         
         $sql_params[] = 'due_date';
         $sql_values[] = $due_date;
