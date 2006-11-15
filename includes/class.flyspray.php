@@ -999,7 +999,7 @@ class Flyspray
         // I hope we don't have to...
         } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 
-               $type = @explode('; ', @exec(trim('file -bi ' . escapeshellarg($fname))));
+               $type = trim(@exec('file -bi ' . escapeshellarg($fname)));
                     
         }
                 // if wasn't possible to determine , return empty string so
@@ -1007,6 +1007,12 @@ class Flyspray
                 return $type;
     }
 
+    /**
+     * getSvnRev 
+     *  For internal use 
+     * @access public
+     * @return string
+     */
     function getSvnRev()
     {
         if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
