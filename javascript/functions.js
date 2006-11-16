@@ -198,7 +198,7 @@ function dualSelect(from, to, id) {
     for(i=0;i<len;++i) {
 	if (!from.options[i].selected) continue;
 	if (to && to.options)
-	    to.options.appendChild(from.options[i]);
+	    to.appendChild(from.options[i]);
 	else
 	    from.removeChild(from.options[i]);
 	// make the option that is slid down selected (if any)
