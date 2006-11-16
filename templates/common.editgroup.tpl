@@ -1,5 +1,5 @@
 <fieldset class="box"> <legend>{L('editgroup')}</legend>
-    <form action="{$_SERVER['PHP_SELF']}" method="get">
+    <form action="{$_SERVER['SCRIPT_NAME']}" method="get">
         <div>
             <label for="selectgroup">{L('editgroup')}</label>
             <select name="id" id="selectgroup">{!tpl_options(Flyspray::ListGroups($proj->id), Req::num('id'))}</select>
@@ -10,7 +10,7 @@
     </form>
     <hr />
   <?php $group_details = Flyspray::getGroupDetails(Req::num('id')); ?>
-  <form action="{$_SERVER['PHP_SELF']}" method="post">
+  <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
     <table class="box">
       <tr>
         <td>
@@ -148,7 +148,7 @@
   
   <hr />
 
-  <form action="{$_SERVER['PHP_SELF']}" method="post">
+  <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
    <div>
     <h3>{L('groupmembers')}</h3>
     <table id="manage_users_in_groups" class="userlist">

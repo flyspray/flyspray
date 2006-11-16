@@ -36,7 +36,7 @@
 <div id="pm-menu">
 
 <div id="projectselector">
-    <form id="projectselectorform" action="{$_SERVER['PHP_SELF']}" method="get">
+    <form id="projectselectorform" action="{$_SERVER['SCRIPT_NAME']}" method="get">
        <div>
         <select name="project">
           {!tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id)}

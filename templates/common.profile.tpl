@@ -1,4 +1,4 @@
-  <form action="{$_SERVER['PHP_SELF']}" method="post">
+  <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
     <table class="box">
       <tr>
         <td><label for="realname">{L('realname')}</label></td>

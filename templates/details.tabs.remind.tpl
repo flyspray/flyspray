@@ -1,7 +1,7 @@
 <?php if (!$task_details['is_closed']): ?>
   <div id="remind" class="tab">
   
-  <form method="post" action="{$_SERVER['PHP_SELF']}" >
+  <form method="post" action="{$_SERVER['SCRIPT_NAME']}" >
     <table id="reminders" class="userlist">
     <tr>
       <th>

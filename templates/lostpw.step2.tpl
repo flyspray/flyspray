@@ -1,7 +1,7 @@
 <fieldset class="box">
 <legend>{L('changepass')}</legend>
 
-    <form action="{$_SERVER['PHP_SELF']}" method="post">
+    <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
     <table>
       <tr>
         <td><label for="pass1">{L('changepass')}</label></td>

@@ -1,7 +1,7 @@
 <fieldset>
 <legend>{L('registernewuser')}</legend>
 
-<form action="{$_SERVER['PHP_SELF']}" name="registernewuser" method="post" id="registernewuser">
+<form action="{$_SERVER['SCRIPT_NAME']}" name="registernewuser" method="post" id="registernewuser">
   <p>{L('entercode')}</p>
   <table class="box">
     <tr>

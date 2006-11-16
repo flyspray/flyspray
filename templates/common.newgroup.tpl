@@ -1,6 +1,6 @@
 <fieldset><legend>{L('createnewgroup')}</legend>
 
-<form action="{$_SERVER['PHP_SELF']}" method="post" id="newgroup">
+<form action="{$_SERVER['SCRIPT_NAME']}" method="post" id="newgroup">
   <table class="box">
     <tr>
       <td><label for="groupname">{L('groupname')}</label></td>

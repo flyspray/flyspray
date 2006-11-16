@@ -3,7 +3,7 @@
 
     <p>{L('lostpwexplain')}</p>
 
-    <form action="{$_SERVER['PHP_SELF']}" method="post">
+    <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
         <p><b>{L('username')}</b>
 
         <input type="hidden" name="action" value="lostpw.sendmagic" />

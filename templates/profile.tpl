@@ -32,7 +32,7 @@
     <th>{L('projectgroup')}</th>
     <td>
     <?php if ($user->perms('manage_project')): ?>
-    <form method="post" action="{$_SERVER['PHP_SELF']}"><div>
+    <form method="post" action="{$_SERVER['SCRIPT_NAME']}"><div>
       <select id="projectgroupin" class="adminlist" name="project_group_in">
         <?php $sel = $theuser->perms('project_group') == '' ? 0 : $theuser->perms('project_group'); ?>
         {!tpl_options(array_merge($project_groups, array(0 => array('group_name' => L('none'), 0 => 0, 'group_id' => 0, 1 => L('none')))), $sel)}

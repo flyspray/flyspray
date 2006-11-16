@@ -39,7 +39,7 @@
           <?php endif; ?>
           <a href="#" class="button" onclick="showhidestuff('denyform{$req['request_id']}');">{L('deny')}</a>
           <div id="denyform{$req['request_id']}" class="denyform">
-            <form action="{$_SERVER['PHP_SELF']}" method="post">
+            <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
               <div>
                 <input type="hidden" name="action" value="denypmreq" />
                 <input type="hidden" name="req_id" value="{$req['request_id']}" />
