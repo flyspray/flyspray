@@ -24,6 +24,8 @@ if (strlen($lt)) {
     $list_id = $lt . '_id';
 }
 
+function Post_to0($key) { return Post::val($key, 0); }
+
 if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
@@ -457,7 +459,7 @@ switch ($action = Req::val('action'))
                         'close_other_tasks', 'assign_to_self',
                         'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
 
-                $params = array_map(array('Post','num'), $cols);
+                $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
                 
                 $db->Query("INSERT INTO  {groups} (project_id, ". join(',', $cols).")
@@ -599,7 +601,7 @@ switch ($action = Req::val('action'))
                 'intro_message', 'project_is_active', 'others_view', 'anon_open',
                 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url', 'comment_closed', 'auto_assign');
-        $args = array_map(array('Post', 'num'), $cols);
+        $args = array_map('Post_to0', $cols);
         $cols[] = 'notify_types';
         $args[] = implode(' ', Post::val('notify_types'));
         $cols[] = 'last_updated';
@@ -774,7 +776,7 @@ switch ($action = Req::val('action'))
                                   'add_votes', 'group_open'));
         }
 
-        $args = array_map(array('Post','num'), $cols);
+        $args = array_map('Post_to0', $cols);
         $args[] = Post::val('group_id');
         $args[] = $proj->id;
 

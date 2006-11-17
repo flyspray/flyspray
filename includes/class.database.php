@@ -73,7 +73,7 @@ class Database
         $dsn = "$dbtype://$dbuser:$dbpass@$dbhost/$dbname";
         $this->dblink = NewADOConnection($dsn);
 
-        if ($this->dblink === false ) {
+        if ($this->dblink === false || !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix)) {
 
             die('Flyspray was unable to connect to the database. '
                .'Check your settings in flyspray.conf.php');
