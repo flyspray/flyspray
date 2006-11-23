@@ -217,13 +217,16 @@ function selectMove(id, step) {
 
     while (i < sel.options.length) {
         if (sel.options[i].selected) {
-            if (i+step < 0 || i+step > sel.options.length) {
+            if (i+step < 0 || i+step >= sel.options.length) {
                 return;
             }
-	    if (i + step == sel.options.length)
+	    if (i + step == sel.options.length - 1)
 		sel.appendChild(sel.options[i]);
-	    else
+	    else if (step < 0)
 		sel.insertBefore(sel.options[i], sel.options[i+step]);
+	    else
+		sel.insertBefore(sel.options[i], sel.options[i+step+1]);
+            updateDualSelectValue(id);
             return;
         }
         i++;
@@ -511,4 +514,5 @@ function surroundText(text1, text2, textarea)
 		textarea.focus(textarea.value.length - 1);
 	}
 }
+
 

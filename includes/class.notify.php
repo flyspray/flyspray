@@ -328,7 +328,7 @@ class Notifications {
 
       // Set the due version correctly
       if ($task_details['closedby_version'] == '0') {
-         $task_details['closedby_version'] = L('undecided');
+         $task_details['due_in_version_name'] = L('undecided');
       }
 
       // Get the string of modification
@@ -353,7 +353,9 @@ class Notifications {
       );
 
       // Generate the nofication message
-      if ($proj->prefs['notify_subject']) {
+      if ($type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
+          $subject = L('notifyfromfs');
+      } else if ($proj->prefs['notify_subject']) {
           $subject = str_replace(array('%p','%s','%t', '%a'),
                                     array($proj->prefs['project_title'], $task_details['item_summary'], $task_id, $notify_type_msg[$type]),
                                     $proj->prefs['notify_subject']);
@@ -425,8 +427,8 @@ class Notifications {
                               'category_name' => L('category'),
                               'due_date' => L('duedate'),
                               'percent_complete' => L('percentcomplete'),
+                              'mark_private' => L('visibility'),
                               'item_summary' => L('summary'),
-                              'due_in_version_name' => L('dueinversion'),
                               'detailed_desc' => L('taskedited'),
                               'project_title' => L('attachedtoproject'));
                               

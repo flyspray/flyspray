@@ -239,7 +239,6 @@ if ($use_public) {
     $page->assign('map',    $data['map']);
     // Remove files so that they are not exposed to the public
     unlink($unlink);
-    unlink(BASEDIR . '/' . $file_name . '.' . $fmt);    
 }
 
 $page->assign('image', $baseurl . $file_name . '.' . $fmt);

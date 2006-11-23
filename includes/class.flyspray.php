@@ -793,6 +793,11 @@ class Flyspray
                         $new[$key] .= '%';
                         $value .= '%';
                         break;
+
+                    case 'mark_private':
+                        $new[$key] = $new[$key] ? L('private') : L('public');
+                        $value = $value ? L('private') : L('public');
+                        break;
                 }
                 $changes[] = array($key, $value, $new[$key]);
             }

@@ -50,7 +50,7 @@ switch ($action = Req::val('action'))
             $_SESSION['SUCCESS'] = L('newtaskadded');
             
             if ($user->isAnon()) {        
-                Flyspray::Redirect(CreateURL('details', $task_id, null, array('task_token' => $token)));
+                Flyspray::Redirect(CreateURL('details', $task_id, null, array('task_token' => Get::val('task_token'))));
             } else {
                 Flyspray::Redirect(CreateURL('details', $task_id));
             }
