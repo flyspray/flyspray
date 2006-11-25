@@ -636,7 +636,7 @@ class Notifications {
       if ($type == NOTIFY_ANON_TASK)
       {
          $body .= L('thankyouforbug') . "\r\n\r\n";
-         $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1));
+         $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1)) . "\r\n\r\n";
       } // }}}
       // {{{ Password change
       if ($type == NOTIFY_PW_CHANGE)

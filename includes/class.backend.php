@@ -678,7 +678,7 @@ class Backend
         }
 
         $sql_params[] = 'mark_private';
-        $sql_values[] = intval($user->perms('manage_project') && Post::val('mark_private'));
+        $sql_values[] = intval($user->perms('manage_project') && isset($args['mark_private']) && $args['mark_private'] == '1');
         
         $sql_params[] = 'due_date';
         $sql_values[] = $due_date;
@@ -781,12 +781,12 @@ class Backend
         $notify->Create(NOTIFY_TASK_OPENED, $task_id);
 
         // If the reporter wanted to be added to the notification list
-        if ($args['notifyme'] == '1' && $user->id != $owner) {
+        if (isset($args['notifyme']) && $args['notifyme'] == '1' && $user->id != $owner) {
             Backend::add_notification($user->id, $task_id, true);
         }
         
         if ($user->isAnon()) {
-            $notify->Create(NOTIFY_ANON_TASK, $task_id, null, $args['anon_email']);
+            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token, $args['anon_email']);
         }
 
         return $task_id;

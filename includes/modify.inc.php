@@ -803,6 +803,9 @@ switch ($action = Req::val('action'))
 
         foreach ($listnames as $id => $listname) {
             if ($listname != '') {
+                if (!isset($listshow[$id])) {
+                    $listshow[$id] = 0;
+                }
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
@@ -868,6 +871,9 @@ switch ($action = Req::val('action'))
 
         foreach ($listnames as $id => $listname) {
             if (is_numeric($listposition[$id]) && $listnames[$id] != '') {
+                if (!isset($listshow[$id])) {
+                    $listshow[$id] = 0;
+                }
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
@@ -937,6 +943,9 @@ switch ($action = Req::val('action'))
 
         foreach ($listnames as $id => $listname) {
             if ($listname != '') {
+                if (!isset($listshow[$id])) {
+                    $listshow[$id] = 0;
+                }
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
                                               show_in_list = ?, category_owner = ?,

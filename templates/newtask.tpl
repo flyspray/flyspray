@@ -104,7 +104,7 @@
             <tr>
               <td><label for="private">{L('private')}</label></td>
               <td>
-                {!tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private')}
+                {!tpl_checkbox('mark_private', Req::val('mark_private', 0), 'private')}
               </td>
             </tr>
         <?php endif; ?>

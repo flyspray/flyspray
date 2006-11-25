@@ -22,7 +22,7 @@
         <input class="text" id="searchtext" name="string" type="text" size="20"
                maxlength="100" value="{Get::val('string')}" accesskey="q" />
         
-        <input type="hidden" name="project" value="{Get::num('project', 0)}" />
+        <input type="hidden" name="project" value="{Get::num('project', $proj->id)}" />
         <?php if (!$user->isAnon()): ?>
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
         <input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />

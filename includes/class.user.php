@@ -7,7 +7,7 @@ class User
     var $infos = array();
     var $searches = array();
     var $search_keys = array('string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'order', 'sort', 'percent', 'changedfrom', 'closedfrom',
-                             'opened', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
+                             'opened', 'closed', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
                              'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
 
     function User($uid = 0)
@@ -57,13 +57,14 @@ class User
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
                     // XXX: this is not a good idea¡¡ change me later ¡¡
-                    $_GET = array_merge($_GET, $arr);
+                    $_GET     = array_merge($_GET, $arr);
+                    $_REQUEST = array_merge($_REQUEST, $arr);
                 }
             }
             
             $arr = array();
             foreach ($this->search_keys as $key) {
-                $arr[$key] = Get::val($key);
+                $arr[$key] = Get::safe($key);
             }            
             
             $db->Query('UPDATE  {users}
@@ -73,7 +74,7 @@ class User
                         
             if (Get::val('search_name') && $this->didSearch()) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),
-                                'user_id'=> $this->id , 'name'=> Get::val('search_name'));
+                                'user_id'=> $this->id , 'name'=> Get::safe('search_name'));
 
                 $keys = array('name','user_id');
 
