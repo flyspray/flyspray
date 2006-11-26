@@ -318,7 +318,7 @@ switch ($action = Req::val('action'))
         //send the email first.
 
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-                        array(Post::val('email_address')), Post::num('notify_type'))) {
+                        array(Post::val('email_address'), Post::val('jabber_id')), Post::num('notify_type'));
         
                 //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,

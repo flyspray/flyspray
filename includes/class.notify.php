@@ -70,6 +70,7 @@ class Notifications {
       $row = $db->FetchRow($result);
       $message_id = $row['message_id'];
       // make sure every email address is only added once
+      settype($to, 'array');
       $to = array_unique($to);
 
       foreach ($to as $jid)
