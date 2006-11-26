@@ -50,8 +50,13 @@ class Database
      */
     function dbOpenFast($conf)
     {
-        extract($conf, EXTR_REFS|EXTR_SKIP);
-        $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, $dbprefix);
+        if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 6) {
+                
+            die( 'Flyspray was unable to connect to the database. '
+                 .'Check your settings in flyspray.conf.php');
+        }
+
+       $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, $dbprefix);
     }
     
     /**
@@ -73,7 +78,7 @@ class Database
         $dsn = "$dbtype://$dbuser:$dbpass@$dbhost/$dbname";
         $this->dblink = NewADOConnection($dsn);
 
-        if ($this->dblink === false || !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix)) {
+        if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
 
             die('Flyspray was unable to connect to the database. '
                .'Check your settings in flyspray.conf.php');
@@ -151,7 +156,7 @@ class Database
            $result =  $this->dblink->Execute($sql, $inputarr);
         }
 
-        if (!$result || ($hastrans && !$this->dblink->CompleteTrans())) {
+        if (($hastrans && !$this->dblink->CompleteTrans()) || !$result) {
 
             if (function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
@@ -163,7 +168,7 @@ class Database
 
             if(is_array($inputarr) && count($inputarr)) {
                 
-                $query_params =  implode(',', array_map('htmlspecialchars', $inputarr));
+                $query_params =  implode(',', array_map(array('Filters','noXSS'), $inputarr));
             
             } 
 
@@ -269,7 +274,9 @@ class Database
      */
     function _add_prefix($sql_data)
     {
-        return (string) preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
+        return empty($this->dbprefix) 
+               ? $sql_data 
+               : (string) preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
     }
     
     /**
