@@ -801,6 +801,9 @@ $translation = array(
 'showtip'                 => 'Muestra este elemento en la lista',
 'deletetip'               => 'Elimina este elemento de la lista',
 'del'                     => 'eliminar',
+'allpriorities'           => 'Todas las Prioridades',
+'request1'                => 'Se ha solicitado cerrar una tarea.',
+'request2'                => 'Una solicitud para reabrir una tarea ha sido efectuada',
 );
 
 ?>
