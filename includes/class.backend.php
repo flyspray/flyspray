@@ -839,14 +839,14 @@ class Backend
             preg_match("/\b(?:FS#|bug )(\d+)\b/", $comment, $dupe_of);
             if (count($dupe_of) >= 2) {
                 $existing = $db->Query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
-                                            array($task_id, $dupe_of[1]));
+                                        array($task_id, $dupe_of[1]));
                                        
                 if ($existing && $db->CountRows($existing) == 0) {  
                     $db->Query('INSERT INTO {related} (this_task, related_task, is_duplicate) VALUES(?, ?, 1)',
                                 array($task_id, $dupe_of[1]));
                 }
+                Backend::add_vote($task['opened_by'], $dupe_of[1]);
             }
-            Backend::add_vote($task['opened_by'], $dupe_of[1]);
         }
         
         return true;
