@@ -293,7 +293,7 @@ function deletesearch(id, url) {
                 });
 }
 function savesearch(query, baseurl, savetext) {
-    url = baseurl + 'javascript/callbacks/savesearches.php?' + query + '&search_name=' + $('save_search').value;
+    url = baseurl + 'javascript/callbacks/savesearches.php?' + query + '&search_name=' + encodeURIComponent($('save_search').value);
     if($('save_search').value != '') {
         var old_text = $('lblsaveas').firstChild.nodeValue;
         $('lblsaveas').firstChild.nodeValue = savetext;

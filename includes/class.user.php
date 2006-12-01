@@ -64,7 +64,7 @@ class User
             
             $arr = array();
             foreach ($this->search_keys as $key) {
-                $arr[$key] = Get::safe($key);
+                $arr[$key] = Get::val($key);
             }            
             
             $db->Query('UPDATE  {users}
@@ -74,7 +74,7 @@ class User
                         
             if (Get::val('search_name') && $this->didSearch()) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),
-                                'user_id'=> $this->id , 'name'=> Get::safe('search_name'));
+                                'user_id'=> $this->id , 'name'=> Get::val('search_name'));
 
                 $keys = array('name','user_id');
 

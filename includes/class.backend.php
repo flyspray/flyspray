@@ -674,7 +674,7 @@ class Backend
 
         // Process the due_date
         if ( ($due_date = $args['due_date']) || ($due_date = 0) ) {
-            $due_date = strtotime("$due_date +23 hours 59 minutes 59 seconds");
+            $due_date = strtotime($due_date);
         }
 
         $sql_params[] = 'mark_private';
