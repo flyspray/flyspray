@@ -33,16 +33,6 @@ class User
         $this->get_perms();
     }
 
-    /* misc functions {{{ */
-    function didSearch() {
-        foreach ($this->search_keys as $key) {
-            if (Get::has($key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     function save_search($do = 'index')
     {
         global $db;
@@ -53,7 +43,7 @@ class User
         
         // Only logged in users get to use the 'last search' functionality     
         if ($do == 'index') {
-            if(!$this->didSearch() && $this->infos['last_search'] && !Get::has('reset')) {
+            if(!Get::val('did_search') && $this->infos['last_search'] && !Get::has('reset')) {
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
                     // XXX: this is not a good idea¡¡ change me later ¡¡
@@ -72,7 +62,7 @@ class User
                          WHERE  user_id = ?',
                         array(serialize( ((Get::has('reset')) ? array() : $arr) ), $this->id));
                         
-            if (Get::val('search_name') && $this->didSearch()) {
+            if (Get::val('search_name') && Get::val('did_search')) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),
                                 'user_id'=> $this->id , 'name'=> Get::val('search_name'));
 
