@@ -598,6 +598,10 @@ table#duplicate_tasks {
 	margin-left:0.5em;
 }
 
+table th.pm-buttons {
+	width:10em;
+}
+
 /* div#content is a generic container for anything but the title and
 the footer paragraph */
 div#content {
@@ -1088,10 +1092,10 @@ div#fileupload {
 	margin:20px 0;
 }
 
-span.pendingreq {
+div.pendingreq {
 	border:solid 1px red;
 	background:url(em.png) white no-repeat 3px 50%;
-	margin:0 0 0 9px;
+	margin:0.5em 0 0 0px;
 	padding:3px 3px 3px 23px;
 }
 

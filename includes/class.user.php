@@ -43,7 +43,7 @@ class User
         
         // Only logged in users get to use the 'last search' functionality     
         if ($do == 'index') {
-            if(!Get::val('did_search') && $this->infos['last_search'] && !Get::has('reset')) {
+            if (!Get::val('did_search') && $this->infos['last_search'] && !Get::has('reset')) {
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
                     // XXX: this is not a good idea¡¡ change me later ¡¡

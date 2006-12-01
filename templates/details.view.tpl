@@ -16,7 +16,7 @@
 
   <div id="fineprint">
 	 {L('attachedtoproject')} &mdash;
-	 <a href="index.php?project={$task_details['project_id']}">{$task_details['project_title']}</a>
+	 <a href="{$_SERVER['SCRIPT_NAME']}?project={$task_details['project_id']}">{$task_details['project_title']}</a>
 	 <br />
 	 {L('openedby')} {!tpl_userlink($task_details['opened_by'])}
      <?php if ($task_details['anon_email'] && $user->perms('view_tasks')): ?>
@@ -129,7 +129,7 @@
           0
           <?php endif; ?>
           <?php if ($user->can_vote($task_details) > 0): ?>
-          <a href="index.php?action=details.addvote&amp;task_id={$task_details['task_id']}">
+          <a href="{$_SERVER['SCRIPT_NAME']}?action=details.addvote&amp;task_id={$task_details['task_id']}">
             ({L('addvote')})</a>
           <?php elseif ($user->can_vote($task_details) == -2): ?>
           ({L('alreadyvotedthistask')})
@@ -148,10 +148,10 @@
             <?php endif; ?>
             
             <?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
-            <a href="index.php?action=makepublic&amp;task_id={$task_details['task_id']}">
+            <a href="{$_SERVER['SCRIPT_NAME']}?action=makepublic&amp;task_id={$task_details['task_id']}">
             ({L('makepublic')})</a>
             <?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
-            <a href="index.php?action=makeprivate&amp;task_id={$task_details['task_id']}">
+            <a href="{$_SERVER['SCRIPT_NAME']}?action=makeprivate&amp;task_id={$task_details['task_id']}">
                ({L('makeprivate')})</a>
             <?php endif; ?>
           </td>
@@ -168,11 +168,11 @@
             
               <?php if (!$watched): ?>
               <a accesskey="w"
-              href="index.php?action=details.add_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}">
+              href="{$_SERVER['SCRIPT_NAME']}?action=details.add_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}">
               ({L('watchtask')})</a>
               <?php else: ?>
               <a accesskey="w"
-              href="index.php?action=remove_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}">
+              href="{$_SERVER['SCRIPT_NAME']}?action=remove_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}">
               ({L('stopwatching')})</a>
               <?php endif; ?>
           </td>
@@ -205,7 +205,7 @@
 		<?php if ($user->can_edit_task($task_details)): ?>
 		<span class="DoNotPrint"> &mdash;
 		  <a class="removedeplink"
-			 href="index.php?action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}">
+			 href="{$_SERVER['SCRIPT_NAME']}?action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}">
 			 {L('remove')}</a>
 		</span>
 		<?php endif; ?>
@@ -262,7 +262,7 @@
 	 <?php if ($task_details['is_closed']): ?>
 
 	 <?php if ($user->can_close_task($task_details)): ?>
-	 <a class="button" href="index.php?action=reopen&amp;task_id={$task_details['task_id']}">
+	 <a class="button" href="{$_SERVER['SCRIPT_NAME']}?action=reopen&amp;task_id={$task_details['task_id']}">
 		{L('reopenthistask')}</a>
 	 <?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
 	 <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');">
@@ -321,13 +321,13 @@
 
 	 <?php if ($user->can_take_ownership($task_details)): ?>
 	 <a id="own" class="button"
-		href="index.php?action=takeownership&amp;ids={$task_details['task_id']}">
+		href="{$_SERVER['SCRIPT_NAME']}?action=takeownership&amp;ids={$task_details['task_id']}">
 		{L('assigntome')}</a>
 	 <?php endif; ?>
 
 	 <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
 	 <a id="own_add" class="button"
-		href="index.php?action=addtoassignees&amp;ids={$task_details['task_id']}">
+		href="{$_SERVER['SCRIPT_NAME']}?action=addtoassignees&amp;ids={$task_details['task_id']}">
 		{L('addmetoassignees')}</a>
 	 <?php endif; ?>
 
@@ -338,11 +338,11 @@
 
 	 <?php endif; ?>
 	 <?php if (count($penreqs)): ?>
-     <span class="pendingreq"><strong>{formatDate($penreqs[0]['time_submitted'])}: {L('request'.$penreqs[0]['request_type'])}</strong>
+     <div class="pendingreq"><strong>{formatDate($penreqs[0]['time_submitted'])}: {L('request'.$penreqs[0]['request_type'])}</strong>
      <?php if ($penreqs[0]['reason_given']): ?>
      {L('reasonforreq')}: {$penreqs[0]['reason_given']}
      <?php endif; ?>
-     </span>
+     </div>
      <?php endif; ?>
   </div>
 </div>

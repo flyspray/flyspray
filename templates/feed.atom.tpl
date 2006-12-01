@@ -10,7 +10,7 @@
   <?php endif; ?>
   <updated>{date('Y-m-d\TH:i:s\Z',$most_recent)}</updated>
   <link rel="self" type="text/xml" href="feed.php?feed_type=atom"/>
-  <link rel="alternate" type="text/html" hreflang="en" href="index.php"/>
+  <link rel="alternate" type="text/html" hreflang="en" href="{$_SERVER['SCRIPT_NAME']}"/>
   <?php foreach ($task_details as $row): ?>
   <entry>
     <title>{$row['item_summary']}</title>

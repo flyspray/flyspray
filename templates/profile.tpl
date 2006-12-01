@@ -54,7 +54,7 @@
     </td>
   </tr>
   <tr>
-    <th><a href="index.php?opened={$theuser->id}&amp;status[]=">{L('tasksopened')}</a></th>
+    <th><a href="{$_SERVER['SCRIPT_NAME']}?opened={$theuser->id}&amp;status[]=">{L('tasksopened')}</a></th>
     <td>
       {$tasks}
     </td>

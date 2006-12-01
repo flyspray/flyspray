@@ -4,7 +4,7 @@
       <?php foreach ($attachments as $attachment): ?>
       <tr>
         <td>
-          <a href="index.php?getfile={$attachment['attachment_id']}" title="{$attachment['file_type']}">
+          <a href="{$_SERVER['SCRIPT_NAME']}?getfile={$attachment['attachment_id']}" title="{$attachment['file_type']}">
           <?php
           // Strip the mimetype to get the icon image name
           list($main) = explode('/', $attachment['file_type']);
