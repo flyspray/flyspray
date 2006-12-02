@@ -47,8 +47,8 @@ class User
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
                     // XXX: this is not a good idea¡¡ change me later ¡¡
-                    $_GET     = array_merge($_GET, $arr);
-                    $_REQUEST = array_merge($_REQUEST, $arr);
+                    $_GET     = array_merge($_GET, $arr, array('did_search' => 1));
+                    $_REQUEST = array_merge($_REQUEST, $arr, array('did_search' => 1));
                 }
             }
             

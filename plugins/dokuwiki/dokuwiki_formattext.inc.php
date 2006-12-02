@@ -21,7 +21,7 @@ class dokuwiki_TextFormatter
         // Create a renderer
         $Renderer = & new Doku_Renderer_XHTML();
 
-        if (!$instructions) {
+        if (!is_array($instructions) || !count($instructions)) {
             $modes = p_get_parsermodes();
             
             $Parser = & new Doku_Parser();

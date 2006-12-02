@@ -579,7 +579,7 @@ function formatDate($timestamp, $extended = false, $default = '')
 
     $dateformat = '';
     $format_id  = $extended ? 'dateformat_extended' : 'dateformat';
-    $st = date('Z')/3600-1; // server GMT timezone
+    $st = date('Z')/3600; // server GMT timezone
 
     if (!$user->isAnon()) {
         $dateformat = $user->infos[$format_id];
