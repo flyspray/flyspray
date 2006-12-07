@@ -8,7 +8,7 @@ class User
     var $searches = array();
     var $search_keys = array('string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'order', 'sort', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
-                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
+                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment', 'did_search');
 
     function User($uid = 0)
     {
@@ -46,9 +46,9 @@ class User
             if (!Get::val('did_search') && $this->infos['last_search'] && !Get::has('reset')) {
                 $arr = unserialize($this->infos['last_search']);
                 if (is_array($arr) && count($arr)) {
-                    // XXX: this is not a good idea¡¡ change me later ¡¡
-                    $_GET     = array_merge($_GET, $arr, array('did_search' => 1));
-                    $_REQUEST = array_merge($_REQUEST, $arr, array('did_search' => 1));
+                    // XXX: this is not a good idea - all this crap will be removed in 1.0 ^^
+                    $_GET     = array_merge($_GET, $arr);
+                    $_REQUEST = array_merge($_REQUEST, $arr);
                 }
             }
             
@@ -62,7 +62,7 @@ class User
                          WHERE  user_id = ?',
                         array(serialize( ((Get::has('reset')) ? array() : $arr) ), $this->id));
                         
-            if (Get::val('search_name') && Get::val('did_search')) {
+            if (Get::val('search_name')) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),
                                 'user_id'=> $this->id , 'name'=> Get::val('search_name'));
 

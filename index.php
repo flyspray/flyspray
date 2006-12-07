@@ -21,7 +21,7 @@ if ($conf['general']['reminder_daemon'] == '1') {
 $modes = array();
 $dir = dir(BASEDIR . '/scripts');
 while (($entry = $dir->read()) !== false) {
-    if ($entry{0} == '.' || $entry{0} == '..') {
+    if ($entry{0} == '.') {
         continue;
     }
     

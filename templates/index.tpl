@@ -27,7 +27,7 @@
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
         <input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />
         &nbsp;<button onclick="savesearch('{$_SERVER['QUERY_STRING']}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
-        <?php if (Get::val('did_search')): ?>
+        <?php if (Get::val('did_search') && !Get::val('reset')): ?>
         <button type="submit" name="reset" value="1">{L('reset')}</button>
         <?php endif; ?>
         </span>
