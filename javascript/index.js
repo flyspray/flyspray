@@ -1,7 +1,13 @@
 Event.observe(window,'load',tasklistInit);
+Event.observe(window,'load',searchInit);
 
 function tasklistInit() {
   Caret.init();
+}
+function searchInit() {
+  if (navigator.appVersion.match(/\bMSIE 6\.0\b/) && $('searchthisproject') && $('reset')) {
+    Event.observe('searchthisproject','click',function() {$('reset').remove();});
+  }
 }
 var Caret = {
   init: function () {
@@ -59,6 +65,7 @@ var Caret = {
     }
     // we've reached the bottom of the list
     if ($('next')) {
+      Cookie.setVar('current_task','top');
       window.location = $('next').href;
       return;
     }
@@ -80,4 +87,5 @@ var Caret = {
     
   }
 };
+
 

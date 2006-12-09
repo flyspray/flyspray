@@ -67,6 +67,7 @@
         </tr>
         <?php endif; ?>
       </table>
+      <?php if (count($categories)): ?>
       <script type="text/javascript">
         <?php
             echo 'TableControl.create("catTable",{
@@ -79,6 +80,7 @@
             });';
         ?>
       </script>
+      <?php endif; ?>
     </form>
 
     <hr />

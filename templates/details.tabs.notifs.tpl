@@ -8,7 +8,7 @@
   <?php endforeach; ?>
 
   <?php if ($user->perms('manage_project')): ?>
-  <form action="index.php#notify" method="get">
+  <form action="{$_SERVER['SCRIPT_NAME']}index.php#notify" method="get">
     <p>
         <label class="default multisel" for="notif_user_id">{L('addusertolist')}</label>
         {!tpl_userselect('user_id', Req::val('user_id'), 'notif_user_id')}

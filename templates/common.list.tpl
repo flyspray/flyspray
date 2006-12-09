@@ -68,6 +68,7 @@
     </tr>
     <?php endif; ?>
   </table>
+  <?php if (count($rows)): ?>
   <script type="text/javascript">
         <?php
             echo 'TableControl.create("listTable",{
@@ -78,7 +79,8 @@
                 handle: "grip"
             });';
         ?>
-      </script>
+  </script>
+  <?php endif; ?>
 </form>
 <hr />
 <form action="{$_SERVER['SCRIPT_NAME']}" method="post">

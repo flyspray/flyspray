@@ -166,11 +166,11 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
         $task = Flyspray::GetTaskDetails($td_id, true);
     }
 
-    if ($strict === true && !$user->can_view_task($task)) {
+    if ($strict === true && (!is_object($user) || !$user->can_view_task($task))) {
         return '';
     }
 
-    if ($user->can_view_task($task)) {
+    if (is_object($user) && $user->can_view_task($task)) {
         $summary = utf8_substr($task['item_summary'], 0, 64);
     } else {
         $summary = L('taskmadeprivate');

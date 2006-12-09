@@ -18,7 +18,7 @@
   <map id="projectsearchform" name="projectsearchform">
     <form action="{$_SERVER['SCRIPT_NAME']}" method="get">
       <div>
-        <button type="submit">{L('searchthisproject')}</button>
+        <button id="searchthisproject" type="submit">{L('searchthisproject')}</button>
         <input class="text" id="searchtext" name="string" type="text" size="20"
                maxlength="100" value="{Get::val('string')}" accesskey="q" />
         
@@ -28,7 +28,7 @@
         <input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />
         &nbsp;<button onclick="savesearch('{$_SERVER['QUERY_STRING']}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
         <?php if (Get::val('did_search') && !Get::val('reset')): ?>
-        <button type="submit" name="reset" value="1">{L('reset')}</button>
+        <button id="reset" type="submit" name="reset" value="1">{L('reset')}</button>
         <?php endif; ?>
         </span>
         <?php endif; ?>
