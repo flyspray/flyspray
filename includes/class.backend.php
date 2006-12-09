@@ -674,7 +674,7 @@ class Backend
 
         // Process the due_date
         if ( ($due_date = $args['due_date']) || ($due_date = 0) ) {
-            $due_date = strtotime($due_date);
+            $due_date = Flyspray::strtotime($due_date);
         }
 
         $sql_params[] = 'mark_private';
@@ -1045,11 +1045,11 @@ class Backend
         foreach ($dates as $post => $db_key) {
             if ($date = array_get($args, $post . 'from')) {
                 $where[]      = '(' . $db_key . ' >= ?)';
-                $sql_params[] = strtotime($date);
+                $sql_params[] = Flyspray::strtotime($date);
             }
             if ($date = array_get($args, $post . 'to')) {
                 $where[]      = '(' . $db_key . ' <= ? AND ' . $db_key . ' > 0)';
-                $sql_params[] = strtotime($date);
+                $sql_params[] = Flyspray::strtotime($date);
             }
         }
 

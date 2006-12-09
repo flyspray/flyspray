@@ -1007,9 +1007,32 @@ class Flyspray
                $type = trim(@exec('file -bi ' . escapeshellarg($fname)));
                     
         }
-                // if wasn't possible to determine , return empty string so
-                // we can use the browser reported mime-type (probably fake) 
-                return $type;
+        // if wasn't possible to determine , return empty string so
+        // we can use the browser reported mime-type (probably fake) 
+        return $type;
+    }
+    
+    /**
+     * Works like strtotime, but it considers the user's timezone
+     * @access public
+     * @param string $time
+     * @return integer
+     */
+    function strtotime($time)
+    {
+        global $user;
+        
+        $time = strtotime($time);
+        
+        if (!$user->isAnon()) {
+            $st = date('Z')/3600; // server GMT timezone
+            // Example: User is GMT+3, Server GMT-2.
+            // User enters 7:00. For the server it must be converted to 2:00 (done below)
+            $time += ($st - $user->infos['time_zone']) * 60 * 60;
+            // later it adds 5 hours to 2:00 for the user when the date is displayed.
+        }
+        
+        return $time;
     }
 
     /**
@@ -1026,8 +1049,7 @@ class Flyspray
         }
         
         return '';
-    }
-    
+    }    
 
 }
 ?>

@@ -75,7 +75,7 @@ switch ($action = Req::val('action'))
 
 
         if ($due_date = Post::val('due_date', 0)) {
-            $due_date = strtotime(Post::val('due_date'));
+            $due_date = Flyspray::strtotime(Post::val('due_date'));
             Backend::add_reminder($task['task_id'], L('defaultreminder') . "\n\n" . CreateURL('details', $task['task_id']), 2*24*60*60, time());
         }
 
@@ -1174,7 +1174,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.addreminder':        
         $how_often  = Post::val('timeamount1', 1) * Post::val('timetype1');
-        $start_time = strtotime(Post::val('timeamount2', 0));
+        $start_time = Flyspray::strtotime(Post::val('timeamount2', 0));
         
         if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, Post::val('to_user_id'))) {
             Flyspray::show_error(L('usernotexist'));

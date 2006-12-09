@@ -73,9 +73,9 @@ if ($proj->id) {
 
 if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
         $where .= ' AND ';
-        $ufromdate = strtotime($fromdate) + 0;
+        $ufromdate = Flyspray::strtotime($fromdate) + 0;
         $todate = Req::val('todate');
-        $utodate   = strtotime($todate) + 86400;
+        $utodate   = Flyspray::strtotime($todate) + 86400;
         
         if ($fromdate) {
             $where .= ' h.event_date > ?';
