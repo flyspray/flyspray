@@ -69,6 +69,13 @@ class Notifications {
 
       $row = $db->FetchRow($result);
       $message_id = $row['message_id'];
+      
+      // If message could not be inserted for
+      // whatever reason...
+      if (!$message_id) {
+          return false;
+      }
+    
       // make sure every email address is only added once
       settype($to, 'array');
       $to = array_unique($to);

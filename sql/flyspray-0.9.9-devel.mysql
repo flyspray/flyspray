@@ -416,3 +416,6 @@ UPDATE flyspray_prefs SET pref_value = '%A, %d %B %Y, %H:%M %GMT' WHERE pref_id 
 
 -- Florian Schmitz, 8 November 2006
 ALTER TABLE `flyspray_groups` DROP `view_attachments`;
+
+-- Florian Schmitz, 9 December 2006 FS#1140 (subjects were not inserted when too long)
+ALTER TABLE `flyspray_notification_messages` CHANGE `message_subject` `message_subject` VARCHAR( 100 ) NOT NULL;

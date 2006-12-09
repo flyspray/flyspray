@@ -13,11 +13,11 @@ foreach($milestone['open_tasks'] as $task): ?>
 </p>
 
 <p>{$milestone['percent_complete']} {L('of')}
-   <a href="{$_SERVER['SCRIPT_NAME']}?tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}&amp;status[]=">
+   <a href="{$_SERVER['SCRIPT_NAME']}?tasks=&amp;did_search=1&amp;project={$proj->id}&amp;due={$milestone['id']}&amp;status[]=">
      {count($milestone['all_tasks'])} {L('tasks')}
    </a> {L('completed')}
    <?php if(count($milestone['open_tasks'])): ?>
-   <a href="{$_SERVER['SCRIPT_NAME']}?tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}">{count($milestone['open_tasks'])} {L('opentasks')}:</a>
+   <a href="{$_SERVER['SCRIPT_NAME']}?tasks=&amp;did_search=1&amp;project={$proj->id}&amp;due={$milestone['id']}">{count($milestone['open_tasks'])} {L('opentasks')}:</a>
    <?php endif; ?>
 </p>
 
