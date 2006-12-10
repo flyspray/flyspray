@@ -334,9 +334,8 @@ function showPreview(textfield, baseurl, field)
     img.alt = 'Loading...';
     preview.appendChild(img);
     
-    var text = new String($(textfield).value);
-    text = text.replace(/&/g,'%26');
-    text = text.replace(/=/g,'%3D');
+    var text = $(textfield).value;
+    text = encodeURIComponent(text);
     var url = baseurl + 'javascript/callbacks/getpreview.php';
     var myAjax = new Ajax.Updater(field, url, {parameters:'text=' + text, method: 'post'});
 

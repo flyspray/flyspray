@@ -158,7 +158,7 @@ class FSTpl extends Tpl
 function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $title = array('status','summary','percent_complete'))
 {
     global $user;
-    
+
     $params = array();
 
     if (!is_array($task) || !isset($task['status_name'])) {
@@ -180,7 +180,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
         $text = 'FS#'. (int) $task['task_id'] . ' - '. htmlspecialchars($summary, ENT_QUOTES, 'utf-8');
     } elseif(is_string($text)) {
         $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
-    }else {
+    } else {
         //we can't handle non-string stuff here.
         return '';
     }

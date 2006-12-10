@@ -97,6 +97,7 @@
         <input type="hidden" name="project_id" value="{$proj->id}" />
         <input type="hidden" name="area" value="{Req::val('area')}" />
         <?php endif; ?>
+        <input type="hidden" name="do" value="{Req::val('do')}" />
         <input id="listnamenew" class="text" type="text" size="15" maxlength="40" value="{Req::val('list_name')}" name="list_name" />
       </td>
       <td>
