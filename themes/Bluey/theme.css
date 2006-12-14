@@ -1463,6 +1463,7 @@ blockquote blockquote {
 .code .kw5,.code .re0,.code .re1,.code .re2 {color:#00f;}
 
 .acronym {cursor:help;}
+em.u {text-decoration:underline;font-style:normal}
 /* }}} */
 /* Stuff for the autocomplete lists {{{ */
 
