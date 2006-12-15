@@ -44,7 +44,7 @@
   </form>
 
   <fieldset><legend>{L('addreminder')}</legend>
-  <form action="{$_SERVER['SCRIPT_NAME']}index.php#remind" method="post" id="formaddreminder">
+  <form action="{$_SERVER['SCRIPT_NAME']}#remind" method="post" id="formaddreminder">
     <div>
       <input type="hidden" name="action" value="details.addreminder" />
       <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
