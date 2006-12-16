@@ -1055,11 +1055,15 @@ switch ($action = Req::val('action'))
         }
 
         foreach (Post::val('related_id') as $related) {
+            $sql = $db->Query('SELECT this_task, related_task FROM {related} WHERE related_id = ?',
+                              array($related));
             $db->Query('DELETE FROM {related} WHERE related_id = ? AND (this_task = ? OR related_task = ?)',
-                       array($related, $task['task_id'], $task['task_id']));
+                        array($related, $task['task_id'], $task['task_id']));
             if ($db->AffectedRows()) {
-                Flyspray::logEvent($task['task_id'], 12, $related);
-                Flyspray::logEvent($related, 12, $task['task_id']);
+                $related_task = $db->FetchRow($sql);
+                $related_task = ($related_task['this_task'] == $task['task_id']) ? $related_task['related_task'] : $task['task_id'];
+                Flyspray::logEvent($task['task_id'], 12, $related_task);
+                Flyspray::logEvent($related_task, 12, $task['task_id']);
                 $_SESSION['SUCCESS'] = L('relatedremoved');
             }
         }
