@@ -157,7 +157,7 @@ class Filters {
      */
     function num($data)
     {
-         return ctype_digit((string)$data) ? intval($data) : 0;
+         return intval($data); // no further checks here please
     }
     
     /**
