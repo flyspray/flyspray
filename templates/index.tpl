@@ -7,7 +7,7 @@
 
 <?php if(isset($updatemsg)): ?>
 <div id="updatemsg">
-    <a href="http://flyspray.rocks.cc/">{L('updatefs')}</a> {L('currentversion')}
+    <a href="http://flyspray.org/">{L('updatefs')}</a> {L('currentversion')}
     <span class="bad">{$fs->version}</span> {L('latestversion')} <span class="good">{$_SESSION['latest_version']}</span>.
     <a href="?hideupdatemsg=yep">{L('hidemessage')}</a>
 </div>

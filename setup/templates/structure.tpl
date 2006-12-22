@@ -25,8 +25,8 @@
             <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'administration')) ? 'class="step-on"' : ''; ?>>Administration</div>
             <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'complete')) ? 'class="step-on"' : ''; ?>>Install {$product_name}</div>
             <h1>Docs</h1>
-            <div><a href="http://flyspray.rocks.cc/manual/installation" title="Installation guide" target="_blank" title="User Manual">Install Guide</a></div>
-            <div><a href="http://flyspray.rocks.cc/development#installing_the_development_version" target="_blank" title="Developer's Manual">Developer's Manual</a> </div>
+            <div><a href="http://flyspray.org/manual/installation" title="Installation guide" target="_blank" title="User Manual">Install Guide</a></div>
+            <div><a href="http://flyspray.org/development#installing_the_development_version" target="_blank" title="Developer's Manual">Developer's Manual</a> </div>
           </div><!-- End of stepbar -->		
             {!$body}
         </div><!-- End of install -->

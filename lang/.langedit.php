@@ -2,7 +2,7 @@
 /* .langedit.php
  *
  * Translation tool for the Flyspray Bug Tracker System
- * http://flyspray.rocks.cc
+ * http://flyspray.org
  *
  * Author
  *  Lars-Erik Hoffsten

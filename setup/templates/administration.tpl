@@ -72,7 +72,7 @@
 				scheduler (like "cron") to make a download program (like "wget") to retrieve the file every five or 
 				ten minutes. You don't need to save it anywhere, just send it to the bit bucket. Merely retrieving 
 				the file causes it to run, and thus, send the reminders out. More details can be obtained at 
-				<a href="http://flyspray.rocks.cc/manual/reminders" target="_blank">http://flyspray.rocks.cc/manual/reminders</a>.
+				<a href="http://flyspray.org/manual/reminders" target="_blank">http://flyspray.org/manual/reminders</a>.
 				Meanwhile you can proceed to complete the installation process.
 				</p>
 				<?php
