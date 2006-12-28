@@ -8,7 +8,7 @@ class User
     var $searches = array();
     var $search_keys = array('string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'order', 'sort', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
-                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment', 'did_search');
+                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
 
     function User($uid = 0)
     {
@@ -42,25 +42,11 @@ class User
         }
         
         // Only logged in users get to use the 'last search' functionality     
-        if ($do == 'index') {
-            if (!Get::val('did_search') && $this->infos['last_search'] && !Get::has('reset')) {
-                $arr = unserialize($this->infos['last_search']);
-                if (is_array($arr) && count($arr)) {
-                    // XXX: this is not a good idea - all this crap will be removed in 1.0 ^^
-                    $_GET     = array_merge($_GET, $arr);
-                    $_REQUEST = array_merge($_REQUEST, $arr);
-                }
-            }
-            
+        if ($do == 'index') {           
             $arr = array();
             foreach ($this->search_keys as $key) {
                 $arr[$key] = Get::val($key);
             }            
-            
-            $db->Query('UPDATE  {users}
-                           SET  last_search = ?
-                         WHERE  user_id = ?',
-                        array(serialize( ((Get::has('reset')) ? array() : $arr) ), $this->id));
                         
             if (Get::val('search_name')) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),

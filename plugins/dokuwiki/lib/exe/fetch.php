@@ -46,13 +46,6 @@
       exit;
     }
 
-    //check permissions (namespace only)
-    if(auth_quickaclcheck(getNS($MEDIA).':X') < AUTH_READ){
-      header("HTTP/1.0 401 Unauthorized");
-      //fixme add some image for imagefiles
-      print 'Unauthorized';
-      exit;
-    }
     $FILE  = mediaFN($MEDIA);
   }
 

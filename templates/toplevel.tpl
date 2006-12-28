@@ -11,14 +11,14 @@
   <tr>
     <th><strong>{L('viewtasks')}</strong></th>
     <td>
-        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;status[]=">{L('All')}</a> |
-        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;status[]=open">{L('open')}</a> |
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;status[]=">{L('All')}</a> |
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;status[]=open">{L('open')}</a> |
         <?php if (!$user->isAnon()): ?>
-          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;dev={$user->id}">{L('assignedtome')}</a> |
-          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;only_watched=1">{L('taskswatched')}</a> |
-          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;opened={$user->id}">{L('tasksireported')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;dev={$user->id}">{L('assignedtome')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;only_watched=1">{L('taskswatched')}</a> |
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;opened={$user->id}">{L('tasksireported')}</a> |
         <?php endif; ?>
-        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;did_search=1&amp;project={$project['project_id']}&amp;openedfrom=-1+week">{L('recentlyopened')}</a>
+        <a href="{$_SERVER['SCRIPT_NAME']}?do=index&amp;project={$project['project_id']}&amp;openedfrom=-1+week">{L('recentlyopened')}</a>
     </td>
   </tr>
   <tr>
