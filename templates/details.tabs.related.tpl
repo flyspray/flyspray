@@ -49,7 +49,7 @@
       <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
       <label>{L('addnewrelated')}
         <input name="related_task" id="related_task_input" type="text" class="text" size="10" maxlength="10" /></label>
-      <button type="submit" onclick="return checkok('{$baseurl}javascript/callbacks/checkrelated.php?related_task=' + $('related_task_input').value + '&amp;project={$proj->id}', '{L('relatedproject')}', 'formaddrelatedtask')">{L('add')}</button>
+      <button type="submit" onclick="return checkok('{$baseurl}javascript/callbacks/checkrelated.php?related_task=' + $('related_task_input').value + '&amp;project={$proj->id}', '{#L('relatedproject')}', 'formaddrelatedtask')">{L('add')}</button>
     </div>
   </form>
   <?php endif; ?>

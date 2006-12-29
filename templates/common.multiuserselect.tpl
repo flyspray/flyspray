@@ -1,6 +1,6 @@
                 <div>
                    {!tpl_userselect('assigned_select', null, 'assigned_select', array('width' => 22, 'onkeydown' => 'return entercheck(event, false)', 'onkeyup' => 'return entercheck(event, true)'))}
-                   <button type="button" onmouseup="adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{!addslashes(L('usernotexist'))}')">
+                   <button type="button" onmouseup="adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{#(L('usernotexist'))}')">
                       +
                    </button>
                    <button type="button" onmouseup="dualSelect('r', '', 'assigned_to')">
@@ -20,7 +20,7 @@
                     keynum = (e.keyCode) ? e.keyCode : e.which;
                     if (keynum == 13) {
                         if (add && $('assigned_select').value) {
-                            adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{!addslashes(L('usernotexist'))}');
+                            adduserselect('{$baseurl}javascript/callbacks/useradd.php', $('assigned_select').value, 'assigned_to', '{#(L('usernotexist'))}');
                         }
                         return false;
                     }
