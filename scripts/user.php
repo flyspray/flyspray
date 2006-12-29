@@ -29,6 +29,9 @@ $page->assign('comments', $db->fetchOne($sql));
 $sql = $db->Query('SELECT count(*) FROM {tasks} WHERE opened_by = ?', array($theuser->id));
 $page->assign('tasks', $db->fetchOne($sql));
 
+$sql = $db->Query('SELECT count(*) FROM {assigned} WHERE user_id = ?', array($theuser->id));
+$page->assign('assigned', $db->fetchOne($sql));
+
 $page->assign('theuser', $theuser);
 
 $page->setTitle($fs->prefs['page_title'] . L('viewprofile'));

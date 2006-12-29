@@ -46,7 +46,7 @@
     </div></form>
     <?php else: ?>
       <?php if ($theuser->perms('project_group')): ?>
-      {$project_groups[Flyspray::array_find('group_id', $theuser->infos['project_group'], $project_groups)]['group_name']}
+      {$project_groups[Flyspray::array_find('group_id', $theuser->perms('project_group'), $project_groups)]['group_name']}
       <?php else: ?>
       {L('none')}
       <?php endif; ?>
@@ -57,6 +57,12 @@
     <th><a href="{$_SERVER['SCRIPT_NAME']}?opened={$theuser->id}&amp;status[]=">{L('tasksopened')}</a></th>
     <td>
       {$tasks}
+    </td>
+  </tr>
+  <tr>
+    <th><a href="{$_SERVER['SCRIPT_NAME']}?dev={$theuser->id}">{L('assignedto')}</a></th>
+    <td>
+      {$assigned}
     </td>
   </tr> 
   <tr>
