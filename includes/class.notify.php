@@ -10,7 +10,7 @@
 class Notifications {
 
    // {{{ Wrapper function for all others 
-   function Create ( $type, $task_id, $info = null, $to = null, $ntype = 3)
+   function Create ( $type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH)
    {
       if (is_null($to)) {
           $to = $this->Address($task_id, $type);

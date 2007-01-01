@@ -13,7 +13,7 @@
     </tr>
     <tr>
       <td><label for="emailaddress">{L('emailaddress')}</label></td>
-      <td><input id="emailaddress" value="{Req::val('email_address')}" name="email_address" class="text" type="text" size="20" maxlength="100" /></td>
+      <td><input id="emailaddress" value="{Req::val('email_address')}" name="email_address" class="required text" type="text" size="20" maxlength="100" /></td>
     </tr>
     <tr>
       <td><label for="jabberid">{L('jabberid')}</label></td>

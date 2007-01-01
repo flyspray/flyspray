@@ -247,9 +247,7 @@ switch ($action = Req::val('action'))
         }
         
         if (!Post::val('user_name') || !Post::val('real_name')
-            || (!Post::val('email_address') && Post::num('notify_type') == '1')
-            || (!Post::val('jabber_id') && Post::num('notify_type') == '2')
-            || (!Post::val('jabber_id') && !Post::val('email_address') && Post::num('notify_type') == '3')
+            || !Post::val('email_address'))
         ) {
             // If the form wasn't filled out correctly, show an error
             Flyspray::show_error(L('registererror'));
@@ -318,7 +316,7 @@ switch ($action = Req::val('action'))
         //send the email first.
 
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-            array(Post::val('email_address'), Post::val('jabber_id')), Post::num('notify_type'))) {
+                           Post::val('email_address'), NOTIFY_EMAIL)) {
         
                 //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,
@@ -391,9 +389,7 @@ switch ($action = Req::val('action'))
         }
 
         if (!Post::val('user_name') || !Post::val('real_name')
-            || (!Post::val('email_address') && Post::num('notify_type') == '1')
-            || (!Post::val('jabber_id') && Post::num('notify_type') == '2')
-            || (!Post::val('jabber_id') && !Post::val('email_address') && Post::num('notify_type') == '3')
+            || !Post::val('email_address'))
         ) {
             // If the form wasn't filled out correctly, show an error
             Flyspray::show_error(L('registererror'));

@@ -167,7 +167,6 @@ class fsJabberConnector extends CJP_StandardConnector {
             $record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
             if (!empty($record)) {
                 $server = $record[0]["target"];
-                $port = $record[0]["port"];
             }
         }
         

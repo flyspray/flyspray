@@ -76,7 +76,7 @@ class fsJabberInfo {
      */
     function getInfo()
     {
-        $info = get_object_vars(&$this);
+        $info = get_object_vars($this);
         $results = array();
         
         foreach($info as $property=>$value) {

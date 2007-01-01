@@ -50,7 +50,7 @@ class Tpl
             $item = preg_replace( '/{!([^\s&][^{}]*)}(\n?)/', '<?php echo \1; ?>\2\2', $item);
             // For lang strings in Javascript
             $item = preg_replace( '/{#([^\s&][^{}]*)}(\n?)/',
-                    '<?php echo Filters::noXSS(addslashes(\1)); ?>\2\2', $item);
+                    '<?php echo Filters::noXSS(utf8_str_replace("\'", "\\\'", \1)); ?>\2\2', $item);
             $item = preg_replace( '/{([^\s&][^{}]*)}(\n?)/',
                     '<?php echo Filters::noXSS(\1); ?>\2\2', $item);
         }
