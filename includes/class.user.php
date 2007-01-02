@@ -33,6 +33,14 @@ class User
         $this->get_perms();
     }
 
+    /**
+     * save_search 
+     * 
+     * @param string $do 
+     * @access public
+     * @return void
+     * @notes FIXME: must return something, should not merge _GET and _REQUEST with other stuff.
+     */
     function save_search($do = 'index')
     {
         global $db;

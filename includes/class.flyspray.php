@@ -995,7 +995,7 @@ class Flyspray
 
         if (extension_loaded('fileinfo') && class_exists('finfo')) {
 
-            $info = $info = new finfo(FILEINFO_MIME);                 
+            $info = new finfo(FILEINFO_MIME);                 
             $type = $info->file($fname);
         
         } elseif(function_exists('mime_content_type')) {

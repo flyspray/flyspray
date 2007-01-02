@@ -184,11 +184,11 @@ if(Get::has('hideupdatemsg')) {
 } else if ($conf['general']['update_check'] && $user->perms('is_admin')
            && $fs->prefs['last_update_check'] < time()-60*60*24*3) {
     if (!isset($_SESSION['latest_version'])) {
-		$fs_server  = @fsockopen('flyspray.rocks.cc', 80, $errno, $errstr, 8);
+		$fs_server  = @fsockopen('flyspray.org', 80, $errno, $errstr, 8);
 		if(is_resource($fs_server)) {
 
 			$out = "GET /version.txt HTTP/1.0\r\n";
-		    $out .= "Host: flyspray.rocks.cc\r\n";
+		    $out .= "Host: flyspray.org\r\n";
 		    $out .= "Connection: Close\r\n\r\n";
 
 			fwrite($fs_server, $out);

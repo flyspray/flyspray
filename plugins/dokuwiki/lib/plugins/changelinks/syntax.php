@@ -26,7 +26,7 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
             'date'   => '2005-12-18',
             'name'   => 'Change-Interwikilinks Plugin',
             'desc'   => 'Changes the functionality of interwikilinks',
-            'url'    => 'http://flyspray.rocks.cc/',
+            'url'    => 'http://flyspray.org/',
         );
     }
  

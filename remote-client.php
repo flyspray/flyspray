@@ -21,7 +21,7 @@ require_once('header.php');
 
 // default server (for easier testing)
 
-//$server = "http://flyspray.rocks.cc/bts/remote.php";
+//$server = "http://flyspray.org/bts/remote.php";
 
 $server = Flyspray::absoluteURI('remote.php');
 

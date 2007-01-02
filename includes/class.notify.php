@@ -6,7 +6,15 @@
    ---------------------------------------------------
 */
 
-// Start of the Notifications class
+/**
+ * Notifications 
+ * 
+ * @package 
+ * @version $Id$
+ * @copyright 2006 Flyspray.org
+ * @notes: This is a mess and should be replaced for 1.0
+ */
+
 class Notifications {
 
    // {{{ Wrapper function for all others 

@@ -138,6 +138,7 @@ if (!isset($_SERVER['REQUEST_URI']))
         $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
     }
     else {
+        // this is tained now.
         $_SERVER['REQUEST_URI'] = $_SERVER['PHP_SELF'];
     }
 

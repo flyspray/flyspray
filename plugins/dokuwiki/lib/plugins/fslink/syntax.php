@@ -26,7 +26,7 @@ class syntax_plugin_fslink extends DokuWiki_Syntax_Plugin {
             'date'   => '2005-12-17',
             'name'   => 'FS-link Plugin',
             'desc'   => 'Enables Flyspray\'s bug links',
-            'url'    => 'http://flyspray.rocks.cc/',
+            'url'    => 'http://flyspray.org/',
         );
     }
  
