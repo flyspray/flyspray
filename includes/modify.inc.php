@@ -248,7 +248,7 @@ switch ($action = Req::val('action'))
         
         if (!Post::val('user_name') || !Post::val('real_name')
             || !Post::val('email_address'))
-        ) {
+         {
             // If the form wasn't filled out correctly, show an error
             Flyspray::show_error(L('registererror'));
             break;
@@ -390,7 +390,7 @@ switch ($action = Req::val('action'))
 
         if (!Post::val('user_name') || !Post::val('real_name')
             || !Post::val('email_address'))
-        ) {
+        {
             // If the form wasn't filled out correctly, show an error
             Flyspray::show_error(L('registererror'));
             break;
