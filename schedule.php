@@ -21,7 +21,7 @@ define('IN_FS', true);
 require_once 'header.php';
 
 
-if((isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') &&
+if(z(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') &&
     (isset($conf['general']['reminder_daemon']) && $conf['general']['reminder_daemon'] == '1')) {
 
 //keep going, execute the script in the background

@@ -106,7 +106,7 @@ class Notifications {
    {
       global $db, $fs;
 
-      include_once BASEDIR . '/includes/class.fsjabber.php';
+      include_once BASEDIR . '/includes/class.jabber2.php';
       
 
       if (empty($fs->prefs['jabber_server'])
@@ -116,25 +116,13 @@ class Notifications {
             return false;
       }
 
-      $JABBER = new fsJabber;
-        
-      //in the strange case the user can't use
-      // the really basic jabber features, run away..
-      
-      if(!$JABBER->jinfo->can_use_jabber) {
-            return false;
-      }
+      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'], 
+                           $fs->prefs['jabber_password'],
+                           $fs->prefs['jabber_ssl'],
+                           $fs->prefs['jabber_port']);
 
-      $JABBER->server      = $fs->prefs['jabber_server'];
-      $JABBER->port        = $fs->prefs['jabber_port'];
-      $JABBER->username    = $fs->prefs['jabber_username'];
-      $JABBER->password    = $fs->prefs['jabber_password'];
-      $JABBER->resource    = 'Flyspray';
-      $JABBER->ssl         = $fs->prefs['jabber_ssl'];
-      $JABBER->enable_logging = defined('JABBER_DEBUG');
-      //debug file, only used when JABBER_DEBUG constant is defined
-      $JABBER->log_filename = defined('JABBER_DEBUG_FILE') ? JABBER_DEBUG_FILE
-                                 : Flyspray::get_tmp_dir() . '/jabberdebug.txt';
+      $JABBER->log_enabled = defined('JABBER_DEBUG');
+
       // get listing of all pending jabber notifications
       $result = $db->Query("SELECT DISTINCT message_id
                             FROM {notification_recipients}
@@ -142,32 +130,13 @@ class Notifications {
 
       if (!$db->CountRows($result))
       {
-         $JABBER->AddToLog("No notifications to send");
+         $JABBER->log("No notifications to send");
          return false;
       }
 
       // we have notifications to process - connect
-      $JABBER->AddToLog("We have notifications to process...");
-      $JABBER->AddToLog("Starting Jabber session:");
-
-      if(!$JABBER->Connect()) {
-
-          $JABBER->AddToLog("Cannot connect to the jabber server");
-          return false;
-      }
-      $JABBER->AddToLog("- Connected");
-
-      if(!$JABBER->SendAuth()) {
-          $JABBER->AddToLog("bad authentication,check your username and password");  
-          return false;
-      }
-
-      $JABBER->AddToLog("- Authenticated correctly");
-      sleep(3);
-
-      $JABBER->SendPresence("online", null, null,null,5);
-      $JABBER->AddToLog("- Presence");
-      sleep(3);
+      $JABBER->log("We have notifications to process...");
+      $JABBER->log("Starting Jabber session:");
 
       while ( $row = $db->FetchRow($result) )
       {
@@ -175,7 +144,7 @@ class Notifications {
       }
 
       $desired = join(",", $ids);
-      $JABBER->AddToLog("message ids to send = {" . $desired . "}");
+      $JABBER->log("message ids to send = {" . $desired . "}");
 
       // removed array usage as it's messing up the select
       // I suspect this is due to the variable being comma separated
@@ -185,7 +154,7 @@ class Notifications {
                                    ORDER BY time_created ASC"
                                  );
 
-      $JABBER->AddToLog("number of notifications {" . $db->CountRows($notifications) . "}");
+      $JABBER->log("number of notifications {" . $db->CountRows($notifications) . "}");
 
       // loop through notifications
       while ( $notification = $db->FetchRow($notifications) )
@@ -193,7 +162,7 @@ class Notifications {
          $subject = $notification['message_subject'];
          $body    = $notification['message_body'];
 
-         $JABBER->AddToLog("Processing notification {" . $notification['message_id'] . "}");
+         $JABBER->log("Processing notification {" . $notification['message_id'] . "}");
 
             $recipients = $db->Query("SELECT * FROM {notification_recipients}
                                       WHERE message_id = ?
@@ -205,31 +174,22 @@ class Notifications {
             while ($recipient = $db->FetchRow($recipients) )
             {
                $jid = $recipient['notify_address'];
-               $JABBER->AddToLog("- attempting send to {" . $jid . "}");
+               $JABBER->log("- attempting send to {" . $jid . "}");
 
                // send notification
-               if ($JABBER->connected) {
-                  if ($JABBER->SendMessage($jid, 'normal', NULL,
-                     array(
-                        "subject"   => $subject,
-                        "body"      => $body,
-                     )
-                  )) {
-                     // delete entry from notification_recipients
-                     $result = $db->Query("DELETE FROM {notification_recipients}
-                                           WHERE message_id = ?
-                                           AND notify_method = 'j'
-                                           AND notify_address = ?",
-                                           array($notification['message_id'], $jid)
-                                         );
-                     $JABBER->AddToLog("- notification sent");
-                  }
-                  else {
-                     $JABBER->AddToLog("- notification not sent");
-                  }
-               } else {
-                  $JABBER->AddToLog("- not connected");
-               }
+               if ($JABBER->send_message($jid, $body, 'normal'))
+               {
+                   // delete entry from notification_recipients
+                   $result = $db->Query("DELETE FROM {notification_recipients}
+                                         WHERE message_id = ?
+                                         AND notify_method = 'j'
+                                         AND notify_address = ?",
+                                         array($notification['message_id'], $jid)
+                                       );
+                   $JABBER->log("- notification sent");
+                } else {
+                   $JABBER->log("- notification not sent");
+                }
             }
             // check to see if there are still recipients for this notification
             $result = $db->Query("SELECT * FROM {notification_recipients}
@@ -239,19 +199,19 @@ class Notifications {
 
             if ( $db->CountRows($result) == 0 )
             {
-               $JABBER->AddToLog("No further recipients for message id {" . $notification['message_id'] . "}");
+               $JABBER->log("No further recipients for message id {" . $notification['message_id'] . "}");
                // remove notification no more recipients
                $result = $db->Query("DELETE FROM {notification_messages}
                                      WHERE message_id = ?",
                                      array($notification['message_id'])
                                    );
-               $JABBER->AddToLog("- Notification deleted");
+               $JABBER->log("- Notification deleted");
             }
          }
 
          // disconnect from server
-         $JABBER->Disconnect();
-         $JABBER->AddToLog("Disconnected from Jabber server");
+         $JABBER->disconnect();
+         $JABBER->log("Disconnected from Jabber server");
 
       return true;
    } // }}} 
