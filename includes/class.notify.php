@@ -29,7 +29,7 @@ class Notifications {
       $msg = $this->GenerateMsg($type, $task_id, $info);
       
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
-          if(!$this->SendEmail($to[0], $msg[0], $msg[1])) {
+          if(!$this->SendEmail($to[0], $msg[0], $msg[1], $task_id)) {
               return false;
           }
       }
@@ -216,7 +216,7 @@ class Notifications {
       return true;
    } // }}} 
    // {{{ Send email 
-   function SendEmail($to, $subject, $body)
+   function SendEmail($to, $subject, $body, $task_id)
    {
       global $fs, $proj, $user;
 
@@ -243,7 +243,6 @@ class Notifications {
       {
          $mail->IsSMTP();
          $mail->Host = $fs->prefs['smtp_server'];
-
          if (!empty($fs->prefs['smtp_user']))
          {
             $mail->SMTPAuth = true;     // turn on SMTP authentication
@@ -261,11 +260,15 @@ class Notifications {
          // do not disclose user's address
          $mail->AddAddress($fs->prefs['admin_email']);
          // make sure every email address is only added once
-         $to = array_unique($to);
-         foreach ($to as $val)
-         {
+         $to = array_map('trim', array_unique($to));
+
+         foreach ($to as $val) {
+             //do not send email twice to admin
+             if($val === $fs->prefs['admin_email']) {
+                 continue;
+             }
             // Unlike the docs say, it *does (appear to)* work with mail()
-            $mail->AddBcc(trim($val));
+            $mail->AddBcc($val);
          }
 
       } else {
@@ -276,6 +279,10 @@ class Notifications {
       $mail->Subject = trim($subject);
       $mail->Body = $body;
 
+      if($task_id) {
+          $mail->AddCustomHeader('In-Reply-To: FS#'. intval($task_id));
+      }
+
       if (!$mail->Send()) {
          // Flyspray::show_error(21, false, $mail->ErrorInfo);
           return false;
@@ -283,7 +290,7 @@ class Notifications {
 
         return true;
 
-   } // }}} 
+   } //   }}} 
    // {{{ Create a message for any occasion
    function GenerateMsg($type, $task_id, $arg1='0')
    {
