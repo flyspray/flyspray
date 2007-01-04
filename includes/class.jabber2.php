@@ -57,9 +57,14 @@ class Jabber
      */
     function send($xml)
     {
-       $xml = trim($xml);
-       $this->log('SEND: '. $xml);
-       return @fwrite($this->connection, $xml);
+        if (!feof($this->connection)) {
+           $xml = trim($xml);
+           $this->log('SEND: '. $xml);
+           return fwrite($this->connection, $xml);
+        } else {
+            $this->log('Error: Could not send, connection lost (flood?).');
+            return false;
+        }
     }
     
     /**
@@ -109,7 +114,7 @@ class Jabber
         $data = '';
         
         do {
-            $data = fread($this->connection, 4096);
+            $data = trim(fread($this->connection, 4096));
         } while (time() <= $start + 10 && $data == '');
         
         if ($data != '') {
@@ -173,7 +178,9 @@ class Jabber
                         $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='DIGEST-MD5'/>");
                     // we don't want to use this (neither does the server usually) if no encryption is in place
                     } else if (in_array('PLAIN', $methods) && ($this->ssl || $this->tls)) {
-                        $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'/>");
+                        $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>"
+                                      . base64_encode(chr(0) . $this->user . '@' . $this->server . chr(0) . $this->password) .
+                                    "</auth>");
                     // not good...
                     } else {
                         $this->log('Error: No authentication method supported.');
@@ -312,6 +319,12 @@ class Jabber
         return Jabber::can_use_ssl() && function_exists('stream_socket_enable_crypto');
     }
     
+    /**
+     * Encrypts a password as in RFC 2831
+     * @param array $data Needs data from the client-server connection
+     * @access public
+     * @return string
+     */
     function encrypt_password($data)
     {
         // let's me think about <challenge> again...      
