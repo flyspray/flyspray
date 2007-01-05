@@ -30,7 +30,7 @@ foreach($milestone['open_tasks'] as $task): ?>
       </dt>
       <dd id="dd{$task['task_id']}" >
         {!TextFormatter::render(substr($task['detailed_desc'], 0, 500) . ((strlen($task['detailed_desc']) > 500) ? '...' : ''),
-                         false, 'task', $task['task_id'], $task['content'])}
+                         false, 'rota', $task['task_id'], $task['content'])}
         <br style="position:absolute;" />
       </dd>
     <?php endforeach; ?>

@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Jabber class 
+ * 
+ * @version $Id$
+ * @copyright 2006 Flyspray.org
+ * @notes: This lib has been created due to the lack of any good and modern jabber class out there
+ * @author: Florian Schmitz (floele)
+ */
+ 
 class Jabber
 {
     var $connection = null;
@@ -11,8 +19,10 @@ class Jabber
     var $user = '';
     var $password = '';
     var $server = '';
+    // ID of the XML stream
     var $id = 0;
     var $auth = false;
+    // Jabber ID (including resource) suggested by server
     var $jid = null;
     var $session_req = false;
     
@@ -106,7 +116,14 @@ class Jabber
         
         return false;
     }
-    
+
+    /**
+     * Listens to the connection until it gets data or the timeout is reached.
+     * Thus, it should only be called if data is expected to be received.
+     * @access public
+     * @return bool actually, the return value does not matter. the interesting part is what
+     *              Jabber::response() does with the received data.
+     */
     function listen()
     {
         // Wait for a response until timeout is reached
@@ -126,7 +143,13 @@ class Jabber
             return false;
         }    
     }
-    
+
+    /**
+     * This handles all the different XML elements
+     * @param array $xml
+     * @access public
+     * @return bool
+     */
     function response($xml)
     {
         switch (key($xml)) {
@@ -304,6 +327,8 @@ class Jabber
     {
         if (is_resource($this->connection)) {
             $this->Send('</stream:stream>');
+            $this->auth = $this->session_req = $this->ssl = $this->tls = false;
+            $this->jid = null;
             return fclose($this->connection);
         }
         return false;
@@ -382,7 +407,7 @@ class Jabber
     }
     
     // ======================================================================
-	// Third party code, taken from old jabber lib
+	// Third party code, taken from old jabber lib (the only usable code left)
 	// ======================================================================
 
 	// xmlize()
