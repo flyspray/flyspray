@@ -657,7 +657,10 @@ class Notifications {
 
         $jabber_users = array();
         $email_users = array();
-        settype($users, 'array');
+
+        if(!is_array($users)) {
+            settype($users, 'array');
+        }
         
         if (count($users) < 1) {
             return array();
@@ -688,7 +691,7 @@ class Notifications {
             }
         }
 
-        return array($email_users, $jabber_users);
+        return array(array_unique($email_users), array_unique($jabber_users));
 
    } // }}}
    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
