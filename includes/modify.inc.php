@@ -11,6 +11,7 @@ if (!defined('IN_FS')) {
 
 // Include the notifications class
 require_once BASEDIR . '/includes/class.notify.php';
+require_once BASEDIR . '/includes/class.jabber2.php';
 $notify = new Notifications;
 
 $lt = Post::isAlnum('list_type') ? Post::val('list_type') : '';
@@ -263,7 +264,7 @@ switch ($action = Req::val('action'))
             break;
         }
         //jabber_id is optional
-        if ($jabber_id && !Flyspray::check_email($jabber_id)) {
+        if ($jabber_id && !Jabber::check_jid($jabber_id)) {
             Flyspray::show_error(L('novalidjabber'));
             break;
         }
