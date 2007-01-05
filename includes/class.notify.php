@@ -24,8 +24,10 @@ class Notifications {
           $to = $this->Address($task_id, $type);
       }
       
-      settype($to, 'array');
-
+      if(!is_array($to)) {
+          settype($to, 'array');
+      }
+      
       $msg = $this->GenerateMsg($type, $task_id, $info);
       
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
@@ -777,9 +779,8 @@ class Notifications {
 
       // End of checking if a task is private
       }
-
       // Send back two arrays containing the notification addresses
-      return array($email_users, $jabber_users);
+      return array(array_unique($email_users), array_unique($jabber_users));
 
    } // }}}
 

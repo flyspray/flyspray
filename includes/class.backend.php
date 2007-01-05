@@ -308,8 +308,6 @@ class Backend
     {
         global $db, $notify, $conf, $user;
 
-        mt_srand(Flyspray::make_seed());
-
         $task = Flyspray::GetTaskDetails($task_id);
 
         if (!$user->perms('create_attachments', $task['project_id'])) {
@@ -483,7 +481,7 @@ class Backend
         
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
-            $sql = $db->Query('SELECT email_address
+            $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                 WHERE g.group_id = 1');
@@ -632,6 +630,7 @@ class Backend
      * @access public
      * @return integer the task ID on success
      * @version 1.0
+     * @notes $args is POST data, bad..bad user..
      */
     function create_task($args)
     {
@@ -662,7 +661,7 @@ class Backend
                 'operating_system', 'task_severity', 'task_priority');
 
         $sql_values = array(time(), time(), $args['project_id'], $item_summary,
-                $detailed_desc, intval($user->id), '0');
+                $detailed_desc, intval($user->id), 0);
 
         $sql_params = array();
         foreach ($param_names as $param_name) {
