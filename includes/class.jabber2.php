@@ -319,12 +319,12 @@ class Jabber
             return false;
         }
         
-        return $this->send("<message from='" . htmlspecialchars($this->jid) . "'
-                                     to='" . htmlspecialchars($to) . "'
+        return $this->send("<message from='" . $this->jspecialchars($this->jid) . "'
+                                     to='" . $this->jspecialchars($to) . "'
                                      xml:lang='en'
-                                     type='" . htmlspecialchars($type) . "'
+                                     type='" . $this->jspecialchars($type) . "'
                                      id='" . uniqid('msg') . "'>
-                              <body>" . htmlspecialchars($text) . "</body>
+                              <body>" . $this->jspecialchars($text) . "</body>
                             </message>");
     }
     
@@ -709,7 +709,12 @@ class Jabber
 		}
 
 		return $children;
-	}
+    }
+
+     function jspecialchars($data)
+     {
+         return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
+     }
 
 }
 

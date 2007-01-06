@@ -613,7 +613,7 @@ class Flyspray
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
                            LEFT JOIN  {users} u ON uig.user_id = u.user_id
                                WHERE  u.user_name = ? AND g.project_id = ?
-                            ORDER BY  g.group_id ASC", array($username, '0'));
+                            ORDER BY  g.group_id ASC", array($username, 0));
 
         $auth_details = $db->FetchRow($result);
 
@@ -701,6 +701,7 @@ class Flyspray
      * @access public static
      * @return void
      * @version 1.0
+     * @notes smile intented
      */
     function startSession()
     {
@@ -712,7 +713,6 @@ class Flyspray
                         'UseLinux',
                         'NoMicrosoft',
                         'ThinkB4Replying',
-                        'BuyTonyAMac',
                         'FreeSoftware',
                         'ReadTheFAQ',
                         'RTFM',
@@ -746,18 +746,6 @@ class Flyspray
         }
     }  // }}}
 
-    // {{{
-    /**
-     * Generate a long random number
-     * @access public static
-     * @return float
-     * @version 1.0
-     */
-    function make_seed()
-    {
-        list($usec, $sec) = explode(' ', microtime());
-        return (float) $sec + ((float) $usec * 100000);
-    } // }}}
     // Compare tasks {{{
     /**
      * Compares two tasks and returns an array of differences

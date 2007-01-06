@@ -297,25 +297,26 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE jabber_id = ? AND jabber_id != '' OR email_address = ? AND email_address != ''",
+        $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE 
+                           jabber_id = ? AND jabber_id != '' 
+                           OR email_address = ? AND email_address != ''",
                           array($jabber_id, $email));
         if ($db->fetchOne($sql)) {
             Flyspray::show_error(L('emailtaken'));
             break;
         }
         
-        // Generate a random bunch of numbers for the confirmation code
-        mt_srand(Flyspray::make_seed());
-        $randval = mt_rand();
+        // Generate a random bunch of numbers for the confirmation code and the confirmation url
+
+        foreach(array('randval','magic_url') as $genrandom) {
+
+            $$genrandom = md5(uniqid(rand(), true));
+        }
 
         // Convert those numbers to a seemingly random string using crypt
         $confirm_code = crypt($randval, $conf['general']['cookiesalt']);
 
-        // Generate a looonnnnggg random string to send as an URL to complete this registration
-        $magic_url = md5(uniqid(rand(), true));
-
         //send the email first.
-
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
                            Post::val('email_address'), NOTIFY_EMAIL)) {
         

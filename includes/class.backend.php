@@ -448,8 +448,7 @@ class Backend
         // Autogenerate a password
         if (!$password) {
             $auto = true;
-            mt_srand(Flyspray::make_seed());
-            $password = substr(md5(mt_rand() . $user_name), 0, mt_rand(7, 9));
+            $password = substr(md5(uniqid(rand(), true)), 0, mt_rand(7, 9));
         }
         
         $db->Query("INSERT INTO  {users}
