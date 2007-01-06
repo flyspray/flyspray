@@ -41,8 +41,8 @@ if ($details && count($histories)){
     $html .= '<th>' . L('previousvalue') . '</th>';
     $html .= '<th>' . L('newvalue') . '</th>';
     $html .= '</tr><tr>';
-    $html .= '<td>' . htmlspecialchars($GLOBALS['details_previous'], ENT_QUOTES, 'utf-8') . '</td>';
-    $html .= '<td>' . htmlspecialchars($GLOBALS['details_new'], ENT_QUOTES, 'utf-8') . '</td>';
+    $html .= '<td>' . $GLOBALS['details_previous'] . '</td>';
+    $html .= '<td>' . $GLOBALS['details_new'] . '</td>';
     $html .= '</tr></table>';
     
     echo $html;

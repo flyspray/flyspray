@@ -39,21 +39,18 @@ switch (Req::val('topic')) {
 
 $filename = $feed_type.'-'.$orderby.'-'.$proj->id.'-'.$max_items;
 
-// FIXME : avoid that DB call ...  by making the whole project invalidates cache himself
-// {{{
-// Get the time when a task has been changed last
-
-$sql = $db->Query("SELECT  MAX(t.date_opened), MAX(t.date_closed), MAX(t.last_edited_time)
-                     FROM  {tasks}    t
-               INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  t.is_closed <> ? $sql_project AND t.mark_private <> '1'
-                           AND p.others_view = '1' ", array($closed));
-$most_recent = max($db->fetchRow($sql));
-
-// }}}
 
 /* test cache */
 if ($fs->prefs['cache_feeds']) {
+    // FIXME : avoid that DB call ...  by making the whole project invalidates cache himself
+    // Get the time when a task has been changed last
+    $sql = $db->Query("SELECT  MAX(t.date_opened), MAX(t.date_closed), MAX(t.last_edited_time)
+                         FROM  {tasks}    t
+                   INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
+                        WHERE  t.is_closed <> ? $sql_project AND t.mark_private <> '1'
+                               AND p.others_view = '1' ", array($closed));
+    $most_recent = max($db->fetchRow($sql));
+    
     if ($fs->prefs['cache_feeds'] == '1') {
         if (is_file(BASEDIR .'/cache/'.$filename) && $most_recent <= filemtime(BASEDIR . '/cache/'.$filename)) {
             readfile(BASEDIR . '/cache/'.$filename);

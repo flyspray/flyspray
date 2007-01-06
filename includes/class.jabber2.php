@@ -319,12 +319,12 @@ class Jabber
             return false;
         }
         
-        return $this->send("<message from='" . $this->jspecialchars($this->jid) . "'
-                                     to='" . $this->jspecialchars($to) . "'
+        return $this->send("<message from='" . Jabber::jspecialchars($this->jid) . "'
+                                     to='" . Jabber::jspecialchars($to) . "'
                                      xml:lang='en'
-                                     type='" . $this->jspecialchars($type) . "'
+                                     type='" . Jabber::jspecialchars($type) . "'
                                      id='" . uniqid('msg') . "'>
-                              <body>" . $this->jspecialchars($text) . "</body>
+                              <body>" . Jabber::jspecialchars($text) . "</body>
                             </message>");
     }
     
@@ -446,7 +446,6 @@ class Jabber
             if (preg_match("@^[a-zA-Z0-9-.]+$@", $part) == false) {
                 return false;
             }
-            
         }
         
         $b = array(array(0, 127), array(192, 223), array(224, 239),
@@ -564,7 +563,7 @@ class Jabber
         {
             $len = 0;
             $uni = 0;
-            for ($i=0; $i<=5; $i++)
+            for ($i = 0; $i <= 5; $i++)
             {
                 if (ord($username[$pos]) >= $b[$i][0] && ord($username[$pos]) <= $b[$i][1])
                 {
@@ -597,6 +596,11 @@ class Jabber
         
         return $result;
     }
+
+    function jspecialchars($data)
+    {
+        return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
+    }
     
     // ======================================================================
 	// Third party code, taken from old jabber lib (the only usable code left)
@@ -626,7 +630,6 @@ class Jabber
 		}
 
 		$array[$tagname][0]["#"] = Jabber::_xml_depth($vals, $i); // mod
-
 
 		return $array;
 	}
@@ -710,12 +713,6 @@ class Jabber
 
 		return $children;
     }
-
-     function jspecialchars($data)
-     {
-         return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
-     }
-
 }
 
 ?>
