@@ -114,7 +114,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function Redirect($url, $exit = true, $rfc2616 = true, $local_only= true)
+    function Redirect($url, $exit = true, $rfc2616 = true)
     {
 
         @ob_clean();
@@ -130,19 +130,6 @@ class Flyspray
 
         $url = FlySpray::absoluteURI($url);
 
-        if($local_only) {
-
-            $check_url = parse_url($url);
-            
-            if($check_url['host'] != $_SERVER['HTTP_HOST']) {
-
-                /* We are redirecting to other place
-                * which is not flyspray, or not this host
-                * we don't want that.
-                 */
-                return false;
-            }
-        }
 
         header('Location: '. $url);
 
