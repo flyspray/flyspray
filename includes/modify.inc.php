@@ -385,7 +385,8 @@ switch ($action = Req::val('action'))
     // ##################
     // new user self-registration with a confirmation code
     // ##################
-    case 'newuser.newuser':
+    case 'register.newuser':
+    case 'admin.newuser':
         if (!($user->perms('is_admin') || $user->can_self_register())) {
             break;
         }
@@ -409,6 +410,15 @@ switch ($action = Req::val('action'))
             $group_in = $fs->prefs['anon_group'];
         }
 
+        $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE 
+                           jabber_id = ? AND jabber_id != '' 
+                           OR email_address = ? AND email_address != ''",
+                          array(Post::val('jabber_id'), Post::val('email_address')));
+        if ($db->fetchOne($sql)) {
+            Flyspray::show_error(L('emailtaken'));
+            break;
+        }
+        
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
                               Post::val('real_name'), Post::val('jabber_id'),
                               Post::val('email_address'), Post::num('notify_type'),

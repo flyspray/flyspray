@@ -419,3 +419,8 @@ ALTER TABLE `flyspray_groups` DROP `view_attachments`;
 
 -- Florian Schmitz, 9 December 2006 FS#1140 (subjects were not inserted when too long)
 ALTER TABLE `flyspray_notification_messages` CHANGE `message_subject` `message_subject` VARCHAR( 100 ) NOT NULL;
+
+-- Florian Schmitz, 2007 (some DB cleanup)
+ALTER TABLE `flyspray_users` DROP `last_search`;
+DELETE FROM `flyspray_notifications` WHERE user_id = 0 OR task_id = 0;
+ALTER TABLE `flyspray_notifications` ADD UNIQUE `user_task` ( `task_id` , `user_id` );

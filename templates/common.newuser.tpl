@@ -5,7 +5,13 @@
   <table class="box">
     <tr>
       <td>
-        <input type="hidden" name="action" value="newuser.newuser" />
+        <?php if ($do == 'admin'): ?>
+        <input type="hidden" name="action" value="admin.newuser" />
+        <input type="hidden" name="do" value="admin" />
+        <input type="hidden" name="area" value="newuser" />
+        <?php else: ?>
+        <input type="hidden" name="action" value="register.newuser" />
+        <?php endif; ?>
         <label for="username">{L('username')}</label>
       </td>
       <td><input id="username" name="user_name" value="{Req::val('user_name')}" class="required text" type="text" size="20" maxlength="20" onblur="checkname(this.value);" />
@@ -28,7 +34,7 @@
     </tr>
     <tr>
       <td><label for="emailaddress">{L('emailaddress')}</label></td>
-      <td><input id="emailaddress" name="email_address" class="text" value="{Req::val('email_address')}" type="text" size="20" maxlength="100" /></td>
+      <td><input id="emailaddress" name="email_address" class="text required" value="{Req::val('email_address')}" type="text" size="20" maxlength="100" /></td>
     </tr>
     <tr>
       <td><label for="jabberid">{L('jabberid')}</label></td>
