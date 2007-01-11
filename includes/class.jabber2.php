@@ -12,7 +12,7 @@ class Jabber
 {
     var $connection = null;
     var $log = array();
-    var $log_enabled = false;
+    var $log_enabled = true;
     var $timeout = 10;
     var $ssl = false;
     var $tls = false;
@@ -26,7 +26,7 @@ class Jabber
     var $jid = null;
     var $session_req = false;
     
-    function Jabber($login, $password, $ssl = false, $port = 5222)
+    function Jabber($login, $password, $ssl = false, $port = 5222, $host = '')
     {
         // Can we use Jabber at all?
         // Note: Maybe replace with SimpleXML in the future
@@ -54,7 +54,7 @@ class Jabber
             $port = 5223;
         }
         
-        if ($this->open_socket($server, $port, $ssl)) {
+        if ($this->open_socket( ($host != '') ? $host : $server, $port, $ssl)) {
             $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
 			$this->send("<stream:stream to='{$server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
         } else {
@@ -136,8 +136,9 @@ class Jabber
         $data = '';
         
         do {
-            $data = trim(fread($this->connection, 4096));
-        } while (time() <= $start + 10 && $data == '');
+            $read = trim(fread($this->connection, 4096));
+            $data .= $read;
+        } while (time() <= $start + 10 && ($data == '' || $read != ''));
         
         if ($data != '') {
             // do a response
@@ -229,6 +230,18 @@ class Jabber
                 // continue with authentication...a challenge literally -_-
                 $decoded = base64_decode($xml['challenge'][0]['#'][0]);
                 $decoded = Jabber::parse_data($decoded);
+                if (!isset($decoded['digest-uri'])) {
+                    $decoded['digest-uri'] = 'xmpp/'. $this->server;
+                }
+                
+                // better generate a cnonce, maybe it's needed
+                $str = '';
+                mt_srand((double)microtime()*10000000);
+                for ($i = 0; $i < 32; $i++) {
+                    $str .= chr(mt_rand(0, 255));
+                }
+                $decoded['cnonce'] = base64_encode($str);
+                
                 // second challenge
                 if (isset($decoded['rspauth'])) {
                     $this->send("<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>");
@@ -238,7 +251,7 @@ class Jabber
                                       'charset'  => 'utf-8',
                                       'nc'       => '00000001');
                     
-                    foreach (array('nonce', 'qop', 'digest-uri', 'realm') as $key) {
+                    foreach (array('nonce', 'qop', 'digest-uri', 'realm', 'cnonce') as $key) {
                         if (isset($decoded[$key])) {
                             $response[$key] = $decoded[$key];
                         }
@@ -330,7 +343,7 @@ class Jabber
     
     function disconnect()
     {
-        if (is_resource($this->connection)) {
+        if (!feof($this->connection)) {
             $this->Send('</stream:stream>');
             $this->auth = $this->session_req = $this->ssl = $this->tls = false;
             $this->jid = null;
@@ -365,9 +378,9 @@ class Jabber
         }
         
         if (isset($data['authzid'])) {
-            $a1 = pack('H*', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'] . ':' . $data['authzid'];
+            $a1 = pack('H32', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'] . ':' . $data['authzid'];
         } else {
-            $a1 = pack('H*', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'];
+            $a1 = pack('H32', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'];
         }
 
         // should be: qop = auth
