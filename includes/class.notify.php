@@ -71,10 +71,8 @@ class Notifications {
 
       // grab notification id
       $result = $db->Query("SELECT message_id FROM {notification_messages}
-                            WHERE message_subject = ?
-                            AND message_body = ?
-                            AND time_created = ?",
-                            array($subject, $body, $date)
+                            WHERE time_created = ? ORDER BY message_id DESC",
+                            array($subject, $body, $date), 1
                           );
 
       $row = $db->FetchRow($result);
