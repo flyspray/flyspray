@@ -72,8 +72,7 @@ class Notifications {
       // grab notification id
       $result = $db->Query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC",
-                            array($subject, $body, $date), 1
-                          );
+                            array($date), 1);
 
       $row = $db->FetchRow($result);
       $message_id = $row['message_id'];
@@ -99,7 +98,7 @@ class Notifications {
 
       }
 
-      return TRUE;
+      return true;
    } // }}} 
    // {{{ Send Jabber messages that were stored earlier
    function SendJabber()
