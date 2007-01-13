@@ -123,7 +123,10 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = tpl_tasklink($task, $task['task_id']);
             break;
         case 'summary':
-            $value = tpl_tasklink($task, $task['item_summary']);
+            $value = tpl_tasklink($task, utf8_substr($task['item_summary'], 0, 55));
+            if (utf8_strlen($task['item_summary']) > 55) {
+                $value .= '...';
+            }
             break;
 
         case 'severity':
@@ -151,7 +154,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 
         case 'progress':
             $value = tpl_img($page->get_image('percent-' . $task['percent_complete'], false),
-                    $task['percent_complete'] . '% ' . L('complete'));
+                    $task['percent_complete'] . '%');
             break;
 
         case 'assignedto':

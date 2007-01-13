@@ -487,7 +487,7 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
     return ($attr ? $html. join_attrs($attr) : $html) . '/>';
 } // }}}
 // {{{ Image display
-function tpl_img($src, $alt)
+function tpl_img($src, $alt = '')
 {
     global $baseurl;
     if (is_file(BASEDIR .'/'.$src)) {
@@ -495,7 +495,7 @@ function tpl_img($src, $alt)
             .htmlspecialchars($src, ENT_QUOTES,'utf-8').'" alt="'
             .htmlspecialchars($alt, ENT_QUOTES,'utf-8').'" />';
     }
-    return '';
+    return htmlspecialchars($alt, ENT_QUOTES,'utf-8');
 } // }}}
 // {{{ Text formatting
 $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';

@@ -425,3 +425,4 @@ ALTER TABLE `flyspray_users` DROP `last_search`;
 DELETE FROM `flyspray_notifications` WHERE user_id = 0 OR task_id = 0;
 ALTER TABLE `flyspray_notifications` ADD UNIQUE `user_task` ( `task_id` , `user_id` );
 ALTER TABLE `flyspray_notification_messages` CHANGE `message_subject` `message_subject` TEXT NOT NULL;
+UPDATE `flyspray_tasks` SET item_status=0 WHERE item_status=8;
