@@ -59,7 +59,7 @@ if ($fs->prefs['cache_feeds']) {
     }
     else {
         $sql = $db->Query("SELECT  content
-                             FROM  {cache}
+                             FROM  {cache} p
                             WHERE  type = ? AND topic = ? $sql_project
                                    AND max_items = ?  AND last_updated >= ?",
                         array($feed_type, $orderby, $max_items, $most_recent));
