@@ -257,15 +257,10 @@ class Notifications {
       if (is_array($to))
       {
          // do not disclose user's address
-         $mail->AddAddress($fs->prefs['admin_email']);
          // make sure every email address is only added once
          $to = array_map('trim', array_unique($to));
 
          foreach ($to as $val) {
-             //do not send email twice to admin
-             if($val === $fs->prefs['admin_email']) {
-                 continue;
-             }
             // Unlike the docs say, it *does (appear to)* work with mail()
             $mail->AddBcc($val);
          }
