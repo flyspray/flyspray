@@ -176,7 +176,7 @@ class Notifications {
                $JABBER->log("- attempting send to {" . $jid . "}");
 
                // send notification
-               if ($JABBER->send_message($jid, $body, 'normal'))
+               if ($JABBER->send_message($jid, $body, $subject, 'normal'))
                {
                    // delete entry from notification_recipients
                    $result = $db->Query("DELETE FROM {notification_recipients}

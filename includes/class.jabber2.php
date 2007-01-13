@@ -36,7 +36,7 @@ class Jabber
         }
         
         if (!Jabber::check_jid($login)) {
-            $this->log('Error: Jabber ID is not valid.');
+            $this->log('Error: Jabber ID is not valid: ' . $login);
             return false;
         }
         
@@ -72,7 +72,7 @@ class Jabber
      */
     function send($xml)
     {
-        if (!feof($this->connection)) {
+        if (is_resource($this->connection) && !feof($this->connection)) {
            $xml = trim($xml);
            $this->log('SEND: '. $xml);
            return fwrite($this->connection, $xml);
@@ -327,7 +327,7 @@ class Jabber
         }
     }
     
-    function send_message($to, $text, $type = 'normal') {
+    function send_message($to, $text, $subject, $type = 'normal') {
         if (!$this->jid) {
             return false;
         }
@@ -337,6 +337,7 @@ class Jabber
                                      xml:lang='en'
                                      type='" . Jabber::jspecialchars($type) . "'
                                      id='" . uniqid('msg') . "'>
+                              <subject>" . Jabber::jspecialchars($subject) . "</subject>
                               <body>" . Jabber::jspecialchars($text) . "</body>
                             </message>");
     }
