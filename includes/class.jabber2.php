@@ -101,7 +101,7 @@ class Jabber
         
         $server = $ssl ? 'ssl://' . $server : $server;
 
-        if ($this->connection = @fsockopen($server, $port, $errorno, $errorstr)) {
+        if ($this->connection = @fsockopen($server, $port, $errorno, $errorstr, $this->timeout)) {
             socket_set_blocking($this->connection, 0);
             socket_set_timeout($this->connection, 31536000);
 

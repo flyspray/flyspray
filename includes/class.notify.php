@@ -27,20 +27,22 @@ class Notifications {
       if(!is_array($to)) {
           settype($to, 'array');
       }
-      
+
       $msg = $this->GenerateMsg($type, $task_id, $info);
+      $result = true;
       
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
           if(!$this->SendEmail($to[0], $msg[0], $msg[1], $task_id)) {
-              return false;
+              $result = false;
           }
       }
       if ($ntype == NOTIFY_JABBER || $ntype == NOTIFY_BOTH) {
           if(!$this->StoreJabber($to[1], $msg[0], $msg[1])) {
-              return false;
+              $result = false;
           }
       } 
-            return true;
+      
+      return $result;
 
    // End of Create() function
    } // }}}
