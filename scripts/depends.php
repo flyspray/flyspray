@@ -5,6 +5,10 @@
   | ~~~~~~~~~~~~~~~~~~~~~                                  |
   \********************************************************/
 
+/**
+ * XXX: This stuff looks incredible ugly, rewrite me for 1.0  
+ */
+
 if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
@@ -213,8 +217,36 @@ if ($tmp = fopen($tname, 'wb')) {
 }
 // Now run dot on it:
 if ($use_public) {
+
     if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {
-        $data = file_get_contents(array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.' . $fmt);
+        
+        $data = null;
+        $dotp = parse_url(array_get($conf['general'], 'dot_public'));
+        
+        $dotconn = @fsockopen($dotp['host'], 80);
+        
+        if($dotconn) {
+
+            $out =  "GET {$dotp['path']}" .'/' . $baseurl . $file_name . '.' . $fmt . " HTTP/1.0\r\n";
+            $out .= "Host: {$dotp['host']}\r\n\r\n";
+            $out .= "Connection: Close\r\n\r\n";
+  
+            fwrite($dotconn, $out);
+
+            while(!feof($dotconn)) {
+                $data .= fgets($dotconn, 128);
+            }
+
+            fclose($dotconn);
+            
+            $pos = strpos($data, "\r\n\r\n");
+
+            if($pos !== false) {
+               //strip the http headers. 
+                $data = substr($data, $pos + 2 * strlen("\r\n"));
+            } 
+        }
+
         $f = fopen(BASEDIR . '/' . $file_name . '.' . $fmt, 'wb');
         fwrite($f, $data);
         fclose($f);
@@ -224,12 +256,13 @@ if ($use_public) {
 
     $page->assign('remote', $remote = true);
     $page->assign('map',    array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.map');
+
 } else {
 
     $dot = escapeshellcmd($path_to_dot);
     $tname = escapeshellarg($tname);
 
-    $cmd = "$dot -T $fmt -o \"" . BASEDIR . '/' . escapeshellarg($file_name . '.' . $fmt) . "\" $tname";
+    $cmd = "$dot -T $fmt -o " . escapeshellarg(BASEDIR . '/' . $file_name . '.' . $fmt) .  $tname;
     shell_exec($cmd);
 
     $cmd = "$dot -T cmapx " . $tname;
