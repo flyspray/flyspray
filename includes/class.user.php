@@ -113,8 +113,8 @@ class User
                             LEFT JOIN  {users_in_groups} uig ON g.group_id = uig.group_id
                             LEFT JOIN  {projects} p ON g.project_id = p.project_id
                                 WHERE  uig.user_id = ?
-                             ORDER BY  g.project_id ASC",
-                                array($this->id));
+                             ORDER BY  g.project_id, g.group_id ASC",
+                                array($this->id), count($this->perms)); // in case of bad entries, just select number of projects+1 row
 
             while ($row = $db->FetchRow($sql)) {
                 if (!isset($this->perms[$row['project_id']])) {
@@ -122,6 +122,7 @@ class User
                     $db->Query('DELETE FROM {users_in_groups} WHERE record_id = ?', array($row['record_id']));
                     continue;
                 }
+
                 $this->perms[$row['project_id']] = array_merge($this->perms[$row['project_id']], $row);
             }
             
