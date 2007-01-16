@@ -10,35 +10,35 @@
 
     <link rel="icon" type="image/png" href="{$this->get_image('favicon')}" />
     <?php foreach ($fs->projects as $project): ?>
-    <link rel="section" type="text/html" href="{$_SERVER['SCRIPT_NAME']}?project={$project[0]}" />
+    <link rel="section" type="text/html" href="{$baseurl}?project={$project[0]}" />
     <?php endforeach; ?>
     <link media="screen" href="{$this->themeUrl()}theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="{$this->themeUrl()}theme_print.css" rel="stylesheet" type="text/css" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
-          href="{$_SERVER['SCRIPT_NAME']}feed.php?feed_type=rss1&amp;project={$proj->id}" />
+          href="{$baseurl}feed.php?feed_type=rss1&amp;project={$proj->id}" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
-          href="{$_SERVER['SCRIPT_NAME']}feed.php?feed_type=rss2&amp;project={$proj->id}" />
+          href="{$baseurl}feed.php?feed_type=rss2&amp;project={$proj->id}" />
 	<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
-	      href="{$_SERVER['SCRIPT_NAME']}feed.php?feed_type=atom&amp;project={$proj->id}" />
+	      href="{$baseurl}feed.php?feed_type=atom&amp;project={$proj->id}" />
 	      
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/prototype/prototype.js"></script>
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/script.aculo.us/scriptaculous.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/prototype/prototype.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/script.aculo.us/scriptaculous.js"></script>
     <?php if ('index' == $do || 'details' == $do): ?>
-        <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/{$do}.js"></script>
+        <script type="text/javascript" src="{$baseurl}javascript/{$do}.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'pm' || $do == 'admin'): ?>
-        <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/tablecontrol.js"></script>
+        <script type="text/javascript" src="{$baseurl}javascript/tablecontrol.js"></script>
     <?php endif; ?>
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/tabs.js"></script>
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/functions.js"></script>
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/jscalendar/calendar_stripped.js"></script>
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/jscalendar/calendar-setup_stripped.js"> </script> 
-    <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}javascript/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/tabs.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/functions.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar-setup_stripped.js"> </script> 
+    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
     <!--[if IE]>
     <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
     <![endif]-->
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
-        <script type="text/javascript" src="{$_SERVER['SCRIPT_NAME']}plugins/{$file}"></script>
+        <script type="text/javascript" src="{$baseurl}plugins/{$file}"></script>
     <?php endforeach; ?>
   </head>
   <body onload="perms = new Perms('permissions');<?php
@@ -51,7 +51,7 @@
   
   <div id="container">
     <!-- Remove this to remove the logo -->
-    <h1 id="title"><a href="{$_SERVER['SCRIPT_NAME']}">{$proj->prefs['project_title']}</a></h1>
+    <h1 id="title"><a href="{$baseurl}">{$proj->prefs['project_title']}</a></h1>
     
     <?php $this->display('links.tpl'); ?>
 
@@ -65,7 +65,7 @@
 
     <div id="content">
       <div id="showtask">
-        <form action="{$_SERVER['SCRIPT_NAME']}index.php" method="get">
+        <form action="{$baseurl}index.php" method="get">
           <div>
             <button type="submit">{L('showtask')} #</button>
             <input id="taskid" name="show_task" class="text" type="text" size="10" maxlength="10" accesskey="t" />
