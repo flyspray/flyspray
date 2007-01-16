@@ -20,7 +20,11 @@ if ( !($task_details = Flyspray::GetTaskDetails(Req::num('task_id')))
 }
 
 $path_to_dot = array_get($conf['general'], 'dot_path', '');
-$fmt         = array_get($conf['general'], 'dot_format', 'png');
+//php 4 on windows does not have is_executable..
+$func = function_exists('is_executable') ? 'is_executable' : 'is_file';
+$path_to_dot = $func($path_to_dot) ? $path_to_dot : '';
+$fmt         = Filters::enum(array_get($conf['general'], 'dot_format', 'png'), array('png','svg'));
+
 /* March 10 2006 Jason Porter: Removed the $basedir as $path_for_images
  * should be relative, we use this path also in the HTML output.  Saving
  * the file from dot happens later, and that should be the absolute path.
@@ -223,7 +227,7 @@ if ($use_public) {
         $data = null;
         $dotp = parse_url(array_get($conf['general'], 'dot_public'));
         
-        $dotconn = @fsockopen($dotp['host'], 80);
+        $dotconn = $dotp ? @fsockopen($dotp['host'], 80) : false;
         
         if($dotconn) {
 
@@ -262,7 +266,7 @@ if ($use_public) {
     $dot = escapeshellcmd($path_to_dot);
     $tname = escapeshellarg($tname);
 
-    $cmd = "$dot -T $fmt -o " . escapeshellarg(BASEDIR . '/' . $file_name . '.' . $fmt) .  $tname;
+    $cmd = "$dot -T $fmt -o " . escapeshellarg(BASEDIR . '/' . $file_name . '.' . $fmt) .  ' ' . $tname;
     shell_exec($cmd);
 
     $cmd = "$dot -T cmapx " . $tname;

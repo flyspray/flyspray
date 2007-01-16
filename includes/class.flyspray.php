@@ -643,12 +643,11 @@ class Flyspray
      */
     function setCookie($name, $val, $time = null)
     {
-        global $baseurl;
-        $url = parse_url($baseurl);
-        if (is_null($time)) {
+        $path = parse_url($GLOBALS['baseurl'], PHP_URL_PATH);
+        if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
-        return setcookie($name, $val, $time, str_replace('%2F', '/', rawurlencode($url['path'])));
+        return setcookie($name, $val, $time, $path);
     } // }}}
     // Reminder daemon {{{
     /**
@@ -678,6 +677,7 @@ class Flyspray
             if ($daemon) {
                 fwrite($daemon, "GET {$host['path']}{$include} HTTP/1.0\r\n");
                 fwrite($daemon, "Host: {$_SERVER['HTTP_HOST']}\r\n\r\n");
+                fwrite($daemon, "Connection: Close\r\n\r\n");
                 fclose($daemon);
             }
         }
@@ -1006,8 +1006,8 @@ class Flyspray
             $time += ($st - $user->infos['time_zone']) * 60 * 60;
             // later it adds 5 hours to 2:00 for the user when the date is displayed.
         }
-        
-        return $time;
+        //strtotime()  may return false, making this method to return bool instead of int.
+        return $time ? $time : 0;
     }
 
     /**

@@ -46,6 +46,10 @@ $page->assign('user_events', $user_events);
 
 $sort = strtoupper(Req::enum('sort', array('desc', 'asc')));
 
+$where = array();
+$params = array();
+$orderby = '';
+
 switch (Req::val('order')) {
     case 'type':
         $orderby = "h.event_type {$sort}, h.event_date {$sort}";
@@ -56,9 +60,6 @@ switch (Req::val('order')) {
     case 'date': default:
         $orderby = "h.event_date {$sort}, h.event_type {$sort}";
 }
-
-$where = array();
-$params = array();
 
 foreach (Req::val('events', array()) as $eventtype) {
     $where[] = 'h.event_type = ?'; 
