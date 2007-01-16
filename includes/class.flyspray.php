@@ -643,11 +643,11 @@ class Flyspray
      */
     function setCookie($name, $val, $time = null)
     {
-        $path = parse_url($GLOBALS['baseurl'], PHP_URL_PATH);
+        $url = parse_url($GLOBALS['baseurl']);
         if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
-        return setcookie($name, $val, $time, $path);
+        return setcookie($name, $val, $time, $url['path']);
     } // }}}
     // Reminder daemon {{{
     /**
