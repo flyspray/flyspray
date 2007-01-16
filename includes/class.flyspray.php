@@ -659,27 +659,19 @@ class Flyspray
     function startReminderDaemon()
     {
         global $baseurl;
+
         $runfile = Flyspray::get_tmp_dir() . '/flysprayreminders.run';
         $timeout = 600;
         
         if (!is_file($runfile) or filemtime($runfile) < time() - ($timeout * 2)) {
            
             $include = 'schedule.php';
-            $host = parse_url($baseurl);
-        
-        /* "localhost" is on **purpose** not a mistake ¡¡ 
-         * almost any server accepts requests to itself in localhost ;)
-         * firewalls will not block it.
-         * the "Host" http header will tell the webserver where flyspray is running.
-         */
-          $daemon = @fsockopen('localhost', $_SERVER['SERVER_PORT'], $errno, $errstr, 5);
-        
-            if ($daemon) {
-                fwrite($daemon, "GET {$host['path']}{$include} HTTP/1.0\r\n");
-                fwrite($daemon, "Host: {$_SERVER['HTTP_HOST']}\r\n\r\n");
-                fwrite($daemon, "Connection: Close\r\n\r\n");
-                fclose($daemon);
-            }
+            /* "localhost" is on **purpose** not a mistake ¡¡ 
+             * almost any server accepts requests to itself in localhost ;)
+             * firewalls will not block it.
+             * the "Host" http header will tell the webserver where flyspray is running.
+             */
+            Flyspray::remote_request($baseurl . $include, !GET_CONTENTS, $_SERVER['SERVER_PORT'], 'localhost', $_SERVER['HTTP_HOST']);
         }
     }
             // Start the session {{{
@@ -1006,6 +998,54 @@ class Flyspray
         }
         //strtotime()  may return false, making this method to return bool instead of int.
         return $time ? $time : 0;
+    }
+
+    /**
+     * file_get_contents replacement for remote files
+     * @access public
+     * @param string $url
+     * @param bool $get_contents whether or not to return file contents, use GET_CONTENTS for true
+     * @param integer $port
+     * @param string $connect manually choose server for connection
+     * @return string an empty string is not necessarily a failure
+     */
+    function remote_request($url, $get_contents = false, $port = 80, $connect = '', $host = null)
+    {
+        $url = parse_url($url);
+        if (!$connect) {
+            $connect = $url['host'];
+        }
+        
+        if ($host) {
+            $url['host'] = $host;
+        }
+        
+        $data = '';
+        
+        if ($conn = @fsockopen($connect, $port, $errno, $errstr, 10)) {
+            $out =  "GET {$url['path']} HTTP/1.0\r\n";
+            $out .= "Host: {$url['host']}\r\n\r\n";
+            $out .= "Connection: Close\r\n\r\n";
+  
+            fwrite($conn, $out);
+
+            if ($get_contents) {
+                while (!feof($conn)) {
+                    $data .= fgets($conn, 128);
+                }
+
+                fclose($conn);
+                
+                $pos = strpos($data, "\r\n\r\n");
+
+                if ($pos !== false) {
+                   //strip the http headers. 
+                    $data = substr($data, $pos + 2 * strlen("\r\n"));
+                }
+            }
+        }
+        
+        return $data;
     }
 
     /**

@@ -187,19 +187,7 @@ if(Get::has('hideupdatemsg')) {
 } else if ($conf['general']['update_check'] && $user->perms('is_admin')
            && $fs->prefs['last_update_check'] < time()-60*60*24*3) {
     if (!isset($_SESSION['latest_version'])) {
-		$fs_server  = @fsockopen('flyspray.org', 80, $errno, $errstr, 8);
-		if(is_resource($fs_server)) {
-
-			$out = "GET /version.txt HTTP/1.0\r\n";
-		    $out .= "Host: flyspray.org\r\n";
-		    $out .= "Connection: Close\r\n\r\n";
-
-			fwrite($fs_server, $out);
-			while (!feof($fs_server)) {
-				$latest = fgetss($fs_server, 20);
-			}
-			fclose($fs_server);
-		}
+        $latest = Flyspray::remote_request('http://flyspray.org/version.txt', GET_CONTENTS);
 		//if for some silly reason we get and empty response, we use the actual version
  		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ; 
         $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_id = 23', array(time()));

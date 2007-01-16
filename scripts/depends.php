@@ -224,32 +224,7 @@ if ($use_public) {
 
     if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {
         
-        $data = null;
-        $dotp = parse_url(array_get($conf['general'], 'dot_public'));
-        
-        $dotconn = $dotp ? @fsockopen($dotp['host'], 80) : false;
-        
-        if($dotconn) {
-
-            $out =  "GET {$dotp['path']}" .'/' . $baseurl . $file_name . '.' . $fmt . " HTTP/1.0\r\n";
-            $out .= "Host: {$dotp['host']}\r\n\r\n";
-            $out .= "Connection: Close\r\n\r\n";
-  
-            fwrite($dotconn, $out);
-
-            while(!feof($dotconn)) {
-                $data .= fgets($dotconn, 128);
-            }
-
-            fclose($dotconn);
-            
-            $pos = strpos($data, "\r\n\r\n");
-
-            if($pos !== false) {
-               //strip the http headers. 
-                $data = substr($data, $pos + 2 * strlen("\r\n"));
-            } 
-        }
+        $data = Flyspray::remote_request(array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.' . $fmt, GET_CONTENTS);
 
         $f = fopen(BASEDIR . '/' . $file_name . '.' . $fmt, 'wb');
         fwrite($f, $data);

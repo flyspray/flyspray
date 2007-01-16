@@ -325,7 +325,7 @@ function emptyElement(el) {
 }
 function showPreview(textfield, baseurl, field)
 {
-    var preview = $('preview');
+    var preview = $(field);
     emptyElement(preview);
     
     var img = document.createElement('img');

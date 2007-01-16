@@ -57,6 +57,7 @@ define('STATUS_UNCONFIRMED',      1);
 define('STATUS_NEW',              2);
 define('STATUS_ASSIGNED',         3);
 
+define('GET_CONTENTS', true);
 // developers or advanced users only
 //define('DEBUG_SQL',true);
 //define('JABBER_DEBUG', true);
