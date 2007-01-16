@@ -276,8 +276,8 @@ class Notifications {
       $mail->Body = $body;
 
       if($task_id) {
-
-          $inreplyto = '<FS' . intval($task_id) . '@' . parse_url($GLOBALS['baseurl'], PHP_URL_HOST) . '>';
+          $hostdata = parse_url($GLOBALS['baseurl']);
+          $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
           $mail->AddCustomHeader('In-Reply-To: ' . $inreplyto);
       }
 
