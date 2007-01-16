@@ -1,7 +1,7 @@
 <div id="toolbox">
   <h3>{L('pmtoolbox')} ::  {$proj->prefs['project_title']} : {L('preferences')}</h3>
 
-  <form style="clear:both;" action="{$_SERVER['SCRIPT_NAME']}" method="post">
+  <form style="clear:both;" action="{CreateUrl('pm', 'prefs', $proj->id)}" method="post">
   <ul id="submenu">
    <li><a href="#general">{L('general')}</a></li>
    <li><a href="#lookandfeel">{L('lookandfeel')}</a></li>

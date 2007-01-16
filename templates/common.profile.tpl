@@ -1,4 +1,4 @@
-  <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
+  <form action="<?php if ($do == 'myprofile'): ?>{CreateUrl('myprofile')}<?php else: ?>{CreateUrl('edituser', $theuser->id)}<?php endif; ?>" method="post">
     <table class="box">
       <tr>
         <td><label for="realname">{L('realname')}</label></td>

@@ -31,7 +31,7 @@ if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
 
-unset($_SESSION['SUCCESS'], $_SESSION['ERROR'], $do);
+unset($_SESSION['SUCCESS'], $_SESSION['ERROR']);
 
 switch ($action = Req::val('action'))
 {
@@ -159,7 +159,6 @@ switch ($action = Req::val('action'))
         Backend::upload_files($task['task_id'], '0', 'usertaskfile');
 
         $_SESSION['SUCCESS'] = L('taskupdated');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
     
     // ##################
@@ -178,7 +177,6 @@ switch ($action = Req::val('action'))
         Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
     
     case 'reopen':
@@ -218,7 +216,6 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 13);
 
         $_SESSION['SUCCESS'] = L('taskreopenedmsg');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -236,7 +233,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('commentaddedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     // ##################
@@ -320,7 +316,7 @@ switch ($action = Req::val('action'))
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
                            Post::val('email_address'), NOTIFY_EMAIL)) {
         
-                //email sent succefully, now update the database.
+            //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,
                         Post::val('email_address'), Post::val('jabber_id'),
                         Post::num('notify_type'), $magic_url, Post::num('time_zone')); 
@@ -331,8 +327,7 @@ switch ($action = Req::val('action'))
                                    magic_url, time_zone )
                          VALUES ( " . $db->fill_placeholders($reg_values) . ' )', $reg_values);
 
-                if($query) {
-
+                if ($query) {
                     $_SESSION['SUCCESS'] = L('codesent');
                     Flyspray::Redirect('./');
                 }
@@ -379,6 +374,7 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('accountcreated');
+        define('NO, DO', true);
         $page->pushTpl('register.ok.tpl');
         break;
 
@@ -427,11 +423,9 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if ($user->perms('is_admin')) {
-            $_SESSION['SUCCESS'] = L('newusercreated');
-            Flyspray::Redirect($_SESSION['prev_page']);
-        } else {
-            $_SESSION['SUCCESS'] = L('accountcreated');
+        $_SESSION['SUCCESS'] = L('newusercreated');
+        if (!$user->perms('is_admin')) {
+            define('NO_DO', true);
             $page->pushTpl('register.ok.tpl');
         }
         break;
@@ -477,7 +471,6 @@ switch ($action = Req::val('action'))
             }
         }
 
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
         
     // ##################
@@ -504,7 +497,6 @@ switch ($action = Req::val('action'))
                 array(trim(Post::val('visible_columns'))));
 
         $_SESSION['SUCCESS'] = L('optionssaved');
-        Flyspray::Redirect(CreateURL('admin','prefs'));
         break;
         
     // ##################
@@ -622,12 +614,11 @@ switch ($action = Req::val('action'))
                                  SET  ".join('=?, ', $cols)."=?
                                WHERE  project_id = ?", $args);
 
-        $update = $db->Query("UPDATE {projects} SET visible_columns = ? WHERE project_id = ?",
-                array(trim(Post::val('visible_columns')), $proj->id));
+        $update = $db->Query('UPDATE {projects} SET visible_columns = ? WHERE project_id = ?',
+                             array(trim(Post::val('visible_columns')), $proj->id));
 
 
         $_SESSION['SUCCESS'] = L('projectupdated');
-        Flyspray::Redirect(CreateURL('pm', 'prefs', $proj->id));
         break;
 
     // ##################
@@ -720,7 +711,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('userupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -793,7 +783,6 @@ switch ($action = Req::val('action'))
                      WHERE  group_id = ? AND project_id = ?", $args);
 
         $_SESSION['SUCCESS'] = L('groupupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
         
     // ##################
@@ -829,7 +818,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('listupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -860,7 +848,6 @@ switch ($action = Req::val('action'))
                 array($proj->id, Post::val('list_name'), $position, '1'));
 
         $_SESSION['SUCCESS'] = L('listitemadded');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -886,7 +873,7 @@ switch ($action = Req::val('action'))
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
                                        WHERE  $list_id = ? AND project_id = ?",
-                        array($listnames[$id], $listposition[$id],
+                        array($listnames[$id], intval($listposition[$id]),
                             intval($listshow[$id]), intval($listtense[$id]), $id, $proj->id));
             } else {
                 Flyspray::show_error(L('fieldsmissing'));
@@ -899,7 +886,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('listupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
         
     // ##################
@@ -928,10 +914,9 @@ switch ($action = Req::val('action'))
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
                         VALUES  (?, ?, ?, ?, ?)",
                  array($proj->id, Post::val('list_name'),
-                     $position, '1', Post::val('version_tense')));
+                     intval($position), '1', Post::val('version_tense')));
 
         $_SESSION['SUCCESS'] = L('listitemadded');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -979,7 +964,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('listupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
     
     // ##################
@@ -1009,7 +993,6 @@ switch ($action = Req::val('action'))
                       Post::val('category_owner', 0) == '' ? '0' : Flyspray::username_to_id(Post::val('category_owner', 0)), $right, $right+1));
 
         $_SESSION['SUCCESS'] = L('listitemadded');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -1051,7 +1034,6 @@ switch ($action = Req::val('action'))
         $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'));
 
         $_SESSION['SUCCESS'] = L('relatedaddedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id'] .'#related'));
         break;
 
     // ##################
@@ -1076,7 +1058,6 @@ switch ($action = Req::val('action'))
             }
         }
 
-        Flyspray::Redirect(CreateURL('details', $task['task_id']) . '#related');
         break;
 
     // ##################
@@ -1089,7 +1070,6 @@ switch ($action = Req::val('action'))
         }
         
         $_SESSION['SUCCESS'] = L('notifyadded');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -1099,7 +1079,6 @@ switch ($action = Req::val('action'))
         Backend::remove_notification(Req::val('user_id'), Req::val('ids'));
         
         $_SESSION['SUCCESS'] = L('notifyremoved');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -1132,7 +1111,6 @@ switch ($action = Req::val('action'))
         Backend::delete_files(Post::val('delete_att'));
 
         $_SESSION['SUCCESS'] = L('editcommentsaved');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
         
     // ##################
@@ -1178,7 +1156,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('commentdeletedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
         
     // ##################
@@ -1194,7 +1171,6 @@ switch ($action = Req::val('action'))
         }
         
         $_SESSION['SUCCESS'] = L('reminderaddedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#remind');
         break;
         
     // ##################
@@ -1217,7 +1193,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('reminderdeletedmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#remind');
         break;
         
     // ##################
@@ -1251,7 +1226,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('groupswitchupdated');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
         
     // ##################
@@ -1261,7 +1235,6 @@ switch ($action = Req::val('action'))
         Backend::assign_to_me($user->id, Req::val('ids'));
 
         $_SESSION['SUCCESS'] = L('takenownershipmsg');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
         
     // ##################
@@ -1271,7 +1244,6 @@ switch ($action = Req::val('action'))
         Backend::add_to_assignees($user->id, Req::val('ids'));
     
         $_SESSION['SUCCESS'] = L('addedtoassignees');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -1302,7 +1274,6 @@ switch ($action = Req::val('action'))
         $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms));
 
         $_SESSION['SUCCESS'] = L('adminrequestmade');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     // ##################
@@ -1329,7 +1300,6 @@ switch ($action = Req::val('action'))
         $notify->Create(NOTIFY_PM_DENY_REQUEST, $req_details['task_id'], Req::val('deny_reason'));
 
         $_SESSION['SUCCESS'] = L('pmreqdeniedmsg');
-        Flyspray::Redirect($_SESSION['prev_page']);
         break;
 
     // ##################
@@ -1379,8 +1349,6 @@ switch ($action = Req::val('action'))
                     array($task['task_id'], Post::val('dep_task_id')));
 
         $_SESSION['SUCCESS'] = L('dependadded');
-
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     // ##################
@@ -1408,7 +1376,6 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('depremovedmsg');
-        Flyspray::Redirect(CreateURL('details', $dep_info['task_id']));
         break;
 
     // ##################
@@ -1438,7 +1405,6 @@ switch ($action = Req::val('action'))
         $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
 
         $_SESSION['SUCCESS'] = L('magicurlsent');
-        Flyspray::Redirect('./');
         break;
 
     // ##################
@@ -1480,7 +1446,6 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 3, 1, 0, 'mark_private');
 
         $_SESSION['SUCCESS'] = L('taskmadeprivatemsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     // ##################
@@ -1498,7 +1463,6 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 3, 0, 1, 'mark_private');
 
         $_SESSION['SUCCESS'] = L('taskmadepublicmsg');
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
         
     // ##################
@@ -1507,30 +1471,10 @@ switch ($action = Req::val('action'))
     case 'details.addvote':
         if (Backend::add_vote($user->id, $task['task_id'])) {                         
             $_SESSION['SUCCESS'] = L('voterecorded');
-            Flyspray::Redirect(CreateURL('details', $task['task_id']));
         } else {
             Flyspray::show_error(L('votefailed'));
             break;
         }
-        
-    default:
-        Flyspray::show_error(20);
-}
-
-// this happens if the user has insufficient permissions.
-// in general he won't  get into such a situation because such parts of the interface are hidden
-if (!isset($_SESSION['SUCCESS']) && !isset($_SESSION['ERROR'])) {
-    $_SESSION['ERROR'] = L('databasemodfailed');
-    if (Req::has('task_id')) {
-        Flyspray::Redirect(CreateURL('details', $task['task_id']));
-    } else {
-        Flyspray::Redirect($baseurl);
-    }
-}
-
-// in case an error occured
-if (isset($do)) {
-    include_once BASEDIR . "/scripts/$do.php";
 }
 
 ?>

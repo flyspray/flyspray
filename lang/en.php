@@ -808,6 +808,7 @@ Regards,',
 'request1'                => 'A task closure has been requested.',
 'request2'                => 'A request to re-open the task has been made.',
 'allpriorities'           => 'All Priorities',
+'noroadmap'               => 'No roadmap available (no project specific "future" versions exist).',
 ); 
 
 ?>

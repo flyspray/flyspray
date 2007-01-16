@@ -40,4 +40,10 @@ foreach($milestone['open_tasks'] as $task): ?>
 </div>
 <?php endforeach; ?>
 
+<?php if (!count($data)): ?>
+<div class="box roadmap">
+<p><em>{L('noroadmap')}</em></p>
+</div>
+<?php else: ?>
 <p><a href="{CreateURL('roadmap', $proj->id, null, array('txt' => 'true'))}"><img src="{$this->get_image('mime/text')}" alt="" /> {L('textversion')}</a></p>
+<?php endif; ?>

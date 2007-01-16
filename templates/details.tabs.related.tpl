@@ -1,7 +1,7 @@
 <div id="related" class="tab">
   <table> <?php // table based layout, sorry. if anyone has the desire to face browser bugs, feel free to rewrite it with floats ?>
    <tr><td>
-    <form method="post" action="{$baseurl}" >
+    <form method="post" action="{CreateUrl('details', $task_details['task_id'])}#related" >
         <table id="tasks_related" class="userlist">
         <tr>
           <th>
@@ -43,7 +43,7 @@
   </table>
 
   <?php if ($user->can_edit_task($task_details) && !$task_details['is_closed']): ?>
-  <form action="{$baseurl}#related" method="post" id="formaddrelatedtask">
+  <form action="{CreateUrl('details', $task_details['task_id'])}#related" method="post" id="formaddrelatedtask">
     <div>
       <input type="hidden" name="action" value="details.add_related" />
       <input type="hidden" name="task_id" value="{$task_details['task_id']}" />

@@ -35,11 +35,11 @@
           <?php if ($req['request_type'] == 1) : ?>
           <a class="button" href="{CreateUrl('details', $req['task_id'], null, array('showclose' => 1))}#formclosetask">{L('accept')}</a>
           <?php elseif ($req['request_type'] == 2) : ?>
-          <a class="button" href="{$_SERVER['SCRIPT_NAME']}?action=reopen&task_id={$req['task_id']}">{L('accept')}</a>
+          <a class="button" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=reopen&task_id={$req['task_id']}">{L('accept')}</a>
           <?php endif; ?>
           <a href="#" class="button" onclick="showhidestuff('denyform{$req['request_id']}');">{L('deny')}</a>
           <div id="denyform{$req['request_id']}" class="denyform">
-            <form action="{$_SERVER['SCRIPT_NAME']}" method="post">
+            <form action="{CreateUrl('pm', 'pendingreq', $proj->id)}" method="post">
               <div>
                 <input type="hidden" name="action" value="denypmreq" />
                 <input type="hidden" name="req_id" value="{$req['request_id']}" />

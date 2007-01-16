@@ -31,10 +31,10 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'groups':
         $page->assign('groups', Flyspray::ListGroups($proj->id));
     case 'editgroup':
-    case 'tt':
-    case 'res':
+    case 'tasktype':
+    case 'resolution':
     case 'os':
-    case 'ver':
+    case 'version':
     case 'cat':
     case 'status':
     case 'newgroup':

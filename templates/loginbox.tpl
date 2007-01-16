@@ -9,6 +9,8 @@
 
   <label for="lbl_remember">{L('rememberme')}</label>
   <input type="checkbox" id="lbl_remember" name="remember_login" />
+  
+  <input type="hidden" name="return_to" value="{$_SERVER['REQUEST_URI']}" />
 
   <button accesskey="l" type="submit">{L('login')}</button>
 

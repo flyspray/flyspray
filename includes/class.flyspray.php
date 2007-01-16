@@ -877,13 +877,11 @@ class Flyspray
      */
     function show_error($error_message, $die = true, $advanced_info = null, $url = null)
     {
-        global $modes, $do, $baseurl;
+        global $modes, $baseurl;
         
         if (!is_int($error_message)) {
             // in modify.inc.php
             $_SESSION['ERROR'] = $error_message;
-
-            $do = Filters::enum(reset(explode('.', Req::val('action'))), $modes);
         } else {
             $_SESSION['ERROR'] = L('error#') . $error_message . ': ' . L('error' . $error_message);
             if (!is_null($advanced_info)) {

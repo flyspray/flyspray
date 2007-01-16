@@ -18,7 +18,7 @@ if (!Req::has('magic_url') && $user->isAnon()) {
 elseif (Req::has('magic_url') && $user->isAnon()) {
     // Step Two: user enters new password
 
-    $check_magic = $db->Query("SELECT * FROM {users} WHERE magic_url = ?",
+    $check_magic = $db->Query('SELECT * FROM {users} WHERE magic_url = ?',
             array(Get::val('magic_url')));
 
     if (!$db->CountRows($check_magic)) {

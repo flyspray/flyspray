@@ -19,7 +19,7 @@
 
     <?php if ($user->perms('delete_comments')): ?>
     &mdash;
-    <a href="{$_SERVER['SCRIPT_NAME']}?action=details.deletecomment&amp;task_id={$task_details['task_id']}&amp;comment_id={$comment['comment_id']}"
+    <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=details.deletecomment&amp;task_id={$task_details['task_id']}&amp;comment_id={$comment['comment_id']}"
       onclick="return confirm('{L('confirmdeletecomment')}');">
       {L('delete')}</a>
     <?php endif ?>
@@ -43,7 +43,7 @@
 
   <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
   <fieldset><legend>{L('addcomment')}</legend>
-  <form enctype="multipart/form-data" action="{$_SERVER['SCRIPT_NAME']}" method="post">
+  <form enctype="multipart/form-data" action="{CreateUrl('details', $task_details['task_id'])}" method="post">
     <div>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <div class="hide preview" id="preview"></div>

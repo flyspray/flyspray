@@ -671,6 +671,16 @@ function tpl_disableif ($if)
         return 'disabled="disabled"';
     }
 }
+
+function tpl_form($action, $method = 'post', $enctype = 'application/x-www-form-urlencoded')
+{
+    $form = sprintf('<form action="%s" method="%s">',
+                        htmlspecialchars($action, ENT_QUOTES, 'utf-8'),
+                        htmlspecialchars($method, ENT_QUOTES, 'utf-8'),
+                        htmlspecialchars($enctype, ENT_QUOTES, 'utf-8'));
+    $form .= "\n" . '<input type="hidden" name="prev_page" value="" />';
+}
+
 // {{{ Url handling
 // Create an URL based upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())

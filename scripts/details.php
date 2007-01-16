@@ -30,7 +30,7 @@ $page->assign('old_assigned', implode(' ', $task_details['assigned_to']));
 
 $page->setTitle('FS#' . $task_details['task_id'] . ': ' . $task_details['item_summary']);
 
-if (Req::val('edit') && $user->can_edit_task($task_details)) {
+if ((Get::val('edit') || Post::has('item_summary')) && $user->can_edit_task($task_details)) {
     $result = $db->Query('SELECT u.user_id, u.user_name, u.real_name, g.group_name
                             FROM {assigned} a, {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id

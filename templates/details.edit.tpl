@@ -1,5 +1,5 @@
 <div id="taskdetails">
-  <form action="{$baseurl}" id="taskeditform" enctype="multipart/form-data" method="post">
+  <form action="{CreateUrl('details', 261)}" id="taskeditform" enctype="multipart/form-data" method="post">
 	 <div>
 		<h2 class="summary severity{Req::val('task_severity', $task_details['task_severity'])}">
 		  <a href="{CreateUrl('details', $task_details['task_id'])}">FS#{$task_details['task_id']}</a> &mdash;

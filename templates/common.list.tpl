@@ -8,7 +8,7 @@
     </div>
 </div>
 <?php endif; ?>
-<form action="{$_SERVER['SCRIPT_NAME']}" method="post">
+<form action="{CreateURL($do, $list_type, $proj->id)}" method="post">
   <table class="list" id="listTable">
    <thead>
      <tr>
@@ -83,7 +83,7 @@
   <?php endif; ?>
 </form>
 <hr />
-<form action="{$_SERVER['SCRIPT_NAME']}" method="post">
+<form action="{CreateURL($do, $list_type, $proj->id)}" method="post">
   <table class="list">
     <tr>
       <td>

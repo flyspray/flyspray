@@ -53,5 +53,5 @@ else {
     Flyspray::show_error(8);
 }
 
-Flyspray::Redirect($_SESSION['prev_page']);
+Flyspray::Redirect(Req::val('return_to'));
 ?>

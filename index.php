@@ -30,7 +30,6 @@ while (($entry = $dir->read()) !== false) {
 
 $do = Req::enum('do', $modes, $proj->prefs['default_entry']);
 
-
 if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
     $do = 'pm';
 } elseif ($do == 'pm' && Req::has('switch') && Req::val('project') == '0') {
@@ -157,10 +156,12 @@ $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 $page->assign('do', $do);
 $page->pushTpl('header.tpl');
 
+// DB modifications?
 if (Req::has('action')) {
     require_once(BASEDIR . '/includes/modify.inc.php');
-} else {
-    // Show the page the user wanted
+}
+
+if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
 }
 
@@ -169,8 +170,5 @@ $page->setTheme($proj->prefs['theme_style']);
 $page->render();
 
 unset($_SESSION['ERROR'], $_SESSION['SUCCESS']);
-if (Flyspray::absoluteURI($_SERVER['REQUEST_URI']) != $baseurl || !isset($_SESSION['prev_page'])) {
-    $_SESSION['prev_page'] = $_SERVER['REQUEST_URI'];
-}
 
 ?>

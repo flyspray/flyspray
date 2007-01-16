@@ -17,10 +17,8 @@ if (!$user->perms('is_admin')) {
     Flyspray::show_error(4);
 }
 
-$old_project = $proj->id;
 $proj = new Project(0);
 
-$page->uses('old_project');
 $page->pushTpl('admin.menu.tpl');
 
 switch ($area = Req::val('area', 'prefs')) {
@@ -40,10 +38,10 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'newproject':
     case 'os':
     case 'prefs':
-    case 'res':
-    case 'tt':
+    case 'resolution':
+    case 'tasktype':
     case 'status':
-    case 'ver':
+    case 'version':
     case 'newgroup':
 
         $page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
