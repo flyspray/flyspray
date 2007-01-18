@@ -97,6 +97,8 @@ class Jabber
             if (!empty($record)) {
                 $server = $record[0]["target"];
             }
+        } else {
+            $this->log('Warning: dns_get_record function not found . gtalk will not work');
         }
         
         $server = $ssl ? 'ssl://' . $server : $server;
@@ -344,7 +346,7 @@ class Jabber
     
     function disconnect()
     {
-        if (!feof($this->connection)) {
+        if (is_resource($this->connection) && !feof($this->connection)) {
             $this->Send('</stream:stream>');
             $this->auth = $this->session_req = $this->ssl = $this->tls = false;
             $this->jid = null;
