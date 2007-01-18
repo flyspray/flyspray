@@ -18,7 +18,7 @@
     </div>
   </div>
   <?php endif; ?>
-    <form action="{CreateURL($do, 'cat')}" method="post">
+    <form action="{CreateURL($do, 'cat', $proj->id)}" method="post">
       <table class="list" id="catTable">
          <thead>
          <tr>
@@ -86,7 +86,7 @@
     <hr />
 
     <!-- Form to add a new category to the list -->
-    <form action="{CreateURL($do, 'cat')}" method="post">
+    <form action="{CreateURL($do, 'cat', $proj->id)}" method="post">
       <table class="list">
         <tr>
           <td>
