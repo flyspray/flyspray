@@ -25,7 +25,6 @@ if ( is_readable ('../flyspray.conf.php') && (count($config = parse_ini_file('..
 
 // define basic stuff first.
 
-define('VALID_FLYSPRAY',1);
 define('IN_FS', 1 );
 define('APPLICATION_NAME', 'Flyspray');
 define('BASEDIR', dirname(__FILE__));

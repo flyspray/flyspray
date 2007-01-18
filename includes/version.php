@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------
 //
 
-if (!defined('VALID_FLYSPRAY')) die('Sorry you cannot access this file directly');
+if (!defined('IN_FS')) die('Sorry you cannot access this file directly');
 
 /**
  * Class to store information about Version and release
