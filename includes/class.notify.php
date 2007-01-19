@@ -139,19 +139,21 @@ class Notifications {
       $JABBER->log("We have notifications to process...");
       $JABBER->log("Starting Jabber session:");
 
+      $ids = array();
+
       while ( $row = $db->FetchRow($result) )
       {
          $ids[] = $row['message_id'];
       }
 
-      $desired = join(",", $ids);
+      $desired = join(",", array_map('intval', $ids));
       $JABBER->log("message ids to send = {" . $desired . "}");
 
       // removed array usage as it's messing up the select
       // I suspect this is due to the variable being comma separated
       // Jamin W. Collins 20050328
       $notifications = $db->Query("SELECT * FROM {notification_messages}
-                                   WHERE message_id in ($desired)
+                                   WHERE message_id IN ($desired)
                                    ORDER BY time_created ASC"
                                  );
 
@@ -271,7 +273,6 @@ class Notifications {
          $mail->AddAddress(trim($to));
       }
 
-      $mail->WordWrap = 70; // 70 characters
       $mail->Subject = trim($subject);
       $mail->Body = $body;
 
@@ -393,7 +394,7 @@ class Notifications {
          $body .= L('details') . ' - ' . $task_details['detailed_desc'] . "\r\n\r\n";
          $body .= L('moreinfo') . "\r\n";
          $body .= CreateURL('details', $task_id) . "\r\n\r\n";
-      } // }}}
+      } // }}} 
       // {{{ Task details changed
       if ($type == NOTIFY_TASK_CHANGED)
       {
@@ -545,7 +546,7 @@ class Notifications {
       {
          $body .= L('noticefrom') . " {$proj->prefs['project_title']}\r\n\r\n"
                . L('addressused') . "\r\n\r\n"
-               . "{$arg1[0]}index.php?do=register&magic_url={$arg1[1]}\r\n\r\n"
+               . " {$arg1[0]}index.php?do=register&magic_url={$arg1[1]} \r\n\r\n"
                 // In case that spaces in the username have been removed
                . L('username') . ': '. $arg1[2] . "\r\n"
                . L('confirmcodeis') . " $arg1[3] \r\n\r\n";

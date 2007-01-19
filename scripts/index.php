@@ -113,7 +113,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
-    if(!is_array($task) || empty($task) || !ctype_alnum(str_replace('_','', $colname))) {
+    if(!is_array($task) || empty($task) || preg_match('![^A-Za-z0-9_]!', $colname)) {
         //run away..
         return '';
     }

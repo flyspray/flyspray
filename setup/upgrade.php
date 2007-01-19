@@ -116,7 +116,7 @@ class ConfUpdater
             $new_config .= "\n";
         }
 
-        $fp = fopen($location, 'w');
+        $fp = fopen($location, 'wb');
         fwrite($fp, $new_config);
         fclose($fp);
     }
