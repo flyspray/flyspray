@@ -34,7 +34,7 @@ require_once APPLICATION_PATH . '/adodb/adodb-xmlschema03.inc.php';
 
 $db = new Database;
 $db->dbOpenFast($conf['database']);
-              
+
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
@@ -57,6 +57,8 @@ $page->assign('short_version', UPGRADE_VERSION);
 // Now the hard work
 // ---------------------------------------------------------------------
 
+$upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
+
 if (Post::val('upgrade')) {
     // At first the config file
     new ConfUpdater(CONFIG_PATH);
@@ -69,9 +71,8 @@ if (Post::val('upgrade')) {
     }
     
     // Next a mix of XML schema files and PHP upgrade scripts
-    $upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
     if (!isset($upgrade_info[$type])) {
-        die('Bad upgrade.info file.');
+        die('#1 Bad upgrade.info file.');
     }
     
     ksort($upgrade_info[$type]);
@@ -171,9 +172,10 @@ foreach ($checks as $check => $result) {
     }
 }
 
-/*$page->assign('upgrade_options', '<div><label><input type="checkbox" />
-                                  Replace resolution list (strongly recommended)
-                                  </label></div>'); // piece of HTML which adds user input, quick and dirty*/
+if (isset($upgrade_info['options'])) {
+    // piece of HTML which adds user input, quick and dirty*/
+    $page->assign('upgrade_options', implode('', $upgrade_info['options']));
+}
 
 $page->assign('index', APPLICATION_SETUP_INDEX);
 $page->uses('checks', 'fs', 'upgrade_possible');

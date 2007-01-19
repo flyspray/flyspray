@@ -114,7 +114,7 @@ class User
                             LEFT JOIN  {projects} p ON g.project_id = p.project_id
                                 WHERE  uig.user_id = ?
                              ORDER BY  g.project_id, g.group_id ASC",
-                                array($this->id), count($this->perms)); // in case of bad entries, just select number of projects+1 row
+                                array($this->id));
 
             while ($row = $db->FetchRow($sql)) {
                 if (!isset($this->perms[$row['project_id']])) {

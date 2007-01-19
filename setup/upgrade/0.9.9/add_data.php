@@ -5,21 +5,25 @@
    \***********************************************************/
 
 // Some new global preferences
-$sql = $db->Query('SELECT max(pref_id) FROM {prefs}');
-$max_pref = $db->FetchOne($sql);
+$sql = $db->Query('SELECT pref_name FROM {prefs}');
+$pref_names = $db->FetchCol($sql);
 switch (true)
 {
-    // no break here
-    case ($max_pref < 26):
-        $db->Query("INSERT INTO {prefs} VALUES (26, 'page_title', 'Flyspray:: ')");
-    case ($max_pref < 25):
-        $db->Query("INSERT INTO {prefs} VALUES (25 , 'notify_registration', '0')");
-    case ($max_pref < 24):
-        $db->Query("INSERT INTO {prefs} VALUES (24, 'jabber_ssl', '0')");
-    case ($max_pref < 23):
-        $db->Query("INSERT INTO {prefs} VALUES (23, 'last_update_check', '0')");
-    case ($max_pref < 22):
-        $db->Query("INSERT INTO {prefs} VALUES (22, 'cache_feeds', '0')");
+    case (!in_array('page_title', $pref_names)):
+        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('page_title', 'Flyspray:: ')");
+        break;
+    case (!in_array('notify_registration', $pref_names)):
+        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('notify_registration', '0')");
+        break;
+    case (!in_array('jabber_ssl', $pref_names)):
+        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('jabber_ssl', '0')");
+        break;
+    case (!in_array('last_update_check', $pref_names)):
+        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('last_update_check', '0')");
+        break;
+    case (!in_array('cache_feeds', $pref_names)):
+        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('cache_feeds', '0')");
+        break;
 }
 
 // New status list, make sure data is only inserted if we have an empty table
@@ -33,8 +37,12 @@ if ($db->FetchOne($sql) < 1) {
     $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (6, 'Requires testing', 6, 1, 0)");
 }
 
+if (Post::val('replace_resolution')) {
+    $db->Query('UPDATE {list_resolution} SET resolution_name = ? WHERE resolution_id = ?', array('Duplicate (the real one)', 6));
+}
+
 $db->Query("DELETE FROM {list_status} WHERE status_id = 7");
-$db->Query("DELETE FROM {prefs} WHERE pref_id = 10");
+$db->Query("DELETE FROM {prefs} WHERE pref_name = 'assigned_groups'");
 $db->Query("DELETE FROM {notifications} WHERE user_id = 0 OR task_id = 0");
 
 $db->Query("UPDATE {tasks} SET closure_comment='' WHERE closure_comment='0'");

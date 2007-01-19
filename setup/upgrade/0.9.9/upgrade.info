@@ -1,12 +1,19 @@
 [defaultupgrade]
-0="flyspray-begin.xml"
-1="upgrade_assignments.php"
-2="convert_categories.php"
-3="convert_private.php"
-4="add_duplicates.php"
-5="add_searches.php"
-6="flyspray-final.xml"
-7="add_data.php"
+0="clean_unique.php"
+1="flyspray-begin.xml"
+2="upgrade_assignments.php"
+3="convert_categories.php"
+4="convert_private.php"
+5="add_duplicates.php"
+6="add_searches.php"
+7="flyspray-final.xml"
+8="add_data.php"
 
 [develupgrade]
 1="flyspray-final.xml"
+
+[options]
+1="<div><label><input name="replace_resolution" checked="checked" type="checkbox" />
+        Replace resolution list (strongly recommended for 0.9.8 to 0.9.9)
+        </label>
+   </div>"

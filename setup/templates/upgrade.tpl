@@ -25,7 +25,7 @@
 				<table class="formBlock">
 				<tr>
 					<td valign="top">../flyspray.conf.php</td>
-					<td align="left"><b><?php if ($checks['config_writable']): ?><span class="green">writeable</span><?php else: ?><span class="red">writeable</span><?php endif; ?></b></td>
+					<td align="left"><b><?php if ($checks['config_writable']): ?><span class="green">writeable</span><?php else: ?><span class="red">not writeable</span><?php endif; ?></b></td>
 					<td>&nbsp;</td>
                 </tr><tr>
 					<td valign="top">Database connection</td>
