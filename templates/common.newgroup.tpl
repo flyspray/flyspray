@@ -1,6 +1,6 @@
 <fieldset><legend>{L('createnewgroup')}</legend>
 
-<form action="{CreateUrl($do, 'newgroup')}" method="post" id="newgroup">
+<form action="{CreateUrl($do, 'newgroup', $proj->id)}" method="post" id="newgroup">
   <table class="box">
     <tr>
       <td><label for="groupname">{L('groupname')}</label></td>

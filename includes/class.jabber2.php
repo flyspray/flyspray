@@ -92,7 +92,7 @@ class Jabber
      */
     function open_socket($server, $port, $ssl = false)
     {
-        if (function_exists("dns_get_record")){
+        if (function_exists("dns_get_record")) {
             $record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
             if (!empty($record)) {
                 $server = $record[0]["target"];
@@ -329,7 +329,7 @@ class Jabber
         }
     }
     
-    function send_message($to, $text, $subject, $type = 'normal') {
+    function send_message($to, $text, $subject = '', $type = 'normal') {
         if (!$this->jid) {
             return false;
         }

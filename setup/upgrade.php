@@ -9,54 +9,86 @@
 // +----------------------------------------------------------------------
 //
 
-session_start();
-
 set_time_limit(0);
 ini_set('memory_limit', '32M');
 
 // define basic stuff first.
-define('IN_FS', 1 );
+define('IN_FS', 1);
 define('APPLICATION_NAME', 'Flyspray');
 define('BASEDIR', dirname(__FILE__));
 define('APPLICATION_PATH', dirname(BASEDIR));
+define('CONFIG_PATH', APPLICATION_PATH . '/flyspray.conf.php');
 define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
-$conf['general']['syntax_plugin'] = '';
-
+$conf  = @parse_ini_file(CONFIG_PATH, true) or die('Cannot open config file at ' . CONFIG_PATH);
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
+require_once OBJECTS_PATH . '/class.database.php';
 require_once OBJECTS_PATH . '/class.flyspray.php';
 require_once OBJECTS_PATH . '/class.tpl.php';
-require_once OBJECTS_PATH . '/version.php';
 
+// Initialise DB
+require_once APPLICATION_PATH . '/adodb/adodb.inc.php';
+require_once APPLICATION_PATH . '/adodb/adodb-xmlschema03.inc.php';
+
+$db = new Database;
+$db->dbOpenFast($conf['database']);
+              
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
-define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
-define('XMLS_DEBUG', true);
-define('XMLS_PREFIX_MAXLEN', 15);
+$fs = new Flyspray();
 
-$version = new Version();
+define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
+define('UPGRADE_VERSION', substr($fs->version, 0, 5));
+define('UPGRADE_PATH', BASEDIR . '/upgrade/' . UPGRADE_VERSION);
+
+// Get installed version
+$sql = $db->Query('SELECT pref_value FROM {prefs} WHERE pref_name = "fs_ver"');
+$installed_version = $db->FetchOne($sql);
+
 $page = new Tpl;
 $page->assign('title', 'Upgrade ');
-$page->assign('product_name', $version->mProductName);
-$page->assign('version', $version->mVersion);
-$page->assign('installed_version', 'X'); // get version info from database
-$page->assign('short_version', $version->mRelease . '.' . $version->mDevLevel);
-$page->assign('copyright', $version->mCopyright);
+$page->assign('installed_version', $installed_version); // get version info from database
+$page->assign('short_version', UPGRADE_VERSION);
 
 // ---------------------------------------------------------------------
 // Now the hard work
 // ---------------------------------------------------------------------
 
 if (Post::val('upgrade')) {
-    $conf = new ConfUpdater(APPLICATION_PATH . '/flyspray.conf.php', $version);
-}
+    // At first the config file
+    new ConfUpdater(CONFIG_PATH);
     
-function is_true($var)
-{
-    return $var === true;
+    // dev version upgrade?
+    if (UPGRADE_VERSION == $installed_version) {
+        $type = 'develupgrade';
+    } else {
+        $type = 'defaultupgrade';
+    }
+    
+    // Next a mix of XML schema files and PHP upgrade scripts
+    $upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
+    if (!isset($upgrade_info[$type])) {
+        die('Bad upgrade.info file.');
+    }
+    
+    ksort($upgrade_info[$type]);
+    foreach ($upgrade_info[$type] as $file) {
+        if (substr($file, -4) == '.php') {
+            require_once UPGRADE_PATH . '/' . $file;
+        }
+        
+        if (substr($file, -4) == '.xml') {
+            $schema = new adoSchema($db->dblink);
+            $schema->SetPrefix($conf['database']['dbprefix']);
+            $schema->ParseSchemaFile(UPGRADE_PATH . '/' . $file);
+            $schema->ExecuteSchema();
+        }
+    }
+    $db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name = 'fs_ver'", array($fs->version));
+    $page->assign('done', true);
 }
 
 class ConfUpdater
@@ -70,14 +102,14 @@ class ConfUpdater
      * @access public
      * @return bool
      */
-    function ConfUpdater($location, $version)
+    function ConfUpdater($location)
     {
         if (!is_writable($location)) {
             return false;
         }
         
         $this->old_config = parse_ini_file($location, true);
-        $this->new_config = parse_ini_file(BASEDIR . '/upgrade/' . $version->mRelease . '.' . $version->mDevLevel . '/flyspray.conf.php', true);
+        $this->new_config = parse_ini_file(UPGRADE_PATH . '/flyspray.conf.php', true);
         // Now we overwrite all values of the *default* file if there is one in the existing config
         array_walk($this->new_config, array($this, '_merge_configs'));
         
@@ -122,17 +154,29 @@ class ConfUpdater
     }
 }
 
-$checks = array();
-$checks['config_writable'] = is_writable(APPLICATION_PATH . '/flyspray.conf.php');
+$checks = $todo = array();
+$checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION) === -1;
+$checks['config_writable'] = is_writable(CONFIG_PATH);
+$checks['db_connect'] = (bool) $db->dblink;
+$todo['config_writable'] = 'Please make sure that the file at ' . CONFIG_PATH . ' is writable.';
+$todo['db_connect'] = 'Connection to the database could not be established. Check your config.';
+$todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
 
-$page->assign('upgrade_options', '<div><label><input type="checkbox" />
+$upgrade_possible = true;
+foreach ($checks as $check => $result) {
+    if ($result !== true) {
+        $upgrade_possible = false;
+        $page->assign('todo', $todo[$check]);
+        break;
+    }
+}
+
+/*$page->assign('upgrade_options', '<div><label><input type="checkbox" />
                                   Replace resolution list (strongly recommended)
-                                  </label></div>'); // piece of HTML which adds user input, quick and dirty
-$page->assign('todo', 'Says what needs to be done to make the upgrader work.'); // check if file is writable
-$page->assign('upgrade_possible', count(array_filter($checks, 'is_true'))); // version compare (consider development versions!), flyspray.conf check
+                                  </label></div>'); // piece of HTML which adds user input, quick and dirty*/
 
 $page->assign('index', APPLICATION_SETUP_INDEX);
-$page->uses('checks');
+$page->uses('checks', 'fs', 'upgrade_possible');
 
 $page->display('upgrade.tpl');
 

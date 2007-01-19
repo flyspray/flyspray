@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>{$title . '  ' . $product_name}</title>
+<title>{$title} Flyspray</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" href="styles/setup.css" type="text/css" media="screen" />
 </head>
@@ -27,29 +27,38 @@
 					<td valign="top">../flyspray.conf.php</td>
 					<td align="left"><b><?php if ($checks['config_writable']): ?><span class="green">writeable</span><?php else: ?><span class="red">writeable</span><?php endif; ?></b></td>
 					<td>&nbsp;</td>
+                </tr><tr>
+					<td valign="top">Database connection</td>
+					<td align="left"><b><?php if ($checks['db_connect']): ?><span class="green">OK</span><?php else: ?><span class="red">Failed</span><?php endif; ?></b></td>
+					<td>&nbsp;</td>
 				</tr>
 				</table>
 				<p>
-				In order to upgrade {$product_name} 
+				In order to upgrade Flyspray
 				correctly it needs to be able to access and write flyspray.conf.php.
 				</p>
 			</div>
             <?php if (!$upgrade_possible): ?>
-            Thus, an upgrade is not possible. {$todo}
+            Apparently, an upgrade is not possible. {$todo}
             <?php else: ?>
-            Thus, an upgrade is possible.
+            Apparently, an upgrade is possible.
             </p>
             
             <h2>Precautions</h2>
             <p>Create a backup of your <strong>database</strong> <em>and</em> all Flyspray related <strong>files</strong> before performing the upgrade.</p>
             
-            <?php if ($upgrade_options): ?>
+            <?php if (isset($upgrade_options)): ?>
             <h2>Upgrade options</h2>
             <p>{!$upgrade_options}</p>
             <?php endif; ?>
             
             <h2>Perform Upgrade</h2>
-            <p><input name="upgrade" class="button" value="Perform Upgrade > >" type="submit" /></p>
+            <p>
+              <input name="upgrade" class="button" value="Perform Upgrade > >" type="submit" />
+              <?php if (isset($done)): ?>
+              <span class="green"><strong>Done!</strong></span>
+              <?php endif; ?>
+            </p>
             <?php endif; ?> 
         </div><!-- End of install -->
         </form>
@@ -59,7 +68,8 @@
     </div><!-- End of content -->
     <div id="footer">
       <p>
-        {$copyright}<br />{$version}
+        Flyspray {$fs->version} [Fly Flapper]<br />
+        Copyright 2004-{date('Y')} &copy; Tony Collins and the Flyspray team.  All rights reserved.
       </p>
     </div><!-- End of footer -->
   </div><!-- End of container -->

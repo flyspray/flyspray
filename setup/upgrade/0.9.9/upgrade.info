@@ -1,4 +1,12 @@
-[upgradeorder]
+[defaultupgrade]
+0="flyspray-begin.xml"
 1="upgrade_assignments.php"
-2="dbupgrade"
-3="xyz.php"
+2="convert_categories.php"
+3="convert_private.php"
+4="add_duplicates.php"
+5="add_searches.php"
+6="flyspray-final.xml"
+7="add_data.php"
+
+[develupgrade]
+1="flyspray-final.xml"
