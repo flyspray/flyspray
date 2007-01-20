@@ -18,15 +18,36 @@ function hidestuff(boxid){
 
 function showhidestuff(boxid) {
    switch ($(boxid).style.visibility) {
-      case '': $(boxid).style.visibility='visible'; break
-      case 'hidden': $(boxid).style.visibility='visible'; break
-      case 'visible': $(boxid).style.visibility='hidden'; break
+      case '': 
+	$(boxid).style.visibility='visible';
+	document.onmousedown = function() { showhidestuff(boxid); };
+	break;
+      case 'hidden': 
+	$(boxid).style.visibility='visible';
+	document.onmousedown = function() { showhidestuff(boxid); };
+	break;
+      case 'visible': 
+	$(boxid).style.visibility='hidden';
+	document.onmousedown = null;
+	break;
    }
    switch ($(boxid).style.display) {
-      case '': $(boxid).style.display='block'; break
-      case 'none': $(boxid).style.display='block'; break
-      case 'block': $(boxid).style.display='none'; break
-      case 'inline': $(boxid).style.display='none'; break
+      case '': 
+	$(boxid).style.display='block';
+	document.onmousedown = function() { showhidestuff(boxid); };
+	break;
+      case 'none': 
+	$(boxid).style.display='block';
+	document.onmousedown = function() { showhidestuff(boxid); };
+	break;
+      case 'block': 
+	$(boxid).style.display='none';
+	document.onmousedown = null;
+	break;
+      case 'inline': 
+	$(boxid).style.display='none';
+	document.onmousedown = null;
+	break;
    }
 }
 function setUpTasklistTable() {
@@ -513,5 +534,6 @@ function surroundText(text1, text2, textarea)
 		textarea.focus(textarea.value.length - 1);
 	}
 }
+
 
 

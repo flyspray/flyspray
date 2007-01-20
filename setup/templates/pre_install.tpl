@@ -59,6 +59,16 @@
 					<td align="left"><b>{!$config_output}</b></td>
 					<td>&nbsp;</td>
 				</tr>
+				<tr>
+					<td valign="top">../cache</td>
+					<td align="left"><b>{!$cache_output}</b></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td valign="top">../attachments</td>
+					<td align="left"><b>{!$att_output}</b></td>
+					<td>&nbsp;</td>
+				</tr>
 				</table>
 				<p>
 				In order for {$product_name} to function
@@ -74,7 +84,7 @@
 				proceed with the setup. Alternatively if you wish to proceed, the installer will
 				make available the contents of the configuration file at the end of the setup. You
 				will then have to manually copy and paste the contents into the configuration file
-				located at <strong><?php echo APPLICATION_PATH . '/flyspray.conf.php'; ?></strong>.
+				located at <strong><?php echo APPLICATION_PATH . DIRECTORY_SEPARATOR . 'flyspray.conf.php'; ?></strong>.
 				</p>
 				<?php endif; ?>
 			</div>
