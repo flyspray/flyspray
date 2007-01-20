@@ -28,8 +28,8 @@ $db = new Database;
 $db->dbOpenFast($conf['database']);
 $fs = new Flyspray;
 
-if (is_readable(BASEDIR . '/sql/index.html') && strpos($fs->version, 'dev') === false) {
-    die('Please empty the folder "' . BASEDIR . DIRECTORY_SEPARATOR . 'sql" before you start using Flyspray.');
+if (is_readable(BASEDIR . '/setup/index.php') && strpos($fs->version, 'dev') === false) {
+    die('Please empty the folder "' . BASEDIR . DIRECTORY_SEPARATOR . 'setup" before you start using Flyspray.');
 }
 
 // Any "do" mode that accepts a task_id or id field should be added here.

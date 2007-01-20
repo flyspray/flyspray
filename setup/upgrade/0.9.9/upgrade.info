@@ -6,14 +6,15 @@
 4="convert_private.php"
 5="add_duplicates.php"
 6="add_searches.php"
-7="flyspray-final.xml"
-8="add_data.php"
+7="rename_columns.php"
+8="flyspray-final.xml"
+9="add_data.php"
 
 [develupgrade]
 1="flyspray-final.xml"
 
 [options]
 1="<div><label><input name="replace_resolution" checked="checked" type="checkbox" />
-        Replace resolution list (strongly recommended for 0.9.8 to 0.9.9)
+        Edit resolution list (strongly recommended for 0.9.8 to 0.9.9)
         </label>
    </div>"

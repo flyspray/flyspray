@@ -89,7 +89,7 @@ switch ($action = Req::val('action'))
                             task_severity = ?, task_priority = ?, last_edited_by = ?,
                             last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?
                      WHERE  task_id = ?',
-                array($proj->id, Post::val('task_type'),
+                array(Post::val('project_id'), Post::val('task_type'),
                     Post::val('item_summary'), Post::val('detailed_desc'),
                     Post::val('item_status'), intval($user->can_change_private($task) && Post::val('mark_private')),
                     Post::val('product_category'), Post::val('closedby_version', 0),
