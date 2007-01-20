@@ -867,9 +867,7 @@ class Backend
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
-        if (!is_array($visible) || !count($visible)) {
-            $visible = array('id');
-        }
+
         $select = '';
         $groupby = '';
         $from   = '             {tasks}         t

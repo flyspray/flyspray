@@ -4,28 +4,6 @@
    | the XML schema files.                                     |
    \***********************************************************/
 
-// Some new global preferences
-$sql = $db->Query('SELECT pref_name FROM {prefs}');
-$pref_names = $db->FetchCol($sql);
-switch (true)
-{
-    case (!in_array('page_title', $pref_names)):
-        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('page_title', 'Flyspray:: ')");
-        break;
-    case (!in_array('notify_registration', $pref_names)):
-        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('notify_registration', '0')");
-        break;
-    case (!in_array('jabber_ssl', $pref_names)):
-        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('jabber_ssl', '0')");
-        break;
-    case (!in_array('last_update_check', $pref_names)):
-        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('last_update_check', '0')");
-        break;
-    case (!in_array('cache_feeds', $pref_names)):
-        $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES ('cache_feeds', '0')");
-        break;
-}
-
 // New status list, make sure data is only inserted if we have an empty table
 $sql = $db->Query('SELECT count(*) FROM {list_status}');
 if ($db->FetchOne($sql) < 1) {
@@ -42,7 +20,6 @@ if (Post::val('replace_resolution')) {
 }
 
 $db->Query("DELETE FROM {list_status} WHERE status_id = 7");
-$db->Query("DELETE FROM {prefs} WHERE pref_name = 'assigned_groups'");
 $db->Query("DELETE FROM {notifications} WHERE user_id = 0 OR task_id = 0");
 
 $db->Query("UPDATE {tasks} SET closure_comment='' WHERE closure_comment='0'");

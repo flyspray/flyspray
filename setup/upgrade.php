@@ -88,6 +88,25 @@ if (Post::val('upgrade')) {
             $schema->ExecuteSchema();
         }
     }
+    
+    // Last but not least global prefs update
+    if (isset($upgrade_info['fsprefs'])) {
+        $sql = $db->Query('SELECT pref_name FROM {prefs}');
+        $existing = $db->FetchCol($sql);
+        // Add what is missing
+        foreach ($upgrade_info['fsprefs'] as $name => $value) {
+            if (!in_array($name, $existing)) {
+                $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES (?, ?)", array($name, $value));
+            }
+        }
+        // Delete what is too much
+        foreach ($existing as $name) {
+            if (!isset($upgrade_info['fsprefs'][$name])) {
+                $db->Query("DELETE FROM {prefs} WHERE pref_name = ?", array($name));
+            }
+        }
+    }
+    
     $db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name = 'fs_ver'", array($fs->version));
     $page->assign('done', true);
 }

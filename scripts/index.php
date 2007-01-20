@@ -27,6 +27,9 @@ $offset = $perpage * ($pagenum - 1);
 
 // Get the visibility state of all columns
 $visible = explode(' ', trim($proj->id ? $proj->prefs['visible_columns'] : $fs->prefs['visible_columns']));
+if (!is_array($visible) || !count($visible) || !$visible[0]) {
+    $visible = array('id');
+}
 
 if (Get::has('reset')) {
     foreach ($user->search_keys as $key) {
