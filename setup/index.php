@@ -10,12 +10,12 @@ set_time_limit(0);
 session_start();
 ini_set('memory_limit', '32M');
 
-/*
-if ( is_readable ('../flyspray.conf.php') && (count($config = parse_ini_file('../flyspray.conf.php', true)) > 0) )
+
+if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0)
 {
-   die('Flyspray Already Installed. Delete the contents of flyspray.conf.php to run setup.');
+   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
+        You can *not* use the setup on an existing database.');
 }
- */
 
 // define basic stuff first.
 

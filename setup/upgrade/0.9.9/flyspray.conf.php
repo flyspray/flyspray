@@ -10,13 +10,12 @@
          
 [general]
 cookiesalt = "f1s"            ; Randomisation value for cookie encoding
-adodbpath = "C:/.../adodb/adodb.inc.php"   ; Path to the main ADODB include file
 output_buffering = "on"                       ; Available options: "off", "on" and "gzip"
 address_rewriting = "0" ; Boolean. 0 = off, 1 = on.
 reminder_daemon = "0" ; Boolean. 0 = off, 1 = on.
 passwdcrypt = "md5"                                ; Available options: "crypt", "md5", "sha1"
 doku_url = "http://en.wikipedia.org/wiki/"      ; URL to your external wiki for [[dokulinks]] in FS
-syntax_plugin = "dokuwiki"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)
+syntax_plugin = "none"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)
 update_check = "1"                               ; Boolean. 0 = off, 1 = on.
 dot_public = "http://public.research.att.com/~north/cgi-bin/webdot/webdot.cgi" ; URL to a public dot server
 dot_path = "" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)
