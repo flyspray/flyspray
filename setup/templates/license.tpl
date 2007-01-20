@@ -1,5 +1,5 @@
       <div id="right">
-         {$message}
+         {!$message}
          <h1>GNU/LGPL License:</h1>
          <div class="installBlock">
          <p>

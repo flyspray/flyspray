@@ -22,14 +22,14 @@ var _TAB_DIVS;
 
 // tabs handling {{{
 // show tab with given id
-function showTabById(tabid) { // {{{
+function showTabById(tabid, noEval) { // {{{
   var divs = document.getElementsByTagName('div');
   var tab = document.getElementById(tabid);
   var submenu = document.getElementById('submenu');
   var i;
   var el = document.getElementById(tabid + "taba");
 
-  if (el) {
+  if (!noEval && el) {
     eval(el.getAttribute('onmousedown'));
   }
   for (i=0; i<divs.length; i++) {

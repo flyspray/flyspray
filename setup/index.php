@@ -27,7 +27,6 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf['general']['syntax_plugin'] = '';
 
-
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/class.flyspray.php';
@@ -660,11 +659,9 @@ class Setup extends Flyspray
                   'db_prefix' => array('Table prefix', 'string', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Configuration Error'))
-            {
-               // Set a page heading in case of errors.
-               $_SESSION['page_heading'] = 'Database Processing';
+            {            
                // Process the database checks and install tables
-               if ($this->ProcessDatabaseSetup($data))
+               if (@$this->ProcessDatabaseSetup($data))
                {
                   // Proceed to Administration part
                   $this->DisplayAdministration();
@@ -691,7 +688,7 @@ class Setup extends Flyspray
                'db_username' => array('Database username', 'string', true),
                'db_password' => array('Database password', 'string', false),
                'db_name' => array('Database name', 'string', true),
-               'db_prefix' => array('Table prefix', 'string', true),
+               'db_prefix' => array('Table prefix', 'string', false),
                'admin_username' => array('Administrator\'s username', 'string', true),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
@@ -749,8 +746,7 @@ class Setup extends Flyspray
       $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
 					? 1
 					: 0;
-
-	  // Double check the urls and paths slashes.
+      $db_prefix = (isset($data['db_prefix']) ? $data['db_prefix'] : '');
 
       $config	= array();
       $config[] = "[database]";
@@ -798,7 +794,8 @@ class Setup extends Flyspray
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
 
       // Get the users table name.
-      $users_table	= $db_prefix . 'users';
+      $users_table	= (isset($db_prefix) ? $db_prefix : '') . 'users';
+
       $sql	= "SELECT * FROM $users_table WHERE user_id = '1'";
 
       // Check if we already have an Admin user.
@@ -828,7 +825,9 @@ class Setup extends Flyspray
 
      if (!$result)
      {
+        $errorno = $this->mDbConnection->MetaError();
         $_SESSION['page_heading'] = 'Failed to update Admin users details.';
+        $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($errorno)) . ': '. $this->mDbConnection->ErrorMsg($errorno);
         return false;
      }
      else
@@ -859,6 +858,7 @@ class Setup extends Flyspray
 
       if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
+         $_SESSION['page_heading'] = 'Database Processing';
          switch($error_number = $this->mDbConnection->MetaError())
          {
             case '-1':
@@ -870,7 +870,7 @@ class Setup extends Flyspray
 
             case '-24':
             // Could not connect to database with the hostname provided
-            $_SESSION['page_message'][] = 'Database ' . ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
+            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
             $_SESSION['page_message'][] = 'Usually the database host name is "localhost". In some occassions, it maybe an internal ip-address or another host name to your webserver.';
             $_SESSION['page_message'][] = 'Double check with your hosting provider or System Administrator.';
             return false;
@@ -878,8 +878,8 @@ class Setup extends Flyspray
 
             case '-26':
             // Username passwords don't match for the hostname provided
-            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number));
-            $_SESSION['page_message'][] = "Obviously you haven't set up the right permissions for the database hostname provided.";
+            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
+            $_SESSION['page_message'][] = "Apparently you haven't set up the right permissions for the database hostname provided.";
             $_SESSION['page_message'][] = 'Double check the provided credentials or contact your System Administrator for further assistance.';
             return false;
             break;
@@ -938,13 +938,14 @@ class Setup extends Flyspray
        }
        
         // Set the prefix for database objects ( before parsing)
-      $this->mXmlSchema->setPrefix($db_prefix, true);
+      $this->mXmlSchema->setPrefix( (isset($db_prefix) ? $db_prefix : ''), true);
       $this->mXmlSchema->ParseSchema($sql_file);
       
       $this->mXmlSchema->ExecuteSchema();
 
       if (($error_no = $this->mDbConnection->MetaError()))
       {
+         $_SESSION['page_heading'] = 'Database Processing';
          switch ($error_no)
          {
             case '-5':

@@ -128,7 +128,7 @@ function event_description($history) {
                     }
                     break;
                 case 'detailed_desc':
-                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">" . L('details') . '</a>';
+                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');showTabById('history', true);\">" . L('details') . '</a>';
                     if (!empty($details)) {
                         $details_previous = TextFormatter::render($old_value);
                         $details_new =  TextFormatter::render($new_value);
