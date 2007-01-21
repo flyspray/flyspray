@@ -274,9 +274,7 @@ class Database
      */
     function _add_prefix($sql_data)
     {
-        return empty($this->dbprefix) 
-               ? $sql_data 
-               : (string) preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
+        return preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
     }
     
     /**

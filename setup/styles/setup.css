@@ -88,7 +88,6 @@ body {
 }
 #navMenu a:hover, #navMenu a:active, #current a:link, #current a:visited, #current a:hover {
   background-color: #688EB4; color: #FFF9BF;
-  background-image:  url(../images/navigation_hover.gif);
   background-position: right top;
   background-repeat: repeat-y;
 }
@@ -127,7 +126,7 @@ body {
   color: #3AFF53; background-color: #47617B;
   font-weight: bold; font-size: 90%;
   padding: 10px; border: 1px solid #688EB4; margin-bottom: 2px;
-  background-image:  url(../images/navigation_hover.gif); background-position: right top; background-repeat: repeat-y;
+  background-position: right top; background-repeat: repeat-y;
 }
 
 #stepbar div {
