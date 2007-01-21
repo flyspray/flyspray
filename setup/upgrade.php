@@ -14,7 +14,6 @@ ini_set('memory_limit', '32M');
 
 // define basic stuff first.
 define('IN_FS', 1);
-define('APPLICATION_NAME', 'Flyspray');
 define('BASEDIR', dirname(__FILE__));
 define('APPLICATION_PATH', dirname(BASEDIR));
 define('CONFIG_PATH', APPLICATION_PATH . '/flyspray.conf.php');
@@ -41,7 +40,7 @@ $db->dbOpenFast($conf['database']);
 $fs = new Flyspray();
 
 define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
-define('UPGRADE_VERSION', substr($fs->version, 0, 5));
+define('UPGRADE_VERSION', $fs->short_version());
 define('UPGRADE_PATH', BASEDIR . '/upgrade/' . UPGRADE_VERSION);
 
 // Get installed version
@@ -178,9 +177,12 @@ $checks = $todo = array();
 $checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION) === -1;
 $checks['config_writable'] = is_writable(CONFIG_PATH);
 $checks['db_connect'] = (bool) $db->dblink;
+$checks['installed_version'] = version_compare($installed_version, '0.9.5') === 1;
 $todo['config_writable'] = 'Please make sure that the file at ' . CONFIG_PATH . ' is writable.';
 $todo['db_connect'] = 'Connection to the database could not be established. Check your config.';
 $todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
+$todo['installed_version'] = 'An upgrade from Flyspray versions lower than 0.9.6 is not possible.
+                              You will have to upgrade manually to at least 0.9.6, the scripts which do that are included in all Flyspray releases <= 0.9.8.';
 
 $upgrade_possible = true;
 foreach ($checks as $check => $result) {

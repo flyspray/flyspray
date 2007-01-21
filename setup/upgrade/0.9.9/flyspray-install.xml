@@ -1006,7 +1006,7 @@
     <query>INSERT INTO list_tasktype VALUES (1, 'Bug Report', 1, 1, 0);</query>
     <query>INSERT INTO list_tasktype VALUES (2, 'Feature Request', 2, 1, 0);</query>
     <query>INSERT INTO list_version VALUES (1, 1, 'Development', 1, 1, 2);</query>
-    <query>INSERT INTO prefs VALUES (1, 'fs_ver', '0.9.9 dev');</query>
+    <query>INSERT INTO prefs VALUES (1, 'fs_ver', '0.9.9');</query>
     <query>INSERT INTO prefs VALUES (2, 'jabber_server', '');</query>
     <query>INSERT INTO prefs VALUES (3, 'jabber_port', '5222');</query>
     <query>INSERT INTO prefs VALUES (4, 'jabber_username', '');</query>
@@ -1030,7 +1030,7 @@
     <query>INSERT INTO prefs VALUES (24, 'jabber_ssl', '0');</query>
     <query>INSERT INTO prefs VALUES (25, 'last_update_check', '0');</query>
     <query>INSERT INTO prefs VALUES (26, 'cache_feeds', '1');</query>
-    <query>INSERT INTO projects VALUES (1, 'Default Project', 'Bluey', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 1, 0, '', '', NULL, '0', NULL, NULL, '', '', 0, 0, 0, NULL, 'index');</query>
+    <query>INSERT INTO projects VALUES (1, 'Default Project', 'Bluey', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index');</query>
     <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 1, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0');</query>   
     <query>INSERT INTO users VALUES (1, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0);</query>
     <query>INSERT INTO users_in_groups VALUES (1, 1, 1);</query>

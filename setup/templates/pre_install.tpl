@@ -17,15 +17,13 @@
 				<tr>
 					<td class="heading">Database</td>
 					<td class="heading">in PHP</td>
-					<td class="heading">{$product_name}</td>
+					<td class="heading" style="text-align:center">{$product_name}</td>
 				</tr>
 				{!$database_output}
 				</table>
 				<p>
-				If any of these items are highlighted
-				in red then please take actions to correct them. Failure to do so
-				could lead to your {$product_name} installation not functioning
-				correctly.
+				To make setup possible, you must have a correct PHP version installed and
+                <strong>at least one</strong> supported database.
 				</p>
 			</div>
 			<div class="clr"></div>

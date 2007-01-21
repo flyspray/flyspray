@@ -10,7 +10,7 @@
       <table class="box">
         <tr>
           <td><label for="projecttitle">{L('projecttitle')}</label></td>
-          <td><input id="projecttitle" name="project_title" value="{Req::val('project_title')}" type="text" class="text" size="40" maxlength="100" /></td>
+          <td><input id="projecttitle" name="project_title" value="{Req::val('project_title')}" type="text" class="required text" size="40" maxlength="100" /></td>
         </tr>
         <tr>
           <td><label for="themestyle">{L('themestyle')}</label></td>

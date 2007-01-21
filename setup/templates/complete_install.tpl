@@ -1,5 +1,5 @@
 			<div id="right">
-			<form action="{$site_index}?{$complete_action}" method="post" name="database_form">
+			<form action="{$site_index}{$complete_action}" method="post" name="database_form">
 				<h1>Install status</h1>
 				<h2>Congratulations! {$product_name} is now installed and ready to run.</h2>
 				<div class="installBlock">

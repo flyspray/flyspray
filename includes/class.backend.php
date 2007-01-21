@@ -519,7 +519,7 @@ class Backend
         
         Flyspray::logEvent(0, 31, $user_data);
         
-        return (bool) $db->affectedRows($sql);
+        return true;
     }
 
     /**
@@ -567,7 +567,7 @@ class Backend
         // of groups which are also used by the old project)
         $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ?', array($pid));
         while ($row = $db->FetchRow($sql)) {
-            $db->Query('DELETE FROM {users_in_groups} WHERE group_id = ?', array($row['project_id']));
+            $db->Query('DELETE FROM {users_in_groups} WHERE group_id = ?', array($row['group_id']));
         }
         $sql = $db->Query('DELETE FROM {groups} WHERE project_id = ?', array($pid));        
         

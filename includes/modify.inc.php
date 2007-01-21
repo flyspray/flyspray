@@ -374,7 +374,7 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('accountcreated');
-        define('NO, DO', true);
+        define('NO_DO', true);
         $page->pushTpl('register.ok.tpl');
         break;
 

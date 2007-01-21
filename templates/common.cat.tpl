@@ -103,7 +103,7 @@
             </select>
           </td>
           <td class="buttons">
-            <input type="hidden" name="action" value="{Req::val('action', $do . '.add_category')}" />
+            <input type="hidden" name="action" value="{$do}.add_category" />
             <input type="hidden" name="area" value="{Req::val('area')}" />
             <input type="hidden" name="project_id" value="{$proj->id}" />
             <button type="submit">{L('addnew')}</button>

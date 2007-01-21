@@ -19,8 +19,7 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 }
 
 // Check permissions
-if (!$user->perms('view_history'))
-{
+if (!$user->perms('view_history')) {
     die();
 }
 
@@ -33,41 +32,13 @@ if ($details = Get::num('details')) {
 $sql = get_events(Get::num('task_id'), $details);
 $histories = $db->fetchAllArray($sql);
 
-if ($details && count($histories)){
-    event_description($histories[0]);
-    
-    $html = '<table class="history">';
-    $html .= '<tr>';
-    $html .= '<th>' . L('previousvalue') . '</th>';
-    $html .= '<th>' . L('newvalue') . '</th>';
-    $html .= '</tr><tr>';
-    $html .= '<td>' . $GLOBALS['details_previous'] . '</td>';
-    $html .= '<td>' . $GLOBALS['details_new'] . '</td>';
-    $html .= '</tr></table>';
-    
-    echo $html;
-    die();
+$page = new FSTpl;
+$page->uses('histories', 'details');
+if ($details) {
+    event_description($histories[0]); // modifies global variables
+    $page->assign('details_previous', $GLOBALS['details_previous']);
+    $page->assign('details_new', $GLOBALS['details_new']);
 }
+$page->display('details.tabs.history.callback.tpl');
 
-
-$html = '<table class="history"><tr>';
-$html .= '<th>' . L('eventdate') . '</th>';
-$html .= '<th>' . L('user') . '</th>';
-$html .= '<th>' . L('event') . '</th>';
-$html .= '</tr>';
-
-if(count($histories)) {
-
-    foreach($histories as $history)
-    {
-        $html .= '<tr>';
-        $html .= '<td>' . formatDate($history['event_date'], false) . '</td>';
-        $html .= '<td>' . tpl_userlink($history['user_id']) . '</td>';
-        $html .= '<td>' . event_description($history) . '</td>';
-        $html .= '</tr>';
-    }
-}
-
-$html .= '</table>';
-
-echo $html;
+?>

@@ -71,7 +71,6 @@ class Setup extends Flyspray
    var $mMinPasswordLength;
    var $mAdminUsername;
    var $mAdminPassword;
-   var $mCompleteAction;
    /**
     * @var object to store the adodb datadict object.
     */
@@ -117,7 +116,14 @@ class Setup extends Flyspray
       // Get the full path to the file
       $file = APPLICATION_PATH .'/' . $path;
 
-      // Update the status of the Config file
+      // In case it is flyspray.conf.php, the file does not exist
+      // so we can't tell that it is writeable. So we attempt to create an empty one
+      if ($path == 'flyspray.conf.php') {
+        $fp = @fopen($file, 'w');
+        @fclose($fp);
+      }
+      // Let's try at least...
+      @chmod($file, 0666);
       $this->mWriteStatus[$path] = $this->IsWriteable($file);
 
       // Return an html formated writeable/un-writeable string
@@ -295,7 +301,7 @@ class Setup extends Flyspray
                                     'admin_username' => $this->mAdminUsername,
                                     'admin_password' => $this->mAdminPassword,
                                     'site_index' => dirname($_SERVER['REQUEST_URI']) . '/../',
-                                    'complete_action' => $this->mCompleteAction,
+                                    'complete_action' => 'index.php',
                                     'daemonise' => true,
                                  ),
                      ),
@@ -322,6 +328,14 @@ class Setup extends Flyspray
 
       // Trim the empty values in the $_POST array
       $data = array_filter($_POST, array($this, "TrimArgs"));
+      $this->CheckDatabaseSupport();
+
+      // Make sure that the user can't choose a DB which is not supported  
+      foreach ($this->mSupportedDatabases as $db => $arr) {
+        if (!$this->mAvailableDatabases[$db]['supported']) {
+            unset($this->mSupportedDatabases[$db]);
+        }
+      }
 
       $templates =
       array(
@@ -740,7 +754,7 @@ class Setup extends Flyspray
       $config_intro	= str_replace("\t", "", $config_intro);
 
       // Create a random cookie salt
-      $cookiesalt = substr(md5(uniqid(rand(), true)), 0, 2);
+      $cookiesalt = substr(md5(uniqid(rand(), true)), 0, 4);
 
 	  // check to see if to enable the Reminder Daemon.
       $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
@@ -835,7 +849,6 @@ class Setup extends Flyspray
         $this->mAdminUsername = $admin_username;
         $this->mAdminPassword = $admin_password;
      }
-     $this->mCompleteAction	= 'do=authenticate';
 
       return true;
    }
@@ -920,7 +933,7 @@ class Setup extends Flyspray
    {
       // Get the sql file name and set the path
 
-       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . substr($this->version, 0, 5) . '/flyspray-install.xml';
+       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . $this->short_version() . '/flyspray-install.xml';
        
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {

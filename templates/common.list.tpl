@@ -88,9 +88,9 @@
     <tr>
       <td>
         <?php if ($list_type == 'version'): ?>
-        <input type="hidden" name="action" value="{Req::val('action', $do . '.add_to_version_list')}" />
+        <input type="hidden" name="action" value="{$do}.add_to_version_list" />
         <?php else: ?>
-        <input type="hidden" name="action" value="{Req::val('action', $do . '.add_to_list')}" />
+        <input type="hidden" name="action" value="{$do}.add_to_list" />
         <?php endif; ?>
         <input type="hidden" name="list_type" value="{$list_type}" />
         <?php if ($proj->id): ?>

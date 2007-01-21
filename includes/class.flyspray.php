@@ -101,6 +101,11 @@ class Flyspray
 
         $this->max_file_size = ((bool) ini_get('file_uploads')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
+    
+    function short_version()
+    {
+        return substr($this->version, 0, strpos($this->version, ' '));
+    }
 
     // {{{ Redirect to $url
     /**
