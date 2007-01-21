@@ -58,7 +58,7 @@
       <col>task_id</col>
       <col>user_id</col>
     </index>
-    <index name="task_id">
+    <index name="task_id_assigned">
       <col>task_id</col>
       <col>user_id</col>
     </index>
@@ -100,7 +100,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="task_id">
+    <index name="task_id_attachments">
       <col>task_id</col>
       <col>comment_id</col>
     </index>
@@ -131,7 +131,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="type">
+    <index name="cache_type">
       <UNIQUE/>
       <col>type</col>
       <col>topic</col>
@@ -163,7 +163,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="task_id">
+    <index name="task_id_comments">
       <col>task_id</col>
     </index>
   </table>
@@ -180,7 +180,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="task_id">
+    <index name="task_id_deps">
       <UNIQUE/>
       <col>task_id</col>
       <col>dep_task_id</col>
@@ -366,7 +366,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <index name="project_id">
+    <index name="project_id_cat">
       <col>project_id</col>
     </index>
   </table>
@@ -390,7 +390,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="project_id">
+    <index name="project_id_os">
       <col>project_id</col>
     </index>
   </table>
@@ -414,7 +414,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="project_id">
+    <index name="project_id_res">
       <col>project_id</col>
     </index>
   </table>
@@ -438,10 +438,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="project_id">
-      <col>project_id</col>
-    </index>
-    <index name="project_id_2">
+    <index name="project_id_status">
       <col>project_id</col>
     </index>
   </table>
@@ -465,7 +462,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="project_id">
+    <index name="project_id_tt">
       <col>project_id</col>
     </index>
   </table>
@@ -493,7 +490,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="project_id">
+    <index name="project_id_version">
       <col>project_id</col>
       <col>version_tense</col>
     </index>
@@ -543,12 +540,12 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="task_id">
+    <index name="user_task">
       <UNIQUE/>
       <col>task_id</col>
       <col>user_id</col>
     </index>
-    <index name="user_task">
+    <index name="task_id_notifs">
       <UNIQUE/>
       <col>task_id</col>
       <col>user_id</col>
@@ -953,12 +950,12 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="group_id">
+    <index name="group_id_uig">
       <UNIQUE/>
       <col>group_id</col>
       <col>user_id</col>
     </index>
-    <index name="user_id">
+    <index name="user_id_uig">
       <col>user_id</col>
     </index>
   </table>

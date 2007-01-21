@@ -888,7 +888,24 @@ class Setup extends Flyspray
             $_SESSION['page_message'][] = 'Double check with your hosting provider or System Administrator.';
             return false;
             break;
-
+            
+            case '-25':
+            // Database does not exist, try to create one
+            $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+            $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
+            $dict = NewDataDictionary($this->mDbConnection);
+            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
+            if (!$dict->ExecuteSQLArray($sqlarray)) {
+                $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
+                $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
+                                               use a database user with sufficient permissions to create a database.';
+                return false;
+            } else {
+                $this->mDbConnection->SelectDB(array_get($data, 'db_name'));
+                unset($_SESSION['page_heading']);
+                break;
+            }
+                
             case '-26':
             // Username passwords don't match for the hostname provided
             $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
@@ -898,28 +915,27 @@ class Setup extends Flyspray
             break;
 
             default:
-            $_SESSION['page_message'][] = "Please verify your username/password/database details (error=$error_number)";
+            $_SESSION['page_message'][] = "Please verify your username/password/database details (error=$error_number)" . $this->mDbConnection->MetaErrorMsg($error_number);
             return false;
             break;
          }
       }
-      else
-      {
-           // Setting the Fetch mode of the database connection.
-           $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
-            //creating the datadict object for further operations
-           $this->mDataDict = & NewDataDictionary($this->mDbConnection);
 
-           include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
+       // Setting the Fetch mode of the database connection.
+       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
+        //creating the datadict object for further operations
+       $this->mDataDict = & NewDataDictionary($this->mDbConnection);
 
-            $this->mXmlSchema =  new adoSchema($this->mDbConnection);
+       include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
 
-             // Populate the database with the new tables and return the result (boolean)
-             if (!$this->PopulateDb($data))
-             {
-                return false;
-             }
-      }
+       $this->mXmlSchema =  new adoSchema($this->mDbConnection);
+
+       // Populate the database with the new tables and return the result (boolean)
+       if (!$this->PopulateDb($data))
+       {
+          return false;
+       }
+
       return true;
    }
 
