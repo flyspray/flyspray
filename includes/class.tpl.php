@@ -291,7 +291,7 @@ function tpl_fast_tasklink($arr)
     return tpl_tasklink($arr[1], $arr[0]);
 }
 
-// }}}
+// }}} 
 // {{{ some useful plugins
 
 function join_attrs($attr = null) {
@@ -601,7 +601,7 @@ function formatDate($timestamp, $extended = false, $default = '')
     $zone = L('GMT') . (($st == 0) ? ' ' : (($st > 0) ? '+' . $st : $st));
     $dateformat = str_replace('%GMT', $zone, $dateformat);
 
-    return utf8_encode(strftime($dateformat, $timestamp));
+    return utf8_encode(strftime(Filters::noXSS($dateformat), (int) $timestamp));
 } /// }}}
 // {{{ Draw permissions table
 function tpl_draw_perms($perms)
