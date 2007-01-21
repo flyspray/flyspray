@@ -578,6 +578,49 @@ class ADODB_mysql extends ADOConnection {
          
          return  $foreign_keys;
      }
+     
+    /**
+    * Added by cjunge@author-it.com, Dec 2006
+    *
+    * @return mixed
+    */
+    function GetCharSet()
+    {
+        if (!empty($this->_connectionID)) {
+    /*
+    below does not work if the charset has been changed, always shows the encoding when the connection was made.
+    $this->charSet = @mysql_client_encoding($this->_connectionID);
+    */
+            $charSet = @$this->GetAssoc('SHOW VARIABLES LIKE "character_set_client"');
+            
+            if (isset($charSet['character_set_client'])) {
+                $this->charSet = $charSet['character_set_client'];
+            }
+    }
+        if (!$this->charSet) {
+            return false;
+        } else {
+            return $this->charSet;
+        }
+
+    }
+
+    /**
+    * Added by cjunge@author-it.com, Dec 2006
+    *
+    * @return bool
+    */
+    
+    function SetCharSet($charset_name)
+    {
+        if (!empty($this->_connectionID) && $this->charSet !== $charset_name) {
+            $this->Execute(sprintf('SET NAMES %s', $this->qstr($charset_name)));
+                if ($this->GetCharSet() == $charset_name) {
+                    return true;
+                }
+        }
+            return false;
+    }
 	 
 	
 }
