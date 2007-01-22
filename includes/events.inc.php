@@ -72,7 +72,7 @@ function event_description($history) {
     switch($history['event_type']) {
     case '3':  //Field changed
             if (!$new_value && !$old_value) {
-                $return .= L('taskedited');
+                $return .= eL('taskedited');
                 break;
             }
         
@@ -97,38 +97,38 @@ function event_description($history) {
                         $old_value = $history[$field . '1'];
                         $new_value = $history[$field . '2'];
                     }
-                    $field = L($translate[$field]);
+                    $field = eL($translate[$field]);
                     break;
                 case 'closedby_version':
-                    $field = L('dueinversion');
-                    $old_value = ($old_value == '0') ? L('undecided') : $history['product_version1'];
-                    $new_value = ($new_value == '0') ? L('undecided') : $history['product_version2'];
+                    $field = eL('dueinversion');
+                    $old_value = ($old_value == '0') ? eL('undecided') : $history['product_version1'];
+                    $new_value = ($new_value == '0') ? eL('undecided') : $history['product_version2'];
                     break;
                  case 'due_date':
-                    $field = L('duedate');
-                    $old_value = formatDate($old_value, false, L('undecided'));
-                    $new_value = formatDate($new_value, false, L('undecided'));
+                    $field = eL('duedate');
+                    $old_value = formatDate($old_value, false, eL('undecided'));
+                    $new_value = formatDate($new_value, false, eL('undecided'));
                     break;
                 case 'percent_complete':
-                    $field = L('percentcomplete');
+                    $field = eL('percentcomplete');
                     $old_value .= '%';
                     $new_value .= '%';
                     break;
                 case 'mark_private':
-                    $field = L($translate[$field]);
+                    $field = eL($translate[$field]);
                     if ($old_value == 1) {
-                        $old_value = L('private');
+                        $old_value = eL('private');
                     } else {
-                        $old_value = L('public');
+                        $old_value = eL('public');
                     }
                     if ($new_value == 1) {
-                        $new_value = L('private');
+                        $new_value = eL('private');
                     } else {
-                        $new_value = L('public');
+                        $new_value = eL('public');
                     }
                     break;
                 case 'detailed_desc':
-                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');showTabById('history', true);\">" . L('details') . '</a>';
+                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');showTabById('history', true);\">" . eL('details') . '</a>';
                     if (!empty($details)) {
                         $details_previous = TextFormatter::render($old_value);
                         $details_new =  TextFormatter::render($new_value);
@@ -137,16 +137,16 @@ function event_description($history) {
                     $new_value = '';
                     break;
             }
-            $return .= L('fieldchanged').": {$field}";
+            $return .= eL('fieldchanged').": {$field}";
             if ($old_value || $new_value) {
                  $return .= " ({$old_value} &rarr; {$new_value})";
             }
             break;
     case '1':      //Task opened
-            $return .= L('taskopened');
+            $return .= eL('taskopened');
             break;
     case '2':      //Task closed
-            $return .= L('taskclosed');
+            $return .= eL('taskclosed');
             $return .= " ({$history['resolution_name']}";
             if (!empty($old_value)) {
                  $return .= ': ' . TextFormatter::render($old_value, true);
@@ -154,12 +154,12 @@ function event_description($history) {
             $return .= ')';
             break;
     case '4':      //Comment added
-            $return .= '<a href="#comments">' . L('commentadded') . '</a>';
+            $return .= '<a href="#comments">' . eL('commentadded') . '</a>';
             break;
     case '5':      //Comment edited
-            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".L('commentedited')."</a>";
+            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".eL('commentedited')."</a>";
             if ($history['c_date_added']) {
-                 $return .= " (".L('commentby').' ' . tpl_userlink($history['c_user_id']) . " - " . formatDate($history['c_date_added'], true) . ")";
+                 $return .= " (".eL('commentby').' ' . tpl_userlink($history['c_user_id']) . " - " . formatDate($history['c_date_added'], true) . ")";
             }
             if ($details) {
                  $details_previous = TextFormatter::render($old_value);
@@ -167,9 +167,9 @@ function event_description($history) {
             }
             break;
     case '6':     //Comment deleted
-            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".L('commentdeleted')."</a>";
+            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".eL('commentdeleted')."</a>";
             if ($new_value != '' && $history['field_changed'] != '') {
-                 $return .= " (".L('commentby').' ' . tpl_userlink($new_value) . " - " . formatDate($history['field_changed'], true) . ")";
+                 $return .= " (".eL('commentby').' ' . tpl_userlink($new_value) . " - " . formatDate($history['field_changed'], true) . ")";
             }
             if (!empty($details)) {
                  $details_previous = TextFormatter::render($old_value);
@@ -177,7 +177,7 @@ function event_description($history) {
             }
             break;
     case '7':    //Attachment added
-            $return .= L('attachmentadded');
+            $return .= eL('attachmentadded');
             if ($history['orig_name']) {
                  $return .= ": <a href=\"{$baseurl}?getfile={$new_value}\">{$history['orig_name']}</a>";
                  if ($history['file_desc'] != '') {
@@ -186,77 +186,77 @@ function event_description($history) {
             }
             break;
     case '8':    //Attachment deleted
-            $return .= L('attachmentdeleted') . ": {$new_value}";
+            $return .= eL('attachmentdeleted') . ": {$new_value}";
             break;
     case '9':    //Notification added
-            $return .= L('notificationadded') . ': ' . tpl_userlink($new_value);
+            $return .= eL('notificationadded') . ': ' . tpl_userlink($new_value);
             break;
     case '10':  //Notification deleted
-            $return .= L('notificationdeleted') . ': ' . tpl_userlink($new_value);
+            $return .= eL('notificationdeleted') . ': ' . tpl_userlink($new_value);
             break;
     case '11':  //Related task added
-            $return .= L('relatedadded') . ': ' . tpl_tasklink($new_value);
+            $return .= eL('relatedadded') . ': ' . tpl_tasklink($new_value);
             break;
     case '12':  //Related task deleted
-            $return .= L('relateddeleted') . ': ' . tpl_tasklink($new_value);
+            $return .= eL('relateddeleted') . ': ' . tpl_tasklink($new_value);
             break;
     case '13':  //Task reopened
-            $return .= L('taskreopened');
+            $return .= eL('taskreopened');
             break;
     case '14':  //Task assigned
             if (empty($old_value)) {
                 $users = explode(' ', trim($new_value));
                 $users = array_map('tpl_userlink', $users);
-                $return .= L('taskassigned').' ';
+                $return .= eL('taskassigned').' ';
                 $return .= implode(', ', $users);
             } elseif (empty($new_value)) {
-                 $return .= L('assignmentremoved');
+                 $return .= eL('assignmentremoved');
             } else {
                  $users = explode(' ', trim($new_value));
                  $users = array_map('tpl_userlink', $users);
-                 $return .= L('taskreassigned').' ';
+                 $return .= eL('taskreassigned').' ';
                  $return .= implode(', ', $users);
             }
             break;
     case '17': //Reminder added
-            $return .= L('reminderadded') . ': ' . tpl_userlink($new_value);
+            $return .= eL('reminderadded') . ': ' . tpl_userlink($new_value);
             break;
     case '18': //Reminder deleted
-            $return .= L('reminderdeleted') . ': ' . tpl_userlink($new_value);
+            $return .= eL('reminderdeleted') . ': ' . tpl_userlink($new_value);
             break;
     case '19': //User took ownership
-            $return .= L('ownershiptaken') . ': ' . tpl_userlink($new_value);
+            $return .= eL('ownershiptaken') . ': ' . tpl_userlink($new_value);
             break;
     case '20': //User requested task closure
-            $return .= L('closerequestmade') . ' - ' . $new_value;
+            $return .= eL('closerequestmade') . ' - ' . $new_value;
             break;
     case '21': //User requested task
-            $return .= L('reopenrequestmade') . ' - ' . $new_value;
+            $return .= eL('reopenrequestmade') . ' - ' . $new_value;
             break;
     case '22': // Dependency added
-            $return .= L('depadded') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depadded') . ' ' . tpl_tasklink($new_value);
             break;
     case '23': // Dependency added to other task
-            $return .= L('depaddedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depaddedother') . ' ' . tpl_tasklink($new_value);
             break;
     case '24': // Dependency removed
-            $return .= L('depremoved') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremoved') . ' ' . tpl_tasklink($new_value);
             break;
     case '25': // Dependency removed from other task
-            $return .= L('depremovedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremovedother') . ' ' . tpl_tasklink($new_value);
             break;
     // 26 and 27 replaced by 0 (mark_private)
     case '28': // PM request denied
-            $return .= L('pmreqdenied') . ' - ' . $new_value;
+            $return .= eL('pmreqdenied') . ' - ' . $new_value;
             break;
     case '29': // User added to assignees list
-            $return .= L('addedtoassignees');
+            $return .= eL('addedtoassignees');
             break;    
     case '30': // user created
-            $return .= L('usercreated');
+            $return .= eL('usercreated');
             break;
     case '31': // user deleted
-            $return .= L('userdeleted');
+            $return .= eL('userdeleted');
             break;
     }
     

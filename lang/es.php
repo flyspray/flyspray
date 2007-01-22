@@ -804,6 +804,9 @@ $translation = array(
 'allpriorities'           => 'Todas las Prioridades',
 'request1'                => 'Se ha solicitado cerrar una tarea.',
 'request2'                => 'Una solicitud para reabrir una tarea ha sido efectuada',
+'tasksiwatch'             => 'Tareas que observo',
+'tasksa2me'               => 'Tareas asignadas a mi',
+'tasksiopened'            => 'Tareas que he abierto',
 );
 
 ?>

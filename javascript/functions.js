@@ -20,33 +20,33 @@ function showhidestuff(boxid) {
    switch ($(boxid).style.visibility) {
       case '': 
 	$(boxid).style.visibility='visible';
-	document.onmousedown = function() { showhidestuff(boxid); };
+	document.onmouseup = function() { showhidestuff(boxid); };
 	break;
       case 'hidden': 
 	$(boxid).style.visibility='visible';
-	document.onmousedown = function() { showhidestuff(boxid); };
+	document.onmouseup = function() { showhidestuff(boxid); };
 	break;
       case 'visible': 
 	$(boxid).style.visibility='hidden';
-	document.onmousedown = null;
+	document.onmouseup = null;
 	break;
    }
    switch ($(boxid).style.display) {
       case '': 
 	$(boxid).style.display='block';
-	document.onmousedown = function() { showhidestuff(boxid); };
+	document.onmouseup = function() { showhidestuff(boxid); };
 	break;
       case 'none': 
 	$(boxid).style.display='block';
-	document.onmousedown = function() { showhidestuff(boxid); };
+	document.onmouseup = function() { showhidestuff(boxid); };
 	break;
       case 'block': 
 	$(boxid).style.display='none';
-	document.onmousedown = null;
+	document.onmouseup = null;
 	break;
       case 'inline': 
 	$(boxid).style.display='none';
-	document.onmousedown = null;
+	document.onmouseup = null;
 	break;
    }
 }
@@ -296,7 +296,8 @@ function toggleSearchBox(themeurl) {
       Cookie.setVar('advancedsearch','1');
   }
 }
-function deletesearch(id, url) {
+function deletesearch(e, id, url) {
+    stopBubble(e);
     var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/Bluey/ajax_load.gif';
     url = url + 'javascript/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {method: 'get', parameters: 'id=' + id,
@@ -535,5 +536,9 @@ function surroundText(text1, text2, textarea)
 	}
 }
 
-
+function stopBubble(e) {
+	if (!e) { var e = window.event; }
+	e.cancelBubble = true;
+	if (e.stopPropagation) { e.stopPropagation(); }
+}
 

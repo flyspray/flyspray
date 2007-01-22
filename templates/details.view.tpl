@@ -268,7 +268,7 @@
 	 <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');">
 		{L('reopenrequest')}</a>
 	 <div id="closeform" class="popup hide">
-		<form name="form3" action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask">
+		<form name="form3" action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask" onmouseup="stopBubble(event);">
 		  <div>
 			 <input type="hidden" name="action" value="requestreopen" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
@@ -285,7 +285,7 @@
 	 <?php if ($user->can_close_task($task_details) && !$d_open): ?>
 	 <a href="{CreateUrl('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))}" id="closetask" class="button" accesskey="y" onclick="showhidestuff('closeform');return false;">
 		{L('closetask')}</a>
-     <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
+     <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup" onmouseup="stopBubble(event);">
 		<form action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="details.close" />

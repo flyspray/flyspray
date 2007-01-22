@@ -6,6 +6,11 @@ if (!defined('IN_FS')) {
 
 require_once BASEDIR . '/lang/en.php';
 
+/**
+ * get the language string $key
+ * return string
+ */
+
 function L($key)
 {
     global $language;
@@ -16,6 +21,16 @@ function L($key)
         return $language[$key];
     }
     return "[[$key]]";
+}
+
+/**
+ * html escaped variant of the previous
+ * return $string
+ */
+
+function eL($key)
+{
+    return htmlspecialchars(L($key), ENT_QUOTES, 'utf-8');
 }
 
 function load_translations()

@@ -110,20 +110,50 @@ class Database
         $this->dblink->Close();
     }
 
+    /**
+     * CountRows 
+     * Returns the number of rows in a result
+     * @param object $result 
+     * @access public
+     * @return int
+     */
     function CountRows(&$result)
     {
         return (int) $result->RecordCount();
     }
 
+    /**
+     * AffectedRows 
+     *  
+     * @access public
+     * @return int
+     */
     function AffectedRows()
     {
         return (int) $this->dblink->Affected_Rows();
     }
 
+    /**
+     * FetchRow 
+     * 
+     * @param & $result 
+     * @access public
+     * @return void
+     */
+
     function FetchRow(&$result)
     {
         return $result->FetchRow();
     }
+
+    /**
+     * fetchCol 
+     * 
+     * @param & $result 
+     * @param int $col 
+     * @access public
+     * @return void
+     */
 
     function fetchCol(&$result, $col=0)
     {
@@ -134,10 +164,22 @@ class Database
         return $tab;
     }
 
+    /**
+     * Query 
+     * 
+     * @param mixed $sql 
+     * @param mixed $inputarr 
+     * @param mixed $numrows 
+     * @param mixed $offset 
+     * @access public
+     * @return void
+     */
+
     function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
-        //use transactions only for non SELECT statements.
-
+        /* use transactions only for non SELECT statements.
+         * FIXME: real transactions for 1.0 !! 
+         */
         $hastrans = ($this->dblink->hasTransactions && 
                      strpos($sql , 'SELECT') === FALSE);
 
@@ -181,6 +223,15 @@ class Database
         return $result;
     }
 
+    /**
+     * cached_query 
+     * 
+     * @param mixed $idx 
+     * @param mixed $sql 
+     * @param array $sqlargs 
+     * @access public
+     * @return array
+     */
     function cached_query($idx, $sql, $sqlargs = array())
     {
         if (isset($this->cache[$idx])) {
@@ -191,12 +242,26 @@ class Database
         return ($this->cache[$idx] = $this->fetchAllArray($sql));
     }
 
+    /**
+     * FetchOne 
+     * 
+     * @param & $result 
+     * @access public
+     * @return array
+     */
     function FetchOne(&$result)
     {
         $row = $this->FetchRow($result);
         return (count($row) ? $row[0] : '');
     }
 
+    /**
+     * FetchAllArray 
+     * 
+     * @param & $result 
+     * @access public
+     * @return array
+     */
     function FetchAllArray(&$result)
     {
         return $result->GetArray();
@@ -222,6 +287,16 @@ class Database
         return array_values($rows);
     }
     
+    /**
+     * GetColumnNames 
+     * 
+     * @param mixed $table 
+     * @param mixed $alt 
+     * @param mixed $prefix 
+     * @access public
+     * @return void
+     */
+
     function GetColumnNames($table, $alt, $prefix)
     {
         global $conf;

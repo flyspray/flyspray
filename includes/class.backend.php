@@ -168,7 +168,7 @@ class Backend
 
             if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
                 $db->Query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
-                Flyspray::logEvent($task_id, 3, 3, 1, 'item_status');
+                Flyspray::logEvent($row['task_id'], 3, 3, 1, 'item_status');
             }
         }
     }
@@ -463,20 +463,58 @@ class Backend
 
         // Now, create a new record in the users_in_groups table
         $db->Query('INSERT INTO  {users_in_groups} (user_id, group_id)
-                         VALUES  ( ?, ?)', array($uid, $group_in));
+                         VALUES  (?, ?)', array($uid, $group_in));
         
         Flyspray::logEvent(0, 30, serialize(Flyspray::getUserDetails($uid)));
+
+        $varnames = array('iwatch','atome','iopened');
+
+        $toserialize = array('string' => NULL,
+                        'type' => array (''),
+                        'sev' => array (''),
+                        'due' => array (''),
+                        'dev' => NULL,
+                        'cat' => array (''),
+                        'status' => array ('open'),
+                        'order' => NULL,
+                        'sort' => NULL,
+                        'percent' => array (''),
+                        'opened' => NULL,
+                        'search_in_comments' => NULL,
+                        'search_for_all' => NULL,
+                        'reported' => array (''),
+                        'only_primary' => NULL,
+                        'only_watched' => NULL);
+
+
+                foreach($varnames as $tmpname) {
+
+                    if($tmpname == 'iwatch') {
+
+                        $tmparr = array('only_watched' => '1');
+
+                    } elseif ($tmpname == 'atome') {
+
+                        $tmparr = array('dev'=> $uid);
+
+                    } elseif($tmpname == 'iopened') {
+
+                        $tmparr = array('opened'=> $uid);
+                    }
+
+                    $$tmpname = $tmparr + $toserialize;
+                }
         
         // Now give him his default searches
         $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
-                         VALUES (?, \'Tasks I watch\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";N;s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";N;s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";s:1:"1";}\', ' . time() . ')',
-                    array($uid));
+                         VALUES (?, ?, ?, ?)',
+                    array($uid, L('tasksiwatch'), serialize($iwatch), time()));
         $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
-                         VALUES (?, \'Tasks assigned to me\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";s:' . strlen($uid) . ':"' . $uid .'";s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";N;s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";N;}\', ' . time() . ')',
-                    array($uid));
+                         VALUES (?, ?, ?, ?)',
+                    array($uid, L('tasksa2me'), serialize($atome), time()));
         $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
-                         VALUES (?, \'Tasks I opened\', \'a:16:{s:6:"string";N;s:4:"type";a:1:{i:0;s:0:"";}s:3:"sev";a:1:{i:0;s:0:"";}s:3:"due";a:1:{i:0;s:0:"";}s:3:"dev";N;s:3:"cat";a:1:{i:0;s:0:"";}s:6:"status";a:1:{i:0;s:4:"open";}s:5:"order";N;s:4:"sort";N;s:7:"percent";a:1:{i:0;s:0:"";}s:6:"opened";s:' . strlen($uid) . ':"' . $uid .'";s:18:"search_in_comments";N;s:14:"search_for_all";N;s:8:"reported";a:1:{i:0;s:0:"";}s:12:"only_primary";N;s:12:"only_watched";N;}\', ' . time() . ')',
-                    array($uid));
+                         VALUES (?, ?, ?, ?)',
+                    array($uid, L('tasksiopened'), serialize($iopened), time()));
         
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
