@@ -19,7 +19,7 @@
                <td>Database Type</td>
                <td>
                <select name="db_type">
-                 {!tpl_options(array_combine(array_keys($databases), array_keys($databases)), $db_type)}
+                 {!tpl_options(array_combine(array_map(create_function('$x', 'return $x[2];'), $databases), array_keys($databases)), $db_type)}
                </select>
                </td>
             </tr>
@@ -46,7 +46,10 @@
             this is usually 'localhost'.
             </p>
             <p>
-            2) Enter the <strong>database username and password</strong>. {$product_name} requires that you have a
+            2) Choose the <strong>database type</strong>. If you have both the choice between MySQL and MySQLi, use the latter one.
+            </p>
+            <p>
+            3) Enter the <strong>database username and password</strong>. {$product_name} requires that you have a
             database setup with a username and password to install the database schema. If you are not sure about
             these details, please consult with your administrator or web hosting provider.
             </p>

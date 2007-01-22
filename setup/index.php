@@ -52,8 +52,6 @@ class Setup extends Flyspray
 
    var $mDbConnection;
    var $mProductName;
-   var $mUnixName;
-   var $mAuthor;
 
    /**
     * @var string To store the data filter type
@@ -79,7 +77,7 @@ class Setup extends Flyspray
    var $mXmlSchema;
 
    function Setup()
-   {     
+   {
       // Look for ADOdb
       $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
       $this->mProductName       = 'Flyspray';
@@ -96,8 +94,8 @@ class Setup extends Flyspray
       // If the database is supported in Flyspray, the function to check in PHP.
       $this->mSupportedDatabases	=
                            array(
+                                 'MySQLi' => array(true,'mysqli_connect','mysqli'),
                                  'MySQL' => array(true, 'mysql_connect', 'mysql'),
-                                 'MySQLi' => array(true,'mysqli_connect','mysql'),
                                  'Postgres' => array(true, 'pg_connect', 'pgsql'),
                               );
       $this->mAvailableDatabases	= array();
@@ -164,7 +162,7 @@ class Setup extends Flyspray
 
 
    /**
-    * CheckPreStatus 
+    * CheckPreStatus
     * we proceed or not ?
     * @access public
     * @return bool
@@ -330,7 +328,7 @@ class Setup extends Flyspray
       $data = array_filter($_POST, array($this, "TrimArgs"));
       $this->CheckDatabaseSupport();
 
-      // Make sure that the user can't choose a DB which is not supported  
+      // Make sure that the user can't choose a DB which is not supported
       foreach ($this->mSupportedDatabases as $db => $arr) {
         if (!$this->mAvailableDatabases[$db]['supported']) {
             unset($this->mSupportedDatabases[$db]);
@@ -350,7 +348,7 @@ class Setup extends Flyspray
                                           'db_hostname' => $this->GetParamValue($data, 'db_hostname', 'localhost'),
                                           'db_username' => $this->GetParamValue($data, 'db_username', ''),
                                           'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                          'db_name' => $this->GetParamValue($data, 'db_name', $this->mUnixName),
+                                          'db_name' => $this->GetParamValue($data, 'db_name', ''),
                                           'db_prefix' => $this->GetParamValue($data, 'db_prefix', 'flyspray_'),
                                           'version' => $this->version,
                                        ),
@@ -503,7 +501,7 @@ class Setup extends Flyspray
       {
          $message =
          '<h1 class="error">' . $_SESSION['page_heading'] . '</h1>';
-         
+
         if (isset($_SESSION['page_message'])) {
             // Get an html formated list
             $message .= '<div class="box"><div class="shade">' . $this->OutputHtmlList($_SESSION['page_message'],'ul') . '</div></div>';
@@ -588,7 +586,7 @@ class Setup extends Flyspray
 				$selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
 	    }
 			return $selection;
-	
+
 	}
 
 
@@ -673,7 +671,7 @@ class Setup extends Flyspray
                   'db_prefix' => array('Table prefix', 'string', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Configuration Error'))
-            {            
+            {
                // Process the database checks and install tables
                if (@$this->ProcessDatabaseSetup($data))
                {
@@ -777,7 +775,7 @@ class Setup extends Flyspray
       $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\"";
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
       $config[] = "dot_public = \"http://public.research.att.com/~north/cgi-bin/webdot/webdot.cgi\" ; URL to a public dot server";
-      $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";      
+      $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on.";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
@@ -888,7 +886,7 @@ class Setup extends Flyspray
             $_SESSION['page_message'][] = 'Double check with your hosting provider or System Administrator.';
             return false;
             break;
-            
+
             case '-25':
             // Database does not exist, try to create one
             $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
@@ -905,7 +903,7 @@ class Setup extends Flyspray
                 unset($_SESSION['page_heading']);
                 break;
             }
-                
+
             case '-26':
             // Username passwords don't match for the hostname provided
             $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
@@ -950,7 +948,7 @@ class Setup extends Flyspray
       // Get the sql file name and set the path
 
        $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . $this->short_version() . '/flyspray-install.xml';
-       
+
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
 
@@ -965,11 +963,11 @@ class Setup extends Flyspray
            $_SESSION['page_message'][] = 'database prefix cannot be numeric only';
            return false;
        }
-       
+
         // Set the prefix for database objects ( before parsing)
       $this->mXmlSchema->setPrefix( (isset($db_prefix) ? $db_prefix : ''), true);
       $this->mXmlSchema->ParseSchema($sql_file);
-      
+
       $this->mXmlSchema->ExecuteSchema();
 
       if (($error_no = $this->mDbConnection->MetaError()))
@@ -998,11 +996,11 @@ class Setup extends Flyspray
             break;
           }
        }
-    
-       return true;      
+
+       return true;
    }
 
- 
+
 
 
    /**
@@ -1084,7 +1082,7 @@ class Setup extends Flyspray
             break;
 
             case 'email address':
-             include_once OBJECTS_PATH . '/external/Validate.php'; 
+             include_once OBJECTS_PATH . '/external/Validate.php';
              return Validate::email($value);
              break;
 

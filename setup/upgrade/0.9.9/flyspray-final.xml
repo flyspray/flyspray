@@ -851,6 +851,7 @@
     </field>
     <field name="anon_email" type="C" size="100">
       <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
     <field name="task_token" type="C" size="32">
       <NOTNULL/>

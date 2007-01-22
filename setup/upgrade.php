@@ -147,7 +147,11 @@ class ConfUpdater
         foreach ($settings as $key => $value) {
             if (isset($this->old_config[$group][$key])) {
                 $settings[$key] = $this->old_config[$group][$key];
-            }                
+            }
+            // Upgrade to MySQLi if possible
+            if ($key == 'dbtype' && strtolower($value) == 'mysql' && function_exists('mysqli_connect')) {
+                $settings[$key] = 'mysqli';
+            }
         }
     }
 
