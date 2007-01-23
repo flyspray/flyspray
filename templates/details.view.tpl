@@ -31,7 +31,7 @@
   </div>
 
   <table><tr><td id="taskfieldscell"><?php // small layout table ?>
-  
+
   <div id="taskfields">
 	 <table>
 		<tr>
@@ -146,7 +146,7 @@
             <?php else: ?>
             {L('no')}
             <?php endif; ?>
-            
+
             <?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
             <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=makepublic&amp;task_id={$task_details['task_id']}">
             ({L('makepublic')})</a>
@@ -165,7 +165,7 @@
               <?php else: ?>
               {L('no')}
               <?php endif; ?>
-            
+
               <?php if (!$watched): ?>
               <a accesskey="w"
               href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;task_id={$task_details['task_id']}&amp;action=details.add_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}">
@@ -182,7 +182,7 @@
   </div>
 
   </td><td>
-  
+
   <div id="taskdetailsfull">
 	 <h3 class="taskdesc">{L('details')}</h3>
      <div id="taskdetailstext">{!$task_text}</div>
@@ -190,7 +190,7 @@
      <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
            $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
   </div>
-  
+
   </td></tr></table>
 
   <div id="taskinfo">
@@ -268,7 +268,7 @@
 	 <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');">
 		{L('reopenrequest')}</a>
 	 <div id="closeform" class="popup hide">
-		<form name="form3" action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask" onmouseup="stopBubble(event);">
+		<form name="form3" action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="requestreopen" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
@@ -285,7 +285,7 @@
 	 <?php if ($user->can_close_task($task_details) && !$d_open): ?>
 	 <a href="{CreateUrl('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))}" id="closetask" class="button" accesskey="y" onclick="showhidestuff('closeform');return false;">
 		{L('closetask')}</a>
-     <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup" onmouseup="stopBubble(event);">
+     <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
 		<form action="{CreateUrl('details', $task_details['task_id'])}" method="post" id="formclosetask">
 		  <div>
 			 <input type="hidden" name="action" value="details.close" />

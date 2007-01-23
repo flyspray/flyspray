@@ -5,7 +5,7 @@
  * Flyspray class
  *
  * This script contains all the functions we use often in
- * Flyspray to do miscellaneous things.   
+ * Flyspray to do miscellaneous things.
  *
  * @license http://opensource.org/licenses/lgpl-license.php Lesser GNU Public License
  * @package flyspray
@@ -77,13 +77,13 @@ class Flyspray
         while ($row = $db->FetchRow($res)) {
             $this->prefs[$row['pref_name']] = $row['pref_value'];
         }
-        
+
         $sizes = array();
         foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
             if (!$val) {
                 continue;
             }
-            
+
             $val = trim($val);
             $last = strtolower($val{strlen($val)-1});
             switch ($last) {
@@ -101,7 +101,7 @@ class Flyspray
 
         $this->max_file_size = ((bool) ini_get('file_uploads')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
-    
+
     function short_version()
     {
         return substr($this->version, 0, strpos($this->version, ' '));
@@ -146,9 +146,9 @@ class Flyspray
         if ($exit) {
             exit;
         }
-        
+
         return true;
-    } // }}} 
+    } // }}}
 
     /**
      * Absolute URI (This function is part of PEAR::HTTP licensed under the BSD) {{{
@@ -221,7 +221,7 @@ class Flyspray
 
 
         if (!strlen($url) || $url{0} == '?' || $url{0} == '#') {
-            $uri = isset($_SERVER['REQUEST_URI']) ? 
+            $uri = isset($_SERVER['REQUEST_URI']) ?
                 $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
             if ($url && $url{0} == '?' && false !== ($q = strpos($uri, '?'))) {
                 $url = substr($uri, 0, $q) . $url;
@@ -229,7 +229,7 @@ class Flyspray
                 $url = $uri . $url;
             }
         }
- 
+
         if ($url{0} == '/') {
             return $server . $url;
         }
@@ -247,7 +247,7 @@ class Flyspray
         }
 
         return $server . $path . $url;
-    } // }}}  
+    } // }}}
 
     // Duplicate submission check {{{
     /**
@@ -268,9 +268,9 @@ class Flyspray
                 }
             }
         }
-      
+
       if (count($_POST)) {
-      
+
         $requestarray = array_merge(array_keys($_POST), array_values($_POST));
 
         if (preg_match('/^newtask.newtask|details.addcomment$/', Post::val('action', '')))
@@ -342,7 +342,7 @@ class Flyspray
             $get_details += array('severity_name' => $fs->severities[$get_details['task_severity']]);
             $get_details += array('priority_name' => $fs->priorities[$get_details['task_priority']]);
         }
-        
+
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
         if ($assignees = Flyspray::GetAssignees($task_id, true)) {
             $get_details['assigned_to'] = $assignees[0];
@@ -487,10 +487,10 @@ class Flyspray
         // 31: User deletion
 
         $query_params = array(intval($task_id), intval($user->id),
-                             ((!is_numeric($time)) ? time() : $time), 
-                              $type, $field, $oldvalue, $newvalue); 
+                             ((!is_numeric($time)) ? time() : $time),
+                              $type, $field, $oldvalue, $newvalue);
 
-        if($db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed, 
+        if($db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed,
                        old_value, new_value) VALUES (?, ?, ?, ?, ?, ?, ?)', $query_params)) {
 
                            return true;
@@ -667,11 +667,11 @@ class Flyspray
 
         $runfile = Flyspray::get_tmp_dir() . '/flysprayreminders.run';
         $timeout = 600;
-        
+
         if (!is_file($runfile) or filemtime($runfile) < time() - ($timeout * 2)) {
-           
+
             $include = 'schedule.php';
-            /* "localhost" is on **purpose** not a mistake ¡¡ 
+            /* "localhost" is on **purpose** not a mistake ¡¡
              * almost any server accepts requests to itself in localhost ;)
              * firewalls will not block it.
              * the "Host" http header will tell the webserver where flyspray is running.
@@ -692,7 +692,7 @@ class Flyspray
         if (defined('IN_FEED')) {
             return;
         }
-        
+
         $names = array( 'GetFirefox',
                         'UseLinux',
                         'NoMicrosoft',
@@ -806,7 +806,7 @@ class Flyspray
         }
 
         return $assignees;
-    } /// }}} 
+    } /// }}}
 
     // {{{
     /**
@@ -828,7 +828,7 @@ class Flyspray
     	}
     	return $ret;
     } /// }} }
-    
+
     /**
      * Checks if a function is disabled
      * @param string $func_name
@@ -875,7 +875,7 @@ class Flyspray
     function show_error($error_message, $die = true, $advanced_info = null, $url = null)
     {
         global $modes, $baseurl;
-        
+
         if (!is_int($error_message)) {
             // in modify.inc.php
             $_SESSION['ERROR'] = $error_message;
@@ -903,13 +903,13 @@ class Flyspray
 
         $sql = $db->Query('SELECT user_id FROM {users} WHERE ' .
                           (is_numeric($name) ? 'user_id' : 'user_name') . ' = ?', array($name));
-        
+
         return intval($db->FetchOne($sql));
     }
     /**
-     * check_email 
-     *  checks if an email is valid 
-     * @param string $email 
+     * check_email
+     *  checks if an email is valid
+     * @param string $email
      * @access public
      * @return bool
      */
@@ -921,7 +921,7 @@ class Flyspray
     }
 
     /**
-     * get_tmp_dir 
+     * get_tmp_dir
      * Based on PEAR System::tmpdir() by Tomas V.V.Cox.
      * @access public
      * @return void
@@ -930,7 +930,7 @@ class Flyspray
     {
         if(function_exists('sys_get_temp_dir')) {
             return sys_get_temp_dir();
-            
+
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP')) {
                 return $var;
@@ -950,8 +950,8 @@ class Flyspray
     }
 
     /**
-     * check_mime_type 
-     * 
+     * check_mime_type
+     *
      * @param string $fname path to filename
      * @access public
      * @return string the mime type of the offended file.
@@ -965,23 +965,23 @@ class Flyspray
 
         if (extension_loaded('fileinfo') && class_exists('finfo')) {
 
-            $info = new finfo(FILEINFO_MIME);                 
+            $info = new finfo(FILEINFO_MIME);
             $type = $info->file($fname);
-        
+
         } elseif(function_exists('mime_content_type')) {
-            
+
             $type = mime_content_type($fname);
         // I hope we don't have to...
         } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 
                $type = trim(@exec('file -bi ' . escapeshellarg($fname)));
-                    
+
         }
         // if wasn't possible to determine , return empty string so
-        // we can use the browser reported mime-type (probably fake) 
+        // we can use the browser reported mime-type (probably fake)
         return $type;
     }
-    
+
     /**
      * Works like strtotime, but it considers the user's timezone
      * @access public
@@ -991,9 +991,9 @@ class Flyspray
     function strtotime($time)
     {
         global $user;
-        
+
         $time = strtotime($time);
-        
+
         if (!$user->isAnon()) {
             $st = date('Z')/3600; // server GMT timezone
             // Example: User is GMT+3, Server GMT-2.
@@ -1020,18 +1020,18 @@ class Flyspray
         if (!$connect) {
             $connect = $url['host'];
         }
-        
+
         if ($host) {
             $url['host'] = $host;
         }
-        
+
         $data = '';
-        
+
         if ($conn = @fsockopen($connect, $port, $errno, $errstr, 10)) {
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
             $out .= "Host: {$url['host']}\r\n\r\n";
             $out .= "Connection: Close\r\n\r\n";
-  
+
             fwrite($conn, $out);
 
             if ($get_contents) {
@@ -1040,22 +1040,22 @@ class Flyspray
                 }
 
                 fclose($conn);
-                
+
                 $pos = strpos($data, "\r\n\r\n");
 
                 if ($pos !== false) {
-                   //strip the http headers. 
+                   //strip the http headers.
                     $data = substr($data, $pos + 2 * strlen("\r\n"));
                 }
             }
         }
-        
+
         return $data;
     }
 
     /**
-     * getSvnRev 
-     *  For internal use 
+     * getSvnRev
+     *  For internal use
      * @access public
      * @return string
      */
@@ -1065,9 +1065,9 @@ class Flyspray
 
             return 'r' . intval(file_get_contents(BASEDIR .'/REVISION'));
         }
-        
+
         return '';
-    }    
+    }
 
 }
 ?>

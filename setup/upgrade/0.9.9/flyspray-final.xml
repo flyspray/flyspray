@@ -560,6 +560,7 @@
       <NOTNULL/>
     </field>
     <field name="pref_value" type="C" size="250">
+      <DEFAULT value="0"/>
       <NOTNULL/>
     </field>
   </table>
@@ -581,6 +582,7 @@
     </field>
     <field name="intro_message" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="project_is_active" type="I" size="1">
       <NOTNULL/>
@@ -599,12 +601,15 @@
     </field>
     <field name="notify_email" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_jabber" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_reply" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_types" type="C" size="100">
       <NOTNULL/>
@@ -612,12 +617,15 @@
     </field>
     <field name="feed_img_url" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_subject" type="C" size="100">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="lang_code" type="C" size="10">
       <NOTNULL/>
@@ -914,12 +922,15 @@
     </field>
     <field name="dateformat" type="C" size="30">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="dateformat_extended" type="C" size="30">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="magic_url" type="C" size="40">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="tasks_perpage" type="I" size="3">
       <NOTNULL/>

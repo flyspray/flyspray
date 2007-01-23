@@ -560,6 +560,7 @@
       <NOTNULL/>
     </field>
     <field name="pref_value" type="C" size="250">
+      <DEFAULT value="0"/>
       <NOTNULL/>
     </field>
   </table>
@@ -581,6 +582,7 @@
     </field>
     <field name="intro_message" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="project_is_active" type="I" size="1">
       <NOTNULL/>
@@ -599,12 +601,15 @@
     </field>
     <field name="notify_email" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_jabber" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_reply" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_types" type="C" size="100">
       <NOTNULL/>
@@ -612,12 +617,15 @@
     </field>
     <field name="feed_img_url" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="notify_subject" type="C" size="100">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="lang_code" type="C" size="10">
       <NOTNULL/>
@@ -914,12 +922,15 @@
     </field>
     <field name="dateformat" type="C" size="30">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="dateformat_extended" type="C" size="30">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="magic_url" type="C" size="40">
       <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <field name="tasks_perpage" type="I" size="3">
       <NOTNULL/>
@@ -979,58 +990,58 @@
     </field>
   </table>
   <sql>
-    <query>INSERT INTO groups VALUES (1, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (2, 'Developers', 'Global Developers for all projects', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (3, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (4, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (5, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
-    <query>INSERT INTO groups VALUES (6, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
-    <query>INSERT INTO history VALUES (1, 1, 1, 1130024797, 1, '', '', '');</query>
-    <query>INSERT INTO list_category VALUES (1, 1, 'Backend / Core', 1, 0, 2, 3);</query>
-    <query>INSERT INTO list_category VALUES (2, 0, 'root', 0, 0, 1, 2);</query>
-    <query>INSERT INTO list_category VALUES (3, 1, 'root', 0, 0, 1, 4);</query>
-    <query>INSERT INTO list_os VALUES (1, 1, 'All', 1, 1);</query>
-    <query>INSERT INTO list_os VALUES (2, 1, 'Windows', 2, 1);</query>
-    <query>INSERT INTO list_os VALUES (3, 1, 'Linux', 3, 1);</query>
-    <query>INSERT INTO list_os VALUES (4, 1, 'Mac OS', 4, 1);</query>
-    <query>INSERT INTO list_resolution VALUES (1, 'Not a bug', 1, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (2, 'Won''t fix', 2, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (3, 'Won''t implement', 3, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (4, 'Works for me', 4, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (5, 'Deferred', 5, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (6, 'Duplicate', 6, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (7, 'Fixed', 7, 1, 0);</query>
-    <query>INSERT INTO list_resolution VALUES (8, 'Implemented', 8, 1, 0);</query>
-    <query>INSERT INTO list_tasktype VALUES (1, 'Bug Report', 1, 1, 0);</query>
-    <query>INSERT INTO list_tasktype VALUES (2, 'Feature Request', 2, 1, 0);</query>
-    <query>INSERT INTO list_version VALUES (1, 1, 'Development', 1, 1, 2);</query>
-    <query>INSERT INTO prefs VALUES (1, 'fs_ver', '0.9.9');</query>
-    <query>INSERT INTO prefs VALUES (2, 'jabber_server', '');</query>
-    <query>INSERT INTO prefs VALUES (3, 'jabber_port', '5222');</query>
-    <query>INSERT INTO prefs VALUES (4, 'jabber_username', '');</query>
-    <query>INSERT INTO prefs VALUES (5, 'jabber_password', '');</query>
-    <query>INSERT INTO prefs VALUES (6, 'anon_group', '4');</query>
-    <query>INSERT INTO prefs VALUES (8, 'user_notify', '1');</query>
-    <query>INSERT INTO prefs VALUES (9, 'admin_email', 'flyspray@example.com');</query>
-    <query>INSERT INTO prefs VALUES (11, 'lang_code', 'en');</query>
-    <query>INSERT INTO prefs VALUES (12, 'spam_proof', '1');</query>
-    <query>INSERT INTO prefs VALUES (13, 'default_project', '1');</query>
-    <query>INSERT INTO prefs VALUES (14, 'dateformat', '');</query>
-    <query>INSERT INTO prefs VALUES (15, 'dateformat_extended', '');</query>
-    <query>INSERT INTO prefs VALUES (16, 'anon_reg', '1');</query>
-    <query>INSERT INTO prefs VALUES (17, 'global_theme', 'Bluey');</query>
-    <query>INSERT INTO prefs VALUES (18, 'visible_columns', 'id project category tasktype severity summary status progress');</query>
-    <query>INSERT INTO prefs VALUES (19, 'smtp_server', '');</query>
-    <query>INSERT INTO prefs VALUES (20, 'smtp_user', '');</query>
-    <query>INSERT INTO prefs VALUES (21, 'smtp_pass', '');</query>
-    <query>INSERT INTO prefs VALUES (22, 'page_title', 'Flyspray::');</query>
-    <query>INSERT INTO prefs VALUES (23, 'notify_registration', '0');</query>
-    <query>INSERT INTO prefs VALUES (24, 'jabber_ssl', '0');</query>
-    <query>INSERT INTO prefs VALUES (25, 'last_update_check', '0');</query>
-    <query>INSERT INTO prefs VALUES (26, 'cache_feeds', '1');</query>
-    <query>INSERT INTO projects VALUES (1, 'Default Project', 'Bluey', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index');</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
+    <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'Backend / Core', 1, 0, 2, 3);</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 0, 'root', 0, 0, 1, 2);</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'root', 0, 0, 1, 4);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'All', 1, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Windows', 2, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Linux', 3, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Mac OS', 4, 1);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Not a bug', 1, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Won''t fix', 2, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Won''t implement', 3, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Works for me', 4, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Deferred', 5, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Duplicate', 6, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Fixed', 7, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Implemented', 8, 1, 0);</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Bug Report', 1, 1, 0);</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Feature Request', 2, 1, 0);</query>
+    <query>INSERT INTO list_version VALUES (DEFAULT, 1, 'Development', 1, 1, 2);</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '0.9.9');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_port', '5222');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_username', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_password', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_group', '4');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'user_notify', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'admin_email', 'flyspray@example.com');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'lang_code', 'en');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'global_theme', 'Bluey');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_columns', 'id project category tasktype severity summary status progress');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_server', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_user', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_pass', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'page_title', 'Flyspray::');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'notify_registration', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_ssl', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'last_update_check', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'cache_feeds', '1');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'Bluey', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index');</query>
     <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 1, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0');</query>
-    <query>INSERT INTO users VALUES (1, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0);</query>
-    <query>INSERT INTO users_in_groups VALUES (1, 1, 1);</query>
+    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0);</query>
+    <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>
 </schema>

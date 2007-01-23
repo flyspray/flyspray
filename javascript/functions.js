@@ -18,36 +18,15 @@ function hidestuff(boxid){
 
 function showhidestuff(boxid) {
    switch ($(boxid).style.visibility) {
-      case '': 
-	$(boxid).style.visibility='visible';
-	document.onmouseup = function() { showhidestuff(boxid); };
-	break;
-      case 'hidden': 
-	$(boxid).style.visibility='visible';
-	document.onmouseup = function() { showhidestuff(boxid); };
-	break;
-      case 'visible': 
-	$(boxid).style.visibility='hidden';
-	document.onmouseup = null;
-	break;
+      case '': $(boxid).style.visibility='visible'; break
+      case 'hidden': $(boxid).style.visibility='visible'; break
+      case 'visible': $(boxid).style.visibility='hidden'; break
    }
    switch ($(boxid).style.display) {
-      case '': 
-	$(boxid).style.display='block';
-	document.onmouseup = function() { showhidestuff(boxid); };
-	break;
-      case 'none': 
-	$(boxid).style.display='block';
-	document.onmouseup = function() { showhidestuff(boxid); };
-	break;
-      case 'block': 
-	$(boxid).style.display='none';
-	document.onmouseup = null;
-	break;
-      case 'inline': 
-	$(boxid).style.display='none';
-	document.onmouseup = null;
-	break;
+      case '': $(boxid).style.display='block'; break
+      case 'none': $(boxid).style.display='block'; break
+      case 'block': $(boxid).style.display='none'; break
+      case 'inline': $(boxid).style.display='none'; break
    }
 }
 function setUpTasklistTable() {
@@ -117,7 +96,7 @@ function addUploadFields(id) {
     // Switch the buttons
     $(id + '_attachafile').style.display = 'none';
     $(id + '_attachanotherfile').style.display = 'inline';
-    
+
   } else {
     // Copy the first file upload box and clear it's value
     var newBox = span.cloneNode(true);
@@ -137,7 +116,7 @@ function adduserselect(url, user, selectid, error)
                     return;
                 }
             }
-            
+
             opt = new Option(user_info[0], user_info[1]);
             try {
                 $('r' + selectid).options[$('r' + selectid).options.length]=opt;
@@ -201,7 +180,7 @@ function fill_userselect(url, id) {
     var users = $('v' + id).value.split(' ');
     for (i = 0; i < users.length; i++) {
         if(users[i]) adduserselect(url, users[i], id, '');
-    }        
+    }
 }
 
 function dualSelect(from, to, id) {
@@ -227,7 +206,7 @@ function dualSelect(from, to, id) {
 	    from.options[i == len - 1 ? len - 2 : i].selected = true;
 	break;
     }
-    
+
     updateDualSelectValue(id);
 }
 
@@ -272,7 +251,7 @@ var Cookie = {
   removeVar: function(name) {
     var date = new Date(12);
     document.cookie = name + '=;expires=' + date.toUTCString();
-  }  
+  }
 };
 function setUpSearchBox() {
   if ($('advancedsearch')) {
@@ -288,16 +267,15 @@ function toggleSearchBox(themeurl) {
   var state = Cookie.getVar('advancedsearch');
   if ('1' == state) {
       $('advancedsearchstateimg').src = themeurl + 'edit_add.png';
-      hidestuff('sc2');  
+      hidestuff('sc2');
       Cookie.setVar('advancedsearch','0');
   } else {
       $('advancedsearchstateimg').src = themeurl + 'edit_remove.png';
-      showstuff('sc2'); 
+      showstuff('sc2');
       Cookie.setVar('advancedsearch','1');
   }
 }
-function deletesearch(e, id, url) {
-    stopBubble(e);
+function deletesearch(id, url) {
     var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/Bluey/ajax_load.gif';
     url = url + 'javascript/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {method: 'get', parameters: 'id=' + id,
@@ -336,7 +314,7 @@ function activelink(id) {
     }
 }
 var useAltForKeyboardNavigation = false;  // Set this to true if you don't want to kill
-                                         // Firefox's find as you type 
+                                         // Firefox's find as you type
 
 function emptyElement(el) {
     while(el.firstChild) {
@@ -349,13 +327,13 @@ function showPreview(textfield, baseurl, field)
 {
     var preview = $(field);
     emptyElement(preview);
-    
+
     var img = document.createElement('img');
     img.src = baseurl + 'themes/Bluey/ajax_load.gif';
     img.id = 'temp_img';
     img.alt = 'Loading...';
     preview.appendChild(img);
-    
+
     var text = $(textfield).value;
     text = encodeURIComponent(text);
     var url = baseurl + 'javascript/callbacks/getpreview.php';
@@ -380,7 +358,7 @@ function allow(booler){
         $('username').style.color ='green';
         $('buSubmit').style.visibility = 'visible';
         $('errormessage').innerHTML = '';
-    }  
+    }
 }
 function getHistory(task_id, baseurl, field, details)
 {
@@ -536,9 +514,4 @@ function surroundText(text1, text2, textarea)
 	}
 }
 
-function stopBubble(e) {
-	if (!e) { var e = window.event; }
-	e.cancelBubble = true;
-	if (e.stopPropagation) { e.stopPropagation(); }
-}
 

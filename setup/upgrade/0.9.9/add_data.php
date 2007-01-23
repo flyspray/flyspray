@@ -7,12 +7,12 @@
 // New status list, make sure data is only inserted if we have an empty table
 $sql = $db->Query('SELECT count(*) FROM {list_status}');
 if ($db->FetchOne($sql) < 1) {
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (1, 'Unconfirmed', 1, 1, 0)");
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (2, 'New', 2, 1, 0)");
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (3, 'Assigned', 3, 1, 0)");
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (4, 'Researching', 4, 1, 0)");
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (5, 'Waiting on Customer', 5, 1, 0)");
-    $db->Query("INSERT INTO {list_status} (`status_id`, `status_name`, `list_position`, `show_in_list`, `project_id`) VALUES (6, 'Requires testing', 6, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('Unconfirmed', 1, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('New', 2, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('Assigned', 3, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('Researching', 4, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('Waiting on Customer', 5, 1, 0)");
+    $db->Query("INSERT INTO {list_status} (`status_name`, `list_position`, `show_in_list`, `project_id`) VALUES ('Requires testing', 6, 1, 0)");
 }
 
 if (Post::val('replace_resolution')) {
