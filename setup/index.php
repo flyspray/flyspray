@@ -965,7 +965,7 @@ class Setup extends Flyspray
        }
 
         // Set the prefix for database objects ( before parsing)
-      $this->mXmlSchema->setPrefix( (isset($db_prefix) ? $db_prefix : ''), true);
+      $this->mXmlSchema->setPrefix( (isset($db_prefix) ? $db_prefix : ''), false);
       $this->mXmlSchema->ParseSchema($sql_file);
 
       $this->mXmlSchema->ExecuteSchema();

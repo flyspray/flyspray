@@ -13,7 +13,7 @@
 	</div>
   </li>
   <li>
-  <a id="lastsearchlink" onclick="activelink('lastsearchlink')" onblur="activelink('lastsearchlink')" href="javascript:showhidestuff('mysearches')" accesskey="m">{L('mysearch')}</a>
+  <a id="lastsearchlink" onclick="activelink('lastsearchlink')" href="javascript:showhidestuff('mysearches')" accesskey="m">{L('mysearch')}</a>
   <div id="mysearches">
     <?php $this->display('links.searches.tpl'); ?>
   </div>
@@ -61,12 +61,12 @@
     <li class="first">
       <a id="toplevellink" href="{CreateURL('toplevel', $proj->id)}">{L('overview')}</a>
     </li>
-  
+
     <li>
     <a id="homelink"
         href="{CreateURL('project', $proj->id, null, array('do' => 'index'))}">{L('tasklist')}</a>
     </li>
-    
+
     <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
       <li>
       <a id="newtasklink" href="{CreateURL('newtask', $proj->id)}"
@@ -83,7 +83,7 @@
       <a id="reportslink" href="{CreateURL('reports', null, null, array('project' => $proj->id))}">{L('reports')}</a>
       </li>
     <?php endif; ?>
-    
+
     <?php if ($proj->id): ?>
     <li>
     <a id="roadmaplink"
@@ -97,7 +97,7 @@
         href="{CreateURL('pm', 'prefs', $proj->id)}">{L('manageproject')}</a>
       </li>
     <?php endif; ?>
-    
+
     <?php if ($proj->id && isset($pm_pendingreq_num) && $pm_pendingreq_num): ?>
       <li>
         <a class="pendingreq attention"

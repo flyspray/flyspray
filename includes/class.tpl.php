@@ -60,18 +60,18 @@ class Tpl
     {
         $this->_tpls[] = $_tpl;
     }
-    
+
     function catch_start()
     {
         ob_start();
     }
-    
+
     function catch_end()
     {
         $this->_tpls[] = array(ob_get_contents());
         ob_end_clean();
     }
-    
+
     function display($_tpl, $_arg0 = null, $_arg1 = null)
     {
         // if only plain text
@@ -79,7 +79,7 @@ class Tpl
             echo $_tpl[0];
             return;
         }
-        
+
         // theming part
         if (is_readable(BASEDIR . '/themes/' . $this->_theme.$_tpl)) {
             $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.$_tpl);
@@ -101,13 +101,13 @@ class Tpl
         if (!is_null($_arg0)) {
             $this->assign($_arg0, $_arg1);
         }
-       
+
         foreach ($this->_uses as $_var) {
             global $$_var;
         }
-        
+
         extract($this->_vars, EXTR_REFS|EXTR_SKIP);
-        
+
         // XXX: if you find a clever way to remove the evil here,
         // send us a patch, thanks.. we don't want this..really ;)
 
@@ -115,7 +115,7 @@ class Tpl
     } // }}}
 
     function render()
-    {        
+    {
         while (count($this->_tpls)) {
             $this->display(array_shift($this->_tpls));
         }
@@ -133,7 +133,7 @@ class Tpl
 class FSTpl extends Tpl
 {
     var $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
-    
+
     function get_image($name, $base = true)
 	{
         global $proj, $baseurl;
@@ -178,7 +178,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     } else {
         $summary = L('taskmadeprivate');
     }
-    
+
     if (is_null($text)) {
         $text = 'FS#'. (int) $task['task_id'] . ' - '. htmlspecialchars($summary, ENT_QUOTES, 'utf-8');
     } elseif(is_string($text)) {
@@ -187,11 +187,11 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
         //we can't handle non-string stuff here.
         return '';
     }
-    
+
     if (!$task['task_id']) {
         return $text;
     }
-    
+
     $title_text = array();
 
     foreach($title as $info)
@@ -206,25 +206,25 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
                     $title_text[] = $task['status_name'];
                 }
                 break;
-            
+
             case 'summary':
                 $title_text[] = $summary;
                 break;
-            
+
             case 'assignedto':
                 if (isset($task['assigned_to_name']) ) {
                     if (is_array($task['assigned_to_name'])) {
                         $title_text[] = implode(', ', $task['assigned_to_name']);
                     } else {
                         $title_text[] = $task['assigned_to_name'];
-                    }  
+                    }
                 }
                 break;
-            
+
             case 'percent_complete':
                     $title_text[] = $task['percent_complete'].'%';
                 break;
-            
+
             case 'category':
                 if ($task['product_category']) {
                     if (!isset($task['category_name'])) {
@@ -233,15 +233,15 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
                     $title_text[] = $task['category_name'];
                 }
                 break;
-            
+
             // ... more options if necessary
         }
     }
-    
+
     $title_text = implode(' | ', $title_text);
-    
+
     $params = array();
-    
+
     if (Get::val('string')) {
         $params = array('histring' => Get::val('string'));
     }
@@ -250,7 +250,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     }
 
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
-    $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8'); 
+    $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8');
     $link  = sprintf('<a href="%s" title="%s" %s>%s</a>',$url, $title_text, join_attrs($attrs), $text);
 
     if ($task['is_closed']) {
@@ -274,7 +274,7 @@ function tpl_userlink($uid)
             list($uname, $rname) = $db->fetchRow($sql);
         }
     }
-    
+
     if (isset($uname)) {
         $cache[$uid] = '<a href="'.htmlspecialchars(CreateURL( ($user->perms('is_admin')) ? 'edituser' : 'user', $uid), ENT_QUOTES, 'utf-8').'">'
                            . htmlspecialchars($rname, ENT_QUOTES, 'utf-8').' ('
@@ -291,14 +291,14 @@ function tpl_fast_tasklink($arr)
     return tpl_tasklink($arr[1], $arr[0]);
 }
 
-// }}} 
+// }}}
 // {{{ some useful plugins
 
 function join_attrs($attr = null) {
     if (is_array($attr) && count($attr)) {
         $arr = array();
         foreach ($attr as $key=>$val) {
-            $arr[] = htmlspecialchars($key, ENT_QUOTES, 'utf-8') . '="'. 
+            $arr[] = htmlspecialchars($key, ENT_QUOTES, 'utf-8') . '="'.
                      htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
         }
         return ' '.join(' ', $arr);
@@ -342,7 +342,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
         $date = ($ts > 0 && checkdate($m, $d, $Y)) ? Req::val($name) : '';
     }
 
-       
+
     $page = new FSTpl;
     $page->assign('name', $name);
     $page->assign('date', $date);
@@ -354,21 +354,21 @@ function tpl_datepicker($name, $label = '', $value = 0) {
 // {{{ user selector
 function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     global $db, $user;
-    
+
     if (!$id) {
         $id = $name;
     }
-    
+
     if ($value && ctype_digit($value)) {
         $sql = $db->Query('SELECT user_name FROM {users} WHERE user_id = ?', array($value));
         $value = $db->FetchOne($sql);
     }
-    
+
     if (!$value) {
         $value = '';
     }
-    
-    
+
+
     $page = new FSTpl;
     $page->assign('name', $name);
     $page->assign('id', $id);
@@ -399,7 +399,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
         $label = htmlspecialchars($label, ENT_QUOTES, 'utf-8');
         $value = $labelIsValue ? $label
                                : htmlspecialchars($value, ENT_QUOTES, 'utf-8');
-                               
+
         if ($value === $remove) {
             continue;
         }
@@ -421,7 +421,7 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
 {
     static $_id = 0;
     static $tpl = null;
-    
+
     if (!$tpl) {
         // poor man's cache
         $tpl = new FSTpl();
@@ -434,7 +434,7 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
     $tpl->assign('name', $name);
     $tpl->assign('selected', $selected);
     $tpl->assign('updown', $updown);
-    
+
     $html = $tpl->fetch('common.dualselect.tpl');
 
     $selectedones = array();
@@ -499,7 +499,7 @@ function tpl_img($src, $alt = '')
 } // }}}
 // {{{ Text formatting
 $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';
-        
+
 if (is_readable($path_to_plugin)) {
     include($path_to_plugin);
 }
@@ -509,55 +509,55 @@ class TextFormatter
     function get_javascript()
     {
         global $conf;
-        
+
         $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'];
          $return = array();
-         
+
         if (!is_readable($path_to_plugin)) {
             return $return;
         }
-        
+
         $d = dir($path_to_plugin);
         while (false !== ($entry = $d->read())) {
            if (substr($entry, -3) == '.js') {
                 $return[] = $conf['general']['syntax_plugin'] . '/' . $entry;
             }
         }
-        
+
         return $return;
     }
-    
+
     function render($text, $onyfs = false, $type = null, $id = null, $instructions = null)
     {
         global $conf;
-                
+
         if (@in_array('render', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter')) && !$onyfs) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'), 
+            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $onyfs, $type, $id, $instructions);
         } else {
             $text = nl2br(htmlspecialchars($text, ENT_QUOTES, 'utf-8'));
-            
+
             // Change URLs into hyperlinks
             if (!$onyfs) $text = preg_replace('|[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]|', '<a href="\0">\0</a>', $text);
-            
+
             // Change FS#123 into hyperlinks to tasks
             return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', $text);
         }
     }
-    
+
     function textarea($name, $rows, $cols, $attrs = null, $content = null)
     {
         global $conf;
-        
+
         if (@in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'), 
+            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
                                   $name, $rows, $cols, $attrs, $content);
         }
-        
+
         $name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
         $rows = intval($rows);
         $cols = intval($cols);
-        
+
         $return = "<textarea name=\"{$name}\" cols=\"$cols\" rows=\"$rows\" ";
         if (is_array($attrs) && count($attrs)) {
             $return .= join_attrs($attrs);
@@ -597,7 +597,7 @@ function formatDate($timestamp, $extended = false, $default = '')
     if (!$dateformat) {
         $dateformat = $extended ? '%A, %d %B %Y, %H:%M %GMT' : '%Y-%m-%d';
     }
-    
+
     $zone = L('GMT') . (($st == 0) ? ' ' : (($st > 0) ? '+' . $st : $st));
     $dateformat = str_replace('%GMT', $zone, $dateformat);
 
@@ -623,7 +623,7 @@ function tpl_draw_perms($perms)
     // FIXME: html belongs in a template, not in the template class
     $html = '<table border="1" onmouseover="perms.hide()" onmouseout="perms.hide()">';
     $html .= '<thead><tr><th colspan="2">';
-    $html .= htmlspecialchars(L('permissionsforproject').$proj->prefs['project_title'], ENT_QUOTES, 'utf-8'); 
+    $html .= htmlspecialchars(L('permissionsforproject').$proj->prefs['project_title'], ENT_QUOTES, 'utf-8');
     $html .= '</th></tr></thead><tbody>';
 
     foreach ($perms[$proj->id] as $key => $val) {
@@ -652,11 +652,11 @@ function html_hilight($html,$query){
   return $html;
 }
 
-/** 
+/**
  * Callback used by html_hilight()
  *
  * @author Harry Fuecks <hfuecks@gmail.com>
- */     
+ */
 function html_hilight_callback($m) {
   $hlight = unslash($m[0]);
   if ( !isset($m[2])) {
@@ -688,7 +688,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
     global $baseurl, $conf;
 
     $url = $baseurl;
-       
+
     // If we do want address rewriting
     if ($conf['general']['address_rewriting'] == '1') {
         switch ($type) {
@@ -700,7 +700,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'admin':
             case 'edituser':
             case 'user':      $return = $url . $type . '/' . $arg1; break;
-            
+
             case 'project':   $return = $url . 'proj' . $arg1; break;
 
             case 'toplevel':
@@ -722,7 +722,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         } else {
             $url .= '?do=' . $type;
         }
-        
+
         switch ($type) {
             case 'admin':     $return = $url . '&area=' . $arg1; break;
             case 'edittask':  $return = $url . '&task_id=' . $arg1 . '&edit=yep'; break;
@@ -733,7 +733,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 
             case 'details':
             case 'depends':   $return = $url . '&task_id=' . $arg1; break;
-            
+
             case 'project':   $return = $baseurl . '?project=' . $arg1; break;
 
             case 'roadmap':
@@ -803,22 +803,22 @@ function pagenums($pagenum, $perpage, $totalcount)
     }
 
     return $output;
-} // }}}    
+} // }}}
 class Url {
 	var $url = '';
 	var $parsed;
-	
+
 	function url($url = '') {
 		$this->url = $url;
 		$this->parsed = parse_url($this->url);
 	}
-	
+
 	function seturl($url) {
 		$this->url = $url;
 		$this->parsed = parse_url($this->url);
 	}
-	
-	function getinfo($type = null) {		
+
+	function getinfo($type = null) {
 		if (is_null($type)) {
 			return $this->parsed;
 		} elseif (isset($this->parsed[$type])) {
@@ -827,25 +827,25 @@ class Url {
 			return '';
 		}
 	}
-	
+
 	function setinfo($type, $value) {
 		$this->parsed[$type] = $value;
 	}
-	
+
 	function addfrom($method = 'get', $vars = array()) {
 		$append = '';
 		foreach($vars as $key) {
 			$append .= Url::query_from_array( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
-        
+
         if ($this->getinfo('query')) {
         	$this->parsed['query'] .= '&' . $append;
         } else {
         	$this->parsed['query'] = $append;
         }
 	}
-    
+
     function query_from_array($vars) {
         $append = '';
 		foreach ($vars as $key => $value) {
@@ -859,33 +859,33 @@ class Url {
         }
         return substr($append, 0, -1);
     }
-	
+
 	function addvars($vars = array()) {
         $append = Url::query_from_array($vars);
-        
+
         if ($this->getinfo('query')) {
         	$this->parsed['query'] .= '&' . $append;
         } else {
         	$this->parsed['query'] = $append;
         }
 	}
-	
+
 	function get($fullpath = true) {
 		$return = '';
 		if ($fullpath) {
 			$return .= $this->getinfo('scheme') . '://' . $this->getinfo('host');
-            
+
             if ($this->getinfo('port')) {
                 $return .= ':' . $this->getinfo('port');
             }
         }
-		
+
 		$return .= $this->getinfo('path');
-		
+
 		if ($this->getinfo('query')) {
             $return .= '?' . $this->getinfo('query');
 		}
-		 
+
 		if ($this->getinfo('fragment')) {
 		 	$return .= '#' . $this->getinfo('fragment');
 		}

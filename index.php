@@ -24,7 +24,7 @@ while (($entry = $dir->read()) !== false) {
     if ($entry{0} == '.') {
         continue;
     }
-    
+
     $modes[] = substr($entry, 0, -4);
 }
 
