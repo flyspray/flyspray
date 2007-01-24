@@ -1113,7 +1113,7 @@ class Backend
 
         if (array_get($args, 'only_watched')) {
             //join the notification table to get watched tasks
-            $from        .= " LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id";
+            $from        .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[]      = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
