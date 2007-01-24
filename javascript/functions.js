@@ -6,8 +6,9 @@ function Disable(formid)
    document.formid.submit();
 }
 
-function showstuff(boxid){
-   $(boxid).style.display='block';
+function showstuff(boxid, type){
+   if (!type) type = 'block';
+   $(boxid).style.display= type;
    $(boxid).style.visibility='visible';
 }
 

@@ -488,9 +488,9 @@ switch ($action = Req::val('action'))
                 'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds');
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
-                    array(Post::val($setting), $setting));
+                    array(Post::val($setting, 0), $setting));
             // Update prefs for following scripts
-            $fs->prefs[$setting] = Post::val($setting);
+            $fs->prefs[$setting] = Post::val($setting, 0);
         }
 
         // Process the list of groups into a format we can store

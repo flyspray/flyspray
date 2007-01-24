@@ -29,8 +29,8 @@
       <dt class="severity{$task['task_severity']}">
         {!tpl_tasklink($task['task_id'])}
         <small class="DoNotPrint">
-          <a id="expand{$task['task_id']}" href="javascript:showstuff('dd{$task['task_id']}')">{L('expand')}</a> |
-          <a id="hide{$task['task_id']}" href="javascript:hidestuff('dd{$task['task_id']}')">{L('collapse')}</a>
+          <a id="expand{$task['task_id']}" href="javascript:showstuff('dd{$task['task_id']}');hidestuff('expand{$task['task_id']}');showstuff('hide{$task['task_id']}', 'inline')">{L('expand')}</a>
+          <a class="hide" id="hide{$task['task_id']}" href="javascript:hidestuff('dd{$task['task_id']}');hidestuff('hide{$task['task_id']}');showstuff('expand{$task['task_id']}', 'inline')">{L('collapse')}</a>
         </small>
       </dt>
       <dd id="dd{$task['task_id']}" >
