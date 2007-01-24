@@ -1,6 +1,6 @@
 {!'<?xml version="1.0" ?>'}
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title type="text">Flyspray</title>
+  <title type="text">{$fs->prefs['page_title']}</title>
   <subtitle type="text">
     {$feed_description}
   </subtitle>

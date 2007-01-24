@@ -37,7 +37,7 @@
           <td class="first">
             <input type="hidden" name="lft[{$row['category_id']}]" value="{$row['lft']}" />
             <input type="hidden" name="rgt[{$row['category_id']}]" value="{$row['rgt']}" />
-            <span class="depthmark">{!str_repeat('&rarr;', $row['depth'])}</span>
+            <span class="depthmark">{!str_repeat('&rarr;', intval($row['depth']))}</span>
             <input id="categoryname{$countlines}" class="text" type="text" size="15" maxlength="40" name="list_name[{$row['category_id']}]" 
               value="{$row['category_name']}" />
           </td>

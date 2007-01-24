@@ -96,7 +96,7 @@ $content = $page->fetch('feed.'.$feed_type.'.tpl');
 if ($fs->prefs['cache_feeds'])
 {
     if ($fs->prefs['cache_feeds'] == '1') {
-        if (!is_writeable(BASEDIR .'/cache') || !@chmod(BASEDIR . '/cache', 0700))
+        if (!is_writeable(BASEDIR .'/cache') && !@chmod(BASEDIR . '/cache', 0700))
         {
             die('Error when caching the feed: cache/ is not writeable.');
         }

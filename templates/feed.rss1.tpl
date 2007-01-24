@@ -4,7 +4,7 @@
   xmlns="http://purl.org/rss/1.0/"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel rdf:about="{$baseurl}">
-    <title>Flyspray</title>
+    <title>{$fs->prefs['page_title']}</title>
     <link>{$baseurl}</link>
     <description>{$feed_description}</description>
     <dc:date>{date('Y-m-d\TH:i:s\Z',$most_recent)}</dc:date>
