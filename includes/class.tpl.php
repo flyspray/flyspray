@@ -280,7 +280,7 @@ function tpl_userlink($uid)
                            . htmlspecialchars($rname, ENT_QUOTES, 'utf-8').' ('
                            . htmlspecialchars($uname, ENT_QUOTES, 'utf-8').')</a>';
     } elseif (empty($cache[$uid])) {
-        $cache[$uid] = L('anonymous');
+        $cache[$uid] = eL('anonymous');
     }
 
     return $cache[$uid];
@@ -756,7 +756,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
     }
     return $url->get();
 } // }}}
-// Page numbering {{{
+// Page numbering {{{ 
 // Thanks to Nathan Fritz for this.  http://www.netflint.net/
 function pagenums($pagenum, $perpage, $totalcount)
 {
@@ -770,7 +770,7 @@ function pagenums($pagenum, $perpage, $totalcount)
         $perpage = $totalcount > 0 ? $totalcount : 1;
     }
     $pages  = ceil($totalcount / $perpage);
-    $output = sprintf(L('page'), $pagenum, $pages);
+    $output = sprintf(eL('page'), $pagenum, $pages);
 
     if (!($totalcount / $perpage <= 1)) {
         $output .= '<span class="DoNotPrint"> &nbsp;&nbsp;--&nbsp;&nbsp; ';
@@ -779,10 +779,10 @@ function pagenums($pagenum, $perpage, $totalcount)
         $finish = min($start + 4, $pages);
 
         if ($start > 1)
-            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . L('first') . ' </a>';
+            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . eL('first') . ' </a>';
 
         if ($pagenum > 1)
-            $output .= '<a id="previous" accesskey="p" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . L('previous') . '</a> - ';
+            $output .= '<a id="previous" accesskey="p" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . eL('previous') . '</a> - ';
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
             if ($pagelink != $start)
@@ -796,9 +796,9 @@ function pagenums($pagenum, $perpage, $totalcount)
         }
 
         if ($pagenum < $pages)
-            $output .= ' - <a id="next" accesskey="n" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . L('next') . ' &gt;</a>';
+            $output .= ' - <a id="next" accesskey="n" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . eL('next') . ' &gt;</a>';
         if ($finish < $pages)
-            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . L('last') . ' &gt;&gt;</a>';
+            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . eL('last') . ' &gt;&gt;</a>';
         $output .= '</span>';
     }
 

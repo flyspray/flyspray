@@ -238,7 +238,7 @@ class Notifications {
       if ($proj->prefs['notify_reply']) {
           $mail->AddReplyTo(trim($proj->prefs['notify_reply']));
       }
-      $mail->FromName = 'Flyspray';
+      $mail->FromName = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
       $mail->CharSet = 'UTF-8';
 
       // Do we want to use a remote mail server?

@@ -547,7 +547,7 @@ class Setup extends Flyspray
       array(
             array ('Safe Mode','safe_mode','OFF'),
             array ('File Uploads','file_uploads','ON'),
-            //array ('Magic Quotes GPC','magic_quotes_gpc','OFF'),
+            array ('Magic Quotes GPC','magic_quotes_gpc','OFF'),
             array ('Register Globals','register_globals','OFF'),
             //array ('Output Buffering','output_buffering','OFF'),
             );
@@ -762,7 +762,7 @@ class Setup extends Flyspray
 
       $config	= array();
       $config[] = "[database]";
-      $config[] = "dbtype = \"$db_type\"					; Type of database (\"mysql\" or \"pgsql\" are currently supported)";
+      $config[] = "dbtype = \"$db_type\"					; Type of database (\"mysql\", \"mysqli\" or \"pgsql\" are currently supported)";
       $config[] = "dbhost = \"$db_hostname\"				; Name or IP of your database server";
       $config[] = "dbname = \"$db_name\"					; The name of the database";
       $config[] = "dbuser = \"$db_username\"				; The user to access the database";
@@ -802,8 +802,10 @@ class Setup extends Flyspray
 
       // Setting the database for the ADODB connection
       require_once($this->mAdodbPath);
+      
       $this->mDbConnection =& NewADOConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
+      $this->mDbConnection->SetCharSet('utf8');
 
       // Get the users table name.
       $users_table	= (isset($db_prefix) ? $db_prefix : '') . 'users';
@@ -920,7 +922,8 @@ class Setup extends Flyspray
       }
 
        // Setting the Fetch mode of the database connection.
-       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
+      $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
+      $this->mDbConnection->SetCharSet('utf8');
         //creating the datadict object for further operations
        $this->mDataDict = & NewDataDictionary($this->mDbConnection);
 

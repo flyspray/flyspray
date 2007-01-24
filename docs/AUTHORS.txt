@@ -51,4 +51,4 @@ Other contributors:
       http://oxer.com.au/
 
       Bugfixes,installer improvements, PHP5 testing by Cristian Rodriguez
-	  http://www.onfocus.cl/
+	  http://www.kissofjudas.net/ (in spanish)

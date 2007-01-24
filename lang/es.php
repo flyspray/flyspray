@@ -3,7 +3,7 @@
 /**
 * Esta tradución es actualmente mantenida por
 *  Cristian Rodriguez.
-*  Envia un mail con tus correcciones a judas_iscariote@imapmail.org
+*  Envia un mail con tus correcciones a judas.iscariote@flyspray.org
 *
 *  Asegurate de usar un editor que guarde y lea este archivo en utf-8 asi
 *  como que utilize finales de linea UNIX..ahh.. y NO USES entidades html ¡¡
