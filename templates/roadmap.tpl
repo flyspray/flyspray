@@ -1,11 +1,12 @@
 <?php foreach($data as $milestone): ?>
 
 <div class="box roadmap">
-<h3 style="cursor:pointer;" onclick="<?php
-foreach($milestone['open_tasks'] as $task): ?>
-     showhidestuff('dd{$task['task_id']}');
-<?php endforeach; ?>
-">{L('roadmapfor')} {$milestone['name']} <span class="DoNotPrint fade">[++]</span></h3>
+<h3>{L('roadmapfor')} {$milestone['name']}
+    <small class="DoNotPrint">
+      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>showstuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('expandall')}</a> |
+      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>hidestuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('collapseall')}</a>
+    </small>
+</h3>
 
 <p><img src="{$this->get_image('percent-' . round($milestone['percent_complete']/10)*10)}"
 				title="{(round($milestone['percent_complete']/10)*10)}% {L('complete')}"
@@ -25,8 +26,12 @@ foreach($milestone['open_tasks'] as $task): ?>
 <dl class="roadmap">
     <?php foreach($milestone['open_tasks'] as $task):
           if(!$user->can_view_task($task)) continue; ?>
-      <dt class="severity{$task['task_severity']}" onclick="showhidestuff('dd{$task['task_id']}')">
-        {!tpl_tasklink($task['task_id'])} <b class="DoNotPrint fade">[+]</b>
+      <dt class="severity{$task['task_severity']}">
+        {!tpl_tasklink($task['task_id'])}
+        <small class="DoNotPrint">
+          <a id="expand{$task['task_id']}" href="javascript:showstuff('dd{$task['task_id']}')">{L('expand')}</a> |
+          <a id="hide{$task['task_id']}" href="javascript:hidestuff('dd{$task['task_id']}')">{L('collapse')}</a>
+        </small>
       </dt>
       <dd id="dd{$task['task_id']}" >
         {!TextFormatter::render(substr($task['detailed_desc'], 0, 500) . ((strlen($task['detailed_desc']) > 500) ? '...' : ''),

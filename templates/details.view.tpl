@@ -290,7 +290,7 @@
 		  <div>
 			 <input type="hidden" name="action" value="details.close" />
 			 <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
-			 <select class="adminlist" name="resolution_reason">
+			 <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
 				<option value="0">{L('selectareason')}</option>
 				{!tpl_options($proj->listResolutions(), Req::val('resolution_reason'))}
 			 </select>

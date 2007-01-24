@@ -809,6 +809,10 @@ Regards,',
 'request2'                => 'A request to re-open the task has been made.',
 'allpriorities'           => 'All Priorities',
 'noroadmap'               => 'No roadmap available (no project specific "future" versions exist).',
+'expand'                  => 'Expand',
+'collapse'                => 'Collapse',
+'expandall'               => 'Expand all',
+'collapseall'             => 'Collapse all',
 );
 
 ?>

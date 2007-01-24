@@ -21,7 +21,7 @@
         <button id="searchthisproject" type="submit">{L('searchthisproject')}</button>
         <input class="text" id="searchtext" name="string" type="text" size="20"
                maxlength="100" value="{Get::val('string')}" accesskey="q" />
-        
+
         <input type="hidden" name="project" value="{Get::num('project', $proj->id)}" />
         <?php if (!$user->isAnon()): ?>
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
@@ -29,70 +29,70 @@
         &nbsp;<button onclick="savesearch('{$_SERVER['QUERY_STRING']}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
         </span>
         <?php endif; ?>
-        
+
         <span id="searchstate" style="cursor:pointer">
         <a onclick="toggleSearchBox('{$this->themeUrl()}');return false;" href="{CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))}"><span id="advancedsearchstate" class="showstate">
         <img id="advancedsearchstateimg" src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
              alt="<?php echo (Cookie::val('advancedsearch')) ? '-' : '+'; ?>" width="16" height="16" />
         </span>{L('advanced')}</a>
         </span>
-        
+
         <div id="sc2" class="switchcontent" <?php if (!Cookie::val('advancedsearch')):?>style="display:none;"<?php endif; ?> >
         <fieldset><legend>{L('miscellaneous')}</legend>
         {!tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic')}
         <label class="left" for="sic">{L('searchcomments')}</label>
-        
+
         {!tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa')}
         <label class="left" for="sfa">{L('searchforall')}</label>
 
         {!tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched')}
         <label class="left" for="only_watched">{L('taskswatched')}</label>
-        
+
         {!tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary')}
         <label class="left" for="only_primary">{L('onlyprimary')}</label>
-        
+
         {!tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment')}
         <label class="left" for="has_attachment">{L('hasattachment')}</label>
-        
+
         </fieldset>
 
         <fieldset><legend>{L('taskproperties')}</legend>
-        
+
         <div class="search_select">
         <label class="default multisel" for="type">{L('tasktype')}</label>
         <select name="type[]" id="type" multiple="multiple" size="5">
           {!tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', ''))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="sev">{L('severity')}</label>
         <select name="sev[]" id="sev" multiple="multiple" size="5">
           {!tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', ''))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="pri">{L('priority')}</label>
         <select name="pri[]" id="pri" multiple="multiple" size="5">
           {!tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', ''))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="due">{L('dueversion')}</label>
         <select name="due[]" id="due" multiple="multiple" size="5">
           {!tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', ''))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="reported">{L('reportedversion')}</label>
         <select name="reported[]" id="reported" multiple="multiple" size="5">
           {!tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', ''))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="cat">{L('category')}</label>
         <select name="cat[]" id="cat" multiple="multiple" size="5">
@@ -109,7 +109,7 @@
                         $proj->listTaskStatuses(), Get::val('status', 'open'))}
         </select>
         </div>
-        
+
         <div class="search_select">
         <label class="default multisel" for="percent">{L('percentcomplete')}</label>
         <select name="percent[]" id="percent" multiple="multiple" size="5">
@@ -126,28 +126,28 @@
 
         <label class="default multisel" for="dev">{L('assignedto')}</label>
         {!tpl_userselect('dev', Get::val('dev'), 'dev')}
-        
+
         <label class="default multisel" for="closed">{L('closedby')}</label>
         {!tpl_userselect('closed', Get::val('closed'), 'closed')}
 
         </fieldset>
-        
+
         <fieldset><legend>{L('dates')}</legend>
         <div class="dateselect">
           {!tpl_datepicker('duedatefrom', L('selectduedatefrom'))}
           {!tpl_datepicker('duedateto', L('selectduedateto'))}
         </div>
-        
+
         <div class="dateselect">
           {!tpl_datepicker('changedfrom', L('selectsincedatefrom'))}
           {!tpl_datepicker('changedto', L('selectsincedateto'))}
         </div>
-        
+
         <div class="dateselect">
           {!tpl_datepicker('openedfrom', L('selectopenedfrom'))}
           {!tpl_datepicker('openedto', L('selectopenedto'))}
         </div>
-        
+
         <div class="dateselect">
           {!tpl_datepicker('closedfrom', L('selectclosedfrom'))}
           {!tpl_datepicker('closedto', L('selectclosedto'))}

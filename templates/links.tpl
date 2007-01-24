@@ -13,7 +13,7 @@
 	</div>
   </li>
   <li>
-  <a id="lastsearchlink" onclick="activelink('lastsearchlink')" href="javascript:showhidestuff('mysearches')" accesskey="m">{L('mysearch')}</a>
+  <a id="lastsearchlink" href="" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive">{L('mysearch')}</a>
   <div id="mysearches">
     <?php $this->display('links.searches.tpl'); ?>
   </div>
