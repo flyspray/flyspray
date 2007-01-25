@@ -2,10 +2,12 @@
 
 <div class="box roadmap">
 <h3>{L('roadmapfor')} {$milestone['name']}
+    <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
       <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>showstuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('expandall')}</a> |
       <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>hidestuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('collapseall')}</a>
     </small>
+    <?php endif; ?>
 </h3>
 
 <p><img src="{$this->get_image('percent-' . round($milestone['percent_complete']/10)*10)}"
