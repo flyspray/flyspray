@@ -1,7 +1,7 @@
 <fieldset class="box">
 <legend>{L('registernewuser')}</legend>
 
-<form action="{$_SERVER['SCRIPT_NAME']}" method="post" id="registernewuser">
+<form action="{CreateUrl('register')}" method="post" id="registernewuser">
   <table class="box">
     <tr>
       <td><label for="username">{L('username')}</label></td>
@@ -25,7 +25,7 @@
         <select id="notify_type" name="notify_type">
           {!tpl_options(array(1 => L('email'), 2 => L('jabber'), 3 => L('both')), Req::val('notify_type'))}
         </select>
-      </td> 
+      </td>
     </tr>
     <tr>
       <td><label for="time_zone">{L('timezone')}</label></td>
@@ -39,14 +39,14 @@
           ?>
           {!tpl_options($times, Req::val('time_zone', 0))}
         </select>
-      </td> 
+      </td>
     </tr>
   </table>
  <div>
     <input type="hidden" name="action" value="register.sendcode" />
     <button type="submit" name="buSubmit" id="buSubmit">{L('sendcode')}</button>
   </div>
-  
+
   <p>{!L('note')}</p>
 </form>
 </fieldset>

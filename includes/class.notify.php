@@ -7,9 +7,9 @@
 */
 
 /**
- * Notifications 
- * 
- * @package 
+ * Notifications
+ *
+ * @package
  * @version $Id$
  * @copyright 2006 Flyspray.org
  * @notes: This is a mess and should be replaced for 1.0
@@ -17,20 +17,20 @@
 
 class Notifications {
 
-   // {{{ Wrapper function for all others 
+   // {{{ Wrapper function for all others
    function Create ( $type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH)
    {
       if (is_null($to)) {
           $to = $this->Address($task_id, $type);
       }
-      
+
       if(!is_array($to)) {
           settype($to, 'array');
       }
 
       $msg = $this->GenerateMsg($type, $task_id, $info);
       $result = true;
-      
+
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
           if(!$this->SendEmail($to[0], $msg[0], $msg[1], $task_id)) {
               $result = false;
@@ -40,13 +40,13 @@ class Notifications {
           if(!$this->StoreJabber($to[1], $msg[0], $msg[1])) {
               $result = false;
           }
-      } 
-      
+      }
+
       return $result;
 
    // End of Create() function
    } // }}}
-   // {{{ Store Jabber messages for sending later 
+   // {{{ Store Jabber messages for sending later
    function StoreJabber( $to, $subject, $body )
    {
       global $db, $fs;
@@ -78,13 +78,13 @@ class Notifications {
 
       $row = $db->FetchRow($result);
       $message_id = $row['message_id'];
-      
+
       // If message could not be inserted for
       // whatever reason...
       if (!$message_id) {
           return false;
       }
-    
+
       // make sure every email address is only added once
       settype($to, 'array');
       $to = array_unique($to);
@@ -101,14 +101,14 @@ class Notifications {
       }
 
       return true;
-   } // }}} 
+   } // }}}
    // {{{ Send Jabber messages that were stored earlier
    function SendJabber()
    {
       global $db, $fs;
 
       include_once BASEDIR . '/includes/class.jabber2.php';
-      
+
 
       if (empty($fs->prefs['jabber_server'])
           || empty($fs->prefs['jabber_port'])
@@ -117,7 +117,7 @@ class Notifications {
             return false;
       }
 
-      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'], 
+      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                            $fs->prefs['jabber_password'],
                            $fs->prefs['jabber_ssl'],
                            $fs->prefs['jabber_port']);
@@ -217,13 +217,13 @@ class Notifications {
          $JABBER->log("Disconnected from Jabber server");
 
       return true;
-   } // }}} 
-   // {{{ Send email 
+   } // }}}
+   // {{{ Send email
    function SendEmail($to, $subject, $body, $task_id)
    {
       global $fs, $proj, $user;
 
-      if (empty($to) || empty( $to[0] ) || ($to == $user->id && !$user->infos['notify_own'])) {
+      if (empty($to) || empty($to[0])) {
          return;
       }
 
@@ -289,7 +289,7 @@ class Notifications {
 
         return true;
 
-   } //   }}} 
+   } //   }}}
    // {{{ Create a message for any occasion
    function GenerateMsg($type, $task_id, $arg1='0')
    {
@@ -344,7 +344,7 @@ class Notifications {
       } else {
           $subject = L('notifyfrom') . $proj->prefs['project_title'];
       }
-      
+
       $subject = strtr($subject, "\r\n", '');
 
 
@@ -372,7 +372,7 @@ class Notifications {
          |20. New user                 |
          -------------------------------
       */
-      
+
       $body = L('donotreply') . "\r\n\r\n";
       // {{{ New task opened
       if ($type == NOTIFY_TASK_OPENED)
@@ -394,7 +394,7 @@ class Notifications {
          $body .= L('details') . ' - ' . $task_details['detailed_desc'] . "\r\n\r\n";
          $body .= L('moreinfo') . "\r\n";
          $body .= CreateURL('details', $task_id) . "\r\n\r\n";
-      } // }}} 
+      } // }}}
       // {{{ Task details changed
       if ($type == NOTIFY_TASK_CHANGED)
       {
@@ -413,18 +413,18 @@ class Notifications {
                               'item_summary' => L('summary'),
                               'detailed_desc' => L('taskedited'),
                               'project_title' => L('attachedtoproject'));
-                              
+
          $body .= L('taskchanged') . "\r\n\r\n";
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\r\n";
          $body .= L('userwho') . ': ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\r\n";
-         
+
          foreach($arg1 as $change)
          {
             if($change[0] == 'assigned_to_name') {
                 $change[1] = implode(', ', $change[1]);
                 $change[2] = implode(', ', $change[2]);
             }
-            
+
             if($change[0] == 'detailed_desc') {
                 $body .= $translation[$change[0]] . ":\r\n-------\r\n" . $change[2] . "\r\n-------\r\n";
             } else {
@@ -476,14 +476,14 @@ class Notifications {
       if ($type == NOTIFY_DEP_REMOVED)
       {
          $depend_task = Flyspray::getTaskDetails($arg1);
-         
+
          $body .= L('notify.depremoved') . "\r\n\r\n";
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\r\n";
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\r\n";
          $body .= CreateURL('details', $task_id) . "\r\n\r\n\r\n";
          $body .= L('removeddepis') . ':' . "\r\n\r\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\r\n";
-         $body .= CreateURL('details', $depend_task['task_id']) . "\r\n\r\n";         
+         $body .= CreateURL('details', $depend_task['task_id']) . "\r\n\r\n";
       } // }}}
       // {{{ Comment added
       if ($type == NOTIFY_COMMENT_ADDED)
@@ -496,7 +496,7 @@ class Notifications {
                                ORDER BY comment_id DESC",
                                array($user->id, $task_id), '1');
          $comment = $db->FetchRow($result);
-         
+
          $body .= L('notify.commentadded') . "\r\n\r\n";
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\r\n";
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\r\n\r\n";
@@ -597,7 +597,7 @@ class Notifications {
       if ($type == NOTIFY_REV_DEP_REMOVED)
       {
          $depend_task = Flyspray::getTaskDetails($arg1);
-         
+
          $body .= L('taskwatching') . "\r\n\r\n";
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\r\n";
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\r\n";
@@ -640,11 +640,11 @@ class Notifications {
               $body .= L('emailaddress') . ': ' . $arg1[3] . "\r\n" .
                     L('jabberid') . ':' . $arg1[4] . "\r\n\r\n";
       } // }}}
-      
+
       $body .= L('disclaimer');
       return array($subject, $body);
-   
-   } // }}} 
+
+   } // }}}
    // {{{ Create an address list for specific users
    function SpecificAddresses($users, $ignoretype = false)
    {
@@ -656,7 +656,7 @@ class Notifications {
         if(!is_array($users)) {
             settype($users, 'array');
         }
-        
+
         if (count($users) < 1) {
             return array();
         }
@@ -665,13 +665,13 @@ class Notifications {
                              FROM {users}
                             WHERE' . substr(str_repeat(' user_id = ? OR ', count($users)), 0, -3),
                            array_values($users));
-                         
+
         while ($user_details = $db->FetchRow($sql))
         {
             if ($user_details['user_id'] == $user->id && !$user->infos['notify_own']) {
                 continue;
             }
-            
+
             if ( ($fs->prefs['user_notify'] == '1' && ($user_details['notify_type'] == NOTIFY_EMAIL || $user_details['notify_type'] == NOTIFY_BOTH) )
                 || $fs->prefs['user_notify'] == '2' || $ignoretype)
             {
@@ -702,10 +702,10 @@ class Notifications {
       $task_details = Flyspray::GetTaskDetails($task_id);
 
       // Get list of users from the notification tab
-      $get_users = $db->Query("SELECT *
+      $get_users = $db->Query('SELECT *
                                FROM {notifications} n
                                LEFT JOIN {users} u ON n.user_id = u.user_id
-                               WHERE n.task_id = ?",
+                               WHERE n.task_id = ?',
                                array($task_id));
 
       while ($row = $db->FetchRow($get_users))
@@ -713,14 +713,14 @@ class Notifications {
          if ($row['user_id'] == $user->id && !$user->infos['notify_own']) {
             continue;
          }
-        
+
          if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_EMAIL || $row['notify_type'] == NOTIFY_BOTH) )
              || $fs->prefs['user_notify'] == '2')
          {
                array_push($email_users, $row['email_address']);
 
          }
-         
+
          if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_JABBER || $row['notify_type'] == NOTIFY_BOTH) )
              || $fs->prefs['user_notify'] == '3')
          {
@@ -729,10 +729,10 @@ class Notifications {
       }
 
       // Get list of assignees
-      $get_users = $db->Query("SELECT *
+      $get_users = $db->Query('SELECT *
                                FROM {assigned} a
                                LEFT JOIN {users} u ON a.user_id = u.user_id
-                               WHERE a.task_id = ?",
+                               WHERE a.task_id = ?',
                                array($task_id));
 
       while ($row = $db->FetchRow($get_users))
@@ -740,14 +740,14 @@ class Notifications {
          if ($row['user_id'] == $user->id && !$user->infos['notify_own']) {
             continue;
          }
-         
+
          if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_EMAIL || $row['notify_type'] == NOTIFY_BOTH) )
              || $fs->prefs['user_notify'] == '2')
          {
                array_push($email_users, $row['email_address']);
 
          }
-         
+
          if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_JABBER || $row['notify_type'] == NOTIFY_BOTH) )
              || $fs->prefs['user_notify'] == '3')
          {
