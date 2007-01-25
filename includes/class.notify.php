@@ -232,7 +232,7 @@ class Notifications {
 
       // Define the class
       $mail = new PHPMailer();
-
+      
       $mail->From = trim($fs->prefs['admin_email']);
       $mail->Sender = trim($fs->prefs['admin_email']);
       if ($proj->prefs['notify_reply']) {
@@ -265,8 +265,13 @@ class Notifications {
          $to = array_map('trim', array_unique($to));
 
          foreach ($to as $val) {
-            // Unlike the docs say, it *does (appear to)* work with mail()
-            $mail->AddBcc($val);
+             // Unlike the docs say, it *does (appear to)* work with mail()
+             if(count($to) === 1) {
+                 $mail->AddAddress($val);
+                 break;
+             } else {
+                 $mail->AddBcc($val);
+             }
          }
 
       } else {
@@ -283,7 +288,7 @@ class Notifications {
       }
 
       if (!$mail->Send()) {
-         // Flyspray::show_error(21, false, $mail->ErrorInfo);
+          // Flyspray::show_error(21, false, $mail->ErrorInfo);
           return false;
       }
 
