@@ -21,6 +21,13 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf  = @parse_ini_file(CONFIG_PATH, true) or die('Cannot open config file at ' . CONFIG_PATH);
 
+$borked = str_replace( 'a', 'b', array( -1 => -1 ) );
+
+if(!isset($borked[-1])) {
+    die("Flyspray cannot run here, sorry :-( \n PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
+        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
+}
+
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/class.database.php';
@@ -44,7 +51,7 @@ define('UPGRADE_VERSION', $fs->short_version());
 define('UPGRADE_PATH', BASEDIR . '/upgrade/' . UPGRADE_VERSION);
 
 // Get installed version
-$sql = $db->Query('SELECT pref_value FROM {prefs} WHERE pref_name = "fs_ver"');
+$sql = $db->Query('SELECT pref_value FROM {prefs} WHERE pref_name = ?', array('fs_ver'));
 $installed_version = $db->FetchOne($sql);
 
 $page = new Tpl;

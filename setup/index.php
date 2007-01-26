@@ -17,6 +17,13 @@ if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.co
         You can *not* use the setup on an existing database.');
 }
 
+$borked = str_replace( 'a', 'b', array( -1 => -1 ) );
+
+if(!isset($borked[-1])) {
+    die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
+        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
+}
+
 // define basic stuff first.
 
 define('IN_FS', 1 );
