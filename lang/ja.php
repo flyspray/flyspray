@@ -477,7 +477,7 @@ Regards,',
 'userupdated'             => 'ユーザ情報が更新されました。',
 'realandemail'            => 'You didn\'t fill in both the Real Name and Email Address fields.',
 'groupupdated'            => 'グループ情報が更新されました。',
-'groupanddesc'            => 'グループ名と説明が埋められていません。',
+'groupanddesc'            => 'グループ名が埋められていません。',
 'fillallfields'           => 'すべての入力欄を埋めてください。',
 'listPmustN'              => '「順番」欄は数字である必要があります。',
 'listupdated'             => '一覧が更新されました。',
@@ -742,7 +742,7 @@ FlysprayのWebサイトに行き、現在稼働しているのが最新バージ
 'novalidemail'            => '有効なE-mailアドレスが入力されていません。',
 'novalidjabber'           => '有効なJabber IDが入力されていません。',
 'missingrequired'         => '入力されていない必須入力欄があります。',
-'entervalidusername'      => 'ユーザ名と氏名を入力してください。',
+'entervalidusername'      => '有効なユーザ名と氏名を入力してください。',
 'couldnotaddusernotif'    => 'ユーザを通知一覧に追加できませんでした。',
 'defaulttask'             => 'デフォルトのタスク詳細',
 'all'                     => 'すべて',
@@ -808,6 +808,11 @@ FlysprayのWebサイトに行き、現在稼働しているのが最新バージ
 'request1'                => 'タスクのクローズの要望が出されています。',
 'request2'                => 'タスクの再オープンの要望が出されています。',
 'allpriorities'           => '全優先度',
-); 
+'noroadmap'               => 'ロードマップはありません(「未来」と設定されたバージョンがプロジェクトにありません)。',
+'expand'                  => '詳細を開く',
+'collapse'                => '詳細を閉じる',
+'expandall'               => 'すべての詳細を開く',
+'collapseall'             => 'すべての詳細を閉じる',
+);
 
 ?>

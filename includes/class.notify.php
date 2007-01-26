@@ -265,9 +265,9 @@ class Notifications {
 
 	if (!$mail->hasFailed()) {
 		//one SEPARATE mail for every single recipient when it is an array  ;)
-    	    $mail->send($to, $fromname . $frommail ,$subject, $body);
+    	    $ret = $mail->send($to, $fromname . $frommail, $subject, $body);
 		    $mail->close();
-		    return true;
+		    return $ret;
 	}
         return false;
 

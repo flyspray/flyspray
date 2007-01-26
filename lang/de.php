@@ -523,6 +523,7 @@ $translation = array(
 'addressused'             => "Diese Adresse wurde verwendet, um ein Flyspray-Benutzerkonto anzulegen. Wenn Sie diese Nachricht nicht erwartet haben, ignorieren und löschen Sie sie bitte. \n\n(This address has been used to register a Flyspray account. If you were not expecting this message, please ignore and delete it.)\n\nIhr Bestätigungscode lautet: ",
 'confirmcodeis'           => 'Ihr Bestätigungscode:',
 'codesent'                => 'Ihr Bestätigungscode wurde versandt. Wie es weitergeht entnehmen Sie bitte der Nachricht.',
+'codenotsent'             => 'Ihr Bestätigungscode wurde nicht versandt. Bitte versuchen Sie es später noch einmal.',
 'taskmadeprivatemsg'      => 'Diese Aufgabe ist nun versteckt',
 'taskmadepublicmsg'       => 'Diese Aufgabe ist nun wieder öffentlich sichtbar',
 'realandnotify'           => 'Sie müssen Ihren Namen angeben und entweder das Feld für die E-Mail-Adresse oder die Jabber-ID ausfüllen.',
@@ -777,6 +778,7 @@ $translation = array(
 'error21'                 => 'Einige E-Mails konnten nicht versandt werden. Prüfen Sie die Konfiguration!',
 'error22'                 => 'Die Registrierung neuer Benutzer ist nicht erlaubt.',
 'error23'                 => 'Der Benutzer oder die Gruppe wurde nicht zum Login berechtigt.',
+'error24'                 => 'Weder das dot-Programm noch ein  öffentlicher dot server wurden gesetzt.',
 'error25'                 => 'Die Roadmap gibt es nur jeweils für ein einzelnes Projekt.',
 'done'                    => 'erledigt',
 'rss'                     => 'RSS',
@@ -798,6 +800,15 @@ $translation = array(
 'showtip'                 => 'Element anzeigen',
 'deletetip'               => 'Element löschen',
 'csvexport'               => 'CSV Export',
+'del'                     => 'del',
+'request1'                => 'Eine Aufgabenlöschung wurde angefordert.',
+'request2'                => 'Eine Wiedereröffnung der Aufgabe wurde gefordert.',
+'allpriorities'           => 'Alle Prioritäten',
+'noroadmap'               => 'keine Roadmap vorhanden, da es keine "future" Versionen gibt.',
+'expand'                  => 'mehr...',
+'collapse'                => 'zusammenklappen',
+'expandall'               => 'Alle erweitern',
+'collapseall'             => 'Alle zusammenklappen',
 );
 
 ?>
