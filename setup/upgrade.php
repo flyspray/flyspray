@@ -68,25 +68,25 @@ $upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
 if (Post::val('upgrade')) {
     // At first the config file
     new ConfUpdater(CONFIG_PATH);
-    
+
     // dev version upgrade?
     if (UPGRADE_VERSION == $installed_version) {
         $type = 'develupgrade';
     } else {
         $type = 'defaultupgrade';
     }
-    
+
     // Next a mix of XML schema files and PHP upgrade scripts
     if (!isset($upgrade_info[$type])) {
         die('#1 Bad upgrade.info file.');
     }
-    
+
     ksort($upgrade_info[$type]);
     foreach ($upgrade_info[$type] as $file) {
         if (substr($file, -4) == '.php') {
             require_once UPGRADE_PATH . '/' . $file;
         }
-        
+
         if (substr($file, -4) == '.xml') {
             $schema = new adoSchema($db->dblink);
             $schema->SetPrefix($conf['database']['dbprefix']);
@@ -94,7 +94,7 @@ if (Post::val('upgrade')) {
             $schema->ExecuteSchema();
         }
     }
-    
+
     // Last but not least global prefs update
     if (isset($upgrade_info['fsprefs'])) {
         $sql = $db->Query('SELECT pref_name FROM {prefs}');
@@ -102,17 +102,17 @@ if (Post::val('upgrade')) {
         // Add what is missing
         foreach ($upgrade_info['fsprefs'] as $name => $value) {
             if (!in_array($name, $existing)) {
-                $db->Query("INSERT INTO {prefs} (pref_name, pref_value) VALUES (?, ?)", array($name, $value));
+                $db->Query('INSERT INTO {prefs} (pref_name, pref_value) VALUES (?, ?)', array($name, $value));
             }
         }
         // Delete what is too much
         foreach ($existing as $name) {
             if (!isset($upgrade_info['fsprefs'][$name])) {
-                $db->Query("DELETE FROM {prefs} WHERE pref_name = ?", array($name));
+                $db->Query('DELETE FROM {prefs} WHERE pref_name = ?', array($name));
             }
         }
     }
-    
+
     $db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name = 'fs_ver'", array($fs->version));
     $page->assign('done', true);
 }
@@ -121,7 +121,7 @@ class ConfUpdater
 {
     var $old_config = array();
     var $new_config = array();
-    
+
     /**
      * Reads the existing config file and updates it
      * @param string $location
@@ -133,14 +133,14 @@ class ConfUpdater
         if (!is_writable($location)) {
             return false;
         }
-        
+
         $this->old_config = parse_ini_file($location, true);
         $this->new_config = parse_ini_file(UPGRADE_PATH . '/flyspray.conf.php', true);
         // Now we overwrite all values of the *default* file if there is one in the existing config
         array_walk($this->new_config, array($this, '_merge_configs'));
-        
+
         $this->_write_config($location);
-        
+
     }
 
     /**

@@ -101,7 +101,7 @@ h1#title a {
 	display:block;
 	width:100%;
 	background:#47617b url("title.png") no-repeat;
-	height:45px;	
+	height:45px;
 	margin:0;
 	padding:1ex 0;
 	text-indent:-9000px;
@@ -145,7 +145,7 @@ input.text,input.password,input.file,textarea,select,button {
 textarea {
 	font-size:1em;
 }
-	
+
 
 input.required {
 	border:solid 2px red;
@@ -224,7 +224,7 @@ div#menu {
 	margin:0;
 	padding:0;
 }
- 
+
 div#menu input.text,div#menu input.password,div#menu button {
 	display:inline;
 	margin:0;
@@ -1343,19 +1343,19 @@ div#taskdetailstext h1,.commenttext h1 {
 
 div#taskdetailstext h2, .commenttext h2 {
 	border-bottom:dotted 1px black;
-	padding-left:0.2em;   
+	padding-left:0.2em;
 	margin:1em 0.5em 0.5em;
 }
 
 div#taskdetailstext h3, .commenttext h3 {
-	padding-left:0.2em;   
+	padding-left:0.2em;
 	margin:1em 1.5em 0;
 }
 
 
 div#taskdetailstext h4, div.preview h4, .commenttext h4,div.preview h5,div#taskdetailstext h5, .commenttext h5 {
-	font-size:1em;    
-	padding-left:0.3em;   
+	font-size:1em;
+	padding-left:0.3em;
 	margin:1em 2.5em 0;
 }
 
@@ -1404,7 +1404,7 @@ table.inline td {
 
 .interwiki,.urlextern {
 	padding-left:17px;
-	background-repeat:no-repeat;
+	background:url(link_icon.gif) no-repeat;
 }
 
 .urlextern {
