@@ -15,6 +15,8 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
+require_once dirname(__FILE__) . '/external/swift-mailer/Swift.php';
+
 class Notifications {
 
    // {{{ Wrapper function for all others
@@ -226,75 +228,50 @@ class Notifications {
       if (empty($to) || empty($to[0])) {
          return;
       }
-
-      // Get the new email class
-      require_once dirname(__FILE__) .'/external/swift-mailer/class.phpmailer.php';
-
-      // Define the class
-      $mail = new PHPMailer();
-      
-      $mail->From = trim($fs->prefs['admin_email']);
-      $mail->Sender = trim($fs->prefs['admin_email']);
-      if ($proj->prefs['notify_reply']) {
-          $mail->AddReplyTo(trim($proj->prefs['notify_reply']));
-      }
-      $mail->FromName = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
-      $mail->CharSet = 'UTF-8';
-
-      // Do we want to use a remote mail server?
+	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server']))
       {
-         $mail->IsSMTP();
-         $mail->Host = $fs->prefs['smtp_server'];
-         if (!empty($fs->prefs['smtp_user']))
-         {
-            $mail->SMTPAuth = true;     // turn on SMTP authentication
-            $mail->Username = $fs->prefs['smtp_user'];  // SMTP username
-            $mail->Password = $fs->prefs['smtp_pass']; // SMTP password
+	        include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/SMTP.php';
+            $mail = new Swift(new Swift_Connection_SMTP($fs->prefs['smtp_server']));
+
+	    if ($fs->prefs['smtp_user']) {
+            $mail->authenticate($fs->prefs['smtp_user'], $fs->prefs['smtp_pass']);
          }
 
       // Use php's built-in mail() function
       } else {
-         $mail->IsMail();
+
+            include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/NativeMail.php';
+            $mail = new Swift(new Swift_Connection_NativeMail);
       }
 
-      if (is_array($to))
-      {
-         // do not disclose user's address
+      if ($proj->prefs['notify_reply']) {
+            $mail->setReplyTo(trim($proj->prefs['notify_reply']));
+      }
+
+	    $fromname = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
+      	$frommail = ' <' . trim($fs->prefs['admin_email']) . '>';
+
+      if (is_array($to) && count($to) > 1) {
          // make sure every email address is only added once
          $to = array_map('trim', array_unique($to));
-
-         foreach ($to as $val) {
-             // Unlike the docs say, it *does (appear to)* work with mail()
-             if(count($to) === 1) {
-                 $mail->AddAddress($val);
-                 break;
-             } else {
-                 $mail->AddBcc($val);
-             }
-         }
-
-      } else {
-         $mail->AddAddress(trim($to));
+      }
+        
+        if($task_id) {
+            $hostdata = parse_url($GLOBALS['baseurl']);
+            $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
+            $mail->addHeaders('In-Reply-To: ' . $inreplyto ."\r\n");
       }
 
-      $mail->Subject = trim($subject);
-      $mail->Body = $body;
+	if (!$mail->hasFailed()) {
+		//one SEPARATE mail for every single recipient when it is an array  ;)
+    	    $mail->send($to, $fromname . $frommail ,$subject, $body);
+		    $mail->close();
+		    return true;
+	}
+        return false;
 
-      if($task_id) {
-          $hostdata = parse_url($GLOBALS['baseurl']);
-          $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
-          $mail->AddCustomHeader('In-Reply-To: ' . $inreplyto);
-      }
-
-      if (!$mail->Send()) {
-          // Flyspray::show_error(21, false, $mail->ErrorInfo);
-          return false;
-      }
-
-        return true;
-
-   } //   }}}
+   } //}}}
    // {{{ Create a message for any occasion
    function GenerateMsg($type, $task_id, $arg1='0')
    {
