@@ -847,6 +847,10 @@ class Backend
             return false;
         }
 
+        if ($task['is_closed']) {
+            return false;
+        }
+
         $db->Query('UPDATE  {tasks}
                        SET  date_closed = ?, closed_by = ?, closure_comment = ?,
                             is_closed = 1, resolution_reason = ?, last_edited_time = ?,

@@ -15,7 +15,7 @@
 				alt="" width="200" height="20" />
 </p>
 
-<p>{$milestone['percent_complete']} {L('of')}
+<p>{$milestone['percent_complete']}{L('of')}
    <a href="{$_SERVER['SCRIPT_NAME']}?tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}&amp;status[]=">
      {count($milestone['all_tasks'])} {L('tasks')}
    </a> {L('completed')}
