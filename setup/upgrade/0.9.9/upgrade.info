@@ -14,10 +14,7 @@
 1="flyspray-final.xml"
 
 [options]
-1="<div><label><input name="replace_resolution" checked="checked" type="checkbox" />
-        Edit resolution list (strongly recommended for 0.9.8 to 0.9.9)
-        </label>
-   </div>"
+1="<div><label><input name="replace_resolution" checked="checked" type="checkbox" /> Edit resolution list (strongly recommended for 0.9.8 to 0.9.9)</label></div>"
    
 [fsprefs]
 fs_ver="0.9.7" ; doesn't matter which version

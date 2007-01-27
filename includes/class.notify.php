@@ -229,8 +229,7 @@ class Notifications {
          return;
       }
 	// Do we want to use a remote mail server?
-      if (!empty($fs->prefs['smtp_server']))
-      {
+      if (!empty($fs->prefs['smtp_server'])) {
 	        include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/SMTP.php';
             $mail = new Swift(new Swift_Connection_SMTP($fs->prefs['smtp_server']));
 
@@ -245,30 +244,41 @@ class Notifications {
             $mail = new Swift(new Swift_Connection_NativeMail);
       }
 
+      $mail->setCharset( 'UTF-8');
+      
+      /* otherwise email autoresponders will reply this mail too..
+       * unfortunately there is no agreement, no standard on this
+       * some prefers "list" or others "bulk" *sigh*
+       */
+      $mail->addHeaders("Precedence: list \r\n");
+
       if ($proj->prefs['notify_reply']) {
             $mail->setReplyTo(trim($proj->prefs['notify_reply']));
       }
 
-	    $fromname = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
-      	$frommail = ' <' . trim($fs->prefs['admin_email']) . '>';
+        $fromname = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
+        $frommail = ' <' . trim($fs->prefs['admin_email']) . '>';
 
-      if (is_array($to) && count($to) > 1) {
-         // make sure every email address is only added once
-         $to = array_map('trim', array_unique($to));
-      }
+       if (is_array($to) && count($to) > 1) {
+            // make sure every email address is only added once
+            $to = array_map('trim', array_unique($to));
+        }
         
         if($task_id) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
+            // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
             $mail->addHeaders('In-Reply-To: ' . $inreplyto ."\r\n");
-      }
-
-	if (!$mail->hasFailed()) {
+            $mail->addHeaders('References: ' . $inreplyto ."\r\n");
+        }
+    
+	    if (!$mail->hasFailed()) {
 		//one SEPARATE mail for every single recipient when it is an array  ;)
     	    $ret = $mail->send($to, $fromname . $frommail, $subject, $body);
 		    $mail->close();
 		    return $ret;
-	}
+        }
+
         return false;
 
    } //}}}
