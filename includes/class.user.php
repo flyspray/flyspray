@@ -21,7 +21,7 @@ class User
                                       AND uig.group_id = g.group_id',
                                 array($uid, $uid));
         }
-        
+
         if ($uid > 0 && $db->countRows($sql)) {
             $this->infos = $db->FetchRow($sql);
             $this->id = intval($uid);
@@ -29,14 +29,14 @@ class User
             $this->infos['real_name'] = L('anonuser');
             $this->infos['user_name'] = '';
         }
-        
+
         $this->get_perms();
     }
 
     /**
-     * save_search 
-     * 
-     * @param string $do 
+     * save_search
+     *
+     * @param string $do
      * @access public
      * @return void
      * @notes FIXME: must return something, should not merge _GET and _REQUEST with other stuff.
@@ -44,18 +44,18 @@ class User
     function save_search($do = 'index')
     {
         global $db;
-        
+
         if($this->isAnon()) {
             return;
         }
-        
-        // Only logged in users get to use the 'last search' functionality     
-        if ($do == 'index') {           
+
+        // Only logged in users get to use the 'last search' functionality
+        if ($do == 'index') {
             $arr = array();
             foreach ($this->search_keys as $key) {
                 $arr[$key] = Get::val($key);
-            }            
-                        
+            }
+
             if (Get::val('search_name')) {
                 $fields = array('search_string'=> serialize($arr), 'time'=> time(),
                                 'user_id'=> $this->id , 'name'=> Get::val('search_name'));
@@ -65,17 +65,17 @@ class User
                 $db->Replace('{searches}', $fields, $keys);
             }
         }
-        
+
         $sql = $db->Query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY name ASC', array($this->id));
         $this->searches = $db->FetchAllArray($sql);
     }
-    
-    function perms($name, $project = null) {      
+
+    function perms($name, $project = null) {
         if (is_null($project)) {
             global $proj;
             $project = $proj->id;
         }
-        
+
         if (isset($this->perms[$project][$name])) {
             return $this->perms[$project][$name];
         } else {
@@ -125,18 +125,18 @@ class User
 
                 $this->perms[$row['project_id']] = array_merge($this->perms[$row['project_id']], $row);
             }
-            
+
             // Set missing permissions and attachments
             foreach ($this->perms as $proj_id => $value) {
                 foreach ($fields as $key) {
                     if ($key == 'project_group') {
                         continue;
                     }
-                    
+
                     $this->perms[$proj_id][$key] = max($this->perms[0]['is_admin'], @$this->perms[$proj_id][$key], $this->perms[0][$key]);
                 }
 
-                // nobody can upload files if uploads are disabled at the system level.. 
+                // nobody can upload files if uploads are disabled at the system level..
                 if (!$fs->max_file_size || !is_writable(BASEDIR .'/attachments')) {
                     $this->perms[$proj_id]['create_attachments'] = 0;
                 }
@@ -178,7 +178,7 @@ class User
         if (is_array($proj) && isset($proj['project_id'])) {
             $proj = $proj['project_id'];
         }
-        
+
         return $this->perms('view_tasks', $proj)
           || ($this->perms('project_is_active', $proj)
               && ($this->perms('others_view', $proj) || $this->perms('project_group', $proj)));
@@ -195,12 +195,12 @@ class User
             || $this->perms('manage_project', $task['project_id'])) {
             return true;
         }
-               
+
         return !$this->isAnon() && in_array($this->id, Flyspray::GetAssignees($task['task_id']));
     }
 
     function can_edit_task($task)
-    {      
+    {
         return !$task['is_closed']
             && ($this->perms('modify_all_tasks', $task['project_id']) ||
                     ($this->perms('modify_own_tasks', $task['project_id'])
@@ -214,12 +214,12 @@ class User
         return ($this->perms('assign_to_self', $task['project_id']) && empty($assignees))
                || ($this->perms('assign_others_to_self', $task['project_id']) && !in_array($this->id, $assignees));
     }
-    
+
     function can_add_to_assignees($task)
-	 {          
+	 {
         return ($this->perms('add_to_assignees', $task['project_id']) && !in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
     }
-	 
+
     function can_close_task($task)
     {
         return ($this->perms('close_own_tasks', $task['project_id']) && in_array($this->id, $task['assigned_to']))
@@ -248,15 +248,15 @@ class User
     {
         return !$task['is_closed'] && ($this->perms('manage_project', $task['project_id']) || in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
     }
-    
+
     function can_vote($task)
     {
         global $db;
-        
+
         if (!$this->perms('add_votes', $task['project_id'])) {
             return -1;
         }
-        
+
         // Check that the user hasn't already voted this task
         $check = $db->Query('SELECT vote_id
                                FROM {votes}
@@ -265,7 +265,7 @@ class User
         if ($db->CountRows($check)) {
             return -2;
         }
-        
+
         // Check that the user hasn't voted more than twice this day
         $check = $db->Query('SELECT vote_id
                                FROM {votes}
@@ -277,7 +277,7 @@ class User
 
         return 1;
     }
-    
+
     function logout()
     {
         // Set cookie expiry time to the past, thus removing them
@@ -291,7 +291,7 @@ class User
         // Unset all of the session variables.
         $_SESSION = array();
         session_destroy();
-        
+
         return !$this->isAnon();
     }
 

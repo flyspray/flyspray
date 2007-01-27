@@ -169,6 +169,10 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        if ($task['is_closed']) {
+            break;
+        }
+
         if (!Post::val('resolution_reason')) {
             Flyspray::show_error(L('noclosereason'));
             break;
