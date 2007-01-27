@@ -38,7 +38,7 @@ require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/class.flyspray.php';
 require_once OBJECTS_PATH . '/class.tpl.php';
-
+require_once BASEDIR . '/array_combine.php';
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
