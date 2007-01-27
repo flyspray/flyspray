@@ -31,14 +31,6 @@ if (!is_array($visible) || !count($visible) || !$visible[0]) {
     $visible = array('id');
 }
 
-if (Get::has('reset')) {
-    foreach ($user->search_keys as $key) {
-        unset($_GET[$key]);
-        unset($_REQUEST[$key]); // datepickers use $_REQUEST
-    }
-    unset($_GET['reset']);
-}
-
 list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
 $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');
@@ -77,7 +69,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
         $order2 = Get::safe('order');
     }
 
-    
+
     $new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
     $html = sprintf('<a title="%s" href="%s">%s</a>',
             L('sortthiscolumn'), Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, $new_order))), $html);
@@ -166,7 +158,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value .= ', +' . ($task['num_assigned'] - 1);
             }
             break;
-            
+
         default:
             $value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
             break;
@@ -192,7 +184,7 @@ if(Get::has('hideupdatemsg')) {
     if (!isset($_SESSION['latest_version'])) {
         $latest = Flyspray::remote_request('http://flyspray.org/version.txt', GET_CONTENTS);
 		//if for some silly reason we get and empty response, we use the actual version
- 		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ; 
+ 		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ;
         $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_id = 23', array(time()));
 	}
 }

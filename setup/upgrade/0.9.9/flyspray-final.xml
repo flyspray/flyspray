@@ -326,12 +326,8 @@
     <field name="field_changed" type="C" size="50">
       <NOTNULL/>
     </field>
-    <field name="old_value" type="X">
-      <NOTNULL/>
-    </field>
-    <field name="new_value" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="old_value" type="X" />
+    <field name="new_value" type="X" />
     <index name="idx_task_id">
       <col>task_id</col>
     </index>
