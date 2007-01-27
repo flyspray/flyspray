@@ -157,7 +157,12 @@ class ConfUpdater
             }
             // Upgrade to MySQLi if possible
             if ($key == 'dbtype' && strtolower($value) == 'mysql' && function_exists('mysqli_connect')) {
-                $settings[$key] = 'mysqli';
+
+                //mysqli is broken on 64bit systems in versions < 5.1 do not use it, tested, does not work.
+                if(php_uname('m') == 'x86_64' && version_compare(phpversion(), '5.1.0', '<')) {
+                    continue;
+                }
+                 $settings[$key] = 'mysqli';
             }
         }
     }
