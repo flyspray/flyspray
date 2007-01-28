@@ -21,8 +21,8 @@ foreach ($projects as $project) {
                     LEFT JOIN {tasks} t ON v.task_id = t.task_id AND t.project_id = ?
                         WHERE t.is_closed = 0
                      GROUP BY v.task_id
-                     ORDER BY num_votes DESC 
-                        LIMIT 5', array($project['project_id']));
+                     ORDER BY num_votes DESC',
+                    array($project['project_id']), 5);
     if ($db->CountRows($sql)) {
         $most_wanted[$project['project_id']] = $db->FetchAllArray($sql);
     }
