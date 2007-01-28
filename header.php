@@ -29,7 +29,8 @@ $db->dbOpenFast($conf['database']);
 $fs = new Flyspray;
 
 if (is_readable(BASEDIR . '/setup/index.php') && strpos($fs->version, 'dev') === false) {
-    die('Please empty the folder "' . BASEDIR . DIRECTORY_SEPARATOR . 'setup" before you start using Flyspray.');
+    die('Please empty the folder "' . BASEDIR . DIRECTORY_SEPARATOR . "setup  before you start using Flyspray.\n".
+        "If you are upgrading, please go to the setup directory and launch upgrade.php");
 }
 
 // Any "do" mode that accepts a task_id or id field should be added here.
