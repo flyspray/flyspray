@@ -4,8 +4,8 @@
 <h3>{L('roadmapfor')} {$milestone['name']}
     <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
-      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>showstuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('expandall')}</a> |
-      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>hidestuff('dd{$task['task_id']}');<?php endforeach; ?>">{L('collapseall')}</a>
+      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>showstuff('dd{$task['task_id']}');hidestuff('expand{$task['task_id']}');showstuff('hide{$task['task_id']}', 'inline')<?php endforeach; ?>">{L('expandall')}</a> |
+      <a href="javascript:<?php foreach($milestone['open_tasks'] as $task): ?>hidestuff('dd{$task['task_id']}');hidestuff('hide{$task['task_id']}');showstuff('expand{$task['task_id']}', 'inline')<?php endforeach; ?>">{L('collapseall')}</a>
     </small>
     <?php endif; ?>
 </h3>
