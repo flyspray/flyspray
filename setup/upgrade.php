@@ -47,7 +47,7 @@ $db->dbOpenFast($conf['database']);
 $fs = new Flyspray();
 
 define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
-define('UPGRADE_VERSION', $fs->short_version());
+define('UPGRADE_VERSION', Flyspray::base_version($fs->version));
 define('UPGRADE_PATH', BASEDIR . '/upgrade/' . UPGRADE_VERSION);
 
 // Get installed version
@@ -70,7 +70,7 @@ if (Post::val('upgrade')) {
     new ConfUpdater(CONFIG_PATH);
 
     // dev version upgrade?
-    if (UPGRADE_VERSION == $installed_version) {
+    if (UPGRADE_VERSION == Flyspray::base_version($installed_version)) {
         $type = 'develupgrade';
     } else {
         $type = 'defaultupgrade';
