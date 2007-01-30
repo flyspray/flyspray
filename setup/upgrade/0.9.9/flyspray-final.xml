@@ -536,16 +536,6 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="user_task">
-      <UNIQUE/>
-      <col>task_id</col>
-      <col>user_id</col>
-    </index>
-    <index name="task_id_notifs">
-      <UNIQUE/>
-      <col>task_id</col>
-      <col>user_id</col>
-    </index>
   </table>
   <table name="prefs">
     <field name="pref_id" type="I" size="1">
