@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded
@@ -102,8 +102,8 @@ $translation = array(
 'dateformat_extended'     => 'Erweitertes Datumsformat',
 'cache_feeds'             => 'Cache für Newsfeeds aktivieren',
 'no_cache'                => 'Ohne Cache',
-'cache_disk'              => 'Cache auf Platte',
-'cache_db'                => 'Cache in DB',
+'cache_disk'              => 'Cache als Datei',
+'cache_db'                => 'Cache in Datenbank',
 'subcategoryof'           => 'Unterkategorie von',
 'visiblecolumns'          => 'Spalten in der Aufgabenliste',
 'tense'                   => 'Zeitliche Einordnung',
@@ -216,7 +216,7 @@ $translation = array(
 'edit'                    => 'Bearbeiten',
 'addcomment'              => 'Kommentar hinzufügen',
 'fileuploadedby'          => 'Datei hochgeladen von',
-'uploadafile'             => 'Datei anhängen',
+'uploadafile'             => 'Datei zum Anhängen hochladen',
 'uploadnow'               => 'Hochladen',
 'thesearerelated'         => 'Folgende Aufgaben sind mit dieser verknüpft: ',
 'remove'                  => 'Entfernen',
