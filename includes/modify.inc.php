@@ -1276,9 +1276,10 @@ switch ($action = Req::val('action'))
                           array($proj->id));
 
         $pms = $db->fetchCol($sql);
-
-        // Call the functions to create the address arrays, and send notifications
-        $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms));
+        if (count($pms)) {
+            // Call the functions to create the address arrays, and send notifications
+            $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms));
+        }
 
         $_SESSION['SUCCESS'] = L('adminrequestmade');
         break;

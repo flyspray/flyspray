@@ -245,7 +245,7 @@ class Notifications {
       }
 
       $mail->setCharset( 'UTF-8');
-      
+
       /* otherwise email autoresponders will reply this mail too..
        * unfortunately there is no agreement, no standard on this
        * some prefers "list" or others "bulk" *sigh*
@@ -263,7 +263,7 @@ class Notifications {
             // make sure every email address is only added once
             $to = array_map('trim', array_unique($to));
         }
-        
+
         if($task_id) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
@@ -271,7 +271,7 @@ class Notifications {
             $mail->addHeaders('In-Reply-To: ' . $inreplyto ."\r\n");
             $mail->addHeaders('References: ' . $inreplyto ."\r\n");
         }
-    
+
 	    if (!$mail->hasFailed()) {
 		//one SEPARATE mail for every single recipient when it is an array  ;)
     	    $ret = $mail->send($to, $fromname . $frommail, $subject, $body);
