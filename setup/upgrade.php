@@ -32,7 +32,7 @@ require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/class.database.php';
 require_once OBJECTS_PATH . '/class.flyspray.php';
-require_once OBJECTS_PATH . '/class.tpl.php';
+@require_once OBJECTS_PATH . '/class.tpl.php';
 
 // Initialise DB
 require_once APPLICATION_PATH . '/adodb/adodb.inc.php';
