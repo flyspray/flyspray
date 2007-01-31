@@ -57,6 +57,9 @@ function get_events($task_id, $where = '')
              ORDER BY event_date ASC, event_type ASC", array($task_id));
 }
 
+/**
+ * XXX: A mess,remove my in 1.0 
+ */
 function event_description($history) {
     $return = '';
     global $fs, $baseurl, $details;
@@ -65,6 +68,14 @@ function event_description($history) {
                        'task_type' => 'tasktype', 'product_category' => 'category', 'item_status' => 'status',
                        'task_priority' => 'priority', 'operating_system' => 'operatingsystem', 'task_severity' => 'severity',
                        'product_version' => 'reportedversion', 'mark_private' => 'visibility');
+    // if soemthing gets double escaped, add it here. 
+    $noescape = array('new_value', 'old_value');
+
+    foreach($history as $key=> $value) {
+        if(!in_array($key, $noescape)) {
+            $history[$key] = Filters::noXSS($value);
+        }
+    }
 
     $new_value = $history['new_value'];
     $old_value = $history['old_value'];
@@ -169,7 +180,7 @@ function event_description($history) {
     case '6':     //Comment deleted
             $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".eL('commentdeleted')."</a>";
             if ($new_value != '' && $history['field_changed'] != '') {
-                 $return .= " (".eL('commentby').' ' . tpl_userlink($new_value) . " - " . formatDate($history['field_changed'], true) . ")";
+                 $return .= " (". eL('commentby'). ' ' . tpl_userlink($new_value) . " - " . formatDate($history['field_changed'], true) . ")";
             }
             if (!empty($details)) {
                  $details_previous = TextFormatter::render($old_value);
@@ -179,14 +190,14 @@ function event_description($history) {
     case '7':    //Attachment added
             $return .= eL('attachmentadded');
             if ($history['orig_name']) {
-                 $return .= ": <a href=\"{$baseurl}?getfile={$new_value}\">{$history['orig_name']}</a>";
+                 $return .= ": <a href=\"{$baseurl}?getfile=" . intval($new_value) . '">' . "{$history['orig_name']}</a>";
                  if ($history['file_desc'] != '') {
                       $return .= " ({$history['file_desc']})";
                  }
             }
             break;
     case '8':    //Attachment deleted
-            $return .= eL('attachmentdeleted') . ": {$new_value}";
+            $return .= eL('attachmentdeleted') . ":" . Filters::noXSS($new_value);
             break;
     case '9':    //Notification added
             $return .= eL('notificationadded') . ': ' . tpl_userlink($new_value);

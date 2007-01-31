@@ -144,7 +144,7 @@ class Flyspray
         if ($rfc2616 && isset($_SERVER['REQUEST_METHOD']) &&
             $_SERVER['REQUEST_METHOD'] != 'HEAD') {
             $url = htmlspecialchars($url, ENT_QUOTES, 'utf-8');
-            printf('%s to: <a href="%s">%s</a>.', L('Redirect'), $url, $url);
+            printf('%s to: <a href="%s">%s</a>.', eL('Redirect'), $url, $url);
         }
         if ($exit) {
             exit;
