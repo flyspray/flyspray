@@ -30,6 +30,10 @@ class Notifications {
           settype($to, 'array');
       }
 
+      if (!count($to)) {
+        return false;
+      }
+
       $msg = $this->GenerateMsg($type, $task_id, $info);
       $result = true;
 
