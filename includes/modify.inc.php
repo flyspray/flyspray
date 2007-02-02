@@ -1,9 +1,9 @@
 <?php
 
-  /*************************\
-  | database modifications  |
-  | ~~~~~~~~~~~~~~~~~~~~~~  |
-  \*************************/
+/**
+ * Database Modifications
+ * @version  $Id$
+ */
 
 if (!defined('IN_FS')) {
     die('Do not access this file directly.');
@@ -150,7 +150,9 @@ switch ($action = Req::val('action'))
                 if (!$user->infos['notify_own']) {
                     $new_assignees = array_filter($new_assignees, create_function('$u', 'global $user; return $user->id != $u;'));
                 }
-                $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees));
+                if(count($new_assignees)) {
+                    $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees));
+                }
             }
         }
 
@@ -1410,7 +1412,9 @@ switch ($action = Req::val('action'))
                      WHERE user_id = ?',
                 array($magic_url, $user_details['user_id']));
 
-        $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
+        if(count($user_details)) {
+            $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
+        }
 
         $_SESSION['SUCCESS'] = L('magicurlsent');
         break;

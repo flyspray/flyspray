@@ -736,7 +736,7 @@ class Backend
         // +1 for the task_id column;
         $sql_placeholder = $db->fill_placeholders($sql_values, 1);
 
-        $result = $db->Query('SELECT  max(task_id)+1
+        $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);
         $task_id = $task_id ? $task_id : 1;
