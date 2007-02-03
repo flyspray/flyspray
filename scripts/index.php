@@ -15,7 +15,7 @@ if (!$user->can_view_project($proj->id)) {
 }
 
 $perpage = '20';
-if (@$user->infos['tasks_perpage'] > 0) {
+if (isset($user->infos['tasks_perpage']) && $user->infos['tasks_perpage'] > 0) {
     $perpage = $user->infos['tasks_perpage'];
 }
 
@@ -46,7 +46,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
-    $html    = Filters::noXSS(L($colname));
+    $html    = eL($colname);
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
@@ -72,13 +72,13 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 
     $new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
     $html = sprintf('<a title="%s" href="%s">%s</a>',
-            L('sortthiscolumn'), Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, $new_order))), $html);
+            eL('sortthiscolumn'), Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, $new_order))), $html);
 
     return sprintf($format, $class, $html);
 }
 
 // }}}
-// tpl function that draws a cell {{{
+// tpl function that  draws a cell {{{
 
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
     global $fs, $proj, $page;
@@ -141,7 +141,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 
         case 'status':
             if ($task['is_closed']) {
-                $value = L('closed');
+                $value = eL('closed');
             } else {
                 $value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
             }
@@ -176,7 +176,7 @@ if (Get::val('toggleadvanced')) {
     $_COOKIE['advancedsearch'] = $advanced_search;
 }
 
-// Update check {{{
+// Update check {{{ 
 if(Get::has('hideupdatemsg')) {
     unset($_SESSION['latest_version']);
 } else if ($conf['general']['update_check'] && $user->perms('is_admin')

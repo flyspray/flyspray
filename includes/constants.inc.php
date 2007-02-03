@@ -1,4 +1,10 @@
 <?php
+/**
+ * Basic constants/variables required for flyspray operation
+ *
+ * @notes be a real paranoid here.
+ * @version $Id$
+ */
 
 define('BASEDIR', dirname(dirname(__FILE__)));
 
@@ -20,12 +26,14 @@ if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'
     $baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
 }
 
+if(isset($conf['general']['syntax_plugin']) && preg_match('/^[a-z0-9_]+$/iD', $conf['general']['syntax_plugin'])) {
 
-$path_to_plugin = BASEDIR . '/plugins/' . trim($conf['general']['syntax_plugin']) . '/' 
-                  . trim($conf['general']['syntax_plugin']) . '_constants.inc.php';
+$path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' 
+                  . $conf['general']['syntax_plugin'] . '_constants.inc.php';
 
-if (is_readable($path_to_plugin)) {
-    include($path_to_plugin);
+    if (is_readable($path_to_plugin)) {
+        include($path_to_plugin);
+    }
 }
 
 define('NOTIFY_TASK_OPENED',      1);

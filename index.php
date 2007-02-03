@@ -9,24 +9,13 @@ define('IN_FS', true);
 
 require_once(dirname(__FILE__).'/header.php');
 
-// Get the translation for the wrapper page (this page)
-setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
-
 // Background daemon that does scheduled reminders
 if ($conf['general']['reminder_daemon'] == '1') {
     Flyspray::startReminderDaemon();
 }
 
 // Get available do-modes
-$modes = array();
-$dir = dir(BASEDIR . '/scripts');
-while (($entry = $dir->read()) !== false) {
-    if ($entry{0} == '.') {
-        continue;
-    }
-
-    $modes[] = substr($entry, 0, -4);
-}
+$modes = str_replace('.php', '', array_map('basename', glob(BASEDIR ."/scripts/*.php")));
 
 $do = Req::enum('do', $modes, $proj->prefs['default_entry']);
 

@@ -576,6 +576,8 @@ function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
 
+    setlocale(LC_ALL, str_replace('-', '_', L( 'locale')) . '.utf8');
+
     if (!$timestamp) {
         return $default;
     }
@@ -600,8 +602,8 @@ function formatDate($timestamp, $extended = false, $default = '')
 
     $zone = L('GMT') . (($st == 0) ? ' ' : (($st > 0) ? '+' . $st : $st));
     $dateformat = str_replace('%GMT', $zone, $dateformat);
-
-    return utf8_encode(strftime(Filters::noXSS($dateformat), (int) $timestamp));
+    //it returned utf-8 encoded by the system
+    return strftime(Filters::noXSS($dateformat), (int) $timestamp);
 } /// }}}
 // {{{ Draw permissions table
 function tpl_draw_perms($perms)
