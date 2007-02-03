@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded

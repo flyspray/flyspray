@@ -1006,6 +1006,12 @@
     <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Bug Report', 1, 1, 0);</query>
     <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Feature Request', 2, 1, 0);</query>
     <query>INSERT INTO list_version VALUES (DEFAULT, 1, 'Development', 1, 1, 2);</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Unconfirmed', 1, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('New', 2, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Assigned', 3, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Researching', 4, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Waiting on Customer', 5, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Requires testing', 6, 1, 0)</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '0.9.9');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_port', '5222');</query>
