@@ -44,14 +44,14 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $task_id = Backend::create_task($_POST);
+        list($task_id, $token) = Backend::create_task($_POST);
 
         // Status and redirect
         if ($task_id) {
             $_SESSION['SUCCESS'] = L('newtaskadded');
 
             if ($user->isAnon()) {
-                Flyspray::Redirect(CreateURL('details', $task_id, null, array('task_token' => Get::val('task_token'))));
+                Flyspray::Redirect(CreateURL('details', $task_id, null, array('task_token' => $token)));
             } else {
                 Flyspray::Redirect(CreateURL('details', $task_id));
             }

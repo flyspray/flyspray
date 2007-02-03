@@ -722,6 +722,7 @@ class Backend
         $sql_values[] = '';
 
         // Token for anonymous users
+        $token = '';
         if ($user->isAnon()) {
             $token = md5(uniqid(rand(), true));
             $sql_params[] = 'task_token';
@@ -824,7 +825,7 @@ class Backend
             $notify->Create(NOTIFY_ANON_TASK, $task_id, $token, $args['anon_email']);
         }
 
-        return $task_id;
+        return array($task_id, $token);
     }
 
     /**
