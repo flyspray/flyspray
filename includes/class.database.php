@@ -26,7 +26,7 @@ class Database
      * @access private
      */
     var $dbprefix;
-    
+
     /**
      * Cache for queries done by cached_query()
      * @var array
@@ -36,7 +36,7 @@ class Database
     var $cache = array();
 
     /**
-     * dblink 
+     * dblink
      * adodb handler object
      * @var object
      * @access public
@@ -51,14 +51,14 @@ class Database
     function dbOpenFast($conf)
     {
         if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 6) {
-                
+
             die( 'Flyspray was unable to connect to the database. '
                  .'Check your settings in flyspray.conf.php');
         }
 
        $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, $dbprefix);
     }
-    
+
     /**
      * Open a connection to the database and set connection parameters
      * @param string $dbhost hostname where the database server uses
@@ -71,7 +71,7 @@ class Database
      */
     function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
     {
-        
+
         $this->dbtype   = $dbtype;
         $this->dbprefix = $dbprefix;
         $ADODB_COUNTRECS = false;
@@ -84,8 +84,8 @@ class Database
                .'Check your settings in flyspray.conf.php');
         }
             $this->dblink->SetFetchMode(ADODB_FETCH_BOTH);
-            
-            /* 
+
+            /*
              * this will work only in the following systems/PHP versions
              *
              * PHP4 and 5 with postgresql
@@ -93,10 +93,10 @@ class Database
              * using mysql 4.1.11 or later and mysql 5.0.6 or later.
              *
              * in the rest of the world, it will silently return FALSE.
-             */    
-                
+             */
+
             $this->dblink->SetCharSet('utf8');
-    
+
             //enable debug if constact DEBUG_SQL is defined.
            !defined('DEBUG_SQL') || $this->dblink->debug = true;
     }
@@ -111,9 +111,9 @@ class Database
     }
 
     /**
-     * CountRows 
+     * CountRows
      * Returns the number of rows in a result
-     * @param object $result 
+     * @param object $result
      * @access public
      * @return int
      */
@@ -123,8 +123,8 @@ class Database
     }
 
     /**
-     * AffectedRows 
-     *  
+     * AffectedRows
+     *
      * @access public
      * @return int
      */
@@ -134,9 +134,9 @@ class Database
     }
 
     /**
-     * FetchRow 
-     * 
-     * @param & $result 
+     * FetchRow
+     *
+     * @param & $result
      * @access public
      * @return void
      */
@@ -147,10 +147,10 @@ class Database
     }
 
     /**
-     * fetchCol 
-     * 
-     * @param & $result 
-     * @param int $col 
+     * fetchCol
+     *
+     * @param & $result
+     * @param int $col
      * @access public
      * @return void
      */
@@ -165,12 +165,12 @@ class Database
     }
 
     /**
-     * Query 
-     * 
-     * @param mixed $sql 
-     * @param mixed $inputarr 
-     * @param mixed $numrows 
-     * @param mixed $offset 
+     * Query
+     *
+     * @param mixed $sql
+     * @param mixed $inputarr
+     * @param mixed $numrows
+     * @param mixed $offset
      * @access public
      * @return void
      */
@@ -178,9 +178,9 @@ class Database
     function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
         /* use transactions only for non SELECT statements.
-         * FIXME: real transactions for 1.0 !! 
+         * FIXME: real transactions for 1.0 !!
          */
-        $hastrans = ($this->dblink->hasTransactions && 
+        $hastrans = ($this->dblink->hasTransactions &&
                      strpos($sql , 'SELECT') === FALSE);
 
         // auto add $dbprefix where we have {table}
@@ -205,17 +205,17 @@ class Database
                 var_dump(debug_backtrace());
                 echo "</pre>";
             }
-            
+
             $query_params = '';
 
             if(is_array($inputarr) && count($inputarr)) {
-                
+
                 $query_params =  implode(',', array_map(array('Filters','noXSS'), $inputarr));
-            
-            } 
+
+            }
 
             die (sprintf("Query {%s} with params {%s} Failed! (%s)",
-                    htmlspecialchars($sql, ENT_QUOTES, 'utf-8'), 
+                    htmlspecialchars($sql, ENT_QUOTES, 'utf-8'),
                     $query_params, $this->dblink->ErrorMsg()));
         }
 
@@ -224,11 +224,11 @@ class Database
     }
 
     /**
-     * cached_query 
-     * 
-     * @param mixed $idx 
-     * @param mixed $sql 
-     * @param array $sqlargs 
+     * cached_query
+     *
+     * @param mixed $idx
+     * @param mixed $sql
+     * @param array $sqlargs
      * @access public
      * @return array
      */
@@ -243,9 +243,9 @@ class Database
     }
 
     /**
-     * FetchOne 
-     * 
-     * @param & $result 
+     * FetchOne
+     *
+     * @param & $result
      * @access public
      * @return array
      */
@@ -256,9 +256,9 @@ class Database
     }
 
     /**
-     * FetchAllArray 
-     * 
-     * @param & $result 
+     * FetchAllArray
+     *
+     * @param & $result
      * @access public
      * @return array
      */
@@ -268,13 +268,13 @@ class Database
     }
 
     /**
-     * GroupBy 
-     * 
+     * GroupBy
+     *
      * This groups a result by a single column the way
      * MySQL would do it. Postgre doesn't like the queries MySQL needs.
      *
-     * @param object $result 
-     * @param string $column 
+     * @param object $result
+     * @param string $column
      * @access public
      * @return array process the returned array with foreach ($return as $row) {}
      */
@@ -286,13 +286,13 @@ class Database
         }
         return array_values($rows);
     }
-    
+
     /**
-     * GetColumnNames 
-     * 
-     * @param mixed $table 
-     * @param mixed $alt 
-     * @param mixed $prefix 
+     * GetColumnNames
+     *
+     * @param mixed $table
+     * @param mixed $alt
+     * @param mixed $prefix
      * @access public
      * @return void
      */
@@ -300,39 +300,39 @@ class Database
     function GetColumnNames($table, $alt, $prefix)
     {
         global $conf;
-        
+
         if (strcasecmp($conf['database']['dbtype'], 'pgsql')) {
             return $alt;
         }
-        
+
         $table = $this->_add_prefix($table);
         $fetched_columns = $this->Query('SELECT column_name FROM information_schema.columns WHERE table_name = ?',
                                          array(str_replace('"', '', $table)));
         $fetched_columns = $this->FetchAllArray($fetched_columns);
-        
+
         foreach ($fetched_columns as $key => $value)
         {
             $col_names[$key] = $prefix . $value[0];
         }
-        
+
         $groupby = implode(', ', $col_names);
-        
+
         return $groupby;
     }
 
     /**
-     * Replace 
-     * 
-     * Try to update a record, 
-     * and if the record is not found, 
+     * Replace
+     *
+     * Try to update a record,
+     * and if the record is not found,
      * an insert statement is generated and executed.
      *
-     * @param string $table 
-     * @param array $field 
-     * @param array $keys 
-     * @param bool $autoquote 
+     * @param string $table
+     * @param array $field
+     * @param array $keys
+     * @param bool $autoquote
      * @access public
-     * @return integer 0 on error, 1 on update. 2 on insert 
+     * @return integer 0 on error, 1 on update. 2 on insert
      */
     function Replace($table, $field, $keys, $autoquote = true)
     {
@@ -351,9 +351,9 @@ class Database
     {
         return preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
     }
-    
+
     /**
-     * Helper method to quote an indentifier 
+     * Helper method to quote an indentifier
      * (table or field name) with the database specific quote
      * @param string $ident table or field name to be quoted
      * @return string
@@ -364,9 +364,9 @@ class Database
     {
         return (string) $this->dblink->nameQuote . $ident . $this->dblink->nameQuote ;
     }
-    
+
     /**
-     * Quote a string in a safe way to be entered to the database 
+     * Quote a string in a safe way to be entered to the database
      * (for the very few cases we don't use prepared statements)
      *
      * @param string $string  string to be quoted
@@ -381,7 +381,7 @@ class Database
     }
 
     /**
-     * fill_placeholders 
+     * fill_placeholders
      *  a convenience function to fill sql query placeholders
      *  according to the number of columns to be used.
      * @param array $cols
@@ -391,11 +391,11 @@ class Database
      * @static
      */
     function fill_placeholders($cols, $additional=0)
-    { 
+    {
         if(is_array($cols) && count($cols) && is_int($additional)) {
 
-            return join(',', array_fill(0, (count($cols) + $additional), '?')); 
-        
+            return join(',', array_fill(0, (count($cols) + $additional), '?'));
+
         } else {
             //this is not an user error, is a programmer error.
             trigger_error("incorrect data passed to fill_placeholders", E_USER_ERROR);

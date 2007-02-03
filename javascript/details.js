@@ -23,7 +23,7 @@ function keyboardNavigation(e) {
   }
   switch (e.keyCode) {
     case 85:  // "u" get back to task list
-        window.location = $('lastsearchlink').href;
+        window.location = $('indexlink').href;
         Event.stop(e);
         break;
     case 80:  // "p" move to previous task
@@ -32,7 +32,7 @@ function keyboardNavigation(e) {
           Event.stop(e);
         }
         break;
-    case 78: // "n" move to next task    
+    case 78: // "n" move to next task
         if ($('next')) {
           window.location = $('next').href;
           Event.stop(e);

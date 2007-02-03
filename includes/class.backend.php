@@ -576,28 +576,27 @@ class Backend
             return false;
         }
 
+        // unset category of tasks because we don't move categories
+        if ($move_to) {
+            $db->Query('UPDATE {tasks} SET product_category = 0 WHERE project_id = ?', array($pid));
+        }
+
         $tables = array('list_category', 'list_os', 'list_resolution', 'list_tasktype',
                         'list_status', 'list_version', 'admin_requests',
                         'cache', 'projects', 'tasks');
 
         foreach ($tables as $table) {
             if ($move_to && $table !== 'projects' && $table !== 'list_category') {
-                $action = 'UPDATE ';
+                $base_sql = 'UPDATE {' . $table . '} SET project_id = ?';
                 $sql_params = array($move_to, $pid);
             } else {
-                $action = 'DELETE FROM ';
+                $base_sql = 'DELETE FROM {' . $table . '}';
                 $sql_params = array($pid);
-                //tp will be true or false ;)
-                $tp = ($table === 'projects');
             }
-
-            $base_sql = $action . '{'. $table .'}'. (($move_to && empty($tp))  ? ' SET project_id = ? ': '');
 
             if (!$db->Query($base_sql . ' WHERE project_id = ?', $sql_params)) {
                 return false;
             }
-             //we need this for the next loop.
-            unset($tp);
         }
 
         // groups are only deleted, not moved (it is likely

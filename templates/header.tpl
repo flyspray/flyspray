@@ -9,6 +9,7 @@
     <meta http-equiv="Content-Style-Type" content="text/css" />
 
     <link rel="icon" type="image/png" href="{$this->get_image('favicon')}" />
+    <link rel="index" id="indexlink" type="text/html" href="{$baseurl}" />
     <?php foreach ($fs->projects as $project): ?>
     <link rel="section" type="text/html" href="{$baseurl}?project={$project[0]}" />
     <?php endforeach; ?>
@@ -20,7 +21,7 @@
           href="{$baseurl}feed.php?feed_type=rss2&amp;project={$proj->id}" />
 	<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
 	      href="{$baseurl}feed.php?feed_type=atom&amp;project={$proj->id}" />
-	      
+
     <script type="text/javascript" src="{$baseurl}javascript/prototype/prototype.js"></script>
     <script type="text/javascript" src="{$baseurl}javascript/script.aculo.us/scriptaculous.js"></script>
     <?php if ('index' == $do || 'details' == $do): ?>
@@ -32,7 +33,7 @@
     <script type="text/javascript" src="{$baseurl}javascript/tabs.js"></script>
     <script type="text/javascript" src="{$baseurl}javascript/functions.js"></script>
     <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar_stripped.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar-setup_stripped.js"> </script> 
+    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar-setup_stripped.js"> </script>
     <script type="text/javascript" src="{$baseurl}javascript/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
     <!--[if IE]>
     <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
@@ -48,11 +49,11 @@
         ?>window.setTimeout('Effect.Fade(\'successbar\', &lbrace;duration:.3&rbrace;)', 8000);<?php
         elseif (isset($_SESSION['ERROR'])):
         ?>window.setTimeout('Effect.Fade(\'errorbar\', &lbrace;duration:.3&rbrace;)', 8000);<?php endif ?>">
-  
+
   <div id="container">
     <!-- Remove this to remove the logo -->
     <h1 id="title"><a href="{$baseurl}">{$proj->prefs['project_title']}</a></h1>
-    
+
     <?php $this->display('links.tpl'); ?>
 
     <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>
@@ -72,7 +73,7 @@
           </div>
         </form>
       </div>
-      
+
       <div class="clear"></div>
       <?php $show_message = array('details', 'index', 'newtask', 'reports', 'depends');
             $actions = explode('.', Req::val('action'));

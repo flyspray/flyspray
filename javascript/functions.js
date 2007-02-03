@@ -17,6 +17,7 @@ function hidestuff(boxid){
 }
 
 function hidestuff_e(e, boxid){
+   e = e || window.event;
    if (Event.element(e).getAttribute('id') !== 'lastsearchlink' ||
 	(Event.element(e).getAttribute('id') === 'lastsearchlink' && $('lastsearchlink').className == 'inactive')) {
 	if (!Position.within($(boxid), Event.pointerX(e), Event.pointerY(e))) {
@@ -555,5 +556,6 @@ function stopBubble(e) {
 	e.cancelBubble = true;
 	if (e.stopPropagation) { e.stopPropagation(); }
 }
+
 
 

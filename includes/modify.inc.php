@@ -500,9 +500,11 @@ switch ($action = Req::val('action'))
         }
 
         // Process the list of groups into a format we can store
+        $viscols = trim(Post::val('visible_columns'));
         $db->Query("UPDATE  {prefs} SET pref_value = ?
                      WHERE  pref_name = 'visible_columns'",
-                array(trim(Post::val('visible_columns'))));
+                array($viscols));
+        $fs->prefs['visible_columns'] = $viscols;
 
         $_SESSION['SUCCESS'] = L('optionssaved');
         break;
@@ -528,13 +530,12 @@ switch ($action = Req::val('action'))
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
-                                   visible_columns, lang_code, notify_reply)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?)',
+                                   visible_columns, lang_code, notify_email, notify_jabber)
+                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
                         Post::val('intro_message'), Post::val('others_view', 0),
-                        Post::val('anon_open', 0),
-                        $viscols,
-                        Post::val('lang_code'), ''));
+                        Post::val('anon_open', 0),  $viscols,
+                        Post::val('lang_code', 'en'), '', ''));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         $pid = $db->fetchOne($sql);
