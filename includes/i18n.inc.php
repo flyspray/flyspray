@@ -38,7 +38,8 @@ function load_translations()
     global $proj, $language;
     // Load translations
     // if no valid lang_code, return english
-    if(!preg_match('/^[a-z0-9_]+$/iD', $proj->prefs['lang_code'])) {
+    // valid == a-z and "_" case insensitive
+    if(!preg_match('/^[a-z_]+$/iD', $proj->prefs['lang_code'])) {
         return;
     }
 

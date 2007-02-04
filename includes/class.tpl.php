@@ -619,8 +619,8 @@ function tpl_draw_perms($perms)
             'add_votes', 'edit_own_comments');
 
     $yesno = array(
-            '<td class="bad">No</td>',
-            '<td class="good">Yes</td>');
+            '<td class="bad">' . eL('no') . '</td>',
+            '<td class="good">' . eL('yes') . '</td>');
 
     // FIXME: html belongs in a template, not in the template class
     $html = '<table border="1" onmouseover="perms.hide()" onmouseout="perms.hide()">';
