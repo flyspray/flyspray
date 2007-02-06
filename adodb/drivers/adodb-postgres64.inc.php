@@ -1,6 +1,6 @@
 <?php
 /*
- V4.93 10 Oct 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+ V4.94 23 Jan 2007  (c) 2000-2007 John Lim (jlim#natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -236,7 +236,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 	// if magic quotes disabled, use pg_escape_string()
 	function qstr($s,$magic_quotes=false)
 	{
-		$s = $magic_quotes ? stripslashes($s) : $s;
+		if (!$magic_quotes) {
 			if (ADODB_PHPVER >= 0x5200) {
 				return  "'".pg_escape_string($this->_connectionID,$s)."'";
 			} 
@@ -247,7 +247,11 @@ select viewname,'V' from pg_views where viewname like $mask";
 				$s = adodb_str_replace(array('\\',"\0"),array('\\\\',"\\\\000"),$s);
 			}
 			return  "'".str_replace("'",$this->replaceQuote,$s)."'"; 
+		}
 		
+		// undo magic quotes for "
+		$s = str_replace('\\"','"',$s);
+		return "'$s'";
 	}
 	
 	
@@ -344,7 +348,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 	{ 
 		pg_exec ($this->_connectionID, "begin"); 
 		
-		$fd = fopen($path,'rb');
+		$fd = fopen($path,'r');
 		$contents = fread($fd,filesize($path));
 		fclose($fd);
 		
@@ -766,11 +770,11 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
 				}
 				$s = "PREPARE $plan ($params) AS ".substr($sql,0,strlen($sql)-2);		
 				//adodb_pr($s);
-				pg_exec($this->_connectionID,$s);
+				$rez = pg_exec($this->_connectionID,$s);
 				//echo $this->ErrorMsg();
 			}
-			
-			$rez = pg_exec($this->_connectionID,$exsql);
+			if ($rez)
+				$rez = pg_exec($this->_connectionID,$exsql);
 		} else {
 			//adodb_backtrace();
 			$rez = pg_exec($this->_connectionID,$sql);
