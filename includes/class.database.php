@@ -98,7 +98,7 @@ class Database
             $this->dblink->SetCharSet('utf8');
 
             //enable debug if constact DEBUG_SQL is defined.
-           !defined('DEBUG_SQL') || $this->dblink->debug = true;
+            !defined('DEBUG_SQL') || $this->dblink->debug = true;
     }
 
     /**
@@ -193,7 +193,9 @@ class Database
         }
 
         if (($numrows >= 0 ) or ($offset >= 0 )) {
-            $result =  $this->dblink->SelectLimit($sql, $numrows, $offset, $inputarr);
+            /* adodb drivers are inconsisent with the casting of $numrows and $offset so WE
+             * cast to integer here anyway */
+            $result =  $this->dblink->SelectLimit($sql, (int) $numrows, (int) $offset, $inputarr);
         } else {
            $result =  $this->dblink->Execute($sql, $inputarr);
         }

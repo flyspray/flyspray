@@ -910,7 +910,7 @@ class Flyspray
     {
         include_once dirname(__FILE__) . '/external/Validate.php';
 
-        return is_string($email) && Validate::email($email, array('use_rfc822'=>true));
+        return is_string($email) && Validate::email($email);
     }
 
     /**

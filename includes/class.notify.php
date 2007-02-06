@@ -264,7 +264,7 @@ class Notifications {
         $frommail = ' <' . trim($fs->prefs['admin_email']) . '>';
 
        if (is_array($to) && count($to) > 1) {
-            // make sure every email address is only added once
+           // make sure every email address is only added once
             $to = array_map('trim', array_unique($to));
         }
 
@@ -657,7 +657,7 @@ class Notifications {
             return array();
         }
 
-        $sql = $db->Query('SELECT *
+        $sql = $db->Query('SELECT user_id, notify_type, email_address, jabber_id
                              FROM {users}
                             WHERE' . substr(str_repeat(' user_id = ? OR ', count($users)), 0, -3),
                            array_values($users));
@@ -753,7 +753,6 @@ class Notifications {
 
       // Now, we add the project contact addresses...
       // ...but only if the task is public
-      $task_details = Flyspray::getTaskDetails($task_id);
       if ($task_details['mark_private'] != '1' && in_array($type, Flyspray::int_explode(' ', $proj->prefs['notify_types'])))
       {
          $proj_emails = preg_split('/[\s,;]+/', $proj->prefs['notify_email'], -1, PREG_SPLIT_NO_EMPTY);
