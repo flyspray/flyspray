@@ -14,7 +14,7 @@ $sql = $db->Query('SELECT  project_id
 
 $relatedproject = $db->fetchOne($sql);
 
-if (Get::val('project') == $relatedproject) {
+if (Get::val('project') == $relatedproject || !$relatedproject) {
     echo 'ok';
 }
 ?>
