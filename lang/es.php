@@ -808,6 +808,7 @@ $translation = array(
 'collapse'                => 'Contraer',
 'expandall'               => 'Expandir todo',
 'collapseall'             => 'Contraer todo',
+'noroadmap'               => '"Roadmap" no disponible (no existen versiones "futuras" específicas en este proyecto).',
 
 );
 

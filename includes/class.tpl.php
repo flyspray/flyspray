@@ -498,10 +498,14 @@ function tpl_img($src, $alt = '')
     return htmlspecialchars($alt, ENT_QUOTES,'utf-8');
 } // }}}
 // {{{ Text formatting
-$path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';
+//format has been already checked in constants.inc.php
+if(isset($conf['general']['syntax_plugin'])) {
 
-if (is_readable($path_to_plugin)) {
-    include($path_to_plugin);
+    $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';
+
+    if (is_readable($path_to_plugin)) {
+        include($path_to_plugin);
+    }
 }
 
 class TextFormatter
@@ -576,7 +580,7 @@ function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
 
-    setlocale(LC_ALL, str_replace('-', '_', L( 'locale')) . '.utf8');
+    setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
 
     if (!$timestamp) {
         return $default;
