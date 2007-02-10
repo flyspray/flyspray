@@ -1,42 +1,58 @@
-Flyspray -  A getting-started guide.
+Installing Flyspray
+Latest version: http://flyspray.org/manual:installation
 
-===== Preparing for install =====
-  * Unpack the compressed package into a directory where your webserver can reach it.
-    It will extract into its own flyspray-version/ directory.
-    >  tar -xzvf flyspray-version.tar.gz flyspray/
-  * Flyspray depends on ADOdb to provide support for different types of databases.
-    If you don't already have ADOdb installed, Flyspray Setup can install it for you.
-    If you want Setup to install ADOdb, then you need to make the adodb/ directory writeable
-    by the webserver.
-  * Flyspray comes with an empty flyspray.conf.php that Flyspray Setup needs to write to.
-    Make it writeable by the webserver.
-  * Create a Mysql database for Flyspray to use:
-    >  mysqladmin -u root -p create flyspray;
-  * Or, create a PostgreSQL database for Flyspray to use:
-    >  createuser -ADP flyspray;
-    >  createdb -E UNICODE -O flyspray flyspray;
-  * If you would like to attach files to Flyspray tasks and comments, make the attachments/
-    directory writeable by the webserver.
+This document describes the installation process for setting up Flyspray version 0.9.9. When reading this guide and performing the following install steps, please go in order; Some of the later steps require that the previous steps have been completed, otherwise the installation will fail.
 
-===== Installation =====
-  * Point your browser to http://yourserver/flyspray/ and follow along with Flyspray Setup.
-  * When Setup completes, you will be automatically logged-in, and taken to your user profile
-    where you can change  details such as your Real Name.
-  * If for some reason you can't use Flyspray Setup (or it doesn't work for you), then you could 
-    try installing without it <http://flyspray.rocks.cc/manual/hardcore_install>.
+Preparing for install
 
-If you would like to enable support for the Task Dependency Graphs feature <http://flyspray.rocks.cc/manual/dependencies%23task_dependency_graphs>,
-an optional additional package can be installed to enable it. Most operating systems have a package
-available for the free Graphviz <http://www.graphviz.org/> package, either in an OS-specific package
-or by download direct from the Graphviz site. This package is required for this feature until bug 612
-is implemented, after which your choice of an internet connection or the locally installed package
-are required. If you have installed this package, but it still isn't working, look at the top of the
-scripts/depends.php file in your Flyspray installation, and make sure the right path to the installed
-"dot" excutable is in place.
-(It is unknown if or how this feature works on Windows PCs, but bug 612 should make it accessible to those installations.)
+    *
+      Install PHP, MySQL or PostgreSQL, and a web server (like Apache). The latest versions of each should work nicely.
+    *
+      For MySQL installations, it’s a good idea to install the MySQL Administratior and MySQL Query Browser. Both can be found here: http://dev.mysql.com/downloads/gui-tools/5.0.html
+    *
+      A good tutorial on how to get Apache, PHP, and MySQL working together is here: http://www.tanguay.at/installPhp5.php5?step=1
+    *
+      In the php.ini file, make sure that the extension php_mysql.dll is uncommented. The tutorial neglects to include this step.
+    *
+      Grab the latest release from the download page.
+    *
+      Unpack the compressed package into a directory where your webserver can reach it. It will extract into its own flyspray-version/ directory.
+    *
+      In the case, that the database user you use for your Flyspray installation cannot create a database on its own, create a database for Flyspray to use.
 
-===== After installation =====
-  * Click the 'Manage Project' link to set up your project preferences, user groups and lists.
-  * Close the sample task, and start adding your own, real tasks.
-  * If you need help, read the documentation <http://flyspray.rocks.cc/manual/toc>,
-    faq <http://flyspray.rocks.cc/faq>, and support <http://flyspray.rocks.cc/support> pages.
+# mysql -u root -p
+  > CREATE DATABASE flyspray DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci; 
+  > GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,CREATE TEMPORARY TABLES ON flyspray.*
+          TO flysprayuser@localhost IDENTIFIED BY 'yourpassword'; 
+  > quit 
+  # mysqladmin -u root -p reload
+
+
+    *
+      Or, create a PostgreSQL database for Flyspray to use:
+
+su;
+su postgres;
+createuser -SDRP flyspray;
+createdb -E UNICODE -O flyspray flyspray;
+
+    *
+      Make sure the attachments/ and cache/ directory is writeable by the webserver.
+
+Installation
+
+    *
+      Point your browser to http://yourserver/flyspray/ and follow along with Flyspray Setup.
+    *
+      When Setup completes, you will be automatically logged-in, and taken to your user profile where you can change details such as your Real Name.
+
+If you would like to enable support for the local Task Dependency Graphs feature, an optional additional package can be installed to enable it. Most operating systems have a package available for the free Graphviz package, either in an OS-specific package or by download direct from the Graphviz site.
+After installation
+
+    *
+      Click the ‘Manage Project’ link to set up your project preferences, user groups and lists.
+    *
+      Close the sample task, and start adding your own, real tasks.
+    *
+      If you need help, read the documentation, faq, and support pages.
+

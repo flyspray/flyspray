@@ -1,15 +1,6 @@
-Upgrading from 0.9.7 to 0.9.8
+Upgrading from 0.9.6 - 0.9.8 to 0.9.9
 
-Point your browser at your Flyspray directory to launch to new setup script.
-
-
-Upgrading from 0.9.6 to 0.9.7
-
-Simply pointing your browser at your Flyspray directory should launch
-the upgrade script.  You might like to deny other people access to your
-Flyspray while you conduct the upgrade.  The upgrade script will use
-the settings in flyspray.conf.php to select the database type (mysql
-or postgresql), and upgrade your database accordingly.
+Run the upgrader at http://yourflyspray/setup/upgrade.php
 
 
 Upgrading from 0.9.5 to 0.9.6

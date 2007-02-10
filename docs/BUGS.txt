@@ -1,1 +1,1 @@
-Reported bugs are at http://flyspray.rocks.cc/bts/
+Reported bugs are at http://bugs.flyspray.org/

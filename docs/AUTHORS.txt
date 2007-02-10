@@ -1,29 +1,8 @@
-Primary Developer:
+See http://flyspray.org/team
 
-      Tony Collins
-      Canberra, Australia
-      http://tony.rocks.cc/
+Other past contributors:
 
-The Development Team:
-
-      Konrad Roziewski (SQL, Postgres port, Polish translation)
-      Warsaw, Poland
-      http://www.suwalki.com.pl/~konrad/
-
-      Anders Betner (Javascript)
-      Patrick Dubbert (Code handyman, initial German translation)
-      Florian Schmitz (various coding)
-
-
-We would particularly like to thank:
-
-      Mac Newbold for extensive testing and bugfixing during leadup to the
-      0.9.8 release.
-
-
-Other contributors:
-
-      Installer by Jeffrey Fernandez
+      (0.9.8) Installer by Jeffrey Fernandez
 
       Much xml-rpc code by Angus Hardie
       http://www.malcolmhardie.com/
@@ -49,6 +28,3 @@ Other contributors:
 
       Configurable tasklist columns by Jonathan Oxer
       http://oxer.com.au/
-
-      Bugfixes,installer improvements, PHP5 testing by Cristian Rodriguez
-	  http://www.kissofjudas.net/ (in spanish)

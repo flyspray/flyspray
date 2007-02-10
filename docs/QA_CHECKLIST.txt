@@ -19,9 +19,7 @@ Installation:
 
 Upgrade:
 * detect if flyspray.conf.php is writeable
-* licence agreement displays correctly, and will not advance without acceptance
 * insert database upgrade tables
-* attachments are converted to comments + attachments
 
 Be sure to test everything below with address_rewriting both ON and OFF.
 
