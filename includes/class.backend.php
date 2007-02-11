@@ -993,7 +993,7 @@ class Backend
                 'summary'      => 'item_summary',
                 'severity'     => 'task_severity',
                 'category'     => 'lc.category_name',
-                'status'       => 'item_status',
+                'status'       => 'is_closed, item_status',
                 'dueversion'   => 'lvc.list_position',
                 'duedate'      => 'due_date',
                 'progress'     => 'percent_complete',
