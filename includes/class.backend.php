@@ -1013,7 +1013,7 @@ class Backend
         $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
 
         $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', 'severity'), array_keys($order_keys))];
-        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
+        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'priority'), array_keys($order_keys))];
         $sortorder  = sprintf('%s %s, %s %s, t.task_id ASC',
                 $order_column[0], Filters::enum(array_get($args, 'sort', 'desc'), array('asc', 'desc')),
                 $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
