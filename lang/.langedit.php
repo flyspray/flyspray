@@ -17,7 +17,7 @@
  *  Creates a work file for better safety
  *  New languages are easily created just by typing the new language code on the URL
  * 2006-06-07 Version 1.2
- *  Moved to the setup directory so that it wouldn't be left behind in the 
+ *  Moved to the setup directory so that it wouldn't be left behind in the
  *  installation to be used by some one unauthorized
  *  mb_strlen() replaced by strlen(utf_decode()) because mb_* functions are not standard
  * 2006-06-12 Version 1.3
@@ -43,37 +43,29 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
  * @package     PHP_Compat
  * @link        http://php.net/function.fprintf
  * @author      Aidan Lister <aidan@php.net>
- * @version     $Revision: 1.14 $
+ * @version     $Revision: 1.13 $
  * @since       PHP 5
  * @require     PHP 4.0.0 (user_error)
  */
-function php_compat_fprintf()
-{
-    $args = func_get_args();
-
-    if (count($args) < 2) {
-        user_error('Wrong parameter count for fprintf()', E_USER_WARNING);
-        return;
-    }
-
-    $resource_handle = array_shift($args);
-    $format = array_shift($args);
-
-    if (!is_resource($resource_handle)) {
-        user_error('fprintf() supplied argument is not a valid stream resource',
-            E_USER_WARNING);
-        return false;
-    }
-
-    return fwrite($resource_handle, vsprintf($format, $args));
-}
-
-
-// Define
 if (!function_exists('fprintf')) {
-    function fprintf()
-    {
-        return php_compat_fprintf();
+   function fprintf() {
+        $args = func_get_args();
+
+        if (count($args) < 2) {
+            user_error('Wrong parameter count for fprintf()', E_USER_WARNING);
+            return;
+        }
+
+        $resource_handle = array_shift($args);
+        $format = array_shift($args);
+
+        if (!is_resource($resource_handle)) {
+            user_error('fprintf() supplied argument is not a valid stream resource',
+                E_USER_WARNING);
+            return false;
+        }
+
+        return fwrite($resource_handle, vsprintf($format, $args));
     }
 }
 
@@ -165,7 +157,7 @@ else
   }
   else
     $translation = $language;  // Edit the english language file
-  
+
   if(!is_array(@$translation))
     echo "<b>Warning: </b>the translation file does not contain the \$translation array, a new file will be created: <code>$lang.php</code>\n";
 }
@@ -273,7 +265,7 @@ foreach ($language as $key => $val)
       echo "<input class=\"edit\" type=\"text\" name=\"L[$key]\" value=\"$trans\" size=80 $onchange>";
     }
     echo "</nobr></td></tr>\n";
-    
+
     if(--$limit == 0 && !$search && !$show_empty)
       break;
   }
@@ -308,7 +300,7 @@ function parseNL($str)
 function update_language($lang, &$strings, $edit)
 {
   global $language, $translation;
-  
+
   if(!is_array($edit))
     return;
   // Form data contains UTF-8 encoded text
