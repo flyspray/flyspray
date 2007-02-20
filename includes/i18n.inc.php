@@ -39,8 +39,8 @@ function load_translations()
     // Load translations
     // if no valid lang_code, return english
     // valid == a-z and "_" case insensitive
-    if(!preg_match('/^[a-z_]+$/iD', $proj->prefs['lang_code'])) {
-        return;
+    if (!preg_match('/^[a-z_]+$/iD', $proj->prefs['lang_code'])) {
+        $proj->prefs['lang_code'] = 'en';
     }
 
     $translation = BASEDIR . "/lang/{$proj->prefs['lang_code']}.php";
