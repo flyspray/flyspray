@@ -31,7 +31,13 @@ class Tpl
 
     function setTheme($theme)
     {
-        $this->_theme = str_replace('//', '/', $theme.'/');
+        // Check available themes
+        $themes = Flyspray::listThemes();
+        if (in_array($theme, $themes)) {
+            $this->_theme = $theme.'/';
+        } else {
+            $this->_theme = $themes[0].'/';
+        }
     }
 
     function setTitle($title)
@@ -762,7 +768,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
     }
     return $url->get();
 } // }}}
-// Page numbering {{{ 
+// Page numbering {{{
 // Thanks to Nathan Fritz for this.  http://www.netflint.net/
 function pagenums($pagenum, $perpage, $totalcount)
 {
