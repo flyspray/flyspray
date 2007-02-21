@@ -35,17 +35,17 @@ function get_events($task_id, $where = '')
 
             LEFT JOIN {list_category} lc1 ON lc1.category_id = h.old_value AND h.field_changed='product_category'
             LEFT JOIN {list_category} lc2 ON lc2.category_id = h.new_value AND h.field_changed='product_category'
-            
+
             LEFT JOIN {list_status} ls1 ON ls1.status_id = h.old_value AND h.field_changed='item_status'
             LEFT JOIN {list_status} ls2 ON ls2.status_id = h.new_value AND h.field_changed='item_status'
-            
+
             LEFT JOIN {list_resolution} lr ON lr.resolution_id = h.new_value AND h.event_type = 2
 
             LEFT JOIN {projects} p1 ON p1.project_id = h.old_value AND h.field_changed='project_id'
             LEFT JOIN {projects} p2 ON p2.project_id = h.new_value AND h.field_changed='project_id'
-            
+
             LEFT JOIN {comments} c ON c.comment_id = h.field_changed AND h.event_type = 5
-            
+
             LEFT JOIN {attachments} att ON att.attachment_id = h.new_value AND h.event_type = 7
 
             LEFT JOIN {list_version} lv1 ON lv1.version_id = h.old_value
@@ -58,17 +58,17 @@ function get_events($task_id, $where = '')
 }
 
 /**
- * XXX: A mess,remove my in 1.0 
+ * XXX: A mess,remove my in 1.0
  */
 function event_description($history) {
     $return = '';
     global $fs, $baseurl, $details;
-    
+
     $translate = array('item_summary' => 'summary', 'project_id' => 'attachedtoproject',
                        'task_type' => 'tasktype', 'product_category' => 'category', 'item_status' => 'status',
                        'task_priority' => 'priority', 'operating_system' => 'operatingsystem', 'task_severity' => 'severity',
                        'product_version' => 'reportedversion', 'mark_private' => 'visibility');
-    // if soemthing gets double escaped, add it here. 
+    // if soemthing gets double escaped, add it here.
     $noescape = array('new_value', 'old_value');
 
     foreach($history as $key=> $value) {
@@ -86,7 +86,7 @@ function event_description($history) {
                 $return .= eL('taskedited');
                 break;
             }
-        
+
             $field = $history['field_changed'];
             switch ($field) {
                 case 'item_summary':
@@ -104,7 +104,7 @@ function event_description($history) {
                     } elseif($field == 'task_severity') {
                         $old_value = $fs->severities[$old_value];
                         $new_value = $fs->severities[$new_value];
-                    } elseif($field != 'item_summary') {                        
+                    } elseif($field != 'item_summary') {
                         $old_value = $history[$field . '1'];
                         $new_value = $history[$field . '2'];
                     }
@@ -262,7 +262,7 @@ function event_description($history) {
             break;
     case '29': // User added to assignees list
             $return .= eL('addedtoassignees');
-            break;    
+            break;
     case '30': // user created
             $return .= eL('usercreated');
             break;
@@ -270,11 +270,11 @@ function event_description($history) {
             $return .= eL('userdeleted');
             break;
     }
-    
+
     if (isset($details_previous)) $GLOBALS['details_previous'] = $details_previous;
     if (isset($details_new))      $GLOBALS['details_new'] = $details_new;
-    
-    return $return;    
+
+    return $return;
 }
 
 ?>
