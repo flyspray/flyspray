@@ -15,7 +15,7 @@ if ($conf['general']['reminder_daemon'] == '1') {
 }
 
 // Get available do-modes
-$modes = str_replace('.php', '', array_map('basename', glob(BASEDIR ."/scripts/*.php")));
+$modes = str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/scripts/*.php")));
 
 $do = Req::enum('do', $modes, $proj->prefs['default_entry']);
 

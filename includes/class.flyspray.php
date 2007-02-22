@@ -425,7 +425,7 @@ class Flyspray
      */
     function listLangs()
     {
-        return str_replace('.php', '', array_map('basename', glob(BASEDIR ."/lang/*.php")));
+        return str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/lang/*.php")));
 
     } // }}}
     // Log events to the history table {{{

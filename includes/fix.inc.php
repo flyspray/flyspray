@@ -82,8 +82,8 @@ function unregister_GLOBALS()
        if (!in_array($k, $noUnset) && isset($GLOBALS[$k])) {
 
            unset($GLOBALS[$k]);
-           /* no, this is not a bug, we use double unset() .. it is to circunvent 
-           /* this PHP critical vulnerability 
+           /* no, this is not a bug, we use double unset() .. it is to circunvent
+           /* this PHP critical vulnerability
             * http://www.hardened-php.net/hphp/zend_hash_del_key_or_index_vulnerability.html
             * this is intended to minimize the catastrophic effects that has on systems with
             * register_globals on.. users with register_globals off are still vulnerable but
@@ -221,7 +221,7 @@ function php_compat_array_intersect_key()
     // Intersect keys
     $arg_keys = array_map('array_keys', $args);
     $result_keys = call_user_func_array('array_intersect', $arg_keys);
-    
+
     // Build return array
     $result = array();
     foreach($result_keys as $key) {
@@ -235,8 +235,43 @@ if (!function_exists('array_intersect_key')) {
     function array_intersect_key()
     {
         $args = func_get_args();
-        return call_user_func_array('php_compat_array_intersect_key', $args);   
+        return call_user_func_array('php_compat_array_intersect_key', $args);
     }
+}
+
+/**
+ * Replace glob() since this function is apparently
+ * disabled for no apparent reason ("security") on some systems
+ *
+ * @see glob()
+ * @require     PHP 4.3.0 (fnmatch)
+ */
+function glob_compat($pattern, $flags = 0) {
+
+    if (!function_exists('fnmatch')) {
+        function fnmatch($pattern, $string) {
+            return @preg_match('/^'.strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
+        }
+    }
+
+    $split = explode('/', $pattern);
+    $match = array_pop($split);
+    $path = implode('/', $split);
+    if (($dir = opendir($path)) !== false) {
+        $glob = array();
+        while (($file = readdir($dir)) !== false) {
+            if (fnmatch($match, $file)) {
+                if (is_dir("$path/$file") || !($flags & GLOB_ONLYDIR)) {
+                    if ($flags & GLOB_MARK) $file .= '/';
+                    $glob[] = $file;
+                }
+            }
+        }
+        closedir($dir);
+        if (!($flags & GLOB_NOSORT)) sort($glob);
+        return $glob;
+    }
+    return false;
 }
 
 //for reasons outside flsypray, the PHP core may throw Exceptions in PHP5
@@ -247,7 +282,7 @@ if(PHP_VERSION >= 5) {
 
 function flyspray_exception_handler($exception) {
 
-    die("Completely unexpected exception: " .  
+    die("Completely unexpected exception: " .
         htmlspecialchars($exception->getMessage(),ENT_QUOTES, 'utf-8')  . "<br/>" .
       "This should <strong> never </strong> happend, please inform Flyspray Developers");
 
