@@ -14,6 +14,11 @@
 					<td align="left"><b>{!$php_output}</b></td>
 					<td>&nbsp;</td>
 				</tr>
+                <tr>
+					<td>XML Extension</td>
+					<td align="left"><b>{!Setup::ReturnStatus($xmlStatus)}</b></td>
+					<td>&nbsp;</td>
+				</tr>
 				<tr>
 					<td class="heading">Database</td>
 					<td class="heading">in PHP</td>
@@ -27,7 +32,7 @@
 				</p>
 			</div>
 			<div class="clr"></div>
-	
+
 			<h2>Recommended settings:</h2>
 			<div class="installBlock">
 				<table class="formBlock">
@@ -48,7 +53,7 @@
 				</p>
 			</div>
 			<div class="clr"></div>
-	
+
 			<h2>Directory and File Permissions:</h2>
 			<div class="installBlock">
 				<table class="formBlock">
@@ -87,7 +92,7 @@
 				<?php endif; ?>
 			</div>
 			<div class="clr"></div>
-	
+
 			<h2>Proceed to Licence Agreement:</h2>
 			<div class="installBlock">
 				<form class="formBlock farRight" action="index.php" method="post" name="adminForm" style="display:inline;">

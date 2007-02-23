@@ -53,6 +53,7 @@ class Setup extends Flyspray
    var $mProceed;
    var $mPhpVersionStatus;
    var $mDatabaseStatus;
+   var $xmlStatus;
    var $mConfigText;
    var $mHtaccessText;
    var $mWriteStatus;
@@ -97,6 +98,7 @@ class Setup extends Flyspray
       //equal or mayor to 4.3.9 which is enough for us
       //earlier versions are really buggy anyway.
       $this->mPhpRequired			= '4.3.9';
+      $this->xmlStatus = function_exists('xml_parser_create');
 
       // If the database is supported in Flyspray, the function to check in PHP.
       $this->mSupportedDatabases	=
@@ -176,7 +178,7 @@ class Setup extends Flyspray
     */
    function CheckPreStatus()
    {
-      $this->mProceed = ($this->mDatabaseStatus && $this->mPhpVersionStatus);
+      $this->mProceed = ($this->mDatabaseStatus && $this->mPhpVersionStatus && $this->xmlStatus);
 
       return $this->mProceed;
    }
@@ -397,6 +399,7 @@ class Setup extends Flyspray
                                     'cache_output' => $this->CheckWriteability('cache'),
                                     'att_output' => $this->CheckWriteability('attachments'),
                                     'config_status' => $this->mWriteStatus['flyspray.conf.php'],
+                                    'xmlStatus' => $this->xmlStatus,
                                     'php_settings' => $this->GetPhpSettings(),
                                     'status' => $this->CheckPreStatus(),
                                     'message' => $this->GetPageMessage(),
@@ -809,7 +812,7 @@ class Setup extends Flyspray
 
       // Setting the database for the ADODB connection
       require_once($this->mAdodbPath);
-      
+
       $this->mDbConnection =& NewADOConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
       $this->mDbConnection->SetCharSet('utf8');
