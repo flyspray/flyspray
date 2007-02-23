@@ -128,7 +128,6 @@ class Notifications {
                            $fs->prefs['jabber_ssl'],
                            $fs->prefs['jabber_port']);
 
-      $JABBER->log_enabled = defined('JABBER_DEBUG');
 
       // get listing of all pending jabber notifications
       $result = $db->Query("SELECT DISTINCT message_id
