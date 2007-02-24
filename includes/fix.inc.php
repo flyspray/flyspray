@@ -274,6 +274,18 @@ function glob_compat($pattern, $flags = 0) {
     return false;
 }
 
+// now for all those borked PHP installations...
+if (!function_exists('ctype_alnum')) {
+	function ctype_alnum($text) {
+		return preg_match('/^[a-z0-9]*$/i', $text);
+	}
+}
+if (!function_exists('ctype_digit')) {
+	function ctype_digit($text) {
+		return preg_match('/^[0-9]*$/i', $text);
+	}
+}
+
 //for reasons outside flsypray, the PHP core may throw Exceptions in PHP5
 // for a good example see this article
 // http://ilia.ws/archives/107-Another-unserialize-abuse.html
