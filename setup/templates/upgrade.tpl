@@ -17,7 +17,7 @@
       <div id="bodyContent">
       <form action="upgrade.php" method="post">
       <input type="hidden" name="upgrade" value="1" />
-        <div class="install">	
+        <div class="install">
             <h2>Precondition checks</h2>
             <p>
             Your current version is <strong>{$installed_version}</strong> and the version we can upgrade to is <strong>{$short_version}</strong>.
@@ -43,23 +43,25 @@
             <?php else: ?>
             Apparently, an upgrade is possible.
             </p>
-            
+
             <h2>Precautions</h2>
             <p>Create a backup of your <strong>database</strong> <em>and</em> all Flyspray related <strong>files</strong> before performing the upgrade.</p>
-            
+
             <?php if (isset($upgrade_options)): ?>
             <h2>Upgrade options</h2>
             <p>{!$upgrade_options}</p>
             <?php endif; ?>
-            
+
             <h2>Perform Upgrade</h2>
             <p>
-              <input name="upgrade" class="button" value="Perform Upgrade > >" type="submit" />
+              <input name="upgrade" class="button" value="Perform Upgrade > >" type="submit" onclick="this.disabled = true" />
               <?php if (isset($done)): ?>
               <span class="green"><strong>Done!</strong></span>
+              <?php else: ?>
+              (this may take a while)
               <?php endif; ?>
             </p>
-            <?php endif; ?> 
+            <?php endif; ?>
         </div><!-- End of install -->
         </form>
         <div class="clr"></div>
