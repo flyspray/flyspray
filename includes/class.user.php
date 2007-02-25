@@ -147,7 +147,11 @@ class User
     function check_account_ok()
     {
         global $conf;
-
+        // Anon users are always OK
+        if ($this->isAnon()) {
+            return;
+        }
+        
         if (Cookie::val('flyspray_passhash') !=
                 crypt($this->infos['user_pass'], $conf['general']['cookiesalt'])
                 || !$this->infos['account_enabled']
