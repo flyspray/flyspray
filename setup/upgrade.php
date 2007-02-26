@@ -64,7 +64,9 @@ $page->assign('short_version', UPGRADE_VERSION);
 // Now the hard work
 // ---------------------------------------------------------------------
 
-$upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
+if (is_dir(UPGRADE_PATH)) {
+    $upgrade_info = parse_ini_file(UPGRADE_PATH . '/upgrade.info', true);
+}
 
 if (Post::val('upgrade')) {
     // At first the config file
@@ -195,11 +197,13 @@ $checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION
 $checks['config_writable'] = is_writable(CONFIG_PATH);
 $checks['db_connect'] = (bool) $db->dblink;
 $checks['installed_version'] = version_compare($installed_version, '0.9.5') === 1;
+$checks['upgrade_required'] = is_dir(UPGRADE_PATH);
 $todo['config_writable'] = 'Please make sure that the file at ' . CONFIG_PATH . ' is writable.';
 $todo['db_connect'] = 'Connection to the database could not be established. Check your config.';
 $todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
 $todo['installed_version'] = 'An upgrade from Flyspray versions lower than 0.9.6 is not possible.
                               You will have to upgrade manually to at least 0.9.6, the scripts which do that are included in all Flyspray releases <= 0.9.8.';
+$todo['upgrade_required'] = 'A database upgrade is not required. Flyspray should work properly already.';
 
 $upgrade_possible = true;
 foreach ($checks as $check => $result) {

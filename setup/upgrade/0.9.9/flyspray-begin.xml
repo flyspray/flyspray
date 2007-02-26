@@ -686,8 +686,9 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="due_date" type="C" size="10">
+    <field name="due_date" type="I" size="11">
       <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="users">
