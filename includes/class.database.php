@@ -50,13 +50,13 @@ class Database
      */
     function dbOpenFast($conf)
     {
-        if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 6) {
+        if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 5) {
 
             die( 'Flyspray was unable to connect to the database. '
                  .'Check your settings in flyspray.conf.php');
         }
 
-       $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, $dbprefix);
+       $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, isset($dbprefix) ? $dbprefix : '');
     }
 
     /**
