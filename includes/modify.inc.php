@@ -77,7 +77,6 @@ switch ($action = Req::val('action'))
 
         if ($due_date = Post::val('due_date', 0)) {
             $due_date = Flyspray::strtotime(Post::val('due_date'));
-            Backend::add_reminder($task['task_id'], L('defaultreminder') . "\n\n" . CreateURL('details', $task['task_id']), 2*24*60*60, time());
         }
 
         $time = time();
