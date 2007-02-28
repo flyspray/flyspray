@@ -509,8 +509,10 @@ class Setup extends Flyspray
       // If there is an error
       if (isset($_SESSION['page_message']) || isset($_SESSION['page_heading']))
       {
-         $message =
-         '<h1 class="error">' . $_SESSION['page_heading'] . '</h1>';
+         $message = '';
+         if (isset($_SESSION['page_heading'])) {
+            $message = '<h1 class="error">' . $_SESSION['page_heading'] . '</h1>';
+         }
 
         if (isset($_SESSION['page_message'])) {
             // Get an html formated list
