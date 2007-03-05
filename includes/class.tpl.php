@@ -313,7 +313,7 @@ function join_attrs($attr = null) {
 }
 // {{{ Datepicker
 function tpl_datepicker($name, $label = '', $value = 0) {
-    //global $user;
+    global $user;
 
     $date = '';
 
@@ -321,6 +321,12 @@ function tpl_datepicker($name, $label = '', $value = 0) {
         if (!is_numeric($value)) {
             $value = strtotime($value);
         }
+
+        if (!$user->isAnon()) {
+            $st = date('Z')/3600; // server GMT timezone
+            $value += ($user->infos['time_zone'] - $st) * 60 * 60;
+        }
+
         $date = date('Y-m-d', intval($value));
 
      /* It must "look" as a date..
