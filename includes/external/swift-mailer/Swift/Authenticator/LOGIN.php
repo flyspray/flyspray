@@ -1,121 +1,51 @@
 <?php
 
 /**
- * This is the LOGIN Authentication for Swift Mailer, a PHP Mailer class.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	4th August 2006
- * @license http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- * 
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer LOGIN Authenticator Mechanism
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Authenticator
+ * @license GNU Lesser General Public License
  */
+
+require_once dirname(__FILE__) . "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_Authenticator");
 
 /**
- * SMTP LOGIN Authenticator Class.
- * Runs the commands needed in order to use LOGIN SMTP authentication
- * @package Swift
+ * Swift LOGIN Authenticator
+ * @package Swift_Authenticator
+ * @author Chris Corbyn <chris@w3style.co.uk>
  */
-class Swift_Authenticator_LOGIN
+class Swift_Authenticator_LOGIN extends Swift_Authenticator
 {
 	/**
-	 * The string the SMTP server returns to identify
-	 * that it supports this authentication mechanism
-	 * @var string serverString
+	 * Try to authenticate using the username and password
+	 * Returns false on failure
+	 * @param string The username
+	 * @param string The password
+	 * @param Swift The instance of Swift this authenticator is used in
+	 * @return boolean
 	 */
-	var $serverString = 'LOGIN';
-	/**
-	 * SwiftInstance parent object
-	 * @var object SwiftInstance (reference)
-	 */
-	var $baseObject;
-
-	function Swift_Authenticator_LOGIN()
+	function isAuthenticated($user, $pass, &$swift)
 	{
-		//
-	}
-	/**
-	 * Loads an instance of Swift to the Plugin
-	 *
-	 * @param	object	SwiftInstance
-	 * @return	void
-	 */
-	function loadBaseObject(&$object)
-	{
-		$this->baseObject =& $object;
-	}
-	/**
-	 * Executes the logic in the authentication mechanism
-	 *
-	 * @param	string	username
-	 * @param	string	password
-	 * @return	bool	successful
-	 */
-	function run($username, $password)
-	{
-		return $this->authLOGIN($username, $password);
-	}
-	/**
-	 * Executes the logic in the authentication mechanism
-	 *
-	 * @param	string	username
-	 * @param	string	password
-	 * @return	bool	successful
-	 */
-	function authLOGIN($username, $password)
-	{
-		$response = $this->baseObject->command("AUTH LOGIN\r\n");
-		//This should be the server OK go ahead and give me a username
-		preg_match('/^334\ (.*)$/', $response, $matches);
-		if (!empty($matches[1]))
-		{
-			$decoded_response = base64_decode($matches[1]);
-			if (strtolower($decoded_response) == 'username:')
-			{
-				$response = $this->baseObject->command(base64_encode($username));
-				//This should be the server saying now give me a password
-				preg_match('/^334\b\ (.*)$/', $response, $matches);
-				if (!empty($matches[1]))
-				{
-					$decoded_response = base64_decode($matches[1]);
-					if (strtolower($decoded_response) == 'password:')
-					{
-						//235 is a good authentication response!
-						$this->baseObject->command(base64_encode($password));
-						if ($this->baseObject->responseCode == 235) return true;
-					}
-				}
-			}
+		Swift_ClassLoader::load("Swift_Errors");
+		Swift_Errors::expect($e, "Swift_Connection_Exception");
+			if (!$e) $swift->command("AUTH LOGIN", 334);
+			if (!$e) $swift->command(base64_encode($user), 334);
+			if (!$e) $swift->command(base64_encode($pass), 235);
+		if ($e) {
+			$swift->reset();
+			return false;
 		}
-		//If the logic got down here then the authentication failed
-		$this->baseObject->logError('Authentication failed using LOGIN', $this->baseObject->responseCode);
-		$this->baseObject->fail();
-		return false;
+		Swift_Errors::clear("Swift_Connection_Exception");
+		return true;
+	}
+	/**
+	 * Return the name of the AUTH extension this is for
+	 * @return string
+	 */
+	function getAuthExtensionName()
+	{
+		return "LOGIN";
 	}
 }
-
-?>

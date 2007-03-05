@@ -1,126 +1,65 @@
 <?php
 
 /**
- * This is the CRAM-MD5 Authentication for Swift Mailer, a PHP Mailer class.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	4th August 2006
- * @license http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- * 
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer CRAM-MD5 Authenticator Mechanism
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Authenticator
+ * @license GNU Lesser General Public License
  */
+
+require_once dirname(__FILE__) . "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_Authenticator");
 
 /**
- * SMTP CRAM-MD5 Authenticator Class.
- * Runs the commands needed in order to use LOGIN SMTP authentication
- * @package Swift
+ * Swift CRAM-MD5 Authenticator
+ * This form of authentication is a secure challenge-response method
+ * @package Swift_Authenticator
+ * @author Chris Corbyn <chris@w3style.co.uk>
  */
-class Swift_Authenticator_CRAMMD5
+class Swift_Authenticator_CRAMMD5 extends Swift_Authenticator
 {
 	/**
-	 * The string the SMTP server returns to identify
-	 * that it supports this authentication mechanism
-	 * @var string serverString
+	 * Try to authenticate using the username and password
+	 * Returns false on failure
+	 * @param string The username
+	 * @param string The password
+	 * @param Swift The instance of Swift this authenticator is used in
+	 * @return boolean
 	 */
-	var $serverString = 'CRAM-MD5';
-	/**
-	 * SwiftInstance parent object
-	 * @var object SwiftInstance (reference)
-	 */
-	var $baseObject;
-
-	function Swift_Authenticator_CRAMMD5()
+	function isAuthenticated($user, $pass, &$swift)
 	{
-		//
-	}
-	/**
-	 * Loads an instance of Swift to the Plugin
-	 *
-	 * @param	object	SwiftInstance
-	 * @return	void
-	 */
-	function loadBaseObject(&$object)
-	{
-		$this->baseObject =& $object;
-	}
-	/**
-	 * Executes the logic in the authentication mechanism
-	 *
-	 * @param	string	username
-	 * @param	string	password
-	 * @return	bool	successful
-	 */
-	function run($username, $password)
-	{
-		return $this->authCRAM_MD5($username, $password);
-	}
-	/**
-	 * Executes the logic in the authentication mechanism
-	 *
-	 * @param	string	username
-	 * @param	string	password
-	 * @return	bool	successful
-	 */
-	function authCRAM_MD5($username, $password)
-	{
-		$response = $this->baseObject->command("AUTH CRAM-MD5\r\n");
-		preg_match('/^334\ (.*)$/', $response, $matches);
-		if (!empty($matches[1]))
-		{
-			//This response is a base64 encoded challenge "<123456.123456789@domain.tld>"
-			$decoded_response = base64_decode($matches[1]);
-			
-			//We need to generate a digest using this challenge
-			$digest = $username.' '.$this->_authGenerateCRAM_MD5_Response($password, $decoded_response);
-			//We then send the username and digest as a base64 encoded string
-			$auth_string = base64_encode($digest);
-			$this->baseObject->command("$auth_string\r\n");
-			
-			if ($this->baseObject->responseCode == 235) //235 means OK
-			{
-				return true;
+		Swift_ClassLoader::load("Swift_Errors");
+		Swift_Errors::expect($e, "Swift_Connection_Exception");
+			$res =& $swift->command("AUTH CRAM-MD5", 334);
+			if (!$e) {
+			$encoded_challenge = substr($res->getString(), 4);
+			$challenge = base64_decode($encoded_challenge);
+			$response = base64_encode($user . " " . $this->generateCRAMMD5Hash($pass, $challenge));
+			$swift->command($response, 235);
 			}
+		if ($e) {
+			$swift->reset();
+			return false;
 		}
-		$this->baseObject->logError('Authentication failed using CRAM-MD5', $this->baseObject->responseCode);
-		$this->baseObject->fail();
-		return false;
+		Swift_Errors::clear("Swift_Connection_Exception");
+		return true;
 	}
 	/**
-	 * This has been lifted from a PEAR implementation at
-	 * http://pear.php.net/package/Auth_SASL/
-	 *
-	 * @param	string	password
-	 * @param	string	challenge
-	 * @return	string	digest
+	 * Return the name of the AUTH extension this is for
+	 * @return string
 	 */
-	//This has been lifted from a PEAR implementation at
-	// http://pear.php.net/package/Auth_SASL/
-	function _authGenerateCRAM_MD5_Response($password, $challenge)
+	function getAuthExtensionName()
+	{
+		return "CRAM-MD5";
+	}
+	/**
+	 * Generate a CRAM-MD5 hash from a challenge
+	 * @param string The string to get a hash from
+	 * @param string The challenge to use to make the hash
+	 * @return string
+	 */
+	function generateCRAMMD5Hash($password, $challenge)
 	{
 		if (strlen($password) > 64)
 			$password = pack('H32', md5($password));
@@ -137,5 +76,3 @@ class Swift_Authenticator_CRAMMD5
 		return $digest;
 	}
 }
-
-?>

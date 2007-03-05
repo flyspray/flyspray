@@ -1,98 +1,107 @@
 <?php
 
 /**
- * Connection rotator plugin for Swift Mailer, a PHP Mailer class.
- * This is the second component to making Swift_Connection_Rotator handle its
- * rotation.  Without this, only one connection is used.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	30th July 2006
- * @license	http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- * 
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer Rotating Connection Controller
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Plugin
+ * @license GNU Lesser General Public License
  */
 
-class Swift_Plugin_ConnectionRotator
+require_once dirname(__FILE__) . "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_Events_Listener");
+
+/**
+ * Swift Rotating Connection Controller
+ * Invokes the nextConnection() method of Swift_Connection_Rotator upon sending a given number of messages
+ * @package Swift_Plugin
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ */
+class Swift_Plugin_ConnectionRotator extends Swift_Events_Listener
 {
 	/**
-	 * Name of the plugin (identifier)
-	 * @var string plugin id
+	 * The number of emails which must be sent before the connection is rotated
+	 * @var int Threshold number of emails
 	 */
-	var $pluginName = 'ConnectionRotator';
+	var $threshold = 1;
 	/**
-	 * Contains a reference to the main swift object.
-	 * @var object swiftInstance
+	 * The total number of emails sent on this connection
+	 * @var int
 	 */
-	var $swiftInstance;
+	var $count = 0;
 	/**
-	 * If we're waiting to do a rotate
-	 * @var bool pend rotation
+	 * The connections we have used thus far
+	 * @var array
 	 */
-	var $pendRotation = false;
+	var $used = array();
 	
 	/**
-	 * Constructor.
+	 * Constructor
+	 * @param int The number of emails to send before rotating
 	 */
-	function Swift_Plugin_ConnectionRotator()
+	function Swift_Plugin_ConnectionRotator($threshold=1)
 	{
-		//
+		$this->setThreshold($threshold);
 	}
 	/**
-	 * Load in Swift
-	 * @param object SwiftInstance
+	 * Set the number of emails to send before a connection rotation is tried
+	 * @param int Number of emails
 	 */
-	function loadBaseObject(&$object)
+	function setThreshold($threshold)
 	{
-		$this->swiftInstance =& $object;
+		$this->threshold = (int) $threshold;
 	}
 	/**
-	 * onLoad event
+	 * Get the number of emails which must be sent before a rotation occurs
+	 * @return int
 	 */
-	function onLoad()
+	function getThreshold()
 	{
-		//This is recursion gone crazy!
-		$this->swiftInstance->connection->loadSwiftInstance($this->swiftInstance);
+		return $this->threshold;
 	}
 	/**
-	 * Event handler for onCommand.
+	 * Swift's SendEvent listener.
+	 * Invoked when Swift sends a message
+	 * @param Swift_Events_SendEvent The event information
+	 * @throws Swift_Connection_Exception If the connection cannot be rotated
 	 */
-	function onCommand()
+	function sendPerformed(&$e)
 	{
-		if ($this->swiftInstance->commandKeyword == 'data')
+		$swift =& $e->getSwift();
+		if (!method_exists($swift->connection, "nextConnection"))
 		{
-			$this->pendRotation = true;
+			trigger_error("The ConnectionRotator plugin cannot be used with connections other than Swift_Connection_Rotator.");
+			return;
 		}
-		elseif ($this->pendRotation)
+		
+		$this->count++;
+		if ($this->count >= $this->getThreshold())
 		{
-			$this->swiftInstance->connection->rotate();
-			$this->pendRotation = false;
+			$swift->connection->nextConnection();
+			if (!in_array(($id = $swift->connection->getActive()), $this->used))
+			{
+				$swift->connect();
+				$this->used[] = $id;
+			}
+			$this->count = 0;
 		}
+	}
+	/**
+	 * Disconnect all the other connections
+	 * @param Swift_Events_DisconnectEvent The event info
+	 */
+	function disconnectPerformed(&$e)
+	{
+		$conn =& $e->getConnection();
+		$swift =& $e->getSwift();
+		$active = $conn->getActive();
+		$conn->nextConnection();
+		while ($conn->getActive() != $active)
+		{
+			$swift->command("QUIT", 221);
+			$conn->stop();
+			$conn->nextConnection();
+		}
+		$this->used = array();
 	}
 }
-
-?>

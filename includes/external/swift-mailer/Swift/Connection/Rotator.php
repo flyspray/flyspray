@@ -1,227 +1,197 @@
 <?php
 
 /**
- * Handles connection cycling & load balancing for Swift Mailer, a PHP Mailer class.
- * This requires the plugin "Swift_Connection_Rotator_Plugin" to actually rotate.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	30th July 2006
- * @license	http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- *
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer Multiple Redundant Cycling Connection component.
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Connection
+ * @license GNU Lesser General Public License
  */
+ 
+require_once dirname(__FILE__) . "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_ConnectionBase");
 
 /**
- * Allows rotating of multiple connections on each send
- * Takes an array if connection objects, find the ones that work, then offers a rotate() option
- * @package Swift
+ * Swift Rotator Connection
+ * Switches through each connection in turn after sending each message
+ * @package Swift_Connection
+ * @author Chris Corbyn <chris@w3style.co.uk>
  */
-class Swift_Connection_Rotator
+class Swift_Connection_Rotator extends Swift_ConnectionBase
 {
 	/**
-	 * Any errors we see
-	 * @var string error
-	 */
-	var $error;
-	/**
-	 * Just a boolean value for when we're connected
-	 * @var bool connected
-	 */
-	var $connected = false;
-	/**
-	 * References the readHook in the active connection
-	 * @var	resource	socket (reference)
-	 */
-	var $readHook;
-	/**
-	 * References the writeHook in the active connection
-	 * @var	resource	socket (reference)
-	 */
-	var $writeHook;
-	/**
-	 * The loaded connections
-	 * @var array connections
+	 * The list of available connections
+	 * @var array
 	 */
 	var $connections = array();
 	/**
-	 * Contains references to the connections which work
-	 * @var array connections
+	 * The id of the active connection
+	 * @var int
 	 */
-	var $workingConnections = array();
+	var $active = null;
 	/**
-	 * The active connector
-	 * @var object connection
+	 * Contains a list of any connections which were tried but found to be dead
+	 * @var array
 	 */
-	var $activeConnector;
-	/**
-	 * The key of the active connection
-	 */
-	var $connectionIdex = 0;
-	/**
-	 * Last index in connections tried
-	 * @var int index
-	 */
-	var $lastIndex = -1;
-	/**
-	 * An instance of Swift
-	 * @var object Swift
-	 */
-	var $swiftInstance;
-	/**
-	 * If we've tried to use all of the connections
-	 */
-	var $allTried = false;
-
+	var $dead = array();
+	
 	/**
 	 * Constructor
-	 * @param	array	connection objects
 	 */
 	function Swift_Connection_Rotator($connections=array())
 	{
-		$this->connections = $connections;
+		foreach ($connections as $id => $conn)
+		{
+			$this->addConnection($connections[$id], $id);
+		}
 	}
 	/**
-	 * Establishes a connection with the MTA
-	 * The SwiftInstance Object calls this
-	 * @return	bool	connected
+	 * Add a connection to the list of options
+	 * @param Swift_Connection An instance of the connection
+	 */
+	function addConnection(&$connection)
+	{
+		if (!is_a($connection, "Swift_Connection") && !is_a($connection, "SimpleMock"))
+		{
+			trigger_error("Swift_Connection_Rotator::addConnection expects parameter 1 to be instance of Swift_Connection.");
+			return;
+		}
+		$this->connections[] =& $connection;
+	}
+	/**
+	 * Rotate to the next working connection
+	 * @throws Swift_Connection_Exception If no connections are available
+	 */
+	function nextConnection()
+	{
+		$total = count($this->connections);
+		$start = $this->active === null ? 0 : ($this->active + 1);
+		if ($start >= $total) $start = 0;
+		
+		$fail_messages = array();
+		for ($id = $start; $id < $total; $id++)
+		{
+			if (in_array($id, $this->dead)) continue; //The connection was previously found to be useless
+			
+			Swift_Errors::expect($e, "Swift_Connection_Exception");
+				if (!$this->connections[$id]->isAlive()) $this->connections[$id]->start();
+			if (!$e) {
+				if ($this->connections[$id]->isAlive())
+				{
+					Swift_Errors::clear("Swift_Connection_Exception");
+					$this->active = $id;
+					return true;
+				}
+				$this->dead[] = $id;
+				$this->connections[$id]->stop();
+				Swift_ClassLoader::load("Swift_Connection_Exception");
+				Swift_Errors::trigger(new Swift_Connection_Exception(
+					"The connection started but reported that it was not active"));
+			}
+			$this->dead[] = $id;
+			$this->connections[$id]->stop();
+			$fail_messages[] = $id . ": " . $e->getMessage();
+			$e = null;
+		}
+		$failure = implode("<br />", $fail_messages);
+		Swift_ClassLoader::load("Swift_Connection_Exception");
+		Swift_Errors::trigger(new Swift_Connection_Exception(
+			"No connections were started.<br />" . $failure));
+	}
+	/**
+	 * Read a full response from the buffer
+	 * @return string
+	 * @throws Swift_Connection_Exception Upon failure to read
+	 */
+	function read()
+	{
+		if ($this->active === null)
+		{
+			Swift_ClassLoader::load("Swift_Connection_Exception");
+			Swift_Errors::trigger(new Swift_Connection_Exception("None of the connections set have been started"));
+			return;
+		}
+		return $this->connections[$this->active]->read();
+	}
+	/**
+	 * Write a command to the server (leave off trailing CRLF)
+	 * @param string The command to send
+	 * @throws swift_Connection_Exception Upon failure to write
+	 */
+	function write($command, $end="\r\n")
+	{
+		if ($this->active === null)
+		{
+			Swift_ClassLoader::load("Swift_Connection_Exception");
+			Swift_Errors::trigger(new Swift_Connection_Exception("None of the connections set have been started"));
+			return;
+		}
+		return $this->connections[$this->active]->write($command, $end);
+	}
+	/**
+	 * Try to start the connection
+	 * @throws Swift_Connection_Exception Upon failure to start
 	 */
 	function start()
 	{
-		return $this->startConnector();
+		if ($this->active === null) return $this->nextConnection();
 	}
 	/**
-	 * Load in Swift
-	 * @param object Swift
-	 */
-	function loadSwiftInstance(&$object)
-	{
-		$this->swiftInstance =& $object;
-	}
-	/**
-	 * Loops over the connections and get one that works
-	 * @return	bool	connected
-	 * @private
-	 */
-	function startConnector()
-	{
-		$loop = false;
-		//Loop over the connections
-		for ($i = $this->lastIndex+1; $i < count($this->connections); $i++)
-		{
-			//If one starts, reference class properties with the connector
-			if ($this->connections[$i]->start())
-			{
-				$this->lastIndex = $i;
-				$this->activeConnector =& $this->connections[$i];
-				$this->connected =& $this->activeConnector->connected;
-				$this->readHook =& $this->activeConnector->readHook;
-				$this->writeHook =& $this->activeConnector->writeHook;
-				$this->workingConnections[] =& $this->connections[$i];
-				$this->connectionIndex = count($this->workingConnections)-1;
-				return true;
-			}
-			else //Otherwise see what the problem was
-			{
-				if (!empty($this->connections[$i]->error))
-				{
-					if (!$loop) $this->error = $this->connections[$i]->error;
-					else $this->error .= "; ".$this->connections[$i]->error;
-				}
-				
-			}
-			$loop = true;
-		}
-		//None worked...
-		$this->allTried = true;
-		return false;
-	}
-	/**
-	 * Move onto the next connector
-	 */
-	function rotate()
-	{
-		if (!$this->allTried)
-		{
-			//This re-assigns the connection anyway
-			if ($this->startConnector())
-			{
-				//We'll need to do a handshake because it's the first connect
-				$this->swiftInstance->handshake();
-			}
-		}
-		else
-		{
-			//Can we go forward?
-			if (isset($this->workingConnections[$this->connectionIndex+1]))
-			{
-				$this->connectionIndex++;
-			}
-			else //Ok, then we go back to the start instead
-			{
-				$this->connectionIndex = 0;
-			}
-			$this->activeConnector =& $this->workingConnections[$this->connectionIndex];
-			$this->connected =& $this->activeConnector->connected;
-			$this->readHook =& $this->activeConnector->readHook;
-			$this->writeHook =& $this->activeConnector->writeHook;
-		}
-	}
-	/**
-	 * Closes the connections with the MTA
-	 * Called by the SwiftInstance object
-	 * @return	void
+	 * Try to close the connection
+	 * @throws Swift_Connection_Exception Upon failure to close
 	 */
 	function stop()
 	{
-		//Close all connections that opened
-		foreach ($this->workingConnections as $i => $obj)
+		foreach ($this->connections as $id => $conn)
 		{
-			if ($this->workingConnections[$i]->isConnected())
-			{
-				$this->workingConnections[$i]->stop();
-			}
+			if ($this->connections[$id]->isAlive()) $this->connections[$id]->stop();
 		}
-		$this->workingConnections = array();
-		$this->connectionIndex = 0;
-		$this->lastTried = -1;
-		$this->connected = false;
-		$this->activeConnection = null;
-		$this->readHook = null;
-		$this->writeHook = null;
+		$this->active = null;
 	}
 	/**
-	 * Returns TRUE if the socket is connected
-	 * @return bool connected
+	 * Check if the current connection is alive
+	 * @return boolean
 	 */
-	function isConnected()
+	function isAlive()
 	{
-		return $this->connected;
+		return (($this->active !== null) && $this->connections[$this->active]->isAlive());
+	}
+	/**
+	 * Get the ID of the active connection
+	 * @return int
+	 */
+	function getActive()
+	{
+		return $this->active;
+	}
+	/**
+	 * Call the current connection's postConnect() method
+	 */
+	function postConnect(&$instance)
+	{
+		Swift_ClassLoader::load("Swift_Plugin_ConnectionRotator");
+		if (!$instance->getPlugin("_ROTATOR")) $instance->attachPlugin(new Swift_Plugin_ConnectionRotator(), "_ROTATOR");
+		$this->connections[$this->active]->postConnect($instance);
+	}
+	/**
+	 * Call the current connection's setExtension() method
+	 */
+	function setExtension($extension, $attributes=array())
+	{
+		$this->connections[$this->active]->setExtension($extension, $attributes);
+	}
+	/**
+	 * Call the current connection's hasExtension() method
+	 */
+	function hasExtension($name)
+	{
+		return $this->connections[$this->active]->hasExtension($name);
+	}
+	/**
+	 * Call the current connection's getAttributes() method
+	 */
+	function getAttributes($name)
+	{
+		return $this->connections[$this->active]->getAttributes($name);
 	}
 }
-
-?>

@@ -1,143 +1,98 @@
 <?php
 
 /**
- * This is the mail() handler for Swift Mailer, a PHP Mailer class.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	24th August 2006
- * @license	http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- * 
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer mail() connection component
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Connection
+ * @license GNU Lesser General Public License
  */
+ 
+require_once dirname(__FILE__). "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_ConnectionBase");
 
-//Requires the Swift SMTP Stream library
-require_once dirname(__FILE__).'/../Stream.php';
-require_once dirname(__FILE__).'/../Stream/Processor.php';
-require_once dirname(__FILE__).'/../Stream/MailProxy.php';
-
-class Swift_Connection_NativeMail
+/**
+ * Swift mail() Connection
+ * NOTE: This class is nothing more than a stub.  The MailSend plugin does the actual sending.
+ * @package Swift_Connection
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ */
+class Swift_Connection_NativeMail extends Swift_ConnectionBase
 {
 	/**
-	 * Just a boolean value for when we're connected
-	 * @var bool connected
+	 * The response the stub will be giving next
+	 * @var string Response
 	 */
-	var $connected = false;
+	var $response = "220 Stubbed";
+	
 	/**
-	 * SMTP Connection socket
-	 * @var	resource	socket
+	 * Sets the MailSend plugin in Swift once Swift has connected
+	 * @param Swift The current instance of Swift
 	 */
-	var $socket;
-	/**
-	 * SMTP Read part of I/O for Swift
-	 * @var	resource	socket (reference)
-	 */
-	var $readHook;
-	/**
-	 * SMTP Write part of I/O for Swift
-	 * @var	resource	socket (reference)
-	 */
-	var $writeHook;
-	/**
-	 * The fake plugin can also have a fake username and password
-	 * @var string username
-	 */
-
-	/**
-	 * Constructor
-	 * @param array faked extensions
-	 */
-	function Swift_Connection_NativeMail()
+	function postConnect(&$instance)
 	{
-		SmtpMsgStub::setExtensions(array());
+		Swift_ClassLoader::load("Swift_Plugin_MailSend");
+		$instance->attachPlugin(new Swift_Plugin_MailSend(), "_MAIL_SEND");
 	}
 	/**
-	 * Establishes a connection with the MTA
-	 * The SwiftInstance Object calls this
-	 *
-	 * @return	bool	connected
+	 * Read a full response from the buffer (this is spoofed if running in -t mode)
+	 * @return string
+	 * @throws Swift_Connection_Exception Upon failure to read
 	 */
-	function start()
+	function read()
 	{
-		return $this->connect();
+		return $this->response;
 	}
 	/**
-	 * Establishes a connection with the MTA
-	 *
-	 * @return	bool	connected
-	 * @private
+	 * Set the response this stub will return
+	 * @param string The response to send
 	 */
-	function connect()
+	function setResponse($int)
 	{
-		$this->socket = fopen('swift://esmtp', 'w+');
-		$processor =& Swift_Stream_Processor::getInstance();
-		
-		$processor->addObserver(new Swift_Stream_MailProxy($processor));
-		
-		$this->readHook =& $this->socket;
-		$this->writeHook =& $this->socket;
-
-		if (!$this->socket) return $this->connected = false;
-		else return $this->connected = true;
+		$this->response = $int . " Stubbed";
 	}
 	/**
-	 * Closes the connection with the MTA
-	 * Called by the SwiftInstance object
-	 *
-	 * @return	void
+	 * Write a command to the process (leave off trailing CRLF)
+	 * @param string The command to send
+	 * @throws Swift_Connection_Exception Upon failure to write
 	 */
-	function stop()
+	function write($command, $end="\r\n")
 	{
-		$this->disconnect();
-	}
-	/**
-	 * Closes the connection with the MTA
-	 * @return	void
-	 */
-	function disconnect()
-	{
-		if ($this->connected && $this->socket)
+		$command = strtoupper($command);
+		if (strpos($command, " ")) $command = substr($command, 0, strpos($command, " "));
+		switch ($command)
 		{
-			fclose($this->socket);
-			$this->readHook = false;
-			$this->writeHook = false;
-			$this->socket = false;
-			
-			$this->connected = false;
+			case "DATA":
+				$this->setResponse(354);
+				break;
+			case "EHLO": case "MAIL": case "RCPT": case "QUIT": case "RSET": default:
+				$this->setResponse(250);
+				break;
 		}
 	}
 	/**
-	 * Returns TRUE if the socket is connected
-	 * @return bool connected
+	 * Try to start the connection
+	 * @throws Swift_Connection_Exception Upon failure to start
 	 */
-	function isConnected()
+	function start()
 	{
-		return $this->connected;
+		$this->response = "220 Stubbed";
+		return true;
+	}
+	/**
+	 * Try to close the connection
+	 * @throws Swift_Connection_Exception Upon failure to close
+	 */
+	function stop()
+	{
+		$this->response = "220 Stubbed";
+	}
+	/**
+	 * Check if the process is still alive
+	 * @return boolean
+	 */
+	function isAlive()
+	{
+		return function_exists("mail");
 	}
 }
-
-?>

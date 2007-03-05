@@ -1,120 +1,106 @@
 <?php
 
 /**
- * Anti-Flood plugin for Swift Mailer, a PHP Mailer class.
- *
- * @package	Swift
- * @version	>= 2.0.0
- * @author	Chris Corbyn
- * @date	30th July 2006
- * @license	http://www.gnu.org/licenses/lgpl.txt Lesser GNU Public License
- *
- * @copyright Copyright &copy; 2006 Chris Corbyn - All Rights Reserved.
- * @filesource
- * 
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to
- *
- *   The Free Software Foundation, Inc.,
- *   51 Franklin Street,
- *   Fifth Floor,
- *   Boston,
- *   MA  02110-1301  USA
- *
- *    "Chris Corbyn" <chris@w3style.co.uk>
- *
+ * Swift Mailer AntiFlood Plugin
+ * Please read the LICENSE file
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ * @package Swift_Plugin
+ * @license GNU Lesser General Public License
  */
 
-class Swift_Plugin_AntiFlood
+require_once dirname(__FILE__) . "/../ClassLoader.php";
+Swift_ClassLoader::load("Swift_Events_Listener");
+
+/**
+ * Swift AntiFlood controller.
+ * Closes a connection and pauses for X seconds after a number of emails have been sent.
+ * @package Swift_Plugin
+ * @author Chris Corbyn <chris@w3style.co.uk>
+ */
+class Swift_Plugin_AntiFlood extends Swift_Events_Listener
 {
 	/**
-	 * Name of the plugin (identifier)
-	 * @var string plugin id
+	 * The number of emails to send between connections
+	 * @var int
 	 */
-	var $pluginName = 'Anti_Flood';
+	var $threshold = null;
 	/**
-	 * The maximum number of messages to send
-	 * over a single connection
-	 * @var int max messages
+	 * The number of seconds to pause for between connections
+	 * @var int
 	 */
-	var $maxMessages;
+	var $waitFor = null;
 	/**
-	 * The time to wait for before reconnecting
-	 * @var int sleep seconds
+	 * Number of emails sent so far
+	 * @var int
 	 */
-	var $sleep;
-	/**
-	 * Current messages sent since last reconnect
-	 * or plugin loading.
-	 * @var int current messages
-	 */
-	var $currMessages = 0;
-	/**
-	 * Contains a reference to the main swift object.
-	 * @var object swiftInstance
-	 */
-	var $swiftInstance;
+	var $count = 0;
 	
 	/**
-	 * Constructor.
-	 * @param int max messages, optional
-	 * @return void
+	 * Constructor
+	 * @param int Number of emails to send before re-connecting
+	 * @param int The timeout in seconds between connections
 	 */
-	function Swift_Plugin_AntiFlood($max=10, $sleep=0)
+	function Swift_Plugin_AntiFlood($threshold, $wait=0)
 	{
-		$this->maxMessages = (int) $max;
-		$this->sleep = (int) $sleep;
+		$this->setThreshold($threshold);
+		$this->setWait($wait);
 	}
 	/**
-	 * Load in Swift
-	 * @param object SwiftInstance
+	 * Set the number of emails which must be sent for a reconnection to occur
+	 * @param int Number of emails
 	 */
-	function loadBaseObject(&$object)
+	function setThreshold($threshold)
 	{
-		$this->swiftInstance =& $object;
+		$this->threshold = (int) $threshold;
 	}
 	/**
-	 * Event handler for onSend.
+	 * Get the number of emails which need to be sent for reconnection to occur
+	 * @return int
 	 */
-	function onSend()
+	function getThreshold()
 	{
-		$this->currMessages++;
-		if ($this->currMessages >= $this->maxMessages)
+		return $this->threshold;
+	}
+	/**
+	 * Set the number of seconds the plugin should wait for before reconnecting
+	 * @param int Time in seconds
+	 */
+	function setWait($time)
+	{
+		$this->waitFor = (int) $time;
+	}
+	/**
+	 * Get the number of seconds the plugin should wait for before re-connecting
+	 * @return int
+	 */
+	function getWait()
+	{
+		return $this->waitFor;
+	}
+	/**
+	 * Sleep for a given number of seconds
+	 * @param int Number of seconds to wait for
+	 */
+	function wait($seconds)
+	{
+		if ($seconds) sleep($seconds);
+	}
+	/**
+	 * Swift's SendEvent listener.
+	 * Invoked when Swift sends a message
+	 * @param Swift_Events_SendEvent The event information
+	 * @throws Swift_Connection_Exception If the connection cannot be closed/re-opened
+	 */
+	function sendPerformed(&$e)
+	{
+		$swift =& $e->getSwift();
+		$this->count++;
+		if ($this->count >= $this->getThreshold())
 		{
-			$this->reconnect();
-			$this->currMessages = 0;
-		}
-	}
-	/**
-	 * Reconnect to the server
-	 */
-	function reconnect()
-	{
-		$this->swiftInstance->close();
-		
-		//Wait for N seconds if needed to give the server a rest
-		if ($this->sleep) sleep($this->sleep);
-		
-		$this->swiftInstance->connect();
-		//Re-authenticate if needs be
-		if (!empty($this->swiftInstance->username))
-		{
-			$this->swiftInstance->authenticate(
-				$this->swiftInstance->username,
-				$this->swiftInstance->password
-			);
+			$swift->disconnect();
+			$this->wait($this->getWait());
+			$swift->connect();
+			$this->count = 0;
 		}
 	}
 }
-
-?>

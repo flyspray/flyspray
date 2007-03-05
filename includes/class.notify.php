@@ -15,7 +15,7 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/Swift.php';
+require_once dirname(__FILE__) . '/external/swift-mailer/EasySwift.php';
 
 class Notifications {
 
@@ -234,7 +234,7 @@ class Notifications {
 	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server'])) {
 	        include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/SMTP.php';
-            $mail = new Swift(new Swift_Connection_SMTP($fs->prefs['smtp_server']));
+            $mail = new EasySwift(new Swift_Connection_SMTP($fs->prefs['smtp_server']));
 
 	    if ($fs->prefs['smtp_user']) {
             $mail->authenticate($fs->prefs['smtp_user'], $fs->prefs['smtp_pass']);
@@ -244,7 +244,7 @@ class Notifications {
       } else {
 
             include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/NativeMail.php';
-            $mail = new Swift(new Swift_Connection_NativeMail);
+            $mail = new EasySwift(new Swift_Connection_NativeMail);
       }
 
       $mail->setCharset( 'UTF-8');

@@ -1038,9 +1038,9 @@ class Backend
             $temp = '';
             foreach ($type as $val) {
                 // add conditions for the status selection
-                if ($key == 'status' && $val == 'closed') {
+                if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
                     $temp  .= " is_closed = '1' AND";
-                } elseif ($key == 'status') {
+                } elseif ($key == 'status' && !in_array('closed', $type)) {
                     $temp .= " is_closed <> '1' AND";
                 }
                 if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == 'closed')) {
