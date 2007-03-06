@@ -70,7 +70,7 @@ class Swift_Message_Headers
 	 * @var string
 	 */
 	var $LE = "\r\n";
-	
+
 	/**
 	 * Set the line ending character to use
 	 * @param string The line ending sequence
@@ -107,9 +107,9 @@ class Swift_Message_Headers
 			$this->headers[$name] = null;
 			$this->lowerHeaders[$lname] =& $this->headers[$name];
 		}
-		
+
 		$this->cached[$lname] = null;
-		
+
 		if (!is_array($value) && $value !== null) $this->lowerHeaders[$lname] = (string) $value;
 		else $this->lowerHeaders[$lname] = $value;
 	}
@@ -288,10 +288,10 @@ class Swift_Message_Headers
 				"Consider using Swift_Message_Headers-&gt;has() to check."));
 			return;
 		}
-		
+
 		$name = strtolower($name);
 		$lheader = strtolower($header);
-		
+
 		if ($this->hasAttribute($header, $name))
 		{
 			return $this->attributes[$lheader][$name];
@@ -322,24 +322,24 @@ class Swift_Message_Headers
 	{
 		Swift_ClassLoader::load("Swift_Message_Encoder");
 		$encoder =& Swift_Message_Encoder::instance();
-		
+
 		//I'll try as best I can to walk through this...
-		
+
 		$lname = strtolower($name);
-		
-		if ($this->cached[$lname] !== null) return $this->cached[$lname];
-		
+
+		if (isset($this->cached[$lname])) return $this->cached[$lname];
+
 		$value = $this->get($name);
-		
+
 		$encoded_value = (array) $value; //Turn strings into arrays (just to make the following logic simpler)
-		
+
 		//Look at each value in this header
 		// There will only be 1 value if it was a string to begin with, and usually only address lists will be multiple
 		foreach ($encoded_value as $key => $row)
 		{
 			$spec = ""; //The bit which specifies the encoding of the header (if any)
 			$end = ""; //The end delimiter for an encoded header
-			
+
 			//If the header is 7-bit printable it's at no risk of injection
 			if ($encoder->is7BitPrintable($row) && !$this->forceEncoding)
 			{
@@ -359,7 +359,7 @@ class Swift_Message_Headers
 				//Encode to QP, excluding the specification for now but keeping the lines short enough to be compliant
 				$encoded_value[$key] = $encoder->QPEncode(
 					$row, (75-(strlen($spec)+6)), ($key > 0 ? 0 : (75-$used_length)), $save_email, $this->LE);
-				
+
 			}
 			elseif ($this->encoding == "B") //Need to Base64 encode
 			{
@@ -371,14 +371,14 @@ class Swift_Message_Headers
 				$encoded_value[$key] = $encoder->base64Encode(
 					$row, (75-(strlen($spec)+5)), ($key > 0 ? 0 : (76-($used_length+3))), $save_email, $this->LE);
 			}
-			
+
 			//Turn our header into an array of lines ready for wrapping around the encoding specification
 			$lines = explode($this->LE, $encoded_value[$key]);
-			
+
 			for ($i = 0, $len = count($lines); $i < $len; $i++)
 			{
 				if ($this->encoding == "Q") $lines[$i] = rtrim($lines[$i], "=");
-				
+
 				if ($lines[$i] == "" && $i > 0)
 				{
 					unset($lines[$i]); //Empty line, we'd rather not have these in the headers thank you!
@@ -399,13 +399,13 @@ class Swift_Message_Headers
 			$encoded_value[$key] = implode($this->LE, $lines);
 			$lines = null;
 		}
-		
+
 		//If there are multiple values in this header, put them on separate lines, cleared by commas
 		$this->cached[$lname] = implode("," . $this->LE . " ", $encoded_value);
-		
+
 		//Append attributes if there are any
 		if (!empty($this->attributes[$lname])) $this->cached[$lname] .= $this->buildAttributes($this->cached[$lname], $lname);
-		
+
 		return $this->cached[$lname];
 	}
 	/**
@@ -420,7 +420,7 @@ class Swift_Message_Headers
 	{
 		Swift_ClassLoader::load("Swift_Message_Encoder");
 		$encoder =& Swift_Message_Encoder::instance();
-		
+
 		$lines = explode($this->LE, $header_line);
 		$used_len = strlen($lines[count($lines)-1]);
 		$lines= null;
@@ -440,7 +440,7 @@ class Swift_Message_Headers
 				if (preg_match("~[\\s\";,<>\\(\\)@:\\\\/\\[\\]\\?=]~", $line)) $lines[$i] = '"' . $line . '"';
 			}
 			$encoded = implode($this->LE, $lines);
-			
+
 			//If we can fit this entire attribute onto the same line as the header then do it!
 			if ((strlen($encoded) + $used_len + strlen($attribute) + 4) < 74)
 			{
