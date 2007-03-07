@@ -1032,8 +1032,6 @@ class Flyspray
                     $data .= fgets($conn, 128);
                 }
 
-                fclose($conn);
-
                 $pos = strpos($data, "\r\n\r\n");
 
                 if ($pos !== false) {
@@ -1041,6 +1039,7 @@ class Flyspray
                     $data = substr($data, $pos + 2 * strlen("\r\n"));
                 }
             }
+                fclose($conn);
         }
 
         return $data;
