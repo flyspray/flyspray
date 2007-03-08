@@ -325,7 +325,7 @@ class Backend
                 continue;
             }
 
-            
+
             $fname = substr($task_id . '_' . md5(uniqid(mt_rand(), true)), 0, 30);
             $path = BASEDIR .'/attachments/'. $fname ;
 
@@ -407,6 +407,22 @@ class Backend
     }
 
     /**
+     * Cleans a username (length, special chars, spaces)
+     * @param string $user_name
+     * @access public
+     * @return string
+     */
+    function clean_username($user_name)
+    {
+        // Limit length
+        $user_name = substr(trim($user_name), 0, 32);
+        // Remove doubled up spaces and control chars
+        $user_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $user_name);
+        // Strip special chars
+        return utf8_keepalphanum($user_name);
+    }
+
+    /**
      * Creates a new user
      * @param string $user_name
      * @param string $password
@@ -425,16 +441,12 @@ class Backend
     {
         global $fs, $db, $notify, $baseurl;
 
-        // Limit lengths
-        $user_name = substr(trim($user_name), 0, 32);
+        $user_name = Backend::clean_username($user_name);
+
+        // Limit length
         $real_name = substr(trim($real_name), 0, 100);
         // Remove doubled up spaces and control chars
-        if (version_compare(PHP_VERSION, '4.3.4') == 1) {
-            $user_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $user_name);
-            $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
-        }
-        // Strip special chars
-        $user_name = utf8_keepalphanum($user_name);
+        $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
 
         // Check to see if the username is available
         $sql = $db->Query('SELECT COUNT(*) FROM {users} WHERE user_name = ?', array($user_name));

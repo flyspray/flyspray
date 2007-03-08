@@ -16,7 +16,7 @@ if (Req::val('logout')) {
 
 if (Req::val('user_name') != '' && Req::val('password') != '') {
     // Otherwise, they requested login.  See if they provided the correct credentials...
-    $username = Req::val('user_name');
+    $username = Backend::clean_username(Req::val('user_name'));
     $password = Req::val('password');
 
     // Run the username and password through the login checker
@@ -34,7 +34,7 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
         } else {
             $cookie_time = 0; // Set cookies to expire when session ends (browser closes)
         }
-        
+
         $user = new User($user_id);
 
         // Set a couple of cookies
