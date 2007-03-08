@@ -19,6 +19,12 @@
 					<td align="left"><b>{!Setup::ReturnStatus($xmlStatus)}</b></td>
 					<td>&nbsp;</td>
 				</tr>
+                <tr>
+					<td>SAPI ({php_sapi_name()})</td>
+					<td align="left"><b>{!Setup::ReturnStatus($sapiStatus, 'support')}</b></td>
+					<td>&nbsp;</td>
+				</tr>
+
 				<tr>
 					<td class="heading">Database</td>
 					<td class="heading">in PHP</td>
@@ -29,7 +35,12 @@
 				<p>
 				To make setup possible, you must have a correct PHP version installed and
                 <strong>at least one</strong> supported database.
-				</p>
+                </p>
+                <?php if (!$sapiStatus): ?>
+                <p><strong>CGI server API is not supported</strong>. Consider upgrading to FastCGI, otherwise you have to add
+                <code>force_baseurl = "http://yourflyspray/"</code> manually to flyspray.conf.php after setup.
+                </p>
+                <?php endif; ?>
 			</div>
 			<div class="clr"></div>
 

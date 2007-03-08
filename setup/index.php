@@ -99,6 +99,7 @@ class Setup extends Flyspray
       //earlier versions are really buggy anyway.
       $this->mPhpRequired			= '4.3.9';
       $this->xmlStatus = function_exists('xml_parser_create');
+      $this->sapiStatus = (php_sapi_name() != 'cgi');
 
       // If the database is supported in Flyspray, the function to check in PHP.
       $this->mSupportedDatabases	=
@@ -400,6 +401,7 @@ class Setup extends Flyspray
                                     'att_output' => $this->CheckWriteability('attachments'),
                                     'config_status' => $this->mWriteStatus['flyspray.conf.php'],
                                     'xmlStatus' => $this->xmlStatus,
+                                    'sapiStatus' => $this->sapiStatus,
                                     'php_settings' => $this->GetPhpSettings(),
                                     'status' => $this->CheckPreStatus(),
                                     'message' => $this->GetPageMessage(),
