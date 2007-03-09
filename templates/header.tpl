@@ -69,7 +69,7 @@
         <form action="{$baseurl}index.php" method="get">
           <div>
             <button type="submit">{L('showtask')} #</button>
-            <input id="taskid" name="show_task" class="text" type="text" size="10" maxlength="10" accesskey="t" />
+            <input id="taskid" name="show_task" class="text" type="text" size="10" accesskey="t" />
           </div>
         </form>
       </div>
