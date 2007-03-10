@@ -615,6 +615,7 @@
     </field>
     <field name="lang_code" type="C" size="10">
       <NOTNULL/>
+      <DEFAULT value="en"/>
     </field>
     <field name="comment_closed" type="I" size="1">
       <NOTNULL/>
