@@ -269,8 +269,8 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('novalidjabber'));
             break;
         }
-        
-        $user_name = Backend::clean_username($user_name);
+
+        $user_name = Backend::clean_username(Post::val('user_name'));
 
         // Limit length
         $real_name = substr(trim(Post::val('real_name')), 0, 100);
