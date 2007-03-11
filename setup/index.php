@@ -962,9 +962,11 @@ class Setup extends Flyspray
 
    function PopulateDb($data)
    {
-      // Get the sql file name and set the path
-
-       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . $this->base_version($this->version) . '/flyspray-install.xml';
+      // Check available upgrade scripts, use the script of very latest  version
+      $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
+      usort($folders, 'version_compare'); // start with lowest version
+      $folders = array_reverse($folders); // start with highest version
+      $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/flyspray-install.xml';
 
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
