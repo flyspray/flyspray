@@ -132,7 +132,7 @@ class Flyspray
         }
 
         if (headers_sent()) {
-            exit;
+            die("Headers are already sent, this should not have happended, please inform flyspray developers.");
         }
 
         $url = FlySpray::absoluteURI($url);
