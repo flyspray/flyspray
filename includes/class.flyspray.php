@@ -132,8 +132,7 @@ class Flyspray
         }
 
         if (headers_sent()) {
-            //if this happends we need to trace the root cause anyway, so return false
-            return false;
+            exit;
         }
 
         $url = FlySpray::absoluteURI($url);
