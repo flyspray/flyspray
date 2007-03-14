@@ -338,10 +338,10 @@ class ADODB2_postgres extends ADODB_DataDict {
                                                  AND relkind='S'");
 
 		// check if a tables depends on the sequenz and it therefor cant and dont need to be droped separatly
-		if (!$seq || $this->connection->GetOne("SELECT relname FROM pg_class JOIN pg_depend ON pg_class.relfilenode=pg_depend.objid WHERE relname='$seq' AND relkind='S' AND deptype='i'")) {
+		if (!$seq || $this->connection->GetOne("SELECT relname FROM pg_class JOIN pg_depend ON pg_class.relfilenode=pg_depend.objid WHERE relname='$seq' AND relkind='S' AND (deptype='i' OR deptype = 'a')")) {
 			return False;
 		}
-		return "DROP SEQUENCE IF EXISTS ".$seq; // yes, IF EXISTS *is* neccessary. don't ask me for reasons though...
+		return "DROP SEQUENCE ".$seq; // yes, IF EXISTS *is* neccessary. don't ask me for reasons though...
 	}
 
 	/*
