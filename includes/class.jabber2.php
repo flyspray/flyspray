@@ -1,13 +1,13 @@
 <?php
 /**
- * Jabber class 
- * 
+ * Jabber class
+ *
  * @version $Id$
  * @copyright 2006 Flyspray.org
  * @notes: This lib has been created due to the lack of any good and modern jabber class out there
  * @author: Florian Schmitz (floele)
  */
- 
+
 class Jabber
 {
     var $connection = null;
@@ -25,7 +25,7 @@ class Jabber
     // Jabber ID (including resource) suggested by server
     var $jid = null;
     var $session_req = false;
-    
+
     function Jabber($login, $password, $ssl = false, $port = 5222, $host = '')
     {
         // Can we use Jabber at all?
@@ -34,15 +34,15 @@ class Jabber
             $this->log('Error: No XML functions available, Jabber functions can not operate.');
             return false;
         }
-        
+
         if (!Jabber::check_jid($login)) {
             $this->log('Error: Jabber ID is not valid: ' . $login);
             return false;
         }
-        
+
         // Extract data from user@server.org
         list($username, $server) = explode('@', $login);
-        
+
         // Decide whether or not to use SSL
         $ssl = ($ssl && Jabber::can_use_ssl());
         $this->ssl      = $ssl;
@@ -53,7 +53,7 @@ class Jabber
         if ($port == 5222 && $ssl) {
             $port = 5223;
         }
-        
+
         if ($this->open_socket( ($host != '') ? $host : $server, $port, $ssl)) {
             $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
 			$this->send("<stream:stream to='{$server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
@@ -81,12 +81,12 @@ class Jabber
             return false;
         }
     }
-    
+
     /**
-     * OpenSocket 
+     * OpenSocket
      * @param string $server host to connect to
      * @param int $port port number
-     * @param bool $ssl use ssl or not  
+     * @param bool $ssl use ssl or not
      * @access public
      * @return bool
      */
@@ -100,7 +100,7 @@ class Jabber
         } else {
             $this->log('Warning: dns_get_record function not found . gtalk will not work');
         }
-        
+
         $server = $ssl ? 'ssl://' . $server : $server;
 
         if ($this->connection = @fsockopen($server, $port, $errorno, $errorstr, $this->timeout)) {
@@ -113,14 +113,14 @@ class Jabber
         $this->log('Error: ' . $errorstr);
         return false;
     }
-    
+
     function log($msg)
     {
         if ($this->log_enabled) {
             $this->log[] = $msg;
             return true;
         }
-        
+
         return false;
     }
 
@@ -136,12 +136,12 @@ class Jabber
         // Wait for a response until timeout is reached
         $start = time();
         $data = '';
-        
+
         do {
             $read = trim(fread($this->connection, 4096));
             $data .= $read;
         } while (time() <= $start + 10 && ($data == '' || $read != ''));
-        
+
         if ($data != '') {
             // do a response
             $this->log('RECV: '. $data);
@@ -149,7 +149,7 @@ class Jabber
         } else {
             $this->log('Timeout, no response from server.');
             return false;
-        }    
+        }
     }
 
     /**
@@ -171,7 +171,7 @@ class Jabber
                     $this->listen();
                 }
                 break;
-            
+
             case 'stream:features':
                 // Resource binding after successfull authentication
                 if ($this->auth) {
@@ -203,7 +203,7 @@ class Jabber
                     foreach ($xml['stream:features'][0]['#']['mechanisms'][0]['#']['mechanism'] as $value) {
                         $methods[] = $value['#'];
                     }
-                    
+
                     // we prefer this one
                     if (in_array('DIGEST-MD5', $methods)) {
                         $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='DIGEST-MD5'/>");
@@ -219,7 +219,7 @@ class Jabber
                         return false;
                     }
                     $this->listen();
-                    
+
                 } else {
                     // ok, this is it. bye.
                     $this->log('Error: Server does not offer SASL authentication.');
@@ -227,7 +227,7 @@ class Jabber
                     return false;
                 }
                 break;
-            
+
             case 'challenge':
                 // continue with authentication...a challenge literally -_-
                 $decoded = base64_decode($xml['challenge'][0]['#'][0]);
@@ -235,7 +235,7 @@ class Jabber
                 if (!isset($decoded['digest-uri'])) {
                     $decoded['digest-uri'] = 'xmpp/'. $this->server;
                 }
-                
+
                 // better generate a cnonce, maybe it's needed
                 $str = '';
                 mt_srand((double)microtime()*10000000);
@@ -243,7 +243,7 @@ class Jabber
                     $str .= chr(mt_rand(0, 255));
                 }
                 $decoded['cnonce'] = base64_encode($str);
-                
+
                 // second challenge
                 if (isset($decoded['rspauth'])) {
                     $this->send("<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>");
@@ -252,7 +252,7 @@ class Jabber
                                       'response' => $this->encrypt_password(array_merge($decoded, array('nc' => '00000001'))),
                                       'charset'  => 'utf-8',
                                       'nc'       => '00000001');
-                    
+
                     foreach (array('nonce', 'qop', 'digest-uri', 'realm', 'cnonce') as $key) {
                         if (isset($decoded[$key])) {
                             $response[$key] = $decoded[$key];
@@ -263,15 +263,15 @@ class Jabber
                                  base64_encode(Jabber::implode_data($response))
                                  . "</response>");
                 }
-                
+
                 $this->listen();
                 break;
-            
+
             case 'failure':
                 $this->log('Error: Server sent "failure".');
                 $this->disconnect();
                 return false;
-            
+
             case 'proceed':
                 // continue switching to TLS
                 $meta = stream_get_meta_data($this->connection);
@@ -285,17 +285,17 @@ class Jabber
                 // new stream
                 $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
                 $this->send("<stream:stream to='{$this->server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
-                
+
                 $this->listen();
                 break;
-            
+
             case 'success':
                 // Yay, authentication successfull.
                 $this->send("<stream:stream to='{$this->server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
                 $this->auth = true;
                 $this->listen(); // we have to wait for another response
                 break;
-            
+
             case 'iq':
                 // multiple possibilities here
                 switch ($xml['iq'][0]['@']['id'])
@@ -304,7 +304,7 @@ class Jabber
                         $this->jid = $xml['iq'][0]['#']['bind'][0]['#']['jid'][0]['#'];
                         // and (maybe) yet another request to be able to send messages *finally*
                         if ($this->session_req) {
-                            $this->send("<iq to='{$this->server}' 
+                            $this->send("<iq to='{$this->server}'
                                              type='set'
                                              id='sess_1'>
                                           <session xmlns='urn:ietf:params:xml:ns:xmpp-session'/>
@@ -312,28 +312,28 @@ class Jabber
                             $this->listen();
                         }
                         break;
-                    
+
                     case 'sess_1':
                         break;
-                    
+
                     default:
                         $this->log('Received unexpected IQ.');
                         break;
                 }
                 break;
-                
+
             default:
                 // hm...don't know this response
                 $this->log('Error: Unknown server response (' . key($xml) . ')');
                 break;
         }
     }
-    
+
     function send_message($to, $text, $subject = '', $type = 'normal') {
         if (!$this->jid) {
             return false;
         }
-        
+
         return $this->send("<message from='" . Jabber::jspecialchars($this->jid) . "'
                                      to='" . Jabber::jspecialchars($to) . "'
                                      xml:lang='en'
@@ -343,7 +343,7 @@ class Jabber
                               <body>" . Jabber::jspecialchars($text) . "</body>
                             </message>");
     }
-    
+
     function disconnect()
     {
         if (is_resource($this->connection) && !feof($this->connection)) {
@@ -354,17 +354,17 @@ class Jabber
         }
         return false;
     }
-    
+
     function can_use_ssl()
     {
         return extension_loaded('openssl');
     }
-    
+
     function can_use_tls()
     {
         return Jabber::can_use_ssl() && function_exists('stream_socket_enable_crypto');
     }
-    
+
     /**
      * Encrypts a password as in RFC 2831
      * @param array $data Needs data from the client-server connection
@@ -373,13 +373,13 @@ class Jabber
      */
     function encrypt_password($data)
     {
-        // let's me think about <challenge> again...      
+        // let's me think about <challenge> again...
         foreach (array('realm', 'cnonce', 'digest-uri') as $key) {
             if (!isset($data[$key])) {
                 $data[$key] = '';
             }
         }
-        
+
         if (isset($data['authzid'])) {
             $a1 = pack('H32', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'] . ':' . $data['authzid'];
         } else {
@@ -391,9 +391,9 @@ class Jabber
 
         return md5(md5($a1) . ':' . $data['nonce'] . ':' . $data['nc'] . ':' . $data['cnonce'] . ':' . $data['qop'] . ':' . md5($a2));
     }
-    
+
     /**
-     * parse_data like a="b",c="d",... 
+     * parse_data like a="b",c="d",...
      * @param string $data
      * @access public
      * @return array a => b ...
@@ -404,14 +404,14 @@ class Jabber
         $data = explode(',', $data);
         $pairs = array();
         foreach ($data as $pair) {
-            $pair = explode('=', $pair);
-            if (count($pair) == 2) {
-                $pairs[$pair[0]] = trim($pair[1], '"');
+            $dd = strpos($pair, '=');
+            if ($dd) {
+                $pairs[substr($pair, 0, $dd)] = trim(substr($pair, $dd + 1), '"');
             }
         }
         return $pairs;
     }
-    
+
     /**
      * opposite of Jabber::parse_data()
      * @param array $data
@@ -439,34 +439,34 @@ class Jabber
         if ($i === false) {
             return false;
         }
-        
+
         $username = substr($jid, 0, $i);
         $realm = substr($jid, $i + 1);
-        
+
         if (strlen($username) == 0 || strlen($realm) < 3) {
             return false;
         }
 
         $arr = explode('.', $realm);
-        
+
         if (count($arr) == 0) {
             return false;
         }
-        
+
         foreach ($arr as $part)
         {
             if (substr($part, 0, 1) == '-' || substr($part, -1, 1) == '-') {
                 return false;
             }
-            
+
             if (preg_match("@^[a-zA-Z0-9-.]+$@", $part) == false) {
                 return false;
             }
         }
-        
+
         $b = array(array(0, 127), array(192, 223), array(224, 239),
                    array(240, 247), array(248, 251), array(252, 253));
-            
+
         // Prohibited Characters RFC3454 + RFC3920
         $p = array(
             // Table C.1.1
@@ -571,10 +571,10 @@ class Jabber
             array(0x3E, 0x3E),			// >
             array(0x40, 0x40)			// @
         );
-        
+
         $pos = 0;
         $result = true;
-        
+
         while ($pos < strlen($username))
         {
             $len = 0;
@@ -584,21 +584,21 @@ class Jabber
                 if (ord($username[$pos]) >= $b[$i][0] && ord($username[$pos]) <= $b[$i][1])
                 {
                     $len = $i + 1;
-                    
+
                     $uni = (ord($username[$pos]) - $b[$i][0]) * pow(2, $i * 6);
-                    
+
                     for ($k = 1; $k < $len; $k++) {
                         $uni += (ord($username[$pos + $k]) - 128) * pow(2, ($i - $k) * 6);
                     }
-                    
+
                     break;
                 }
             }
-            
+
             if ($len == 0) {
                 return false;
             }
-            
+
             foreach ($p as $pval)
             {
                 if ($uni >= $pval[0] && $uni <= $pval[1]) {
@@ -606,10 +606,10 @@ class Jabber
                     break 2;
                 }
             }
-            
+
             $pos = $pos + $len;
         }
-        
+
         return $result;
     }
 
@@ -617,7 +617,7 @@ class Jabber
     {
         return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
     }
-    
+
     // ======================================================================
 	// Third party code, taken from old jabber lib (the only usable code left)
 	// ======================================================================
