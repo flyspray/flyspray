@@ -11,11 +11,11 @@
 </span>
 
   <h2 class="summary severity{$task_details['task_severity']}">
-	 FS#{$task_details['task_id']} &mdash; {$task_details['item_summary']}
+	 FS#{$task_details['task_id']} - {$task_details['item_summary']}
   </h2>
 
   <div id="fineprint">
-	 {L('attachedtoproject')} &mdash;
+	 {L('attachedtoproject')}:
 	 <a href="{$_SERVER['SCRIPT_NAME']}?project={$task_details['project_id']}">{$task_details['project_title']}</a>
 	 <br />
 	 {L('openedby')} {!tpl_userlink($task_details['opened_by'])}
@@ -203,7 +203,7 @@
 		?>
 		{!$link}
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span class="DoNotPrint"> &mdash;
+		<span class="DoNotPrint"> -
 		  <a class="removedeplink"
 			 href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}">
 			 {L('remove')}</a>

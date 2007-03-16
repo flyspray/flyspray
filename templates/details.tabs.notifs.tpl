@@ -2,7 +2,7 @@
   <p><em>{L('theseusersnotify')}</em></p>
   <?php foreach ($notifications as $row): ?>
   <p>
-    {!tpl_userlink($row['user_id'])} &mdash;
+    {!tpl_userlink($row['user_id'])} -
     <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=remove_notification&amp;task_id={$task_details['task_id']}&amp;ids={$task_details['task_id']}&amp;user_id={$row['user_id']}#notify">{L('remove')}</a>
   </p>
   <?php endforeach; ?>
