@@ -98,7 +98,7 @@ function tasklistTableClick(e) {
   } else {
     // If both the task id and the task summary columns are non-visible
     // just use the good old way to get to the task
-    window.location = '?do=details&id=' + row.id.substr(4);
+    window.location = '?do=details&task_id=' + row.id.substr(4);
   }
 }
 
