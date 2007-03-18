@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'Redigera användare',
 'username'                => 'Användarnamn',
 'realname'                => 'Fullständigt namn',

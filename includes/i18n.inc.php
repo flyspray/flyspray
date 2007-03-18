@@ -46,7 +46,7 @@ function load_translations()
     $translation = BASEDIR . "/lang/{$proj->prefs['lang_code']}.php";
     if ($proj->prefs['lang_code'] != 'en' && is_readable($translation)) {
         include_once($translation);
-        $language = array_merge($language, $translation);
+        $language = is_array($translation) ? array_merge($language, $translation) : $language;
     }
 }
 
