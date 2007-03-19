@@ -40,7 +40,7 @@ $events = array(1 => L('opened'),
 
 $user_events = array(30 => L('created'),
                      31 => L('deleted'));
-                     
+
 $page->assign('events', $events);
 $page->assign('user_events', $user_events);
 
@@ -62,7 +62,7 @@ switch (Req::val('order')) {
 }
 
 foreach (Req::val('events', array()) as $eventtype) {
-    $where[] = 'h.event_type = ?'; 
+    $where[] = 'h.event_type = ?';
     $params[] = $eventtype;
 }
 $where = '(' . implode(' OR ', $where) . ')';
@@ -74,24 +74,22 @@ if ($proj->id) {
 
 if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
         $where .= ' AND ';
-        $ufromdate = Flyspray::strtotime($fromdate) + 0;
         $todate = Req::val('todate');
-        $utodate   = Flyspray::strtotime($todate) + 86400;
-        
+
         if ($fromdate) {
             $where .= ' h.event_date > ?';
-            $params[] = $ufromdate;
+            $params[] = Flyspray::strtotime($fromdate) + 0;
         }
         if ($todate && $fromdate) {
             $where .= ' AND h.event_date < ?';
-            $params[] = $utodate;
+            $params[] = Flyspray::strtotime($todate) + 86400;
         } else if ($todate) {
             $where .= ' h.event_date < ?';
-            $params[] = $utodate;
+            $params[] = Flyspray::strtotime($todate) + 86400;
         }
 }
 
-if (count(Req::val('events'))) { 
+if (count(Req::val('events'))) {
     $histories = $db->Query("SELECT h.*
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
