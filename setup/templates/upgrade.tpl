@@ -15,7 +15,7 @@
     </div><!-- End of header -->
     <div id="content">
       <div id="bodyContent">
-      <form action="upgrade.php" method="post">
+      <form action="upgrade.php" method="post" onsubmit="document.getElementById('upgradebutton').disabled = true;return true;" >
       <input type="hidden" name="upgrade" value="1" />
         <div class="install">
             <h2>Precondition checks</h2>
@@ -54,7 +54,7 @@
 
             <h2>Perform Upgrade</h2>
             <p>
-              <input name="upgrade" class="button" value="Perform Upgrade > >" type="submit" onclick="this.disabled = true" />
+              <input name="upgrade" id="upgradebutton" class="button" value="Perform Upgrade > >" type="submit" />
               <?php if (isset($done)): ?>
               <span class="green"><strong>Done!</strong></span>
               <?php else: ?>
