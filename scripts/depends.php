@@ -6,7 +6,7 @@
   \********************************************************/
 
 /**
- * XXX: This stuff looks incredible ugly, rewrite me for 1.0  
+ * XXX: This stuff looks incredible ugly, rewrite me for 1.0
  */
 
 if (!defined('IN_FS')) {
@@ -29,7 +29,7 @@ $fmt         = Filters::enum(array_get($conf['general'], 'dot_format', 'png'), a
  * should be relative, we use this path also in the HTML output.  Saving
  * the file from dot happens later, and that should be the absolute path.
  */
- 
+
 if (Flyspray::function_disabled('shell_exec') && !array_get($conf['general'], 'dot_public')) {
     Flyspray::show_error(24, true, null, $_SESSION['prev_page']);
 }
@@ -49,7 +49,7 @@ foreach ($pmodes as $mode => $desc) {
     if ($mode == $prunemode) {
         $strlist[] = $desc;
     } else {
-        $strlist[] = "<a href='". htmlspecialchars($selfurl, ENT_QUOTES, 'utf-8') . 
+        $strlist[] = "<a href='". htmlspecialchars($selfurl, ENT_QUOTES, 'utf-8') .
                       ($mode !=0 ? "&amp;prune=$mode" : "") . "'>$desc</a>\n";
     }
 }
@@ -58,14 +58,14 @@ $page->uses('strlist');
 
 $starttime = microtime();
 
-$sql= 'SELECT t1.task_id AS id1, t1.item_summary AS sum1, 
-             t1.percent_complete AS pct1, t1.is_closed AS clsd1, 
+$sql= 'SELECT t1.task_id AS id1, t1.item_summary AS sum1,
+             t1.percent_complete AS pct1, t1.is_closed AS clsd1,
              lst1.status_name AS stat1, t1.task_severity AS sev1,
              t1.task_priority AS pri1,
              t1.closure_comment AS com1, u1c.real_name AS clsdby1,
              r1.resolution_name as res1,
-             t2.task_id AS id2, t2.item_summary AS sum2, 
-             t2.percent_complete AS pct2, t2.is_closed AS clsd2, 
+             t2.task_id AS id2, t2.item_summary AS sum2,
+             t2.percent_complete AS pct2, t2.is_closed AS clsd2,
              lst2.status_name AS stat2, t2.task_severity AS sev2,
              t2.task_priority AS pri2,
              t2.closure_comment AS com2, u2c.real_name AS clsdby2,
@@ -190,7 +190,7 @@ foreach ($node_list as $n => $r) {
     $tooltip =
       ($r['clsd'] ? L('closed') . ": $r[res]".
        (!empty($r['clsdby']) ? " ($r[clsdby])" : "").
-       ($r['com']!='' ? " - $r[com]" : "")
+       ($r['com']!='' ? ' - ' . str_replace(array("\r", "\n"), '', $r['com']) : "")
        : $fs->severities[$r['sev']]. L('severity') . "/".
        $fs->priorities[$r['pri']]. L('priority') . " - ".
        L('status') . ": ".$r['status_name']);
@@ -223,7 +223,7 @@ if ($tmp = fopen($tname, 'wb')) {
 if ($use_public) {
 
     if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {
-        
+
         $data = Flyspray::remote_request(array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.' . $fmt, GET_CONTENTS);
 
         $f = fopen(BASEDIR . '/' . $file_name . '.' . $fmt, 'wb');
@@ -246,7 +246,7 @@ if ($use_public) {
 
     $cmd = "$dot -T cmapx " . $tname;
     $data['map'] = shell_exec($cmd);
-    
+
     $page->assign('remote', $remote = false);
     $page->assign('map',    $data['map']);
     // Remove files so that they are not exposed to the public
