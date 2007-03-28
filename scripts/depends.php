@@ -261,9 +261,9 @@ if ($fmt == 'svg') {
     if (!$remote) {
         $data = file_get_contents(BASEDIR . '/' . $file_name);
     }
-    preg_match('/<svg width="(\d+)pt" height="(\d+)pt"/', $data, $matches);
-    $page->assign('width', round($matches[1]*1.4, 0));
-    $page->assign('height', round($matches[2]*1.4, 0));
+    preg_match('/<svg width="([0-9.]+)([a-zA-Z]+)" height="([0-9.]+)([a-zA-Z]+)"/', $data, $matches);
+    $page->assign('width',  round($matches[1] * (($matches[2] == 'pt') ? 1.4 : (($matches[2] == 'in') ? 1.33 * 72.27 : 1)), 0));
+    $page->assign('height', round($matches[3] * (($matches[4] == 'pt') ? 1.4 : (($matches[4] == 'in') ? 1.35 * 72.27 : 1)), 0));
 }
 
 /*
