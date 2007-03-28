@@ -198,7 +198,7 @@ foreach ($node_list as $n => $r) {
         ($r['clsd'] ? 'color=black,' : '') .
         ($r['clsd'] ? 'fillcolor=white,' : "fillcolor=\"$col\",") .
         ($n == $id ? 'shape=box,' : '') .
-        "href=\"".CreateURL("details", $n)."\", ".
+        "target=\"_top\", href=\"".CreateURL("details", $n)."\", ".
         "tooltip=\"$tooltip\"];\n";
 }
 // Add edges
