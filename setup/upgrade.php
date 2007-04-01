@@ -221,7 +221,7 @@ $checks = $todo = array();
 $checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION) === -1;
 $checks['config_writable'] = is_writable(CONFIG_PATH);
 $checks['db_connect'] = (bool) $db->dblink;
-$checks['installed_version'] = version_compare($installed_version, '0.9.5') === 1;
+$checks['installed_version'] = version_compare($installed_version, '0.9.6') === 1;
 $checks['upgrade_required'] = $upgrade_available;
 $todo['config_writable'] = 'Please make sure that the file at ' . CONFIG_PATH . ' is writable.';
 $todo['db_connect'] = 'Connection to the database could not be established. Check your config.';
