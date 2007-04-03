@@ -15,7 +15,7 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/EasySwift.php';
+require_once dirname(__FILE__) . '/external/swift-mailer/Swift.php';
 
 class Notifications {
 
@@ -234,55 +234,51 @@ class Notifications {
 	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server'])) {
 	        include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/SMTP.php';
-            $mail = new EasySwift(new Swift_Connection_SMTP($fs->prefs['smtp_server']));
+            $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
 
 	    if ($fs->prefs['smtp_user']) {
-            $mail->authenticate($fs->prefs['smtp_user'], $fs->prefs['smtp_pass']);
+            $swiftconn->setUsername($fs->prefs['smtp_user']);
+            $swiftconn->setPassword($fs->prefs['smtp_pass']);
          }
 
       // Use php's built-in mail() function
       } else {
-
             include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/NativeMail.php';
-            $mail = new EasySwift(new Swift_Connection_NativeMail);
+            $swiftconn =& new Swift_Connection_NativeMail();
       }
+      
+      $swift = &new Swift($swiftconn);
 
-      $mail->setCharset( 'UTF-8');
-
-      /* otherwise email autoresponders will reply this mail too..
-       * unfortunately there is no agreement, no standard on this
-       * some prefers "list" or others "bulk" *sigh*
-       */
-      $mail->addHeaders("Precedence: list \r\n");
+      $message =& new Swift_Message($subject, $body);
+      $message->headers->setCharset('utf-8');
+      $message->headers->set('Precedence', 'list');
 
       if ($proj->prefs['notify_reply']) {
-            $mail->setReplyTo(trim($proj->prefs['notify_reply']));
+            $message->setReplyTo($proj->prefs['notify_reply']);
       }
-
-        $fromname = $proj->prefs['project_title'] ? $proj->prefs['project_title'] : 'Flyspray';
-        $frommail = ' <' . trim($fs->prefs['admin_email']) . '>';
-
-       if (is_array($to) && count($to) > 1) {
-           // make sure every email address is only added once
-            $to = array_map('trim', array_unique($to));
-        }
-
-        if($task_id) {
+      
+      if($task_id) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
-            // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
-            $mail->addHeaders('In-Reply-To: ' . $inreplyto ."\r\n");
-            $mail->addHeaders('References: ' . $inreplyto ."\r\n");
+        // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
+            $message->headers->set('In-Reply-To', $inreplyto);
+            $message->headers->set('References', $inreplyto);
         }
 
-	    if (!$mail->hasFailed()) {
-		//one SEPARATE mail for every single recipient when it is an array  ;)
-    	    $ret = $mail->send($to, $fromname . $frommail, $subject, $body);
-		    $mail->close();
-		    return $ret;
-        }
+      $to = array_filter(is_array($to) ? array_unique($to) : (array) $to);
+      
+      // at this step we have a clean array with no empty nor duplicated values.
+      if (count($to)) {
+            $recipients =& new Swift_RecipientList();
+            foreach($to as $luser) {
+                //addTo should be able to accept an array though..
+                $recipients->addTo($luser);
+            }
+                return (bool) $swift->batchsend($message, $recipients, 
+                              new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
+       }
+            return false;
 
-        return false;
 
    } //}}}
    // {{{ Create a message for any occasion
