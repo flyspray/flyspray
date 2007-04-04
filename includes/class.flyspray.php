@@ -98,8 +98,8 @@ class Flyspray
 
             $sizes[] = $val;
         }
-
-        $func = function_exists('is_executable') ? create_function('$x', 'return is_executable($x) && is_writable($x);') : 'is_writable';
+        clearstatcache();
+        $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
 
