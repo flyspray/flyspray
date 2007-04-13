@@ -262,7 +262,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="category_name" type="C" size="30">
+    <field name="category_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
@@ -301,7 +301,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="os_name" type="C" size="20">
+    <field name="os_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
@@ -318,7 +318,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="resolution_name" type="C" size="30">
+    <field name="resolution_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
@@ -339,7 +339,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="tasktype_name" type="C" size="20">
+    <field name="tasktype_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
@@ -364,7 +364,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="version_name" type="C" size="20">
+    <field name="version_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
@@ -428,7 +428,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="pref_name" type="C" size="20">
+    <field name="pref_name" type="C" size="30">
       <NOTNULL/>
     </field>
     <field name="pref_value" type="C" size="250">
