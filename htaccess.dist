@@ -6,6 +6,22 @@
 
 AddDefaultCharset utf-8
 
+DirectoryIndex index.php index.html
+
+AddDefaultCharset utf-8
+
+#mod security conflicts with flyspray and you do not need it here
+# see also http://blog.php-security.org/archives/70-Modsecurity-vs.-PHP.html
+
+#for mod_security 1
+<IfModule mod_security.c>
+   SecFilterEngine Off
+</IfModule>
+#modsecurity 2
+<IfModule security2_module>
+   SecRuleEngine Off
+</IfModule>
+
 # php5 as  apache 1/2 module 
 <IfModule mod_php5.c>
 php_flag register_globals Off
@@ -13,7 +29,8 @@ php_flag magic_quotes_gpc Off
 php_flag session.use_trans_sid 0
 php_flag short_open_tag off
 php_flag register_argc_argv Off
-#no Pierre, not for now, flyspray has it's own filters.
+php_flag register_long_arrays Off
+#not for now, flyspray has it's own filters.
 php_value filter.default "unsafe_raw"
 </IfModule>
 

@@ -22,7 +22,9 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
     // Run the username and password through the login checker
     if (($user_id = Flyspray::checkLogin($username, $password)) < 1) {
         $_SESSION['failed_login'] = Req::val('user_name');
-        if ($user_id == -1) {
+        if($user_id === -2) {
+            Flyspray::show_error(L('usernotexist'));
+        }elseif ($user_id === -1) {
             Flyspray::show_error(23);
         } else  /* $user_id == 0 */ {
             Flyspray::show_error(7);
