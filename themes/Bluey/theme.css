@@ -993,6 +993,7 @@ div#toolboxmenu a:hover {
 div#toolbox {
 	margin-left:150px;
 	min-height:350px;
+	height:1%;  /* Fix for IE bug */
 }
 
 a.grouptitle {
