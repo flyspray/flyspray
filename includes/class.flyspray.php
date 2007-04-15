@@ -924,25 +924,48 @@ class Flyspray
      */
     function get_tmp_dir()
     {
-        if(function_exists('sys_get_temp_dir')) {
-            return sys_get_temp_dir();
+        if (function_exists('sys_get_temp_dir')) {
+            $return = sys_get_temp_dir();
 
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP')) {
-                return $var;
-            }
+                $return = $var;
+            } else
             if ($var = isset($_ENV['TMP']) ? $_ENV['TMP'] : getenv('TMP')) {
-                return $var;
-            }
+                $return = $var;
+            } else
             if ($var = isset($_ENV['windir']) ? $_ENV['windir'] : getenv('windir')) {
-                return $var;
+                $return = $var;
+            } else {
+                $return = getenv('SystemRoot') . '\temp';
             }
-            return getenv('SystemRoot') . '\temp';
 
         } elseif ($var = isset($_ENV['TMPDIR']) ? $_ENV['TMPDIR'] : getenv('TMPDIR')) {
-             return $var;
+             $return = $var;
+        } else {
+            $return = '/tmp';
         }
-            return '/tmp';
+
+        // Now, the final check
+        if (is_dir($return) && is_writable($return)) {
+            return $return;
+        } else {
+            // now we got a problem, let's abuse our cache ^^
+            $tmp = BASEDIR . '/cache/temp';
+            if (!is_dir($tmp)) {
+                mkdir($tmp);
+            }
+            // any folders we can use?
+            chdir($tmp);
+            $folders = glob('t*');
+            if (count($folders)) {
+                $dir = $tmp . '/' . reset($folders);
+            } else {
+                $dir = $tmp . '/t' . md5(mt_rand() . time());
+                mkdir($dir);
+            }
+            return $dir;
+        }
     }
 
     /**
