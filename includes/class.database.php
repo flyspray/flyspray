@@ -177,20 +177,10 @@ class Database
 
     function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
-        /* use transactions only for non SELECT statements.
-         * FIXME: real transactions for 1.0 !!
-         */
-        $hastrans = ($this->dblink->hasTransactions &&
-                     strpos($sql , 'SELECT') === FALSE);
-
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
-
-        if($hastrans) {
-            $this->dblink->StartTrans();
-        }
 
         if (($numrows >= 0 ) or ($offset >= 0 )) {
             /* adodb drivers are inconsisent with the casting of $numrows and $offset so WE
@@ -200,7 +190,7 @@ class Database
            $result =  $this->dblink->Execute($sql, $inputarr);
         }
 
-        if (($hastrans && !$this->dblink->CompleteTrans()) || !$result) {
+        if (!$result) {
 
             if (function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
