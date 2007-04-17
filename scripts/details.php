@@ -14,10 +14,11 @@ if (!defined('IN_FS')) {
 
 $task_id = Req::num('task_id');
 
-if ( !($task_details = Flyspray::GetTaskDetails($task_id))
-        || !$user->can_view_task($task_details))
-{
+if ( !($task_details = Flyspray::GetTaskDetails($task_id)) ) {
     Flyspray::show_error(10);
+}
+if (!$user->can_view_task($task_details)) {
+    Flyspray::show_error( $user->isAnon() ? 102 : 101);
 }
 
 require_once(BASEDIR . '/includes/events.inc.php');
@@ -56,7 +57,7 @@ else {
         $prev_id = isset($id_list[$i - 1]) ? $id_list[$i - 1] : '';
         $next_id = isset($id_list[$i + 1]) ? $id_list[$i + 1] : '';
     }
-    
+
     // Parent categories
     $parent = $db->Query('SELECT  *
                             FROM  {list_category}
@@ -68,8 +69,8 @@ else {
     $check_deps   = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.dep_task_id = t.task_id
-                             LEFT JOIN  {list_status} s ON t.item_status = s.status_id 
-                             LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id 
+                             LEFT JOIN  {list_status} s ON t.item_status = s.status_id
+                             LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
                                  WHERE  d.task_id = ?', array($task_id));
 
     // Check for tasks that this task blocks
@@ -77,7 +78,7 @@ else {
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
-                             LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id 
+                             LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
                                  WHERE  d.dep_task_id = ?', array($task_id));
 
     // Check for pending PM requests
@@ -96,20 +97,20 @@ else {
                                    FROM  {notifications}
                                   WHERE  task_id = ?  AND user_id = ?',
                                   array($task_id, $user->id));
-    
+
     // Check if task has been reopened some time
     $reopened     =  $db->Query('SELECT  COUNT(*)
                                    FROM  {history}
                                   WHERE  task_id = ?  AND event_type = 13',
                                   array($task_id));
-    
+
     // Check for cached version
     $cached = $db->Query("SELECT content, last_updated
                             FROM {cache}
                            WHERE topic = ? AND type = 'task'",
                            array($task_details['task_id']));
     $cached = $db->FetchRow($cached);
-    
+
     // List of votes
     $get_votes = $db->Query('SELECT u.user_id, u.user_name, u.real_name, v.date_time
                                FROM {votes} v
@@ -139,7 +140,7 @@ else {
 
     ////////////////////////////
     // tabbed area
-    
+
     // Comments + cache
     $sql = $db->Query('  SELECT * FROM {comments} c
                       LEFT JOIN {cache} ca ON (c.comment_id = ca.topic AND ca.type = ? AND c.last_edited_time <= ca.last_updated)
@@ -156,7 +157,7 @@ else {
         $comment_changes[$row['event_date']][] = $row;
     }
     $page->assign('comment_changes', $comment_changes);
-    
+
     // Comment attachments
     $attachments = array();
     $sql = $db->Query('SELECT *
@@ -165,15 +166,15 @@ else {
                        array($task_id));
     while ($row = $db->FetchRow($sql)) {
         $attachments[$row['comment_id']][] = $row;
-    } 
+    }
     $page->assign('comment_attachments', $attachments);
 
     // Relations, notifications and reminders
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r
                     LEFT JOIN  {tasks} t ON (r.related_task = t.task_id AND r.this_task = ? OR r.this_task = t.task_id AND r.related_task = ?)
-                    LEFT JOIN  {list_status} s ON t.item_status = s.status_id 
-                    LEFT JOIN  {list_resolution} res ON t.resolution_reason = res.resolution_id 
+                    LEFT JOIN  {list_status} s ON t.item_status = s.status_id
+                    LEFT JOIN  {list_resolution} res ON t.resolution_reason = res.resolution_id
                         WHERE  t.task_id is NOT NULL AND is_duplicate = 0 AND ( t.mark_private = 0 OR ? = 1 )
                      ORDER BY  t.task_id ASC',
             array($task_id, $task_id, $user->perms('manage_project')));
@@ -182,8 +183,8 @@ else {
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r
                     LEFT JOIN  {tasks} t ON r.this_task = t.task_id
-                    LEFT JOIN  {list_status} s ON t.item_status = s.status_id 
-                    LEFT JOIN  {list_resolution} res ON t.resolution_reason = res.resolution_id 
+                    LEFT JOIN  {list_status} s ON t.item_status = s.status_id
+                    LEFT JOIN  {list_resolution} res ON t.resolution_reason = res.resolution_id
                         WHERE  is_duplicate = 1 AND r.related_task = ?
                      ORDER BY  t.task_id ASC',
                       array($task_id));
