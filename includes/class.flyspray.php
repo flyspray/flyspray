@@ -945,27 +945,17 @@ class Flyspray
         } else {
             $return = '/tmp';
         }
-
         // Now, the final check
         if (is_dir($return) && is_writable($return)) {
             return $return;
-        } else {
-            // now we got a problem, let's abuse our cache ^^
-            $tmp = BASEDIR . '/cache/temp';
-            if (!is_dir($tmp)) {
-                mkdir($tmp);
-            }
-            // any folders we can use?
-            chdir($tmp);
-            $folders = glob('t*');
-            if (count($folders)) {
-                $dir = $tmp . '/' . reset($folders);
-            } else {
-                $dir = $tmp . '/t' . md5(mt_rand() . time());
-                mkdir($dir);
-            }
-            return $dir;
+        // we have a problem at this stage.
+        } elseif(is_writable(ini_get('upload_tmp_dir')) ) {
+            return ini_get('upload_tmp_dir');
+        } elseif(is_writable(ini_get('session.save_path'))) {
+            return ini_get('session.save_path');
         }
+        // we are dead and flyspray will not work at all as it does not have where to write sessions. 
+        return '';
     }
 
     /**
@@ -1081,7 +1071,7 @@ class Flyspray
     {
         if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
 
-            return 'r' . intval(file_get_contents(BASEDIR .'/REVISION'));
+            return sprintf('r%d',file_get_contents(BASEDIR .'/REVISION'));
         }
 
         return '';

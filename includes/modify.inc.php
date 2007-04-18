@@ -307,11 +307,10 @@ switch ($action = Req::val('action'))
 
         foreach(array('randval','magic_url') as $genrandom) {
 
-            $$genrandom = md5(uniqid(rand(), true));
+            $$genrandom = md5(uniqid(mt_rand(), true));
         }
 
-        // Convert those numbers to a seemingly random string using crypt
-        $confirm_code = crypt($randval, $conf['general']['cookiesalt']);
+        $confirm_code = substr($randval, 0, 20);
 
         //send the email first.
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
@@ -373,6 +372,9 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('usernametaken'));
             break;
         }
+        $db->Query('DELETE FROM {registrations} WHERE magic_url = ? AND confirm_code = ?',
+                   array(Post::val('magic_url'), Post::val('confirmation_code')));
+
 
         $_SESSION['SUCCESS'] = L('accountcreated');
         define('NO_DO', true);
@@ -1400,7 +1402,7 @@ switch ($action = Req::val('action'))
 
         $user_details = $db->FetchRow($sql);
         //no microtime(), time,even with microseconds is predictable ;-)
-        $magic_url    = md5(uniqid(rand(), true));
+        $magic_url    = md5(uniqid(mt_rand(), true));
 
         // Insert the random "magic url" into the user's profile
         $db->Query('UPDATE {users}

@@ -226,15 +226,16 @@ class Notifications {
    // {{{ Send email
    function SendEmail($to, $subject, $body, $task_id)
    {
-      global $fs, $proj, $user;
-
-      if (empty($to) || empty($to[0])) {
+       global $fs, $proj, $user;
+       
+       if (empty($to) || empty($to[0])) {
          return;
       }
+
 	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server'])) {
-	        include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/SMTP.php';
-            $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
+          Swift_ClassLoader::load('Swift_Connection_SMTP');
+          $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
 
 	    if ($fs->prefs['smtp_user']) {
             $swiftconn->setUsername($fs->prefs['smtp_user']);
@@ -243,12 +244,15 @@ class Notifications {
 
       // Use php's built-in mail() function
       } else {
-            include_once BASEDIR . '/includes/external/swift-mailer/Swift/Connection/NativeMail.php';
+            Swift_ClassLoader::load('Swift_Connection_NativeMail');
             $swiftconn =& new Swift_Connection_NativeMail();
       }
       
       $swift = &new Swift($swiftconn);
-
+      
+      Swift_CacheFactory::setClassName("Swift_Cache_Disk");
+      Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
+      
       $message =& new Swift_Message($subject, $body);
       $message->headers->setCharset('utf-8');
       $message->headers->set('Precedence', 'list');
@@ -259,20 +263,20 @@ class Notifications {
       
       if($task_id) {
             $hostdata = parse_url($GLOBALS['baseurl']);
-            $inreplyto = '<FS' . intval($task_id) . '@' . $hostdata['host']. '>';
+            $inreplyto = sprintf('<FS%d@%s>', $task_id, $hostdata['host']);
         // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
             $message->headers->set('In-Reply-To', $inreplyto);
             $message->headers->set('References', $inreplyto);
         }
 
-      $to = array_filter(is_array($to) ? array_unique($to) : (array) $to);
+      $to = is_array($to) ? $to : array($to);
       
       // at this step we have a clean array with no empty nor duplicated values.
       if (count($to)) {
             $recipients =& new Swift_RecipientList();
             foreach($to as $luser) {
                 //addTo should be able to accept an array though..
-                $recipients->addTo($luser);
+                $recipients->addTo(strtolower($luser));
             }
                 return (bool) $swift->batchsend($message, $recipients, 
                               new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
@@ -677,7 +681,7 @@ class Notifications {
             }
         }
 
-        return array(array_unique($email_users), array_unique($jabber_users));
+        return array($email_users, array_unique($jabber_users));
 
    } // }}}
    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
@@ -768,7 +772,7 @@ class Notifications {
       // End of checking if a task is private
       }
       // Send back two arrays containing the notification addresses
-      return array(array_unique($email_users), array_unique($jabber_users));
+      return array($email_users, array_unique($jabber_users));
 
    } // }}}
 
