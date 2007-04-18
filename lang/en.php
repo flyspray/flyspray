@@ -815,6 +815,8 @@ Regards,',
 'collapse'                => 'Collapse',
 'expandall'               => 'Expand all',
 'collapseall'             => 'Collapse all',
+'minpwsize'               => 'Minimum password size is 5 chars',
+'passwordtoosmall'        => 'Password size too small.',
 );
 
 ?>

@@ -258,7 +258,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 				// we need to explicit convert varchar to a number to be able to do an AlterColumn of a char column to a nummeric one
 				if (in_array($tableflds[strtoupper($fld->name)]['TYPE'], array('I', 'I2', 'I4', 'I8', 'N', 'F'))
                     && in_array($fld->type,array('varchar','char','text','bytea'))) {
-					$copyflds[] = "CASE WHEN {$fld->name}='' THEN 0 ELSE {$fld->name}::int8 END AS {$fld->name}";
+					$copyflds[] = "CASE WHEN {$fld->name}='' THEN 0 ELSE int8({$fld->name}::text) END AS {$fld->name}";
                     $selectflds[] = $fld->name;
 				} else {
 					$copyflds[] = $fld->name;

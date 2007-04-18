@@ -22,13 +22,13 @@ if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'
             $webdir = dirname($webdir);
         }
     }
-    
+
     $baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
 }
 
 if(isset($conf['general']['syntax_plugin']) && preg_match('/^[a-z0-9_]+$/iD', $conf['general']['syntax_plugin'])) {
 
-$path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' 
+$path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/'
                   . $conf['general']['syntax_plugin'] . '_constants.inc.php';
 
     if (is_readable($path_to_plugin)) {
@@ -66,6 +66,10 @@ define('STATUS_NEW',              2);
 define('STATUS_ASSIGNED',         3);
 
 define('GET_CONTENTS', true);
+
+// Others
+define('MIN_PW_LENGTH', 5);
+
 // developers or advanced users only
 //define('DEBUG_SQL',true);
 //define('JABBER_DEBUG', true);

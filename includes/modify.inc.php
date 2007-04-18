@@ -357,6 +357,10 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        if (strlen(Post::val('user_pass')) <= MIN_PW_LENGTH) {
+            return array(ERROR_RECOVER, L('passwordtoosmall'));
+        }
+
         // Check that the user entered the right confirmation code
         $sql = $db->Query("SELECT * FROM {registrations} WHERE magic_url = ?",
                 array(Post::val('magic_url')));
@@ -401,6 +405,10 @@ switch ($action = Req::val('action'))
         if (Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
+        }
+
+        if (strlen(Post::val('user_pass')) <= MIN_PW_LENGTH) {
+            return array(ERROR_RECOVER, L('passwordtoosmall'));
         }
 
         if ($user->perms('is_admin')) {
