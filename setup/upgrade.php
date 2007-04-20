@@ -162,7 +162,7 @@ class ConfUpdater
             return false;
         }
 
-        $this->old_config = parse_ini_file($location, true);
+        $this->old_config = parse_ini_file($location, true) or die('Aborting: Could not open config file at ' . $location);
         $this->new_config = parse_ini_file($upgrade_path . '/flyspray.conf.php', true);
         // Now we overwrite all values of the *default* file if there is one in the existing config
         array_walk($this->new_config, array($this, '_merge_configs'));

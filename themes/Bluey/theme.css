@@ -1103,9 +1103,14 @@ div.pendingreq {
 	padding:3px 3px 3px 23px;
 }
 
-a.pendingreq {
+a.pendingreq, span#locked {
 	color:red;
 	background:url(em.png) no-repeat 6px !important;
+}
+
+span#locked {
+	padding-left:2em;
+	font-weight:bold;
 }
 
 /* container for the next/previous links in the task details */

@@ -28,6 +28,15 @@
   <a id="logoutlink" href="{CreateURL('logout', null)}"
     accesskey="l">{L('logout')}</a>
   </li>
+  <?php if (isset($_SESSION['was_locked'])): ?>
+  <li>
+    <span id="locked">{L('accountwaslocked')}</span>
+  </li>
+  <?php elseif (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] > 0): ?>
+  <li>
+    <span id="locked">{sprintf(L('failedattempts'), $_SESSION['login_attempts'])}</span>
+  </li>
+  <?php endif; unset($_SESSION['login_attempts'], $_SESSION['was_locked']); ?>
 
 </ul>
 <?php endif; ?>

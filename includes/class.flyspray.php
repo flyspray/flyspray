@@ -593,7 +593,8 @@ class Flyspray
     {
         global $db;
 
-        $result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass
+        $result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
+                                        lock_until, login_attempts
                                 FROM  {users_in_groups} uig
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
                            LEFT JOIN  {users} u ON uig.user_id = u.user_id
@@ -620,6 +621,13 @@ class Flyspray
             default:
                 $password = crypt($password, $auth_details['user_pass']); //using the salt from db
                 break;
+        }
+
+        if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
+            $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
+                           WHERE user_id = ?', array($auth_details['user_id']));
+            $auth_details['account_enabled'] = 1;
+            $_SESSION['was_locked'] = true;
         }
 
         // Compare the crypted password to the one in the database
@@ -954,7 +962,7 @@ class Flyspray
         } elseif(is_writable(ini_get('session.save_path'))) {
             return ini_get('session.save_path');
         }
-        // we are dead and flyspray will not work at all as it does not have where to write sessions. 
+        // we are dead and flyspray will not work at all as it does not have where to write sessions.
         return '';
     }
 

@@ -26,7 +26,7 @@
 		  - {formatDate($task_details['last_edited_time'], true)}
 		  <?php endif; ?>
 		</div>
-        
+
         <table><tr><td id="taskfieldscell"><?php // small layout table ?>
 
 		<div id="taskfields">
@@ -59,7 +59,7 @@
 			 <td><label>{L('assignedto')}</label></td>
 			 <td>
                 <?php if ($user->perms('edit_assignments')): ?>
-				
+
 				<input type="hidden" name="old_assigned" value="{$old_assigned}" />
                 <?php $this->display('common.multiuserselect.tpl'); ?>
                 <?php else: ?>
@@ -140,14 +140,14 @@
             <?php endif; ?>
 		  </table>
 		</div>
-        
-        </td><td>
-        
+
+        </td><td style="width:100%">
+
 		<div id="taskdetailsfull">
           <h3 class="taskdesc">{L('details')}</h3>
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
           $this->display('common.editattachments.tpl', 'attachments', $attachments); ?>
-          
+
           <?php if ($user->perms('create_attachments')): ?>
           <div id="uploadfilebox">
             <span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
@@ -158,7 +158,7 @@
                 <span>
                   <input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
                     <a href="javascript://" tabindex="6" onclick="removeUploadField(this);">{L('remove')}</a><br />
-                </span>    
+                </span>
             </noscript>
           </div>
           <button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
@@ -171,19 +171,19 @@
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
           <?php endif; ?>
-          {!TextFormatter::textarea('detailed_desc', 10, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc']))}
+          {!TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc']))}
           <br />
           <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
               <button type="button" onclick="showstuff('edit_add_comment');this.style.display='none';">{L('addcomment')}</button>
               <div id="edit_add_comment" class="hide">
               <label for="comment_text">{L('comment')}</label>
-              
+
               <?php if ($user->perms('create_attachments')): ?>
               <div id="uploadfilebox_c">
                 <span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
                   <input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
                     <a href="javascript://" tabindex="6" onclick="removeUploadField(this, 'uploadfilebox_c');">{L('remove')}</a><br />
-                </span>    
+                </span>
               </div>
               <button id="uploadfilebox_c_attachafile" tabindex="7" type="button" onclick="addUploadFields('uploadfilebox_c')">
                 {L('uploadafile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
@@ -192,7 +192,7 @@
                  {L('attachanotherfile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
               </button>
               <?php endif; ?>
-              
+
               <textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="10"></textarea>
               </div>
           <?php endif; ?>
@@ -204,9 +204,9 @@
               <button type="reset">{L('reset')}</button>
           </p>
 		</div>
-        
+
         </td></tr></table>
-        
+
 	 </div>
      <div class="clear"></div>
   </form>

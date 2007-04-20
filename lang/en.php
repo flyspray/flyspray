@@ -767,6 +767,7 @@ Regards,',
 'error5'                  => 'That user does not exist on this Flyspray installation.',
 'error6'                  => 'Invalid admin area.',
 'error7'                  => 'Login failed (wrong username or password)!',
+'error71'                 => 'Account locked for %d minutes due to too many failed login attempts!',
 'error8'                  => 'You didn\'t enter both a username and password.',
 'error9'                  => 'Task does not exist or no permissions to view this task.',
 'error10'                 => 'This task does not exist.',
@@ -817,6 +818,8 @@ Regards,',
 'collapseall'             => 'Collapse all',
 'minpwsize'               => 'Minimum password size is 5 chars',
 'passwordtoosmall'        => 'Password size too small.',
+'accountwaslocked'        => 'Your account had been locked due to too many failed login attempts.',
+'failedattempts'          => 'There were %d failed login attempts.',
 );
 
 ?>

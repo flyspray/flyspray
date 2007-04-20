@@ -27,7 +27,20 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
         }elseif ($user_id === -1) {
             Flyspray::show_error(23);
         } else  /* $user_id == 0 */ {
-            Flyspray::show_error(7);
+            // just some extra check here so that never ever an account can get locked when it's already disabled
+            // ... that would make it easy to get enabled
+            $db->Query('UPDATE {users} SET login_attempts = login_attempts+1 WHERE account_enabled = 1 AND user_name = ?',
+                        array($username));
+            // Lock account if failed too often for a limited amount of time
+            $db->Query('UPDATE {users} SET lock_until = ?, account_enabled = 0 WHERE login_attempts > ? AND user_name = ?',
+                         array(time() + 60 * $fs->prefs['lock_for'], LOGIN_ATTEMPTS, $username));
+
+            if ($db->AffectedRows()) {
+                Flyspray::show_error(sprintf(L('error71'), $fs->prefs['lock_for']));
+                Flyspray::Redirect('./');
+            } else {
+                Flyspray::show_error(7);
+            }
         }
     } else {
         // Determine if the user should be remembered on this machine
@@ -46,6 +59,11 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
         // If the user had previously requested a password change, remove the magic url
         $remove_magic = $db->Query("UPDATE {users} SET magic_url = '' WHERE user_id = ?",
                                     array($user->id));
+        // Save for displaying
+        if ($user->infos['login_attempts'] > 0) {
+            $_SESSION['login_attempts'] = $user->infos['login_attempts'];
+        }
+        $db->Query('UPDATE {users} SET login_attempts = 0 WHERE user_id = ?', array($user->id));
 
         $_SESSION['SUCCESS'] = L('loginsuccessful');
     }

@@ -7,9 +7,9 @@
       <input id="itemsummary" class="text severity{Req::val('task_severity', 2)}" type="text" value="{Req::val('item_summary')}"
         name="item_summary" size="80" maxlength="100" />
     </h2>
-    
+
     <table><tr><td id="taskfieldscell"><?php // small layout table ?>
-    
+
     <div id="taskfields">
       <table>
         <tr>
@@ -110,15 +110,15 @@
         <?php endif; ?>
       </table>
     </div>
-    
-    </td><td>
+
+    </td><td style="width:100%">
 
     <div id="taskdetailsfull">
       <h3 class="taskdesc">{L('details')}</h3>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <div class="hide preview" id="preview"></div>
       <?php endif; ?>
-      {!TextFormatter::textarea('detailed_desc', 10, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task']))}
+      {!TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task']))}
       <?php if ($user->perms('create_attachments')): ?>
       <div id="uploadfilebox">
         <span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
@@ -129,8 +129,8 @@
           <span>
             <input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
               <a href="javascript://" tabindex="6" onclick="removeUploadField(this, 'uploadfilebox');">{L('remove')}</a><br />
-          </span>  
-        </noscript>    
+          </span>
+        </noscript>
       </div>
       <button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields('uploadfilebox')">
         {L('uploadafile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
@@ -161,10 +161,10 @@
         <?php endif; ?>
     </p>
     </div>
-    
+
     </td></tr></table>
 
   </form>
-  
+
   <div class="clear"></div>
 </div>
