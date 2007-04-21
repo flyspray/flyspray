@@ -786,7 +786,7 @@ $translation = array(
 'projectnotdeleted'       => 'Проектът не може да бъде изтрит.',
 'GMT'                     => 'GMT',
 'timezone'                => 'Времева зона',
-'accept'                  => 'Приеми',
+'accept'                  => 'Приемане',
 'reasonfordeinal'         => 'Причина за забраната',
 'pruneclosedlinks'        => 'Премахване на затворените връзки',
 'pruneclosedtasks'        => 'Премахване на затворените задачи',
@@ -808,6 +808,10 @@ $translation = array(
 'collapse'                => 'Затваряне',
 'expandall'               => 'Пълно отваряне',
 'collapseall'             => 'Пълно затваряне',
+'minpwsize'               => 'Минималната дължина на паролата е 5 символа',
+'passwordtoosmall'        => 'Дължината на паролата е твърде малка.',
+'accountwaslocked'        => 'Вашият акаунт е блокиран поради твърде много неуспешни опити за влизане.',
+'failedattempts'          => '%d неуспешни опита за влизане.',
 );
 
 ?>
