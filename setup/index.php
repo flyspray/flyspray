@@ -8,7 +8,8 @@
 
 @set_time_limit(0);
 session_start();
-ini_set('memory_limit', '32M');
+//do it fastest as possible.
+ini_set('memory_limit', '64M');
 
 
 if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0)
@@ -17,11 +18,17 @@ if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.co
         You can *not* use the setup on an existing database.');
 }
 
-$borked = str_replace( 'a', 'b', array( -1 => -1 ) );
+$borked = str_replace('a', 'b', array( -1 => -1 ) );
 
 if(!isset($borked[-1])) {
     die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
         "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
+}
+
+if(substr(php_sapi_name(), 0, 3) == 'cgi' && ! ini_get('cgi.fix_pathinfo')) {
+
+    die("You are using cgi or fastcgi and you have not set cgi.fix_pathinfo=1 in php.ini. 
+         Flyspray cannot work properly without cgi.fix_pathinfo enabled, please update your configuration");
 }
 
 // define basic stuff first.
