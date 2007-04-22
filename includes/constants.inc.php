@@ -9,7 +9,7 @@
 define('BASEDIR', dirname(dirname(__FILE__)));
 
 // Change this line if you move flyspray.conf.php elsewhere
-$conf    = @parse_ini_file(BASEDIR . '/flyspray.conf.php', true);
+$conf = @parse_ini_file(Flyspray::get_config_path(), true);
 
 // $baseurl
 // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.

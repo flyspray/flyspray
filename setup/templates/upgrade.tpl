@@ -24,7 +24,7 @@
             <div class="installBlock">
 				<table class="formBlock">
 				<tr>
-					<td valign="top">../flyspray.conf.php</td>
+					<td valign="top">../{basename(CONFIG_PATH)}</td>
 					<td align="left"><b><?php if ($checks['config_writable']): ?><span class="green">writeable</span><?php else: ?><span class="red">not writeable</span><?php endif; ?></b></td>
 					<td>&nbsp;</td>
                 </tr><tr>

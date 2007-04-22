@@ -17,8 +17,10 @@ ini_set('memory_limit', '32M');
 define('IN_FS', 1);
 define('BASEDIR', dirname(__FILE__));
 define('APPLICATION_PATH', dirname(BASEDIR));
-define('CONFIG_PATH', APPLICATION_PATH . '/flyspray.conf.php');
 define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
+require_once OBJECTS_PATH . '/class.flyspray.php';
+define('CONFIG_PATH', Flyspray::get_config_path(APPLICATION_PATH));
+
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf  = @parse_ini_file(CONFIG_PATH, true) or die('Cannot open config file at ' . CONFIG_PATH);
 
@@ -32,7 +34,7 @@ if(!isset($borked[-1])) {
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/class.database.php';
-require_once OBJECTS_PATH . '/class.flyspray.php';
+
 @require_once OBJECTS_PATH . '/class.tpl.php';
 
 // Initialise DB
@@ -68,6 +70,7 @@ usort($folders, 'version_compare'); // start with lowest version
 
 $upgrade_available = false;
 if (Post::val('upgrade')) {
+    $db->dblink->StartTrans();
     foreach ($folders as $folder) {
         if (version_compare($installed_version, $folder, '<=')) {
             execute_upgrade_file($folder, $installed_version);
@@ -76,6 +79,7 @@ if (Post::val('upgrade')) {
     }
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
+    $db->dblink->CompleteTrans();
     $installed_version = $fs->version;
 }
 foreach ($folders as $folder) {
