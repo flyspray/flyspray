@@ -118,7 +118,7 @@ class Tpl
         // send us a patch, thanks.. we don't want this..really ;)
 
         eval( '?>'. $_tpl_data );
-    } // }}} 
+    } // }}}
 
     function render()
     {
@@ -296,7 +296,7 @@ function tpl_fast_tasklink($arr)
     return tpl_tasklink($arr[1], $arr[0]);
 }
 
-// }}}   
+// }}}
 // {{{ some useful plugins
 
 function join_attrs($attr = null) {
@@ -580,7 +580,7 @@ class TextFormatter
     }
 }
 // }}}
-// Format Date {{{ 
+// Format Date {{{
 function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
@@ -683,7 +683,7 @@ function tpl_disableif ($if)
     }
 }
 
-// {{{ Url handling 
+// {{{ Url handling
 // Create an URL bas ed upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
@@ -784,18 +784,20 @@ function pagenums($pagenum, $perpage, $totalcount)
             $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1))));
             $output .= sprintf('<a href="%s">&lt;&lt;%s </a>', $url, eL('first'));
         }
-        if ($pagenum > 1)
+        if ($pagenum > 1) {
             $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1))));
             $output .= sprintf('<a id="previous" accesskey="p" href="%s">&lt; %s</a> - ', $url, eL('previous'));
+        }
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
-            if ($pagelink != $start)
+            if ($pagelink != $start) {
                 $output .= ' - ';
+            }
 
             if ($pagelink == $pagenum) {
                 $output .= sprintf('<strong>%d</strong>', $pagelink);
             } else {
-                $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))); 
+                $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink))));
                 $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
             }
         }
@@ -804,14 +806,15 @@ function pagenums($pagenum, $perpage, $totalcount)
             $url =  Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1))));
             $output .= sprintf(' - <a id="next" accesskey="n" href="%s">%s &gt;</a>', $url, eL('next'));
         }
-        if ($finish < $pages) 
+        if ($finish < $pages) {
             $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages))));
-            $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last')); 
+            $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last'));
+        }
         $output .= '</span>';
     }
 
     return $output;
-} // }}}   
+} // }}}
 class Url {
 	var $url = '';
 	var $parsed;
@@ -901,6 +904,6 @@ class Url {
 		return $return;
 	}
 }
-// }}} 
-// }}} 
+// }}}
+// }}}
 ?>
