@@ -47,7 +47,7 @@ class Tpl
 
     function themeUrl()
     {
-        return $GLOBALS['baseurl'] . 'themes/'.$this->_theme;
+        return sprintf('%s/themes/%s', $GLOBALS['baseurl'], $this->_theme);
     }
 
     function compile(&$item)
@@ -118,7 +118,7 @@ class Tpl
         // send us a patch, thanks.. we don't want this..really ;)
 
         eval( '?>'. $_tpl_data );
-    } // }}}
+    } // }}} 
 
     function render()
     {
@@ -144,7 +144,7 @@ class FSTpl extends Tpl
 	{
         global $proj, $baseurl;
         $pathinfo = pathinfo($name);
-        $link = 'themes/' . $proj->prefs['theme_style'] . '/';
+        $link = sprintf('themes/%s/', $proj->prefs['theme_style']);
         if ($pathinfo['dirname'] != '.') {
             $link .= $pathinfo['dirname'] . '/';
             $name = $pathinfo['basename'];
@@ -186,7 +186,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     }
 
     if (is_null($text)) {
-        $text = 'FS#'. (int) $task['task_id'] . ' - '. htmlspecialchars($summary, ENT_QUOTES, 'utf-8');
+        $text = sprintf('FS#%d - %s', $task['task_id'], Filters::noXSS($summary));
     } elseif(is_string($text)) {
         $text = htmlspecialchars(utf8_substr($text, 0, 64), ENT_QUOTES, 'utf-8');
     } else {
@@ -282,9 +282,8 @@ function tpl_userlink($uid)
     }
 
     if (isset($uname)) {
-        $cache[$uid] = '<a href="'.htmlspecialchars(CreateURL( ($user->perms('is_admin')) ? 'edituser' : 'user', $uid), ENT_QUOTES, 'utf-8').'">'
-                           . htmlspecialchars($rname, ENT_QUOTES, 'utf-8').' ('
-                           . htmlspecialchars($uname, ENT_QUOTES, 'utf-8').')</a>';
+        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+        $cache[$uid] = vsprintf('<a href="%s">%s (%s)</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
     } elseif (empty($cache[$uid])) {
         $cache[$uid] = eL('anonymous');
     }
@@ -297,15 +296,14 @@ function tpl_fast_tasklink($arr)
     return tpl_tasklink($arr[1], $arr[0]);
 }
 
-// }}}
+// }}}   
 // {{{ some useful plugins
 
 function join_attrs($attr = null) {
     if (is_array($attr) && count($attr)) {
         $arr = array();
         foreach ($attr as $key=>$val) {
-            $arr[] = htmlspecialchars($key, ENT_QUOTES, 'utf-8') . '="'.
-                     htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+            $arr[] = vsprintf('%s = "%s"', array_map(array('Filters', 'noXSS'), array($key, $val)));
         }
         return ' '.join(' ', $arr);
     }
@@ -488,9 +486,9 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
 {
     $name  = htmlspecialchars($name,  ENT_QUOTES, 'utf-8');
     $value = htmlspecialchars($value, ENT_QUOTES, 'utf-8');
-    $html  = '<input type="checkbox" name="'.$name.'" value="'.$value.'" ';
+    $html  = sprintf('<input type="checkbox" name="%s" value="%s" ', $name, $value);
     if (is_string($id)) {
-        $html .= 'id="'.htmlspecialchars($id, ENT_QUOTES, 'utf-8').'" ';
+        $html .= sprintf('id="%s" ', Filters::noXSS($id));
     }
     if ($checked == true) {
         $html .= 'checked="checked" ';
@@ -503,11 +501,9 @@ function tpl_img($src, $alt = '')
 {
     global $baseurl;
     if (is_file(BASEDIR .'/'.$src)) {
-        return '<img src="'.$baseurl
-            .htmlspecialchars($src, ENT_QUOTES,'utf-8').'" alt="'
-            .htmlspecialchars($alt, ENT_QUOTES,'utf-8').'" />';
+        return sprintf('<img src="%s%s" alt="%s" />', $baseurl, Filters::noXSS($src), Filters::noXSS($alt));
     }
-    return htmlspecialchars($alt, ENT_QUOTES,'utf-8');
+    return Filters::noXSS($alt);
 } // }}}
 // {{{ Text formatting
 //format has been already checked in constants.inc.php
@@ -526,7 +522,7 @@ class TextFormatter
     {
         global $conf;
 
-        $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'];
+        $path_to_plugin = sprintf('%s/plugins/%s', BASEDIR, $conf['general']['syntax_plugin']);
          $return = array();
 
         if (!is_readable($path_to_plugin)) {
@@ -571,10 +567,7 @@ class TextFormatter
         }
 
         $name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
-        $rows = intval($rows);
-        $cols = intval($cols);
-
-        $return = "<textarea name=\"{$name}\" cols=\"$cols\" rows=\"$rows\" ";
+        $return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
         if (is_array($attrs) && count($attrs)) {
             $return .= join_attrs($attrs);
         }
@@ -587,7 +580,7 @@ class TextFormatter
     }
 }
 // }}}
-// Format Date {{{
+// Format Date {{{ 
 function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
@@ -621,7 +614,7 @@ function formatDate($timestamp, $extended = false, $default = '')
     //it returned utf-8 encoded by the system
     return strftime(Filters::noXSS($dateformat), (int) $timestamp);
 } /// }}}
-// {{{ Draw permissions table
+// {{{ Draw permissi ons table
 function tpl_draw_perms($perms)
 {
     global $proj;
@@ -690,17 +683,8 @@ function tpl_disableif ($if)
     }
 }
 
-function tpl_form($action, $method = 'post', $enctype = 'application/x-www-form-urlencoded')
-{
-    $form = sprintf('<form action="%s" method="%s">',
-                        htmlspecialchars($action, ENT_QUOTES, 'utf-8'),
-                        htmlspecialchars($method, ENT_QUOTES, 'utf-8'),
-                        htmlspecialchars($enctype, ENT_QUOTES, 'utf-8'));
-    $form .= "\n" . '<input type="hidden" name="prev_page" value="" />';
-}
-
-// {{{ Url handling
-// Create an URL based upon address-rewriting preferences {{{
+// {{{ Url handling 
+// Create an URL bas ed upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
     global $baseurl, $conf;
@@ -773,8 +757,8 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         $url->addvars($arg3);
     }
     return $url->get();
-} // }}}
-// Page numbering {{{
+} // }} }
+// Page  numbering {{{
 // Thanks to Nathan Fritz for this.  http://www.netflint.net/
 function pagenums($pagenum, $perpage, $totalcount)
 {
@@ -796,32 +780,38 @@ function pagenums($pagenum, $perpage, $totalcount)
         $start  = max(1, $pagenum - 4 + min(2, $pages - $pagenum));
         $finish = min($start + 4, $pages);
 
-        if ($start > 1)
-            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1)))) . '">&lt;&lt;' . eL('first') . ' </a>';
-
+        if ($start > 1) {
+            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1))));
+            $output .= sprintf('<a href="%s">&lt;&lt;%s </a>', $url, eL('first'));
+        }
         if ($pagenum > 1)
-            $output .= '<a id="previous" accesskey="p" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1)))) . '">&lt; ' . eL('previous') . '</a> - ';
+            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1))));
+            $output .= sprintf('<a id="previous" accesskey="p" href="%s">&lt; %s</a> - ', $url, eL('previous'));
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
             if ($pagelink != $start)
                 $output .= ' - ';
 
             if ($pagelink == $pagenum) {
-                $output .= '<strong>' . $pagelink . '</strong>';
+                $output .= sprintf('<strong>%d</strong>', $pagelink);
             } else {
-                $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))) . '">' . $pagelink . '</a>';
+                $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink)))); 
+                $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
             }
         }
 
-        if ($pagenum < $pages)
-            $output .= ' - <a id="next" accesskey="n" href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1)))) . '">' . eL('next') . ' &gt;</a>';
-        if ($finish < $pages)
-            $output .= '<a href="' . Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages)))) . '"> ' . eL('last') . ' &gt;&gt;</a>';
+        if ($pagenum < $pages) {
+            $url =  Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1))));
+            $output .= sprintf(' - <a id="next" accesskey="n" href="%s">%s &gt;</a>', $url, eL('next'));
+        }
+        if ($finish < $pages) 
+            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages))));
+            $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last')); 
         $output .= '</span>';
     }
 
     return $output;
-} // }}}
+} // }}}   
 class Url {
 	var $url = '';
 	var $parsed;
@@ -911,6 +901,6 @@ class Url {
 		return $return;
 	}
 }
-// }}}
-// }}}
+// }}} 
+// }}} 
 ?>
