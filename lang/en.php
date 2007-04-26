@@ -820,6 +820,7 @@ Regards,',
 'passwordtoosmall'        => 'Password size too small.',
 'accountwaslocked'        => 'Your account had been locked due to too many failed login attempts.',
 'failedattempts'          => 'There were %d failed login attempts.',
+'groupnotexist'           => 'Selected group does not exist in this project.',
 );
 
 ?>

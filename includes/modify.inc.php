@@ -358,7 +358,8 @@ switch ($action = Req::val('action'))
         }
 
         if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
-            return array(ERROR_RECOVER, L('passwordtoosmall'));
+            Flyspray::show_error(L('passwordtoosmall'));
+            break;
         }
 
         // Check that the user entered the right confirmation code
@@ -407,8 +408,9 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (strlen(Post::val('user_pass')) <= MIN_PW_LENGTH) {
-            return array(ERROR_RECOVER, L('passwordtoosmall'));
+        if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
+            Flyspray::show_error(L('passwordtoosmall'));
+            break;
         }
 
         if ($user->perms('is_admin')) {

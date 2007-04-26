@@ -9,7 +9,6 @@
         </div>
     </form>
     <hr />
-  <?php $group_details = Flyspray::getGroupDetails(Req::num('id')); ?>
   <form action="{CreateURL('editgroup', Req::num('id'), $do)}" method="post">
     <table class="box">
       <tr>
@@ -131,7 +130,7 @@
       <tr>
         <td><label for="add_user">{L('addusergroup')}</label></td>
         <td>
-            {!tpl_userselect('uid', '', 'add_user')}   
+            {!tpl_userselect('uid', '', 'add_user')}
         </td>
       </tr>
       <tr>
@@ -145,7 +144,7 @@
       </tr>
     </table>
   </form>
-  
+
   <hr />
 
   <form action="{CreateURL('editgroup', Req::num('id'), $do)}" method="post">
@@ -194,6 +193,6 @@
   <input type="hidden" name="project_id" value="{$proj->id}" />
   <input type="hidden" name="action" value="movetogroup" />
   <input type="hidden" name="old_group" value="{$group_details['group_id']}" />
-  </div> 
+  </div>
  </form>
 </fieldset>

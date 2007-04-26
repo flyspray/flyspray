@@ -31,6 +31,15 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'groups':
         $page->assign('groups', Flyspray::ListGroups($proj->id));
     case 'editgroup':
+        // yeah, utterly stupid, is changed in 1.0 already
+        if (Req::val('area') == 'editgroup') {
+            $group_details = Flyspray::getGroupDetails(Req::num('id'));
+            if (!$group_details || $group_details['project_id'] != $proj->id) {
+                Flyspray::show_error(L('groupnotexist'));
+                Flyspray::Redirect(CreateURL('pm', 'groups', $proj->id));
+            }
+            $page->uses('group_details');
+        }
     case 'tasktype':
     case 'resolution':
     case 'os':
