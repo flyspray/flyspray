@@ -38,12 +38,12 @@ class Notifications {
       $result = true;
 
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
-          if(!$this->SendEmail($to[0], $msg[0], $msg[1], $task_id)) {
+          if(!$this->SendEmail((is_array($to[0]) ? $to[0] : $to), $msg[0], $msg[1], $task_id)) {
               $result = false;
           }
       }
       if ($ntype == NOTIFY_JABBER || $ntype == NOTIFY_BOTH) {
-          if(!$this->StoreJabber($to[1], $msg[0], $msg[1])) {
+          if(!$this->StoreJabber((is_array($to[1]) ? $to[1] : $to), $msg[0], $msg[1])) {
               $result = false;
           }
       }

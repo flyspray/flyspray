@@ -8,8 +8,6 @@ AddDefaultCharset utf-8
 
 DirectoryIndex index.php index.html
 
-AddDefaultCharset utf-8
-
 #mod security conflicts with flyspray and you do not need it here
 # see also http://blog.php-security.org/archives/70-Modsecurity-vs.-PHP.html
 
