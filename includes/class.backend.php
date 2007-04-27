@@ -535,7 +535,7 @@ class Backend
                                 WHERE g.group_id = 1');
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
-                            $db->FetchAllArray($sql), NOTIFY_EMAIL);
+                            $db->FetchCol($sql), NOTIFY_EMAIL);
         }
 
         return true;

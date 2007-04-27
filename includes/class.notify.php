@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/external/swift-mailer/Swift.php';
 class Notifications {
 
    // {{{ Wrapper function for all others
-   function Create ( $type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH)
+   function Create ($type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH)
    {
       if (is_null($to)) {
           $to = $this->Address($task_id, $type);
@@ -33,10 +33,8 @@ class Notifications {
       if (!count($to)) {
         return false;
       }
-
       $msg = $this->GenerateMsg($type, $task_id, $info);
       $result = true;
-
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
           if(!$this->SendEmail((is_array($to[0]) ? $to[0] : $to), $msg[0], $msg[1], $task_id)) {
               $result = false;
@@ -223,7 +221,7 @@ class Notifications {
 
       return true;
    } // }}}
-   // {{{ Send email
+   // {{{ Send email  
    function SendEmail($to, $subject, $body, $task_id)
    {
        global $fs, $proj, $user;
@@ -248,7 +246,7 @@ class Notifications {
             $swiftconn =& new Swift_Connection_NativeMail();
       }
       
-      $swift = &new Swift($swiftconn);
+      $swift =& new Swift($swiftconn);
       
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
@@ -269,7 +267,7 @@ class Notifications {
             $message->headers->set('References', $inreplyto);
         }
 
-      $to = is_array($to) ? $to : array($to);
+      $to = is_array($to) ? $to : (array)$to;
       
       // at this step we have a clean array with no empty nor duplicated values.
       if (count($to)) {
