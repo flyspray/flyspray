@@ -197,7 +197,7 @@ foreach ($node_list as $n => $r) {
     $dotgraph .= "FS$n [label=\"".str_replace("\n", "\\$lj", $label)."\", ".
         ($r['clsd'] ? 'color=black,' : '') .
         ($r['clsd'] ? 'fillcolor=white,' : "fillcolor=\"$col\",") .
-        ($n == $id ? 'shape=box,' : '') .
+        ($n == $id ? 'shape=box,' : '') . 
         "href=\"javascript:top.window.location.href='".CreateURL("details", $n)."'\", target=\"_top\" ".
         "tooltip=\"$tooltip\"];\n";
 }
@@ -212,54 +212,67 @@ $dotgraph .= "}\n";
 
 
 // All done with the graph. Save it to a temp file (new name if the data has changed)
-$file_name = 'cache/fs_depends_dot_' . $id . '_' . md5($dotgraph) . '.dot';
-$tname = $unlink = BASEDIR . '/' . $file_name;
+$file_name = sprintf('cache/fs_depends_dot_%d_%s.dot', $id, md5($dotgraph));
+$absfilename = sprintf('%s/%s.%s', BASEDIR, $file_name, $fmt);
+//cannot use tempnam( ) as file has to end with $ftm extension
 
+if($use_public) {
+    //cannot use tempnam() as file has to end with $ftm extension
+    $tname = $file_name;
+} else {
+    // we are operating on the command line, avoid races.
+    $tname = tempnam(Flyspray::get_tmp_dir(), md5(uniqid(mt_rand() , true)));
+}
+//get our dot done..
 if ($tmp = fopen($tname, 'wb')) {
-    fwrite($tmp, $dotgraph);
+    if(flock($tmp, LOCK_EX)) {
+        fwrite($tmp, $dotgraph);
+        flock($tmp, LOCK_UN);
+    }
     fclose($tmp);
 }
+
 // Now run dot on it:
 if ($use_public) {
+    if (!is_file($absfilename)) {
 
-    if (!is_file(BASEDIR . '/' . $file_name . '.' . $fmt)) {
+        $url = sprintf('%s/%s%s.%s', array_get($conf['general'], 'dot_public'), $baseurl, $tname, $fmt);
 
-        $data = Flyspray::remote_request(array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.' . $fmt, GET_CONTENTS);
+        $data = Flyspray::remote_request($url, GET_CONTENTS);
 
-        $f = fopen(BASEDIR . '/' . $file_name . '.' . $fmt, 'wb');
-        fwrite($f, $data);
-        fclose($f);
+        if($f = fopen($absfilename, 'wb')) {
+            if(flock($f, LOCK_EX)) {                
+                fwrite($f, $data);
+                flock($f, LOCK_UN);
+            }
+            fclose($f);
+        } 
     } else {
-        $data = file_get_contents(BASEDIR . '/' . $file_name . '.' . $fmt);
+        $data = file_get_contents($absfilename);
     }
 
     $page->assign('remote', $remote = true);
-    $page->assign('map',    array_get($conf['general'], 'dot_public') . '/' . $baseurl . $file_name . '.map');
+    $page->assign('map',    sprintf('%s/%s%s.map', array_get($conf['general'], 'dot_public'), $baseurl, $file_name));
 
 } else {
 
     $dot = escapeshellcmd($path_to_dot);
-    $tname = escapeshellarg($tname);
-
-    $cmd = "$dot -T $fmt -o " . escapeshellarg(BASEDIR . '/' . $file_name . '.' . $fmt) .  ' ' . $tname;
-    shell_exec($cmd);
-
-    $cmd = "$dot -T cmapx " . $tname;
-    $data['map'] = shell_exec($cmd);
-
+    $tfn = escapeshellarg($tname);
+    shell_exec(sprintf('%s -T %s -o %s %s', $dot, escapeshellarg($fmt), escapeshellarg($absfilename), $tfn));
+    $data['map'] = shell_exec(sprintf('%s -T cmapx %s', $dot, $tfn));
     $page->assign('remote', $remote = false);
     $page->assign('map',    $data['map']);
     // Remove files so that they are not exposed to the public
-    unlink($unlink);
+    unlink($tname);
 }
 
-$page->assign('image', $baseurl . $file_name . '.' . $fmt);
+$page->assign('image', sprintf('%s%s.%s', $baseurl, $file_name, $fmt));
 
 
 // we have to find out the image size if it is SVG
 if ($fmt == 'svg') {
     if (!$remote) {
-        $data = file_get_contents(BASEDIR . '/' . $file_name);
+        $data = file_get_contents($absfilename);
     }
     preg_match('/<svg width="([0-9.]+)([a-zA-Z]+)" height="([0-9.]+)([a-zA-Z]+)"/', $data, $matches);
     $page->assign('width',  round($matches[1] * (($matches[2] == 'pt') ? 1.4 : (($matches[2] == 'in') ? 1.33 * 72.27 : 1)), 0));
