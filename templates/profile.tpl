@@ -53,6 +53,7 @@
     <?php endif; ?>
     </td>
   </tr>
+  <?php endif; ?>
   <tr>
     <th><a href="{$_SERVER['SCRIPT_NAME']}?opened={$theuser->id}&amp;status[]=">{L('tasksopened')}</a></th>
     <td>
@@ -64,22 +65,21 @@
     <td>
       {$assigned}
     </td>
-  </tr> 
+  </tr>
   <tr>
     <th>{L('comments')}</th>
     <td>
       {$comments}
     </td>
-  </tr> 
-  <?php endif; ?>
+  </tr>
   <?php if ($theuser->infos['register_date']): ?>
   <tr>
     <th>{L('regdate')}</th>
     <td>
       {formatDate($theuser->infos['register_date'])}
     </td>
-  </tr> 
+  </tr>
   <?php endif; ?>
 </table>
-    
+
 </fieldset>
