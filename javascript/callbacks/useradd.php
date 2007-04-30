@@ -22,10 +22,9 @@ $get_users = $db->Query('SELECT u.real_name, u.user_name, u.user_id, g.group_nam
                          array($searchterm, $searchterm), 1);
 
 if ($row = $db->FetchRow($get_users)) {
-
-    array_walk($row, array('Filters','noXSS'));
     
-    echo '[' . $row['group_name'] . '] ' . $row['real_name'] . ' (' . $row['user_name'] . ')|' . $row['user_id'];
+    vprintf('[%s] %s (%s)|%d', array_map(array('Filters','noXSS'), 
+            array($row['group_name'], $row['real_name'], $row['user_name'], $row['user_id'])));
 }
 
 ?>

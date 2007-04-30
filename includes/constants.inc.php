@@ -28,8 +28,7 @@ if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'
 
 if(isset($conf['general']['syntax_plugin']) && preg_match('/^[a-z0-9_]+$/iD', $conf['general']['syntax_plugin'])) {
 
-$path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/'
-                  . $conf['general']['syntax_plugin'] . '_constants.inc.php';
+$path_to_plugin = sprintf('%s/plugins/%s/%s_constants.inc.php', BASEDIR, $conf['general']['syntax_plugin'], $conf['general']['syntax_plugin']);
 
     if (is_readable($path_to_plugin)) {
         include($path_to_plugin);

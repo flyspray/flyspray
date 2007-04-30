@@ -100,8 +100,11 @@ if ($fs->prefs['cache_feeds'])
         }
 
         // Remove old cached files
-        if($handle = fopen(BASEDIR . '/cache/'.$filename, 'w+b')) {
-            fwrite($handle, $content);
+        if($handle = @fopen(sprintf('%s/cache/%s', BASEDIR, $filename), 'w+b')) {
+            if (flock($handle, LOCK_EX)) {
+                fwrite($handle, $content);
+                flock($fp, LOCK_UN);
+            }
             fclose($handle);
         }
     }

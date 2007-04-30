@@ -11,7 +11,8 @@
 //
 
 @set_time_limit(0);
-ini_set('memory_limit', '32M');
+//do it fast damn it
+ini_set('memory_limit', '64M');
 
 // define basic stuff first.
 define('IN_FS', 1);
