@@ -357,7 +357,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (strlen(Post::val('user_pass')) && (strlen(Post::val('user_pass')) < MIN_PW_LENGTH)) {
+        if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
             Flyspray::show_error(L('passwordtoosmall'));
             break;
         }
