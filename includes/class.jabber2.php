@@ -36,7 +36,7 @@ class Jabber
         }
 
         //bug in php 5.2.1 renders this stuff more or less useless.
-        if(version_compare(phpversion(), '5.2.1', '==')) {
+        if(version_compare(phpversion(), '5.2.1', '>=')) {
             $this->log('Error: PHP 5.2.1 is incompatible with jabber notifications, see http://bugs.php.net/41236');
             return false;
         }

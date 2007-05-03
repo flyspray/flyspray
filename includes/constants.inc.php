@@ -69,6 +69,7 @@ define('GET_CONTENTS', true);
 // Others
 define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
+define('FS_CACHE_DIR', Flyspray::get_tmp_dir());
 
 // developers or advanced users only
 //define('DEBUG_SQL',true);

@@ -55,7 +55,7 @@ class dokuwiki_TextFormatter
         $Renderer->interwiki = getInterwiki();
 
         $conf = $fs_conf;
-        $conf['cachedir'] = BASEDIR . '/cache/dokuwiki'; // for dokuwiki
+        $conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
         
         // Loop through the instructions
         foreach ($instructions as $instruction) {
