@@ -4,7 +4,11 @@
       <?php foreach ($attachments as $attachment): ?>
       <tr>
         <td>
+          <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
           <a href="{$_SERVER['SCRIPT_NAME']}?getfile={$attachment['attachment_id']}" title="{$attachment['file_type']}">
+          <?php else: ?>
+          <del>
+          <?php endif; ?>
           <?php
           // Strip the mimetype to get the icon image name
           list($main) = explode('/', $attachment['file_type']);
@@ -16,7 +20,12 @@
           <?php else: ?>
           <img src="{$imgpath}{$main}.png" alt="" title="{$attachment['file_type']}" />
           <?php endif; ?>
-          &nbsp;&nbsp;{$attachment['orig_name']}</a>
+          &nbsp;&nbsp;{$attachment['orig_name']}
+          <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
+          </a>
+          <?php else: ?>
+          </del>
+          <?php endif; ?>
         </td>
         <td>
           <?php if ($attachment['file_size'] < 1000000): ?>

@@ -2,7 +2,11 @@
   if ($attachments && $user->can_view_task($task_details)): ?>
   <div class="attachments">
   <?php foreach ($attachments as $attachment): ?>
+    <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
     <a title="{$attachment['orig_name']}" href="?getfile={$attachment['attachment_id']}">
+    <?php else: ?>
+    <del>
+    <?php endif; ?>
       <?php
       // Strip the mimetype to get the icon image name
       list($main) = explode('/', $attachment['file_type']);
@@ -19,7 +23,12 @@
       {utf8_substr($attachment['orig_name'], 0, 29)}...
       <?php else: ?>
       {$attachment['orig_name']}
-      <?php endif; ?></a>
+      <?php endif; ?>
+      <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
+      </a>
+      <?php else: ?>
+      </del>
+      <?php endif; ?>
       <?php if ($attachment['file_size'] < 1000000): ?>
       ({round($attachment['file_size']/1024,1)} {L('KiB')})
       <?php else: ?>
@@ -31,4 +40,4 @@
   <?php elseif (count($attachments)): ?>
   <div class="attachments">{L('attachnoperms')}</div>
   <?php endif; ?>
-  
+
