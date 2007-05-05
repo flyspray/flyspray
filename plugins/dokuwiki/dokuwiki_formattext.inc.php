@@ -56,6 +56,8 @@ class dokuwiki_TextFormatter
 
         $conf = $fs_conf;
         $conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
+        $conf['fperm'] = 0600;
+        $conf['dperm'] = 0700;
         
         // Loop through the instructions
         foreach ($instructions as $instruction) {

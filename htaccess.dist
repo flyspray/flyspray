@@ -30,6 +30,7 @@ php_flag register_argc_argv Off
 php_flag register_long_arrays Off
 #not for now, flyspray has it's own filters.
 php_value filter.default "unsafe_raw"
+php_flag always_populate_raw_post_data Off
 </IfModule>
 
 # php4 as **apache 1** module
@@ -40,6 +41,7 @@ php_flag session.use_trans_sid 0
 php_flag short_open_tag off
 php_flag register_argc_argv Off
 php_value filter.default "unsafe_raw"
+php_flag always_populate_raw_post_data Off
 </IfModule>
 
 #php4 as **apache 2** module
@@ -52,6 +54,7 @@ php_flag session.use_trans_sid 0
 php_flag short_open_tag off
 php_flag register_argc_argv Off
 php_value filter.default "unsafe_raw"
+php_flag always_populate_raw_post_data Off
 </IfModule>
 
 # We only use POST GET and HEAD (implicit)
