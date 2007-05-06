@@ -254,6 +254,7 @@ class Notifications {
       $message =& new Swift_Message($subject, $body);
       $message->headers->setCharset('utf-8');
       $message->headers->set('Precedence', 'list');
+      $message->headers->set('X-Mailer', 'Flyspray');
 
       if ($proj->prefs['notify_reply']) {
             $message->setReplyTo($proj->prefs['notify_reply']);
@@ -265,18 +266,15 @@ class Notifications {
         // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
             $message->headers->set('In-Reply-To', $inreplyto);
             $message->headers->set('References', $inreplyto);
-        }
+      }
 
       $to = is_array($to) ? $to : (array)$to;
-      
       // at this step we have a clean array with no empty nor duplicated values.
       if (count($to)) {
-            $recipients =& new Swift_RecipientList();
-            foreach($to as $luser) {
-                //addTo should be able to accept an array though..
-                $recipients->addTo(strtolower($luser));
-            }
-                return (bool) $swift->batchsend($message, $recipients, 
+          $recipients =& new Swift_RecipientList();
+          // now accepts string , array or Swift_Adress.
+          $recipients->addTo($to);  
+          return (bool) $swift->batchsend($message, $recipients, 
                               new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
        }
             return false;
