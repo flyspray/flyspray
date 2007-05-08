@@ -284,11 +284,9 @@ class Flyspray
 
       if (count($_POST)) {
 
-        $requestarray = array_merge(array_keys($_POST), array_values($_POST));
-
         if (preg_match('/^newtask.newtask|details.addcomment$/', Post::val('action', '')))
         {
-            $currentrequest = md5(serialize($requestarray));
+            $currentrequest = md5(serialize($_POST));
             if (!empty($_SESSION['requests_hash'][$currentrequest])) {
                 return true;
             }
@@ -1000,7 +998,7 @@ class Flyspray
 
             $type = mime_content_type($fname);
         // I hope we don't have to...
-        } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' 
+        } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
                  && php_uname('s') !== 'SunOS') {
 
                $type = @exec(sprintf('file -bi %s', escapeshellarg($fname)));
