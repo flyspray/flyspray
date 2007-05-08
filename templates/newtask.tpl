@@ -142,7 +142,7 @@
 
     <p class="buttons">
         <?php if ($user->isAnon()): ?>
-        <label class="inline" for="anon_email">{L('youremail')}</label><input type="text" class="text" id="anon_email" name="anon_email" size="30" /><br />
+        <label class="inline" for="anon_email">{L('youremail')}</label><input type="text" class="text" id="anon_email" name="anon_email" size="30"  value="{Req::val('anon_email')}" /><br />
         <?php endif; ?>
         <?php if (!$user->perms('modify_all_tasks')): ?>
         <input type="hidden" name="item_status"   value="1" />
