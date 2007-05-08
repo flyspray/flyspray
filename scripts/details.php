@@ -29,7 +29,7 @@ $page->uses('task_details');
 $page->assign('assigned_users', $task_details['assigned_to']);
 $page->assign('old_assigned', implode(' ', $task_details['assigned_to']));
 
-$page->setTitle('FS#' . $task_details['task_id'] . ': ' . $task_details['item_summary']);
+$page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['item_summary']));
 
 if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS']))) && $user->can_edit_task($task_details)) {
     $result = $db->Query('SELECT u.user_id, u.user_name, u.real_name, g.group_name
@@ -42,7 +42,8 @@ if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS
     $result = $db->GroupBy($result, 'user_id');
     $userlist = array();
     foreach ($result as $row) {
-        $userlist[] = array(0 => $row['user_id'], 1 => "[{$row['group_name']}] {$row['user_name']} ({$row['real_name']})");
+        $userlist[] = array(0 => $row['user_id'], 
+                            1 => sprintf('[%s] %s (%s)', $row['group_name'], $row['user_name'], $row['real_name']));
     }
 
     $page->assign('userlist', $userlist);

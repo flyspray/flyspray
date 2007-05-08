@@ -71,6 +71,8 @@ define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
 define('FS_CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . md5($_SERVER['SERVER_NAME'] . (int) $_SERVER['SERVER_PORT']));
 
+is_dir(FS_CACHE_DIR) || mkdir(FS_CACHE_DIR, 0700);
+
 // developers or advanced users only
 //define('DEBUG_SQL',true);
 //define('JABBER_DEBUG', true);

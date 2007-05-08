@@ -292,6 +292,6 @@ list($endusec, $endsec) = explode(' ', $endtime);
 $diff = ($endsec - $startsec) + ($endusec - $startusec);
 $page->assign('time', round($diff, 2));
 
-$page->setTitle('FS#' . $id . ': ' . L('dependencygraph'));
+$page->setTitle(sprintf('FS#%d : %s', $id, L('dependencygraph')));
 $page->pushTpl('depends.tpl');
 ?>

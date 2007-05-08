@@ -267,18 +267,12 @@ class Notifications {
             $message->headers->set('In-Reply-To', $inreplyto);
             $message->headers->set('References', $inreplyto);
       }
-
-      $to = is_array($to) ? $to : (array)$to;
-      // at this step we have a clean array with no empty nor duplicated values.
-      if (count($to)) {
           $recipients =& new Swift_RecipientList();
-          // now accepts string , array or Swift_Adress.
+          // now accepts string , array or Swift_Address.
           $recipients->addTo($to);  
+          
           return (bool) $swift->batchsend($message, $recipients, 
                               new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
-       }
-            return false;
-
 
    } //}}}
    // {{{ Create a message for any occasion
