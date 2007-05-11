@@ -67,4 +67,43 @@
       <col>user_name</col>
     </index>
   </table>
+  <table name="attachments">
+    <field name="attachment_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="orig_name" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="file_name" type="C" size="30">
+      <NOTNULL/>
+    </field>
+    <field name="file_type" type="C" size="50">
+      <NOTNULL/>
+    </field>
+    <field name="file_size" type="I" size="20">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="added_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_attachments">
+      <col>task_id</col>
+      <col>comment_id</col>
+    </index>
+  </table>
 </schema>

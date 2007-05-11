@@ -23,7 +23,7 @@ function get_events($task_id, $where = '')
                       lr.resolution_name,
                       c.date_added AS c_date_added,
                       c.user_id AS c_user_id,
-                      att.orig_name, att.file_desc
+                      att.orig_name
 
                 FROM  {history} h
 
@@ -191,9 +191,6 @@ function event_description($history) {
             $return .= eL('attachmentadded');
             if ($history['orig_name']) {
                  $return .= ": <a href=\"{$baseurl}?getfile=" . intval($new_value) . '">' . "{$history['orig_name']}</a>";
-                 if ($history['file_desc'] != '') {
-                      $return .= " ({$history['file_desc']})";
-                 }
             }
             break;
     case '8':    //Attachment deleted

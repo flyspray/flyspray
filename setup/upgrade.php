@@ -130,7 +130,7 @@ function execute_upgrade_file($folder, $installed_version)
             $schema = new adoSchema($db->dblink);
             $schema->SetPrefix($conf['database']['dbprefix']);
             $schema->ParseSchemaFile($upgrade_path . '/' . $file);
-            $schema->ExecuteSchema();
+            $schema->ExecuteSchema(null, true);
         }
     }
 

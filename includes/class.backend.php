@@ -352,13 +352,13 @@ class Backend
             $db->Query("INSERT INTO  {attachments}
                                      ( task_id, comment_id, file_name,
                                        file_type, file_size, orig_name,
-                                       added_by, date_added, file_desc )
-                             VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                       added_by, date_added)
+                             VALUES  (?, ?, ?, ?, ?, ?, ?, ?)",
                     array($task_id, $comment_id, $fname,
                         $_FILES[$source]['type'][$key],
                         $_FILES[$source]['size'][$key],
                         $_FILES[$source]['name'][$key],
-                        $user->id, time(), ''));
+                        $user->id, time()));
 
             // Fetch the attachment id for the history log
             $result = $db->Query('SELECT  attachment_id
