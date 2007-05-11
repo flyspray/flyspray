@@ -76,13 +76,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="orig_name" type="C" size="100">
+    <field name="orig_name" type="C" size="255">
       <NOTNULL/>
     </field>
     <field name="file_name" type="C" size="30">
-      <NOTNULL/>
-    </field>
-    <field name="file_desc" type="C" size="100">
       <NOTNULL/>
     </field>
     <field name="file_type" type="C" size="50">
