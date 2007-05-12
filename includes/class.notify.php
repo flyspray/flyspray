@@ -221,11 +221,11 @@ class Notifications {
 
       return true;
    } // }}}
-   // {{{ Send email  
+   // {{{ Send email
    function SendEmail($to, $subject, $body, $task_id)
    {
        global $fs, $proj, $user;
-       
+
        if (empty($to) || empty($to[0])) {
          return;
       }
@@ -245,12 +245,12 @@ class Notifications {
             Swift_ClassLoader::load('Swift_Connection_NativeMail');
             $swiftconn =& new Swift_Connection_NativeMail();
       }
-      
+
       $swift =& new Swift($swiftconn);
-      
+
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
-      
+
       $message =& new Swift_Message($subject, $body);
       $message->headers->setCharset('utf-8');
       $message->headers->set('Precedence', 'list');
@@ -259,7 +259,7 @@ class Notifications {
       if ($proj->prefs['notify_reply']) {
             $message->setReplyTo($proj->prefs['notify_reply']);
       }
-      
+
       if($task_id) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = sprintf('<FS%d@%s>', $task_id, $hostdata['host']);
@@ -269,9 +269,9 @@ class Notifications {
       }
           $recipients =& new Swift_RecipientList();
           // now accepts string , array or Swift_Address.
-          $recipients->addTo($to);  
-          
-          return (bool) $swift->batchsend($message, $recipients, 
+          $recipients->addTo($to);
+
+          return (bool) $swift->batchsend($message, $recipients,
                               new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
 
    } //}}}
@@ -320,14 +320,15 @@ class Notifications {
       );
 
       // Generate the nofication message
+      if (!$proj->prefs['notify_subject']) {
+          $proj->prefs['notify_subject'] = '[%p][#%t] %s';
+      }
       if ($type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
           $subject = L('notifyfromfs');
-      } else if ($proj->prefs['notify_subject']) {
+      } else {
           $subject = str_replace(array('%p','%s','%t', '%a'),
                                     array($proj->prefs['project_title'], $task_details['item_summary'], $task_id, $notify_type_msg[$type]),
                                     $proj->prefs['notify_subject']);
-      } else {
-          $subject = L('notifyfrom') . $proj->prefs['project_title'];
       }
 
       $subject = strtr($subject, "\r\n", '');

@@ -14,7 +14,7 @@
 						<td align="center">
 							{!$daemonise}
 						</td>
-					</tr>					
+					</tr>
 					<?php endif; ?>
 				</table>
 				<p>
@@ -26,8 +26,8 @@
 
 				<p>
 				 2) The <strong>Reminder Daemon</strong>.
-				 Starting with the 0.9.8 release, {$product_name} has a background daemon to regularly trigger 
-				 the scheduled reminders script and background notifications. 
+				 Starting with the 0.9.8 release, {$product_name} has a background daemon. This is required for Jabber notifications, reminders
+                 and other scheduled actions which will added to Flyspray in the future.
 				</p>
 
 				<input type="hidden" name="db_type" value="{$db_type}" />

@@ -27,7 +27,7 @@ if(!isset($borked[-1])) {
 
 if(substr(php_sapi_name(), 0, 3) == 'cgi' && ! ini_get('cgi.fix_pathinfo')) {
 
-    die("You are using cgi or fastcgi and you have not set cgi.fix_pathinfo=1 in php.ini. 
+    die("You are using cgi or fastcgi and you have not set cgi.fix_pathinfo=1 in php.ini.
          Flyspray cannot work properly without cgi.fix_pathinfo enabled, please update your configuration");
 }
 
@@ -276,7 +276,7 @@ class Setup extends Flyspray
                                     'db_password' => $this->GetParamValue($data, 'db_password', ''),
                                     'db_name' => $this->GetParamValue($data, 'db_name', ''),
                                     'db_prefix' => $this->GetParamValue($data, 'db_prefix', ''),
-									'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '1')),
+									'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '0')),
                                  ),
                      ),
 
