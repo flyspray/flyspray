@@ -938,13 +938,13 @@ class Backend
             $from   .= ' LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
-        if (array_get($args, 'changedfrom') || array_get($args, 'changedto') || in_array('lastedit', $visible)) {
-            $from   .= ' LEFT JOIN  {history} h         ON t.task_id = h.task_id ';
-            $select .= ' MAX(h.event_date)              AS event_date, ';
-        }
-        if (array_get($args, 'search_in_comments') || in_array('comments', $visible)) {
+        if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || in_array('lastedit', $visible)) {
             $from   .= ' LEFT JOIN  {comments} c        ON t.task_id = c.task_id ';
             $select .= ' COUNT(DISTINCT c.comment_id)   AS num_comments, ';
+            if (in_array('lastedit', $visible)) {
+                $select .= ' MAX(c.date_added) AS la1, MAX(c.last_edited_time) AS la2, MAX(t.last_edited_time) AS la3,
+                             MAX(t.date_opened) AS la4, MAX(t.date_closed) AS la5, ';
+            }
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
@@ -1098,7 +1098,7 @@ class Backend
         }
         /// }}}
 
-        $dates = array('duedate' => 'due_date', 'changed' => 'event_date',
+        $dates = array('duedate' => 'due_date', 'changed' => 't.last_edited_time',
                        'opened' => 'date_opened', 'closed' => 'date_closed');
         foreach ($dates as $post => $db_key) {
             if ($date = array_get($args, $post . 'from')) {
