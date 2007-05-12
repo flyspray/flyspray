@@ -95,7 +95,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'status'     => 'status_name',
             'openedby'   => 'opened_by_name',
             'assignedto' => 'assigned_to_name',
-            'lastedit'   => '',
+            'lastedit'   => 'max_date',
             'reportedin' => 'product_version',
             'dueversion' => 'closedby_version',
             'duedate'    => 'due_date',
@@ -133,7 +133,6 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 
         case 'lastedit':
-            $task[$indexes[$colname]] = max($task['la1'], $task['la2'], $task['la3'], $task['la4'], $task['la5']);
         case 'duedate':
         case 'dateopened':
         case 'dateclosed':

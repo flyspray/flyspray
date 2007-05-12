@@ -941,9 +941,13 @@ class Backend
         if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || in_array('lastedit', $visible)) {
             $from   .= ' LEFT JOIN  {comments} c        ON t.task_id = c.task_id ';
             $select .= ' COUNT(DISTINCT c.comment_id)   AS num_comments, ';
+            // in other words: max(c.date_added, t.date_closed, t.date_opened, t.last_edited_time)
             if (in_array('lastedit', $visible)) {
-                $select .= ' MAX(c.date_added) AS la1, MAX(c.last_edited_time) AS la2, MAX(t.last_edited_time) AS la3,
-                             MAX(t.date_opened) AS la4, MAX(t.date_closed) AS la5, t.last_edited_time, ';
+                $select .= ' CASE WHEN c.date_added>t.date_closed THEN
+                                CASE WHEN c.date_added>t.date_opened THEN CASE WHEN c.date_added > t.last_edited_time THEN c.date_added ELSE t.last_edited_time END ELSE
+                                    CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END ELSE
+                                CASE WHEN t.date_closed>t.date_opened THEN CASE WHEN t.date_closed > t.last_edited_time THEN t.date_closed ELSE t.last_edited_time END ELSE
+                                    CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END END AS max_date, ';
             }
         }
         if (in_array('reportedin', $visible)) {
@@ -1008,7 +1012,7 @@ class Backend
                 'dueversion'   => 'lvc.list_position',
                 'duedate'      => 'due_date',
                 'progress'     => 'percent_complete',
-                'lastedit'     => 't.last_edited_time',
+                'lastedit'     => 'max_date',
                 'priority'     => 'task_priority',
                 'openedby'     => 'uo.real_name',
                 'reportedin'   => 't.product_version',
@@ -1097,17 +1101,16 @@ class Backend
             if ($temp) $where[] = '(' . substr($temp, 0, -3) . ')';
         }
         /// }}}
-
-        $dates = array('duedate' => 'due_date', 'changed' => 't.last_edited_time',
+        $having = array();
+        $dates = array('duedate' => 'due_date', 'changed' => 'max_date',
                        'opened' => 'date_opened', 'closed' => 'date_closed');
         foreach ($dates as $post => $db_key) {
+            $var = ($post == 'changed') ? 'having' : 'where';
             if ($date = array_get($args, $post . 'from')) {
-                $where[]      = '(' . $db_key . ' >= ?)';
-                $sql_params[] = Flyspray::strtotime($date);
+                ${$var}[]      = '(' . $db_key . ' >= ' . Flyspray::strtotime($date) . ')';
             }
             if ($date = array_get($args, $post . 'to')) {
-                $where[]      = '(' . $db_key . ' <= ? AND ' . $db_key . ' > 0)';
-                $sql_params[] = Flyspray::strtotime($date);
+                ${$var}[]      = '(' . $db_key . ' <= ' . Flyspray::strtotime($date) . ' AND ' . $db_key . ' > 0)';
             }
         }
 
@@ -1146,6 +1149,7 @@ class Backend
              $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name,{$order_column[0]},{$order_column[1]}, lr.resolution_name, ";
         }
         $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
+        $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
         $sql = $db->Query("
                           SELECT   t.*, $select
@@ -1156,6 +1160,7 @@ class Backend
                           FROM     $from
                           $where
                           GROUP BY $groupby
+                          $having
                           ORDER BY $sortorder", $sql_params);
 
         $tasks = $db->fetchAllArray($sql);
