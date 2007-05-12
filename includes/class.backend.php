@@ -943,7 +943,7 @@ class Backend
             $select .= ' COUNT(DISTINCT c.comment_id)   AS num_comments, ';
             if (in_array('lastedit', $visible)) {
                 $select .= ' MAX(c.date_added) AS la1, MAX(c.last_edited_time) AS la2, MAX(t.last_edited_time) AS la3,
-                             MAX(t.date_opened) AS la4, MAX(t.date_closed) AS la5, ';
+                             MAX(t.date_opened) AS la4, MAX(t.date_closed) AS la5, t.last_edited_time, ';
             }
         }
         if (in_array('reportedin', $visible)) {
@@ -1008,7 +1008,7 @@ class Backend
                 'dueversion'   => 'lvc.list_position',
                 'duedate'      => 'due_date',
                 'progress'     => 'percent_complete',
-                'lastedit'     => 'event_date',
+                'lastedit'     => 't.last_edited_time',
                 'priority'     => 'task_priority',
                 'openedby'     => 'uo.real_name',
                 'reportedin'   => 't.product_version',

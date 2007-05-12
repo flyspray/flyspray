@@ -10,10 +10,6 @@
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
-// @version SVN $Id$
-//
-// this translation was last updated by Ceesjan Luiten on 09/15/2006
-//
 $translation = array(
 'edituser'                => 'Bewerk gebruiker',
 'username'                => 'Gebruikersnaam',
@@ -766,9 +762,12 @@ $translation = array(
 'error5'                  => 'Die gebruiker bestaat niet.',
 'error6'                  => 'Ongeldig beheerdersgebied.',
 'error7'                  => 'Inloggen mislukt, verkeerde gebruikersnaam of wachtwoord.',
+'error71'                 => 'Account voor %d minuten bevroren omdat er te veel mislukte inlogpogingen gedaan zijn.',
 'error8'                  => 'U moet zowel een gebruikersnaam als een wachtwoord opgeven.',
 'error9'                  => 'Onbekende taak, of u heeft niet genoeg rechten om de taak te bekijken.',
 'error10'                 => 'Onbekende taak, of u heeft niet genoeg rechten om de taak te bekijken.',
+'error101'                => 'U heeft niet genoeg rechten om deze taak te bekijken.',
+'error102'                => 'U heeft niet genoeg rechten op deze taak te bekijken, wellicht helpt het om in te loggen.',
 'error11'                 => 'U heeft geen toestemming om het commentaar te bewerken.',
 'error12'                 => 'Dit is een ongeldige magische sleutel! Weet u zeker dat deze sleutel in uw notificatiebericht stond?',
 'error13'                 => 'Anonieme gebruikers hebben geen profiel.',
@@ -803,8 +802,20 @@ $translation = array(
 'ordertip'                => 'Op welke manier items geordend worden',
 'showtip'                 => 'Toon dit item in de lijst',
 'deletetip'               => 'Verwijder dit item van de lijst',
-'csvexport'               => 'CSV-uitvoer',
 'del'                     => 'Verwijder',
+'request1'                => 'Er is een verzoek gedaan om een taak te sluiten.',
+'request2'                => 'Er is een verzoek gedaan om een taak te heropenen.',
+'allpriorities'           => 'Alle prioriteiten',
+'noroadmap'               => 'Geen planning beschikbaar, omdat er geen toekomstige versies bestaan binnen dit project.',
+'expand'                  => 'Uitklappen',
+'collapse'                => 'Inklappen',
+'expandall'               => 'Alles uitklappen',
+'collapseall'             => 'Alles inklappen',
+'minpwsize'               => 'Minimale wachtwoordlengte is 5 karakters',
+'passwordtoosmall'        => 'Wachtwoordlength is te klein',
+'accountwaslocked'        => 'Uw account is uitgeschakeld, omdat er te veel mislukte inlogpogingen gedaan zijn.',
+'failedattempts'          => 'Er hebben %d mislukte inlogpogingen plaatsgevonden.',
+'groupnotexist'           => 'Geselecteerde groep bestaat niet in dit project.',
 );
 
 ?>
