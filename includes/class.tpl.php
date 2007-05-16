@@ -720,30 +720,30 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         }
     } else {
         if ($type == 'edittask') {
-            $url .= '?do=details';
+            $url .= 'index.php?do=details';
         } else {
-            $url .= '?do=' . $type;
+            $url .= 'index.php?do=' . $type;
         }
 
         switch ($type) {
             case 'admin':     $return = $url . '&area=' . $arg1; break;
             case 'edittask':  $return = $url . '&task_id=' . $arg1 . '&edit=yep'; break;
             case 'pm':        $return = $url . '&area=' . $arg1 . '&project=' . $arg2; break;
-            case 'user':      $return = $baseurl . '?do=user&area=users&id=' . $arg1; break;
-            case 'edituser':  $return = $baseurl . '?do=admin&area=users&user_id=' . $arg1; break;
-            case 'logout':    $return = $baseurl . '?do=authenticate&logout=1'; break;
+            case 'user':      $return = $baseurl . 'index.php?do=user&area=users&id=' . $arg1; break;
+            case 'edituser':  $return = $baseurl . 'index.php?do=admin&area=users&user_id=' . $arg1; break;
+            case 'logout':    $return = $baseurl . 'index.php?do=authenticate&logout=1'; break;
 
             case 'details':
             case 'depends':   $return = $url . '&task_id=' . $arg1; break;
 
-            case 'project':   $return = $baseurl . '?project=' . $arg1; break;
+            case 'project':   $return = $baseurl . 'index.php?project=' . $arg1; break;
 
             case 'roadmap':
             case 'toplevel':
             case 'index':
             case 'newtask':   $return = $url . '&project=' . $arg1; break;
 
-            case 'editgroup': $return = $baseurl . '?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
+            case 'editgroup': $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
 
             case 'lostpw':
             case 'myprofile':

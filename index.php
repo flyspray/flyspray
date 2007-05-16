@@ -159,7 +159,7 @@ $page->setTheme($proj->prefs['theme_style']);
 $page->render();
 
 // remove dupe data on error, since no submission happened
-if (isset($_SESSION['ERROR'])) {
+if (isset($_SESSION['ERROR']) && isset($_SESSION['requests_hash'])) {
     $currentrequest = md5(serialize($_POST));
     unset($_SESSION['requests_hash'][$currentrequest]);
 }
