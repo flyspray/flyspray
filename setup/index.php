@@ -995,6 +995,7 @@ class Setup extends Flyspray
       $this->mXmlSchema->ParseSchema($sql_file);
 
       $this->mXmlSchema->ExecuteSchema();
+      $this->mDbConnection->Execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
 
       if (($error_no = $this->mDbConnection->MetaError()))
       {
