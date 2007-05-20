@@ -603,7 +603,7 @@ Regards,',
 'feeddescription'         => 'Feed description',
 'feedimgurl'              => 'Feed image URL (leave blank for no image)',
 'notifysubject'           => 'Subject for notifications',
-'notifysubjectinfo'       => '(%p = project title, %s = task summary, %t = task id, %a = action)',
+'notifysubjectinfo'       => '(%p = project title, %s = task summary, %t = task id, %a = action, %u = user)',
 'priority6'               => 'Flash',
 'priority5'               => 'Immediate',
 'priority4'               => 'Urgent',
@@ -821,6 +821,7 @@ Regards,',
 'accountwaslocked'        => 'Your account had been locked due to too many failed login attempts.',
 'failedattempts'          => 'There were %d failed login attempts.',
 'groupnotexist'           => 'Selected group does not exist in this project.',
+'searchindetails'         => 'Search details',
 );
 
 ?>

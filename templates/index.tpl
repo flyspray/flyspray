@@ -42,6 +42,9 @@
         {!tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic')}
         <label class="left" for="sic">{L('searchcomments')}</label>
 
+        {!tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details')}
+        <label class="left" for="search_in_details">{L('searchindetails')}</label>
+
         {!tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa')}
         <label class="left" for="sfa">{L('searchforall')}</label>
 

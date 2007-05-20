@@ -1120,14 +1120,20 @@ class Backend
             $where_temp = array();
 
             if (array_get($args, 'search_in_comments')) {
-                $comments = 'OR c.comment_text LIKE ?';
+                $comments .= 'OR c.comment_text LIKE ?';
+            }
+            if (array_get($args, 'search_in_details')) {
+                $comments .= 'OR t.detailed_desc LIKE ?';
             }
 
             foreach ($words as $word) {
                 $word = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary LIKE ? OR t.detailed_desc LIKE ? OR t.task_id LIKE ? $comments)";
-                array_push($sql_params, $word, $word, $word);
+                $where_temp[] = "(t.item_summary LIKE ? OR t.task_id LIKE ? $comments)";
+                array_push($sql_params, $word, $word);
                 if (array_get($args, 'search_in_comments')) {
+                    array_push($sql_params, $word);
+                }
+                if (array_get($args, 'search_in_details')) {
                     array_push($sql_params, $word);
                 }
             }
