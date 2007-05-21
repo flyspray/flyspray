@@ -223,6 +223,8 @@ class ConfUpdater
         $this->new_config = parse_ini_file($upgrade_path . '/flyspray.conf.php', true);
         // Now we overwrite all values of the *default* file if there is one in the existing config
         array_walk($this->new_config, array($this, '_merge_configs'));
+        // save custom attachment definitions
+        $this->new_config['attachments'] = $this->old_config['attachments'];
 
         $this->_write_config($location);
     }
