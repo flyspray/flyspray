@@ -1,5 +1,7 @@
 [defaultupgrade]
 1="update_users.xml"
+2="lowercase_emails.php"
+
 
 [develupgrade]
 1="update_users.xml"

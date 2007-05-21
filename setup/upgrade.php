@@ -59,6 +59,9 @@ $fs = new Flyspray();
 define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
 define('UPGRADE_VERSION', Flyspray::base_version($fs->version));
 
+define('DOMAIN_HASH', md5($_SERVER['SERVER_NAME'] . (int) $_SERVER['SERVER_PORT']));
+define('CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . DOMAIN_HASH);
+
 // Get installed version
 $sql = $db->Query('SELECT pref_value FROM {prefs} WHERE pref_name = ?', array('fs_ver'));
 $installed_version = $db->FetchOne($sql);
@@ -66,6 +69,10 @@ $installed_version = $db->FetchOne($sql);
 $page = new Tpl;
 $page->assign('title', 'Upgrade ');
 $page->assign('short_version', UPGRADE_VERSION);
+
+//cleanup 
+//the cache dir
+@rmdirr(sprintf('%s/cache/dokuwiki', APPLICATION_PATH));
 
 // ---------------------------------------------------------------------
 // Now the hard work
@@ -156,6 +163,45 @@ function execute_upgrade_file($folder, $installed_version)
     $page->assign('done', true);
 }
 
+ /**
+  * Delete a file, or a folder and its contents
+  *
+  * @author      Aidan Lister <aidan@php.net>
+  * @version     1.0.3
+  * @link        http://aidanlister.com/repos/v/function.rmdirr.php
+  * @param       string   $dirname    Directory to delete
+  * @return      bool     Returns TRUE on success, FALSE on failure
+  * @license     Public Domain.
+  */
+
+ function rmdirr($dirname)
+ {
+     // Sanity check
+     if (!file_exists($dirname)) {
+         return false;
+     }
+  
+     // Simple delete for a file
+     if (is_file($dirname) || is_link($dirname)) {
+         return unlink($dirname);
+     }
+  
+     // Loop through the folder
+     $dir = dir($dirname);
+     while (false !== $entry = $dir->read()) {
+         // Skip pointers
+         if ($entry == '.' || $entry == '..') {
+             continue;
+         }
+           // Recurse
+        rmdirr($dirname . DIRECTORY_SEPARATOR . $entry);
+     }
+     // Clean up
+     $dir->close();
+     return rmdir($dirname);
+ }
+  
+
 class ConfUpdater
 {
     var $old_config = array();
@@ -203,6 +249,10 @@ class ConfUpdater
 
                 $settings[$key] = 'mysqli';
             }
+            //no matter what, change the randomization key on each upgrade as an extra security improvement.
+            if($key === 'cookiesalt') {
+               $settings[$key] = md5(uniqid(mt_rand(), true));
+            }
         }
     }
 
@@ -217,7 +267,7 @@ class ConfUpdater
         foreach ($this->new_config as $group => $settings) {
             $new_config .= "[{$group}]\n";
             foreach ($settings as $key => $value) {
-                $new_config .= $key . '="' . str_replace('"', '\"', $value) . '"' . "\n";
+                $new_config .= sprintf('%s="%s"', $key, addslashes($value)). "\n";
             }
             $new_config .= "\n";
         }

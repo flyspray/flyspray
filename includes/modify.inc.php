@@ -31,7 +31,9 @@ if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
 
-unset($_SESSION['SUCCESS'], $_SESSION['ERROR']);
+if(isset($_SESSION)) {
+    unset($_SESSION['SUCCESS'], $_SESSION['ERROR']);
+}
 
 switch ($action = Req::val('action'))
 {
@@ -256,8 +258,8 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $email =  Post::val('email_address');
-        $jabber_id = Post::val('jabber_id');
+        $email =  strtolower(Post::val('email_address'));
+        $jabber_id = strtolower(Post::val('jabber_id'));
 
         //email is mandatory
         if (!$email || !Flyspray::check_email($email)) {
@@ -314,11 +316,11 @@ switch ($action = Req::val('action'))
 
         //send the email first.
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-                           Post::val('email_address'), NOTIFY_EMAIL)) {
+                           $email, NOTIFY_EMAIL)) {
 
             //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,
-                        Post::val('email_address'), Post::val('jabber_id'),
+                        $email, $jabber_id,
                         Post::num('notify_type'), $magic_url, Post::num('time_zone'));
             // Insert everything into the database
             $query = $db->Query("INSERT INTO  {registrations}

@@ -158,12 +158,13 @@ $page->pushTpl('footer.tpl');
 $page->setTheme($proj->prefs['theme_style']);
 $page->render();
 
+if(isset($_SESSION)) {
 // remove dupe data on error, since no submission happened
-if (isset($_SESSION['ERROR']) && isset($_SESSION['requests_hash'])) {
-    $currentrequest = md5(serialize($_POST));
-    unset($_SESSION['requests_hash'][$currentrequest]);
+    if (isset($_SESSION['ERROR']) && isset($_SESSION['requests_hash'])) {
+        $currentrequest = md5(serialize($_POST));
+        unset($_SESSION['requests_hash'][$currentrequest]);
+    }
+    unset($_SESSION['ERROR'], $_SESSION['SUCCESS']);
 }
-
-unset($_SESSION['ERROR'], $_SESSION['SUCCESS']);
 
 ?>

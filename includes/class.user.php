@@ -151,10 +151,9 @@ class User
         if ($this->isAnon()) {
             return;
         }
-        
-        if (Cookie::val('flyspray_passhash') !=
-                crypt($this->infos['user_pass'], $conf['general']['cookiesalt'])
-                || !$this->infos['account_enabled']
+        $saltedpass = md5($this->infos['user_pass'] . $conf['general']['cookiesalt']);
+
+        if (Cookie::val('flyspray_passhash') !== $saltedpass || !$this->infos['account_enabled']
                 || !$this->perms('group_open', 0))
         {
             Flyspray::setcookie('flyspray_userid',   '', time()-60);

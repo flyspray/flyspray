@@ -996,7 +996,7 @@ class Flyspray
 
         } elseif(function_exists('mime_content_type')) {
 
-            $type = mime_content_type($fname);
+            $type = @mime_content_type($fname);
         // I hope we don't have to...
         } elseif(!FlySpray::function_disabled('exec') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
                  && php_uname('s') !== 'SunOS') {

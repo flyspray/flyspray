@@ -134,7 +134,7 @@ class Setup extends Flyspray
       // In case it is flyspray.conf.php, the file does not exist
       // so we can't tell that it is writeable. So we attempt to create an empty one
       if ($path == 'flyspray.conf.php') {
-        $fp = @fopen($file, 'w');
+        $fp = @fopen($file, 'wb');
         @fclose($fp);
       }
       // Let's try at least...
@@ -773,7 +773,7 @@ class Setup extends Flyspray
       $config_intro	= str_replace("\t", "", $config_intro);
 
       // Create a random cookie salt
-      $cookiesalt = substr(md5(uniqid(rand(), true)), 0, 4);
+      $cookiesalt = md5(uniqid(mt_rand(), true));
 
 	  // check to see if to enable the Reminder Daemon.
       $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
@@ -793,7 +793,7 @@ class Setup extends Flyspray
       $config[] = '[general]';
       $config[] = "cookiesalt = \"$cookiesalt\"			; Randomisation value for cookie encoding";
       $config[] = 'output_buffering = "on"				; Available options: "on" or "gzip"';
-      $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\"";
+      $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\" (Deprecated, do not change the default)";
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
       $config[] = "dot_public = \"http://public.research.att.com/~north/cgi-bin/webdot/webdot.cgi\" ; URL to a public dot server";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";

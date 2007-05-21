@@ -467,7 +467,7 @@ class Backend
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone)
                      VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, $jabber_id, '', $email, $notify_type, time(), $time_zone));
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone));
 
         // Get this user's id for the record
         $uid = Flyspray::username_to_id($user_name);
