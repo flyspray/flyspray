@@ -327,8 +327,9 @@ class Notifications {
           $subject = L('notifyfromfs');
       } else {
           $subject = str_replace(array('%p','%s','%t', '%a', '%u'),
-                                    array($proj->prefs['project_title'], $task_details['item_summary'], $task_id, $notify_type_msg[$type]),
-                                    $proj->prefs['notify_subject'], $user->infos['user_name']);
+                                 array($proj->prefs['project_title'], $task_details['item_summary'], $task_id, $notify_type_msg[$type],
+                                       $proj->prefs['notify_subject']),
+                                 $user->infos['user_name']);
       }
 
       $subject = strtr($subject, "\r\n", '');
