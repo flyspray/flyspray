@@ -326,10 +326,12 @@ class Notifications {
       if ($type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
           $subject = L('notifyfromfs');
       } else {
-          $subject = str_replace(array('%p','%s','%t', '%a', '%u'),
-                                 array($proj->prefs['project_title'], $task_details['item_summary'], $task_id, $notify_type_msg[$type],
-                                       $proj->prefs['notify_subject']),
-                                 $user->infos['user_name']);
+          $subject = strtr($proj->prefs['notify_subject'],
+                          array('%p' => $proj->prefs['project_title'],
+                                '%s' => $task_details['item_summary'], 
+                                '%t' => $task_id,
+                                '%a' => $notify_type_msg[$type],
+                                '%u' => $user->infos['user_name']));
       }
 
       $subject = strtr($subject, "\r\n", '');
