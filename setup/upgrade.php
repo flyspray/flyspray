@@ -70,7 +70,7 @@ $page = new Tpl;
 $page->assign('title', 'Upgrade ');
 $page->assign('short_version', UPGRADE_VERSION);
 
-//cleanup 
+//cleanup
 //the cache dir
 @rmdirr(sprintf('%s/cache/dokuwiki', APPLICATION_PATH));
 
@@ -135,8 +135,9 @@ function execute_upgrade_file($folder, $installed_version)
 
         if (substr($file, -4) == '.xml') {
             $schema = new adoSchema($db->dblink);
-            $schema->SetPrefix($conf['database']['dbprefix']);
-            $schema->ParseSchemaFile($upgrade_path . '/' . $file);
+            $xml = file_get_contents($upgrade_path . '/' . $file);
+            $xml = str_replace('<table name="', '<table name="' . $conf['database']['dbprefix'], $xml);
+            $schema->ParseSchemaString($xml);
             $schema->ExecuteSchema(null, true);
         }
     }
@@ -180,12 +181,12 @@ function execute_upgrade_file($folder, $installed_version)
      if (!file_exists($dirname)) {
          return false;
      }
-  
+
      // Simple delete for a file
      if (is_file($dirname) || is_link($dirname)) {
          return unlink($dirname);
      }
-  
+
      // Loop through the folder
      $dir = dir($dirname);
      while (false !== $entry = $dir->read()) {
@@ -200,7 +201,7 @@ function execute_upgrade_file($folder, $installed_version)
      $dir->close();
      return rmdir($dirname);
  }
-  
+
 
 class ConfUpdater
 {

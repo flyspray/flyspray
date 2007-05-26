@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    var $version = '0.9.9.2 dev';
+    var $version = '0.9.9.3 dev';
 
     /**
      * Flyspray preferences
