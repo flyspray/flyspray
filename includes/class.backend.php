@@ -366,7 +366,7 @@ class Backend
                                    WHERE  task_id = ?
                                 ORDER BY  attachment_id DESC',
                     array($task_id), 1);
-            Flyspray::logEvent($task_id, 7, $db->fetchOne($result));
+            Flyspray::logEvent($task_id, 7, $db->fetchOne($result), $_FILES[$source]['name'][$key]);
         }
 
         return $res;
@@ -780,8 +780,6 @@ class Backend
         // Log that the task was opened
         Flyspray::logEvent($task_id, 1);
 
-        Backend::upload_files($task_id);
-
         $result = $db->Query('SELECT  *
                                 FROM  {list_category}
                                WHERE  category_id = ?',
@@ -825,7 +823,11 @@ class Backend
         }
 
         // Create the Notification
-        $notify->Create(NOTIFY_TASK_OPENED, $task_id);
+        if (Backend::upload_files($task_id)) {
+            $notify->Create(NOTIFY_TASK_OPENED, $task_id, 'files');
+        } else {
+            $notify->Create(NOTIFY_TASK_OPENED, $task_id);
+        }
 
         // If the reporter wanted to be added to the notification list
         if (isset($args['notifyme']) && $args['notifyme'] == '1' && $user->id != $owner) {

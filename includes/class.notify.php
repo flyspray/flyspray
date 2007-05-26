@@ -328,7 +328,7 @@ class Notifications {
       } else {
           $subject = strtr($proj->prefs['notify_subject'],
                           array('%p' => $proj->prefs['project_title'],
-                                '%s' => $task_details['item_summary'], 
+                                '%s' => $task_details['item_summary'],
                                 '%t' => $task_id,
                                 '%a' => $notify_type_msg[$type],
                                 '%u' => $user->infos['user_name']));
@@ -381,7 +381,14 @@ class Notifications {
          $body .= L('dueinversion') . ' - ' . $task_details['due_in_version_name'] . "\r\n";
          $body .= L('duedate') . ' - ' . $due_date . "\r\n";
          $body .= L('details') . ' - ' . $task_details['detailed_desc'] . "\r\n\r\n";
+
+         if ($arg1 == 'files') {
+            $body .= L('fileaddedtoo') . "\r\n\r\n";
+            $subject .= ' (' . L('attachmentadded') . ')';
+         }
+
          $body .= L('moreinfo') . "\r\n";
+
          $body .= CreateURL('details', $task_id) . "\r\n\r\n";
       } // }}}
       // {{{ Task details changed
@@ -495,6 +502,7 @@ class Notifications {
 
          if ($arg1 == 'files') {
             $body .= L('fileaddedtoo') . "\r\n\r\n";
+            $subject .= ' (' . L('attachmentadded') . ')';
          }
 
          $body .= L('moreinfo') . "\r\n";
