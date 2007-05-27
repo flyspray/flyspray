@@ -125,6 +125,7 @@ class Notifications {
                            $fs->prefs['jabber_password'],
                            $fs->prefs['jabber_ssl'],
                            $fs->prefs['jabber_port']);
+      $JABBER->login();
 
 
       // get listing of all pending jabber notifications

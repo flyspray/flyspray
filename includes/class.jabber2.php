@@ -8,25 +8,23 @@
  * @author: Florian Schmitz (floele)
  */
 
+define('SECURITY_NONE', 0);
+define('SECURITY_SSL', 1);
+define('SECURITY_TLS', 2);
+
 class Jabber
 {
     var $connection = null;
+    var $session = array();
     var $log = array();
     var $log_enabled = true;
     var $timeout = 10;
-    var $ssl = false;
-    var $tls = false;
     var $user = '';
     var $password = '';
     var $server = '';
-    // ID of the XML stream
-    var $id = 0;
-    var $auth = false;
-    // Jabber ID (including resource) suggested by server
-    var $jid = null;
-    var $session_req = false;
+    var $features = array();
 
-    function Jabber($login, $password, $ssl = false, $port = 5222, $host = '')
+    function Jabber($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
     {
         // Can we use Jabber at all?
         // Note: Maybe replace with SimpleXML in the future
@@ -36,8 +34,8 @@ class Jabber
         }
 
         //bug in php 5.2.1 renders this stuff more or less useless.
-        if(version_compare(phpversion(), '5.2.1', '>=')) {
-            $this->log('Error: PHP ' . phpversion() . ' is incompatible with jabber notifications, see http://bugs.php.net/41236');
+        if (version_compare(phpversion(), '5.2.1', '>=') && $security != SECURITY_NONE) {
+            $this->log('Error: PHP ' . phpversion() . ' + SSL is incompatible with jabber, see http://bugs.php.net/41236');
             return false;
         }
 
@@ -49,25 +47,24 @@ class Jabber
         // Extract data from user@server.org
         list($username, $server) = explode('@', $login);
 
-        // Decide whether or not to use SSL
-        $ssl = ($ssl && Jabber::can_use_ssl());
-        $this->ssl      = $ssl;
-        $this->server   = $server;
-        $this->user     = $username;
-        $this->password = $password;
-        // Change port if we use SSL
-        if ($port == 5222 && $ssl) {
-            $port = 5223;
+        // Decide whether or not to use encryption
+        if ($security == SECURITY_SSL && !Jabber::can_use_ssl() || $security == SECURITY_TLS && !Jabber::can_use_tls()) {
+            $security = SECURITY_NONE;
         }
 
-        if ($this->open_socket( ($host != '') ? $host : $server, $port, $ssl)) {
+        $this->session['security'] = $security;
+        $this->server              = $server;
+        $this->user                = $username;
+        $this->password            = $password;
+
+        if ($this->open_socket( ($host != '') ? $host : $server, $port, $security == SECURITY_SSL)) {
             $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
 			$this->send("<stream:stream to='{$server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
         } else {
             return false;
         }
         // Now we listen what the server has to say...and give appropriate responses
-        $this->listen();
+        $this->response($this->listen());
     }
 
     /**
@@ -78,7 +75,7 @@ class Jabber
      */
     function send($xml)
     {
-        if (is_resource($this->connection) && !feof($this->connection)) {
+        if ($this->connected()) {
            $xml = trim($xml);
            $this->log('SEND: '. $xml);
            return fwrite($this->connection, $xml);
@@ -101,17 +98,21 @@ class Jabber
         if (function_exists("dns_get_record")) {
             $record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
             if (!empty($record)) {
-                $server = $record[0]["target"];
+                $server = $record[0]['target'];
             }
         } else {
-            $this->log('Warning: dns_get_record function not found . gtalk will not work');
+            $this->log('Warning: dns_get_record function not found. gtalk will not work.');
         }
 
         $server = $ssl ? 'ssl://' . $server : $server;
 
+        if ($ssl) {
+            $this->session['ssl'] = true;
+        }
+
         if ($this->connection = @fsockopen($server, $port, $errorno, $errorstr, $this->timeout)) {
             socket_set_blocking($this->connection, 0);
-            socket_set_timeout($this->connection, 31536000);
+            socket_set_timeout($this->connection, 60);
 
             return true;
         }
@@ -134,11 +135,14 @@ class Jabber
      * Listens to the connection until it gets data or the timeout is reached.
      * Thus, it should only be called if data is expected to be received.
      * @access public
-     * @return bool actually, the return value does not matter. the interesting part is what
-     *              Jabber::response() does with the received data.
+     * @return mixed either false for timeout or an array with the received data
      */
-    function listen()
+    function listen($timeout = 10, $wait = false)
     {
+        if (!$this->connected()) {
+            return false;
+        }
+
         // Wait for a response until timeout is reached
         $start = time();
         $data = '';
@@ -146,17 +150,101 @@ class Jabber
         do {
             $read = trim(fread($this->connection, 4096));
             $data .= $read;
-
-        } while (time() <= $start + 10 && ($data == '' || $read != ''));
+        } while (time() <= $start + $timeout && ($wait || $data == '' || $read != ''
+                                                 || (substr(rtrim($data), -1) != '>')));
 
         if ($data != '') {
-            // do a response
             $this->log('RECV: '. $data);
-            $this->response(Jabber::xmlize($data));
+            return Jabber::xmlize($data);
         } else {
             $this->log('Timeout, no response from server.');
             return false;
         }
+    }
+
+    /**
+     * Initiates login (using data from contructor)
+     * @access public
+     * @return bool
+     */
+    function login()
+    {
+        if (!count($this->features)) {
+            $this->log('Error: No feature information from server available.');
+            return false;
+        }
+
+        return $this->response($this->features);
+    }
+
+    /**
+     * Initiates account registration (based on data used for contructor)
+     * @access public
+     * @return bool
+     */
+    function register()
+    {
+        if (!isset($this->session['id']) || isset($this->session['jid'])) {
+            $this->log('Error: Cannot initiate registration.');
+            return false;
+        }
+
+        $this->send("<iq type='get' id='reg_1'>
+                       <query xmlns='jabber:iq:register'/>
+                     </iq>");
+        return $this->response($this->listen());
+    }
+
+    /**
+     * Initiates account un-registration (based on data used for contructor)
+     * @access public
+     * @return bool
+     */
+    function unregister()
+    {
+        if (!isset($this->session['id']) || !isset($this->session['jid'])) {
+            $this->log('Error: Cannot initiate un-registration.');
+            return false;
+        }
+
+        $this->send("<iq type='set' from='" . Jabber::jspecialchars($this->session['jid']) . "' id='unreg_1'>
+                       <query xmlns='jabber:iq:register'>
+                         <remove/>
+                       </query>
+                     </iq>");
+        return $this->response($this->listen(2)); // maybe we don't even get a response
+    }
+
+    /**
+     * Sets account presence. No additional info required (default is "online" status)
+     * @param $type dnd, away, chat, xa or nothing
+     * @param $message
+     * @param $unavailable set this to true if you want to become unavailable
+     * @access public
+     * @return bool
+     */
+    function presence($type = '', $message = '', $unavailable = false)
+    {
+        if (!isset($this->session['jid'])) {
+            $this->log('Error: Cannot set presence at this point.');
+            return false;
+        }
+
+        if (in_array($type, array('dnd', 'away', 'chat', 'xa'))) {
+            $type = '<show>'. $type .'</show>';
+        } else {
+            $type = '';
+        }
+
+        $unavailable = ($unavailable) ? " type='unavailable'" : '';
+        $message = ($message) ? '<status>' . Jabber::jspecialchars($message) .'</status>' : '';
+
+        $this->session['sent_presence'] = !$unavailable;
+
+        return $this->send("<presence$unavailable>" .
+                              $type .
+                              $message .
+                           '</presence>');
     }
 
     /**
@@ -167,41 +255,65 @@ class Jabber
      */
     function response($xml)
     {
+        if (!is_array($xml) || !count($xml)) {
+            return false;
+        }
+
+        // did we get multiple elements? do one after another
+        // array('message' => ..., 'presence' => ...)
+        if (count($xml) > 1) {
+            foreach ($xml as $key => $value) {
+                $this->response(array($key => $value));
+            }
+            return;
+        } else
+        // or even multiple elements of the same type?
+        // array('message' => array(0 => ..., 1 => ...))
+        if (count(reset($xml)) > 1) {
+            foreach (reset($xml) as $value) {
+                $this->response(array(key($xml) => array(0 => $value)));
+            }
+            return;
+        }
+
         switch (key($xml)) {
             case 'stream:stream':
                 // Connection initialised (or after authentication). Not much to do here...
-                $this->id = $xml["stream:stream"][0]['@']['id'];
+                $this->session['id'] = $xml['stream:stream'][0]['@']['id'];
                 if (isset($xml['stream:stream'][0]['#']['stream:features'])) {
                     // we already got all info we need
-                    $this->response($xml['stream:stream'][0]['#']);
+                    $this->features = $xml['stream:stream'][0]['#'];
                 } else {
-                    $this->listen();
+                    $this->features = $this->listen();
+                }
+
+                // go on with authentication?
+                if (isset($this->features['stream:features'][0]['#']['bind'])) {
+                    return $this->response($this->features);
                 }
                 break;
 
             case 'stream:features':
-                // Resource binding after successfull authentication
-                if ($this->auth) {
-                    if (isset($xml['stream:features'][0]['#']['session'])) {
-                        // a session is required
-                        $this->session_req = true;
-                    }
+                // Resource binding after successful authentication
+                if (isset($this->session['authenticated'])) {
+                    // session required?
+                    $this->session['sess_required'] = isset($xml['stream:features'][0]['#']['session']);
+
                     $this->send("<iq type='set' id='bind_1'>
                                     <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
                                         <resource>class.jabber2.php</resource>
                                     </bind>
                                  </iq>");
-                    $this->listen();
-                    break;
+                    return $this->response($this->listen());
                 }
                 // Let's use TLS if SSL is not enabled and we can actually use it
-                if (!$this->ssl && Jabber::can_use_tls() && isset($xml['stream:features'][0]['#']['starttls'])) {
+                if ($this->session['security'] == SECURITY_TLS && isset($xml['stream:features'][0]['#']['starttls'])) {
                     $this->log('Switching to TLS.');
-                    $this->Send("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>\n");
-                    $this->listen();
-                    return true;
+                    $this->send("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>\n");
+                    return $this->response($this->listen());
                 }
                 // Does the server support SASL authentication?
+
                 // I hope so, because we do (and no other method).
                 if (isset($xml['stream:features'][0]['#']['mechanisms'][0]['@']['xmlns']) &&
                     $xml['stream:features'][0]['#']['mechanisms'][0]['@']['xmlns'] == 'urn:ietf:params:xml:ns:xmpp-sasl') {
@@ -215,17 +327,22 @@ class Jabber
                     if (in_array('DIGEST-MD5', $methods)) {
                         $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='DIGEST-MD5'/>");
                     // we don't want to use this (neither does the server usually) if no encryption is in place
-                    } else if (in_array('PLAIN', $methods) && ($this->ssl || $this->tls)) {
+                    # http://www.xmpp.org/extensions/attic/jep-0078-1.7.html
+                    # The plaintext mechanism SHOULD NOT be used unless the underlying stream is encrypted (using SSL or TLS)
+                    # and the client has verified that the server certificate is signed by a trusted certificate authority.
+                    } else if (in_array('PLAIN', $methods) && (isset($this->session['ssl']) || isset($this->session['tls']))) {
                         $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>"
                                       . base64_encode(chr(0) . $this->user . '@' . $this->server . chr(0) . $this->password) .
                                     "</auth>");
+                    } else if (in_array('ANONYMOUS', $methods)) {
+                        $this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='ANONYMOUS'/>");
                     // not good...
                     } else {
                         $this->log('Error: No authentication method supported.');
                         $this->disconnect();
                         return false;
                     }
-                    $this->listen();
+                    return $this->response($this->listen());
 
                 } else {
                     // ok, this is it. bye.
@@ -237,7 +354,7 @@ class Jabber
 
             case 'challenge':
                 // continue with authentication...a challenge literally -_-
-                $decoded = base64_decode($xml['challenge'][0]['#'][0]);
+                $decoded = base64_decode($xml['challenge'][0]['#']);
                 $decoded = Jabber::parse_data($decoded);
                 if (!isset($decoded['digest-uri'])) {
                     $decoded['digest-uri'] = 'xmpp/'. $this->server;
@@ -251,7 +368,7 @@ class Jabber
                 }
                 $decoded['cnonce'] = base64_encode($str);
 
-                // second challenge
+                // second challenge?
                 if (isset($decoded['rspauth'])) {
                     $this->send("<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>");
                 } else {
@@ -271,8 +388,7 @@ class Jabber
                                  . "</response>");
                 }
 
-                $this->listen();
-                break;
+                return $this->response($this->listen());
 
             case 'failure':
                 $this->log('Error: Server sent "failure".');
@@ -288,75 +404,136 @@ class Jabber
                     return false;
                 }
                 socket_set_blocking($this->connection, $meta['blocked']);
-                $this->tls = true;
+                $this->session['tls'] = true;
                 // new stream
                 $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
                 $this->send("<stream:stream to='{$this->server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
 
-                $this->listen();
-                break;
+                return $this->response($this->listen());
 
             case 'success':
-                // Yay, authentication successfull.
+                // Yay, authentication successful.
                 $this->send("<stream:stream to='{$this->server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
-                $this->auth = true;
-                $this->listen(); // we have to wait for another response
-                break;
+                $this->session['authenticated'] = true;
+                return $this->response($this->listen()); // we have to wait for another response
 
             case 'iq':
+                // we are not interested in IQs we did not expect
+                if (!isset($xml['iq'][0]['@']['id'])) {
+                    return false;
+                }
                 // multiple possibilities here
                 switch ($xml['iq'][0]['@']['id'])
                 {
                     case 'bind_1':
-                        $this->jid = $xml['iq'][0]['#']['bind'][0]['#']['jid'][0]['#'];
+                        $this->session['jid'] = $xml['iq'][0]['#']['bind'][0]['#']['jid'][0]['#'];
                         // and (maybe) yet another request to be able to send messages *finally*
-                        if ($this->session_req) {
+                        if ($this->session['sess_required']) {
                             $this->send("<iq to='{$this->server}'
                                              type='set'
                                              id='sess_1'>
                                           <session xmlns='urn:ietf:params:xml:ns:xmpp-session'/>
                                         </iq>");
-                            $this->listen();
+                            return $this->response($this->listen());
                         }
-                        break;
+                        return true;
 
                     case 'sess_1':
-                        break;
+                        return true;
+
+                    case 'reg_1':
+                        $this->send("<iq type='set' id='reg_2'>
+                                       <query xmlns='jabber:iq:register'>
+                                         <username>" . Jabber::jspecialchars($this->user) . "</username>
+                                         <password>" . Jabber::jspecialchars($this->password) . "</password>
+                                       </query>
+                                     </iq>");
+                        return $this->response($this->listen());
+
+                    case 'reg_2':
+                        // registration end
+                        if (isset($xml['iq'][0]['#']['error'])) {
+                            $this->log('Warning: Registration failed.');
+                            return false;
+                        }
+                        return true;
+
+                    case 'unreg_1':
+                        return true;
 
                     default:
-                        $this->log('Received unexpected IQ.');
-                        break;
+                        $this->log('Notice: Received unexpected IQ.');
+                        return false;
                 }
+                break;
+
+            case 'message':
+                // we are only interested in content...
+                if (!isset($xml['message'][0]['#']['body'])) {
+                    return false;
+                }
+
+                $message['body'] = $xml['message'][0]['#']['body'][0]['#'];
+                $message['from'] = $xml['message'][0]['@']['from'];
+                if (isset($xml['message'][0]['#']['subject'])) {
+                    $message['subject'] = $xml['message'][0]['#']['subject'][0]['#'];
+                }
+                $this->session['messages'][] = $message;
                 break;
 
             default:
                 // hm...don't know this response
-                $this->log('Error: Unknown server response (' . key($xml) . ')');
-                break;
+                $this->log('Notice: Unknown server response (' . key($xml) . ')');
+                return false;
         }
     }
 
-    function send_message($to, $text, $subject = '', $type = 'normal') {
-        if (!$this->jid) {
+    function send_message($to, $text, $subject = '', $type = 'normal')
+    {
+        if (!isset($this->session['jid'])) {
             return false;
         }
 
-        return $this->send("<message from='" . Jabber::jspecialchars($this->jid) . "'
+        if (!in_array($type, array('chat', 'normal', 'error', 'groupchat', 'headline'))) {
+            $type = 'normal';
+        }
+
+        return $this->send("<message from='" . Jabber::jspecialchars($this->session['jid']) . "'
                                      to='" . Jabber::jspecialchars($to) . "'
-                                     xml:lang='en'
-                                     type='" . Jabber::jspecialchars($type) . "'
+                                     type='$type'
                                      id='" . uniqid('msg') . "'>
                               <subject>" . Jabber::jspecialchars($subject) . "</subject>
                               <body>" . Jabber::jspecialchars($text) . "</body>
                             </message>");
     }
 
+    function get_messages($waitfor = 3)
+    {
+        if (!isset($this->session['sent_presence']) || !$this->session['sent_presence']) {
+            $this->presence();
+        }
+
+        if ($waitfor > 0) {
+            $this->response($this->listen($waitfor, $wait = true)); // let's see if any messages fly in
+        }
+
+        return isset($this->session['messages']) ? $this->session['messages'] : array();
+    }
+
+    function connected()
+    {
+        return is_resource($this->connection) && !feof($this->connection);
+    }
+
     function disconnect()
     {
-        if (is_resource($this->connection) && !feof($this->connection)) {
-            $this->Send('</stream:stream>');
-            $this->auth = $this->session_req = $this->ssl = $this->tls = false;
-            $this->jid = null;
+        if ($this->connected()) {
+            // disconnect gracefully
+            if (isset($this->session['sent_presence'])) {
+                $this->presence('', 'offline', $unavailable = true);
+            }
+            $this->send('</stream:stream>');
+            $this->session = array();
             return fclose($this->connection);
         }
         return false;
@@ -387,16 +564,17 @@ class Jabber
             }
         }
 
+        $pack = md5($this->user . ':' . $data['realm'] . ':' . $this->password);
         if (isset($data['authzid'])) {
-            $a1 = pack('H32', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'] . ':' . $data['authzid'];
+            $a1 = pack('H32', $pack)  . sprintf(':%s:%s:%s', $data['nonce'], $data['cnonce'], $data['authzid']);
         } else {
-            $a1 = pack('H32', md5($this->user . ':' . $data['realm'] . ':' . $this->password))  . ':' . $data['nonce'] . ':' . $data['cnonce'];
+            $a1 = pack('H32', $pack)  . sprintf(':%s:%s', $data['nonce'], $data['cnonce']);
         }
 
         // should be: qop = auth
         $a2 = 'AUTHENTICATE:'. $data['digest-uri'];
 
-        return md5(md5($a1) . ':' . $data['nonce'] . ':' . $data['nc'] . ':' . $data['cnonce'] . ':' . $data['qop'] . ':' . md5($a2));
+        return md5(sprintf('%s:%s:%s:%s:%s:%s', md5($a1), $data['nonce'], $data['nc'], $data['cnonce'], $data['qop'], md5($a2)));
     }
 
     /**
@@ -635,11 +813,14 @@ class Jabber
 	function xmlize($data, $WHITE=1, $encoding='UTF-8') {
 
 		$data = trim($data);
-		$vals = $index = $array = array();
+        if (substr($data, 0, 5) != '<?xml') {
+            $data = '<root>'. $data . '</root>'; // mod
+        }
+		$vals = $array = array();
 		$parser = xml_parser_create($encoding);
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, $WHITE);
-		xml_parse_into_struct($parser, $data, $vals, $index);
+		xml_parse_into_struct($parser, $data, $vals);
 		xml_parser_free($parser);
 
 		$i = 0;
@@ -653,6 +834,9 @@ class Jabber
 		}
 
 		$array[$tagname][0]["#"] = Jabber::_xml_depth($vals, $i); // mod
+        if (substr($data, 0, 5) != '<?xml') {
+            $array = $array['root'][0]['#']; // mod
+        }
 
 		return $array;
 	}
