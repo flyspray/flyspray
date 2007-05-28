@@ -98,7 +98,7 @@ if ($fs->prefs['cache_feeds'])
         if(!is_link($cachefile) && ($handle = @fopen($cachefile, 'w+b'))) {
             if (flock($handle, LOCK_EX)) {
                 fwrite($handle, $content);
-                flock($fp, LOCK_UN);
+                flock($handle, LOCK_UN);
             }
             fclose($handle);
             chmod($cachefile, 0600);
