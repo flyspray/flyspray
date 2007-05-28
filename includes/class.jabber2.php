@@ -34,7 +34,7 @@ class Jabber
         }
 
         //bug in php 5.2.1 renders this stuff more or less useless.
-        if (version_compare(phpversion(), '5.2.1', '>=') && $security != SECURITY_NONE) {
+        if ((version_compare(phpversion(), '5.2.1', '>=') && version_compare(phpversion(), '5.2.3RC2', '<')) && $security != SECURITY_NONE) {
             $this->log('Error: PHP ' . phpversion() . ' + SSL is incompatible with jabber, see http://bugs.php.net/41236');
             return false;
         }
