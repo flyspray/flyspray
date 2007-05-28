@@ -940,11 +940,12 @@ class Backend
             $from   .= ' LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
-        if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || in_array('lastedit', $visible)) {
+        $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
+        if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || $search_for_changes) {
             $from   .= ' LEFT JOIN  {comments} c        ON t.task_id = c.task_id ';
             $select .= ' COUNT(DISTINCT c.comment_id)   AS num_comments, ';
             // in other words: max(c.date_added, t.date_closed, t.date_opened, t.last_edited_time)
-            if (in_array('lastedit', $visible)) {
+            if ($search_for_changes) {
                 $select .= ' CASE WHEN c.date_added>t.date_closed THEN
                                 CASE WHEN c.date_added>t.date_opened THEN CASE WHEN c.date_added > t.last_edited_time THEN c.date_added ELSE t.last_edited_time END ELSE
                                     CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END ELSE
