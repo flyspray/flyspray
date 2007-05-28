@@ -940,10 +940,10 @@ class Flyspray
      */
     function get_tmp_dir()
     {
-        if (function_exists('sys_get_temp_dir')) {
-            //no further checks
-            return sys_get_temp_dir();
+        $return = '';
 
+        if (function_exists('sys_get_temp_dir')) {
+            $return = sys_get_temp_dir();
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP')) {
                 $return = $var;
@@ -964,15 +964,15 @@ class Flyspray
         }
         // Now, the final check
         if (is_dir($return) && is_writable($return)) {
-            return $return;
+            return rtrim($return, DIRECTORY_SEPARATOR);
+        )
         // we have a problem at this stage.
-        } elseif(is_writable(ini_get('upload_tmp_dir')) ) {
-            return ini_get('upload_tmp_dir');
+        } elseif(is_writable(ini_get('upload_tmp_dir'))) {
+            $return = ini_get('upload_tmp_dir');
         } elseif(is_writable(ini_get('session.save_path'))) {
-            return ini_get('session.save_path');
+            $return = ini_get('session.save_path');
         }
-        // we are dead and flyspray will not work at all as it does not have where to write sessions.
-        return '';
+        return rtrim($return, DIRECTORY_SEPARATOR);
     }
 
     /**

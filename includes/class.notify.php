@@ -233,14 +233,17 @@ class Notifications {
 
 	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server'])) {
+          
           Swift_ClassLoader::load('Swift_Connection_SMTP');
           $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
-
-	    if ($fs->prefs['smtp_user']) {
-            $swiftconn->setUsername($fs->prefs['smtp_user']);
-            $swiftconn->setPassword($fs->prefs['smtp_pass']);
-         }
-
+          
+          if ($fs->prefs['smtp_user']) {
+                $swiftconn->setUsername($fs->prefs['smtp_user']);
+                $swiftconn->setPassword($fs->prefs['smtp_pass']);
+          }
+          if(defined('FS_SMTP_TIMEOUT')) {
+             $swiftconn->setTimeout(FS_SMTP_TIMEOUT);
+          }
       // Use php's built-in mail() function
       } else {
             Swift_ClassLoader::load('Swift_Connection_NativeMail');
