@@ -252,6 +252,11 @@ class Notifications {
 
       $swift =& new Swift($swiftconn);
 
+      if(defined('FS_MAIL_LOGFILE')) {
+          $swift->log->enable();
+          $swift->log->setMaxSize(0);
+      }
+
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
 
@@ -275,8 +280,20 @@ class Notifications {
           // now accepts string , array or Swift_Address.
           $recipients->addTo($to);
 
-          return (bool) $swift->batchsend($message, $recipients,
-                              new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
+          $retval = (bool) $swift->batchsend($message, $recipients,
+                    new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
+          
+          if(defined('FS_MAIL_LOGFILE')) {
+              if(is_writable(dirname(FS_MAIL_LOGFILE))) {
+                  if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
+                      fwrite($fh, implode("\n", $swift->log->entries));
+                      fclose($fh);
+                  }
+              }
+              
+          }
+          $swift->disconnect();
+          return $retval;  
 
    } //}}}
    // {{{ Create a message for any occasion
