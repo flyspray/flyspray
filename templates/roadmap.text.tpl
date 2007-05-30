@@ -3,7 +3,7 @@
 <?php foreach($data as $milestone): ?>
 {L('roadmapfor')} {$milestone['name']}
 
-{$milestone['percent_complete']}% of {count($milestone['all_tasks'])} {L('tasks')} {L('completed')} <?php
+{$milestone['percent_complete']}{L('of')} {count($milestone['all_tasks'])} {L('tasks')} {L('completed')} <?php
    if(count($milestone['open_tasks'])):
    ?>{count($milestone['open_tasks'])} {L('opentasks')}:<?php
    endif; ?>
