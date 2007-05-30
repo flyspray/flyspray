@@ -48,6 +48,12 @@ function load_translations()
         include_once($translation);
         $language = is_array($translation) ? array_merge($language, $translation) : $language;
     }
+
+    // correctly translate title since language not set when initialising the project
+    if (!$proj->id) {
+        $proj->prefs['project_title'] = L('allprojects');
+        $proj->prefs['feed_description']  = L('feedforall');
+    }
 }
 
 ?>
