@@ -516,6 +516,10 @@ div#tasklist {
 	background-color:#e6eef6;
 }
 
+div#tasklist del, div#tasklist a.closedtasklink {
+	text-decoration:none;
+}
+
 /* The table listing tasks on the main page */
 div#tasklist table {
 	clear:both;
