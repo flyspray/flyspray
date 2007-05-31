@@ -25,12 +25,6 @@ if(!isset($borked[-1])) {
         "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
 }
 
-if(substr(php_sapi_name(), 0, 3) == 'cgi' && ! ini_get('cgi.fix_pathinfo')) {
-
-    die("You are using cgi or fastcgi and you have not set cgi.fix_pathinfo=1 in php.ini.
-         Flyspray cannot work properly without cgi.fix_pathinfo enabled, please update your configuration");
-}
-
 // define basic stuff first.
 
 define('IN_FS', 1 );
@@ -572,6 +566,10 @@ class Setup extends Flyspray
             array ('Register Globals','register_globals','OFF'),
             //array ('Output Buffering','output_buffering','OFF'),
             );
+
+      if (substr(php_sapi_name(), 0, 3) == 'cgi') {
+          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','On');
+      }
 
       $output = '';
 
