@@ -341,10 +341,10 @@ class Notifications {
       );
 
       // Generate the nofication message
-      if (!$proj->prefs['notify_subject']) {
+      if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
           $proj->prefs['notify_subject'] = '[%p][#%t] %s';
       }
-      if ($type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
+      if (!isset($proj->prefs['notify_subject']) || $type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
           $subject = L('notifyfromfs');
       } else {
           $subject = strtr($proj->prefs['notify_subject'],
