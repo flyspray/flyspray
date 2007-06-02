@@ -1,5 +1,5 @@
 
-<form action="{$_SERVER['SCRIPT_NAME']}?do=authenticate" method="post">
+<form action="{$baseurl}?do=authenticate" method="post">
 <div>
   <label for="lbl_user_name">{L('username')}</label>
   <input class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="30" />

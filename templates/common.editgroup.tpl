@@ -1,5 +1,5 @@
 <fieldset class="box"> <legend>{L('editgroup')}</legend>
-    <form action="{$_SERVER['SCRIPT_NAME']}" method="get">
+    <form action="{$baseurl}index.php" method="get">
         <div>
             <label for="selectgroup">{L('editgroup')}</label>
             <select name="id" id="selectgroup">{!tpl_options(Flyspray::ListGroups($proj->id), Req::num('id'))}</select>

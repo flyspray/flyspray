@@ -37,7 +37,7 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
 
             if ($db->AffectedRows()) {
                 Flyspray::show_error(sprintf(L('error71'), $fs->prefs['lock_for']));
-                Flyspray::Redirect('./');
+                Flyspray::Redirect($baseurl);
             } else {
                 Flyspray::show_error(7);
             }

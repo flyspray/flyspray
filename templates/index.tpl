@@ -16,7 +16,7 @@
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <div id="search">
   <map id="projectsearchform" name="projectsearchform">
-    <form action="{$_SERVER['SCRIPT_NAME']}" method="get">
+    <form action="{$baseurl}index.php" method="get">
       <div>
         <button id="searchthisproject" type="submit">{L('searchthisproject')}</button>
         <input class="text" id="searchtext" name="string" type="text" size="20"
@@ -166,7 +166,7 @@
 <?php endif; ?>
 
 <div id="tasklist">
-  <form action="{$_SERVER['SCRIPT_NAME']}" id="massops" method="post">
+  <form action="{CreateURL('project', $proj->id, null, array('do' => 'index'))}" id="massops" method="post">
     <div>
       <table id="tasklist_table">
         <thead>

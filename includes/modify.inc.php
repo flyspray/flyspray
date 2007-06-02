@@ -331,7 +331,7 @@ switch ($action = Req::val('action'))
 
                 if ($query) {
                     $_SESSION['SUCCESS'] = L('codesent');
-                    Flyspray::Redirect('./');
+                    Flyspray::Redirect($baseurl);
                 }
 
             } else {
@@ -1450,7 +1450,7 @@ switch ($action = Req::val('action'))
                    array($new_pass_hash, Post::val('magic_url')));
 
         $_SESSION['SUCCESS'] = L('passchanged');
-        Flyspray::Redirect('./');
+        Flyspray::Redirect($baseurl);
         break;
 
     // ##################
