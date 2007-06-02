@@ -701,7 +701,7 @@ class Flyspray
      */
     function startSession()
     {
-        if (defined('IN_FEED')) {
+        if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
 

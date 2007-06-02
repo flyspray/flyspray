@@ -286,6 +286,10 @@ if (!function_exists('ctype_digit')) {
 	}
 }
 
+if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
+    $_SERVER['SERVER_NAME'] = php_uname('n');
+}
+
 //for reasons outside flsypray, the PHP core may throw Exceptions in PHP5
 // for a good example see this article
 // http://ilia.ws/archives/107-Another-unserialize-abuse.html

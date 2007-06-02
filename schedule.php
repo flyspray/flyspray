@@ -19,26 +19,19 @@ define('IN_FS', true);
  */
 
 require_once 'header.php';
-
-
-if((isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') &&
-    (isset($conf['general']['reminder_daemon']) && $conf['general']['reminder_daemon'] == '1')) {
-
-//keep going, execute the script in the background
-ignore_user_abort(true);
-set_time_limit(0);
-
 include_once BASEDIR . '/includes/class.notify.php';
 
-do {
+function send_reminders()
+{
+    global $db;
     //we touch the file on every single iteration to avoid
     //the possible restart done by Startremiderdaemon method
-    //in class.flyspray.conf 
+    //in class.flyspray.conf
 touch(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
-    
 
-$notify = new Notifications;
-$user = new User(0);
+
+$notify =& new Notifications;
+$user =& new User(0);
 $now = time();
 
 $get_reminders = $db->Query("SELECT  r.*, t.*, p.*
@@ -86,21 +79,44 @@ while ($row = $db->FetchRow($get_reminders)) {
                                SET  last_sent = ?
                              WHERE  reminder_id = ?",
                             array(time(), $row['reminder_id']));
+
+ }
+	// send those stored notifications
+$notify->SendJabber();
+unset($notify, $user);
+unlink(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
+
 }
 
-// send those stored notifications
-$notify->SendJabber();
-//wait 10 minutes for the next loop.
-sleep(600);
 
-//forever ¡¡¡ ( oh well. a least will not stop unless killed or the server restarted)
-} while(true);
+if(isset($conf['general']['reminder_daemon']) && in_array($conf['general']['reminder_daemon'], range(1, 2))) {
 
-@register_shutdown_function('unlink', Flyspray::get_tmp_dir() . '/flysprayreminders.run');
+	if(php_sapi_name() === 'cli') {
+		//once
+		send_reminders();
 
+    } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1'
+              && $conf['general']['reminder_daemon'] == '2') {
+
+		//keep going, execute the script in the background
+		ignore_user_abort(true);
+		set_time_limit(0);
+
+        do {
+
+			send_reminders();
+			//wait 10 minutes for the next loop.
+			sleep(600);
+
+        //forever ¡¡¡ ( oh well. a least will not stop unless killed or the server restarted)
+		} while(true);
+         
+       } else {
+
+    		die("you are not authorized to start the reminder daemon\n");
+	}
 } else {
 
-    die("you are not authorized to start the remider daemon");
+    die("reminder is disabled...not running..\n");
 }
-
 ?>
