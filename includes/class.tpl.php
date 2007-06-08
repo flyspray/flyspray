@@ -248,7 +248,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 
     // to store search options
     $params = $_GET;
-    unset($params['do'], $params['action'], $params['task_id']);
+    unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
 
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
     $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8');

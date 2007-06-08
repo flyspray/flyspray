@@ -952,6 +952,7 @@ class Backend
                                 CASE WHEN t.date_closed>t.date_opened THEN CASE WHEN t.date_closed > t.last_edited_time THEN t.date_closed ELSE t.last_edited_time END ELSE
                                     CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END END AS max_date, ';
             }
+            $groupby .= 'c.date_added, ';
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
@@ -1156,8 +1157,11 @@ class Backend
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
              $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name,{$order_column[0]},{$order_column[1]}, lr.resolution_name, ";
+             $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
+        } else {
+            $groupby = 't.task_id';
         }
-        $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
+
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
         $sql = $db->Query("

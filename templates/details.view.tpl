@@ -3,7 +3,7 @@
   {!tpl_tasklink($prev_id, L('previoustask'), false, array('id'=>'prev', 'accesskey' => 'p'))}
   <?php endif; ?>
   <?php if ($prev_id): ?> | <?php endif; ?>
-  <?php $params = $_GET; unset($params['do'], $params['action'], $params['task_id']); ?>
+  <?php $params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch']); ?>
   <a href="{CreateUrl('project', $proj->id, null, $params)}">{L('tasklist')}</a>
   <?php if ($next_id): ?> | <?php endif; ?>
   <?php if ($next_id): ?>
