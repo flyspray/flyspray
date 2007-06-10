@@ -677,13 +677,24 @@ switch ($action = Req::val('action'))
                 break;
             }
             if (Post::val('oldpass')) {
-              $sql = $db->Query('SELECT user_pass FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
-              $oldpass =  $db->FetchRow($sql);
+                $sql = $db->Query('SELECT user_pass FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
+                $oldpass =  $db->FetchRow($sql);
 
-              if (Flyspray::cryptPassword(Post::val('oldpass')) != $oldpass['user_pass']){
-                Flyspray::show_error(L('oldpasswrong'));
-                break;
-              }
+                switch(strlen($oldpass['user_pass'])) {
+                    case '40':
+                        $cryptPass = sha1(Post::val('oldpass'));
+                    case '32':
+                        $cryptPass = md5(Post::val('oldpass'));
+                        break;
+                    default:
+                        $cryptPass = crypt(Post::val('oldpass'), $oldpass['user_pass']);
+                        break;
+                }
+
+                if ($cryptPass != $oldpass['user_pass']){
+                    Flyspray::show_error(L('oldpasswrong'));
+                    break;
+                }
             }
             $new_hash = Flyspray::cryptPassword(Post::val('changepass'));
             $db->Query('UPDATE {users} SET user_pass = ? WHERE user_id = ?',
