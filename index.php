@@ -10,7 +10,7 @@ define('IN_FS', true);
 require_once(dirname(__FILE__).'/header.php');
 
 // Background daemon that does scheduled reminders
-if ($conf['general']['reminder_daemon'] == '1') {
+if ($conf['general']['reminder_daemon'] == '2') {
     Flyspray::startReminderDaemon();
 }
 
