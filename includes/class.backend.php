@@ -341,7 +341,8 @@ class Backend
             $res = true;
 
             // Use a different MIME type
-            $extension = end(explode('.', $_FILES[$source]['name'][$key]));
+            $fileparts = explode( '.', $_FILES[$source]['name'][$key]);
+            $extension = end($fileparts);
             if (isset($conf['attachments'][$extension])) {
                 $_FILES[$source]['type'][$key] = $conf['attachments'][$extension];
             //actually, try really hard to get the real filetype, not what the browser reports.
