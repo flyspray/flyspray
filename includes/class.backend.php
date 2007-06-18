@@ -567,6 +567,10 @@ class Backend
             }
         }
 
+        // for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
+        // get permissions for a task automatically
+        $db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
+
         Flyspray::logEvent(0, 31, $user_data);
 
         return true;
