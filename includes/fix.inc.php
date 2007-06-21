@@ -277,12 +277,12 @@ function glob_compat($pattern, $flags = 0) {
 // now for all those borked PHP installations...
 if (!function_exists('ctype_alnum')) {
 	function ctype_alnum($text) {
-		return preg_match('/^[a-z0-9]+$/iD', $text);
+		return is_string($text) && preg_match('/^[a-z0-9]+$/iD', $text);
 	}
 }
 if (!function_exists('ctype_digit')) {
 	function ctype_digit($text) {
-        return preg_match('/^[0-9]+$/iD', $text);
+        return is_string($text) && preg_match('/^[0-9]+$/iD', $text);
 	}
 }
 
