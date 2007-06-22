@@ -51,6 +51,7 @@ ini_set('session.auto_start',0);
 
 ini_set('session.cookie_httponly',1);
 
+ini_set('auto_detect_line_endings', 0);
 
 // we live is register_globals Off world forever..
 //This code was written By Stefan Esser from the hardened PHP project (sesser@php.net)

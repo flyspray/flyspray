@@ -1,10 +1,5 @@
 <?php
 
-// As of 24 July 2004, all editable config is stored in flyspray.conf.php
-// There should be no reason to edit this file anymore, except if you
-// move flyspray.conf.php to a directory where a browser can't access it.
-// (RECOMMENDED).
-
 require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';

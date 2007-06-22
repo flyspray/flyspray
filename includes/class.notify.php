@@ -250,12 +250,7 @@ class Notifications {
             $swiftconn =& new Swift_Connection_NativeMail();
       }
 
-      $swift =& new Swift($swiftconn);
-
-      if(defined('FS_MAIL_LOGFILE')) {
-          $swift->log->enable();
-          $swift->log->setMaxSize(0);
-      }
+      $swift =& new Swift($swiftconn , false, (defined('FS_MAIL_LOGFILE') ? SWIFT_ENABLE_LOGGING : null));
 
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
@@ -282,11 +277,13 @@ class Notifications {
 
           $retval = (bool) $swift->batchsend($message, $recipients,
                     new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
-          
+          // Currently swift mailer does not offer a file log facility, simple workaround..
           if(defined('FS_MAIL_LOGFILE')) {
               if(is_writable(dirname(FS_MAIL_LOGFILE))) {
                   if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                      fwrite($fh, implode("\n", $swift->log->entries));
+                      fwrite($fh, base64_encode(serialize($message)) . "\n");
+                      fwrite($fh, base64_encode(implode("\n", $swift->log->entries)) . "\n");
+                      fwrite($fh, php_uname());
                       fclose($fh);
                   }
               }
