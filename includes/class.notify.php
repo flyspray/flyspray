@@ -274,7 +274,7 @@ class Notifications {
           $recipients =& new Swift_RecipientList();
           // now accepts string , array or Swift_Address.
           $recipients->addTo($to);
-
+          $message->build();
           $retval = (bool) $swift->batchsend($message, $recipients,
                     new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
           // Currently swift mailer does not offer a file log facility, simple workaround..
