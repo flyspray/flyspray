@@ -21,7 +21,7 @@
     <?php if ($user->isAnon() && $fs->prefs['user_notify']): ?>
     <a id="forgotlink" href="{CreateURL('lostpw','')}">{L('lostpassword')}</a>
     <?php else: ?>
-    <a id="lostpwlink" href="mailto:<?php foreach($admin_emails as $mail): ?>{str_replace('@', '#', $mail[0])},<?php endforeach;
+    <a id="forgotlink" href="mailto:<?php foreach($admin_emails as $mail): ?>{str_replace('@', '#', $mail[0])},<?php endforeach;
     ?>?subject={rawurlencode(L('lostpwforfs'))}&amp;body={rawurlencode(L('lostpwmsg1'))}{$baseurl}{rawurlencode(L('lostpwmsg2'))}<?php
              if(isset($_SESSION['failed_login'])):
              ?>{rawurlencode($_SESSION['failed_login'])}<?php
@@ -29,7 +29,7 @@
              ?>&lt;{rawurlencode(L('yourusername'))}&gt;<?php
              endif;
              ?>{rawurlencode(L('regards'))}">{L('lostpassword')}</a>
-    <script type="text/javascript">var link = document.getElementById('lostpwlink');link.href=link.href.replace(/#/g,"@");</script>
+    <script type="text/javascript">var link = document.getElementById('forgotlink');link.href=link.href.replace(/#/g,"@");</script>
     <?php endif; ?>
   </span>
 </div>
