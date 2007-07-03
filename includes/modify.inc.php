@@ -214,11 +214,19 @@ switch ($action = Req::val('action'))
 
         $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id']);
 
-        // If there's an admin request related to this, close it
+        // add comment of PM request to comment page if accepted
+        $sql = $db->Query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ?',
+                          array($task['task_id'], 2));
+        $request = $db->FetchRow($sql);
+        $db->Query('INSERT INTO  {comments}
+                                 (task_id, date_added, last_edited_time, user_id, comment_text)
+                         VALUES  ( ?, ?, ?, ?, ? )',
+                    array($task['task_id'], time(), time(), $request['submitted_by'], $request['reason_given']));
+        // delete existing PM request
         $db->Query('UPDATE  {admin_requests}
                        SET  resolved_by = ?, time_resolved = ?
-                     WHERE  task_id = ? AND request_type = ?',
-                  array($user->id, time(), $task['task_id'], 2));
+                     WHERE  request_id = ?',
+                  array($user->id, time(), $request['request_id']));
 
         Flyspray::logEvent($task['task_id'], 13);
 
