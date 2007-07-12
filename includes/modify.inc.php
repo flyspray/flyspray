@@ -429,13 +429,17 @@ switch ($action = Req::val('action'))
             $group_in = $fs->prefs['anon_group'];
         }
 
-        $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE
+        if(!$user->perms('is_admin')) {
+            
+            $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE
                            jabber_id = ? AND jabber_id != ''
                            OR email_address = ? AND email_address != ''",
                           array(Post::val('jabber_id'), Post::val('email_address')));
-        if ($db->fetchOne($sql)) {
-            Flyspray::show_error(L('emailtaken'));
-            break;
+            
+            if ($db->fetchOne($sql)) {
+                Flyspray::show_error(L('emailtaken'));
+                break;
+            }
         }
 
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
