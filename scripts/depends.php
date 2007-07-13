@@ -184,7 +184,7 @@ foreach ($node_list as $n => $r) {
     $x = dechex(255-($r['pct']+10));
     $col = "#$x$x$x";
     // Make sure label terminates in \n!
-    $label = "FS#$n \n". ((!$use_public) ? utf8_substr($r['sum'], 0, 15) . "\n" : '') .
+    $label = "FS#$n \n". ((!$use_public) ? addslashes(utf8_substr($r['sum'], 0, 15)) . "\n" : '') .
         ($r['clsd'] ? L('closed') :
          "$r[pct]% ".L('complete'));
     $tooltip =
