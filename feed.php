@@ -15,7 +15,7 @@ header ('Content-type: text/html; charset=utf-8');
 $max_items  = (Req::num('num', 10) == 10) ? 10 : 20;
 $sql_project = '';
 if ($proj->id) {
-    $sql_project = sprintf(' AND p.project_id = %d', $proj->id);
+    $sql_project = sprintf(' p.project_id = %d', $proj->id);
 }
 
 $feed_type  = Req::val('feed_type', 'rss2');
@@ -24,15 +24,15 @@ if ($feed_type != 'rss1' && $feed_type != 'rss2') {
 }
 
 switch (Req::val('topic')) {
-    case 'clo': $orderby = 'date_closed'; $closed = 0;
+    case 'clo': $orderby = 'date_closed'; $closed = 't.is_closed = 1 AND';
                 $title   = 'Recently closed tasks';
     break;
 
-    case 'edit':$orderby = 'last_edited_time'; $closed = 1;
+    case 'edit':$orderby = 'last_edited_time'; $closed = '';
                 $title   = 'Recently edited tasks';
     break;
 
-    default:    $orderby = 'date_opened'; $closed = 1;
+    default:    $orderby = 'date_opened'; $closed = '';
                 $title   = 'Recently opened tasks';
     break;
 }
@@ -44,8 +44,8 @@ $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 $sql = $db->Query("SELECT  MAX(t.date_opened), MAX(t.date_closed), MAX(t.last_edited_time)
                      FROM  {tasks}    t
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  t.is_closed <> ? $sql_project AND t.mark_private <> '1'
-                           AND p.others_view = '1' ", array($closed));
+                    WHERE  $closed $sql_project AND t.mark_private <> '1'
+                           AND p.others_view = '1' ");
 $most_recent = max($db->fetchRow($sql));
 
 if ($fs->prefs['cache_feeds']) {
@@ -74,9 +74,9 @@ $sql = $db->Query("SELECT  t.task_id, t.item_summary, t.detailed_desc, t.date_op
                      FROM  {tasks}    t
                INNER JOIN  {users}    u ON t.opened_by = u.user_id
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  t.is_closed <> ? $sql_project AND t.mark_private <> '1'
+                    WHERE  $closed $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
-                 ORDER BY  $orderby DESC", array($closed), $max_items);
+                 ORDER BY  $orderby DESC", 0, $max_items);
 
 $task_details     = $db->fetchAllArray($sql);
 $feed_description = $proj->prefs['feed_description'] ? $proj->prefs['feed_description'] : $fs->prefs['page_title'] . $proj->prefs['project_title'].': '.$title;
