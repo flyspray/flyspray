@@ -8,8 +8,7 @@ require_once BASEDIR . '/includes/i18n.inc.php';
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
 
-// If it is empty,take the user to the setup page
-
+// If it is empty, take the user to the setup page
 if (!$conf) {
     Flyspray::Redirect('setup/index.php');
 }
@@ -25,6 +24,11 @@ require_once BASEDIR . '/includes/class.tpl.php';
 $db = new Database;
 $db->dbOpenFast($conf['database']);
 $fs = new Flyspray;
+
+// If version number of database and files do not match, run upgrader
+if (Flyspray::base_version($fs->version) != Flyspray::base_version($fs->prefs['fs_ver'])) {
+    Flyspray::Redirect('setup/upgrade.php');
+}
 
 if (is_readable(BASEDIR . '/setup/index.php') && strpos($fs->version, 'dev') === false) {
     die('Please empty the folder "' . BASEDIR . DIRECTORY_SEPARATOR . "setup\"  before you start using Flyspray.\n".
