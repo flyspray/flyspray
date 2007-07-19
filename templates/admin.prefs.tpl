@@ -149,7 +149,7 @@
         <tr>
           <td><label for="jabberpassword">{L('jabberpass')}</label></td>
           <td>
-            <input id="jabberpassword" name="jabber_password" class="password" type="password" size="40" maxlength="100" value="{$fs->prefs['jabber_password']}" />
+            <input id="jabberpassword" name="jabber_password" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['jabber_password']}" />
           </td>
         </tr>
       </table>
