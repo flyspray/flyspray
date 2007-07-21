@@ -41,12 +41,16 @@ $filename = md5(sprintf('%s-%s-%d-%d', $feed_type, $orderby, $proj->id, $max_ite
 $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 
 // Get the time when a task has been changed last
-$sql = $db->Query("SELECT  MAX(t.date_opened), MAX(t.date_closed), MAX(t.last_edited_time)
+$sql = $db->Query("SELECT  t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
                      FROM  {tasks}    t
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
                     WHERE  $closed $sql_project AND t.mark_private <> '1'
-                           AND p.others_view = '1' ");
-$most_recent = max($db->fetchRow($sql));
+                           AND p.others_view = '1'
+                 ORDER BY  $orderby DESC", null, $max_items);
+$most_recent = 0;
+while ($row = $db->fetchRow($sql)) {
+    $most_recent = max($most_recent, $row['date_opened'], $row['date_closed'], $row['last_edited_time']); 
+}
 
 if ($fs->prefs['cache_feeds']) {
     if ($fs->prefs['cache_feeds'] == '1') {
