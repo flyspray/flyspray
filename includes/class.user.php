@@ -156,9 +156,8 @@ class User
         if (Cookie::val('flyspray_passhash') !== $saltedpass || !$this->infos['account_enabled']
                 || !$this->perms('group_open', 0))
         {
-            Flyspray::setcookie('flyspray_userid',   '', time()-60);
-            Flyspray::setcookie('flyspray_passhash', '', time()-60);
-            Flyspray::Redirect(CreateURL('logout', null));
+            $this->logout();
+            Flyspray::Redirect(CreateURL('index'));
         }
     }
 
