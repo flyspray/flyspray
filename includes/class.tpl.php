@@ -547,7 +547,7 @@ class TextFormatter
             // Change URLs into hyperlinks
             if (!$onlyfs) {
                 $text = preg_replace('|[[:space:]]+[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]|', '<a href="\0">\0</a>', $text);
-                $text = preg_replace('/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}/', '<a href="mailto:\0">\0</a>', $text);
+                $text = preg_replace('/[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}/', '<a href="mailto:\0">\0</a>', $text);
             }
 
             // Change FS#123 into hyperlinks to tasks

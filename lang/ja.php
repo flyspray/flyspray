@@ -354,8 +354,8 @@ $translation = array(
 'tasklist'                => 'タスク一覧',
 'dateclosed'              => 'クローズ日',
 'advanced'                => '詳細',
-'searchcomments'          => 'コメント内を検索',
-'searchforall'            => 'すべての単語で検索',
+'searchcomments'          => 'コメント内も検索',
+'searchforall'            => 'すべての単語でAND検索',
 'anonusers'               => '未ログインユーザ',
 'miscellaneous'           => '検索範囲',
 'users'                   => 'ユーザ',
@@ -821,7 +821,7 @@ FlysprayのWebサイトに行き、現在稼働しているのが最新バージ
 'accountwaslocked'        => '繰り返しログインに失敗したので、このアカウントはロックされていました。',
 'failedattempts'          => '%d 回のログイン失敗がありました。',
 'groupnotexist'           => '選択されたグループはこのプロジェクトに存在しません。',
-'searchindetails'         => '詳細内を検索',
+'searchindetails'         => '詳細内も検索',
 );
 
 ?>
