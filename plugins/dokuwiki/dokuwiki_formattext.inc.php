@@ -106,53 +106,53 @@ class dokuwiki_TextFormatter
 	function getDokuWikiToolbar( $textareaId ) {
 		global $conf, $baseurl;
 	
-		return '<a href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;">
+		return '<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;">
 		  		<img src="'.$baseurl.'plugins/dokuwiki/img/format-text-bold.png" align="bottom" alt="Bold" title="Bold" border="0" /></a>
-			<a href="javascript:void(0);" onclick="surroundText(\'//\', \'//\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'//\', \'//\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/format-text-italic.png" align="bottom" alt="Italicized" title="Italicized" border="0" /></a>
-			<a href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;">
 			<img src="'.$baseurl.'plugins/dokuwiki/img/format-text-underline.png" align="bottom" alt="Underline" title="Underline" border="0" /></a>
 			
-			<a href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;">
 			<img src="'.$baseurl.'plugins/dokuwiki/img/format-text-strikethrough.png" align="bottom" alt="Strikethrough" title="Strikethrough" border="0" /></a>
 			
 			<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" align="bottom" alt="|" style="margin: 0 3px 0 3px;" />
 			
-			<a href="javascript:void(0);" onclick="surroundText(\'======\', \'======\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'======\', \'======\', \''.$textareaId.'\'); return false;">
 			<img title="Level 1 Headline" src="'.$baseurl.'plugins/dokuwiki/img/h1.gif" align="bottom" width="23" height="22" alt="Heading1" border="0" /></a>
 
-			<a href="javascript:void(0);" onclick="surroundText(\'=====\', \'=====\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'=====\', \'=====\', \''.$textareaId.'\'); return false;">
 			<img title="Level 2 Headline" src="'.$baseurl.'plugins/dokuwiki/img/h2.gif" align="bottom" width="23" height="22" alt="Heading2" border="0" /></a>
 
-			<a href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;">
 			<img title="Level 3 Headline" src="'.$baseurl.'plugins/dokuwiki/img/h3.gif" align="bottom" width="23" height="22" alt="Heading3" border="0" /></a>
 			
 			<img title="Divider" src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />
 			
-			<a href="javascript:void(0);" onclick="surroundText(\'&#123;&#123;http://\', \'&#125;&#125;\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'&#123;&#123;http://\', \'&#125;&#125;\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/image-x-generic.png" align="bottom" alt="Insert Image" title="Insert Image" border="0" /></a>
 			
-			<a href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/ul.gif" align="bottom" width="23" height="22" alt="Insert List" title="Insert List" border="0" /></a>
-			<a href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/ol.gif" align="bottom" width="23" height="22" alt="Insert List" title="Insert List" border="0" /></a>
-			<a href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/hr.gif" align="bottom" width="23" height="22" alt="Horizontal Rule" title="Horizontal Rule" border="0" /></a>
 				
 			<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />
 			
-			<a href="javascript:void(0);" onclick="surroundText(\'[[http://example.com|External Link\', \']]\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'[[http://example.com|External Link\', \']]\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/text-html.png" align="bottom" alt="Insert Hyperlink" title="Insert Hyperlink" border="0" /></a>					
-			<a href="javascript:void(0);" onclick="surroundText(\'[[\', \']]\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'[[\', \']]\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/email.png" align="bottom" alt="Insert Email" title="Insert Email" border="0" /></a>
-			<a href="javascript:void(0);" onclick="surroundText(\'[[ftp://\', \']]\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'[[ftp://\', \']]\', \''.$textareaId.'\'); return false;">
 				<img src="'.$baseurl.'plugins/dokuwiki/img/network.png" align="bottom" alt="Insert FTP Link" title="Insert FTP Link" border="0" /></a>
 				
 			<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />
 			
-			<a href="javascript:void(0);" onclick="surroundText(\'<code>\', \'</code>\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'<code>\', \'</code>\', \''.$textareaId.'\'); return false;">
 			<img src="'.$baseurl.'plugins/dokuwiki/img/source.png" align="bottom" alt="Insert Code" title="Insert Code" border="0" /></a>
-			<a href="javascript:void(0);" onclick="surroundText(\'<code php>\', \'</code>\', \''.$textareaId.'\'); return false;">
+			<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'<code php>\', \'</code>\', \''.$textareaId.'\'); return false;">
 			<img src="'.$baseurl.'plugins/dokuwiki/img/source_php.png" align="bottom" alt="Insert Code" title="Insert PHP Code" border="0" /></a>
 		';
 	}
