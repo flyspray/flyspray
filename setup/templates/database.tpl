@@ -37,7 +37,7 @@
             </tr>
             <tr>
                <td>Table prefix</td>
-               <td align="left"><input class="inputbox text" type="text" name="db_prefix" value="{$db_prefix}" /></td>
+               <td align="left"><input class="inputbox text" type="text" maxlength="10" name="db_prefix" value="{$db_prefix}" /></td>
             </tr>
             </table>
             <p>Follow the steps described below to setup {$product_name}'s Database schema.</p>
