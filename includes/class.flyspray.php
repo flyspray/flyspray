@@ -963,7 +963,7 @@ class Flyspray
             $return = '/tmp';
         }
         // Now, the final check
-        if (is_dir($return) && is_writable($return)) {
+        if (@is_dir($return) && is_writable($return)) {
             return rtrim($return, DIRECTORY_SEPARATOR);
         // we have a problem at this stage.
         } elseif(is_writable(ini_get('upload_tmp_dir'))) {
