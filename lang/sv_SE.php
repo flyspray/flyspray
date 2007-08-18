@@ -1,5 +1,7 @@
 <?php
-
+//
+// Translated by Mikael Silfver, mikael dot silfver gmail com.
+//
 $translation = array(
 'edituser'                => 'Redigera användare',
 'username'                => 'Användarnamn',
@@ -358,7 +360,7 @@ $translation = array(
 'searchforall'            => 'Sök alla ord',
 'anonusers'               => 'Anonyma användare',
 'miscellaneous'           => 'Diverse',
-'users'                   => 'Anvädare',
+'users'                   => 'Användare',
 'taskproperties'          => 'Ärendeegenskaper',
 'selectsincedate'         => 'Välj ändrad sedan',
 'changedsince'            => 'Ändrad sedan',
@@ -368,7 +370,7 @@ $translation = array(
 'hidemessage'             => '(påminn mig senare)',
 'saveas'                  => 'Spara sökning som',
 'nosearches'              => 'Inga sparade sökningar',
-'saving'                   => 'Sparar...',
+'saving'                  => 'Sparar...',
 'votes'                   => 'Röster',
 'allclosedtasks'          => 'Alla stängda ärenden',
 'password'                => 'Lösenord',
@@ -376,15 +378,9 @@ $translation = array(
 'rememberme'              => 'Kom ihåg mig',
 'lostpassword'            => 'Glömt lösenordet?',
 'lostpwforfs'             => 'Bortglömt lösenord för Flyspray',
-'lostpwmsg1'              => 'Hej.
-
-Jag har glömt mitt lösenord för ',
-'lostpwmsg2'              => ', kan ni ordna ett nytt lösenord till mig?
-
-användarnamn: ',
-'regards'                 => '
-
-Mvh,',
+'lostpwmsg1'              => "Hej.\n\nJag har glömt mitt lösenord för ",
+'lostpwmsg2'              => ", kan ni ordna ett nytt lösenord till mig?\n\nanvändarnamn: ",
+'regards'                 => "\n\nMvh,",
 'yourusername'            => ' ditt användarnamn ',
 'locale'                  => 'sv-SE',
 'filenotexist'            => 'Endera så finns inte filen eller så har du inte behörighet att komma åt den.',
@@ -412,13 +408,7 @@ Mvh,',
 'permissions'             => 'Visa behörigheter',
 'hide'                    => 'Göm',
 'pendingreq'              => 'Det finns gjorda efterfrågningar',
-'errorpage'               => 'Flyspray kan inte hitta den sida som du efterfrågade.
-                              Du kanske sökte ett ärende som inte finns eller så
-                              har du inte behörighet att se sidan.<br /><br />
-                              Du kanske försökte med en otillåten URL för att komma åt
-                              databasen via SQL injection. Om du gjort det så gå till närmsta
-                              hörn, sätt dig ner och fundera över vad du gjort. När du kommer
-                              tillbaka så gör inte om det!',
+'errorpage'               => "Flyspray kan inte hitta den sida som du efterfrågade.\n                              Du kanske sökte ett ärende som inte finns eller så\n                              har du inte behörighet att se sidan.<br /><br />\n                              Du kanske försökte med en otillåten URL för att komma åt\n                              databasen via SQL injection. Om du gjort det så gå till närmsta\n                              hörn, sätt dig ner och fundera över vad du gjort. När du kommer\n                              tillbaka så gör inte om det!",
 'permissionsforproject'   => 'Behörigheter för ',
 'switchto'                => 'Byt till',
 'lastsearch'              => 'Senaste sökning',
@@ -695,15 +685,11 @@ Mvh,',
 'userdeleted'             => 'Användare borttagen',
 'autoassign'              => 'Tilldela ärendet till kategoriägaren automatiskt',
 'ssl'                     => 'SSL',
-'updatewrong'             => 'Du har automatisk uppdateringskontroll aktiverat, men ett fel uppstod
-                             när uppdateringsservern skulle kontaktas. Endera så tillåter inte din server
-                             utgående trafik eller så blev det ett nätverksfel.
-                             Du kan gå till Flysprays webbsida för att se till att du kör senaste versionen.',
+'updatewrong'             => "Du har automatisk uppdateringskontroll aktiverat, men ett fel uppstod\n                             när uppdateringsservern skulle kontaktas. Endera så tillåter inte din server\n                             utgående trafik eller så blev det ett nätverksfel.\n                             Du kan gå till Flysprays webbsida för att se till att du kör senaste versionen.",
 'deleteproject'           => 'Ta bort detta projekt och flytta allt innehåll till',
 'projectdeleted'          => 'Lyckades ta bort projektet',
 'feedforall'              => 'Feed för alla projekt',
 'usercreated'             => 'Användare skapad',
-'userdeleted'             => 'Användare borttagen',
 'created'                 => 'Skapad',
 'deleted'                 => 'Borttagen',
 'userid'                  => 'Användar-id',
@@ -747,7 +733,7 @@ Mvh,',
 'couldnotaddusernotif'    => 'Kunde inte lägga in denna användare i aviseringslistan.',
 'defaulttask'             => 'Förvald ärendebeskrivning',
 'all'                     => 'alla',
-'events.useraddedtoassignees' => 'Användare satt som tilldelare',
+'events.useraddedtoassignees'=> 'Användare satt som tilldelare',
 'vote(s)'                 => 'röst(er)',
 'eventlog'                => 'Händelselogg',
 'assignmentchanged'       => 'Tilldelning ändrad',
@@ -768,9 +754,12 @@ Mvh,',
 'error5'                  => 'Användaren finns inte i denna Flyspray.',
 'error6'                  => 'Felaktig administratörsarea.',
 'error7'                  => 'Inloggning misslyckades (fel användarnamn eller lösenord)!',
+'error71'                 => 'Användarkontot är låst i %d minuter på grund av för många misslyckade inloggningsförsök!',
 'error8'                  => 'Du måste ange både användarnamn och lösenord.',
 'error9'                  => 'Ärendet finns inte eller så har du inte behörighet att se det.',
 'error10'                 => 'Ärendet finns inte eller så har du inte behörighet att se det.',
+'error101'                => 'Du har inga rättigheter av visa detta ärende.',
+'error102'                => 'Du har inga rättigheter av visa detta ärende, försök att logga in.',
 'error11'                 => 'Ingen behörighet att ändra denna kommentar.',
 'error12'                 => 'Inte en giltig kod! Är du säker på att det är den du fick den från registreringsmeddelandet?',
 'error13'                 => 'Anonyma användare har ingen profil.',
@@ -809,14 +798,17 @@ Mvh,',
 'request1'                => 'En ärendestängning är begärd.',
 'request2'                => 'En återöppning av ärendet är begärd.',
 'allpriorities'           => 'Alla prioriteringar',
-'csvexport'               => 'CSV-export',
-'groups'                  => 'Grupper',
-'global'                  => 'Global',
-'userlist'                => 'Användarlista',
-'any'                     => 'Någon',
-'useradded'               => 'Användaren har lagts till gruppen.',
-'addormoveusers'          => 'Lägg till (eller flytta) en eller flera användare',
-'currentglobalgroups'     => 'Befintliga globala grupper',
+'noroadmap'               => 'Ingen arbetsplan finns (ingen projektspecifik "framtids"-version finns).',
+'expand'                  => 'Fäll ut',
+'collapse'                => 'Fäll in',
+'expandall'               => 'Fäll ut alla',
+'collapseall'             => 'Fäll in alla',
+'minpwsize'               => 'Minsta lösenordslängd är 5 tecken',
+'passwordtoosmall'        => 'Lösenordslängden är för kort.',
+'accountwaslocked'        => 'Ditt användarkonto har blivit låst på grund av för många misslyckade inloggningsförsök.',
+'failedattempts'          => 'Det var %d misslyckade inloggningsförsök.',
+'groupnotexist'           => 'Den valda gruppen finns inte i detta projekt.',
+'searchindetails'         => 'Sök i beskrivning',
 );
 
 ?>

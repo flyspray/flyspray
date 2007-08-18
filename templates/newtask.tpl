@@ -32,8 +32,8 @@
         <tr>
           <td><label for="status">{L('status')}</label></td>
           <td>
-            <select id="status" name="item_status" <?php if (!$user->perms('modify_all_tasks')) echo ' disabled="disabled"';?>>
-              {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', 2))}
+            <select id="status" name="item_status" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
+              {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED)))}
             </select>
           </td>
         </tr>
@@ -70,7 +70,7 @@
         <tr>
           <td><label for="priority">{L('priority')}</label></td>
           <td>
-            <select id="priority" name="task_priority" <?php if (!$user->perms('modify_all_tasks')) echo ' disabled="disabled"';?>>
+            <select id="priority" name="task_priority" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               {!tpl_options($fs->priorities, Req::val('task_priority', 2))}
             </select>
           </td>
@@ -86,7 +86,7 @@
         <tr>
           <td><label for="dueversion">{L('dueinversion')}</label></td>
           <td>
-            <select id="dueversion" name="closedby_version" <?php if (!$user->perms('modify_all_tasks')) echo ' disabled="disabled"';?>>
+            <select id="dueversion" name="closedby_version" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               <option value="0">{L('undecided')}</option>
               {!tpl_options($proj->listVersions(false, 3), Req::val('closedby_version'))}
             </select>

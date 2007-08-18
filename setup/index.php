@@ -692,7 +692,7 @@ class Setup extends Flyspray
             if ($data = $this->CheckPostedData($required_data, $message = 'Configuration Error'))
             {
                // Process the database checks and install tables
-               if (@$this->ProcessDatabaseSetup($data))
+               if ($this->ProcessDatabaseSetup($data))
                {
                   // Proceed to Administration part
                   $this->DisplayAdministration();
