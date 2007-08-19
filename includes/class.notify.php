@@ -250,7 +250,12 @@ class Notifications {
             $swiftconn =& new Swift_Connection_NativeMail();
       }
 
-      $swift =& new Swift($swiftconn , false, (defined('FS_MAIL_LOGFILE') ? SWIFT_ENABLE_LOGGING : null));
+      if(defined( 'FS_MAIL_LOGFILE')) {
+         $log =& Swift_LogContainer::getLog();
+         $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
+      }
+
+      $swift =& new Swift($swiftconn);
 
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
@@ -277,12 +282,11 @@ class Notifications {
           $message->build();
           $retval = (bool) $swift->batchsend($message, $recipients,
                     new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
-          // Currently swift mailer does not offer a file log facility, simple workaround..
+          
           if(defined('FS_MAIL_LOGFILE')) {
               if(is_writable(dirname(FS_MAIL_LOGFILE))) {
                   if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                      fwrite($fh, base64_encode(serialize($message)) . "\n");
-                      fwrite($fh, base64_encode(implode("\n", $swift->log->entries)) . "\n");
+                      fwrite($fh, $log->dump(true));
                       fwrite($fh, php_uname());
                       fclose($fh);
                   }
@@ -635,7 +639,7 @@ class Notifications {
          $body .= L('thankyouforbug') . "\n\n";
          $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1)) . "\n\n";
       } // }}}
-      // {{{ Password change
+      // {{{ Password change 
       if ($type == NOTIFY_PW_CHANGE)
       {
           $body = L('messagefrom'). $arg1[0] . "\n\n"
@@ -657,7 +661,7 @@ class Notifications {
       } // }}}
 
       $body .= L('disclaimer');
-      return array($subject, $body);
+      return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body));
 
    } // }}}
    // {{{ Create an address list for specific users
@@ -795,6 +799,45 @@ class Notifications {
       return array($email_users, array_unique($jabber_users));
 
    } // }}}
+    // {{{ Fix the message data 
+        /**
+         * fixMsgData 
+         * a 0.9.9.x ONLY workaround for the "truncated email problem"
+         * based on code Henri Sivonen (http://hsivonen.iki.fi) 
+         * @param mixed $data
+         * @access public
+         * @return void
+         */
+        function fixMsgData($data)
+        {
+            // at the first step, remove all NUL bytes
+            //users with broken databases  encoding  can give us this :(
+            $data = str_replace(chr(0), '', $data);
+
+            //then remove all invalid utf8 secuences
+                $UTF8_BAD =
+                '([\x00-\x7F]'.                          # ASCII (including control chars)
+                '|[\xC2-\xDF][\x80-\xBF]'.               # non-overlong 2-byte
+                '|\xE0[\xA0-\xBF][\x80-\xBF]'.           # excluding overlongs
+                '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    # straight 3-byte
+                '|\xED[\x80-\x9F][\x80-\xBF]'.           # excluding surrogates
+                '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        # planes 1-3
+                '|[\xF1-\xF3][\x80-\xBF]{3}'.            # planes 4-15
+                '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # plane 16
+                '|(.{1}))';                              # invalid byte
+
+            $valid_data = '';
+
+            while (preg_match('/'.$UTF8_BAD.'/S', $data, $matches)) {
+                if ( !isset($matches[2])) {
+                    $valid_data .= $matches[0];
+                } else {
+                    $valid_data .= '?';
+                }
+                $data = substr($data, strlen($matches[0]));
+            }
+                return $valid_data;
+        } //}}}
 
 // End of Notify class
 }
