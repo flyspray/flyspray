@@ -929,7 +929,7 @@ class Backend
         $where  = $sql_params = array();
 
         $select = '';
-        $groupby = '';
+        $groupby = 't.task_id, ';
         $from   = '             {tasks}         t
                      LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
                      LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
