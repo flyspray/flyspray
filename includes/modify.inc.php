@@ -635,7 +635,7 @@ switch ($action = Req::val('action'))
                 'feed_description', 'feed_img_url', 'comment_closed', 'auto_assign');
         $args = array_map('Post_to0', $cols);
         $cols[] = 'notify_types';
-        $args[] = implode(' ', Post::val('notify_types'));
+        $args[] = implode(' ', (array) Post::val('notify_types'));
         $cols[] = 'last_updated';
         $args[] = time();
         $cols[] = 'default_cat_owner';
