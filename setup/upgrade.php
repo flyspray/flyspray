@@ -76,7 +76,6 @@ $page->assign('short_version', UPGRADE_VERSION);
 $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
 usort($folders, 'version_compare'); // start with lowest version
 
-$upgrade_available = false;
 if (Post::val('upgrade')) {
     $db->dblink->StartTrans();
     foreach ($folders as $folder) {
@@ -89,16 +88,6 @@ if (Post::val('upgrade')) {
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
     $installed_version = $fs->version;
-}
-foreach ($folders as $folder) {
-    if (version_compare($installed_version, $folder, '<')) {
-        $upgrade_available = true;
-    }
-    // or dev version
-    if ($folder == Flyspray::base_version($installed_version)
-        && version_compare($installed_version, $folder, '<=')) {
-        $upgrade_available = true;
-    }
 }
 
 function execute_upgrade_file($folder, $installed_version)
@@ -280,13 +269,11 @@ $checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION
 $checks['config_writable'] = is_writable(CONFIG_PATH);
 $checks['db_connect'] = (bool) $db->dblink;
 $checks['installed_version'] = version_compare($installed_version, '0.9.6') === 1;
-$checks['upgrade_required'] = $upgrade_available;
 $todo['config_writable'] = 'Please make sure that the file at ' . CONFIG_PATH . ' is writable.';
 $todo['db_connect'] = 'Connection to the database could not be established. Check your config.';
 $todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
 $todo['installed_version'] = 'An upgrade from Flyspray versions lower than 0.9.6 is not possible.
                               You will have to upgrade manually to at least 0.9.6, the scripts which do that are included in all Flyspray releases <= 0.9.8.';
-$todo['upgrade_required'] = 'A database upgrade is not required. Flyspray should work properly already.';
 
 $upgrade_possible = true;
 foreach ($checks as $check => $result) {
