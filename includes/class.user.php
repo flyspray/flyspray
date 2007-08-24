@@ -146,7 +146,7 @@ class User
 
     function check_account_ok()
     {
-        global $conf;
+        global $conf, $baseurl;
         // Anon users are always OK
         if ($this->isAnon()) {
             return;
@@ -157,7 +157,7 @@ class User
                 || !$this->perms('group_open', 0))
         {
             $this->logout();
-            Flyspray::Redirect(CreateURL('index'));
+            Flyspray::Redirect($baseurl);
         }
     }
 
