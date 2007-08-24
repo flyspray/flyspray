@@ -939,6 +939,13 @@ class Setup extends Flyspray
             break;
          }
       }
+      // Check that table prefix is OK, some DBs don't like it
+      $prefix = array_get($data, 'db_prefix');
+      if (strlen($prefix) > 0 && is_numeric($prefix[0])) {
+        $_SESSION['page_heading'] = 'Database Processing';
+        $_SESSION['page_message'][] = 'The table prefix may not start with a number.';
+        return false;
+      }
 
        // Setting the Fetch mode of the database connection.
       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
