@@ -76,7 +76,6 @@ switch ($action = Req::val('action'))
             break;
         }
 
-
         if ($due_date = Post::val('due_date', 0)) {
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
@@ -98,9 +97,11 @@ switch ($action = Req::val('action'))
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
                     Post::val('percent_complete'), Post::val('reportedver'),
                     $task['task_id']));
-
+        
         // Update the list of users assigned this task
-        if ($user->perms('edit_assignments') && Post::val('old_assigned') != trim(Post::val('assigned_to')) ) {
+        $assignees = (array) Post::val('rassigned_to');
+        $assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
+        if ($user->perms('edit_assignments') && $assignees_changed) {
 
             // Delete the current assignees for this task
             $db->Query('DELETE FROM {assigned}
@@ -108,7 +109,7 @@ switch ($action = Req::val('action'))
                         array($task['task_id']));
 
             // Convert assigned_to and store them in the 'assigned' table
-            foreach (Flyspray::int_explode(' ', trim(Post::val('assigned_to'))) as $key => $val)
+            foreach ((array) Post::val('rassigned_to') as $key => $val)
             {
                 $db->Replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id','task_id'));
             }
@@ -140,13 +141,13 @@ switch ($action = Req::val('action'))
             $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes);
         }
 
-        if (Post::val('old_assigned') != trim(Post::val('assigned_to')) ) {
+        if ($assignees_changed) {
             // Log to task history
-            Flyspray::logEvent($task['task_id'], 14, trim(Post::val('assigned_to')), Post::val('old_assigned'), '', $time);
+            Flyspray::logEvent($task['task_id'], 14, implode(' ', $assignees), implode(' ', $task['assigned_to']), '', $time);
 
             // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
-            if (Post::val('assigned_to') != '') {
-                $new_assignees = array_diff(Flyspray::int_explode(' ', Post::val('assigned_to')), Flyspray::int_explode(' ', Post::val('old_assigned')));
+            if (count($assignees)) {
+                $new_assignees = array_diff($task['assigned_to'], $assignees);
                 // Remove current user from notification list
                 if (!$user->infos['notify_own']) {
                     $new_assignees = array_filter($new_assignees, create_function('$u', 'global $user; return $user->id != $u;'));
@@ -487,7 +488,7 @@ switch ($action = Req::val('action'))
                         'modify_all_tasks', 'view_comments', 'add_comments', 'edit_assignments',
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
-                        'close_other_tasks', 'assign_to_self',
+                        'close_other_tasks', 'assign_to_self', 'show_as_assignees',
                         'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
 
                 $params = array_map('Post_to0',$cols);
@@ -565,7 +566,7 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'manage_project', 'view_tasks', 'open_new_tasks',
                 'modify_own_tasks', 'modify_all_tasks', 'view_comments',
-                'add_comments', 'edit_comments', 'delete_comments',
+                'add_comments', 'edit_comments', 'delete_comments', 'show_as_assignees',
                 'create_attachments', 'delete_attachments', 'view_history', 'add_votes',
                 'close_own_tasks', 'close_other_tasks', 'assign_to_self', 'edit_own_comments',
                 'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
@@ -812,7 +813,7 @@ switch ($action = Req::val('action'))
                                 array('manage_project', 'view_tasks', 'edit_own_comments',
                                   'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks',
                                   'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-                                  'create_attachments', 'delete_attachments',
+                                  'create_attachments', 'delete_attachments', 'show_as_assignees',
                                   'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
                                   'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
                                   'add_votes', 'group_open'));

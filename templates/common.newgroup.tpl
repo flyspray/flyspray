@@ -94,6 +94,10 @@
       <td><label for="editassignments">{L('editassignments')}</label></td>
       <td>{!tpl_checkbox('edit_assignments', Req::val('edit_assignments'), 'editassignments')}</td>
     </tr>
+    <tr>
+      <td><label for="show_as_assignees">{L('showasassignees')}</label></td>
+      <td>{!tpl_checkbox('show_as_assignees', Req::val('show_as_assignees'), 'show_as_assignees')}</td>
+    </tr>
     <?php if (!$proj->id): ?>
     <tr>
       <td><label for="groupopen">{L('groupenabled')}</label></td>

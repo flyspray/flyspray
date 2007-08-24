@@ -822,6 +822,8 @@ Regards,',
 'failedattempts'          => 'There were %d failed login attempts.',
 'groupnotexist'           => 'Selected group does not exist in this project.',
 'searchindetails'         => 'Search details',
+'showasassignees'         => 'Show as assignees',
+'find'                    => 'Find',
 );
 
 ?>

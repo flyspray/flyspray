@@ -144,6 +144,7 @@ input.text,input.password,input.file,textarea,select,button {
 	border:1px solid gray;
 	font-size:0.9em;
 	margin:2px;
+	vertical-align:middle;
 }
 
 textarea {

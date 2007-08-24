@@ -205,21 +205,6 @@ function updateDualSelectValue(id)
         val.value += (i > 0 ? ' ' : '') + rt.options[i].value;
     }
 }
-function remove_0val(id) {
-    el = $(id);
-    for (i = 0; i < el.options.length; i++) {
-        if (el.options[i].value == '0') {
-	    el.removeChild(el.options[i]);
-        }
-    }
-}
-function fill_userselect(url, id) {
-    var users = $('v' + id).value.split(' ');
-    for (i = 0; i < users.length; i++) {
-        if(users[i]) adduserselect(url, users[i], id, '');
-    }
-}
-
 function dualSelect(from, to, id) {
     if (typeof(from) == 'string') {
 	from = $(from+id);

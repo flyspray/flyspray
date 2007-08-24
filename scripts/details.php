@@ -33,19 +33,23 @@ $page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['i
 
 if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS']))) && $user->can_edit_task($task_details)) {
     $result = $db->Query('SELECT u.user_id, u.user_name, u.real_name, g.group_name
-                            FROM {assigned} a, {users} u
+                            FROM {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
-                           WHERE a.user_id = u.user_id AND task_id = ? AND (g.project_id = 0 OR g.project_id = ?)
-                        ORDER BY g.project_id DESC',
-                          array($task_id, $proj->id));
-    $result = $db->GroupBy($result, 'user_id');
+                           WHERE g.show_as_assignees = 1
+                        GROUP BY u.user_id
+                        ORDER BY g.project_id ASC, g.group_id ASC');
     $userlist = array();
-    foreach ($result as $row) {
-        $userlist[] = array(0 => $row['user_id'], 
-                            1 => sprintf('[%s] %s (%s)', $row['group_name'], $row['user_name'], $row['real_name']));
+    while ($row = $db->FetchRow($result)) {
+        $userlist[$row['group_name']][] = array(0 => $row['user_id'], 
+                            1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']));
     }
-
+    if (is_array(Post::val('rassigned_to'))) {
+        $page->assign('assignees', Post::val('rassigned_to'));
+    } else {
+        $assignees = $db->Query('SELECT user_id FROM {assigned} WHERE task_id = ?', $task_details['task_id']);
+        $page->assign('assignees', $db->FetchCol($assignees));
+    }
     $page->assign('userlist', $userlist);
     $page->pushTpl('details.edit.tpl');
 }
