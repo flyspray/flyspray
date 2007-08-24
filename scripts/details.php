@@ -36,7 +36,7 @@ if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS
                             FROM {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
-                           WHERE g.show_as_assignees = 1
+                           WHERE g.show_as_assignees = 1 OR g.is_admin = 1
                         GROUP BY u.user_id
                         ORDER BY g.project_id ASC, g.group_id ASC');
     $userlist = array();
