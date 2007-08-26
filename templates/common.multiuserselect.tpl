@@ -1,6 +1,7 @@
                 <div>
                    <label for="find_user" class="inline" style="margin:0;padding:0;">{L('find')}</label>:
                    <input type="text" style="vertical-align:middle" class="text" value="{Post::val('find_user')}" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
+                   <a href="javascript:unselectAll()">{L('noone')}</a>
                    <br />
 
                    <select size="8" style="width:200px;" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
@@ -39,4 +40,12 @@
                         }
                     }
                 }
+                
+                function unselectAll()
+				{
+					var options = $('rassigned_to').options;
+                    for (var i = 0; i < options.length; i++) {
+						options[i].selected=false;
+					}
+				}
                 </script>
