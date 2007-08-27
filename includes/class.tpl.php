@@ -47,7 +47,7 @@ class Tpl
 
     function themeUrl()
     {
-        return sprintf('%s/themes/%s', $GLOBALS['baseurl'], $this->_theme);
+        return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
     }
 
     function compile(&$item)
