@@ -767,19 +767,18 @@ class Backend
                          VALUES  ($sql_placeholder)", $sql_values);
 
         // Log the assignments and send notifications to the assignees
-        if (isset($args['assigned_to']) && trim($args['assigned_to']))
+        if (isset($args['rassigned_to']) && is_array($args['rassigned_to']))
         {
             // Convert assigned_to and store them in the 'assigned' table
-            foreach (Flyspray::int_explode(' ', trim($args['assigned_to'])) as $key => $val)
+            foreach ($args['rassigned_to'] as $val)
             {
                 $db->Replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task_id), array('user_id','task_id'));
             }
             // Log to task history
-            Flyspray::logEvent($task_id, 14, trim($args['assigned_to']));
+            Flyspray::logEvent($task_id, 14, implode(' ', $args['rassigned_to']));
 
             // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
-            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null,
-                            $notify->SpecificAddresses(Flyspray::int_explode(' ', $args['assigned_to'])));
+            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null, $notify->SpecificAddresses($args['rassigned_to']));
         }
 
         // Log that the task was opened
