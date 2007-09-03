@@ -238,7 +238,11 @@ class Backend
         }
 
         $task = Flyspray::GetTaskDetails($task_id);
-
+        
+        if (!$task) {
+            return false;
+        }
+        
         if ($user->can_vote($task) > 0) {
 
             if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
