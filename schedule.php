@@ -23,7 +23,7 @@ include_once BASEDIR . '/includes/class.notify.php';
 
 function send_reminders()
 {
-    global $db;
+    global $db, $fs;
     //we touch the file on every single iteration to avoid
     //the possible restart done by Startremiderdaemon method
     //in class.flyspray.conf
