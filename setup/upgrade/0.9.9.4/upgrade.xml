@@ -153,5 +153,9 @@
       <col>project_id</col>
       <col>max_items</col>
     </index>
+    <index name="cache_type_topic">
+      <col>type</col>
+      <col>topic</col>
+    </index>
   </table>
 </schema>
