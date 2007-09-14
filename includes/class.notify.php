@@ -121,13 +121,6 @@ class Notifications {
             return false;
       }
 
-      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
-                           $fs->prefs['jabber_password'],
-                           $fs->prefs['jabber_ssl'],
-                           $fs->prefs['jabber_port']);
-      $JABBER->login();
-
-
       // get listing of all pending jabber notifications
       $result = $db->Query("SELECT DISTINCT message_id
                             FROM {notification_recipients}
@@ -135,9 +128,15 @@ class Notifications {
 
       if (!$db->CountRows($result))
       {
-         $JABBER->log("No notifications to send");
          return false;
       }
+      
+      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
+                   $fs->prefs['jabber_password'],
+                   $fs->prefs['jabber_ssl'],
+                   $fs->prefs['jabber_port']);
+      $JABBER->login();
+
 
       // we have notifications to process - connect
       $JABBER->log("We have notifications to process...");
