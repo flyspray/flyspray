@@ -28,11 +28,11 @@ switch (Req::val('topic')) {
                 $title   = 'Recently closed tasks';
     break;
 
-    case 'edit':$orderby = 'last_edited_time'; $closed = '';
+    case 'edit':$orderby = 'last_edited_time'; $closed = '1=1';
                 $title   = 'Recently edited tasks';
     break;
 
-    default:    $orderby = 'date_opened'; $closed = '';
+    default:    $orderby = 'date_opened'; $closed = '1=1';
                 $title   = 'Recently opened tasks';
     break;
 }
