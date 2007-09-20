@@ -24,7 +24,7 @@ if ($feed_type != 'rss1' && $feed_type != 'rss2') {
 }
 
 switch (Req::val('topic')) {
-    case 'clo': $orderby = 'date_closed'; $closed = 't.is_closed = 1 AND';
+    case 'clo': $orderby = 'date_closed'; $closed = 't.is_closed = 1 ';
                 $title   = 'Recently closed tasks';
     break;
 
@@ -44,7 +44,7 @@ $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 $sql = $db->Query("SELECT  t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
                      FROM  {tasks}    t
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  $closed $sql_project AND t.mark_private <> '1'
+                    WHERE  $closed AND $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
                  ORDER BY  $orderby DESC", null, $max_items);
 $most_recent = 0;
@@ -78,7 +78,7 @@ $sql = $db->Query("SELECT  t.task_id, t.item_summary, t.detailed_desc, t.date_op
                      FROM  {tasks}    t
                INNER JOIN  {users}    u ON t.opened_by = u.user_id
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  $closed $sql_project AND t.mark_private <> '1'
+                    WHERE  $closed AND $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
                  ORDER BY  $orderby DESC", 0, $max_items);
 
