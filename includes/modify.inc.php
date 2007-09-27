@@ -1148,6 +1148,7 @@ switch ($action = Req::val('action'))
         $db->Query("UPDATE  {comments}
                        SET  comment_text = ?, last_edited_time = ?
                      WHERE  comment_id = ? AND task_id = ? $where", $params);
+        $db->Query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
 
         Flyspray::logEvent($task['task_id'], 5, Post::val('comment_text'),
                 Post::val('previous_text'), Post::val('comment_id'));
