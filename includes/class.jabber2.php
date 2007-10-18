@@ -16,6 +16,7 @@ class Jabber
 {
     var $connection = null;
     var $session = array();
+	var $resource = 'class.jabber2.php';
     var $log = array();
     var $log_enabled = true;
     var $timeout = 10;
@@ -48,7 +49,12 @@ class Jabber
         list($username, $server) = explode('@', $login);
 
         // Decide whether or not to use encryption
-        if ($security == SECURITY_SSL && !Jabber::can_use_ssl() || $security == SECURITY_TLS && !Jabber::can_use_tls()) {
+        if ($security == SECURITY_SSL && !Jabber::can_use_ssl()) {
+            $this->log('Warning: SSL encryption is not supported (openssl required). Falling back to no encryption.');
+            $security = SECURITY_NONE;
+        }
+        if ($security == SECURITY_TLS && !Jabber::can_use_tls()) {
+            $this->log('Warning: TLS encryption is not supported (openssl and stream_socket_enable_crypto() required). Falling back to no encryption.');
             $security = SECURITY_NONE;
         }
 
@@ -66,6 +72,16 @@ class Jabber
         // Now we listen what the server has to say...and give appropriate responses
         $this->response($this->listen());
     }
+	
+	/**
+     * Sets the resource which is used. No validation is done here, only escaping.
+	 * @param string $$name
+     * @access public
+     */
+	function SetResource($name)
+	{
+		$this->resource = $name;
+	}
 
     /**
      * Send data to the Jabber server
@@ -299,10 +315,10 @@ class Jabber
                     // session required?
                     $this->session['sess_required'] = isset($xml['stream:features'][0]['#']['session']);
 
-                    $this->send("<iq type='set' id='bind_1'>
-                                    <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
-                                        <resource>class.jabber2.php</resource>
-                                    </bind>
+					$this->send("<iq type='set' id='bind_1'>
+								   <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
+							    	 <resource>" . Jabber::jspecialchars($this->resource) . "</resource>
+                                   </bind>
                                  </iq>");
                     return $this->response($this->listen());
                 }
@@ -375,9 +391,10 @@ class Jabber
                     $response = array('username' => $this->user,
                                       'response' => $this->encrypt_password(array_merge($decoded, array('nc' => '00000001'))),
                                       'charset'  => 'utf-8',
-                                      'nc'       => '00000001');
+                                      'nc'       => '00000001',
+                                      'qop'      => 'auth'); // the only option we support anyway
 
-                    foreach (array('nonce', 'qop', 'digest-uri', 'realm', 'cnonce') as $key) {
+                    foreach (array('nonce', 'digest-uri', 'realm', 'cnonce') as $key) {
                         if (isset($decoded[$key])) {
                             $response[$key] = $decoded[$key];
                         }
