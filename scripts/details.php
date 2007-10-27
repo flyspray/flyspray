@@ -36,9 +36,10 @@ if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS
                             FROM {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
-                           WHERE g.show_as_assignees = 1 OR g.is_admin = 1
+                           WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
+                                 AND (g.project_id = 0 OR g.project_id = ?)
                         GROUP BY u.user_id
-                        ORDER BY g.project_id ASC, g.group_id ASC, u.user_name ASC');
+                        ORDER BY g.project_id ASC, g.group_id ASC, u.user_name ASC', $proj->id);
     $userlist = array();
     while ($row = $db->FetchRow($result)) {
         $userlist[$row['group_name']][] = array(0 => $row['user_id'], 
