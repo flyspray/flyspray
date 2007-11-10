@@ -13,7 +13,7 @@ $page = new FSTpl();
 header ('Content-type: text/html; charset=utf-8');
 
 $max_items  = (Req::num('num', 10) == 10) ? 10 : 20;
-$sql_project = '';
+$sql_project = ' 1=1 ';
 if ($proj->id) {
     $sql_project = sprintf(' p.project_id = %d', $proj->id);
 }
@@ -62,7 +62,7 @@ if ($fs->prefs['cache_feeds']) {
     else {
         $sql = $db->Query("SELECT  content
                              FROM  {cache} p
-                            WHERE  type = ? AND topic = ? $sql_project
+                            WHERE  type = ? AND topic = ? AND $sql_project
                                    AND max_items = ?  AND last_updated >= ?",
                         array($feed_type, $orderby, $max_items, $most_recent));
         if ($content = $db->FetchOne($sql)) {
