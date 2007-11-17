@@ -843,7 +843,7 @@ class Backend
         }
 
         if ($user->isAnon()) {
-            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token, $args['anon_email']);
+            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token, $args['anon_email'], NOTIFY_EMAIL);
         }
 
         return array($task_id, $token);
