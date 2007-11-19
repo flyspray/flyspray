@@ -847,7 +847,12 @@ class Url {
 			$append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
-
+        
+        $separator = ini_get('arg_separator.output');
+        if (strlen($separator) != 0) {
+            $append = str_replace($separator, '&', $append);
+        }
+        
         if ($this->getinfo('query')) {
         	$this->parsed['query'] .= '&' . $append;
         } else {
@@ -858,6 +863,11 @@ class Url {
 	function addvars($vars = array()) {
         $append = http_build_query($vars);
 
+        $separator = ini_get('arg_separator.output');
+        if (strlen($separator) != 0) {
+            $append = str_replace($separator, '&', $append);
+        }
+        
         if ($this->getinfo('query')) {
         	$this->parsed['query'] .= '&' . $append;
         } else {
