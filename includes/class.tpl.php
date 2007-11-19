@@ -844,7 +844,7 @@ class Url {
 	function addfrom($method = 'get', $vars = array()) {
 		$append = '';
 		foreach($vars as $key) {
-			$append .= Url::query_from_array( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
+			$append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
 
@@ -855,22 +855,8 @@ class Url {
         }
 	}
 
-    function query_from_array($vars) {
-        $append = '';
-		foreach ($vars as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $valuei) {
-                    $append .= rawurlencode($key) . '[]=' . rawurlencode($valuei) . '&';
-                }
-            } else {
-                $append .= rawurlencode($key) . '=' . rawurlencode($value) . '&';
-            }
-        }
-        return substr($append, 0, -1);
-    }
-
 	function addvars($vars = array()) {
-        $append = Url::query_from_array($vars);
+        $append = http_build_query($vars);
 
         if ($this->getinfo('query')) {
         	$this->parsed['query'] .= '&' . $append;
