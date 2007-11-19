@@ -210,6 +210,12 @@ class Filters {
         
         return $data;
     }
+
+    function escapeqs($qs)
+    {
+            parse_str($qs, $clean_qs);
+            return http_build_query($clean_qs);
+    }
 }
 
 /**

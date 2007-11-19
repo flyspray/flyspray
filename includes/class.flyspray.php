@@ -664,6 +664,13 @@ class Flyspray
         if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
+
+        if((strlen($name) + strlen($val)) > 4096) {
+            //violation of the protocol
+            trigger_error("Flyspray sent a too big cookie, browsers will not handle it");
+            return false;
+        }
+
         return setcookie($name, $val, $time, $url['path']);
     } // }}}
     // Reminder daemon {{{
