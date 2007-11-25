@@ -295,12 +295,18 @@ class Jabber
         switch (key($xml)) {
             case 'stream:stream':
                 // Connection initialised (or after authentication). Not much to do here...
-                $this->session['id'] = $xml['stream:stream'][0]['@']['id'];
                 if (isset($xml['stream:stream'][0]['#']['stream:features'])) {
                     // we already got all info we need
                     $this->features = $xml['stream:stream'][0]['#'];
                 } else {
                     $this->features = $this->listen();
+                }
+                $second_time = isset($this->session['id']);
+                $this->session['id'] = $xml['stream:stream'][0]['@']['id'];
+                if ($second_time) {
+                    // If we are here for the second time after TLS, we need to continue logging in
+                    $this->login();
+                    return;
                 }
 
                 // go on with authentication?
