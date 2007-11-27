@@ -822,6 +822,8 @@ FlysprayのWebサイトに行き、現在稼働しているのが最新バージ
 'failedattempts'          => '%d 回のログイン失敗がありました。',
 'groupnotexist'           => '選択されたグループはこのプロジェクトに存在しません。',
 'searchindetails'         => '詳細内も検索',
+'showasassignees'         => '担当者欄に表示',
+'find'                    => '検索',
 );
 
 ?>
