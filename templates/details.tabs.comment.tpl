@@ -20,7 +20,7 @@
     <?php if ($user->perms('delete_comments')): ?>
     &mdash;
     <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=details.deletecomment&amp;task_id={$task_details['task_id']}&amp;comment_id={$comment['comment_id']}"
-      onclick="return confirm('{L('confirmdeletecomment')}');">
+      onclick="return confirm('{#L('confirmdeletecomment')}');">
       {L('delete')}</a>
     <?php endif ?>
   </span>
@@ -74,7 +74,7 @@
 
       <button tabindex="9" type="submit">{L('addcomment')}</button>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-      <button tabindex="9" type="button" onclick="showPreview('comment_text', '{$baseurl}', 'preview')">{L('preview')}</button>
+      <button tabindex="9" type="button" onclick="showPreview('comment_text', '{#$baseurl}', 'preview')">{L('preview')}</button>
       <?php endif; ?>
       <?php if (!$watched): ?>
       {!tpl_checkbox('notifyme', Req::val('notifyme', !(Req::val('action') == 'details.addcomment')), 'notifyme')} <label class="left" for="notifyme">{L('notifyme')}</label>

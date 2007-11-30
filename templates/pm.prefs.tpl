@@ -42,7 +42,7 @@
             {!TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message']))}
             <br />
             <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-            <button tabindex="9" type="button" onclick="showPreview('intromesg', '{$baseurl}', 'preview')">{L('preview')}</button>
+            <button tabindex="9" type="button" onclick="showPreview('intromesg', '{#$baseurl}', 'preview')">{L('preview')}</button>
             <?php endif; ?>
           </td>
         </tr>
@@ -55,7 +55,7 @@
             {!TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task']))}
             <br />
             <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-            <button tabindex="9" type="button" onclick="showPreview('default_task', '{$baseurl}', 'preview_taskdesc')">{L('preview')}</button>
+            <button tabindex="9" type="button" onclick="showPreview('default_task', '{#$baseurl}', 'preview_taskdesc')">{L('preview')}</button>
             <?php endif; ?>
           </td>
         </tr>

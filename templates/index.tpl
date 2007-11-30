@@ -26,12 +26,12 @@
         <?php if (!$user->isAnon()): ?>
         <span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
         <input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />
-        &nbsp;<button onclick="savesearch('{!Filters::escapeqs($_SERVER['QUERY_STRING'])}', '{$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
+        &nbsp;<button onclick="savesearch('{!Filters::escapeqs($_SERVER['QUERY_STRING'])}', '{#$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
         </span>
         <?php endif; ?>
 
         <span id="searchstate" style="cursor:pointer">
-        <a onclick="toggleSearchBox('{$this->themeUrl()}');return false;" href="{CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))}"><span id="advancedsearchstate" class="showstate">
+        <a onclick="toggleSearchBox('{#$this->themeUrl()}');return false;" href="{CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))}"><span id="advancedsearchstate" class="showstate">
         <img id="advancedsearchstateimg" src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
              alt="<?php echo (Cookie::val('advancedsearch')) ? '-' : '+'; ?>" width="16" height="16" />
         </span>{L('advanced')}</a>

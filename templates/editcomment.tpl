@@ -38,7 +38,7 @@
     <input type="hidden" name="previous_text" value="{$comment['comment_text']}" />
     <button type="submit">{L('saveeditedcomment')}</button>
     <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-    <button tabindex="9" type="button" onclick="showPreview('comment_text', '{$baseurl}', 'preview')">{L('preview')}</button>
+    <button tabindex="9" type="button" onclick="showPreview('comment_text', '{#$baseurl}', 'preview')">{L('preview')}</button>
     <?php endif; ?>
     </div>
 </form>

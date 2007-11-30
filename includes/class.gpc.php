@@ -177,6 +177,22 @@ class Filters {
     }
     
     /**
+     * Give user input free from potentially mailicious html and JS insertions
+     * @param mixed $data
+     * @return string
+     * @access public static
+     */
+    function noJsXSS($data)
+    {
+        if(empty($data) || is_numeric($data)) {
+            return $data;
+        } elseif(is_string($data)) {
+            return Filters::noXSS(preg_replace("/[\x01-\x1F\x7F]|\xC2[\x80-\x9F]/u", "", addcslashes($data, "\t\"'\\")));
+        }
+        return '';
+    }
+    
+    /**
      * is $data alphanumeric eh ?
      * @param string $data string value to check
      * @return bool
