@@ -187,7 +187,7 @@ class Filters {
         if(empty($data) || is_numeric($data)) {
             return $data;
         } elseif(is_string($data)) {
-            return Filters::noXSS(preg_replace("/[\x01-\x1F\x7F]|\xC2[\x80-\x9F]/u", "", addcslashes($data, "\t\"'\\")));
+            return Filters::noXSS(preg_replace("/[\x01-\x1F\x7F]|\xC2[\x80-\x9F]/", "", addcslashes($data, "\t\"'\\")));
         }
         return '';
     }
