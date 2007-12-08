@@ -639,9 +639,12 @@ class Flyspray
         }
 
         // Compare the crypted password to the one in the database
-        if ($password == $auth_details['user_pass']
-                && $auth_details['account_enabled'] == '1'
-                && $auth_details['group_open'] == '1')
+        $pwOk = ($password == $auth_details['user_pass']);
+        // Admin users cannot be disabled
+        if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
+            return $auth_details['user_id'];
+        }
+        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1')
         {
             return $auth_details['user_id'];
         }
