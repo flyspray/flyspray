@@ -216,7 +216,7 @@ switch ($action = Req::val('action'))
         $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id']);
 
         // add comment of PM request to comment page if accepted
-        $sql = $db->Query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ?',
+        $sql = $db->Query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ? AND resolved_by = 0',
                           array($task['task_id'], 2));
         $request = $db->FetchRow($sql);
         if ($request) {
