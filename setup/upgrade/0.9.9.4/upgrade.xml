@@ -158,4 +158,42 @@
       <col>topic</col>
     </index>
   </table>
+  <table name="admin_requests">
+    <field name="request_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="submitted_by" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="request_type" type="I" size="2">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="reason_given" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="time_submitted" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="resolved_by" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="time_resolved" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="deny_reason" type="C" size="255" />
+  </table>
 </schema>
