@@ -36,9 +36,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="deny_reason" type="C" size="255">
-      <NOTNULL/>
-    </field>
+    <field name="deny_reason" type="C" size="255" />
   </table>
   <table name="assigned">
     <field name="assigned_id" type="I" size="10">
@@ -110,7 +108,7 @@
     <field name="type" type="C" size="4">
       <NOTNULL/>
     </field>
-    <field name="content" type="X">
+    <field name="content" type="XL">
       <NOTNULL/>
     </field>
     <field name="topic" type="C" size="30">
@@ -134,6 +132,10 @@
       <col>topic</col>
       <col>project_id</col>
       <col>max_items</col>
+    </index>
+    <index name="cache_type_topic">
+      <col>type</col>
+      <col>topic</col>
     </index>
   </table>
   <table name="comments">
@@ -283,6 +285,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="edit_assignments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_as_assignees" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
@@ -986,12 +992,12 @@
     </field>
   </table>
   <sql>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1);</query>
     <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'Backend / Core', 1, 0, 2, 3);</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 0, 'root', 0, 0, 1, 2);</query>
