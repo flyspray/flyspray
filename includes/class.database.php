@@ -75,6 +75,7 @@ class Database
         $this->dbtype   = $dbtype;
         $this->dbprefix = $dbprefix;
         $ADODB_COUNTRECS = false;
+        $dbpass = rawurlencode($dbpass);
         $dsn = "$dbtype://$dbuser:$dbpass@$dbhost/$dbname";
         $this->dblink = NewADOConnection($dsn);
 
