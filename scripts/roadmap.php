@@ -48,6 +48,13 @@ while ($row = $db->FetchRow($milestones)) {
                          array($row['version_id'], $proj->id));
     $tasks = $db->fetchAllArray($tasks);
     
+    $count = count($tasks);
+    for ($i = 0; $i < $count; $i++) {
+        if (!$user->can_view_task($tasks[$i])) {
+            unset($tasks[$i]);
+        }
+    }
+    
     $data[] = array('id' => $row['version_id'], 'open_tasks' => $tasks, 'percent_complete' => $percent_complete,
                     'all_tasks' => $all_tasks, 'name' => $row['version_name']);
 }
