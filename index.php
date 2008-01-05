@@ -57,7 +57,6 @@ if (Get::val('getfile')) {
 
     if ($user->can_view_task($task))
     {
-        output_reset_rewrite_vars();
         $path = BASEDIR . "/attachments/$file_name";
 
         header('Pragma: public');
