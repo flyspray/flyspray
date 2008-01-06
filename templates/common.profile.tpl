@@ -24,17 +24,10 @@
       <tr>
         <td><label for="notifytype">{L('notifytype')}</label></td>
         <td>
-          <?php if ($fs->prefs['user_notify'] == '1'): ?>
           <select id="notifytype" name="notify_type">
-            {!tpl_options(array(L('none'),
-                                L('email'),
-                                L('jabber'),
-                                L('both')),
+            {!tpl_options($fs->GetNotificationOptions(),
                                 Req::val('notify_type', $theuser->infos['notify_type']))}
           </select>
-          <?php else: ?>
-          {L('setglobally')}
-          <?php endif; ?>
           {!tpl_checkbox('notify_own', Req::val('notify_own', !Post::val('action') && $theuser->infos['notify_own']), 'notify_own')}
           <label class="left notable" for="notify_own">{L('notifyown')}</label>
         </td>

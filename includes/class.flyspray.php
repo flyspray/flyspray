@@ -1087,7 +1087,37 @@ class Flyspray
 
         return $data;
     }
-
+    
+    /**
+     * Returns an array containing all notification options the user is
+     * allowed to use.
+     * @access public
+     * @return array
+     */
+    function GetNotificationOptions($noneAllowed = true)
+    {
+        switch ($this->prefs['user_notify']) 
+        {
+            case 0:
+                return array(0             => L('none'));
+            case 2:
+                return array(NOTIFY_EMAIL  => L('email'));
+            case 3:
+                return array(NOTIFY_JABBER => L('jabber'));
+                
+        }
+        
+        $return = array(0             => L('none'),
+                        NOTIFY_EMAIL  => L('email'),
+                        NOTIFY_JABBER => L('jabber'),
+                        NOTIFY_BOTH   => L('both'));
+        if (!$noneAllowed) {
+            unset($return[0]);
+        }
+        
+        return $return;
+    }
+    
     /**
      * getSvnRev
      *  For internal use

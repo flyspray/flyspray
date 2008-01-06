@@ -44,7 +44,7 @@
       <td><label for="notify_type">{L('notifications')}</label></td>
       <td>
         <select id="notify_type" name="notify_type">
-          {!tpl_options(array(L('none'), L('email'), L('jabber'), L('both')), Req::val('notify_type'))}
+          {!tpl_options($fs->GetNotificationOptions(), Req::val('notify_type'))}
         </select>
       </td>
     </tr>
