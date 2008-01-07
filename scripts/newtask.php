@@ -22,7 +22,7 @@ $result = $db->Query('SELECT u.user_id, u.user_name, u.real_name, g.group_name
                            WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
                                  AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
                         GROUP BY u.user_id
-                        ORDER BY g.project_id ASC, g.group_id ASC', $proj->id);
+                        ORDER BY g.project_id ASC, g.group_name, g.group_id ASC, u.user_name ASC', $proj->id);
 $userlist = array();
 while ($row = $db->FetchRow($result)) {
     $userlist[$row['group_name']][] = array(0 => $row['user_id'], 
