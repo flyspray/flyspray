@@ -222,7 +222,7 @@ class Notifications {
       return true;
    } // }}}
    // {{{ Send email
-   function SendEmail($to, $subject, $body, $task_id)
+   function SendEmail($to, $subject, $body, $task_id = null)
    {
        global $fs, $proj, $user;
 
@@ -268,32 +268,33 @@ class Notifications {
             $message->setReplyTo($proj->prefs['notify_reply']);
       }
 
-      if($task_id) {
+      if (isset($task_id)) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = sprintf('<FS%d@%s>', $task_id, $hostdata['host']);
         // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
             $message->headers->set('In-Reply-To', $inreplyto);
             $message->headers->set('References', $inreplyto);
       }
-          $recipients =& new Swift_RecipientList();
-          // now accepts string , array or Swift_Address.
-          $recipients->addTo($to);
-          $message->build();
-          $retval = (bool) $swift->batchsend($message, $recipients,
-                    new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
-          
-          if(defined('FS_MAIL_LOGFILE')) {
-              if(is_writable(dirname(FS_MAIL_LOGFILE))) {
-                  if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                      fwrite($fh, $log->dump(true));
-                      fwrite($fh, php_uname());
-                      fclose($fh);
-                  }
+      
+      $recipients =& new Swift_RecipientList();
+      // now accepts string , array or Swift_Address.
+      $recipients->addTo($to);
+      $message->build();
+      $retval = (bool) $swift->batchsend($message, $recipients,
+                new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
+      
+      if(defined('FS_MAIL_LOGFILE')) {
+          if(is_writable(dirname(FS_MAIL_LOGFILE))) {
+              if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
+                  fwrite($fh, $log->dump(true));
+                  fwrite($fh, php_uname());
+                  fclose($fh);
               }
-              
           }
-          $swift->disconnect();
-          return $retval;  
+          
+      }
+      $swift->disconnect();
+      return $retval;  
 
    } //}}}
    // {{{ Create a message for any occasion
