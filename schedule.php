@@ -20,7 +20,6 @@ define('IN_FS', true);
 
 require_once 'header.php';
 include_once BASEDIR . '/includes/class.notify.php';
-error_reporting(E_ALL);
 
 function send_reminders()
 {

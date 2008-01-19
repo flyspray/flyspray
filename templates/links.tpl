@@ -47,7 +47,7 @@
 <div id="projectselector">
     <form id="projectselectorform" action="{$baseurl}index.php" method="get">
        <div>
-        <select name="project">
+        <select name="project" onChange="document.getElementById('projectselectorform').submit()">
           {!tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id)}
         </select>
         <button type="submit" value="1" name="switch">{L('switch')}</button>
