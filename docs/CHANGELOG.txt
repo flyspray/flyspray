@@ -1,4 +1,151 @@
+===== 0.9.9.4 - 12 December 2007 =====
 
+==== Features ====
+  * less sucking assignee selector (http://forum.flyspray.org/viewtopic.php?id=259)
+
+==== Fixes ====
+  * [security] Fixed XSS holes, see [[FSA:2|FSA:2]]
+  * setup fix: now prevents table prefixes starting with a number
+  * fixed a redirection error
+  * fixed double slash in themeurl()
+  * FS#1338 - 'comments' field on tasklist is malfunctioning. 
+  * fixed not-null jabber ID column
+  * FS#1341 - Crafted url for voting exposes sql
+  * cache-table fix
+  * fixed wrong login URL
+  * fixed error message in schedule.php
+  * FS#1344: Wrong URLs with address_rewriting
+  * fixed two Jabber login bugs
+  * FS#1347 - Jabber connects if no message is to be send
+  * SQL fix for feed.php
+  * FS#1354 - Adding user to notification list in IE: tlp_userselect don't show users list
+  * Fixed missing event in the reports page
+  * FS#1376 - Jabber and email notification not working
+  * Fixes for "saved searches"
+
+==== Changes ====
+  * updated languages
+  * Manage project permission now "maxes out" all other permissions for a project
+
+
+===== 0.9.9.3 - 23 August 2007 =====
+
+==== Features ====
+
+  * added mailto-link support
+
+==== Bugs ====
+
+  * fixed Postgre SQL error
+  * limited table prefix length for setup to prevent problems
+  * fixed regular expression for emails
+  * FS#1323: Tabindex for WYSIWYG-Icon before textarea hinders usability a bit
+  * FS#1321: User::check_account_ok() may create an endless redirect loop
+  * fixed duplicate RSS feed entries
+  * FS#1320: Mouse overing UserName when in Manage-Project
+  * FS#1312: "double quotes" break the dependency graph 
+  * FS#1306: Comments with SQL Statements with URLs in them get unwanted SemiColons
+  * fix: deleting a user and resetting the automincrement value of a table (don't do this!) could grant a new user unwanted permissions
+  * improved attachment notifications and history
+  * fixed SQL error when searching for last edit date without having last edit column enabled
+  * fix for another upgrading bug
+  * made Jabber usable in PHP 5.2.[1|2] as long as no encryption is in place
+  * FS#1272: All Projects: in page title
+  * FS#1274: Error in translation "% of task"
+  * FS#1268: Upgrade script fails due to incorrect error about cgi.fix_pathinfo
+  * corrected dates of the last edit column
+  * make force_baseurl compatibility setting work correctly everywhere
+  * FS#1282: Task list in task details do not work after search
+  * fixed changing old type (crypt-based) passwords
+
+==== Changes ====
+
+  * admin users are not restricted anymore setting a user's email address
+  * removed strike through for the task list when searching for closed tasks
+  * single newlines are possible in dokuwiki now as well
+  * reopen-request comments are now copied to the comments tab when accepted
+
+===== 0.9.9.2 - 26 May 2007 =====
+
+==== Features ====
+ 
+  * temporary account lock when password entered incorrectly too often + user notification
+  * (backported from 1.0) Strike through and disable links for missing attachments
+  * new notification subject parameter: %u for user name
+  * search in task summary only now possible
+
+==== Bugs ====
+
+  * fixed anon email not being saved on task submission error
+  * fixed false positive duplicate requests
+  * another fix for duplicate emails
+  * speed up for the "last edited" column, was virtually unusable with non small-sized DBs
+  * fixed dokuwiki creating directories with wrong permissions
+  * FS#1258 - Extension jscalendar doesn't work with polish translation
+  * disabled Jabber notifications in PHP 5.2.1 and 5.2.2 due to a bug (http://bugs.php.net/bug.php?id=41236) which could cause a server to slow down significantly
+  * FS#1249: Switching between projects while editing project's user groups
+  * fixed "members can log in" on new group page for projects
+  * FS#1250 - Notifications::Create does not iterate through $to array
+  * FS#1246 - Categories marked as 'no show' still show up in the new task category list
+  * fixed an issue with older IIS versions
+  * fixed user profile info when viewed in "all projects"
+  * more reliable temp dir detection
+  * fixed that removed notifications did not appear in the history
+  * if user does not exists flyspray wrongly says "user is not enabled to login" . This has been corrected and now shows the correct error message.
+  * fixed a few possible upgrade problems for 0.9.8 to 0.9.9 and 0.9.7 to 0.9.9
+  * improved SVG with/height parsing for dependency graphs
+  * fixed links on the roadmap page when default entry page is not the task list
+  * FS#1224 - Flyspray generating dot file with syntax error
+  * Flyspray checks writability of the attachments folder now
+  * fixed a problem with swift and emails
+  * fixed upgrader button in IE7
+  * updated sv-SE, spanish, NL translation
+  * fixed a PHP notice in reports.php
+  * fixed a bug in the Jabber library
+  * fixed task links if both the summary and ID column are disabled
+
+==== Changes ====
+
+  * bigger textarea for tasks
+  * changed possibly confusing confirmation codes
+  * minimum password size is 5 chars now
+  * removed email addresses from feeds
+  * the default htaccess file will now disable mod_security
+  * now upgrader will not allow to upgrade from 0.9.6 (too old)
+
+===== 0.9.9.1 - 16 March 2007 =====
+
+==== Bugs ====
+
+  * [security] minor issue: Project summary of private projects can be seen with direct links
+  * [security] major issue: Performing actions as admin possible without password when getting Flyspray to spit out errors before all headers are sent (Thanks to Stefan Esser) see also [[fsa:1 | FSA1]]
+  * fixed upgrade problems with PostgreSQL
+  * fixed a bug regarding adding attachments
+  * fixed a bug related to the task list and update check (undefined index...)
+  * fixed maxlength for user name fields + usernames ar stripped on login the same way as on creation
+  * fixed a problem with time zones
+  * upgraded swift to fix a problem with double dots in emails (hopefully)
+  * fixed two upgrade problems for 0.9.7 to 0.9.9
+  * fixed "Undefined index: user_pass" with wrong cookies
+  * fixed a typo (hardcoded task ID), which lead to confusing URLs after editing a task
+  * fixed that the template class can use a non-existent themes
+  * fixed language selection if no language is set
+  * fixed FS#1198: Unable to translate into new language with .langedit.php
+  * fixed FS#1194: Restore default task list sort order
+  * fixed "Sort task list by status fails for closed tasks"
+
+
+==== Changes ====
+
+  * updated BG translation
+  * fixed a too low margin on the roadmap page
+  * table cells for task fields now use nowrap 
+  * glob_compat() for all PHP installations that have glob() disabled for some pseudo security reasons, some people still secure their systems based in the wrong assumption that safe_mode or open_basedir are safe.
+  * Flyspray now checks if the XML parser is available which is required for setup, otherwise setup might fail for no apparent reason
+  * added replacements for ctype_digit and ctype_alnum which are sometimes missing on borked PHP installations
+  * removed automatically added reminders. It will not be in 1.0 anyway, so you better don't get used to it.
+  * upgrader button can't be pressed twice in a row anymore
+  
 ===== 0.9.9 - 10 February 2007 =====
 
 The list of changes is so extensive that it's too much work to list them all. Refer to http://blog.flyspray.org/archives/2-Development-status-update.html for a developement summary.
