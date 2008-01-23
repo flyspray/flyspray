@@ -50,8 +50,9 @@
         <select name="project" onChange="document.getElementById('projectselectorform').submit()">
           {!tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id)}
         </select>
-        <button type="submit" value="1" name="switch">{L('switch')}</button>
+        <button type="submit">{L('switch')}</button>
         <input type="hidden" name="do" value="{$do}" />
+        <input type="hidden" value="1" name="switch" />
         <?php $check = array('area', 'id');
               if ($do == 'reports') {
                 $check = array_merge($check, array('open', 'close', 'edit', 'assign', 'repdate', 'comments', 'attachments',
