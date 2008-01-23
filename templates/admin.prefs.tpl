@@ -106,6 +106,10 @@
           <td><label for="smtpserv">{L('smtpserver')}</label></td>
           <td>
             <input id="smtpserv" name="smtp_server" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['smtp_server']}" />
+            <?php if (extension_loaded('openssl')) : ?>
+            {!tpl_checkbox('email_ssl', $fs->prefs['email_ssl'], 'email_ssl')} <label class="inline" for="email_ssl">{L('ssl')}</label>
+            {!tpl_checkbox('email_tls', $fs->prefs['email_tls'], 'email_tls')} <label class="inline" for="email_tls">{L('tls')}</label>
+            <?php endif; ?>
           </td>
         </tr>
         <tr>

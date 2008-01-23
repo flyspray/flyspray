@@ -824,6 +824,7 @@ Regards,',
 'searchindetails'         => 'Search details',
 'showasassignees'         => 'Show as assignees',
 'find'                    => 'Find',
+'tls'                     => 'TLS',
 );
 
 ?>

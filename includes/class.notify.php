@@ -234,7 +234,14 @@ class Notifications {
       if (!empty($fs->prefs['smtp_server'])) {
           
           Swift_ClassLoader::load('Swift_Connection_SMTP');
-          $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
+          // connection... SSL, TLS or none
+          if ($fs->prefs['email_ssl']) {
+              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_SSL);
+          } else if ($fs->prefs['email_tls']) {
+              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_TLS);
+          } else {
+              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
+          }
           
           if ($fs->prefs['smtp_user']) {
                 $swiftconn->setUsername($fs->prefs['smtp_user']);

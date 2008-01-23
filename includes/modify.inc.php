@@ -512,7 +512,7 @@ switch ($action = Req::val('action'))
         }
 
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
-                'jabber_password', 'anon_group', 'user_notify', 'admin_email',
+                'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
                 'lang_code', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
                 'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds');
