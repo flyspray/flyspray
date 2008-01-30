@@ -640,7 +640,7 @@ switch ($action = Req::val('action'))
         $cols[] = 'last_updated';
         $args[] = time();
         $cols[] = 'default_cat_owner';
-        $args[] =  Flyspray::username_to_id(Post::val('default_cat_owner'));
+        $args[] =  Flyspray::ValidUserId(Post::val('default_cat_owner'));
         $args[] = $proj->id;
 
         $update = $db->Query("UPDATE  {projects}
@@ -778,7 +778,10 @@ switch ($action = Req::val('action'))
         if ($uid = Post::val('uid')) {
             $uids = preg_split('/[\s,;]+/', $uid, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($uids as $uid) {
-                $uid = Flyspray::username_to_id($uid);
+                $uid = Flyspray::UserNameToId($uid);
+                if (!$uid) {
+                    continue;
+                }
 
                 // If user is already a member of one of the project's groups, **move** (not add) him to the new group
                 $sql = $db->Query('SELECT g.group_id
@@ -989,7 +992,7 @@ switch ($action = Req::val('action'))
                                               show_in_list = ?, category_owner = ?,
                                               lft = ?, rgt = ?
                                        WHERE  category_id = ? AND project_id = ?',
-                                  array($listname, intval($listshow[$id]), Flyspray::username_to_id($listowners[$id]), $listlft[$id], $listrgt[$id], $id, $proj->id));
+                                  array($listname, intval($listshow[$id]), Flyspray::UserNameToId($listowners[$id]), $listlft[$id], $listrgt[$id], $id, $proj->id));
                 // Correct visibility for sub categories
                 if ($listshow[$id] == 0) {
                     foreach ($listnames as $key => $value) {
@@ -1035,7 +1038,7 @@ switch ($action = Req::val('action'))
                                  ( project_id, category_name, show_in_list, category_owner, lft, rgt )
                          VALUES  (?, ?, 1, ?, ?, ?)",
                 array($proj->id, Post::val('list_name'),
-                      Post::val('category_owner', 0) == '' ? '0' : Flyspray::username_to_id(Post::val('category_owner', 0)), $right, $right+1));
+                      Post::val('category_owner', 0) == '' ? '0' : Flyspray::UserNameToId(Post::val('category_owner', 0)), $right, $right+1));
 
         $_SESSION['SUCCESS'] = L('listitemadded');
         break;
@@ -1109,7 +1112,7 @@ switch ($action = Req::val('action'))
     // adding a user to the notification list
     // ##################
     case 'details.add_notification':
-        if (!Backend::add_notification(Req::val('user_id'), Req::val('ids'))) {
+        if (!Backend::add_notification(Flyspray::ValidUserId(Req::val('user_id')), Req::val('ids'))) {
             Flyspray::show_error(L('couldnotaddusernotif'));
             break;
         }

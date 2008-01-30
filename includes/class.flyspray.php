@@ -913,21 +913,37 @@ class Flyspray
     }
 
     /**
+     * Returns the user ID if valid, 0 otherwise
+     * @param int $id
+     * @access public static
+     * @return integer 0 if the user does not exist
+     * @version 1.0
+     */
+    function ValidUserId($id)
+    {
+        global $db;
+
+        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array($id));
+
+        return intval($db->FetchOne($sql));
+    }
+    
+    /**
      * Returns the ID of a user with $name
      * @param string $name
      * @access public static
      * @return integer 0 if the user does not exist
      * @version 1.0
      */
-    function username_to_id($name)
+    function UserNameToId($name)
     {
         global $db;
 
-        $sql = $db->Query('SELECT user_id FROM {users} WHERE ' .
-                          (is_numeric($name) ? 'user_id' : 'user_name') . ' = ?', array($name));
+        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
 
         return intval($db->FetchOne($sql));
     }
+    
     /**
      * check_email
      *  checks if an email is valid

@@ -15,7 +15,7 @@ if ($proj->id) {
     $page->assign('project_groups', Flyspray::ListGroups($proj->id));
 }
 
-$id = Flyspray::username_to_id(Get::val('id', Get::val('uid')));
+$id = Flyspray::ValidUserId(Get::val('id', Get::val('uid')));
 
 $theuser = new User($id);
 if ($theuser->isAnon()) {

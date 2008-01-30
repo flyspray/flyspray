@@ -33,7 +33,7 @@ class Backend
 
         settype($tasks, 'array');
 
-        $user_id = Flyspray::username_to_id($user_id);
+        $user_id = Flyspray::ValidUserId($user_id);
 
         if (!$user_id || !count($tasks)) {
             return false;
@@ -475,7 +475,7 @@ class Backend
             array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone));
 
         // Get this user's id for the record
-        $uid = Flyspray::username_to_id($user_name);
+        $uid = Flyspray::UserNameToId($user_name);
 
         // Now, create a new record in the users_in_groups table
         $db->Query('INSERT INTO  {users_in_groups} (user_id, group_id)
@@ -656,7 +656,7 @@ class Backend
             // Get all users assigned to a task
             $user_id = Flyspray::GetAssignees($task_id);
         } else {
-            $user_id = array(Flyspray::username_to_id($user_id));
+            $user_id = array(Flyspray::ValidUserId($user_id));
             if (!reset($user_id)) {
                 return false;
             }
