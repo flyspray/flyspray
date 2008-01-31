@@ -23,7 +23,7 @@
     <form action="{$baseurl}index.php" method="get">
         <div>
             <label for="edit_user">{L('edituser')}</label>
-            {!tpl_userselect('user_id', '', 'edit_user')}       
+            {!tpl_userselect('user_name', '', 'edit_user')}       
             <button type="submit">{L('edit')}</button>
 
             <input type="hidden" name="do" value="admin" />

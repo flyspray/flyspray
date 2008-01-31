@@ -24,8 +24,10 @@ $page->pushTpl('admin.menu.tpl');
 
 switch ($area = Req::val('area', 'prefs')) {
     case 'users':
-        $id = Flyspray::ValidUserId(Req::val('user_id'));
-
+        $id = Flyspray::UserNameToId(Req::val('user_name'));
+        if (!$id) {
+            $id = Req::val('user_id');
+        }
         $theuser = new User($id, $proj);
         if ($theuser->isAnon()) {
             Flyspray::show_error(5, true, null, $_SESSION['prev_page']);
