@@ -19,6 +19,7 @@
         <td>
           <input id="jabberid" class="text" type="text" name="jabber_id" size="50" maxlength="100"
             value="{Req::val('jabber_id', $theuser->infos['jabber_id'])}" />
+          <input type="hidden" name="old_jabber_id" value="{$theuser->infos['jabber_id']}" />
         </td>
       </tr>
       <tr>

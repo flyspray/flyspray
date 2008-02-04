@@ -721,6 +721,9 @@ switch ($action = Req::val('action'))
                         crypt($new_hash, $conf['general']['cookiesalt']), time()+3600*24*30);
             }
         }
+        if (Post::val('old_jabber_id') != Post::val('jabber_id')) {
+            Notifications::JabberRequestAuth(Post::val('jabber_id'));
+        }
 
         $db->Query('UPDATE  {users}
                        SET  real_name = ?, email_address = ?, notify_own = ?,

@@ -531,7 +531,11 @@ class Backend
         $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
                          VALUES (?, ?, ?, ?)',
                     array($uid, L('tasksireported'), serialize($iopened), time()));
-
+        
+        if ($jabber_id) {
+            Notifications::JabberRequestAuth($jabber_id);
+        }
+        
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
             $sql = $db->Query('SELECT DISTINCT email_address

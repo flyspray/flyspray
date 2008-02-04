@@ -106,6 +106,28 @@ class Notifications {
 
       return true;
    } // }}}
+   function JabberRequestAuth($email)
+   {
+        global $fs;
+
+        include_once BASEDIR . '/includes/class.jabber2.php';
+
+        if (empty($fs->prefs['jabber_server'])
+            || empty($fs->prefs['jabber_port'])
+            || empty($fs->prefs['jabber_username'])
+            || empty($fs->prefs['jabber_password'])) {
+            return false;
+        }
+        
+        $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
+                   $fs->prefs['jabber_password'],
+                   $fs->prefs['jabber_ssl'],
+                   $fs->prefs['jabber_port']);
+        $JABBER->login();
+        $JABBER->send("<presence to='" . Jabber::jspecialchars($email) . "' type='subscribe'/>");
+        $JABBER->disconnect();
+   }
+   
    // {{{ Send Jabber messages that were stored earlier
    function SendJabber()
    {
