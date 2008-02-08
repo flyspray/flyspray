@@ -1,6 +1,8 @@
 [defaultupgrade]
+1="upgrade.xml"
 
 [develupgrade]
+1="upgrade.xml"
 
 [fsprefs]
 fs_ver="0.9.7" ; doesn't matter which version

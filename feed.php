@@ -25,14 +25,17 @@ if ($feed_type != 'rss1' && $feed_type != 'rss2') {
 
 switch (Req::val('topic')) {
     case 'clo': $orderby = 'date_closed'; $closed = 't.is_closed = 1 ';
+                $topic = 1;
                 $title   = 'Recently closed tasks';
     break;
 
     case 'edit':$orderby = 'last_edited_time'; $closed = '1=1';
+                $topic = 2;
                 $title   = 'Recently edited tasks';
     break;
 
     default:    $orderby = 'date_opened'; $closed = '1=1';
+                $topic = 3;
                 $title   = 'Recently opened tasks';
     break;
 }
@@ -64,7 +67,7 @@ if ($fs->prefs['cache_feeds']) {
                              FROM  {cache} p
                             WHERE  type = ? AND topic = ? AND $sql_project
                                    AND max_items = ?  AND last_updated >= ?",
-                        array($feed_type, $orderby, $max_items, $most_recent));
+                        array($feed_type, $topic, $max_items, $most_recent));
         if ($content = $db->FetchOne($sql)) {
             echo $content;
             exit;
@@ -116,7 +119,7 @@ if ($fs->prefs['cache_feeds'])
         *   an insert statement is generated and executed "
         */
 
-        $fields = array('content'=> $content , 'type'=> $feed_type , 'topic'=> $orderby ,
+        $fields = array('content'=> $content , 'type'=> $feed_type , 'topic'=> $topic ,
                         'project_id'=> $proj->id ,'max_items'=> $max_items , 'last_updated'=> time() );
 
         $keys = array('type','topic','project_id','max_items');

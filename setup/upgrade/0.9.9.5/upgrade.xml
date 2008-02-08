@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+  <table name="cache">
+    <field name="id" type="I" size="6">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="type" type="C" size="4">
+      <NOTNULL/>
+    </field>
+    <field name="content" type="XL">
+      <NOTNULL/>
+    </field>
+    <field name="topic" type="I" size="11">
+      <NOTNULL/>
+    </field>
+    <field name="last_updated" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="project_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="max_items" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cache_type">
+      <UNIQUE/>
+      <col>type</col>
+      <col>topic</col>
+      <col>project_id</col>
+      <col>max_items</col>
+    </index>
+    <index name="cache_type_topic">
+      <col>type</col>
+      <col>topic</col>
+    </index>
+  </table>
+</schema>
