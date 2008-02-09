@@ -557,8 +557,8 @@ switch ($action = Req::val('action'))
                                    visible_columns, lang_code, notify_email, notify_jabber)
                          VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
-                        Post::val('intro_message'), Post::val('others_view', 0),
-                        Post::val('anon_open', 0),  $viscols,
+                        Post::val('intro_message'), Post::num('others_view', 0),
+                        Post::num('anon_open', 0),  $viscols,
                         Post::val('lang_code', 'en'), '', ''));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
@@ -631,10 +631,11 @@ switch ($action = Req::val('action'))
         }
 
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
-                'intro_message', 'project_is_active', 'others_view', 'anon_open',
-                'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url', 'comment_closed', 'auto_assign');
+                'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
+                'feed_description', 'feed_img_url');
         $args = array_map('Post_to0', $cols);
+        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
+        $args = array_merge($args, array_map(array('Post', 'num'), $ints));
         $cols[] = 'notify_types';
         $args[] = implode(' ', (array) Post::val('notify_types'));
         $cols[] = 'last_updated';
@@ -731,10 +732,10 @@ switch ($action = Req::val('action'))
                             dateformat = ?, dateformat_extended = ?,
                             tasks_perpage = ?, time_zone = ?
                      WHERE  user_id = ?',
-                array(Post::val('real_name'), Post::val('email_address'), Post::val('notify_own', 0),
+                array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
                     Post::val('jabber_id', 0), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
-                    Post::val('tasks_perpage'), Post::val('time_zone'), Post::val('user_id')));
+                    Post::num('tasks_perpage'), Post::num('time_zone'), Post::num('user_id')));
 
         endif; // end only admin or user himself can change
 
@@ -995,7 +996,7 @@ switch ($action = Req::val('action'))
                                               show_in_list = ?, category_owner = ?,
                                               lft = ?, rgt = ?
                                        WHERE  category_id = ? AND project_id = ?',
-                                  array($listname, intval($listshow[$id]), Flyspray::UserNameToId($listowners[$id]), $listlft[$id], $listrgt[$id], $id, $proj->id));
+                                  array($listname, intval($listshow[$id]), Flyspray::UserNameToId($listowners[$id]), intval($listlft[$id]), intval($listrgt[$id]), intval($id), $proj->id));
                 // Correct visibility for sub categories
                 if ($listshow[$id] == 0) {
                     foreach ($listnames as $key => $value) {

@@ -180,6 +180,10 @@ class Database
     {
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
+        // remove conversions for MySQL
+        if (strcasecmp($this->dbtype, 'pgsql') != 0) {
+            $sql = str_replace('::int', '', $sql);
+        }
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 
@@ -208,8 +212,7 @@ class Database
             }
 
             die (sprintf("Query {%s} with params {%s} Failed! (%s)",
-                    htmlspecialchars($sql, ENT_QUOTES, 'utf-8'),
-                    $query_params, $this->dblink->ErrorMsg()));
+                    Filters::noXSS($sql), $query_params, Filters::noXSS($this->dblink->ErrorMsg())));
         }
 
 
