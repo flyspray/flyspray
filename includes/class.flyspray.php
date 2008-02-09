@@ -923,7 +923,7 @@ class Flyspray
     {
         global $db;
 
-        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array($id));
+        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array(intval($id)));
 
         return intval($db->FetchOne($sql));
     }

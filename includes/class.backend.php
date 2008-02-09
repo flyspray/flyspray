@@ -952,19 +952,10 @@ class Backend
             $from   .= ' LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
+        $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || $search_for_changes) {
-            $from   .= ' LEFT JOIN  {comments} c        ON t.task_id = c.task_id ';
-            $select .= ' COUNT(DISTINCT c.comment_id)   AS num_comments, ';
-            // in other words: max(max(c.date_added), t.date_closed, t.date_opened, t.last_edited_time)
-            if ($search_for_changes) {
-                $select .= ' CASE WHEN max(c.date_added)>t.date_closed THEN
-                                CASE WHEN max(c.date_added)>t.date_opened THEN CASE WHEN max(c.date_added) > t.last_edited_time THEN max(c.date_added) ELSE t.last_edited_time END ELSE
-                                    CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END ELSE
-                                CASE WHEN t.date_closed>t.date_opened THEN CASE WHEN t.date_closed > t.last_edited_time THEN t.date_closed ELSE t.last_edited_time END ELSE
-                                    CASE WHEN t.date_opened > t.last_edited_time THEN t.date_opened ELSE t.last_edited_time END END END AS max_date, ';
-            }
-            $groupby .= 'c.date_added, ';
+            $select .= ' (SELECT COUNT(c.comment_id) FROM {comments} c WHERE c.task_id = t.task_id)  AS num_comments, ';
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
@@ -1118,7 +1109,7 @@ class Backend
         }
         /// }}}
         $having = array();
-        $dates = array('duedate' => 'due_date', 'changed' => 'max_date',
+        $dates = array('duedate' => 'due_date', 'changed' => $maxdatesql,
                        'opened' => 'date_opened', 'closed' => 'date_closed');
         foreach ($dates as $post => $db_key) {
             $var = ($post == 'changed') ? 'having' : 'where';
