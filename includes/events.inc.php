@@ -104,7 +104,10 @@ function event_description($history) {
                     } elseif($field == 'task_severity') {
                         $old_value = $fs->severities[$old_value];
                         $new_value = $fs->severities[$new_value];
-                    } elseif($field != 'item_summary') {
+                    } elseif($field == 'item_summary') {
+                        $old_value = Filters::noXSS($old_value);
+                        $new_value = Filters::noXSS($new_value);
+                    } else {
                         $old_value = $history[$field . '1'];
                         $new_value = $history[$field . '2'];
                     }
