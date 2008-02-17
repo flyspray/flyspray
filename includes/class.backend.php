@@ -599,6 +599,24 @@ class Backend
         if (!$user->perms('manage_project', $pid)) {
             return false;
         }
+        
+        // Delete all project's tasks related information
+        if (!$move_to) {
+            $taskIds = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
+            $taskIds = $db->FetchCol($taskIds);
+            $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
+                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes'); 
+            foreach ($tables as $table) {
+                if ($table == 'related') {
+                    $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE this_task = ? OR related_task = ? ');
+                } else {   
+                    $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE task_id = ?');
+                }
+                foreach ($taskIds as $id) {
+                    $db->dblink->Execute($stmt, ($table == 'related') ? array($id, $id) : array($id));
+                }
+            }
+        }
 
         // unset category of tasks because we don't move categories
         if ($move_to) {
