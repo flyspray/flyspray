@@ -974,6 +974,7 @@ class Backend
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || $search_for_changes) {
             $select .= ' (SELECT COUNT(c.comment_id) FROM {comments} c WHERE c.task_id = t.task_id)  AS num_comments, ';
+            $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
