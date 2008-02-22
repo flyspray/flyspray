@@ -989,7 +989,10 @@ class Setup extends Flyspray
 
        // Extract the variables to local namespace
        extract($data);
-
+       if (!isset($db_prefix)) {
+            $db_prefix = '';
+       }
+       
        if(is_numeric($db_prefix)) {
            $_SESSION['page_message'][] = 'database prefix cannot be numeric only';
            return false;
