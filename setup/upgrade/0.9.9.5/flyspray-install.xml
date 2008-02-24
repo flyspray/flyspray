@@ -111,7 +111,7 @@
     <field name="content" type="XL">
       <NOTNULL/>
     </field>
-    <field name="topic" type="C" size="30">
+    <field name="topic" type="I" size="11">
       <NOTNULL/>
     </field>
     <field name="last_updated" type="I" size="11">
