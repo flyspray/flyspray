@@ -1116,7 +1116,7 @@ switch ($action = Req::val('action'))
     // adding a user to the notification list
     // ##################
     case 'details.add_notification':
-        if (!Backend::add_notification(Flyspray::ValidUserId(Req::val('user_id')), Req::val('ids'))) {
+        if (!Backend::add_notification(Flyspray::UserNameToId(Req::val('user_id')), Req::val('ids'))) {
             Flyspray::show_error(L('couldnotaddusernotif'));
             break;
         }
