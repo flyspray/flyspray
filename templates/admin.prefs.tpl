@@ -174,7 +174,7 @@
           <td class="text">
             <?php // Set the selectable column names
             $columnnames = array('id', 'project', 'tasktype', 'category', 'severity',
-            'priority', 'summary', 'dateopened', 'status', 'openedby',
+            'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
             'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
             'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
             $selectedcolumns = explode(" ", $fs->prefs['visible_columns']);

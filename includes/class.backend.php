@@ -1048,6 +1048,7 @@ class Backend
                 'votes'        => 'num_votes',
                 'attachments'  => 'num_attachments',
                 'comments'     => 'num_comments',
+                'private'      => 'mark_private',
         );
 
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)

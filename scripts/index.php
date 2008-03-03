@@ -105,6 +105,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'dateclosed' => 'date_closed',
             'progress'   => '',
             'os'         => 'os_name',
+            'private'    => 'mark_private',
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
@@ -157,6 +158,10 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             if ($task['num_assigned'] > 1) {
                 $value .= ', +' . ($task['num_assigned'] - 1);
             }
+            break;
+        
+        case 'private':
+            $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
 
         default:
