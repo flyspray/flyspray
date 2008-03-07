@@ -61,7 +61,7 @@
 
       <br />
 
-      {!tpl_datepicker('timeamount2', L('startat'), Req::val('timeamount2'))}
+      {!tpl_datepicker('timeamount2', L('startat'), Req::val('timeamount2', formatDate(time())))}
 
       <br />
       <textarea class="text" name="reminder_message"

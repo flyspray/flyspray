@@ -1218,7 +1218,8 @@ switch ($action = Req::val('action'))
         $how_often  = Post::val('timeamount1', 1) * Post::val('timetype1');
         $start_time = Flyspray::strtotime(Post::val('timeamount2', 0));
 
-        if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, Post::val('to_user_id'))) {
+        $userId = Flyspray::UsernameToId(Post::val('to_user_id'));
+        if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, $userId)) {
             Flyspray::show_error(L('usernotexist'));
             break;
         }

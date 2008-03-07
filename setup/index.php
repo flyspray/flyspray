@@ -979,7 +979,10 @@ class Setup extends Flyspray
       usort($folders, 'version_compare'); // start with lowest version
       $folders = array_reverse($folders); // start with highest version
       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/flyspray-install.xml';
-
+      
+      $upgradeInfo = APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/upgrade.info';
+      $upgradeInfo = parse_ini_file($upgradeInfo, true);
+      
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
 
@@ -1003,6 +1006,24 @@ class Setup extends Flyspray
       $this->mXmlSchema->ParseSchema($sql_file);
 
       $this->mXmlSchema->ExecuteSchema();
+      
+      // Last but not least global prefs update
+        if (isset($upgradeInfo['fsprefs'])) {
+            $existing = $this->mDbConnection->GetCol("SELECT pref_name FROM {$db_prefix}prefs");
+            // Add what is missing
+            foreach ($upgradeInfo['fsprefs'] as $name => $value) {
+                if (!in_array($name, $existing)) {
+                    $this->mDbConnection->Execute("INSERT INTO {$db_prefix}prefs (pref_name, pref_value) VALUES (?, ?)", array($name, $value));
+                }
+            }
+            // Delete what is too much
+            foreach ($existing as $name) {
+                if (!isset($upgradeInfo['fsprefs'][$name])) {
+                    $this->mDbConnection->Execute("DELETE FROM {$db_prefix}prefs WHERE pref_name = ?", array($name));
+                }
+            }
+        }
+    
       $this->mDbConnection->Execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
 
       if (($error_no = $this->mDbConnection->MetaError()))
