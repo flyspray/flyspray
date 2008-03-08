@@ -972,9 +972,12 @@ class Backend
         }
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
-        if (array_get($args, 'search_in_comments') || in_array('comments', $visible) || $search_for_changes) {
-            $select .= ' (SELECT COUNT(c.comment_id) FROM {comments} c WHERE c.task_id = t.task_id)  AS num_comments, ';
+        if ($search_for_changes) {
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
+        }
+        if (array_get($args, 'search_in_comments') || in_array('comments', $visible)) {
+            $select .= ' COUNT(c.comment_id)  AS num_comments, ';
+            $from   .= ' LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
@@ -1154,14 +1157,14 @@ class Backend
             }
 
             foreach ($words as $word) {
-                $word = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary LIKE ? OR t.task_id LIKE ? $comments)";
-                array_push($sql_params, $word, $word);
+                $likeWord = '%' . str_replace('+', ' ', trim($word)) . '%';
+                $where_temp[] = "(t.item_summary LIKE ? OR t.task_id = ? $comments)";
+                array_push($sql_params, $likeWord, intval($word));
                 if (array_get($args, 'search_in_comments')) {
-                    array_push($sql_params, $word);
+                    array_push($sql_params, $likeWord);
                 }
                 if (array_get($args, 'search_in_details')) {
-                    array_push($sql_params, $word);
+                    array_push($sql_params, $likeWord);
                 }
             }
 
