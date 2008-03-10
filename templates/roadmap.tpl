@@ -35,8 +35,7 @@
         </small>
       </dt>
       <dd id="dd{$task['task_id']}" >
-        {!TextFormatter::render(substr($task['detailed_desc'], 0, 500) . ((strlen($task['detailed_desc']) > 500) ? '...' : ''),
-                         false, 'rota', $task['task_id'], $task['content'])}
+        {!TextFormatter::render($task['detailed_desc'], false, 'rota', $task['task_id'], $task['content'])}
         <br style="position:absolute;" />
       </dd>
     <?php endforeach; ?>
