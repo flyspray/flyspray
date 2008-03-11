@@ -11,7 +11,7 @@
   <form action="{CreateUrl('details', $task_details['task_id'])}#notify" method="post">
     <div>
         <label class="default multisel" for="notif_user_id">{L('addusertolist')}</label>
-        {!tpl_userselect('user_id', Req::val('user_id'), 'notif_user_id')}
+        {!tpl_userselect('user_name', Req::val('user_name'), 'notif_user_id')}
 
       <button type="submit">{L('add')}</button>
       <input type="hidden" name="ids" value="{Req::num('ids', $task_details['task_id'])}" />
