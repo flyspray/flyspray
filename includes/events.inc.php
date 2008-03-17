@@ -27,30 +27,30 @@ function get_events($task_id, $where = '')
 
                 FROM  {history} h
 
-            LEFT JOIN {list_tasktype} tt1 ON tt1.tasktype_id = h.old_value::int AND h.field_changed='task_type'
-            LEFT JOIN {list_tasktype} tt2 ON tt2.tasktype_id = h.new_value::int AND h.field_changed='task_type'
+            LEFT JOIN {list_tasktype} tt1 ON tt1.tasktype_id::text = h.old_value AND h.field_changed='task_type'
+            LEFT JOIN {list_tasktype} tt2 ON tt2.tasktype_id::text = h.new_value AND h.field_changed='task_type'
 
-            LEFT JOIN {list_os} los1 ON los1.os_id = h.old_value::int AND h.field_changed='operating_system'
-            LEFT JOIN {list_os} los2 ON los2.os_id = h.new_value::int AND h.field_changed='operating_system'
+            LEFT JOIN {list_os} los1 ON los1.os_id::text = h.old_value AND h.field_changed='operating_system'
+            LEFT JOIN {list_os} los2 ON los2.os_id::text = h.new_value AND h.field_changed='operating_system'
 
-            LEFT JOIN {list_category} lc1 ON lc1.category_id = h.old_value::int AND h.field_changed='product_category'
-            LEFT JOIN {list_category} lc2 ON lc2.category_id = h.new_value::int AND h.field_changed='product_category'
+            LEFT JOIN {list_category} lc1 ON lc1.category_id::text = h.old_value AND h.field_changed='product_category'
+            LEFT JOIN {list_category} lc2 ON lc2.category_id::text = h.new_value AND h.field_changed='product_category'
 
-            LEFT JOIN {list_status} ls1 ON ls1.status_id = h.old_value::int AND h.field_changed='item_status'
-            LEFT JOIN {list_status} ls2 ON ls2.status_id = h.new_value::int AND h.field_changed='item_status'
+            LEFT JOIN {list_status} ls1 ON ls1.status_id::text = h.old_value AND h.field_changed='item_status'
+            LEFT JOIN {list_status} ls2 ON ls2.status_id::text = h.new_value AND h.field_changed='item_status'
 
-            LEFT JOIN {list_resolution} lr ON lr.resolution_id = h.new_value::int AND h.event_type = 2
+            LEFT JOIN {list_resolution} lr ON lr.resolution_id::text = h.new_value AND h.event_type = 2
 
-            LEFT JOIN {projects} p1 ON p1.project_id = h.old_value::int AND h.field_changed='project_id'
-            LEFT JOIN {projects} p2 ON p2.project_id = h.new_value::int AND h.field_changed='project_id'
+            LEFT JOIN {projects} p1 ON p1.project_id::text = h.old_value AND h.field_changed='project_id'
+            LEFT JOIN {projects} p2 ON p2.project_id::text = h.new_value AND h.field_changed='project_id'
 
-            LEFT JOIN {comments} c ON c.comment_id = h.field_changed::int AND h.event_type = 5
+            LEFT JOIN {comments} c ON c.comment_id::text = h.field_changed AND h.event_type = 5
 
-            LEFT JOIN {attachments} att ON att.attachment_id = h.new_value::int AND h.event_type = 7
+            LEFT JOIN {attachments} att ON att.attachment_id::text = h.new_value AND h.event_type = 7
 
-            LEFT JOIN {list_version} lv1 ON lv1.version_id = h.old_value::int
+            LEFT JOIN {list_version} lv1 ON lv1.version_id::text = h.old_value
                       AND (h.field_changed='product_version' OR h.field_changed='closedby_version')
-            LEFT JOIN {list_version} lv2 ON lv2.version_id = h.new_value::int
+            LEFT JOIN {list_version} lv2 ON lv2.version_id::text = h.new_value
                       AND (h.field_changed='product_version' OR h.field_changed='closedby_version')
 
                 WHERE h.task_id = ? $where

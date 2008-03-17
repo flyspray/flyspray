@@ -183,6 +183,7 @@ class Database
         // remove conversions for MySQL
         if (strcasecmp($this->dbtype, 'pgsql') != 0) {
             $sql = str_replace('::int', '', $sql);
+            $sql = str_replace('::text', '', $sql);
         }
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
