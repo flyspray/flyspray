@@ -641,7 +641,7 @@ switch ($action = Req::val('action'))
         $cols[] = 'last_updated';
         $args[] = time();
         $cols[] = 'default_cat_owner';
-        $args[] =  Flyspray::ValidUserId(Post::val('default_cat_owner'));
+        $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
         $args[] = $proj->id;
 
         $update = $db->Query("UPDATE  {projects}
