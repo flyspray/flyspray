@@ -33,6 +33,7 @@ if(UTF8_MBSTRING){ mb_internal_encoding('UTF-8'); }
  * @author Andreas Gohr <andi@splitbrain.org>
  * @see    urlencode
  */
+if (!function_exists('utf8_encodeFN')){
 function utf8_encodeFN($file,$safe=true){
   if($safe && preg_match('#^[a-zA-Z0-9/_\-.%]+$#',$file)){
     return $file;
@@ -40,6 +41,7 @@ function utf8_encodeFN($file,$safe=true){
   $file = urlencode($file);
   $file = str_replace('%2F','/',$file);
   return $file;
+}
 }
 
 /**
@@ -50,9 +52,11 @@ function utf8_encodeFN($file,$safe=true){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @see    urldecode
  */
+if (!function_exists('utf8_decodeFN')){
 function utf8_decodeFN($file){
   $file = urldecode($file);
   return $file;
+}
 }
 
 /**
@@ -60,11 +64,13 @@ function utf8_decodeFN($file){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
+if (!function_exists('utf8_isASCII')){
 function utf8_isASCII($str){
   for($i=0; $i<strlen($str); $i++){
     if(ord($str{$i}) >127) return false;
   }
   return true;
+}
 }
 
 /**
@@ -74,6 +80,7 @@ function utf8_isASCII($str){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
+if (!function_exists('utf8_strip')){
 function utf8_strip($str){
   $ascii = '';
   for($i=0; $i<strlen($str); $i++){
@@ -83,6 +90,7 @@ function utf8_strip($str){
   }
   return $ascii;
 }
+}
 
 /**
  * Tries to detect if a string is in Unicode encoding
@@ -90,6 +98,7 @@ function utf8_strip($str){
  * @author <bmorel@ssi.fr>
  * @link   http://www.php.net/manual/en/function.utf8-encode.php
  */
+if (!function_exists('utf8_check')){
 function utf8_check($Str) {
  for ($i=0; $i<strlen($Str); $i++) {
   $b = ord($Str[$i]);
@@ -107,6 +116,7 @@ function utf8_check($Str) {
  }
  return true;
 }
+}
 
 /**
  * Unicode aware replacement for strlen()
@@ -119,8 +129,10 @@ function utf8_check($Str) {
  * @see    strlen()
  * @see    utf8_decode()
  */
+if(!function_exists('utf8_strlen')){
 function utf8_strlen($string){
   return strlen(utf8_decode($string));
+}
 }
 
 /**
@@ -135,6 +147,7 @@ function utf8_strlen($string){
  * @param integer (optional) length in UTF-8 characters from offset
  * @return mixed string or FALSE if failure
  */
+if(!function_exists('utf8_substr')){
 function utf8_substr($str, $offset, $length = null) {
     if(UTF8_MBSTRING){
         if( $length === null ){
@@ -224,6 +237,7 @@ function utf8_substr($str, $offset, $length = null) {
     if (!preg_match('#'.$offset_pattern.$length_pattern.'#us',$str,$match)) return '';
     return $match[1];
 }
+}
 
 /**
  * Unicode aware replacement for substr_replace()
@@ -231,12 +245,14 @@ function utf8_substr($str, $offset, $length = null) {
  * @author Andreas Gohr <andi@splitbrain.org>
  * @see    substr_replace()
  */
+if (!function_exists('utf8_substr_replace')){
 function utf8_substr_replace($string, $replacement, $start , $length=0 ){
   $ret = '';
   if($start>0) $ret .= utf8_substr($string, 0, $start);
   $ret .= $replacement;
   $ret .= utf8_substr($string, $start+$length);
   return $ret;
+}
 }
 
 /**
@@ -246,6 +262,7 @@ function utf8_substr_replace($string, $replacement, $start , $length=0 ){
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @see    explode();
  */
+if (!function_exists('utf8_explode')){
 function utf8_explode($sep, $str) {
   if ( $sep == '' ) {
     trigger_error('Empty delimiter',E_USER_WARNING);
@@ -253,6 +270,7 @@ function utf8_explode($sep, $str) {
   }
 
   return preg_split('!'.preg_quote($sep,'!').'!u',$str);
+}
 }
 
 /**
@@ -262,6 +280,7 @@ function utf8_explode($sep, $str) {
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @see    strreplace();
  */
+if (!function_exists('utf8_str_replace')){
 function utf8_str_replace($s,$r,$str){
   if(!is_array($s)){
     $s = '!'.preg_quote($s,'!').'!u';
@@ -272,6 +291,7 @@ function utf8_str_replace($s,$r,$str){
   }
   return preg_replace($s,$r,$str);
 }
+}
 
 /**
  * Unicode aware replacement for ltrim()
@@ -280,6 +300,7 @@ function utf8_str_replace($s,$r,$str){
  * @see    ltrim()
  * @return string
  */
+if (!function_exists('utf8_ltrim')){
 function utf8_ltrim($str,$charlist=''){
   if($charlist == '') return ltrim($str);
 
@@ -287,6 +308,7 @@ function utf8_ltrim($str,$charlist=''){
   $charlist = preg_replace('!([\\\\\\-\\]\\[/])!','\\\${1}',$charlist);
 
   return preg_replace('/^['.$charlist.']+/u','',$str);
+}
 }
 
 /**
@@ -296,6 +318,7 @@ function utf8_ltrim($str,$charlist=''){
  * @see    rtrim()
  * @return string
  */
+if (!function_exists('utf8_rtrim')){
 function  utf8_rtrim($str,$charlist=''){
   if($charlist == '') return rtrim($str);
 
@@ -303,6 +326,7 @@ function  utf8_rtrim($str,$charlist=''){
   $charlist = preg_replace('!([\\\\\\-\\]\\[/])!','\\\${1}',$charlist);
 
   return preg_replace('/['.$charlist.']+$/u','',$str);
+}
 }
 
 /**
@@ -312,10 +336,12 @@ function  utf8_rtrim($str,$charlist=''){
  * @see    trim()
  * @return string
  */
+if (!function_exists('utf8_trim')){
 function  utf8_trim($str,$charlist='') {
   if($charlist == '') return trim($str);
 
   return utf8_ltrim(utf8_rtrim($str));
+}
 }
 
 
@@ -328,6 +354,7 @@ function  utf8_trim($str,$charlist='') {
  * @see    strtolower()
  * @see    utf8_strtoupper()
  */
+if(!function_exists('utf8_strtolower')){
 function utf8_strtolower($string){
   if(UTF8_MBSTRING) return mb_strtolower($string,'utf-8');
 
@@ -341,6 +368,7 @@ function utf8_strtolower($string){
   }
   return unicode_to_utf8($uni);
 }
+}
 
 /**
  * This is a unicode aware replacement for strtoupper()
@@ -351,6 +379,7 @@ function utf8_strtolower($string){
  * @see    strtoupper()
  * @see    utf8_strtoupper()
  */
+if (!function_exists('utf8_strtoupper')){
 function utf8_strtoupper($string){
   if(UTF8_MBSTRING) return mb_strtoupper($string,'utf-8');
 
@@ -364,6 +393,7 @@ function utf8_strtoupper($string){
   }
   return unicode_to_utf8($uni);
 }
+}
 
 /**
  * Replace accented UTF-8 characters by unaccented ASCII-7 equivalents
@@ -373,6 +403,7 @@ function utf8_strtoupper($string){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
+if (!function_exists('utf8_deaccent')){
 function utf8_deaccent($string,$case=0){
   if($case <= 0){
     global $UTF8_LOWER_ACCENTS;
@@ -384,17 +415,20 @@ function utf8_deaccent($string,$case=0){
   }
   return $string;
 }
+}
 
 /**
  * Romanize a non-latin string
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
+if (!function_exists('utf8_romanize')){
 function utf8_romanize($string){
   if(utf8_isASCII($string)) return $string; //nothing to do
 
   global $UTF8_ROMANIZATION;
   return strtr($string,$UTF8_ROMANIZATION);
+}
 }
 
 /**
@@ -408,6 +442,7 @@ function utf8_romanize($string){
  * @param  string $repl       Replace special with this string
  * @param  string $additional Additional chars to strip (used in regexp char class)
  */
+if (!function_exists('utf8_stripspecials')){
 function utf8_stripspecials($string,$repl='',$additional=''){
   global $UTF8_SPECIAL_CHARS;
   global $UTF8_SPECIAL_CHARS2;
@@ -420,6 +455,7 @@ function utf8_stripspecials($string,$repl='',$additional=''){
 
   return preg_replace('/['.$additional.'\x00-\x19'.$specials.']/u',$repl,$string);
 }
+}
 
 /**
  * This is an Unicode aware replacement for strpos
@@ -429,6 +465,7 @@ function utf8_stripspecials($string,$repl='',$additional=''){
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @see    strpos()
  */
+if (!function_exists('utf8_strpos')){
 function utf8_strpos($haystack, $needle,$offset=0) {
   if(UTF8_MBSTRING) return mb_strpos($haystack,$needle,$offset,'utf-8');
 
@@ -452,6 +489,7 @@ function utf8_strpos($haystack, $needle,$offset=0) {
     return false;
   }
 }
+}
 
 /**
  * Encodes UTF-8 characters to HTML entities
@@ -459,6 +497,7 @@ function utf8_strpos($haystack, $needle,$offset=0) {
  * @author <vpribish at shopping dot com>
  * @link   http://www.php.net/manual/en/function.utf8-decode.php
  */
+if (!function_exists('utf8_tohtml')){
 function utf8_tohtml ($str) {
   $ret = '';
   $max = strlen($str);
@@ -478,6 +517,7 @@ function utf8_tohtml ($str) {
     }
   }
   return $ret . substr($str, $last, $i); // append the last batch of regular characters
+}
 }
 
 /**
@@ -502,6 +542,7 @@ function utf8_tohtml ($str) {
  * @link   http://hsivonen.iki.fi/php-utf8/
  * @link   http://sourceforge.net/projects/phputf8/
  */
+if (!function_exists('utf8_to_unicode')){
 function utf8_to_unicode($str,$strict=false) {
     $mState = 0;     // cached expected number of octets after the current octet
                      // until the beginning of the next UTF8 character sequence
@@ -651,6 +692,7 @@ function utf8_to_unicode($str,$strict=false) {
     }
     return $out;
 }
+}
 
 /**
  * Takes an array of ints representing the Unicode characters and returns
@@ -675,6 +717,7 @@ function utf8_to_unicode($str,$strict=false) {
  * @link   http://hsivonen.iki.fi/php-utf8/
  * @link   http://sourceforge.net/projects/phputf8/
  */
+if (!function_exists('unicode_to_utf8')){
 function unicode_to_utf8($arr,$strict=false) {
     if (!is_array($arr)) return '';
     ob_start();
@@ -742,12 +785,14 @@ function unicode_to_utf8($arr,$strict=false) {
     ob_end_clean();
     return $result;
 }
+}
 
 /**
  * UTF-8 to UTF-16BE conversion.
  *
  * Maybe really UCS-2 without mb_string due to utf8_to_unicode limits
  */
+if (!function_exists('utf8_to_utf16be')){
 function utf8_to_utf16be(&$str, $bom = false) {
   $out = $bom ? "\xFE\xFF" : '';
   if(UTF8_MBSTRING) return $out.mb_convert_encoding($str,'UTF-16BE','UTF-8');
@@ -758,15 +803,18 @@ function utf8_to_utf16be(&$str, $bom = false) {
   }
   return $out;
 }
+}
 
 /**
  * UTF-8 to UTF-16BE conversion.
  *
  * Maybe really UCS-2 without mb_string due to utf8_to_unicode limits
  */
+if (!function_exists('utf16be_to_utf8')){
 function utf16be_to_utf8(&$str) {
   $uni = unpack('n*',$str);
   return unicode_to_utf8($uni);
+}
 }
 
 /**
@@ -784,6 +832,7 @@ function utf16be_to_utf8(&$str) {
  * @param string to replace bad bytes with (defaults to '?') - use ASCII
  * @return string
  */
+if (!function_exists('utf8_bad_replace')){
 function utf8_bad_replace($str, $replace = '') {
     $UTF8_BAD =
      '([\x00-\x7F]'.                          # ASCII (including control chars)
@@ -808,6 +857,7 @@ function utf8_bad_replace($str, $replace = '') {
     ob_end_clean();
     return $result;
 }
+}
 
 /**
  * adjust a byte index into a utf8 string to a utf8 character boundary
@@ -822,6 +872,7 @@ function utf8_bad_replace($str, $replace = '') {
  *
  * @author       chris smith <chris@jalakai.co.uk>
  */
+if (!function_exists('utf8_correctIdx')){
 function utf8_correctIdx(&$str,$i,$next=false) {
 
   if ($i <= 0) return 0;
@@ -836,6 +887,7 @@ function utf8_correctIdx(&$str,$i,$next=false) {
   }
 
   return $i;
+}
 }
 
 // only needed if no mb_string available
