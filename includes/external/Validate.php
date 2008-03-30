@@ -1057,6 +1057,3 @@ class Validate
         return $valid;
     }
 }
-
-?>
-
