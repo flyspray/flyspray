@@ -825,6 +825,8 @@ Regards,',
 'showasassignees'         => 'Show as assignees',
 'find'                    => 'Find',
 'tls'                     => 'TLS',
+'isadmin'                 => 'Is admin',
+'addvotes'                => 'Add votes',
 );
 
 ?>
