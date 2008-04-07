@@ -831,6 +831,9 @@ Atenciosamente,',
 'failedattempts'          => 'Foram %d tentativas de entrar sem sucesso.',
 'groupnotexist'           => 'Grupo selecionado não existe neste projeto.',
 'searchindetails'         => 'Detalhes da Busca',
+'showasassignees'         => 'Exibir como atribuido',
+'find'                    => 'Encontrar',
+'tls'                     => 'TLS',
 );
 
 ?>
