@@ -100,6 +100,13 @@ class Database
 
             //enable debug if constact DEBUG_SQL is defined.
             !defined('DEBUG_SQL') || $this->dblink->debug = true;
+            
+            if($dbtype === 'mysql' || $dbtype === 'mysqli') {
+                $dbinfo = $this->dblink->ServerInfo();
+                if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.0', '>=')) {
+                    $this->dblink->Execute("SET SESSION SQL_MODE='TRADITIONAL'");
+                }
+            }
     }
 
     /**
