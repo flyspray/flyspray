@@ -103,7 +103,7 @@ class Database
             
             if($dbtype === 'mysql' || $dbtype === 'mysqli') {
                 $dbinfo = $this->dblink->ServerInfo();
-                if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.0', '>=')) {
+                if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
                     $this->dblink->Execute("SET SESSION SQL_MODE='TRADITIONAL'");
                 }
             }
