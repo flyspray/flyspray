@@ -1083,7 +1083,8 @@ class Flyspray
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
             $out .= "Host: {$url['host']}\r\n\r\n";
             $out .= "Connection: Close\r\n\r\n";
-
+            
+            stream_set_timeout($conn, 5);
             fwrite($conn, $out);
 
             if ($get_contents) {
