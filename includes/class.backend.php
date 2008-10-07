@@ -470,9 +470,9 @@ class Backend
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, magic_url,
                                email_address, notify_type, account_enabled,
-                               tasks_perpage, register_date, time_zone, dateformat)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone, ''));
+                               tasks_perpage, register_date, time_zone, dateformat, dateformat_extended)
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone, '', ''));
 
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
