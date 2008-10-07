@@ -796,7 +796,7 @@ class Setup extends Flyspray
       $config[] = "dot_public = \"http://public.research.att.com/~north/cgi-bin/webdot/webdot.cgi\" ; URL to a public dot server";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
-      $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on.";
+      $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
       $config[] = "syntax_plugin = \"none\"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)";
       $config[] = "update_check = \"1\"                               ; Boolean. 0 = off, 1 = on.";
