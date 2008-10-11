@@ -762,6 +762,8 @@ class Backend
 
         $sql_params[] = 'closure_comment';
         $sql_values[] = '';
+        $sql_params[] = 'anon_email';
+        $sql_values[] = '';
 
         // Token for anonymous users
         $token = '';
