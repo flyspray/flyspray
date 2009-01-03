@@ -989,7 +989,10 @@
     <field name="date_time" type="I" size="11">
       <NOTNULL/>
       <DEFAULT value="0"/>
-    </field>
+  </field>
+  <index name="task_id_votes">
+  	<col>task_id</col>
+  </index>
   </table>
   <sql>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,1, 1);</query>
