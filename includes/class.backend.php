@@ -978,9 +978,11 @@ class Backend
         if ($search_for_changes) {
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
-        if (array_get($args, 'search_in_comments') || in_array('comments', $visible)) {
-            $select .= ' COUNT(c.comment_id)  AS num_comments, ';
+        if (array_get($args, 'search_in_comments')) {
             $from   .= ' LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
+        }
+        if (in_array('comments', $visible)) {
+            $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
         }
         if (in_array('reportedin', $visible)) {
             $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
