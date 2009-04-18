@@ -150,6 +150,12 @@ if (!isset($_SERVER['REQUEST_URI']))
     }
 }
 
+if (!isset($_SERVER['QUERY_STRING']))
+{
+    $_SERVER['QUERY_STRING'] = '';
+}
+
+
 /* we also don't want magic_quotes_gpc at all
  * this code was written by Ilia Alshanetsky <iilia@php.net>
  * is licensed under the BSD.
