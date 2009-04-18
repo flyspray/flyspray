@@ -6,6 +6,7 @@ allTasks = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_i
 function hideAll()
 {
     for (i = 0; i < allTasks.length; i++) {
+        if (!allTasks[i]) continue;
         hidestuff('dd'+ allTasks[i]);
         hidestuff('hide'+ allTasks[i]);
         showstuff('expand'+ allTasks[i], 'inline');
@@ -15,6 +16,7 @@ function hideAll()
 function showAll()
 {
     for (i = 0; i < allTasks.length; i++) {
+        if (!allTasks[i]) continue;
         showstuff('dd'+ allTasks[i]);
         hidestuff('expand'+ allTasks[i]);
         showstuff('hide'+ allTasks[i], 'inline');
