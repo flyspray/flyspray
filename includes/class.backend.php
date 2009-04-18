@@ -750,7 +750,7 @@ class Backend
         }
 
         // Process the due_date
-        if ( ($due_date = $args['due_date']) || ($due_date = 0) ) {
+        if ( isset($args['due_date']) && ($due_date = $args['due_date']) || ($due_date = 0) ) {
             $due_date = Flyspray::strtotime($due_date);
         }
 
