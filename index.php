@@ -135,7 +135,7 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
                          FROM {users} u
                     LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                         WHERE g.group_id = 1');
-    $page->assign('admin_emails', $db->FetchAllArray($sql));
+    $page->assign('admin_emails', array_map(create_function('$x', 'return str_replace("@", "#", $x);'), $db->fetchCol($sql)));
 }
 
 // default title
