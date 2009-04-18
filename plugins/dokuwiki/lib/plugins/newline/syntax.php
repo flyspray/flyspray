@@ -50,8 +50,7 @@ class syntax_plugin_newline extends DokuWiki_Syntax_Plugin {
 
     function connectTo($mode) {
         // Word boundaries?
-        $this->Lexer->addSpecialPattern("\S+\r\n\S+",$mode,'plugin_newline');
-        $this->Lexer->addSpecialPattern("\S+\n\S+",$mode,'plugin_newline');
+        $this->Lexer->addSpecialPattern("(?<!^|\n)\n(?!\n)",$mode,'plugin_newline');
     }
 
     /**
@@ -66,9 +65,10 @@ class syntax_plugin_newline extends DokuWiki_Syntax_Plugin {
      */
     function render($mode, &$renderer, $data) {
         if($mode == 'xhtml'){
-            $renderer->doc .= str_replace("\n", '<br />', str_replace("\r\n", '<br />', $data[0]));
+          if ($data[0]) $renderer->doc .= '<br />';
+          return true;
         }
-        return true;
+        return false;
     }
 
 }
