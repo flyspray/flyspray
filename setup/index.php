@@ -659,23 +659,7 @@ class Setup extends Flyspray
          break;
 
          case 'database':
-            // Prepare the required data
-            $required_data =
-            array(
-                  'agreecheck' => array(
-                                 'Licence Agreement', 'string', true
-                                 )
-               );
-
-            if ($this->CheckPostedData($required_data, $message = 'Accept Licence'))
-            {
-               $this->DisplayDatabaseSetup();
-            }
-            else
-            {
-               $_POST['action'] = 'licence';
-               $this->DisplayLicense();
-            }
+            $this->DisplayDatabaseSetup();
          break;
 
          case 'administration':
