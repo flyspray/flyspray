@@ -16,7 +16,7 @@
  * @since       PHP 5
  * @require     PHP 4.0.0 (user_error)
  */
-function php_compat_http_build_query($formdata, $numeric_prefix = null)
+function php_compat_http_build_query($formdata, $numeric_prefix = null, $arg_separator = null)
 {
     // If $formdata is an object, convert it to an array
     if (is_object($formdata)) {
@@ -36,7 +36,7 @@ function php_compat_http_build_query($formdata, $numeric_prefix = null)
     }
 
     // Argument seperator
-    $separator = ini_get('arg_separator.output');
+    $separator = $arg_separator ? $arg_separator : ini_get('arg_separator.output');
     if (strlen($separator) == 0) {
         $separator = '&';
     }
