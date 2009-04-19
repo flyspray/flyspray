@@ -75,9 +75,9 @@ class Database
         $this->dbtype   = $dbtype;
         $this->dbprefix = $dbprefix;
         $ADODB_COUNTRECS = false;
-        $dbpass = rawurlencode($dbpass);
-        $dsn = "$dbtype://$dbuser:$dbpass@$dbhost/$dbname";
-        $this->dblink = NewADOConnection($dsn);
+        
+        $this->dblink = NewADOConnection($this->dbtype);
+        $this->dblink->Connect($dbhost, $dbuser, $dbpass, $dbname);
 
         if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
 
