@@ -780,7 +780,7 @@ switch ($action = Req::val('action'))
 
         // Add a user to a group
         if ($uid = Post::val('uid')) {
-            $uids = preg_split('/[\s,;]+/', $uid, -1, PREG_SPLIT_NO_EMPTY);
+            $uids = preg_split('/[,;]+/', $uid, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($uids as $uid) {
                 $uid = Flyspray::UserNameToId($uid);
                 if (!$uid) {
