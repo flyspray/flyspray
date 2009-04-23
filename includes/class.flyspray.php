@@ -1058,6 +1058,23 @@ class Flyspray
     }
 
     /**
+     * Writes content to a file using a lock.
+     * @access public
+     * @param string $filename location to write to
+     * @param string $content data to write
+     */
+    function write_lock($filename, $content)
+    {
+        if ($f = fopen($filename, 'wb')) {
+            if(flock($f, LOCK_EX)) {                
+                fwrite($f, $content);
+                flock($f, LOCK_UN);
+            }
+            fclose($f);
+        }
+    }
+    
+    /**
      * file_get_contents replacement for remote files
      * @access public
      * @param string $url

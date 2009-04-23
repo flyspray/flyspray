@@ -55,6 +55,11 @@ ini_set('session.cookie_httponly',1);
 
 ini_set('auto_detect_line_endings', 0);
 
+ini_set('include_path', join( PATH_SEPARATOR, array(
+  dirname(__FILE__) . '/external' ,
+  ini_get('include_path'))));
+
+
 // we live is register_globals Off world forever..
 //This code was written By Stefan Esser from the hardened PHP project (sesser@php.net)
 // it's now part of the PHP manual

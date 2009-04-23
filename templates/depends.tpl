@@ -7,18 +7,10 @@
     type="image/svg+xml">
 </object>
 <?php else: ?>
-    <?php if ($remote): ?>
-    <a href="{$map}">
-    <?php else: ?>
     <div>{!$map}</div>
-    <?php endif; ?>
        
-    <img src="{$image}" alt="Dependencies for task {$task_id}" class="depimage"
-         <?php if ($remote): ?>ismap="ismap"<?php else: ?>usemap="#{$graphname}"<?php endif; ?> />
+    <img src="{$image}" alt="Dependencies for task {$task_id}" class="depimage" usemap="#{$graphname}" />
 
-    <?php if ($remote): ?>
-    </a>
-    <?php endif; ?>
 <?php endif; ?>
 
 <p>{sprintf(L('pagegenerated'), $time)}<p>

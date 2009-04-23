@@ -23,16 +23,8 @@ $path_to_dot = array_get($conf['general'], 'dot_path', '');
 //php 4 on windows does not have is_executable..
 $func = function_exists('is_executable') ? 'is_executable' : 'is_file';
 $path_to_dot = $func($path_to_dot) ? $path_to_dot : '';
+$useLocal = !Flyspray::function_disabled('shell_exec') && $path_to_dot;
 $fmt         = Filters::enum(array_get($conf['general'], 'dot_format', 'png'), array('png','svg'));
-
-/* March 10 2006 Jason Porter: Removed the $basedir as $path_for_images
- * should be relative, we use this path also in the HTML output.  Saving
- * the file from dot happens later, and that should be the absolute path.
- */
-
-if (Flyspray::function_disabled('shell_exec') && !array_get($conf['general'], 'dot_public')) {
-    Flyspray::show_error(24, true, null, $_SESSION['prev_page']);
-}
 
 $id = Req::num('task_id');
 $page->assign('task_id', $id);
@@ -166,8 +158,6 @@ foreach (array("edge_list", "rvrs_list", "node_list") as $l) {
     }
 }
 
-$use_public = Flyspray::function_disabled('shell_exec') || !$path_to_dot;
-
 // Now we've got everything we need... let's draw the pretty pictures
 
 //Open the graph, and print global options
@@ -184,7 +174,7 @@ foreach ($node_list as $n => $r) {
     $x = dechex(255-($r['pct']+10));
     $col = "#$x$x$x";
     // Make sure label terminates in \n!
-    $label = "FS#$n \n". ((!$use_public) ? addslashes(utf8_substr($r['sum'], 0, 15)) . "\n" : '') .
+    $label = "FS#$n \n". ($useLocal ? addslashes(utf8_substr($r['sum'], 0, 15)) . "\n" : '') .
         ($r['clsd'] ? L('closed') :
          "$r[pct]% ".L('complete'));
     $tooltip =
@@ -212,68 +202,55 @@ $dotgraph .= "}\n";
 
 
 // All done with the graph. Save it to a temp file (new name if the data has changed)
-$file_name = sprintf('cache/fs_depends_dot_%d_%s.dot', $id, md5($dotgraph));
-$absfilename = sprintf('%s/%s.%s', BASEDIR, $file_name, $fmt);
+$dotfilename = sprintf('cache/fs_depends_dot_%d_%s.dot', $id, md5($dotgraph));
+$imgfilename = sprintf('%s/%s.%s', BASEDIR, $dotfilename, $fmt);
+$mapfilename = sprintf('%s/%s.%s', BASEDIR, $dotfilename, 'map');
 //cannot use tempnam( ) as file has to end with $ftm extension
 
-if($use_public) {
+if(!$useLocal) {
     //cannot use tempnam() as file has to end with $ftm extension
-    $tname = $file_name;
+    $tname = $dotfilename;
 } else {
     // we are operating on the command line, avoid races.
     $tname = tempnam(Flyspray::get_tmp_dir(), md5(uniqid(mt_rand() , true)));
 }
 //get our dot done..
-if ($tmp = fopen($tname, 'wb')) {
-    if(flock($tmp, LOCK_EX)) {
-        fwrite($tmp, $dotgraph);
-        flock($tmp, LOCK_UN);
-    }
-    fclose($tmp);
-}
+Flyspray::write_lock($tname, $dotgraph);
 
-// Now run dot on it:
-if ($use_public) {
-    if (!is_file($absfilename)) {
+// Now run dot on it, if target file does not already exist
+if (!is_file($imgfilename))
+{
+    if (!$useLocal) {
 
-        $url = sprintf('%s/%s%s.%s', array_get($conf['general'], 'dot_public'), $baseurl, $tname, $fmt);
+        require_once 'Zend/Rest/Client.php';
+        $client = new Zend_Rest_Client('http://webdot.flyspray.org/');
+        $data = base64_decode($client->getGraph(base64_encode($dotgraph), $fmt)->post());
 
-        $data = Flyspray::remote_request($url, GET_CONTENTS);
+        Flyspray::write_lock($imgfilename, $data);
+        
+        $data = base64_decode($client->getGraph(base64_encode($dotgraph), 'cmapx')->post());
 
-        if($f = fopen($absfilename, 'wb')) {
-            if(flock($f, LOCK_EX)) {                
-                fwrite($f, $data);
-                flock($f, LOCK_UN);
-            }
-            fclose($f);
-        } 
+        Flyspray::write_lock($mapfilename, $data);
+     
     } else {
-        $data = file_get_contents($absfilename);
+
+        $tfn = escapeshellarg($tname);
+        shell_exec(sprintf('%s -T %s -o %s %s', $path_to_dot, escapeshellarg($fmt), escapeshellarg($imgfilename), $tfn));
+        $data['map'] = shell_exec(sprintf('%s -T cmapx %s', $path_to_dot, $tfn));
+        Flyspray::write_lock($mapfilename, $data['map']);
+
+        // Remove files so that they are not exposed to the public
+        unlink($tname);
     }
-
-    $page->assign('remote', $remote = true);
-    $page->assign('map',    sprintf('%s/%s%s.map', array_get($conf['general'], 'dot_public'), $baseurl, $file_name));
-
-} else {
-
-    $dot = $path_to_dot; // assuming safe value from flyspray.conf.php
-    $tfn = escapeshellarg($tname);
-    shell_exec(sprintf('%s -T %s -o %s %s', $dot, escapeshellarg($fmt), escapeshellarg($absfilename), $tfn));
-    $data['map'] = shell_exec(sprintf('%s -T cmapx %s', $dot, $tfn));
-    $page->assign('remote', $remote = false);
-    $page->assign('map',    $data['map']);
-    // Remove files so that they are not exposed to the public
-    unlink($tname);
 }
 
-$page->assign('image', sprintf('%s%s.%s', $baseurl, $file_name, $fmt));
+$page->assign('map', file_get_contents($mapfilename));
+$page->assign('image', sprintf('%s%s.%s', $baseurl, $dotfilename, $fmt));
 
 
 // we have to find out the image size if it is SVG
 if ($fmt == 'svg') {
-    if (!$remote) {
-        $data = file_get_contents($absfilename);
-    }
+    $data = file_get_contents($imgfilename);
     preg_match('/<svg width="([0-9.]+)([a-zA-Z]+)" height="([0-9.]+)([a-zA-Z]+)"/', $data, $matches);
     $page->assign('width',  round($matches[1] * (($matches[2] == 'pt') ? 1.4 : (($matches[2] == 'in') ? 1.33 * 72.27 : 1)), 0));
     $page->assign('height', round($matches[3] * (($matches[4] == 'pt') ? 1.4 : (($matches[4] == 'in') ? 1.35 * 72.27 : 1)), 0));

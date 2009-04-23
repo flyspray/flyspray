@@ -73,6 +73,7 @@ define('GET_CONTENTS', true);
 define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
 
+define('FLYSPRAY_WEBDOT', 'http://webdot.flyspray.org/');
 define('FS_DOMAIN_HASH', md5($_SERVER['SERVER_NAME'] . BASEDIR));
 define('FS_CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . FS_DOMAIN_HASH);
 
