@@ -777,7 +777,6 @@ class Setup extends Flyspray
       $config[] = 'output_buffering = "on"				; Available options: "on" or "gzip"';
       $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\" (Deprecated, do not change the default)";
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
-      $config[] = "dot_public = \"http://public.research.att.com/~north/cgi-bin/webdot/webdot.cgi\" ; URL to a public dot server";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
