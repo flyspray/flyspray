@@ -1121,6 +1121,23 @@ class Flyspray
 
         return $data;
     }
+
+    /**
+     * Determines whether or not dependency graphs are supported.
+     * @access public
+     * @return bool
+     */
+    function isDependencyGraphSupported()
+    {
+        $path_to_dot = array_get($conf['general'], 'dot_path', '');
+        //php 4 on windows does not have is_executable..
+        $func = function_exists('is_executable') ? 'is_executable' : 'is_file';
+        $path_to_dot = $func($path_to_dot) ? $path_to_dot : '';
+        $localPossible = !Flyspray::function_disabled('shell_exec') && $path_to_dot;
+
+        // Either we have a local dot executable, or PHP 5.2.x
+        return ($localPossible || version_compare(PHP_VERSION, '5.2', '>='));
+    }
     
     /**
      * Returns an array containing all notification options the user is
