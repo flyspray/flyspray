@@ -1129,6 +1129,7 @@ class Flyspray
      */
     function isDependencyGraphSupported()
     {
+        global $conf;
         $path_to_dot = array_get($conf['general'], 'dot_path', '');
         //php 4 on windows does not have is_executable..
         $func = function_exists('is_executable') ? 'is_executable' : 'is_file';
