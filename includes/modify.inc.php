@@ -320,7 +320,9 @@ switch ($action = Req::val('action'))
 
         foreach(array('randval','magic_url') as $genrandom) {
 
-            $$genrandom = md5(uniqid(mt_rand(), true));
+            $$genrandom = md5(function_exists('openssl_random_pseudo_bytes') ? 
+                              openssl_random_pseudo_bytes(32) :
+                              uniqid(mt_rand(), true));
         }
 
         $confirm_code = substr($randval, 0, 20);
@@ -1454,7 +1456,10 @@ switch ($action = Req::val('action'))
 
         $user_details = $db->FetchRow($sql);
         //no microtime(), time,even with microseconds is predictable ;-)
-        $magic_url    = md5(uniqid(mt_rand(), true));
+        $magic_url    = md5(function_exists('openssl_random_pseudo_bytes') ?
+                              openssl_random_pseudo_bytes(32) :
+                              uniqid(mt_rand(), true));
+ 
 
         // Insert the random "magic url" into the user's profile
         $db->Query('UPDATE {users}
