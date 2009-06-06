@@ -53,6 +53,13 @@ ini_set('session.auto_start',0);
 
 ini_set('session.cookie_httponly',1);
 
+// use stronger entropy in sessions whenever possible
+ini_set('session.entropy_file', '/dev/urandom');
+ini_set('session.entropy_length', 16);
+// use sha-1 for sessions
+ini_set('session.hash_function',1);
+
+
 ini_set('auto_detect_line_endings', 0);
 
 ini_set('include_path', join( PATH_SEPARATOR, array(

@@ -766,7 +766,9 @@ class Backend
         // Token for anonymous users
         $token = '';
         if ($user->isAnon()) {
-            $token = md5(uniqid(mt_rand(), true));
+            $token = md5(function_exists('openssl_random_pseudo_bytes') ?
+                              openssl_random_pseudo_bytes(32) :
+                              uniqid(mt_rand(), true));
             $sql_params[] = 'task_token';
             $sql_values[] = $token;
 
