@@ -74,7 +74,7 @@ class perf_db2 extends adodb_perf{
 				}
 			}
 		}
-		$qno = rand();
+		$qno = mt_rand();
 		$ok = $this->conn->Execute("EXPLAIN PLAN SET QUERYNO=$qno FOR $sql");
 		ob_start();
 		if (!$ok) echo "<p>Have EXPLAIN tables been created?</p>";

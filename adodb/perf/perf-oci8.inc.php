@@ -352,7 +352,7 @@ select  a.size_for_estimate as cache_mb_estimate,
 		$rs->Close();
 		
 		$carr = explode('::',$check);
-		$prefix = "<a target=".rand()." href=\"?&hidem=1&$type=1&sql=".rawurlencode($sql).'&x#explain">';
+		$prefix = "<a target=".mt_rand()." href=\"?&hidem=1&$type=1&sql=".rawurlencode($sql).'&x#explain">';
 		$suffix = '</a>';
 		if (strlen($prefix)>2000) {
 			$prefix = '';

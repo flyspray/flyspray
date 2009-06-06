@@ -154,21 +154,21 @@ $ADODB_INCLUDED_CSV = 1;
 							switch($tdiff) {
 							case 4:
 							case 3:
-								if ((rand() & 31) == 0) {
+								if ((mt_rand() & 31) == 0) {
 									fclose($fp);
 									$err = "Timeout 3";
 									return $false;
 								}
 								break;
 							case 2: 
-								if ((rand() & 15) == 0) {
+								if ((mt_rand() & 15) == 0) {
 									fclose($fp);
 									$err = "Timeout 2";
 									return $false;
 								}
 								break;
 							case 1:
-								if ((rand() & 3) == 0) {
+								if ((mt_rand() & 3) == 0) {
 									fclose($fp);
 									$err = "Timeout 1";
 									return $false;

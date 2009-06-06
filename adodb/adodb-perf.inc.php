@@ -465,7 +465,7 @@ Committed_AS:   348732 kB
 					$sql2 = substr($sql,0,$max-500);
 					$raw = urlencode($sql2).'&part='.crc32($sql);
 				}
-				$prefix = "<a target=sql".rand()." href=\"?hidem=1&exps=1&sql=".$raw."&x#explain\">";
+				$prefix = "<a target=sql".mt_rand()." href=\"?hidem=1&exps=1&sql=".$raw."&x#explain\">";
 				$suffix = "</a>";
 				if ($this->explain == false || strlen($prefix)>$max) {
 					$suffix = ' ... <i>String too long for GET parameter: '.strlen($prefix).'</i>';
@@ -544,7 +544,7 @@ Committed_AS:   348732 kB
 					$sql2 = substr($sql,0,$max-500);
 					$raw = urlencode($sql2).'&part='.crc32($sql);
 				}
-				$prefix = "<a target=sqle".rand()." href=\"?hidem=1&expe=1&sql=".$raw."&x#explain\">";
+				$prefix = "<a target=sqle".mt_rand()." href=\"?hidem=1&expe=1&sql=".$raw."&x#explain\">";
 				$suffix = "</a>";
 				if($this->explain == false || strlen($prefix>$max)) {
 					$prefix = '';

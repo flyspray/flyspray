@@ -160,8 +160,8 @@ class ADODB_Active_Record {
 			@flock($fp, LOCK_SH);
 			$acttab = unserialize(fread($fp,100000));
 			fclose($fp);
-			if ($acttab->_created + $ADODB_ACTIVE_CACHESECS - (abs(rand()) % 16) > time()) { 
-				// abs(rand()) randomizes deletion, reducing contention to delete/refresh file
+			if ($acttab->_created + $ADODB_ACTIVE_CACHESECS - (abs(mt_rand()) % 16) > time()) { 
+				// abs(mt_rand()) randomizes deletion, reducing contention to delete/refresh file
 				// ideally, you should cache at least 32 secs
 				$activedb->tables[$table] = $acttab;
 				

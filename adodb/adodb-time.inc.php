@@ -489,7 +489,7 @@ function adodb_date_test()
 	flush();
 	for ($i=100; --$i > 0; ) {
 
-		$ts = 3600.0*((rand()%60000)+(rand()%60000))+(rand()%60000);
+		$ts = 3600.0*((mt_rand()%60000)+(mt_rand()%60000))+(mt_rand()%60000);
 		$s1 = date($fmt,$ts);
 		$s2 = adodb_date($fmt,$ts);
 		//print "$s1 <br>$s2 <p>";
@@ -525,18 +525,18 @@ function adodb_date_test()
 	print "<p>Testing random dates between 100 and 4000</p>";
 	adodb_date_test_date(100,1);
 	for ($i=100; --$i >= 0;) {
-		$y1 = 100+rand(0,1970-100);
-		$m = rand(1,12);
+		$y1 = 100+mt_rand(0,1970-100);
+		$m = mt_rand(1,12);
 		adodb_date_test_date($y1,$m);
 		
-		$y1 = 3000-rand(0,3000-1970);
+		$y1 = 3000-mt_rand(0,3000-1970);
 		adodb_date_test_date($y1,$m);
 	}
 	print '<p>';
-	$start = 1960+rand(0,10);
+	$start = 1960+mt_rand(0,10);
 	$yrs = 12;
 	$i = 365.25*86400*($start-1970);
-	$offset = 36000+rand(10000,60000);
+	$offset = 36000+mt_rand(10000,60000);
 	$max = 365*$yrs*86400;
 	$lastyear = 0;
 	
