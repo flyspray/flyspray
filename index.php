@@ -9,11 +9,6 @@ define('IN_FS', true);
 
 require_once(dirname(__FILE__).'/header.php');
 
-// Background daemon that does scheduled reminders
-if ($conf['general']['reminder_daemon'] == '2') {
-    Flyspray::startReminderDaemon();
-}
-
 // Get available do-modes
 $modes = str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/scripts/*.php")));
 

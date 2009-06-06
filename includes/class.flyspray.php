@@ -676,31 +676,6 @@ class Flyspray
 
         return setcookie($name, $val, $time, $url['path']);
     } // }}}
-    // Reminder daemon {{{
-    /**
-     * Starts the reminder daemon
-     * @access public static
-     * @return void
-     * @version 1.0
-     */
-    function startReminderDaemon()
-    {
-        global $baseurl;
-
-        $runfile = Flyspray::get_tmp_dir() . '/flysprayreminders.run';
-        $timeout = 600;
-
-        if (!is_file($runfile) or filemtime($runfile) < time() - ($timeout * 2)) {
-
-            $include = 'schedule.php';
-            /* "localhost" is on **purpose** not a mistake ¡¡
-             * almost any server accepts requests to itself in localhost ;)
-             * firewalls will not block it.
-             * the "Host" http header will tell the webserver where flyspray is running.
-             */
-            Flyspray::remote_request($baseurl . $include, !GET_CONTENTS, $_SERVER['SERVER_PORT'], 'localhost', $_SERVER['HTTP_HOST']);
-        }
-    }
             // Start the session {{{
     /**
      * Starts the session

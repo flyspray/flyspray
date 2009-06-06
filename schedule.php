@@ -9,14 +9,9 @@
 
 define('IN_FS', true);
 
-/**
- * Developers warning :
- * Be aware while debugging this, it actually daemonize ¡¡
- * it runs **forever** in the background every ten minutes
- * to simulate a real cron task, it WONT STOP if you click
- * stop in your browser, it will only stop if you restart
- * your webserver.
- */
+if(php_sapi_name() !== 'cli') {
+    die("Reminder daemon must run in the CLI SAPI only");
+}
 
 require_once 'header.php';
 include_once BASEDIR . '/includes/class.notify.php';
@@ -27,7 +22,6 @@ function send_reminders()
     //we touch the file on every single iteration to avoid
     //the possible restart done by Startremiderdaemon method
     //in class.flyspray.conf
-touch(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
 
 
 $notify =& new Notifications;
@@ -84,39 +78,16 @@ while ($row = $db->FetchRow($get_reminders)) {
 	// send those stored notifications
 $notify->SendJabber();
 unset($notify, $user);
-unlink(Flyspray::get_tmp_dir() . '/flysprayreminders.run');
 
 }
 
+if(isset($conf['general']['reminder_daemon']) && ($conf['general']['reminder_daemon'] == 1)) {
 
-if(isset($conf['general']['reminder_daemon']) && in_array($conf['general']['reminder_daemon'], range(1, 2))) {
+    send_reminders();
 
-	if(php_sapi_name() === 'cli') {
-		//once
-		send_reminders();
-
-    } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1'
-              && $conf['general']['reminder_daemon'] == '2') {
-
-		//keep going, execute the script in the background
-		ignore_user_abort(true);
-		set_time_limit(0);
-
-        do {
-
-			send_reminders();
-			//wait 10 minutes for the next loop.
-			sleep(600);
-
-        //forever ¡¡¡ ( oh well. a least will not stop unless killed or the server restarted)
-		} while(true);
-         
-       } else {
-
-    		die("you are not authorized to start the reminder daemon\n");
-	}
 } else {
 
-    die("reminder is disabled...not running..\n");
+    die("reminder daemon is disabled");
 }
+
 ?>
