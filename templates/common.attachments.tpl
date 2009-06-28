@@ -3,7 +3,7 @@
   <div class="attachments">
   <?php foreach ($attachments as $attachment): ?>
     <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
-    <a title="{$attachment['orig_name']}" href="?getfile={$attachment['attachment_id']}">
+    <a title="{$attachment['orig_name']}" href="?getfile={$attachment['attachment_id']}" <?php if (substr($attachment['file_type'], 0, 5) == 'image'): ?>rel="lightbox[bug]"<?php endif; ?>>
     <?php else: ?>
     <del>
     <?php endif; ?>
