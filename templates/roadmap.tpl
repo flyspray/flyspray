@@ -1,9 +1,6 @@
-<?php foreach($data as $milestone): ?>
-
 <script type="text/javascript">
-allTasks = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
 
-function hideAll()
+function hideAll(allTasks)
 {
     for (i = 0; i < allTasks.length; i++) {
         if (!allTasks[i]) continue;
@@ -13,7 +10,7 @@ function hideAll()
     }
 }
 
-function showAll()
+function showAll(allTasks)
 {
     for (i = 0; i < allTasks.length; i++) {
         if (!allTasks[i]) continue;
@@ -24,12 +21,18 @@ function showAll()
 }
 </script>
 
+<?php foreach($data as $milestone): ?>
+
+<script type="text/javascript">
+allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
+</script>
+
 <div class="box roadmap">
 <h3>{L('roadmapfor')} {$milestone['name']}
     <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
-      <a href="javascript:showAll()">{L('expandall')}</a> |
-      <a href="javascript:hideAll()">{L('collapseall')}</a>
+      <a href="javascript:showAll(allTasks{$milestone['id']})">{L('expandall')}</a> |
+      <a href="javascript:hideAll(allTasks{$milestone['id']})">{L('collapseall')}</a>
     </small>
     <?php endif; ?>
 </h3>
