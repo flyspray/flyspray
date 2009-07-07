@@ -80,7 +80,7 @@
     <field name="file_name" type="C" size="30">
       <NOTNULL/>
     </field>
-    <field name="file_type" type="C" size="50">
+    <field name="file_type" type="C" size="255">
       <NOTNULL/>
     </field>
     <field name="file_size" type="I" size="20">
