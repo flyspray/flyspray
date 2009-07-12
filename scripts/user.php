@@ -16,6 +16,9 @@ if ($proj->id) {
 }
 
 $id = Flyspray::ValidUserId(Get::val('id', Get::val('uid')));
+if (!$id) {
+  $id = Flyspray::UserNameToId(Get::val('user_name'));
+}
 
 $theuser = new User($id);
 if ($theuser->isAnon()) {
