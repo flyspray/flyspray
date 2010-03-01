@@ -429,7 +429,7 @@ Tisztelettel,',
 'categoryowner'           => 'Ön azért kapta ezt azt, mert a hibajegy kategóriájának tulajdonosa.',
 'tasksummary'             => 'Hibajegy összefoglalása:',
 'newtaskadded'            => 'Az új hibajegy hozzáadva.',
-'summaryanddetails'       => 'Ki kell töltenie az összegzést és a részletes leírást is.',
+'summaryanddetails'       => 'Ki kell töltenie az összegzést és a részletes leírást is. Továbbá anonym felhasználó esetén ellenőrizze hogy megadott-e e-mail címet!',
 'goback'                  => 'Vissza.',
 'messagefrom'             => 'Ez egy üzenet a hibajegy rendszertől a ',
 'hasjustmodified'         => 'módosította a következő hibajegyet.',
@@ -842,7 +842,9 @@ Tisztelettel,',
 'assign_to_self'	=> 'Önmagamhoz rendelés',
 'assign_others_to_self'	=> 'Mások hozzárendelése',
 'view_reports'		=> 'Riportok megtekintése',
-'add_votes'		=> 'Szavazat leadása'
+'add_votes'		=> 'Szavazat leadása',
+'showasassignees'         => 'Hozzárendelhető személy',
+'find'		=> 'Keresés'
 );
 
 ?>
