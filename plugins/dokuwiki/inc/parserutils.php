@@ -199,10 +199,10 @@ function p_get_instructions($text){
   $modes = p_get_parsermodes();
 
   // Create the parser
-  $Parser = & new Doku_Parser();
+  $Parser = new Doku_Parser();
 
   // Add the Handler
-  $Parser->Handler = & new Doku_Handler();
+  $Parser->Handler = new Doku_Handler();
 
   //add modes to parser
   foreach($modes as $mode){
@@ -311,7 +311,7 @@ function p_render_metadata($id, $orig){
   $instructions = p_cached_instructions(wikiFN($id),false,$id);
 
   // set up the renderer
-  $renderer = & new Doku_Renderer_metadata();
+  $renderer = new Doku_Renderer_metadata();
   $renderer->meta = $orig;
 
   // loop through the instructions
@@ -451,7 +451,7 @@ function p_render($mode,$instructions,& $info){
     msg("Renderer for $mode not valid",-1);
     return null;
   }
-  $Renderer = & new $rclass(); #FIXME any way to check for class existance?
+  $Renderer = new $rclass(); #FIXME any way to check for class existance?
 
   $Renderer->smileys = getSmileys();
   $Renderer->entities = getEntities();
