@@ -254,6 +254,39 @@ class Backend
     }
 
     /**
+     * Removes a vote from $user_id to the task $task_id
+     * @param integer $user_id
+     * @param integer $task_id
+     * @access public
+     * @return bool
+     * @version 1.0
+     */    
+    function remove_vote($user_id, $task_id)
+    {
+        global $db;
+
+        $user = $GLOBALS['user'];
+        if ($user_id != $user->id) {
+            $user = new User($user_id);
+        }
+
+        $task = Flyspray::GetTaskDetails($task_id);
+        
+        if (!$task) {
+            return false;
+        }
+        
+        if ($user->can_vote($task) == -2) {
+
+            if($db->Query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
+							array($user->id, $task_id))) {
+               return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Adds a comment to $task
      * @param array $task
      * @param string $comment_text

@@ -133,7 +133,8 @@
           <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=details.addvote&amp;task_id={$task_details['task_id']}">
             ({L('addvote')})</a>
           <?php elseif ($user->can_vote($task_details) == -2): ?>
-          ({L('alreadyvotedthistask')})
+          <a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=details.removevote&amp;task_id={$task_details['task_id']}">
+          ({L('removevote')})
           <?php elseif ($user->can_vote($task_details) == -3): ?>
           ({L('alreadyvotedthisday')})
           <?php endif; ?>

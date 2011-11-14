@@ -1542,6 +1542,17 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('votefailed'));
             break;
         }
-}
+		break;
 
+    // ##################
+    // Removing a vote for a task
+    // ##################
+    case 'details.removevote':
+        if (Backend::remove_vote($user->id, $task['task_id'])) {
+            $_SESSION['SUCCESS'] = L('voteremoved');
+        } else {
+            Flyspray::show_error(L('voteremovefailed'));
+            break;
+        }
+}
 ?>

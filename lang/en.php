@@ -827,6 +827,9 @@ Regards,',
 'tls'                     => 'TLS',
 'isadmin'                 => 'Is admin',
 'addvotes'                => 'Add votes',
+'removevote'              => 'Remove vote',
+'voteremoved'             => 'Your vote has been removed',
+'voteremovefailed'        => 'Your vote could not be removed at this time.',
 );
 
 ?>
