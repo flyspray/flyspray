@@ -77,9 +77,9 @@ if ($fs->prefs['cache_feeds']) {
 
 /* build a new feed if cache didn't work */
 $sql = $db->Query("SELECT  t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed,
-                           t.last_edited_time, t.opened_by, u.real_name, u.email_address
+                           t.last_edited_time, t.opened_by, COALESCE(u.real_name, t.anon_email) AS real_name, COALESCE(u.email_address, t.anon_email) AS email_address
                      FROM  {tasks}    t
-               INNER JOIN  {users}    u ON t.opened_by = u.user_id
+                LEFT JOIN  {users}    u ON t.opened_by = u.user_id
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
                     WHERE  $closed AND $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
