@@ -63,7 +63,7 @@ class Doku_Parser {
     function addBaseMode(& $BaseMode) {
         $this->modes['base'] = & $BaseMode;
         if ( !$this->Lexer ) {
-            $this->Lexer = & new Doku_Lexer($this->Handler,'base', TRUE);
+            $this->Lexer = new Doku_Lexer($this->Handler,'base', TRUE);
         }
         $this->modes['base']->Lexer = & $this->Lexer;
     }
