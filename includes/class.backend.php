@@ -271,21 +271,21 @@ class Backend
         }
 
         $task = Flyspray::GetTaskDetails($task_id);
-        
+
         if (!$task) {
             return false;
         }
-        
+
         if ($user->can_vote($task) == -2) {
 
             if($db->Query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
-							array($user->id, $task_id))) {
+                            array($user->id, $task_id))) {
                return true;
             }
         }
         return false;
     }
-    
+
     /**
      * Adds a comment to $task
      * @param array $task
@@ -353,9 +353,9 @@ class Backend
 
         $res = false;
 
-		if (!isset($_FILES[$source]['error'])) {
-			return false;
-		}
+        if (!isset($_FILES[$source]['error'])) {
+            return false;
+        }
 
         foreach ($_FILES[$source]['error'] as $key => $error) {
             if ($error != UPLOAD_ERR_OK) {
@@ -564,11 +564,11 @@ class Backend
         $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
                          VALUES (?, ?, ?, ?)',
                     array($uid, L('tasksireported'), serialize($iopened), time()));
-        
+
         if ($jabber_id) {
             Notifications::JabberRequestAuth($jabber_id);
         }
-        
+
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
             $sql = $db->Query('SELECT DISTINCT email_address
@@ -632,17 +632,17 @@ class Backend
         if (!$user->perms('manage_project', $pid)) {
             return false;
         }
-        
+
         // Delete all project's tasks related information
         if (!$move_to) {
             $taskIds = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
             $taskIds = $db->FetchCol($taskIds);
             $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
-                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes'); 
+                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
             foreach ($tables as $table) {
                 if ($table == 'related') {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE this_task = ? OR related_task = ? ');
-                } else {   
+                } else {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE task_id = ?');
                 }
                 foreach ($taskIds as $id) {
@@ -1136,15 +1136,14 @@ class Backend
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
                         $temp .= ' a.user_id is NULL  OR';
                     } else {
-                        if (is_numeric($val)) {
-                            $condition = ' = ? OR';
-                        } else {
-                           $val = '%' . $val . '%';
-                           $condition = ' LIKE ? OR';
-                        }
-                        foreach ($db_key as $value) {
-                            $temp .= ' ' . $value . $condition;
-                            $sql_params[] = $val;
+                        foreach ($db_key as $singleDBKey) {
+                            if (strpos($singleDBKey, '_name') !== false) {
+                                $temp .= ' ' . $singleDBKey . ' LIKE ? OR ';
+                                $sql_params[] = '%' . $val . '%';
+                            } elseif (is_numeric($val)) {
+                                $temp .= ' ' . $singleDBKey . ' = ? OR';
+                                $sql_params[] = $val;
+                            }
                         }
                     }
                 }
