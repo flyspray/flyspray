@@ -514,9 +514,9 @@ class Flyspray
     function AdminRequest($type, $project_id, $task_id, $submitter, $reason)
     {
         global $db;
-        $db->Query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted)
-                         VALUES (?, ?, ?, ?, ?, ?)',
-                    array($project_id, $task_id, $submitter, $type, $reason, time()));
+        $db->Query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
+                         VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    array($project_id, $task_id, $submitter, $type, $reason, time(), ''));
     } // }}}
     // Check for an existing admin request for a task and event type {{{;
     /**
