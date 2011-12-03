@@ -18,10 +18,10 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
     $do = 'pm';
 } elseif ($do == 'pm' && Req::has('switch') && Req::val('project') == '0') {
     $do = 'admin';
-} elseif (Req::has('show') || (Req::has('switch') && ($do == 'details'))) {
-    $do = 'index';
+} elseif (Req::has('show') || (Req::has('switch') && $do == 'details')
+      || ($do == 'newtask' && Req::val('project') == '0'))  {
+	$do = 'index';
 }
-
 
 
 /* permission stuff */
