@@ -298,7 +298,7 @@ function toggleSearchBox(themeurl) {
   }
 }
 function deletesearch(id, url) {
-    var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/Bluey/ajax_load.gif';
+    var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/CleanFS/ajax_load.gif';
     url = url + 'javascript/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {method: 'get', parameters: 'id=' + id,
                      onSuccess:function()
@@ -351,7 +351,7 @@ function showPreview(textfield, baseurl, field)
     emptyElement(preview);
 
     var img = document.createElement('img');
-    img.src = baseurl + 'themes/Bluey/ajax_load.gif';
+    img.src = baseurl + 'themes/CleanFS/ajax_load.gif';
     img.id = 'temp_img';
     img.alt = 'Loading...';
     preview.appendChild(img);
