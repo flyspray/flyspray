@@ -15,7 +15,7 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/Swift.php';
+require_once dirname(__FILE__) . '/external/swift-mailer/swift_required.php';
 
 class Notifications {
 
@@ -255,14 +255,13 @@ class Notifications {
 	// Do we want to use a remote mail server?
       if (!empty($fs->prefs['smtp_server'])) {
           
-          Swift_ClassLoader::load('Swift_Connection_SMTP');
           // connection... SSL, TLS or none
-          if ($fs->prefs['email_ssl']) {
-              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_SSL);
-          } else if ($fs->prefs['email_tls']) {
-              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_TLS);
+          if ($fs->prefs['email_tls']) {
+              $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server'], 587, 'tls');
+          } else if ($fs->prefs['email_ssl']) {
+              $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server'], 465, 'ssl');
           } else {
-              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server']);
+              $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server']);
           }
           
           if ($fs->prefs['smtp_user']) {
@@ -274,8 +273,7 @@ class Notifications {
           }
       // Use php's built-in mail() function
       } else {
-            Swift_ClassLoader::load('Swift_Connection_NativeMail');
-            $swiftconn = new Swift_Connection_NativeMail();
+            $swiftconn = Swift_MailTransport::newInstance();
       }
 
       if(defined( 'FS_MAIL_LOGFILE')) {
@@ -283,15 +281,16 @@ class Notifications {
          $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
       }
 
-      $swift = new Swift($swiftconn);
+      $swift = Swift_Mailer::newInstance($swiftconn);
 
-      Swift_CacheFactory::setClassName("Swift_Cache_Disk");
-      Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
-
-      $message = new Swift_Message($subject, $body);
-      $message->headers->setCharset('utf-8');
-      $message->headers->set('Precedence', 'list');
-      $message->headers->set('X-Mailer', 'Flyspray');
+      $message = new Swift_Message($subject);
+      $message->setBody($body);
+      $type = $message->getHeaders()->get('Content-Type');
+      $type->setValue('text/plain');
+      $type->setParameter('charset', 'utf-8');
+      
+      $message->getHeaders()->addTextHeader('Precedence', 'list');
+      $message->getHeaders()->addTextHeader('X-Mailer', 'Flyspray');
 
       if ($proj->prefs['notify_reply']) {
             $message->setReplyTo($proj->prefs['notify_reply']);
@@ -301,16 +300,14 @@ class Notifications {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = sprintf('<FS%d@%s>', $task_id, $hostdata['host']);
         // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
-            $message->headers->set('In-Reply-To', $inreplyto);
-            $message->headers->set('References', $inreplyto);
+            $message->getHeaders()->addTextHeader('In-Reply-To', $inreplyto);
+            $message->getHeaders()->addTextHeader('References', $inreplyto);
       }
-      
-      $recipients = new Swift_RecipientList();
+     
       // now accepts string , array or Swift_Address.
-      $recipients->addTo($to);
-      $message->build();
-      $retval = (bool) $swift->batchsend($message, $recipients,
-                new Swift_Address($fs->prefs['admin_email'], $proj->prefs['project_title']));
+      $message->setTo($to);
+      $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
+      $swift->send($message);
       
       if(defined('FS_MAIL_LOGFILE')) {
           if(is_writable(dirname(FS_MAIL_LOGFILE))) {
@@ -322,7 +319,7 @@ class Notifications {
           }
           
       }
-      $swift->disconnect();
+
       return $retval;  
 
    } //}}}
