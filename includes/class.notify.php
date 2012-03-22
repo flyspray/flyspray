@@ -310,15 +310,16 @@ class Notifications {
         $swift->send($message);
 
         if(defined('FS_MAIL_LOGFILE')) {
-          if(is_writable(dirname(FS_MAIL_LOGFILE))) {
-              if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                  fwrite($fh, $log->dump(true));
-                  fwrite($fh, php_uname());
-                  fclose($fh);
-              }
-          }          
+            if(is_writable(dirname(FS_MAIL_LOGFILE))) {
+                if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
+                    fwrite($fh, $log->dump(true));
+                    fwrite($fh, php_uname());
+                    fclose($fh);
+                }
+            }          
         }
-
+        
+        return true;
     } //}}}
     // {{{ Create a message for any occasion
     function GenerateMsg($type, $task_id, $arg1='0')

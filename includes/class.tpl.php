@@ -6,19 +6,19 @@ if (!defined('IN_FS')) {
 
 class Tpl
 {
-    var $_uses  = array();
-    var $_vars  = array();
-    var $_theme = '';
-    var $_tpls  = array();
-    var $_title = "";
+    public $_uses  = array();
+    public $_vars  = array();
+    public $_theme = '';
+    public $_tpls  = array();
+    public $_title = "";
 
-    function uses()
+    public function uses()
     {
         $args = func_get_args();
         $this->_uses = array_merge($this->_uses, $args);
     }
 
-    function assign($arg0 = null, $arg1 = null)
+    public function assign($arg0 = null, $arg1 = null)
     {
         if (is_string($arg0)) {
             $this->_vars[$arg0] = $arg1;
@@ -29,12 +29,12 @@ class Tpl
         }
     }
 
-    function getTheme()
+    public function getTheme()
     {
         return $this->_theme;
     }
     
-    function setTheme($theme)
+    public function setTheme($theme)
     {
         // Check available themes
         $theme = trim($theme, '/');
@@ -46,17 +46,17 @@ class Tpl
         }
     }
 
-    function setTitle($title)
+    public function setTitle($title)
     {
         $this->_title = $title;
     }
 
-    function themeUrl()
+    public function themeUrl()
     {
         return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
     }
 
-    function compile(&$item)
+    public function compile(&$item)
     {
         if (strncmp($item, '<?', 2)) {
             $item = preg_replace( '/{!([^\s&][^{}]*)}(\n?)/', '<?php echo \1; ?>\2\2', $item);
@@ -68,23 +68,23 @@ class Tpl
         }
     }
     // {{{ Display page
-    function pushTpl($_tpl)
+    public function pushTpl($_tpl)
     {
         $this->_tpls[] = $_tpl;
     }
 
-    function catch_start()
+    public function catch_start()
     {
         ob_start();
     }
 
-    function catch_end()
+    public function catch_end()
     {
         $this->_tpls[] = array(ob_get_contents());
         ob_end_clean();
     }
 
-    function display($_tpl, $_arg0 = null, $_arg1 = null)
+    public function display($_tpl, $_arg0 = null, $_arg1 = null)
     {
         // if only plain text
         if (is_array($_tpl) && count($tpl)) {
@@ -128,7 +128,7 @@ class Tpl
         eval( '?>'. $_tpl_data );
     } // }}}
 
-    function render()
+    public function render()
     {
         while (count($this->_tpls)) {
             $this->display(array_shift($this->_tpls));
@@ -136,7 +136,7 @@ class Tpl
 
     }
 
-    function fetch($tpl, $arg0 = null, $arg1 = null)
+    public function fetch($tpl, $arg0 = null, $arg1 = null)
     {
         ob_start();
         $this->display($tpl, $arg0, $arg1);
@@ -146,9 +146,9 @@ class Tpl
 
 class FSTpl extends Tpl
 {
-    var $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
+    public $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
 
-    function get_image($name, $base = true)
+    public function get_image($name, $base = true)
 	{
         global $proj, $baseurl;
         $pathinfo = pathinfo($name);
@@ -821,38 +821,39 @@ function pagenums($pagenum, $perpage, $totalcount)
 
     return $output;
 } // }}}
+
 class Url {
-	var $url = '';
-	var $parsed;
+    public $url = '';
+    public $parsed;
 
-	function url($url = '') {
-		$this->url = $url;
-		$this->parsed = parse_url($this->url);
-	}
+    public function url($url = '') {
+        $this->url = $url;
+        $this->parsed = parse_url($this->url);
+    }
 
-	function seturl($url) {
-		$this->url = $url;
-		$this->parsed = parse_url($this->url);
-	}
+    public function seturl($url) {
+        $this->url = $url;
+        $this->parsed = parse_url($this->url);
+    }
 
-	function getinfo($type = null) {
-		if (is_null($type)) {
-			return $this->parsed;
-		} elseif (isset($this->parsed[$type])) {
-			return $this->parsed[$type];
-		} else {
-			return '';
-		}
-	}
+    public function getinfo($type = null) {
+        if (is_null($type)) {
+            return $this->parsed;
+        } elseif (isset($this->parsed[$type])) {
+            return $this->parsed[$type];
+        } else {
+            return '';
+        }
+    }
 
-	function setinfo($type, $value) {
-		$this->parsed[$type] = $value;
-	}
+    public function setinfo($type, $value) {
+        $this->parsed[$type] = $value;
+    }
 
-	function addfrom($method = 'get', $vars = array()) {
-		$append = '';
-		foreach($vars as $key) {
-			$append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
+    public function addfrom($method = 'get', $vars = array()) {
+        $append = '';
+        foreach($vars as $key) {
+            $append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
         
@@ -862,13 +863,13 @@ class Url {
         }
         
         if ($this->getinfo('query')) {
-        	$this->parsed['query'] .= '&' . $append;
+            $this->parsed['query'] .= '&' . $append;
         } else {
-        	$this->parsed['query'] = $append;
+            $this->parsed['query'] = $append;
         }
-	}
+    }
 
-	function addvars($vars = array()) {
+    public function addvars($vars = array()) {
         $append = http_build_query($vars);
 
         $separator = ini_get('arg_separator.output');
@@ -877,34 +878,34 @@ class Url {
         }
         
         if ($this->getinfo('query')) {
-        	$this->parsed['query'] .= '&' . $append;
+            $this->parsed['query'] .= '&' . $append;
         } else {
-        	$this->parsed['query'] = $append;
+            $this->parsed['query'] = $append;
         }
-	}
+    }
 
-	function get($fullpath = true) {
-		$return = '';
-		if ($fullpath) {
-			$return .= $this->getinfo('scheme') . '://' . $this->getinfo('host');
+    public function get($fullpath = true) {
+        $return = '';
+        if ($fullpath) {
+            $return .= $this->getinfo('scheme') . '://' . $this->getinfo('host');
 
             if ($this->getinfo('port')) {
                 $return .= ':' . $this->getinfo('port');
             }
         }
 
-		$return .= $this->getinfo('path');
+        $return .= $this->getinfo('path');
 
-		if ($this->getinfo('query')) {
+        if ($this->getinfo('query')) {
             $return .= '?' . $this->getinfo('query');
-		}
+        }
 
-		if ($this->getinfo('fragment')) {
-		 	$return .= '#' . $this->getinfo('fragment');
-		}
+        if ($this->getinfo('fragment')) {
+            $return .= '#' . $this->getinfo('fragment');
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 }
 // }}}
 // }}}

@@ -25,7 +25,7 @@ class Database
      * @var string
      * @access private
      */
-    var $dbprefix;
+    private $dbprefix;
 
     /**
      * Cache for queries done by cached_query()
@@ -33,7 +33,7 @@ class Database
      * @access private
      * @see cached_query();
      */
-    var $cache = array();
+    private $cache = array();
 
     /**
      * dblink
@@ -41,14 +41,14 @@ class Database
      * @var object
      * @access public
      */
-    var $dblink = null;
+    public $dblink = null;
 
     /**
      * Open a connection to the database quickly
      * @param array $conf connection data
      * @return void
      */
-    function dbOpenFast($conf)
+    public function dbOpenFast($conf)
     {
         if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 5) {
 
@@ -69,7 +69,7 @@ class Database
      *  "mysql", "mysqli","pdo_mysql" "pgsql", "pdo_pgsql" should work correctly.
      * @param string $dbprefix database prefix.
      */
-    function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
+    public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
     {
 
         $this->dbtype   = $dbtype;
@@ -113,7 +113,7 @@ class Database
      * Closes the database connection
      * @return void
      */
-    function dbClose()
+    public function dbClose()
     {
         $this->dblink->Close();
     }
@@ -125,7 +125,7 @@ class Database
      * @access public
      * @return int
      */
-    function CountRows(&$result)
+    public function CountRows(&$result)
     {
         return (int) $result->RecordCount();
     }
@@ -136,7 +136,7 @@ class Database
      * @access public
      * @return int
      */
-    function AffectedRows()
+    public function AffectedRows()
     {
         return (int) $this->dblink->Affected_Rows();
     }
@@ -149,7 +149,7 @@ class Database
      * @return void
      */
 
-    function FetchRow(&$result)
+    public function FetchRow(&$result)
     {
         return $result->FetchRow();
     }
@@ -163,7 +163,7 @@ class Database
      * @return void
      */
 
-    function fetchCol(&$result, $col=0)
+    public function fetchCol(&$result, $col=0)
     {
         $tab = array();
         while ($tmp = $result->fetchRow()) {
@@ -183,7 +183,7 @@ class Database
      * @return void
      */
 
-    function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
+    public function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
@@ -236,7 +236,7 @@ class Database
      * @access public
      * @return array
      */
-    function cached_query($idx, $sql, $sqlargs = array())
+    public function cached_query($idx, $sql, $sqlargs = array())
     {
         if (isset($this->cache[$idx])) {
             return $this->cache[$idx];
@@ -253,7 +253,7 @@ class Database
      * @access public
      * @return array
      */
-    function FetchOne(&$result)
+    public function FetchOne(&$result)
     {
         $row = $this->FetchRow($result);
         return (count($row) ? $row[0] : '');
@@ -266,7 +266,7 @@ class Database
      * @access public
      * @return array
      */
-    function FetchAllArray(&$result)
+    public function FetchAllArray(&$result)
     {
         return $result->GetArray();
     }
@@ -282,7 +282,7 @@ class Database
      * @access public
      * @return array process the returned array with foreach ($return as $row) {}
      */
-    function GroupBy(&$result, $column)
+    public function GroupBy(&$result, $column)
     {
         $rows = array();
         while ($row = $this->FetchRow($result)) {
@@ -301,7 +301,7 @@ class Database
      * @return void
      */
 
-    function GetColumnNames($table, $alt, $prefix)
+    public function GetColumnNames($table, $alt, $prefix)
     {
         global $conf;
 
@@ -338,7 +338,7 @@ class Database
      * @access public
      * @return integer 0 on error, 1 on update. 2 on insert
      */
-    function Replace($table, $field, $keys, $autoquote = true)
+    public function Replace($table, $field, $keys, $autoquote = true)
     {
         $table = $this->_add_prefix($table);
         return $this->dblink->Replace($table, $field, $keys, $autoquote);
@@ -351,7 +351,7 @@ class Database
      * @access private
      * @since 0.9.9
      */
-    function _add_prefix($sql_data)
+    private function _add_prefix($sql_data)
     {
         return preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
     }
@@ -364,7 +364,7 @@ class Database
      * @access public
      * @since 0.9.9
      */
-    function QuoteIdentifier($ident)
+    public function QuoteIdentifier($ident)
     {
         return (string) $this->dblink->nameQuote . $ident . $this->dblink->nameQuote ;
     }
@@ -379,7 +379,7 @@ class Database
      * @since 0.9.9
      * @notes please use this little as possible, always prefer prepared statements
      */
-    function qstr($string)
+    public function qstr($string)
     {
         return $this->dblink->qstr($string, false);
     }
@@ -394,7 +394,7 @@ class Database
      * @return string comma separated "?" placeholders
      * @static
      */
-    function fill_placeholders($cols, $additional=0)
+    public function fill_placeholders($cols, $additional=0)
     {
         if(is_array($cols) && count($cols) && is_int($additional)) {
 
@@ -407,5 +407,3 @@ class Database
     }
     // End of Database Class
 }
-
-?>

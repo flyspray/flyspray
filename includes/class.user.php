@@ -2,15 +2,15 @@
 
 class User
 {
-    var $id = -1;
-    var $perms = array();
-    var $infos = array();
-    var $searches = array();
-    var $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
+    public $id = -1;
+    public $perms = array();
+    public $infos = array();
+    public $searches = array();
+    public $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_in_details', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
                              'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
 
-    function User($uid = 0)
+    public function __construct($uid = 0)
     {
         global $db;
 
@@ -41,7 +41,7 @@ class User
      * @return void
      * @notes FIXME: must return something, should not merge _GET and _REQUEST with other stuff.
      */
-    function save_search($do = 'index')
+    public function save_search($do = 'index')
     {
         global $db;
 
@@ -75,7 +75,7 @@ class User
         $this->searches = $db->FetchAllArray($sql);
     }
 
-    function perms($name, $project = null) {
+    public function perms($name, $project = null) {
         if (is_null($project)) {
             global $proj;
             $project = $proj->id;
@@ -88,7 +88,7 @@ class User
         }
     }
 
-    function get_perms()
+    public function get_perms()
     {
         global $db, $fs;
 
@@ -152,7 +152,7 @@ class User
         }
     }
 
-    function check_account_ok()
+    public function check_account_ok()
     {
         global $conf, $baseurl;
         // Anon users are always OK
@@ -169,7 +169,7 @@ class User
         }
     }
 
-    function isAnon()
+    public function isAnon()
     {
         return $this->id < 0;
     }
@@ -177,13 +177,13 @@ class User
     /* }}} */
     /* permission related {{{ */
 
-    function can_edit_comment($comment)
+    public function can_edit_comment($comment)
     {
         return $this->perms('edit_comments')
                || ($comment['user_id'] == $this->id && $this->perms('edit_own_comments'));
     }
 
-    function can_view_project($proj)
+    public function can_view_project($proj)
     {
         if (is_array($proj) && isset($proj['project_id'])) {
             $proj = $proj['project_id'];
@@ -194,7 +194,7 @@ class User
               && ($this->perms('others_view', $proj) || $this->perms('project_group', $proj)));
     }
 
-    function can_view_task($task)
+    public function can_view_task($task)
     {
         if ($task['task_token'] && Get::val('task_token') == $task['task_token']) {
             return true;
@@ -209,7 +209,7 @@ class User
         return !$this->isAnon() && in_array($this->id, Flyspray::GetAssignees($task['task_id']));
     }
 
-    function can_edit_task($task)
+    public function can_edit_task($task)
     {
         return !$task['is_closed']
             && ($this->perms('modify_all_tasks', $task['project_id']) ||
@@ -217,7 +217,7 @@ class User
                      && in_array($this->id, Flyspray::GetAssignees($task['task_id']))));
     }
 
-    function can_take_ownership($task)
+    public function can_take_ownership($task)
     {
         $assignees = Flyspray::GetAssignees($task['task_id']);
 
@@ -225,41 +225,41 @@ class User
                || ($this->perms('assign_others_to_self', $task['project_id']) && !in_array($this->id, $assignees));
     }
 
-    function can_add_to_assignees($task)
-	 {
+    public function can_add_to_assignees($task)
+    {
         return ($this->perms('add_to_assignees', $task['project_id']) && !in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
     }
 
-    function can_close_task($task)
+    public function can_close_task($task)
     {
         return ($this->perms('close_own_tasks', $task['project_id']) && in_array($this->id, $task['assigned_to']))
                 || $this->perms('close_other_tasks', $task['project_id']);
     }
 
-    function can_self_register()
+    public function can_self_register()
     {
         global $fs;
         return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
     }
 
-    function can_register()
+    public function can_register()
     {
         global $fs;
         return $this->isAnon() && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
     }
 
-    function can_open_task($proj)
+    public function can_open_task($proj)
     {
         return $proj->id && ($this->perms('manage_project') ||
                  $this->perms('project_is_active', $proj->id) && ($this->perms('open_new_tasks') || $this->perms('anon_open', $proj->id)));
     }
 
-    function can_change_private($task)
+    public function can_change_private($task)
     {
         return !$task['is_closed'] && ($this->perms('manage_project', $task['project_id']) || in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
     }
 
-    function can_vote($task)
+    public function can_vote($task)
     {
         global $db;
 
@@ -288,7 +288,7 @@ class User
         return 1;
     }
 
-    function logout()
+    public function logout()
     {
         // Set cookie expiry time to the past, thus removing them
         Flyspray::setcookie('flyspray_userid',   '', time()-60);
@@ -307,5 +307,3 @@ class User
 
     /* }}} */
 }
-
-?>

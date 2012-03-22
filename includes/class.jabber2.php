@@ -14,18 +14,18 @@ define('SECURITY_TLS', 2);
 
 class Jabber
 {
-    var $connection = null;
-    var $session = array();
-	var $resource = 'class.jabber2.php';
-    var $log = array();
-    var $log_enabled = true;
-    var $timeout = 10;
-    var $user = '';
-    var $password = '';
-    var $server = '';
-    var $features = array();
+    public $connection = null;
+    public $session = array();
+    public $resource = 'class.jabber2.php';
+    public $log = array();
+    public $log_enabled = true;
+    public $timeout = 10;
+    public $user = '';
+    public $password = '';
+    public $server = '';
+    public $features = array();
 
-    function Jabber($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
+    public function __construct($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
     {
         // Can we use Jabber at all?
         // Note: Maybe replace with SimpleXML in the future
@@ -65,23 +65,23 @@ class Jabber
 
         if ($this->open_socket( ($host != '') ? $host : $server, $port, $security == SECURITY_SSL)) {
             $this->send("<?xml version='1.0' encoding='UTF-8' ?" . ">\n");
-			$this->send("<stream:stream to='{$server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
+            $this->send("<stream:stream to='{$server}' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
         } else {
             return false;
         }
         // Now we listen what the server has to say...and give appropriate responses
         $this->response($this->listen());
     }
-	
-	/**
+    
+    /**
      * Sets the resource which is used. No validation is done here, only escaping.
-	 * @param string $$name
+    * @param string $$name
      * @access public
      */
-	function SetResource($name)
-	{
-		$this->resource = $name;
-	}
+    public function SetResource($name)
+    {
+        $this->resource = $name;
+    }
 
     /**
      * Send data to the Jabber server
@@ -89,7 +89,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function send($xml)
+    public function send($xml)
     {
         if ($this->connected()) {
            $xml = trim($xml);
@@ -109,7 +109,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function open_socket($server, $port, $ssl = false)
+    public function open_socket($server, $port, $ssl = false)
     {
         if (function_exists("dns_get_record")) {
             $record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
@@ -137,7 +137,7 @@ class Jabber
         return false;
     }
 
-    function log($msg)
+    public function log($msg)
     {
         if ($this->log_enabled) {
             $this->log[] = $msg;
@@ -153,7 +153,7 @@ class Jabber
      * @access public
      * @return mixed either false for timeout or an array with the received data
      */
-    function listen($timeout = 10, $wait = false)
+    public function listen($timeout = 10, $wait = false)
     {
         if (!$this->connected()) {
             return false;
@@ -183,7 +183,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function login()
+    public function login()
     {
         if (!count($this->features)) {
             $this->log('Error: No feature information from server available.');
@@ -198,7 +198,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function register()
+    public function register()
     {
         if (!isset($this->session['id']) || isset($this->session['jid'])) {
             $this->log('Error: Cannot initiate registration.');
@@ -216,7 +216,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function unregister()
+    public function unregister()
     {
         if (!isset($this->session['id']) || !isset($this->session['jid'])) {
             $this->log('Error: Cannot initiate un-registration.');
@@ -239,7 +239,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function presence($type = '', $message = '', $unavailable = false)
+    public function presence($type = '', $message = '', $unavailable = false)
     {
         if (!isset($this->session['jid'])) {
             $this->log('Error: Cannot set presence at this point.');
@@ -269,7 +269,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    function response($xml)
+    public function response($xml)
     {
         if (!is_array($xml) || !count($xml)) {
             return false;
@@ -507,7 +507,7 @@ class Jabber
         }
     }
 
-    function send_message($to, $text, $subject = '', $type = 'normal')
+    public function send_message($to, $text, $subject = '', $type = 'normal')
     {
         if (!isset($this->session['jid'])) {
             return false;
@@ -526,7 +526,7 @@ class Jabber
                             </message>");
     }
 
-    function get_messages($waitfor = 3)
+    public function get_messages($waitfor = 3)
     {
         if (!isset($this->session['sent_presence']) || !$this->session['sent_presence']) {
             $this->presence();
@@ -539,12 +539,12 @@ class Jabber
         return isset($this->session['messages']) ? $this->session['messages'] : array();
     }
 
-    function connected()
+    public function connected()
     {
         return is_resource($this->connection) && !feof($this->connection);
     }
 
-    function disconnect()
+    public function disconnect()
     {
         if ($this->connected()) {
             // disconnect gracefully
@@ -558,12 +558,12 @@ class Jabber
         return false;
     }
 
-    function can_use_ssl()
+    public static function can_use_ssl()
     {
         return extension_loaded('openssl');
     }
 
-    function can_use_tls()
+    public static function can_use_tls()
     {
         return Jabber::can_use_ssl() && function_exists('stream_socket_enable_crypto');
     }
@@ -574,7 +574,7 @@ class Jabber
      * @access public
      * @return string
      */
-    function encrypt_password($data)
+    public function encrypt_password($data)
     {
         // let's me think about <challenge> again...
         foreach (array('realm', 'cnonce', 'digest-uri') as $key) {
@@ -602,7 +602,7 @@ class Jabber
      * @access public
      * @return array a => b ...
      */
-    function parse_data($data)
+    public function parse_data($data)
     {
         // super basic, but should suffice
         $data = explode(',', $data);
@@ -622,7 +622,7 @@ class Jabber
      * @access public
      * @return string
      */
-    function implode_data($data)
+    public function implode_data($data)
     {
         $return = array();
         foreach ($data as $key => $value) {
@@ -637,7 +637,7 @@ class Jabber
      * @access public
      * @return string
      */
-    function check_jid($jid)
+    public function check_jid($jid)
     {
         $i = strpos($jid, '@');
         if ($i === false) {
@@ -817,7 +817,7 @@ class Jabber
         return $result;
     }
 
-    function jspecialchars($data)
+    public static function jspecialchars($data)
     {
         return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
     }
@@ -829,7 +829,7 @@ class Jabber
 	// xmlize()
 	// (c) Hans Anderson / http://www.hansanderson.com/php/xml/
 
-	function xmlize($data, $WHITE=1, $encoding='UTF-8') {
+	public static function xmlize($data, $WHITE=1, $encoding='UTF-8') {
 
 		$data = trim($data);
         if (substr($data, 0, 5) != '<?xml') {
@@ -865,7 +865,7 @@ class Jabber
 	// _xml_depth()
 	// (c) Hans Anderson / http://www.hansanderson.com/php/xml/
 
-	function _xml_depth($vals, &$i) {
+	public static function _xml_depth($vals, &$i) {
 		$children = array();
 
 		if ( isset($vals[$i]['value']) )
@@ -941,4 +941,3 @@ class Jabber
     }
 }
 
-?>
