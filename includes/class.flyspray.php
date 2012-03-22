@@ -14,7 +14,7 @@
  * @author Cristian Rodriguez
  */
 
-final class Flyspray
+class Flyspray
 {
 
     /**
