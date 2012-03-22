@@ -29,9 +29,15 @@ class Tpl
         }
     }
 
+    function getTheme()
+    {
+        return $this->_theme;
+    }
+    
     function setTheme($theme)
     {
         // Check available themes
+        $theme = trim($theme, '/');
         $themes = Flyspray::listThemes();
         if (in_array($theme, $themes)) {
             $this->_theme = $theme.'/';
@@ -308,7 +314,7 @@ function join_attrs($attr = null) {
 }
 // {{{ Datepicker
 function tpl_datepicker($name, $label = '', $value = 0) {
-    global $user;
+    global $user, $page;
 
     $date = '';
 
@@ -350,12 +356,13 @@ function tpl_datepicker($name, $label = '', $value = 0) {
     }
 
 
-    $page = new FSTpl;
-    $page->assign('name', $name);
-    $page->assign('date', $date);
-    $page->assign('label', $label);
-    $page->assign('dateformat', '%Y-%m-%d');
-    $page->display('common.datepicker.tpl');
+    $subPage = new FSTpl;
+    $subPage->setTheme($page->getTheme());
+    $subPage->assign('name', $name);
+    $subPage->assign('date', $date);
+    $subPage->assign('label', $label);
+    $subPage->assign('dateformat', '%Y-%m-%d');
+    $subPage->display('common.datepicker.tpl');
 }
 // }}}
 // {{{ user selector
