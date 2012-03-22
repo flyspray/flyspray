@@ -14,7 +14,7 @@
  * @author Cristian Rodriguez
  */
 
-class Flyspray
+final class Flyspray
 {
 
     /**
@@ -22,42 +22,42 @@ class Flyspray
      * @access public
      * @var string
      */
-    var $version = '0.9.9.6 dev';
+    public $version = '0.9.9.7 dev';
 
     /**
      * Flyspray preferences
      * @access public
      * @var array
      */
-    var $prefs   = array();
+    public $prefs   = array();
 
     /**
      * Max. file size for file uploads. 0 = no uploads allowed
      * @access public
      * @var integer
      */
-    var $max_file_size = 0;
+    public $max_file_size = 0;
 
     /**
      * List of projects the user is allowed to view
      * @access public
      * @var array
      */
-    var $projects = array();
+    public $projects = array();
 
     /**
      * List of severities. Loaded in i18n.inc.php
      * @access public
      * @var array
      */
-    var $severities = array();
+    public $severities = array();
 
     /**
      * List of priorities. Loaded in i18n.inc.php
      * @access public
      * @var array
      */
-    var $priorities = array();
+    public $priorities = array();
 
     // Application-wide preferences {{{
     /**
@@ -66,7 +66,7 @@ class Flyspray
      * @return void
      * @version 1.0
      */
-    function Flyspray()
+    public function __construct()
     {
         global $db;
 
@@ -103,7 +103,7 @@ class Flyspray
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
 
-    function base_version($version)
+    public static function base_version($version)
     {
         if (strpos($version, ' ') === false) {
             return $version;
@@ -111,7 +111,7 @@ class Flyspray
         return substr($version, 0, strpos($version, ' '));
     }
 
-    function get_config_path($basedir = BASEDIR)
+    public static function get_config_path($basedir = BASEDIR)
     {
         $cfile = $basedir . '/flyspray.conf.php';
         if (is_readable($hostconfig = sprintf('%s/%s.conf.php', $basedir, $_SERVER['SERVER_NAME']))) {
@@ -133,7 +133,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function Redirect($url, $exit = true, $rfc2616 = true)
+    public static function Redirect($url, $exit = true, $rfc2616 = true)
     {
 
         @ob_clean();
@@ -185,7 +185,7 @@ class Flyspray
      * @param   string  $protocol Protocol to use when redirecting URIs.
      * @param   integer $port A new port number.
      */
-    function absoluteURI($url = null, $protocol = null, $port = null)
+    public static function absoluteURI($url = null, $protocol = null, $port = null)
     {
         // filter CR/LF
         $url = str_replace(array("\r", "\n"), ' ', $url);
@@ -270,7 +270,7 @@ class Flyspray
      * @access public static
      * @version 1.0
      */
-    function requestDuplicated()
+    public static function requestDuplicated()
     {
         // garbage collection -- clean entries older than 6 hrs
         $now = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time();
@@ -304,7 +304,7 @@ class Flyspray
      * @return mixed an array with all taskdetails or false on failure
      * @version 1.0
      */
-    function GetTaskDetails($task_id, $cache_enabled = false)
+   public static  function GetTaskDetails($task_id, $cache_enabled = false)
     {
         global $db, $fs;
 
@@ -371,7 +371,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function listProjects($active_only = true)
+    public static function listProjects($active_only = true)
     {
         global $db;
 
@@ -391,7 +391,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function listThemes()
+    public static function listThemes()
     {
         if ($handle = opendir(dirname(dirname(__FILE__)) . '/themes/')) {
             $theme_array = array();
@@ -414,7 +414,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function listGroups($proj_id = 0)
+    public static function listGroups($proj_id = 0)
     {
         global $db;
         $res = $db->Query('SELECT  *
@@ -431,7 +431,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function listLangs()
+    public static function listLangs()
     {
         return str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/lang/[a-zA-Z]*.php")));
 
@@ -449,7 +449,7 @@ class Flyspray
      * @return void
      * @version 1.0
      */
-    function logEvent($task_id, $type, $newvalue = '', $oldvalue = '', $field = '', $time = null)
+    public static function logEvent($task_id, $type, $newvalue = '', $oldvalue = '', $field = '', $time = null)
     {
         global $db, $user;
 
@@ -511,7 +511,7 @@ class Flyspray
      * @return void
      * @version 1.0
      */
-    function AdminRequest($type, $project_id, $task_id, $submitter, $reason)
+    public static function AdminRequest($type, $project_id, $task_id, $submitter, $reason)
     {
         global $db;
         $db->Query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
@@ -527,7 +527,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function AdminRequestCheck($type, $task_id)
+    public static function AdminRequestCheck($type, $task_id)
     {
         global $db;
 
@@ -545,7 +545,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function getUserDetails($user_id)
+   public static function getUserDetails($user_id)
     {
         global $db;
 
@@ -561,7 +561,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function getGroupDetails($group_id)
+    public static function getGroupDetails($group_id)
     {
         global $db;
         $sql = $db->Query('SELECT * FROM {groups} WHERE group_id = ?', array($group_id));
@@ -575,7 +575,7 @@ class Flyspray
      * @return string
      * @version 1.0
      */
-    function cryptPassword($password)
+    public static function cryptPassword($password)
     {
         global $conf;
         $pwcrypt = $conf['general']['passwdcrypt'];
@@ -597,7 +597,7 @@ class Flyspray
      * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
      * @version 1.0
      */
-    function checkLogin($username, $password)
+    public static function checkLogin($username, $password)
     {
         global $db;
 
@@ -661,7 +661,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function setCookie($name, $val, $time = null)
+    public static function setCookie($name, $val, $time = null)
     {
         $url = parse_url($GLOBALS['baseurl']);
         if (!is_int($time)) {
@@ -684,7 +684,7 @@ class Flyspray
      * @version 1.0
      * @notes smile intented
      */
-    function startSession()
+    public static function startSession()
     {
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
@@ -736,7 +736,7 @@ class Flyspray
      * @return array array('field', 'old', 'new')
      * @version 1.0
      */
-    function compare_tasks($old, $new)
+    public static function compare_tasks($old, $new)
     {
         $comp = array('priority_name', 'severity_name', 'status_name', 'assigned_to_name', 'due_in_version_name',
                      'reported_version_name', 'tasktype_name', 'os_name', 'category_name',
@@ -783,7 +783,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function GetAssignees($task_id, $name = false)
+    public static function GetAssignees($task_id, $name = false)
     {
         global $db;
 
@@ -814,7 +814,7 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    function int_explode($separator, $string)
+    public static function int_explode($separator, $string)
     {
     	$ret = array();
     	foreach (explode($separator, $string) as $v)
@@ -833,7 +833,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    function function_disabled($func_name)
+    public static function function_disabled($func_name)
     {
         $disabled_functions = explode(',', ini_get('disable_functions'));
         return in_array($func_name, $disabled_functions);
@@ -849,7 +849,7 @@ class Flyspray
      * @return integer
      * @version 1.0
      */
-    function array_find($key, $value, $array)
+    public static function array_find($key, $value, $array)
     {
         foreach ($array as $num => $part) {
             if (isset($part[$key]) && $part[$key] == $value) {
@@ -869,7 +869,7 @@ class Flyspray
      * @version 1.0
      * @notes if a success and error happens on the same page, a mixed error message will be shown
      */
-    function show_error($error_message, $die = true, $advanced_info = null, $url = null)
+    public static function show_error($error_message, $die = true, $advanced_info = null, $url = null)
     {
         global $modes, $baseurl;
 
@@ -894,7 +894,7 @@ class Flyspray
      * @return integer 0 if the user does not exist
      * @version 1.0
      */
-    function ValidUserId($id)
+    public static function ValidUserId($id)
     {
         global $db;
 
@@ -910,7 +910,7 @@ class Flyspray
      * @return integer 0 if the user does not exist
      * @version 1.0
      */
-    function UserNameToId($name)
+    public static function UserNameToId($name)
     {
         global $db;
 
@@ -926,7 +926,7 @@ class Flyspray
      * @access public
      * @return bool
      */
-    function check_email($email)
+    public static function check_email($email)
     {
         include_once dirname(__FILE__) . '/external/Validate.php';
 
@@ -939,7 +939,7 @@ class Flyspray
      * @access public
      * @return void
      */
-    function get_tmp_dir()
+    public static function get_tmp_dir()
     {
         $return = '';
 
@@ -985,7 +985,7 @@ class Flyspray
      * task (i.e limiting file uploads by type)
      * it wasn't designed for that purpose but to UI related tasks.
      */
-    function check_mime_type($fname) {
+    public static function check_mime_type($fname) {
 
         $type = '';
 
@@ -1015,7 +1015,7 @@ class Flyspray
      * @param string $time
      * @return integer
      */
-    function strtotime($time)
+    public static function strtotime($time)
     {
         global $user;
 
@@ -1038,7 +1038,7 @@ class Flyspray
      * @param string $filename location to write to
      * @param string $content data to write
      */
-    function write_lock($filename, $content)
+    public static function write_lock($filename, $content)
     {
         if ($f = fopen($filename, 'wb')) {
             if(flock($f, LOCK_EX)) {                
@@ -1058,7 +1058,7 @@ class Flyspray
      * @param string $connect manually choose server for connection
      * @return string an empty string is not necessarily a failure
      */
-    function remote_request($url, $get_contents = false, $port = 80, $connect = '', $host = null)
+    public static function remote_request($url, $get_contents = false, $port = 80, $connect = '', $host = null)
     {
         $url = parse_url($url);
         if (!$connect) {
@@ -1102,7 +1102,7 @@ class Flyspray
      * @access public
      * @return bool
      */
-    function isDependencyGraphSupported()
+    public static function isDependencyGraphSupported()
     {
         global $conf;
         $path_to_dot = array_get($conf['general'], 'dot_path', '');
@@ -1121,7 +1121,7 @@ class Flyspray
      * @access public
      * @return array
      */
-    function GetNotificationOptions($noneAllowed = true)
+    public function GetNotificationOptions($noneAllowed = true)
     {
         switch ($this->prefs['user_notify']) 
         {
@@ -1151,7 +1151,7 @@ class Flyspray
      * @access public
      * @return string
      */
-    function getSvnRev()
+    public static function getSvnRev()
     {
         if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
 
@@ -1162,4 +1162,3 @@ class Flyspray
     }
 
 }
-?>

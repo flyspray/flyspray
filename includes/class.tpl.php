@@ -522,7 +522,7 @@ if(isset($conf['general']['syntax_plugin'])) {
 
 class TextFormatter
 {
-    function get_javascript()
+    public static function get_javascript()
     {
         global $conf;
 
@@ -543,7 +543,7 @@ class TextFormatter
         return $return;
     }
 
-    function render($text, $onlyfs = false, $type = null, $id = null, $instructions = null)
+    public static function render($text, $onlyfs = false, $type = null, $id = null, $instructions = null)
     {
         global $conf;
 
@@ -564,7 +564,7 @@ class TextFormatter
         }
     }
 
-    function textarea($name, $rows, $cols, $attrs = null, $content = null)
+    public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
     {
         global $conf;
 
@@ -908,4 +908,3 @@ class Url {
 }
 // }}}
 // }}}
-?>

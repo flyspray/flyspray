@@ -14,36 +14,36 @@
  * @author Pierre Habouzit
  */
  
-class Req
+abstract class Req
 {
-    function has($key)
+    public static function has($key)
     {
         return isset($_REQUEST[$key]);
     }
 
-    function val($key, $default = null)
+    public static function val($key, $default = null)
     {
         return Req::has($key) ? $_REQUEST[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
-    function num($key, $default = null)
+    public static function num($key, $default = null)
     {
         return Filters::num(Req::val($key, $default));
     }
     
-    function enum($key, $options, $default = null)
+    public static function enum($key, $options, $default = null)
     {
         return Filters::enum(Req::val($key, $default), $options);
     }
 
     //always a string (null is typed to an empty string)
-    function safe($key)
+    public static function safe($key)
     {
         return Filters::noXSS(Req::val($key));
     }
 
-    function isAlnum($key)
+    public static function isAlnum($key)
     {
         return Filters::isAlnum(Req::val($key));
     }
@@ -52,9 +52,9 @@ class Req
  // }}}
 // {{{ class Post
 
-class Post
+abstract class Post
 {
-    function has($key)
+    public static function has($key)
     {
         // XXX semantics is different for POST, as POST of '' values is never
         //     unintentionnal, whereas GET/COOKIE may have '' values for empty
@@ -62,24 +62,24 @@ class Post
         return isset($_POST[$key]);
     }
 
-    function val($key, $default = null)
+    public static function val($key, $default = null)
     {
         return Post::has($key) ? $_POST[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
-    function num($key, $default = null)
+    public static function num($key, $default = null)
     {
         return Filters::num(Post::val($key, $default));
     }
 
     //always a string (null is typed to an empty string)
-    function safe($key)
+    public static function safe($key)
     {
         return Filters::noXSS(Post::val($key));
     }
 
-    function isAlnum($key)
+    public static function isAlnum($key)
     {
         return Filters::isAlnum(Post::val($key));
     }
@@ -88,31 +88,31 @@ class Post
 // }}}
 // {{{ class Get
 
-class Get
+abstract class Get
 {
-    function has($key)
+    public static function has($key)
     {
         return isset($_GET[$key]) && $_GET[$key] !== '';
     }
 
-    function val($key, $default = null)
+    public static function val($key, $default = null)
     {
         return Get::has($key) ? $_GET[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
-    function num($key, $default = null)
+    public static function num($key, $default = null)
     {
         return Filters::num(Get::val($key, $default));
     }
 
     //always a string (null is typed to an empty string)
-    function safe($key)
+    public static function safe($key)
     {
         return Filters::noXSS(Get::val($key));
     }
 
-    function enum($key, $options, $default = null)
+    public static function enum($key, $options, $default = null)
     {
         return Filters::enum(Get::val($key, $default), $options);
     }
@@ -122,14 +122,14 @@ class Get
 // }}}
 //{{{ class  Cookie
 
-class Cookie
+abstract class Cookie
 {
-    function has($key)
+    public static function has($key)
     {
         return isset($_COOKIE[$key]) && $_COOKIE[$key] !== '';
     }
 
-    function val($key, $default = null)
+    public static function val($key, $default = null)
     {
         return Cookie::has($key) ? $_COOKIE[$key] : $default;
     }
@@ -146,7 +146,7 @@ class Cookie
  * please DO NOT use this in templates , if the code processing the input there 
  * is not safe, please fix the underlying problem.
  */
-class Filters {
+abstract class Filters {
     /**
      * give me a number only please?
      * @param mixed $data
@@ -155,7 +155,7 @@ class Filters {
      * @notes changed before 0.9.9 to avoid strange results
      * with arrays and objects
      */
-    function num($data)
+    public static function num($data)
     {
          return intval($data); // no further checks here please
     }
@@ -166,7 +166,7 @@ class Filters {
      * @return string htmlspecialchar'ed
      * @access public static
      */
-    function noXSS($data)
+    public static function noXSS($data)
     {
         if(empty($data) || is_numeric($data)) {
             return $data;
@@ -182,7 +182,7 @@ class Filters {
      * @return string
      * @access public static
      */
-    function noJsXSS($data)
+    public static function noJsXSS($data)
     {
         if(empty($data) || is_numeric($data)) {
             return $data;
@@ -205,7 +205,7 @@ class Filters {
      * Be aware: $data MUST be an string, integers or any other
      * type is evaluated to FALSE
      */
-    function isAlnum($data)
+    public static function isAlnum($data)
     {
         return ctype_alnum($data) && strlen($data);
     }
@@ -218,7 +218,7 @@ class Filters {
      * @return mixed
      * @access public static
      */
-    function enum($data, $options)
+    public static function enum($data, $options)
     {
         if (!in_array($data, $options) && isset($options[0])) {
             return $options[0];
@@ -227,7 +227,7 @@ class Filters {
         return $data;
     }
 
-    function escapeqs($qs)
+    public static function escapeqs($qs)
     {
             parse_str($qs, $clean_qs);
             return http_build_query($clean_qs);
@@ -248,4 +248,3 @@ function array_get(&$array, $key, $default = null)
 {
     return (isset($array[$key])) ? $array[$key] : $default;
 }
-?>

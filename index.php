@@ -160,5 +160,3 @@ if(isset($_SESSION)) {
     }
     unset($_SESSION['ERROR'], $_SESSION['SUCCESS']);
 }
-
-?>

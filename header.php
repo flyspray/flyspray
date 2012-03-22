@@ -21,9 +21,9 @@ require_once BASEDIR . '/includes/class.project.php';
 require_once BASEDIR . '/includes/class.user.php';
 require_once BASEDIR . '/includes/class.tpl.php';
 
-$db = new Database;
+$db = new Database();
 $db->dbOpenFast($conf['database']);
-$fs = new Flyspray;
+$fs = new Flyspray();
 
 // If version number of database and files do not match, run upgrader
 if (Flyspray::base_version($fs->version) != Flyspray::base_version($fs->prefs['fs_ver'])) {
@@ -64,5 +64,3 @@ for ($i = 6; $i >= 1; $i--) {
 for ($i = 5; $i >= 1; $i--) {
     $fs->severities[$i] = L('severity' . $i);
 }
-
-?>

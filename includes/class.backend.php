@@ -16,7 +16,7 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-class Backend
+abstract class Backend
 {
     /**
      * Adds the user $user_id to the notifications list of $tasks
@@ -27,7 +27,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function add_notification($user_id, $tasks, $do = false)
+    public static function add_notification($user_id, $tasks, $do = false)
     {
         global $db, $user;
 
@@ -82,7 +82,7 @@ class Backend
      * @version 1.0
      */
 
-    function remove_notification($user_id, $tasks)
+    public static function remove_notification($user_id, $tasks)
     {
         global $db, $user;
 
@@ -128,7 +128,7 @@ class Backend
      * @return void
      * @version 1.0
      */
-    function assign_to_me($user_id, $tasks)
+    public static function assign_to_me($user_id, $tasks)
     {
         global $db, $notify;
 
@@ -182,7 +182,7 @@ class Backend
      * @return void
      * @version 1.0
      */
-    function add_to_assignees($user_id, $tasks, $do = false)
+    public static function add_to_assignees($user_id, $tasks, $do = false)
     {
         global $db, $notify;
 
@@ -228,7 +228,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function add_vote($user_id, $task_id)
+    public static function add_vote($user_id, $task_id)
     {
         global $db;
 
@@ -261,7 +261,7 @@ class Backend
      * @return bool
      * @version 1.0
      */    
-    function remove_vote($user_id, $task_id)
+    public static function remove_vote($user_id, $task_id)
     {
         global $db;
 
@@ -295,7 +295,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function add_comment($task, $comment_text, $time = null)
+    public static function add_comment($task, $comment_text, $time = null)
     {
         global $db, $user, $notify;
 
@@ -341,7 +341,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function upload_files($task_id, $comment_id = 0, $source = 'userfile')
+    public static function upload_files($task_id, $comment_id = 0, $source = 'userfile')
     {
         global $db, $notify, $conf, $user;
 
@@ -417,7 +417,7 @@ class Backend
      * @return void
      * @version 1.0
      */
-    function delete_files($attachments)
+    public static function delete_files($attachments)
     {
         global $db, $user;
 
@@ -450,7 +450,7 @@ class Backend
      * @access public
      * @return string
      */
-    function clean_username($user_name)
+    public static function clean_username($user_name)
     {
         // Limit length
         $user_name = substr(trim($user_name), 0, 32);
@@ -475,7 +475,7 @@ class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in)
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in)
     {
         global $fs, $db, $notify, $baseurl;
 
@@ -590,7 +590,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function delete_user($uid)
+    public static function delete_user($uid)
     {
         global $db, $user;
 
@@ -625,7 +625,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function delete_project($pid, $move_to = 0)
+    public static function delete_project($pid, $move_to = 0)
     {
         global $db, $user;
 
@@ -698,7 +698,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function add_reminder($task_id, $message, $how_often, $start_time, $user_id = null)
+    public static function add_reminder($task_id, $message, $how_often, $start_time, $user_id = null)
     {
         global $user, $db;
         $task = Flyspray::GetTaskDetails($task_id);
@@ -743,7 +743,7 @@ class Backend
      * @version 1.0
      * @notes $args is POST data, bad..bad user..
      */
-    function create_task($args)
+    public static function create_task($args)
     {
         global $db, $user, $proj;
         $notify = new Notifications();
@@ -919,7 +919,7 @@ class Backend
      * @return bool
      * @version 1.0
      */
-    function close_task($task_id, $reason, $comment, $mark100 = true)
+    public static function close_task($task_id, $reason, $comment, $mark100 = true)
     {
         global $db, $notify, $user;
         $task = Flyspray::GetTaskDetails($task_id);
@@ -984,7 +984,7 @@ class Backend
      * @return array
      * @version 1.0
      */
-    function get_task_list($args, $visible, $offset = 0, $perpage = 20)
+    public static function get_task_list($args, $visible, $offset = 0, $perpage = 20)
     {
         global $proj, $db, $user, $conf;
         /* build SQL statement {{{ */
@@ -1262,4 +1262,3 @@ class Backend
     }
 
 }
-?>

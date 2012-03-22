@@ -243,17 +243,17 @@ class Notifications {
 
       return true;
    } // }}}
-   // {{{ Send email
-   function SendEmail($to, $subject, $body, $task_id = null)
-   {
-       global $fs, $proj, $user;
+    // {{{ Send email
+    function SendEmail($to, $subject, $body, $task_id = null)
+    {
+        global $fs, $proj, $user;
 
-       if (empty($to) || empty($to[0])) {
-         return;
-      }
+        if (empty($to) || empty($to[0])) {
+            return;
+        }
 
-	// Do we want to use a remote mail server?
-      if (!empty($fs->prefs['smtp_server'])) {
+        // Do we want to use a remote mail server?
+        if (!empty($fs->prefs['smtp_server'])) {
           
           // connection... SSL, TLS or none
           if ($fs->prefs['email_tls']) {
@@ -265,67 +265,64 @@ class Notifications {
           }
           
           if ($fs->prefs['smtp_user']) {
-                $swiftconn->setUsername($fs->prefs['smtp_user']);
-                $swiftconn->setPassword($fs->prefs['smtp_pass']);
+              $swiftconn->setUsername($fs->prefs['smtp_user']);
+              $swiftconn->setPassword($fs->prefs['smtp_pass']);
           }
           if(defined('FS_SMTP_TIMEOUT')) {
-             $swiftconn->setTimeout(FS_SMTP_TIMEOUT);
+              $swiftconn->setTimeout(FS_SMTP_TIMEOUT);
           }
-      // Use php's built-in mail() function
-      } else {
+        // Use php's built-in mail() function
+        } else {
             $swiftconn = Swift_MailTransport::newInstance();
-      }
+        }
 
-      if(defined( 'FS_MAIL_LOGFILE')) {
-         $log = Swift_LogContainer::getLog();
-         $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
-      }
+        if(defined( 'FS_MAIL_LOGFILE')) {
+            $log = Swift_LogContainer::getLog();
+            $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
+        }
 
-      $swift = Swift_Mailer::newInstance($swiftconn);
+        $swift = Swift_Mailer::newInstance($swiftconn);
 
-      $message = new Swift_Message($subject);
-      $message->setBody($body);
-      $type = $message->getHeaders()->get('Content-Type');
-      $type->setValue('text/plain');
-      $type->setParameter('charset', 'utf-8');
-      
-      $message->getHeaders()->addTextHeader('Precedence', 'list');
-      $message->getHeaders()->addTextHeader('X-Mailer', 'Flyspray');
+        $message = new Swift_Message($subject);
+        $message->setBody($body);
+        $type = $message->getHeaders()->get('Content-Type');
+        $type->setValue('text/plain');
+        $type->setParameter('charset', 'utf-8');
 
-      if ($proj->prefs['notify_reply']) {
+        $message->getHeaders()->addTextHeader('Precedence', 'list');
+        $message->getHeaders()->addTextHeader('X-Mailer', 'Flyspray');
+
+        if ($proj->prefs['notify_reply']) {
             $message->setReplyTo($proj->prefs['notify_reply']);
-      }
+        }
 
-      if (isset($task_id)) {
+        if (isset($task_id)) {
             $hostdata = parse_url($GLOBALS['baseurl']);
             $inreplyto = sprintf('<FS%d@%s>', $task_id, $hostdata['host']);
         // see http://cr.yp.to/immhf/thread.html this does not seems to work though :(
             $message->getHeaders()->addTextHeader('In-Reply-To', $inreplyto);
             $message->getHeaders()->addTextHeader('References', $inreplyto);
-      }
-     
-      // now accepts string , array or Swift_Address.
-      $message->setTo($to);
-      $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
-      $swift->send($message);
-      
-      if(defined('FS_MAIL_LOGFILE')) {
+        }
+
+        // now accepts string , array or Swift_Address.
+        $message->setTo($to);
+        $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
+        $swift->send($message);
+
+        if(defined('FS_MAIL_LOGFILE')) {
           if(is_writable(dirname(FS_MAIL_LOGFILE))) {
               if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
                   fwrite($fh, $log->dump(true));
                   fwrite($fh, php_uname());
                   fclose($fh);
               }
-          }
-          
-      }
+          }          
+        }
 
-      return $retval;  
-
-   } //}}}
-   // {{{ Create a message for any occasion
-   function GenerateMsg($type, $task_id, $arg1='0')
-   {
+    } //}}}
+    // {{{ Create a message for any occasion
+    function GenerateMsg($type, $task_id, $arg1='0')
+    {
       global $db, $fs, $user, $proj;
 
       // Get the task details
@@ -867,5 +864,3 @@ class Notifications {
 
 // End of Notify class
 }
-
-?>
