@@ -162,7 +162,8 @@ a:hover {
       border: none; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003228}}
     #menu #menu-list #locked {
-      margin-left: 7px; }
+      margin-left: 7px; 
+      color: red }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003234}}
 div#mysearches {
