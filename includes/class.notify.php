@@ -258,11 +258,11 @@ class Notifications {
           Swift_ClassLoader::load('Swift_Connection_SMTP');
           // connection... SSL, TLS or none
           if ($fs->prefs['email_ssl']) {
-              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_SSL);
+              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_SSL);
           } else if ($fs->prefs['email_tls']) {
-              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_TLS);
+              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server'], SWIFT_SMTP_PORT_SECURE, SWIFT_SMTP_ENC_TLS);
           } else {
-              $swiftconn =& new Swift_Connection_SMTP($fs->prefs['smtp_server']);
+              $swiftconn = new Swift_Connection_SMTP($fs->prefs['smtp_server']);
           }
           
           if ($fs->prefs['smtp_user']) {
@@ -275,20 +275,20 @@ class Notifications {
       // Use php's built-in mail() function
       } else {
             Swift_ClassLoader::load('Swift_Connection_NativeMail');
-            $swiftconn =& new Swift_Connection_NativeMail();
+            $swiftconn = new Swift_Connection_NativeMail();
       }
 
       if(defined( 'FS_MAIL_LOGFILE')) {
-         $log =& Swift_LogContainer::getLog();
+         $log = Swift_LogContainer::getLog();
          $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
       }
 
-      $swift =& new Swift($swiftconn);
+      $swift = new Swift($swiftconn);
 
       Swift_CacheFactory::setClassName("Swift_Cache_Disk");
       Swift_Cache_Disk::setSavePath(Flyspray::get_tmp_dir());
 
-      $message =& new Swift_Message($subject, $body);
+      $message = new Swift_Message($subject, $body);
       $message->headers->setCharset('utf-8');
       $message->headers->set('Precedence', 'list');
       $message->headers->set('X-Mailer', 'Flyspray');
@@ -305,7 +305,7 @@ class Notifications {
             $message->headers->set('References', $inreplyto);
       }
       
-      $recipients =& new Swift_RecipientList();
+      $recipients = new Swift_RecipientList();
       // now accepts string , array or Swift_Address.
       $recipients->addTo($to);
       $message->build();

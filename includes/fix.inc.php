@@ -13,11 +13,7 @@ ini_set('html_errors', 0);
 
 defined('E_DEPRECATED') || define('E_DEPRECATED', 8192);
 
-if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-	error_reporting(E_ALL & ~E_DEPRECATED);
-} else {
-	error_reporting(E_ALL);
-}
+error_reporting(E_ALL);
 
 // our default charset
 

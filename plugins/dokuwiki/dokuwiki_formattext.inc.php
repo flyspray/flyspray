@@ -19,15 +19,15 @@ class dokuwiki_TextFormatter
         
 
         // Create a renderer
-        $Renderer = & new Doku_Renderer_XHTML();
+        $Renderer = new Doku_Renderer_XHTML();
 
         if (!is_string($instructions) || strlen($instructions) < 1) {
             $modes = p_get_parsermodes();
             
-            $Parser = & new Doku_Parser();
+            $Parser = new Doku_Parser();
             
             // Add the Handler
-            $Parser->Handler = & new Doku_Handler();
+            $Parser->Handler = new Doku_Handler();
             
             // Add modes to parser
             foreach($modes as $mode){

@@ -107,7 +107,7 @@ class Doku_LexerParallelRegex {
      *
      *    @author Christopher Smith <chris@jalakai.co.uk>
      */
-    function split($subject, &$split) {
+    function explode($subject, &$split) {
         if (count($this->_patterns) == 0) {
             return false;
         }
@@ -507,7 +507,7 @@ class Doku_Lexer {
         // modes starting with plugin_ are all handled by the same
         // handler but with an additional parameter
         if(substr($handler,0,7)=='plugin_'){
-          list($handler,$plugin) = split('_',$handler,2);
+          list($handler,$plugin) = explode('_',$handler,2);
               return $this->_parser->$handler($content, $is_match, $pos, $plugin);
         }
 
@@ -535,7 +535,7 @@ class Doku_Lexer {
         if ($raw === "") {
             return true;
         }
-        if ($action = $this->_regexes[$this->_mode->getCurrent()]->split($raw, $split)) {
+        if ($action = $this->_regexes[$this->_mode->getCurrent()]->explode($raw, $split)) {
             list($unparsed, $match, $raw) = $split;
             return array($unparsed, $match, $action);
         }
