@@ -1,0 +1,1058 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+  <table name="admin_requests">
+    <field name="request_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="submitted_by" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="request_type" type="I" size="2">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="reason_given" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="time_submitted" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="resolved_by" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="time_resolved" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="deny_reason" type="C" size="255" />
+  </table>
+  <table name="assigned">
+    <field name="assigned_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_user">
+      <UNIQUE/>
+      <col>task_id</col>
+      <col>user_id</col>
+    </index>
+    <index name="task_id_assigned">
+      <col>task_id</col>
+      <col>user_id</col>
+    </index>
+  </table>
+  <table name="attachments">
+    <field name="attachment_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="orig_name" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="file_name" type="C" size="30">
+      <NOTNULL/>
+    </field>
+    <field name="file_type" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="file_size" type="I" size="20">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="added_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_attachments">
+      <col>task_id</col>
+      <col>comment_id</col>
+    </index>
+  </table>
+  <table name="cache">
+    <field name="id" type="I" size="6">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="type" type="C" size="4">
+      <NOTNULL/>
+    </field>
+    <field name="content" type="XL">
+      <NOTNULL/>
+    </field>
+    <field name="topic" type="I" size="11">
+      <NOTNULL/>
+    </field>
+    <field name="last_updated" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="project_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="max_items" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cache_type">
+      <UNIQUE/>
+      <col>type</col>
+      <col>topic</col>
+      <col>project_id</col>
+      <col>max_items</col>
+    </index>
+    <index name="cache_type_topic">
+      <col>type</col>
+      <col>topic</col>
+    </index>
+  </table>
+  <table name="comments">
+    <field name="comment_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_text" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="last_edited_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_comments">
+      <col>task_id</col>
+    </index>
+  </table>
+  <table name="dependencies">
+    <field name="depend_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="dep_task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_deps">
+      <UNIQUE/>
+      <col>task_id</col>
+      <col>dep_task_id</col>
+    </index>
+  </table>
+  <table name="groups">
+    <field name="group_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="group_name" type="C" size="20">
+      <NOTNULL/>
+    </field>
+    <field name="group_desc" type="C" size="150">
+      <NOTNULL/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="is_admin" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="manage_project" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="open_new_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="modify_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="modify_all_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_own_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="delete_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="create_attachments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="delete_attachments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_history" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="close_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="close_other_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="assign_to_self" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="assign_others_to_self" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_to_assignees" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_reports" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_votes" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_assignments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_as_assignees" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="group_open" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="group_name">
+      <UNIQUE/>
+      <col>group_name</col>
+      <col>project_id</col>
+    </index>
+    <index name="belongs_to_project">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="history">
+    <field name="history_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="event_date" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="event_type" type="I" size="2">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="field_changed" type="C" size="50">
+      <NOTNULL/>
+    </field>
+    <field name="old_value" type="X" />
+    <field name="new_value" type="X" />
+    <index name="idx_task_id">
+      <col>task_id</col>
+    </index>
+  </table>
+  <table name="list_category">
+    <field name="category_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="category_name" type="C" size="30">
+      <NOTNULL/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="category_owner" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="lft" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="rgt" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="project_id_cat">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="list_os">
+    <field name="os_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="os_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="project_id_os">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="list_resolution">
+    <field name="resolution_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="resolution_name" type="C" size="30">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="project_id_res">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="list_status">
+    <field name="status_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="status_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="project_id_status">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="list_tasktype">
+    <field name="tasktype_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="tasktype_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="project_id_tt">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="list_version">
+    <field name="version_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="version_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="version_tense" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="project_id_version">
+      <col>project_id</col>
+      <col>version_tense</col>
+    </index>
+  </table>
+  <table name="notification_messages">
+    <field name="message_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="message_subject" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="message_body" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="time_created" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="notification_recipients">
+    <field name="recipient_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="message_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notify_method" type="C" size="1">
+      <NOTNULL/>
+    </field>
+    <field name="notify_address" type="C" size="100">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="notifications">
+    <field name="notify_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_notifs">
+      <UNIQUE/>
+      <col>task_id</col>
+      <col>user_id</col>
+    </index>
+  </table>
+  <table name="prefs">
+    <field name="pref_id" type="I" size="1">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="pref_name" type="C" size="20">
+      <NOTNULL/>
+    </field>
+    <field name="pref_value" type="C" size="250">
+      <DEFAULT value="0"/>
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="projects">
+    <field name="project_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_title" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="theme_style" type="C" size="20">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_cat_owner" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="intro_message" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="project_is_active" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="visible_columns" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="others_view" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="anon_open" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notify_email" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_jabber" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_reply" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_types" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="feed_img_url" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="feed_description" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_subject" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="lang_code" type="C" size="10">
+      <NOTNULL/>
+    </field>
+    <field name="comment_closed" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="auto_assign" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_updated" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_task" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="default_entry" type="C" size="8">
+      <NOTNULL/>
+      <DEFAULT value="index"/>
+    </field>
+  </table>
+  <table name="registrations">
+    <field name="reg_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="reg_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="confirm_code" type="C" size="20">
+      <NOTNULL/>
+    </field>
+    <field name="user_name" type="C" size="32">
+      <NOTNULL/>
+    </field>
+    <field name="real_name" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="email_address" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="jabber_id" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="notify_type" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="magic_url" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="time_zone" type="I" size="6">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="related">
+    <field name="related_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="this_task" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="related_task" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="is_duplicate" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="this_task">
+      <UNIQUE/>
+      <col>this_task</col>
+      <col>related_task</col>
+      <col>is_duplicate</col>
+    </index>
+  </table>
+  <table name="reminders">
+    <field name="reminder_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="to_user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="from_user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="start_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="how_often" type="I" size="12">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_sent" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="reminder_message" type="X">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="searches">
+    <field name="id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="user_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="name" type="C" size="50">
+      <NOTNULL/>
+    </field>
+    <field name="search_string" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="tasks">
+    <field name="task_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_type" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_opened" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="opened_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="is_closed" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_closed" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closed_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closure_comment" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="item_summary" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="detailed_desc" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="item_status" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="resolution_reason" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="product_category" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="product_version" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closedby_version" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="operating_system" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_severity" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_priority" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_edited_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_edited_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="percent_complete" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="mark_private" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="due_date" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="anon_email" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="task_token" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="attached_to_project">
+      <col>project_id</col>
+    </index>
+    <index name="task_severity">
+      <col>task_severity</col>
+    </index>
+    <index name="task_type">
+      <col>task_type</col>
+    </index>
+    <index name="product_category">
+      <col>product_category</col>
+    </index>
+    <index name="item_status">
+      <col>item_status</col>
+    </index>
+    <index name="is_closed">
+      <col>is_closed</col>
+    </index>
+    <index name="closedby_version">
+      <col>closedby_version</col>
+    </index>
+    <index name="due_date">
+      <col>due_date</col>
+    </index>
+  </table>
+  <table name="users">
+    <field name="user_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="user_name" type="C" size="32">
+      <NOTNULL/>
+    </field>
+    <field name="user_pass" type="C" size="40"/>
+    <field name="real_name" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="jabber_id" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="email_address" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="notify_type" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notify_own" type="I" size="6">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="account_enabled" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="dateformat" type="C" size="30">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="dateformat_extended" type="C" size="30">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="magic_url" type="C" size="40">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="tasks_perpage" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="register_date" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="time_zone" type="I" size="6">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="login_attempts" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="lock_until" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="user_name">
+      <UNIQUE/>
+      <col>user_name</col>
+    </index>
+  </table>
+  <table name="users_in_groups">
+    <field name="record_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="user_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="group_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="group_id_uig">
+      <UNIQUE/>
+      <col>group_id</col>
+      <col>user_id</col>
+    </index>
+    <index name="user_id_uig">
+      <col>user_id</col>
+    </index>
+  </table>
+  <table name="votes">
+    <field name="vote_id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="user_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+  </field>
+  <index name="task_id_votes">
+  	<col>task_id</col>
+  </index>
+  </table>
+  <sql>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1);</query>
+    <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'Backend / Core', 1, 0, 2, 3);</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 0, 'root', 0, 0, 1, 2);</query>
+    <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'root', 0, 0, 1, 4);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'All', 1, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Windows', 2, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Linux', 3, 1);</query>
+    <query>INSERT INTO list_os VALUES (DEFAULT, 1, 'Mac OS', 4, 1);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Not a bug', 1, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Won''t fix', 2, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Won''t implement', 3, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Works for me', 4, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Deferred', 5, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Duplicate', 6, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Fixed', 7, 1, 0);</query>
+    <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Implemented', 8, 1, 0);</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Bug Report', 1, 1, 0);</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Feature Request', 2, 1, 0);</query>
+    <query>INSERT INTO list_version VALUES (DEFAULT, 1, 'Development', 1, 1, 2);</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Unconfirmed', 1, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('New', 2, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Assigned', 3, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Researching', 4, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Waiting on Customer', 5, 1, 0)</query>
+    <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Requires testing', 6, 1, 0)</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '0.9.9');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_port', '5222');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_username', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_password', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_group', '4');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'user_notify', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'admin_email', 'flyspray@example.com');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'lang_code', 'en');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'global_theme', 'CleanFS');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_columns', 'id project category tasktype severity summary status progress');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_server', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_user', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_pass', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'page_title', 'Flyspray::');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'notify_registration', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_ssl', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'last_update_check', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'cache_feeds', '1');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index');</query>
+    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0');</query>
+    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
+  </sql>
+</schema>

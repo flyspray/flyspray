@@ -1,0 +1,35 @@
+[defaultupgrade]
+;1="upgrade.xml"
+
+[develupgrade]
+;1="upgrade.xml"
+
+[fsprefs]
+fs_ver="0.9.7" ; doesn't matter which version
+jabber_server=""
+jabber_port="5222"
+jabber_username=""
+jabber_password=""
+anon_group="0"
+user_notify="1"
+admin_email="flyspray@example.com"
+lang_code="en"
+spam_proof="1"
+default_project="1"
+dateformat=""
+dateformat_extended=""
+anon_reg="1"
+page_title="Flyspray:: "
+notify_registration="0"
+jabber_ssl="0"
+last_update_check="0"
+cache_feeds="1"
+global_theme="CleanFS"
+visible_columns="id project tasktype severity summary status progress"
+smtp_server=""
+smtp_user=""
+smtp_pass=""
+lock_for="5"
+email_ssl="0"
+email_tls="0"
+default_timezone="0"
