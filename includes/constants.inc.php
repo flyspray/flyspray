@@ -11,6 +11,9 @@ define('BASEDIR', dirname(dirname(__FILE__)));
 // Change this line if you move flyspray.conf.php elsewhere
 $conf = @parse_ini_file(Flyspray::get_config_path(), true);
 
+// set the default time zone
+date_default_timezone_set($conf['general']['default_timezone']);
+
 // $baseurl
 // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
 if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'] != '') {
@@ -84,4 +87,3 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 //define('JABBER_DEBUG', true);
 //define('JABBER_DEBUG_FILE''/path/to/my/debug/file');
 //define('FS_MAIL_LOGFILE', BASEDIR . '/logs/maillog.txt');
-?>

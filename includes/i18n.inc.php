@@ -56,4 +56,3 @@ function load_translations()
     }
 }
 
-?>

@@ -332,4 +332,3 @@ function flyspray_exception_handler($exception) {
 // We don't need session IDs in URLs
 output_reset_rewrite_vars();
 
-?>
