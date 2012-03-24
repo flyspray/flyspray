@@ -63,7 +63,7 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
           <a class="hide" id="hide{$task['task_id']}" href="javascript:hidestuff('dd{$task['task_id']}');hidestuff('hide{$task['task_id']}');showstuff('expand{$task['task_id']}', 'inline')">{L('collapse')}</a>
         </small>
       </dt>
-      <dd id="dd{$task['task_id']}" >
+      <dd id="dd{$task['task_id']}" style="display: none;">
         {!TextFormatter::render($task['detailed_desc'], false, 'rota', $task['task_id'], $task['content'])}
         <br style="position:absolute;" />
       </dd>
