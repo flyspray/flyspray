@@ -94,11 +94,7 @@ class Setup extends Flyspray
 
       // Initialise flag for proceeding to next step.
       $this->mProceed				= false;
-      //according to the well known nexen.net survey, more
-      //than 74 % of the installations out there runs versions
-      //equal or mayor to 4.3.9 which is enough for us
-      //earlier versions are really buggy anyway.
-      $this->mPhpRequired			= '4.3.9';
+      $this->mPhpRequired			= '5.2.0';
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
