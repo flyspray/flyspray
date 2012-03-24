@@ -216,7 +216,7 @@
 
 		<br class="DoNotPrint" />
 
-		<?php if ( (count($deps) || count($blocks)) && Flyspray::isDependencyGraphSupported()): ?>
+		<?php if (count($deps) || count($blocks)): ?>
 		<a class="DoNotPrint" href="{CreateURL('depends', $task_details['task_id'])}">{L('depgraph')}</a>
 		<br />
 		<br />

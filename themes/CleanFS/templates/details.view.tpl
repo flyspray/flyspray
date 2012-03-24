@@ -274,56 +274,60 @@
 
   <div id="taskinfo">
 		<div id="taskdeps">
-			<b>{L('taskdependson')}</b>
-			<br />
+		    <?php if (count($deps) || count($blocks)): ?>
+		    <h4>{L('taskdependencies')} (<a class="DoNotPrint" href="{CreateURL('depends', $task_details['task_id'])}">{L('viewgraph')}</a>):</h4>
+			<table>
 			<?php foreach ($deps as $dependency): ?>
-				<?php $link = tpl_tasklink($dependency, null, true);
-						if(!$link) continue;
+                <?php $link = tpl_tasklink($dependency, null, true);
+                       if(!$link) continue;
 				?>
-				{!$link}
-				<?php if ($user->can_edit_task($task_details)): ?>
-					<span class="DoNotPrint"> -
-						<a class="removedeplink"
-						 href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}">
-						 {L('remove')}</a>
+			    <tr>
+			      <td>
+				    <img src="{$this->get_image('img/gray/dependent_13x12')}" alt="" />
+				  </td>
+				  <td>{L('dependson')}</td>
+				  <td> {!$link}</td>
+				  <td>
+				  <?php if ($user->can_edit_task($task_details)): ?>
+					<span class="DoNotPrint"> 
+						<a class="removedeplink" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}">
+						  <img src="{$this->get_image('button_cancel')}" alt="{L('remove')}" title="{L('remove')}" />
+						</a>
 					</span>
-				<?php endif; ?>
-				<br />
+				  <?php endif; ?>
+				  </td>
+				</tr>
 			<?php endforeach; ?>
-	
-			<br class="DoNotPrint" />
-	
-			<?php if ( (count($deps) || count($blocks)) && Flyspray::isDependencyGraphSupported()): ?>
-				<a class="DoNotPrint" href="{CreateURL('depends', $task_details['task_id'])}">{L('depgraph')}</a>
-				<br />
-				<br />
+
+			<?php foreach ($blocks as $block): ?>
+            <?php $link = tpl_tasklink($block, null, true);
+                   if(!$link) continue;
+            ?>
+                <tr>
+			      <td>
+                    <img src="{$this->get_image('img/gray/blocking_13x12')}" alt="" />
+                  </td>
+                  <td>{L('blocks')}</td>
+                  <td> {!$link}</td>
+                </tr>
+            <?php endforeach; ?>		
+			</table>
+			<?php else: ?>
+			<h4>{L('notaskdependencies')}</h4>
 			<?php endif; ?>
 	
 			<?php if ($user->can_edit_task($task_details)): ?>
 			<form action="{CreateUrl('details', $task_details['task_id'])}" method="post">
 				<div>
+				    <label for="dep_task_id">{L('newdependency')}</label>
 					<input type="hidden" name="action" value="details.newdep" />
 					<input type="hidden" name="task_id" value="{$task_details['task_id']}" />
-					<input class="text" type="text" value="{Req::val('dep_task_id')}" name="dep_task_id" size="5" maxlength="10" />
-					<button type="submit" name="submit">{L('addnew')}</button>
+					<input class="text" type="text" value="{Req::val('dep_task_id')}" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
+					<button type="submit" name="submit">{L('add')}</button>
 				</div>
 			</form>
 			<?php endif; ?>
 		</div>
-
-	 <div id="taskblocks">
-        <?php if ($blocks): ?>
-		<b>{L('taskblocks')}</b>
-		<br />
-        <?php endif; ?>
-		<?php foreach ($blocks as $block): ?>
-		<?php $link = tpl_tasklink($block, null, true);
-				if(!$link) continue;
-		?>
-		{!$link}
-		<br />
-		<?php endforeach; ?>
-	 </div>
   </div>
 
   <?php if ($task_details['is_closed']): ?>

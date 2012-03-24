@@ -1393,3 +1393,20 @@ div#closeform {
   position: absolute;
   right: 5px;
   top: 3em; }
+
+div#taskdeps h4 {
+  margin-bottom:0.3em;
+}
+
+div#taskdeps table {
+  margin:0 0 0.8em -0.2em;
+}
+
+div#taskdeps td {
+  padding:0.2em 0.4em;
+}
+
+div#taskdeps img {
+  vertical-align:middle;
+  margin-top:-1px;
+}

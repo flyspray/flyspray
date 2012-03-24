@@ -19,19 +19,8 @@ if ( !($task_details = Flyspray::GetTaskDetails(Req::num('task_id')))
     Flyspray::show_error(9);
 }
 
-$path_to_dot = array_get($conf['general'], 'dot_path', '');
-//php 4 on windows does not have is_executable..
-$func = function_exists('is_executable') ? 'is_executable' : 'is_file';
-$path_to_dot = $func($path_to_dot) ? $path_to_dot : '';
-$useLocal = !Flyspray::function_disabled('shell_exec') && $path_to_dot;
-$fmt         = Filters::enum(array_get($conf['general'], 'dot_format', 'png'), array('png','svg'));
-
 $id = Req::num('task_id');
 $page->assign('task_id', $id);
-
-// ASAP Todo items:
-// - Need to get the configuration options put into the installer/configurator
-//   (someone who knows them well should probably do it)
 
 $prunemode = Req::num('prune', 0);
 $selfurl   = CreateURL('depends', $id);
@@ -158,117 +147,29 @@ foreach (array("edge_list", "rvrs_list", "node_list") as $l) {
     }
 }
 
-// Now we've got everything we need... let's draw the pretty pictures
+// Now we've got everything we need... prepare JSON data
+$resultData = array();
+foreach ($node_list as $taskid => $taskInfo) {
+	$adjacencies = array();
+	if (isset($edge_list[$taskid])) {
+		foreach ($edge_list[$taskid] as $dst) {
+			array_push($adjacencies, array('nodeTo' => $dst, 'nodeFrom' => $taskid));
+		}
+	}
 
-//Open the graph, and print global options
-$lj = 'n'; // label justification - l, r, or n (for center)
-$graphname = "task_${id}_dependencies";
-$dotgraph = "digraph $graphname {\n".
-    "node [width=1.1, shape=ellipse, border=10, color=\"#00E11E\", style=\"filled\", ".
-    "fontsize=10.0, pencolor=black, margin=\"0.1, 0.0\"];\n";
-// define the nodes
-foreach ($node_list as $n => $r) {
-    $col = "";
-    if ($r['clsd'] && $n!=$id) { $r['pct'] = 120; }
-    // color code: shades of gray for % done
-    $x = dechex(255-($r['pct']+10));
-    $col = "#$x$x$x";
-    // Make sure label terminates in \n!
-    $label = "FS#$n \n". ($useLocal ? addslashes(utf8_substr($r['sum'], 0, 15)) . "\n" : '') .
-        ($r['clsd'] ? L('closed') :
-         "$r[pct]% ".L('complete'));
-    $tooltip =
-      ($r['clsd'] ? L('closed') . ": $r[res]".
-       (!empty($r['clsdby']) ? " ($r[clsdby])" : "").
-       ($r['com']!='' ? ' - ' . str_replace(array("\r", "\n"), '', $r['com']) : "")
-       : $fs->severities[$r['sev']]. L('severity') . "/".
-       $fs->priorities[$r['pri']]. L('priority') . " - ".
-       L('status') . ": ".$r['status_name']);
-    $dotgraph .= "FS$n [label=\"".str_replace("\n", "\\$lj", $label)."\", ".
-        ($r['clsd'] ? 'color=black,' : '') .
-        ($r['clsd'] ? 'fillcolor=white,' : "fillcolor=\"$col\",") .
-        ($n == $id ? 'shape=box,' : '') . 
-        "href=\"javascript:top.window.location.href='".CreateURL("details", $n)."'\", target=\"_top\" ".
-        "tooltip=\"$tooltip\"];\n";
-}
-// Add edges
-foreach ($edge_list as $src => $dstlist) {
-    foreach ($dstlist as $dst) {
-        $dotgraph .= "FS$src -> FS$dst;\n";
-    }
-}
-// all done
-$dotgraph .= "}\n";
+	$newTask = array('id' => $taskid,
+					 'name' => tpl_tasklink($taskid),
+					 'data' => array('$color' => $taskid == $id ? '#5F9729' : '#83548B',
+                                     '$type' => 'circle',
+                                     '$dim' => 15),
+                     'adjacencies' => $adjacencies);
 
-
-// All done with the graph. Save it to a temp file (new name if the data has changed)
-$dotfilename = sprintf('cache/fs_depends_dot_%d_%s.dot', $id, md5($dotgraph));
-$imgfilename = sprintf('%s/%s.%s', BASEDIR, $dotfilename, $fmt);
-$mapfilename = sprintf('%s/%s.%s', BASEDIR, $dotfilename, 'map');
-//cannot use tempnam( ) as file has to end with $ftm extension
-
-if(!$useLocal) {
-    //cannot use tempnam() as file has to end with $ftm extension
-    $tname = $dotfilename;
-} else {
-    // we are operating on the command line, avoid races.
-    $tname = tempnam(Flyspray::get_tmp_dir(), md5(uniqid(mt_rand() , true)));
-}
-//get our dot done..
-Flyspray::write_lock($tname, $dotgraph);
-
-// Now run dot on it, if target file does not already exist
-if (!is_file($imgfilename))
-{
-    if (!$useLocal) {
-
-        require_once 'Zend/Rest/Client.php';
-        $client = new Zend_Rest_Client('http://webdot.flyspray.org/');
-        $data = base64_decode($client->getGraph(base64_encode($dotgraph), $fmt)->post());
-
-        Flyspray::write_lock($imgfilename, $data);
-        
-        $data = base64_decode($client->getGraph(base64_encode($dotgraph), 'cmapx')->post());
-
-        Flyspray::write_lock($mapfilename, $data);
-     
-    } else {
-
-        $tfn = escapeshellarg($tname);
-        shell_exec(sprintf('%s -T %s -o %s %s', $path_to_dot, escapeshellarg($fmt), escapeshellarg($imgfilename), $tfn));
-        $data['map'] = shell_exec(sprintf('%s -T cmapx %s', $path_to_dot, $tfn));
-        Flyspray::write_lock($mapfilename, $data['map']);
-
-        // Remove files so that they are not exposed to the public
-        unlink($tname);
-    }
+	array_push($resultData, $newTask);
 }
 
-$page->assign('map', file_get_contents($mapfilename));
-$page->assign('image', sprintf('%s%s.%s', $baseurl, $dotfilename, $fmt));
-
-
-// we have to find out the image size if it is SVG
-if ($fmt == 'svg') {
-    $data = file_get_contents($imgfilename);
-    preg_match('/<svg width="([0-9.]+)([a-zA-Z]+)" height="([0-9.]+)([a-zA-Z]+)"/', $data, $matches);
-    $page->assign('width',  round($matches[1] * (($matches[2] == 'pt') ? 1.4 : (($matches[2] == 'in') ? 1.33 * 72.27 : 1)), 0));
-    $page->assign('height', round($matches[3] * (($matches[4] == 'pt') ? 1.4 : (($matches[4] == 'in') ? 1.35 * 72.27 : 1)), 0));
-}
-
-/*
-[TC] We cannot have this stuff outputting here, so I put it in a quick template
-*/
+$jasonData = json_encode($resultData);
+$page->assign('jasonData', $jasonData);
 $page->assign('taskid', $id);
-$page->assign('fmt', $fmt);
-$page->assign('graphname', $graphname);
-
-$endtime = microtime();
-list($startusec, $startsec) = explode(' ', $starttime);
-list($endusec, $endsec) = explode(' ', $endtime);
-$diff = ($endsec - $startsec) + ($endusec - $startusec);
-$page->assign('time', round($diff, 2));
 
 $page->setTitle(sprintf('FS#%d : %s', $id, L('dependencygraph')));
 $page->pushTpl('depends.tpl');
-?>

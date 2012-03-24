@@ -211,7 +211,7 @@ $language = array(
 'thesearerelated'         => 'These tasks are related to this task',
 'remove'                  => 'Remove',
 'addnewrelated'           => 'Add a new related task',
-'add'                     => 'Add!',
+'add'                     => 'Add',
 'otherrelated'            => 'Other tasks that this task is related to',
 'receivenotify'           => 'These users will receive detailed notifications when this task changes.',
 'addusertolist'           => 'Add user to this list',
@@ -830,6 +830,13 @@ Regards,',
 'removevote'              => 'Remove vote',
 'voteremoved'             => 'Your vote has been removed',
 'voteremovefailed'        => 'Your vote could not be removed at this time.',
+'connectedtasks'          => 'Connected tasks:',
+'taskdependencies'        => 'Task dependencies',
+'viewgraph'               => 'view graph',
+'notaskdependencies'      => 'This task does not depend on any other tasks.',
+'dependson'               => 'Depends on',
+'blocks'                  => 'Blocks',
+'newdependency'           => 'New dependency:'
 );
 
 ?>
