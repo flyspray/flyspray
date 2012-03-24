@@ -47,45 +47,45 @@ define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
 
 class Setup extends Flyspray
 {
-   var $mPhpRequired;
-   var $mSupportedDatabases;
-   var $mAvailableDatabases;
+   public $mPhpRequired;
+   public $mSupportedDatabases;
+   public $mAvailableDatabases;
 
-   var $mProceed;
-   var $mPhpVersionStatus;
-   var $mDatabaseStatus;
-   var $xmlStatus;
-   var $mConfigText;
-   var $mHtaccessText;
-   var $mWriteStatus;
+   public $mProceed;
+   public $mPhpVersionStatus;
+   public $mDatabaseStatus;
+   public $xmlStatus;
+   public $mConfigText;
+   public $mHtaccessText;
+   public $mWriteStatus;
 
-   var $mDbConnection;
-   var $mProductName;
+   public $mDbConnection;
+   public $mProductName;
 
    /**
     * @var string To store the data filter type
     */
-   var $mDataFilter;
+   public $mDataFilter;
 
    /**
     * @var array To store the type of database setup (install or Upgrade).
     */
 
-   var $mAttachmentsTable;
-   var $mCommentsTable;
+   public $mAttachmentsTable;
+   public $mCommentsTable;
 
-   var $mServerSoftware;
-   var $mMinPasswordLength;
-   var $mAdminUsername;
-   var $mAdminPassword;
+   public $mServerSoftware;
+   public $mMinPasswordLength;
+   public $mAdminUsername;
+   public $mAdminPassword;
    /**
     * @var object to store the adodb datadict object.
     */
-   var $mDataDict;
+   public $mDataDict;
 
-   var $mXmlSchema;
+   public $mXmlSchema;
 
-   function Setup()
+   public function __construct()
    {
       // Look for ADOdb
       $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
@@ -116,7 +116,7 @@ class Setup extends Flyspray
    * @param void
    * @return string An html formatted boolean answer
    */
-   function CheckWriteability($path)
+   public function CheckWriteability($path)
    {
       // Get the full path to the file
       $file = APPLICATION_PATH .'/' . $path;
@@ -140,7 +140,7 @@ class Setup extends Flyspray
    * @param void
    * @return void
    */
-   function CheckDatabaseSupport()
+   public function CheckDatabaseSupport()
    {
       $status = array();
 
@@ -174,7 +174,7 @@ class Setup extends Flyspray
     * @access public
     * @return bool
     */
-   function CheckPreStatus()
+   public function CheckPreStatus()
    {
       $this->mProceed = ($this->mDatabaseStatus && $this->mPhpVersionStatus && $this->xmlStatus);
 
@@ -188,7 +188,7 @@ class Setup extends Flyspray
    * @param void
    * @return string An html formatted boolean answer
    */
-   function CheckPhpCompatibility()
+   public function CheckPhpCompatibility()
    {
       // Check the PHP version. Recommended version is 4.3.9 and above
       $this->mPhpVersionStatus = version_compare(PHP_VERSION, $this->mPhpRequired, '>=');
@@ -204,9 +204,12 @@ class Setup extends Flyspray
    * will accumulate error messages in the $_SESSION[PASS_PHRASE]['page_message'] array.
    * return boolean/array $data will be returned if successful
    */
-   function CheckPostedData($expectedFields = array(), $pageHeading)
+   public function CheckPostedData($expectedFields, $pageHeading)
    {
-
+       if(!is_array($expectedFields)){
+           $expectedFields = array();
+       }
+       
       // Grab the posted data and trim it.
       $data = array_filter($_POST, array(&$this, "TrimArgs"));
 
@@ -243,7 +246,7 @@ class Setup extends Flyspray
       }
    }
 
-   function DisplayAdministration()
+   public function DisplayAdministration()
    {
       // Trim the empty values in the $_POST array
       $data = array_filter($_POST, array($this, "TrimArgs"));
@@ -288,7 +291,7 @@ class Setup extends Flyspray
    }
 
 
-   function DisplayCompletion()
+   public function DisplayCompletion()
    {
       // Trim the empty values in the $_POST array
       $data = array_filter($_POST, array($this, "TrimArgs"));
@@ -328,7 +331,7 @@ class Setup extends Flyspray
       $this->OutputPage($templates);
    }
 
-   function DisplayDatabaseSetup()
+   public function DisplayDatabaseSetup()
    {
 
       // Trim the empty values in the $_POST array
@@ -378,7 +381,7 @@ class Setup extends Flyspray
    }
 
 
-   function DisplayPreInstall()
+   public function DisplayPreInstall()
    {
       // Check the Database support on the server.
       $this->CheckDatabaseSupport();
@@ -422,7 +425,7 @@ class Setup extends Flyspray
       $this->OutputPage($templates);
    }
 
-   function DisplayLicense()
+   public function DisplayLicense()
    {
       $templates =
       array(
@@ -454,7 +457,7 @@ class Setup extends Flyspray
 
 
 
-   function GetAdminInput($field, $value, $label)
+   public function GetAdminInput($field, $value, $label)
    {
          $input_field	= "
          <tr>
@@ -465,7 +468,7 @@ class Setup extends Flyspray
    }
 
 
-   function GetDatabaseOutput()
+   public function GetDatabaseOutput()
    {
       $output = '';
       // Loop through the supported databases array
@@ -490,7 +493,7 @@ class Setup extends Flyspray
    * @param string $option The ini setting name to check the status for
    * @return string The status of the setting either "On" or "OFF"
    */
-   function GetIniSetting($option)
+   public function GetIniSetting($option)
    {
       return (ini_get($option) == '1' ? 'ON' : 'OFF');
    }
@@ -503,7 +506,7 @@ class Setup extends Flyspray
    *                  this array, then there will be no error message outputed.
    * @return string $message The message which needs outputting
    */
-   function GetPageMessage()
+   public function GetPageMessage()
    {
       // If there is an error
       if (isset($_SESSION['page_message']) || isset($_SESSION['page_heading']))
@@ -539,7 +542,7 @@ class Setup extends Flyspray
    * @param string $default The default value if the value is not set with the array
    * @return string $value The value to be returned
    */
-   function GetParamValue(&$arr, $name, $default=null )
+   public function GetParamValue(&$arr, $name, $default=null )
    {
       $value = isset($arr[$name]) ? $arr[$name] : $default;
       return $value;
@@ -551,7 +554,7 @@ class Setup extends Flyspray
    * @param void
    * @return string $output HTML formatted string.
    */
-   function GetPhpSettings()
+   public function GetPhpSettings()
    {
       // Array of the setting name, php ini name and the recommended value
       $test_settings =
@@ -587,22 +590,22 @@ class Setup extends Flyspray
       return $output;
    }
 
-	function GetReminderDaemonSelection($value)
-	{
-		$selection	= '';
+    public function GetReminderDaemonSelection($value)
+    {
+        $selection	= '';
 
         if ($value == 1) {
 
-				$selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> Enable';
-				$selection .= '<input type="radio" name="reminder_daemon" value="0" /> Disable';
+                $selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> Enable';
+                $selection .= '<input type="radio" name="reminder_daemon" value="0" /> Disable';
         } else {
 
-				$selection .= '<input type="radio" name="reminder_daemon" value="1" /> Enable';
-				$selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
-	    }
-			return $selection;
+                $selection .= '<input type="radio" name="reminder_daemon" value="1" /> Enable';
+                $selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
+        }
+            return $selection;
 
-	}
+    }
 
 
    /**
@@ -610,7 +613,7 @@ class Setup extends Flyspray
    * @param string $fileSystem Path to check
    * $return boolean true/false
    */
-   function IsWriteable($fileSystem)
+   public function IsWriteable($fileSystem)
    {
       // Clear the cache
       clearstatcache();
@@ -619,12 +622,12 @@ class Setup extends Flyspray
       return is_writable($fileSystem);
    }
 
-  /**
+    /**
    * Function to Output an Ordered/Un-ordered list from an array. Default list type is un-ordered.
    * @param array() $list_array An array list of data to be made into a list.
    * @return string $list An HTML list
    */
-   function OutputHtmlList($list_array = array(), $list_type = 'ul')
+   public function OutputHtmlList($list_array = array(), $list_type = 'ul')
    {
       $list = "<$list_type>";
       foreach ($list_array as $list_item)
@@ -641,7 +644,7 @@ class Setup extends Flyspray
    * Function to act on all the actions during Flyspray Setup
    * The Post variables are extracted for deciding which function to call.
    */
-   function ProcessActions()
+  public function ProcessActions()
    {
       $action = 'index';
       $what = '';
@@ -735,7 +738,7 @@ class Setup extends Flyspray
 
 
 
-   function ProcessAdminConfig($data)
+   public function ProcessAdminConfig($data)
    {
       // Extract the varibales to local namespace
       extract($data);
@@ -852,7 +855,7 @@ class Setup extends Flyspray
    }
 
 
-   function ProcessDatabaseSetup($data)
+   public function ProcessDatabaseSetup($data)
    {
       require_once($this->mAdodbPath);
 
@@ -951,7 +954,7 @@ class Setup extends Flyspray
    * @return boolean
    */
 
-   function PopulateDb($data)
+   public function PopulateDb($data)
    {
       // Check available upgrade scripts, use the script of very latest  version
       $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
@@ -1044,7 +1047,7 @@ class Setup extends Flyspray
    * @param string $type The type of html format to return
    * @return string Depending on the type of format to return
    */
-   function ReturnStatus($boolean, $type = 'yes')
+   public function ReturnStatus($boolean, $type = 'yes')
    {
       // Do a switch on the type of status
       switch($type)
@@ -1098,12 +1101,12 @@ class Setup extends Flyspray
       *
       * @return The result of the check.
       */
-   function TrimArgs($arg)
+   public function TrimArgs($arg)
    {
       return strlen(trim($arg));
    }
 
-   function VerifyVariableTypes($type, $value)
+   public function VerifyVariableTypes($type, $value)
    {
       $message = '';
       switch($type)
@@ -1144,7 +1147,7 @@ class Setup extends Flyspray
    * @param array $templates The collection of templates with their associated variables
    *
    */
-   function OutputPage($templates = array())
+   public function OutputPage($templates = array())
    {
       if (sizeof($templates) == 0)
       {
@@ -1174,6 +1177,5 @@ class Setup extends Flyspray
    }
 }
 
-
-$setup = new Setup;
-?>
+//start the installer, it handles the rest inside the class
+new Setup();
