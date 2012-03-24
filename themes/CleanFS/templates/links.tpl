@@ -3,7 +3,7 @@
 		<ul id="menu-list">
 <?php if ($user->isAnon()): ?>
 			<li class="first">
-				<a id="show_loginbox" href="" accesskey="l" href="#login" onclick="this.addClassName('active'); showhidestuff('loginbox');return false;">{L('login')}</a>
+				<a id="show_loginbox" href="#" accesskey="l" href="#login" onclick="return toggleLoginBox(this);">{L('login')}</a>
 				<div id="loginbox" class="popup hide">
 		    <?php $this->display('loginbox.tpl'); ?>
 			</div></li>

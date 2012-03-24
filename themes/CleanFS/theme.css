@@ -72,11 +72,13 @@ a {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003145}}
 a:hover {
   color: #6699cc;
-  color: #466f1e; }
+  color: #466f1e;}
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003150}}
 #container {
-  position: relative; }
+  min-width: 1000px;
+  position: relative; 
+  text-align: left;}
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003154}}
 #content {
@@ -1042,7 +1044,7 @@ a#show_loginbox {
   right: 5px;
   z-index: 200;
   height: 60px;
-  width: 430px;
+  width: 450px;
   padding-top: 15px;
   margin-top: 1px;
   top: 1.4em;
@@ -1054,6 +1056,7 @@ a#show_loginbox {
   #loginbox #login a {
     color: #222222;
     text-decoration: underline; }
+  #loginbox #login a:hover {color: #fff;}
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\000031037}}
 form#login {
@@ -1092,12 +1095,8 @@ form#login {
       -webkit-border-radius: 10px; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\000031074}}
   form#login .remember_me {
-    position: absolute;
-    top: 30px;
-    right: 57px; }
+    float: right;}
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\000031079}}
-    form#login .remember_me input {
-      vertical-align: middle; }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\000031085}}
 span#advancedsearchstate img {
@@ -1410,3 +1409,65 @@ div#taskdeps img {
   vertical-align:middle;
   margin-top:-1px;
 }
+
+input[type=text], input[type=password], select {
+    color: #000;
+    background: #fff;
+    border: 1px solid #ccc;
+    height: 19px;
+    padding: 2px;
+    vertical-align: middle;
+}
+
+input[type=submit], button {
+    background: #69C;
+    border:  1px solid #0a4193;
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+input[type=text], input[type=submit], button, select {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
+select {height: 23px; vertical-align: middle;}
+
+input[type=submit]:hover, button:hover {
+    background: #5F9729;
+    color: #fff;
+    border-color: #5F9729;
+}
+
+#show_loginbox {
+    background: #494D4E;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#menu #menu-list a#show_loginbox:hover {
+    background-color: #5f9729;
+}
+
+#login_hidelink {
+    float: right;
+    text-align: right;
+}
+
+#login_input {
+    height: 30px;
+}
+
+#login_links {
+    height: 30px;
+    padding: 5px 20px;
+}
+
+#login_button {vertical-align: baseline;}
