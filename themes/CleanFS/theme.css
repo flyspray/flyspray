@@ -853,7 +853,12 @@ form #taskdetails #taskdetailsfull {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003837}}
 #related .related {
   float: left;
-  margin-right: 2em; }
+  margin-right: 0; }
+  
+#duplicate_tasks th
+{
+  height: 30px;
+}
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003842}}
 #content > #submenu {
