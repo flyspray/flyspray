@@ -2,6 +2,7 @@
   <div id="remind" class="tab">
   
   <form method="post" action="{CreateUrl('details', $task_details['task_id'])}#remind" >
+    <?php if (count($reminders)): ?>
     <table id="reminders" class="userlist">
     <tr>
       <th>
@@ -14,7 +15,7 @@
       <th>{L('frequency')}</th>
       <th>{L('message')}</th>
     </tr>
-
+    
     <?php foreach ($reminders as $row): ?>
     <tr>
       <td class="ttcolumn">
@@ -40,7 +41,8 @@
       <input type="hidden" name="action" value="deletereminder" />
       <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
       <button type="submit">{L('remove')}</button></td></tr>
-    </table>
+  </table>
+  <?php endif; ?>  
   </form>
 
   <fieldset><legend>{L('addreminder')}</legend>

@@ -844,6 +844,9 @@ form #taskdetails #taskdetailsfull {
   border: solid 1px #e1e1e1;
   border-radius: 3px; }
 
+#comments h4 {
+  margin:1em 0 0.5em 0;
+}
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003828}}
 .userlist th {
   background-color: #e0e0e0; }

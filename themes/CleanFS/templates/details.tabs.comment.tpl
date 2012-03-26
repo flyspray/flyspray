@@ -52,7 +52,7 @@
   <?php endforeach; ?>
 
   <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
-  <fieldset><legend>{L('addcomment')}</legend>
+  <h4>{L('addcomment')}</h4>
   <form enctype="multipart/form-data" action="{CreateUrl('details', $task_details['task_id'])}" method="post">
     <div>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
@@ -91,6 +91,5 @@
       <?php endif; ?>
     </div>
   </form>
-  </fieldset>
   <?php endif; ?>
 </div>
