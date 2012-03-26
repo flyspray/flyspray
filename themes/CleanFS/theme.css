@@ -140,7 +140,7 @@ a:hover {
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003205}}
-    #menu #menu-list a.active {
+    tr.active, #menu #menu-list a.active {
       /*background: $inverse_link;      */
       color: white;
       background: #5f9729;
