@@ -730,6 +730,7 @@ div#toolboxmenu {
   background: #fff;
   width: auto !important;
   width: 90px;
+  margin-left: 40px;
   display: table;
   position: absolute; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/fs\/themes\/cleanfs\/theme\.scss}line{font-family:\00003717}}
