@@ -37,10 +37,10 @@
 
 					<?php if (!$user->isAnon()): ?>
 						<fieldset>
-							<span class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
+							<div class="save_search"><label for="save_search" id="lblsaveas">{L('saveas')}</label>
 							<input class="text" type="text" value="{Get::val('search_name')}" id="save_search" name="search_name" size="15" />
 							&nbsp;<button onclick="savesearch('{!Filters::escapeqs($_SERVER['QUERY_STRING'])}', '{#$baseurl}', '{L('saving')}')" type="button">{L('OK')}</button>
-							</span>
+							</div>
 						</fieldset>
 					<?php endif; ?>
 

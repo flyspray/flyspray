@@ -3,7 +3,7 @@
 		<ul id="menu-list">
 <?php if ($user->isAnon()): ?>
 			<li class="first">
-				<a id="show_loginbox" href="#" accesskey="l" href="#login" onclick="return toggleLoginBox(this);">{L('login')}</a>
+				<a id="show_loginbox" accesskey="l" href="#login" onclick="this.addClassName('active'); showhidestuff('loginbox');return false;">{L('login')}</a>
 				<div id="loginbox" class="popup hide">
 		    <?php $this->display('loginbox.tpl'); ?>
 			</div></li>
@@ -19,7 +19,7 @@
 				</div>
 			</li>
 			<li>
-				<a id="lastsearchlink" href="" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive">{L('mysearch')}</a>
+				<a id="lastsearchlink" href="#" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive">{L('mysearch')}</a>
 				<div id="mysearches">
 					<?php $this->display('links.searches.tpl'); ?>
 				</div>
@@ -46,8 +46,9 @@
 			</li>
 			<?php endif; unset($_SESSION['login_attempts'], $_SESSION['was_locked']); ?>
 		
-		</ul>
+		
 <?php endif; ?>
+</ul>
 </div>
 
 <div id="pm-menu">
@@ -114,7 +115,7 @@
 			<div id="projectselector">
 				<form id="projectselectorform" action="{$baseurl}index.php" method="get">
 					 <div>
-						<select name="project" onChange="document.getElementById('projectselectorform').submit()">
+						<select name="project" onchange="document.getElementById('projectselectorform').submit()">
 							{!tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id)}
 						</select>
 						<button type="submit">{L('switch')}</button>

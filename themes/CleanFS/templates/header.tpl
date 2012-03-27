@@ -7,8 +7,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
-
+    <?php if(trim($this->get_image('favicon'))): ?>
     <link rel="icon" type="image/png" href="{$this->get_image('favicon')}" />
+    <?php endif; ?>
     <link rel="index" id="indexlink" type="text/html" href="{$baseurl}" />
     <?php foreach ($fs->projects as $project): ?>
     <link rel="section" type="text/html" href="{$baseurl}?project={$project[0]}" />

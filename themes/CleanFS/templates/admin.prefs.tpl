@@ -164,14 +164,12 @@
             {!tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true)}
           </li>
         </ul>
-
+    </div>
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
       <button type="submit">{L('saveoptions')}</button>
 
       <button type="reset">{L('resetoptions')}</button>
     </div>
-
   </form>
-
 </div>

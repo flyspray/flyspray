@@ -36,15 +36,11 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
     </small>
     <?php endif; ?>
 </h3>
-
-<p>
-	<div class="progress_bar_container" style="width: 250px;">
-		<span>{$milestone['percent_complete']}%</span>
-		<div class="progress_bar" style="width:{$milestone['percent_complete']}%"></div>
-	</div>		
-</p>
-
-<p>{$milestone['percent_complete']}{L('of')}
+<div class="progress_bar_container" style="width: 250px;">
+	<span>{$milestone['percent_complete']}%</span>
+	<div class="progress_bar" style="width:{$milestone['percent_complete']}%"></div>
+</div>
+<p style="margin-top: 5px;">{$milestone['percent_complete']}{L('of')}
    <a href="{$baseurl}index.php?do=index&amp;tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}&amp;status[]=">
      {count($milestone['all_tasks'])} {L('tasks')}
    </a> {L('completed')}
