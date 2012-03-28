@@ -1480,3 +1480,15 @@ input[type=submit]:hover, button:hover {
 }
 
 #login_button {vertical-align: baseline;}
+
+div.denyform {
+	visibility:hidden;
+	position:absolute;
+	background: none repeat scroll 0 0 #FAFAFA;
+	border: 1px solid #E1E1E1;
+	margin-top:5px;
+	display:block;
+	width:300px;
+	height:auto;
+	padding:5px 30px 5px 5px;
+}
