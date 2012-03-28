@@ -1335,8 +1335,8 @@ ul.slim {
 /* fancy dual selects */
 
 .double_select {
-  width: 350px;
-  position: relative; }
+	padding-left: 100px;
+	position: relative;}
 
   .double_select .dualselect_selectable {
     height: 220px;
@@ -1386,6 +1386,23 @@ ul.slim {
       height: 10%;
       width: 100%; }
 
+	.double_select .c1 select {
+      height: 24em;
+      min-width: 12em;
+      width: auto;}
+
+	.double_select td {
+	  text-align: center;
+	  vertical-align: middle;}
+
+	  .double_select .c3 button {
+		 height: 2em;
+		 width: 12em;}
+
+	  .double_select .c3 select {
+		height: 20em;
+		min-width: 12em;
+		width: auto;}
 /* closing task form */
 
 div#closeform {
@@ -1492,3 +1509,5 @@ div.denyform {
 	height:auto;
 	padding:5px 30px 5px 5px;
 }
+
+#notify_types {height: 10em;}
