@@ -289,5 +289,38 @@ class Project
                ORDER BY  attachment_id ASC",
                array($tid));
     }
+	/**
+	 * Returns the activity by between dates for a project.
+	 * @param date $startdate
+	 * @param date $enddate
+	 * @param integer $project_id
+	 * @return array used to get the count
+	 * @access public
+	 */
+	function getActivityProjectCount($startdate, $enddate, $project_id)
+	{
+		global $db;
+		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+		WHERE t.project_id = ?
+		AND date(from_unixtime(event_date)) BETWEEN str_to_date(?, '%m/%d/%Y') and str_to_date(?, '%m/%d/%Y')", array($project_id, $startdate, $enddate));
+		return $db->fetchCol($result);
+	}
+	/**
+	 * Returns the day activity by the date for a project.
+	 * @param date $date
+	 * @param integer $project_id
+	 * @return array used to get the count
+	 * @access public
+	 */
+	function getDayActivityByProject($date, $project_id)
+	{
+		global $db;
+		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+							  WHERE t.project_id = ? 
+							  AND date(from_unixtime(event_date)) = str_to_date(?, '%m/%d/%Y')", array($project_id, $date));
+		return $db->fetchCol($result);
+	}
     /* }}} */
 }

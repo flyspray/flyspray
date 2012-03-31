@@ -5,7 +5,6 @@ if (!$project_count): ?>
 <h2>{L('allprivate')}</h2>
 </div>
 <?php endif; ?>
-
 <?php
 foreach ($projects as $project): ?>
 <div class="box<?php if ($project_count == 1) echo ' single-project' ?>">
@@ -38,6 +37,16 @@ foreach ($projects as $project): ?>
     <?php endif; ?>
 
   </tr>
+  <tr>
+  	<th><strong>Activity</strong>
+  	<td><img src="index.php?do=activity&project_id={$project['project_id']}"/></td>
+  </tr>
+  <?php if (!$user->isAnon()): ?>
+  <tr>
+  	<th><strong>My Activity</strong>
+  	<td><img src="index.php?do=activity&user_id={$user->id}&project_id={$project['project_id']}"/></td>
+  </tr>
+  <?php endif; ?>
   <tr>
     <th><strong>{L('stats')}</strong></th>
     <td>{$stats[$project['project_id']]['open']} {L('opentasks')}, {$stats[$project['project_id']]['all']} {L('totaltasks')}.</td>

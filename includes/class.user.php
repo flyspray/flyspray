@@ -304,6 +304,43 @@ class User
 
         return !$this->isAnon();
     }
+   	/**
+	 * Returns the activity by between dates for a project and user.
+	 * @param date $startdate
+	 * @param date $enddate
+	 * @param integer $project_id
+	 * @param integer $userid
+	 * @return array used to get the count
+	 * @access public
+	 */
+	function getActivityUserCount($startdate, $enddate, $project_id, $userid)
+	{
+		global $db;
+		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+							  WHERE t.project_id = ? AND h.user_id = ?
+							  AND date(from_unixtime(event_date)) 
+							  BETWEEN str_to_date(?, '%m/%d/%Y') 
+							  AND str_to_date(?, '%m/%d/%Y')", array($project_id, $userid, $startdate, $enddate));
+		return $db->fetchCol($result);
+	}
+	/**
+	 * Returns the day activity by the date for a project and user.
+	 * @param date $date
+	 * @param integer $project_id
+	 * @param integer $userid
+	 * @return array used to get the count
+	 * @access public
+	 */
+	function getDayActivityByUser($date, $project_id, $userid)
+	{
+		global $db;
+		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+							  WHERE t.project_id = ? AND h.user_id = ?
+							  AND date(from_unixtime(event_date)) = str_to_date(?, '%m/%d/%Y')", array($project_id, $userid, $date));
+		return $db->fetchCol($result);
+	}
 
     /* }}} */
 }
