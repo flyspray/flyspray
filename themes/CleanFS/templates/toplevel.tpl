@@ -39,12 +39,12 @@ foreach ($projects as $project): ?>
   </tr>
   <tr>
   	<th><strong>Activity</strong>
-  	<td><img src="index.php?do=activity&project_id={$project['project_id']}"/></td>
+  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;project_id={$project['project_id']}"/></td>
   </tr>
   <?php if (!$user->isAnon()): ?>
   <tr>
   	<th><strong>My Activity</strong>
-  	<td><img src="index.php?do=activity&user_id={$user->id}&project_id={$project['project_id']}"/></td>
+  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;user_id={$user->id}&amp;project_id={$project['project_id']}"/></td>
   </tr>
   <?php endif; ?>
   <tr>
