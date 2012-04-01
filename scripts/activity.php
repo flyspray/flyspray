@@ -17,7 +17,8 @@ $sparkline->SetBarWidth(4);
 $sparkline->SetBarSpacing(1);
 
 //PROJECT GRAPH
-if(Get::has('project_id') && !Get::has('user_id'))
+//Anonymouse
+if(Get::has('project_id') && !Get::has('graph'))
 {
     $thirtyDays = array();
     $today = date('m/j/Y');
@@ -32,8 +33,37 @@ if(Get::has('project_id') && !Get::has('user_id'))
     $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
     $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
     //look 30 days more and if found scale
-    $check = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
-    if($check[0] > 0)
+    $projectCheck = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
+    if($projectCheck[0] > 0)
+    {
+        for($i = 30; $i < 61; $i++)
+        {
+            $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($daythirtyone)));
+            $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
+            $sparkline->SetBarWidth(2);
+            $sparkline->SetBarSpacing(0.5);
+            $sparkline->SetData($i, $val[0]);
+        }
+    }
+}//User Logged in
+elseif(Get::has('project_id') && Get::has('graph') && Get::val('graph') == 'project')
+{
+    $thirtyDays = array();
+    $today = date('m/j/Y');
+    $daythirtyone = '';
+    for($i = 1; $i < 31; $i++)
+    {
+        $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($today)));
+        $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
+        $sparkline->SetData($i, $val[0]);
+        $daythirtyone = $newday;
+    }
+    $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
+    $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
+    //look 30 days more and if found scale
+    $projectCheck = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
+    $userCheck = User::getActivityUserCount($daysixtyone, $daythirtyone, Get::num('project_id'), Get::num('user_id'));
+    if($projectCheck[0] > 0 || $userCheck[0] > 0)
     {
         for($i = 30; $i < 61; $i++)
         {
@@ -45,7 +75,7 @@ if(Get::has('project_id') && !Get::has('user_id'))
         }
     }
 }//User Graph
-elseif(Get::has('user_id') && Get::has('project_id'))
+elseif(Get::has('user_id') && Get::has('project_id') && Get::val('graph') == 'user')
 {
     $thirtyDays = array();
     $today = date('m/j/Y');

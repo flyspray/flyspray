@@ -37,14 +37,21 @@ foreach ($projects as $project): ?>
     <?php endif; ?>
 
   </tr>
-  <tr>
-  	<th><strong>Activity</strong>
-  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;project_id={$project['project_id']}"/></td>
-  </tr>
   <?php if (!$user->isAnon()): ?>
   <tr>
+  	<th><strong>Activity</strong>
+  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;user_id={$user->id}&amp;project_id={$project['project_id']}&amp;graph=project"/></td>
+  </tr>
+ 
+  <tr>
   	<th><strong>My Activity</strong>
-  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;user_id={$user->id}&amp;project_id={$project['project_id']}"/></td>
+  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;user_id={$user->id}&amp;project_id={$project['project_id']}&amp;graph=user"/></td>
+  </tr>
+  <?php endif; ?>
+  <?php if ($user->isAnon()): ?>
+    <tr>
+  	<th><strong>Activity</strong>
+  	<td><img src="{$_SERVER['SCRIPT_NAME']}?do=activity&amp;project_id={$project['project_id']}"/></td>
   </tr>
   <?php endif; ?>
   <tr>
