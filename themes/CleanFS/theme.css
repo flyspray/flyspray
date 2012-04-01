@@ -218,8 +218,8 @@ div#mysearches {
 
 
 #pmcontrol {
-  float: right !important;
-  padding-right: 20px; }
+  position: absolute;
+  right: 20px;}
 
 
 #pmcontrol div {
@@ -259,7 +259,7 @@ div#mysearches {
     height: 40px;
     border-bottom: solid 4px #5f9729;
     margin: 0;
-    padding: 0 0 0 10px; }
+    padding: 0px 0px 0px 10px; }
 
     #pm-menu #pm-menu-list li {
       display: block;
