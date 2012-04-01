@@ -157,9 +157,17 @@ foreach ($node_list as $taskid => $taskInfo) {
 		}
 	}
 
+    if ($taskid == $id) {
+        $color = '#5F9729';
+    } else if ($taskInfo['clsd']) {
+        $color = '#808080';
+    } else {
+        $color = '#83548B';
+    }
+    
 	$newTask = array('id' => $taskid,
 					 'name' => tpl_tasklink($taskid),
-					 'data' => array('$color' => $taskid == $id ? '#5F9729' : '#83548B',
+					 'data' => array('$color' => $color,
                                      '$type' => 'circle',
                                      '$dim' => 15),
                      'adjacencies' => $adjacencies);
