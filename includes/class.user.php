@@ -313,7 +313,7 @@ class User
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getActivityUserCount($startdate, $enddate, $project_id, $userid)
+	static function getActivityUserCount($startdate, $enddate, $project_id, $userid)
 	{
 		global $db;
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
@@ -332,7 +332,7 @@ class User
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getDayActivityByUser($date, $project_id, $userid)
+	static function getDayActivityByUser($date, $project_id, $userid)
 	{
 		global $db;
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
