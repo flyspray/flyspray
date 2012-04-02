@@ -35,6 +35,16 @@ foreach ($projects as $project): ?>
         </ul>
     </td>
     <?php endif; ?>
+    <?php if ($project_count == 1 and isset($assigned_to_myself[$project['project_id']])): ?>
+    <td rowspan="4">
+      <strong>{L('assignedtome')}</strong>
+        <ul>
+            <?php foreach($assigned_to_myself[$project['project_id']] as $task): ?>
+            <li>{!tpl_tasklink($task['task_id'])}</li>
+            <?php endforeach; ?>
+        </ul>
+    </td>
+    <?php endif; ?>
 
   </tr>
   <?php if (!$user->isAnon()): ?>

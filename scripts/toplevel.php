@@ -17,7 +17,7 @@ if ($proj->id && $user->can_view_project($proj->prefs)) {
 
 $most_wanted = array();
 $stats = array();
-
+$assigned_to_myself = array();
 // Most wanted tasks for each project
 foreach ($projects as $project) {
     $sql = $db->Query('SELECT v.task_id, count(*) AS num_votes
@@ -45,7 +45,18 @@ foreach ($projects as $project) {
     $stats[$project['project_id']]['average_done'] = round($db->fetchOne($sql), 0);
 }
 
-$page->uses('most_wanted', 'stats', 'projects');
+// Assigned to myself
+foreach ($projects as $project) {
+    $sql = $db->Query('SELECT a.task_id
+                         FROM {assigned} a
+                    LEFT JOIN {tasks} t ON a.task_id = t.task_id AND t.project_id = ?
+                        WHERE t.is_closed = 0 and a.user_id = ?',
+                    array($project['project_id'], $user->id), 5);
+    if ($db->CountRows($sql)) {
+        $assigned_to_myself[$project['project_id']] = $db->FetchAllArray($sql);
+    }
+}
+$page->uses('most_wanted', 'stats', 'projects', 'assigned_to_myself');
 
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('toplevel'));
 $page->pushTpl('toplevel.tpl');
