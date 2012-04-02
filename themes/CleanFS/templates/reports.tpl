@@ -5,7 +5,7 @@
         <tr>
           <td><label for="events[]">{L('events')}</label></td>
           <td>
-              <select name="events[]" multiple="multiple" id="events[]" size="{count($events)+count($user_events)+2}">
+              <select name="events[]" class='eventlist' multiple="multiple" id="events[]" size="{count($events)+count($user_events)+2}">
               <optgroup label="{L('Tasks')}">
               {!tpl_options($events, Req::val('events'))}
               </optgroup>
