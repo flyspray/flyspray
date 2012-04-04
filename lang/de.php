@@ -808,6 +808,27 @@ $translation = array(
 'collapse'                => 'Zusammenklappen',
 'expandall'               => 'Alle aufklappen',
 'collapseall'             => 'Alle zusammenklappen',
+'minpwsize'               => 'Das Passwort muss mindestens 5 Zeichen haben',
+'passwordtoosmall'        => 'Das Passwort ist zu kurz.',
+'accountwaslocked'        => 'Ihr Zugang wurde wegen zuviel fehlerhaften Loginversuchen gesperrt.',
+'failedattempts'          => 'Es gab %d fehlerhafte Loginversuche.',
+'groupnotexist'           => 'Die gewählte Gruppe existiert nicht in diesem Projekt.',
+'searchindetails'         => 'Details der Suche',
+'showasassignees'         => 'Als mögliche Bearbeiter anzeigen',
+'find'                    => 'Finden',
+'tls'                     => 'TLS',
+'isadmin'                 => 'Ist Admin',
+'addvotes'                => 'Abstimmungen hinzufügen',
+'removevote'              => 'Abstimmung entfernen',
+'voteremoved'             => 'Ihre Abstimmung wurde entfernt',
+'voteremovefailed'        => 'Ihre Abstimmung konnte momentan nicht entfernt werden.',
+'connectedtasks'          => 'Verbundene Aufgaben:',
+'taskdependencies'        => 'Abhängigkeiten',
+'viewgraph'               => 'Diagramm anzeigen',
+'notaskdependencies'      => 'Diese Aufgabe hängt von keiner anderen Aufgabe ab.',
+'dependson'               => 'Abhängig von',
+'blocks'                  => 'Blocks',
+'newdependency'           => 'Neue Abhängigkeit:'
 );
 
 ?>
