@@ -1516,3 +1516,44 @@ div.denyform {
 #notify_types {height: 10em;}
 
 #rassigned_to {height: 12em; }
+
+/* Stuff for the autocomplete lists {{{ */
+
+span.autocomplete {
+	background-color:#F5F5F5;
+	position: absolute;
+	width: auto !important;
+	border:1px solid gray;
+	padding: 0px;
+	margin:-1px 0 0;
+	text-align:left;
+	display:block;
+}
+
+span.autocomplete ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+span.autocomplete ul li {
+	list-style-type: none;
+	display: block;
+	margin: 0;
+	padding:2px 4px;
+	height: 1.1em;
+	white-space:nowrap;
+}
+
+span.autocomplete ul li span.informal {
+	color: darkgray;
+	font-size:0.9em;
+}
+
+span.autocomplete ul li.selected {
+	background-color: #5F9729;
+	cursor:pointer;
+	color:HighlightText;
+}
+
+
