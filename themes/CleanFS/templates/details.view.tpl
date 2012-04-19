@@ -79,8 +79,16 @@
 		{!tpl_tasklink($prev_id, L('previoustask'), false, array('id'=>'prev', 'accesskey' => 'p'))}
 		<?php endif; ?>
 		<?php if ($prev_id): ?> | <?php endif; ?>
-		<?php $params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']); ?>
-		<a href="{CreateUrl('project', $proj->id, null, array('do' => 'index') + $params)}">{L('tasklist')}</a>
+		<?php 
+		if($_COOKIE['tasklist_type'] == 'project'):
+			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']); 
+			?>
+			<a href="{CreateUrl('project', $proj->id, null, array('do' => 'index') + $params)}">{L('tasklist')}</a>
+			<?php endif; ?>
+		<?php if ($_COOKIE['tasklist_type'] == 'assignedtome'): ?>
+		 <a href="{CreateURL('project', $proj->id, null, array('do' => 'index', 'dev' => $user->id))}">My Assigned Tasks</a>
+		<?php endif; ?>
+		
 		<?php if ($next_id): ?> | <?php endif; ?>
 		<?php if ($next_id): ?>
 		{!tpl_tasklink($next_id, L('nexttask'), false, array('id'=>'next', 'accesskey' => 'n'))}
