@@ -825,15 +825,14 @@ form #taskdetails #taskdetailsfull {
     border: solid 1px #e1e1e1;
     border-radius: 3px; }
 
-  #taskdetails #taskdetailsfull {
+    #taskdetailsfull {
     margin-left: 300px;
     padding: 2em 3em; }
 
-  #taskdetails #taskinfo {
+   #taskinfo {
     margin-left: 300px;
     margin-top: 15px;
     border-top: 1px solid #e1e1e1;
-    min-height: 50px;
     padding: 8px 5px; }
 
 
@@ -1556,4 +1555,8 @@ span.autocomplete ul li.selected {
 	color:HighlightText;
 }
 
-
+#actionbuttons {
+	margin-left: 300px;
+	margin-top: 15px;
+	min-height: 50px;
+	padding: 8px 5px; }
