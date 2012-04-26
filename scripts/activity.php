@@ -17,7 +17,7 @@ $sparkline->SetBarWidth(4);
 $sparkline->SetBarSpacing(1);
 
 //PROJECT GRAPH
-//Anonymouse
+//Anonymous
 if(Get::has('project_id') && !Get::has('graph'))
 {
     $thirtyDays = array();
@@ -90,7 +90,7 @@ elseif(Get::has('user_id') && Get::has('project_id') && Get::val('graph') == 'us
     $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
     $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
     //look 30 days more and if found scale
-    $check = User::getActivityUserCount($daysixtyone, $daythirtyone, Get::num('project_id'), Get::num('user_id'));
+    $check = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
     if($check[0] > 0)
     {
         for($i = 30; $i < 61; $i++)
