@@ -25,7 +25,7 @@ class Database
      * @var string
      * @access private
      */
-    private $dbprefix;
+    public $dbprefix;
 
     /**
      * Cache for queries done by cached_query()
