@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    public $version = '0.9.9.7 dev';
+    public $version = '0.9.9.7';
 
     /**
      * Flyspray preferences
@@ -77,6 +77,8 @@ class Flyspray
         while ($row = $db->FetchRow($res)) {
             $this->prefs[$row['pref_name']] = $row['pref_value'];
         }
+        
+        $this->setDefaultTimezone();
 
         $sizes = array();
         foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
@@ -102,6 +104,14 @@ class Flyspray
         $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
+    
+    protected function setDefaultTimezone()
+    {
+        $default_timezone = isset($this->prefs['default_timezone']) && !empty($this->prefs['default_timezone']) ? $this->prefs['default_timezone'] : 'UTC';
+        // set the default time zone - this will be redefined as we go
+        define('DEFAULT_TIMEZONE',$default_timezone);
+        date_default_timezone_set(DEFAULT_TIMEZONE);
+    }
 
     public static function base_version($version)
     {

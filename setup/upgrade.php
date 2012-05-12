@@ -295,4 +295,3 @@ $page->assign('installed_version', $installed_version);
 
 $page->display('upgrade.tpl');
 
-?>

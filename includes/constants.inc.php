@@ -11,10 +11,6 @@ define('BASEDIR', dirname(dirname(__FILE__)));
 // Change this line if you move flyspray.conf.php elsewhere
 $conf = @parse_ini_file(Flyspray::get_config_path(), true);
 
-// set the default time zone
-$default_timezone = isset($conf['general']['default_timezone']) && !empty($conf['general']['default_timezone']) ? $conf['general']['default_timezone'] : 'UTC';
-date_default_timezone_set($default_timezone);
-
 // $baseurl
 // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
 if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'] != '') {
