@@ -532,6 +532,12 @@ switch ($action = Req::val('action'))
                 array($viscols));
         $fs->prefs['visible_columns'] = $viscols;
 
+        $visfields = trim(Post::val('visible_fields'));
+        $db->Query("UPDATE  {prefs} SET pref_value = ?
+                     WHERE  pref_name = 'visible_fields'",
+                array($visfields));
+        $fs->prefs['visible_fields'] = $visfields;
+ 
         $_SESSION['SUCCESS'] = L('optionssaved');
         break;
 
@@ -552,15 +558,19 @@ switch ($action = Req::val('action'))
                     ? $fs->prefs['visible_columns']
                     : 'id tasktype severity summary status dueversion progress';
 
+        $visfields =  $fs->prefs['visible_fields']
+                    ? $fs->prefs['visible_fields']
+                    : 'id tasktype severity summary status dueversion progress';
+
 
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
-                                   visible_columns, lang_code, notify_email, notify_jabber)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?)',
+                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber)
+                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
                         Post::val('intro_message'), Post::num('others_view', 0),
-                        Post::num('anon_open', 0),  $viscols,
+                        Post::num('anon_open', 0),  $viscols, $visfields,
                         Post::val('lang_code', 'en'), '', ''));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
@@ -652,6 +662,9 @@ switch ($action = Req::val('action'))
 
         $update = $db->Query('UPDATE {projects} SET visible_columns = ? WHERE project_id = ?',
                              array(trim(Post::val('visible_columns')), $proj->id));
+
+        $update = $db->Query('UPDATE {projects} SET visible_fields = ? WHERE project_id = ?',
+                             array(trim(Post::val('visible_fields')), $proj->id));
 
         // Update project prefs for following scripts
         $proj = new Project($proj->id);
