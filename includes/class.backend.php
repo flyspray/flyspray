@@ -575,6 +575,16 @@ abstract class Backend
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                 WHERE g.group_id = 1');
+
+            // If the new user is not an admin, add him to the notification list
+            $users_to_notify = $db->FetchCol($sql);
+            if (! in_array($email, $users_to_notify, true))
+            {
+                array_push($users_to_notify, $email);
+            }
+
+            // Notify the appropriate users
+
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $db->FetchCol($sql), NOTIFY_EMAIL);
