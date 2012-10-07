@@ -34,6 +34,12 @@
           </td>
         </tr>
         <tr>
+          <td><label for="logo">{L('showlogo')}</label></td>
+          <td>
+            <input id="logo" name="logo" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['logo']}" />
+          </td>
+        </tr>
+        <tr>
           <td><label for="dateformat">{L('dateformat')}</label></td>
           <td>
             <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['dateformat']}" />

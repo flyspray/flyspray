@@ -31,6 +31,11 @@
         </li>   
 
         <li>
+          <label for="logo">{L('showlogo')}</label>
+          <input id="logo" name="logo" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['logo']}" />
+        </li>
+
+        <li>
           <label for="dateformat">{L('dateformat')}</label>
           <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['dateformat']}" />
         </li>   

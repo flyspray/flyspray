@@ -60,8 +60,14 @@
 				>
 
   <div id="container">
-    <!-- Remove this to remove the logo -->
-    <h1 id="title"><a href="{$baseurl}">{$proj->prefs['project_title']}</a></h1>
+    <!-- Display title and logo if desired -->
+    <h1 id="title"><a href="{$baseurl}">
+	<?php if ($fs->prefs['logo'] != '') { ?>
+		<img src="{$fs->prefs['logo']}">
+	<?php } ?>
+	{$proj->prefs['project_title']}
+    </a></h1>
+
 
     <?php $this->display('links.tpl'); ?>
 

@@ -115,7 +115,13 @@ a:hover {
     text-decoration: none;
     display: block;
     padding: 25px 50px;
+    float: left;
     width: 50%; }
+
+  #title img {
+    float: left;
+    margin-right: 20px;
+    height: 36px;}
 
 
 #menu {
