@@ -57,7 +57,7 @@
           <li>
             <label for="priority">{L('priority')}</label>
             <select id="priority" name="task_priority" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
-              {!tpl_options($fs->priorities, Req::val('task_priority', 2))}
+              {!tpl_options($fs->priorities, Req::val('task_priority', 4))}
             </select>
           </li>
   
