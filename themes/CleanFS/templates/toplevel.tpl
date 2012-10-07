@@ -1,9 +1,8 @@
 <?php $project_count = count($projects);
 
+/* If user has no projects, just redirect them to the index page of All Projects */
 if (!$project_count): ?>
-<div class="box">
-<h2>{L('allprivate')}</h2>
-</div>
+  <meta http-equiv="Refresh" content="0;url=/index.php?project=0&do=index" />
 <?php endif; ?>
 <?php
 foreach ($projects as $project): ?>
