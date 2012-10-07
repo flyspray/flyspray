@@ -54,11 +54,15 @@
 <div id="pm-menu">
 
 	<ul id="pm-menu-list">
-		<li class="first">
-			<a id="toplevellink"
+		<!-- Only show the user the overview tab if they are part of some projects -->
+		<?php if ( count($fs->projects) ) { ?>
+			<li class="first">
+				<a id="toplevellink"
 					<?php if(isset($_GET['do']) and $_GET['do'] == 'toplevel'): ?> class="active" <?php endif; ?>
 				 href="{CreateURL('toplevel', $proj->id)}">{L('overview')}</a>
-		</li>
+			</li>
+		<?php } ?>
+
 
 		<li>
 		<a id="homelink"
