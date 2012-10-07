@@ -96,6 +96,7 @@ $language = array(
 'cache_db'                => 'Cache in DB',
 'subcategoryof'           => 'Sub-category of',
 'visiblecolumns'          => 'Columns displayed in task list',
+'visiblefields'           => 'Fields when add/edit/view task',
 'tense'                   => 'Tense',
 'listtensetip'            => 'Past, Present or Future',
 'past'                    => 'Past',
