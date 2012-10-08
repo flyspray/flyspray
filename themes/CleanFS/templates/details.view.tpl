@@ -73,6 +73,8 @@
 </div>
 
 
+<!-- Grab fields wanted for this project so we can only show those we want -->
+<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 
 <div id="taskdetails">
 	<span id="navigation"> <?php if ($prev_id): ?>
@@ -97,90 +99,134 @@
 
   <div id="taskfields">
 	 <ul class="fieldslist">
-		<li>
-			<span class="label">{L('status')}</span>
-			<span class="value">
-				<?php if ($task_details['is_closed']): ?>
-				{L('closed')}
-				<?php else: ?>
-				{$task_details['status_name']}
+		<!-- Status -->
+		<? if (in_array('status', $fields)): ?>
+			<li>
+				<span class="label">{L('status')}</span>
+				<span class="value">
+					<?php if ($task_details['is_closed']): ?>
+					{L('closed')}
+					<?php else: ?>
+					{$task_details['status_name']}
 								<?php if ($reopened): ?>
 								 &nbsp; <strong class="reopened">{L('reopened')}</strong>
 								<?php endif; ?>
-				<?php endif; ?>
-			</span>
-		</li>
-		<li>
-			<span class="label">{L('percentcomplete')}</span>
-			<span class="value">
-				<div class="progress_bar_container" style="width: 90px">
-					<span>{$task_details['percent_complete']}%</span>
-					<div class="progress_bar" style="width:{$task_details['percent_complete']}%"></div>
-				</div>
-			</span>
-		</li>
+					<?php endif; ?>
+				</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Progress -->
+		<? if (in_array('progress', $fields)): ?>
+			<li>
+				<span class="label">{L('percentcomplete')}</span>
+				<span class="value">
+					<div class="progress_bar_container" style="width: 90px">
+						<span>{$task_details['percent_complete']}%</span>
+						<div class="progress_bar" style="width:{$task_details['percent_complete']}%"></div>
+					</div>
+				</span>
+			</li>
+		<? endif; ?>
 	</ul>
 	<ul class="fieldslist">
-		<li>
-			<span class="label">{L('tasktype')}</span>
-			<span class="value">{$task_details['tasktype_name']}</span>
-		</li>
-		<li>
-			<span class="label">{L('category')}</span>
-			<span class="value">
-				<?php foreach ($parent as $cat): ?>
-				{$cat['category_name']} &#8594;
-				<?php endforeach; ?>
-				{$task_details['category_name']}
-			</span>
-		</li>
-		<li>
-			<span class="label">{L('assignedto')}</span>
-			<span class="value">
-				<?php if (empty($assigned_users)): ?>
-				{L('noone')}
-				<?php else:
-				foreach ($assigned_users as $userid):
-				?>
-				{!tpl_userlink($userid)}<br />
-				<?php endforeach;
-				endif; ?>
-			</span>
-		</li>
-		<li>
-			<span class="label">{L('operatingsystem')}</span>
-			<span class="value">{$task_details['os_name']}</span>
-		</li>
-		<li>
-			<span class="label">{L('severity')}</span>
-			<span class="value">{$task_details['severity_name']}</span>
-		</li>
-		<li>
-			<span class="label">{L('priority')}</span>
-			<span class="value">{$task_details['priority_name']}</span>
-		</li>
-		<li>
-			<span class="label">{L('reportedversion')}</span>
-			<span class="value">{$task_details['reported_version_name']}</span>
-		</li>
-		<li>
-			<span class="label">{L('dueinversion')}</span>
-			<span class="value"><?php if ($task_details['due_in_version_name']): ?>
-				{$task_details['due_in_version_name']}
-				<?php else: ?>
-				{L('undecided')}
-				<?php endif; ?>
-			</span>
-		</li>
-		<li>
-			<span class="label">{L('duedate')}</span>
-			<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
-		</li>
+		<!-- Task Type-->
+		<? if (in_array('tasktype', $fields)): ?>
+			<li>
+				<span class="label">{L('tasktype')}</span>
+				<span class="value">{$task_details['tasktype_name']}</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Category -->
+		<? if (in_array('category', $fields)): ?>
+			<li>
+				<span class="label">{L('category')}</span>
+				<span class="value">
+					<?php foreach ($parent as $cat): ?>
+					{$cat['category_name']} &#8594;
+					<?php endforeach; ?>
+					{$task_details['category_name']}
+				</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Assigned To-->
+		<? if (in_array('assignedto', $fields)): ?>
+			<li>
+				<span class="label">{L('assignedto')}</span>
+				<span class="value">
+					<?php if (empty($assigned_users)): ?>
+					{L('noone')}
+					<?php else:
+					foreach ($assigned_users as $userid):
+					?>
+					{!tpl_userlink($userid)}<br />
+					<?php endforeach;
+					endif; ?>
+				</span>
+			</li>
+		<? endif; ?>
+
+		<!-- OS -->
+		<? if (in_array('os', $fields)): ?>
+			<li>
+				<span class="label">{L('operatingsystem')}</span>
+				<span class="value">{$task_details['os_name']}</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Severity -->
+		<? if (in_array('severity', $fields)): ?>
+			<li>
+				<span class="label">{L('severity')}</span>
+				<span class="value">{$task_details['severity_name']}</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Priority -->
+		<? if (in_array('priority', $fields)): ?>
+			<li>
+				<span class="label">{L('priority')}</span>
+				<span class="value">{$task_details['priority_name']}</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Reported In -->
+		<? if (in_array('reportedin', $fields)): ?>
+			<li>
+				<span class="label">{L('reportedversion')}</span>
+				<span class="value">{$task_details['reported_version_name']}</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Due -->
+		<? if (in_array('dueversion', $fields)): ?>
+			<li>
+				<span class="label">{L('dueinversion')}</span>
+				<span class="value"><?php if ($task_details['due_in_version_name']): ?>
+					{$task_details['due_in_version_name']}
+					<?php else: ?>
+					{L('undecided')}
+					<?php endif; ?>
+				</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Due Date -->
+		<? if (in_array('duedate', $fields)): ?>
+			<li>
+				<span class="label">{L('duedate')}</span>
+				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
+			</li>
+		<? endif; ?>
 	</ul>
 	<ul class="fieldslist">
-		<li class="votes">
-			<span class="label">{L('votes')}</span>
-			<span class="value">
+		<!-- Votes-->
+		<? if (in_array('votes', $fields)): ?>
+			<li class="votes">
+				<span class="label">{L('votes')}</span>
+				<span class="value">
 					<?php if (count($votes)): ?>
 					<a href="javascript:showhidestuff('showvotes')">{count($votes)} </a>
 					<div id="showvotes" class="hide">
@@ -201,11 +247,15 @@
 					<?php elseif ($user->can_vote($task_details) == -3): ?>
 					({L('alreadyvotedthisday')})
 					<?php endif; ?>
-			</span>
-		</li>
-		<li>
-			<span class="label">{L('private')}</span>
-			<span class="value">
+				</span>
+			</li>
+		<? endif; ?>
+
+		<!-- Private -->
+		<? if (in_array('private', $fields)): ?>
+			<li>
+				<span class="label">{L('private')}</span>
+				<span class="value">
 						<?php if ($task_details['mark_private']): ?>
 						{L('yes')}
 						<?php else: ?>
@@ -219,12 +269,16 @@
 						<a href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=makeprivate&amp;task_id={$task_details['task_id']}">
 							 ({L('makeprivate')})</a>
 						<?php endif; ?>
-			</span>
-		</li>
+				</span>
+			</li>
+		<? endif; ?>
+
+
+		<!-- Watching -->
 		<?php if (!$user->isAnon()): ?>
-		<li>
-			<span class="label">{L('watching')}</span>
-			<span class="value">
+			<li>
+				<span class="label">{L('watching')}</span>
+				<span class="value">
 							<?php if ($watched): ?>
 								{L('yes')}
 							<?php else: ?>
@@ -236,8 +290,8 @@
 							<?php else: ?>
 								<a accesskey="w" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;task_id={$task_details['task_id']}&amp;action=remove_notification&amp;ids={$task_details['task_id']}&amp;user_id={$user->id}"> ({L('stopwatching')})</a>
 							<?php endif; ?>
-			</span>
-		</li>
+				</span>
+			</li>
 		<?php endif; ?>
 	 </ul>
 

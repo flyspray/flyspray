@@ -4,6 +4,9 @@
 	<div class="clear"></div>
 </div>
 
+<!-- Grab fields wanted for this project so we can only show those we want -->
+<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
+
 <div id="taskdetails">
 	 <div>
 		<input type="hidden" name="action" value="details.update" />
@@ -13,39 +16,65 @@
 
     <div id="taskfields">
       <ul class="form_elements slim">
-				<li>
-					<label for="status">{L('status')}</label>
-					<select id="status" name="item_status">
-					 {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status']))}
-					</select>
-				</li>
+                <!-- Status -->
+                <? if (in_array('status', $fields)) { ?>
+			<li>
+                <? } else { ?>
+			<li style="display:none">
+		<? } ?>
 
-				<li>
-					<label for="percent">{L('percentcomplete')}</label>
-					<select id="percent" name="percent_complete">
-					 <?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
-					 {!tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete']))}
-					</select>
-				</li>
-				
-				<li>
-					<label for="tasktype">{L('tasktype')}</label>
-					<select id="tasktype" name="task_type">
-					 {!tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type']))}
-					</select>
-				</li>
-	
-				<li>
-					<label for="category">{L('category')}</label>
-					<select id="category" name="product_category">
-					 {!tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category']))}
-					</select>
-				</li>
-	
-				<li>
-					<label>{L('assignedto')}</label>
-									<?php if ($user->perms('edit_assignments')): ?>
-	
+				<label for="status">{L('status')}</label>
+				<select id="status" name="item_status">
+				 {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status']))}
+				</select>
+			</li>
+
+                <!-- Progress -->
+                <? if (in_array('progress', $fields)) { ?>
+			<li>
+                <? } else { ?>
+			<li style="display:none">
+		<? } ?>
+				<label for="percent">{L('percentcomplete')}</label>
+				<select id="percent" name="percent_complete">
+				 <?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
+				 {!tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete']))}
+				</select>
+			</li>
+
+                <!-- Task Type-->
+                <? if (in_array('tasktype', $fields)) { ?>
+			<li>
+                <? } else { ?>
+			<li style="display:none">
+		<? } ?>
+				<label for="tasktype">{L('tasktype')}</label>
+				<select id="tasktype" name="task_type">
+				 {!tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type']))}
+				</select>
+			</li>
+
+                <!-- Category -->
+                <? if (in_array('category', $fields)) { ?>
+			<li>
+                <? } else { ?>
+			<li style="display:none">
+		<? } ?>
+				<label for="category">{L('category')}</label>
+				<select id="category" name="product_category">
+				 {!tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category']))}
+				</select>
+			</li>
+
+                <!-- Assigned To-->
+                <? if (in_array('assignedto', $fields)) { ?>
+			<li>
+                <? } else { ?>
+			<li style="display:none">
+		<? } ?>
+				<label>{L('assignedto')}</label>
+								<?php if ($user->perms('edit_assignments')): ?>
+
 					<input type="hidden" name="old_assigned" value="{$old_assigned}" />
 									<?php $this->display('common.multiuserselect.tpl'); ?>
 									<?php else: ?>
@@ -59,62 +88,97 @@
 											 endif; ?>
 									<?php endif; ?>
 				</li>
-	
+
+                <!-- OS -->
+                <? if (in_array('os', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="os">{L('operatingsystem')}</label>
 					<select id="os" name="operating_system">
 					 {!tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system']))}
 					</select>
 				</li>
-	
+
+                <!-- Severity -->
+                <? if (in_array('severity', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="severity">{L('severity')}</label>
 					<select id="severity" name="task_severity">
 					 {!tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity']))}
 					</select>
 				</li>
-	
+
+                <!-- Priority -->
+                <? if (in_array('priority', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="priority">{L('priority')}</label>
 					<select id="priority" name="task_priority">
 					 {!tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority']))}
 					</select>
 				</li>
-	
+
+                <!-- Reported In -->
+                <? if (in_array('reportedin', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="reportedver">{L('reportedversion')}</label>
 					<select id="reportedver" name="reportedver">
 					{!tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version']))}
 					</select>
 				</li>
-	
+
+                <!-- Due -->
+                <? if (in_array('dueversion', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="dueversion">{L('dueinversion')}</label>
 					<select id="dueversion" name="closedby_version">
 					 <option value="0">{L('undecided')}</option>
 					 {!tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version']))}
 					</select>
 				</li>
-	
+
+                <!-- Due Date -->
+                <? if (in_array('duedate', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="duedate">{L('duedate')}</label>
 					{!tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date']))}
 				</li>
-		
+
+                <!-- Private -->
 				<?php if ($user->can_change_private($task_details)): ?>
+                <? if (in_array('private', $fields)) { ?>
 				<li>
+                <? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="private">{L('private')}</label>
 					{!tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private')}
 				</li>
 				<?php endif; ?>
 
 				<li>
-					<label for="tasktype">{L('attachedtoproject')}</label>		  
+					<label for="tasktype">{L('attachedtoproject')}</label>
 					<select name="project_id">
 					{!tpl_options($fs->projects, Req::val('project_id', $proj->id))}
 					</select>
 				</li>
-				
+
 		  </ul>
 
 		<div id="fineprint">
