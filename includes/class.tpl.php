@@ -93,12 +93,16 @@ class Tpl
         }
 
         // theming part
+	// FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
+	if (strlen($this->_theme) == 0)
+	{
+	  $this->_theme = 'CleanFS/'; 
+	}
+
         if (is_readable(BASEDIR . '/themes/' . $this->_theme.$_tpl)) {
             $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.$_tpl);
         } else if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
             $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl);
-        } else {
-            $_tpl_data = file_get_contents(BASEDIR . '/templates/'.$_tpl);
         }
 
         // compilation part
