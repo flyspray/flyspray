@@ -171,10 +171,9 @@
           <li>
             <label>{L('visiblefields')}</label>
             <?php // Set the selectable field names
-            $fieldnames = array('id', 'project', 'tasktype', 'category', 'severity',
-            'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
-            'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
+            $fieldnames = array('tasktype', 'category', 'severity', 'priority', 'status',
+            'private', 'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
+            'progress', 'os', 'votes');
             $selectedfields = explode(" ", $fs->prefs['visible_fields']);
             ?>
             {!tpl_double_select('visible_fields', $fieldnames, $selectedfields, true)}
