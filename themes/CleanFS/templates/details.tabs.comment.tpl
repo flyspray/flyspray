@@ -8,10 +8,11 @@
         <!--  title="{L('commentlink')}" alt="" />-->
       </a>
       <!--{L('commentby')}--> {!tpl_userlink($comment['user_id'])} <br />
-      {formatDate($comment['date_added'], true)}
+      
       
       <br />
-      
+          <img src="http://www.gravatar.com/avatar/d89a0b6b18bd413cd0f51b93e59cc7f0?s=50.jpg"/><br>
+          {formatDate($comment['date_added'], true)}
       <span class="DoNotPrint">
         <?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
         <!--&mdash;-->
