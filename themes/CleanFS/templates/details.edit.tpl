@@ -172,7 +172,36 @@
 				</li>
 				<?php endif; ?>
 
+
+
+		<!-- If no currently selected project is not there, push it on there so don't have to change things -->
+		<?
+			$id = Req::val('project_id', $proj->id);
+
+			$selected = false;
+			foreach ($fs->projects as $value => $label)
+			{
+				if ($label[0] == $id)
+				{
+					$selected = true;
+					break;
+				}
+			}
+
+			if (! $selected)
+			{
+		                $title = '---';
+				$foo = array( $id, $title, 'project_id' => $id, 'project_title' => $title);
+				array_unshift( $fs->projects,  $foo);
+			}
+		?>
+
+		<!-- If there is only one choice of projects, then don't bother showing it -->
+		<? if (count($fs->projects) > 1) { ?>
 				<li>
+		<? } else { ?>
+				<li style="display:none">
+		<? } ?>
 					<label for="tasktype">{L('attachedtoproject')}</label>
 					<select name="project_id">
 					{!tpl_options($fs->projects, Req::val('project_id', $proj->id))}
