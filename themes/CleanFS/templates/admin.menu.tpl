@@ -5,7 +5,7 @@
      <?php if(isset($_GET['area']) and $_GET['area'] == 'prefs') echo $activeclass; ?>
      href="{CreateURL('admin', 'prefs')}">{L('preferences')}</a>
   <a id="globuglink"
-     <?php if(isset($_GET['area']) and in_array($_GET['area'], array('groups','newuser','newgroup','editgroup', 'users'))) echo $activeclass; ?>
+     <?php if(isset($_GET['area']) and in_array($_GET['area'], array('groups','newuser', 'newuserbulk', 'newgroup','editgroup', 'users'))) echo $activeclass; ?>
      href="{CreateURL('admin', 'groups')}">{L('usersandgroups')}</a>
   <a id="globttlink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'tasktype') echo $activeclass; ?>

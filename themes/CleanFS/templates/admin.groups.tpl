@@ -4,6 +4,9 @@
     <!--<img src="{$this->get_image('personal')}" alt="" class="middle" /> --><a href="{CreateURL('admin', 'newuser', $proj->id)}">{L('newuser')}</a>
   </p>
   <p>
+    <!--<img src="{$this->get_image('personal')}" alt="" class="middle" /> --><a href="{CreateURL('admin', 'newuserbulk', $proj->id)}">{L('newuserbulk')}</a>
+  </p>
+  <p>
     <!--<img src="{$this->get_image('kuser')}" alt="" class="middle" />--> <a href="{CreateURL('admin', 'newgroup', $proj->id)}">{L('newgroup')}</a>
   </p>
   
