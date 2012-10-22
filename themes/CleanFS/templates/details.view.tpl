@@ -161,7 +161,11 @@
 					<?php else:
 					foreach ($assigned_users as $userid):
 					?>
-					{!tpl_userlink($userid)}<br />
+					<?php if($fs->prefs['gravatars'] == 1) {?>
+					{!tpl_userlinkgravatar($userid, 25)}
+					<?php } else { ?>
+					{!tpl_userlink($userid)}
+					<?php } ?>
 					<?php endforeach;
 					endif; ?>
 				</span>
