@@ -298,6 +298,29 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
+function tpl_userlinkgravatar($uid, $size, $float = '', $padding = '')
+{
+    global $db, $user;
+	if (is_array($uid)) {
+        list($uid, $uname, $rname) = $uid;
+	}
+        $sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
+                           array(intval($uid)));
+        if ($sql && $db->countRows($sql)) {
+            list($uname, $rname, $email) = $db->fetchRow($sql);
+        }
+	$email = md5(strtolower(trim($email)));
+	$image = "<img src='http://www.gravatar.com/avatar/".$email."?s=".$size."'/>";
+    if (isset($uname)) {
+        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+        //$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
+        $link = "<a style='float: ".$float."; padding: ".$padding."' href=".$url." title='".$rname."'>".$image."</a>";
+    }
+
+    return $link;
+}
+
+
 function tpl_fast_tasklink($arr)
 {
     return tpl_tasklink($arr[1], $arr[0]);

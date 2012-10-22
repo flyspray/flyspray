@@ -11,11 +11,14 @@
       
       
       <br />
-          <img src="http://www.gravatar.com/avatar/d89a0b6b18bd413cd0f51b93e59cc7f0?s=50.jpg"/><br>
+      <?php if($fs->prefs['gravatars'] == 1) {?>
+         {!tpl_userlinkgravatar($comment['user_id'], 50, 'left', '5px')}
+        <?php } ?>
           {formatDate($comment['date_added'], true)}
       <span class="DoNotPrint">
         <?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
         <!--&mdash;-->
+        <br>
         <a href="{$_SERVER['SCRIPT_NAME']}?do=editcomment&amp;task_id={$task_details['task_id']}&amp;id={$comment['comment_id']}">
           {L('edit')}</a>
         <?php endif; ?>

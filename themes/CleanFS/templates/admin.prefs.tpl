@@ -36,6 +36,13 @@
         </li>
 
         <li>
+          <label for="gravatars">{L('showgravatars')}</label>
+          <!-- <input id="gravatars" name="gravatars" type="checkbox" class="text" size="40" maxlength="30" value="{$fs->prefs['gravatars']}" />
+        	-->
+        	{!tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars')}
+        </li>
+        
+        <li>
           <label for="dateformat">{L('dateformat')}</label>
           <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['dateformat']}" />
         </li>   

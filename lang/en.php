@@ -78,6 +78,7 @@ $language = array(
 'defaultproject'          => 'Default Project',
 'projectlists'            => 'Project lists',
 'showlogo'                => 'Show title logo image',
+'showgravatars'			  => 'Show Gravatars',
 'intromessage'            => 'Introductory message',
 'isactive'                => 'Project is active',
 'createproject'           => 'Create a new Project',
