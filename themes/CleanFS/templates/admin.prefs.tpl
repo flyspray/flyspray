@@ -37,8 +37,6 @@
 
         <li>
           <label for="gravatars">{L('showgravatars')}</label>
-          <!-- <input id="gravatars" name="gravatars" type="checkbox" class="text" size="40" maxlength="30" value="{$fs->prefs['gravatars']}" />
-        	-->
         	{!tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars')}
         </li>
         
