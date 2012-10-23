@@ -8,13 +8,17 @@
         <!--  title="{L('commentlink')}" alt="" />-->
       </a>
       <!--{L('commentby')}--> {!tpl_userlink($comment['user_id'])} <br />
-      {formatDate($comment['date_added'], true)}
+      
       
       <br />
-      
+      <?php if($fs->prefs['gravatars'] == 1) {?>
+         {!tpl_userlinkgravatar($comment['user_id'], 50, 'left', '5px')}
+        <?php } ?>
+          {formatDate($comment['date_added'], true)}
       <span class="DoNotPrint">
         <?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
         <!--&mdash;-->
+        <br>
         <a href="{$_SERVER['SCRIPT_NAME']}?do=editcomment&amp;task_id={$task_details['task_id']}&amp;id={$comment['comment_id']}">
           {L('edit')}</a>
         <?php endif; ?>
