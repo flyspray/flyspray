@@ -571,23 +571,23 @@ abstract class Backend
 
         // Send a user his details (his username might be altered, password auto-generated)
         if ($fs->prefs['notify_registration']) {
+            // Gather list of admin users
             $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
-                                WHERE g.group_id = 1');
+                                 WHERE g.group_id = 1');
 
             // If the new user is not an admin, add him to the notification list
             $users_to_notify = $db->FetchCol($sql);
-            if (! in_array($email, $users_to_notify, true))
+            if (! in_array($email, $users_to_notify))
             {
                 array_push($users_to_notify, $email);
             }
 
             // Notify the appropriate users
-
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
-                            $db->FetchCol($sql), NOTIFY_EMAIL);
+                            $users_to_notify, NOTIFY_EMAIL);
         }
 
         return true;
