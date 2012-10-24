@@ -9,6 +9,9 @@
   <p>
     <!--<img src="{$this->get_image('kuser')}" alt="" class="middle" />--> <a href="{CreateURL('admin', 'newgroup', $proj->id)}">{L('newgroup')}</a>
   </p>
+  <p>
+    <!--<img src="{$this->get_image('personal')}" alt="" class="middle" /> --><a href="{CreateURL('admin', 'editallusers', $proj->id)}">{L('editallusers')}</a>
+  </p>
   
   <div class="groupedit">
     <form action="{$baseurl}index.php" method="get">

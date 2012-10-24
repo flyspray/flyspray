@@ -47,6 +47,7 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'groups':
     case 'newuser':
     case 'newuserbulk':
+    case 'editallusers':
         $page->assign('groups', Flyspray::ListGroups());
     case 'newproject':
     case 'os':
