@@ -1,5 +1,28 @@
 <h1>FIXME: This page is still being built and does not yet workd</h1>
 
+
+<!--
+
+  ==================
+  Spec for this page
+  ==================
+
+  Show all users with:
+  - Name, email, etc
+  - Groups
+  - Disabled or enabled
+  - ??
+
+  Functionlity:
+  - Bulk enable/disable users view checkbox & dropdown
+  - Bulk reset password
+  - Bulk send user password
+  - Bulk change group
+  - Bulk delete users
+
+-->
+
+
 <form action="<?php if ($do == 'admin'): ?>{CreateURL($do, 'editallusers')}<?php else: ?>{$_SERVER['SCRIPT_NAME']}<?php endif; ?>" method="post" id="registernewuser">
   <ul class="form_elements">
     <li class="required">
