@@ -1266,6 +1266,23 @@ fieldset.advsearch_users input {
 .bulkuser {
   padding-left: 120px;
 }
+
+.bulkedituser{
+	padding-left: 120px;
+}
+.account_header{
+	background: #999;
+	border: 1px solid #111;
+}
+.account_enabled{
+	background: #EAF7D9;
+	border: 1px solid #BBDF8D;
+}
+.account_disabled{
+	background: #FFD1D1;
+	border: 1px solid #F8ACAC;
+}
+
 ul.form_elements {
   list-style: none;
   padding: 0;

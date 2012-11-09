@@ -531,6 +531,76 @@ switch ($action = Req::val('action'))
         break;
 
 
+    // ##################
+    // Bulk User Edit Form
+    // ##################
+    case 'admin.editallusers':
+        if (!($user->perms('is_admin'))) {
+            break;
+        }
+	echo "x"; // FIXME
+	break;
+
+        $group_in = Post::val('group_in');
+        $error = '';
+        $noUsers = true;
+
+        // For each user in post, add them
+        for ($i = 0 ; $i < 10 ; $i++)
+        {
+            $user_name     = Post::val('user_name' . $i);
+            $real_name     = Post::val('real_name' . $i);
+            $email_address = Post::val('email_address' . $i);
+
+
+            if( $user_name == '' || $real_name == '' || $email_address == '')
+            {
+                continue;
+            }
+            else
+            {
+                $noUsers = false;
+            }
+
+            // Avoid dups
+            $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE email_address = ?",
+                              array($email_address));
+
+            if ($db->fetchOne($sql))
+            {
+                $error .= "\n" . L('emailtakenbulk') . ": $email_address\n";
+                continue;
+            }
+
+            if (!Backend::create_user($user_name, Post::val('user_pass'),
+                                  $real_name, '', $email_address, Post::num('notify_type'),
+                                  Post::num('time_zone'), $group_in))
+            {
+                $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
+                continue;
+            }
+        }
+
+        if ($error != '')
+        {
+          Flyspray::show_error($error);
+        }
+        else if ( $noUsers == true)
+        {
+          Flyspray::show_error(L('nouserstoadd'));
+        }
+        else
+        {
+          $_SESSION['SUCCESS'] = L('newusercreated');
+          if (!$user->perms('is_admin')) {
+              define('NO_DO', true);
+              $page->pushTpl('register.ok.tpl');
+          }
+        }
+        break;
+
+
+
 
 
     // ##################

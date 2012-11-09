@@ -432,7 +432,25 @@ class Flyspray
                             WHERE  project_id = ?
                          ORDER BY  group_id ASC', array($proj_id));
         return $db->FetchAllArray($res);
+    } // }}}
+
+    // Get info on all users {{{
+    /**
+     * Returns a list of a project's groups
+     * @param integer $proj_id
+     * @access public static
+     * @return array
+     * @version 1.0
+     */
+    public static function listUsers()
+    {
+        global $db;
+        $res = $db->Query('SELECT  account_enabled, user_id, user_name, real_name, email_address
+                             FROM  {users}
+                         ORDER BY  account_enabled DESC, user_name ASC');
+        return $db->FetchAllArray($res);
     }
+
     // }}}
     // List languages {{{
     /**
