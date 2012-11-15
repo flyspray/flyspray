@@ -1267,9 +1267,6 @@ fieldset.advsearch_users input {
   padding-left: 120px;
 }
 
-.bulkedituser{
-	padding-left: 120px;
-}
 .account_header{
 	background: #999;
 	border: 1px solid #111;
@@ -1278,9 +1275,15 @@ fieldset.advsearch_users input {
 	background: #EAF7D9;
 	border: 1px solid #BBDF8D;
 }
+.account_enabled:hover {
+	background: #00FF00;
+}
 .account_disabled{
 	background: #FFD1D1;
 	border: 1px solid #F8ACAC;
+}
+.account_disabled:hover {
+	background: #FF0000;
 }
 
 ul.form_elements {

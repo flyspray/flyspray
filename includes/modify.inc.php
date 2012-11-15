@@ -535,71 +535,45 @@ switch ($action = Req::val('action'))
     // Bulk User Edit Form
     // ##################
     case 'admin.editallusers':
+
         if (!($user->perms('is_admin'))) {
             break;
         }
-	echo "x"; // FIXME
-	break;
 
-        $group_in = Post::val('group_in');
-        $error = '';
-        $noUsers = true;
+        $users = Post::val('checkedUsers');
 
-        // For each user in post, add them
-        for ($i = 0 ; $i < 10 ; $i++)
-        {
-            $user_name     = Post::val('user_name' . $i);
-            $real_name     = Post::val('real_name' . $i);
-            $email_address = Post::val('email_address' . $i);
+	if (count($users) == 0)
+	{
+        	Flyspray::show_error(L('nouserselected'));
+		break;
+	}
 
 
-            if( $user_name == '' || $real_name == '' || $email_address == '')
-            {
-                continue;
-            }
-            else
-            {
-                $noUsers = false;
-            }
+	// Make array of users to modify
+	$ids = "(" . $users[0];
+	for ($i = 1 ; $i < count($users) ; $i++)
+	{
+		$ids .= ", " . $users[$i];
+	}
+	$ids .= ")";
 
-            // Avoid dups
-            $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE email_address = ?",
-                              array($email_address));
-
-            if ($db->fetchOne($sql))
-            {
-                $error .= "\n" . L('emailtakenbulk') . ": $email_address\n";
-                continue;
-            }
-
-            if (!Backend::create_user($user_name, Post::val('user_pass'),
-                                  $real_name, '', $email_address, Post::num('notify_type'),
-                                  Post::num('time_zone'), $group_in))
-            {
-                $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
-                continue;
-            }
-        }
-
-        if ($error != '')
-        {
-          Flyspray::show_error($error);
-        }
-        else if ( $noUsers == true)
-        {
-          Flyspray::show_error(L('nouserstoadd'));
-        }
-        else
-        {
-          $_SESSION['SUCCESS'] = L('newusercreated');
-          if (!$user->perms('is_admin')) {
-              define('NO_DO', true);
-              $page->pushTpl('register.ok.tpl');
-          }
-        }
+	// Grab the action
+	if (isset($_POST['enable']))
+	{
+		$sql = $db->Query("UPDATE {users} SET account_enabled = 1 WHERE user_id IN $ids");
+	}
+	else if (isset($_POST['disable']))
+	{
+		$sql = $db->Query("UPDATE {users} SET account_enabled = 0 WHERE user_id IN $ids");
+	}
+	else if (isset($_POST['delete']))
+	{
+		$sql = $db->Query("DELETE FROM {users} WHERE user_id IN $ids");
+	}
+	
+	// Show success message and exit
+        $_SESSION['SUCCESS'] = L('usersupdated');
         break;
-
-
 
 
 

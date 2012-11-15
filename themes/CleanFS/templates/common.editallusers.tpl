@@ -1,28 +1,3 @@
-<h1>FIXME: This page is still being built and does not yet workd</h1>
-
-
-<!--
-
-  ==================
-  Spec for this page
-  ==================
-
-  Show all users with:
-  - Name, email, etc
-  - Groups
-  - Disabled or enabled
-  - ??
-
-  Functionlity:
-  - Bulk enable/disable users view checkbox & dropdown
-  - Bulk reset password
-  - Bulk send user password
-  - Bulk change group
-  - Bulk delete users
-
--->
-
-
 <form action="<?php if ($do == 'admin'): ?>{CreateURL($do, 'editallusers')}<?php else: ?>{$_SERVER['SCRIPT_NAME']}<?php endif; ?>" method="post" id="editallusers">
   <ul class="form_elements">
     <li class="required">
@@ -41,6 +16,7 @@
 		        <td><label for="emailaddress"><b>{L('emailaddress')}</b></label></td>
 		</tr>
 	<?php
+		/* FIXME: each TR should have an onclick that selects/deselects the checkbox for that user */
 		foreach (Flyspray::ListUsers() as $user)
 		{ 
 			if ( $user['account_enabled'] )
@@ -54,7 +30,7 @@
         ?>
 
 
-		        <td><input type="checkbox" name"<?= $user['user_id'] ?>"></td>
+		        <td><input type="checkbox" name="checkedUsers[]" value="<?= $user['user_id'] ?>"></td>
 		        <td><a href=<?= CreateURL('edituser', $user['user_id'] )?>><?= $user['real_name'] ?></a></td>
 		        <td><?= $user['user_name'] ?></td>
 		        <td><?= $user['email_address'] ?></td>
@@ -68,13 +44,13 @@
 
     </table>
 
-
     <br />
 
-    <button type="submit" id="buSubmit">{L('Enable Accounts')}</button>
-    <button type="submit" id="buSubmit">{L('Disable Accounts')}</button>
-    <button type="submit" id="buSubmit">{L('Delete Accounts')}</button>
+    <button type="submit" id="buSubmit" name="enable">{L('enableaccounts')}</button>
+    <button type="submit" id="buSubmit" name="disable">{L('disableaccounts')}</button>
+    <button type="submit" id="buSubmit" name="delete">{L('deleteaccounts')}</button>
 
+<!-- FIXME: Should still add these to bulk edit, but hasn't been done yet
     <li>
       <label for="notify_type">{L('notifications')}</label>
       <select id="notify_type" name="notify_type">
@@ -106,4 +82,5 @@
 
   </ul>
   <p><button type="submit" id="buSubmit">{L('Update Accounts')}</button></p>
+-->
 </form>
