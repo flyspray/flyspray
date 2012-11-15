@@ -62,7 +62,7 @@
   <div id="container">
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="{$baseurl}">
-	<?php if ($fs->prefs['logo'] != '') { ?>
+	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>
 		<img src="{$fs->prefs['logo']}">
 	<?php } ?>
 	{$proj->prefs['project_title']}
