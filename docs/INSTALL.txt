@@ -8,7 +8,7 @@ Preparing for install
     *
       Install PHP, MySQL or PostgreSQL, and a web server (like Apache). The latest versions of each should work nicely.
     *
-      For MySQL installations, it’s a good idea to install the MySQL Administratior and MySQL Query Browser. Both can be found here: http://dev.mysql.com/downloads/gui-tools/5.0.html
+      For MySQL installations, it's a good idea to install the MySQL Administratior and MySQL Query Browser. Both can be found here: http://dev.mysql.com/downloads/gui-tools/5.0.html
     *
       A good tutorial on how to get Apache, PHP, and MySQL working together is here: http://www.tanguay.at/installPhp5.php5?step=1
     *
@@ -50,7 +50,7 @@ If you would like to enable support for the local Task Dependency Graphs feature
 After installation
 
     *
-      Click the ‘Manage Project’ link to set up your project preferences, user groups and lists.
+      Click the 'Manage Project' link to set up your project preferences, user groups and lists.
     *
       Close the sample task, and start adding your own, real tasks.
     *
