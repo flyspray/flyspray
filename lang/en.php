@@ -2,6 +2,7 @@
 
 $language = array(
 'edituser'                => 'Edit user',
+'accountenabled'          => 'Account Enabled',
 'editallusers'            => 'View All Users',
 'username'                => 'Username',
 'usersupdated'            => 'Users sucessfully updated',
