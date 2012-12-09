@@ -103,7 +103,11 @@ class Tpl
             $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.$_tpl);
         } else if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
             $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl);
-        }
+        } else
+	{
+            // This is needed to catch times when there is no theme (for example setup pages)
+            $_tpl_data = file_get_contents(BASEDIR . "/templates/" . $_tpl);
+	}
 
         // compilation part
         $_tpl_data = preg_split('!(<\?php.*\?>)!sU', $_tpl_data, -1,
