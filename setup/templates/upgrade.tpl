@@ -71,7 +71,7 @@
     <div id="footer">
       <p>
         Flyspray {$fs->version} [Fly Flapper]<br />
-        Copyright 2004-{date('Y')} &copy; Tony Collins and the Flyspray team.  All rights reserved.
+        Copyright 2004-{date('Y')} &copy; The Flyspray team.  All rights reserved.
       </p>
     </div><!-- End of footer -->
   </div><!-- End of container -->
