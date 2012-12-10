@@ -167,7 +167,7 @@
             $columnnames = array('id', 'project', 'tasktype', 'category', 'severity',
             'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
             'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
+            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'parent');
             $selectedcolumns = explode(" ", $fs->prefs['visible_columns']);
             ?>
             {!tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true)}
@@ -177,7 +177,7 @@
             <label>{L('visiblefields')}</label>
             <?php // Set the selectable field names
             $fieldnames = array('tasktype', 'category', 'severity', 'priority', 'status', 'private',
-            'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
+            'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes', 'parent');
             $selectedfields = explode(" ", $fs->prefs['visible_fields']);
             ?>
             {!tpl_double_select('visible_fields', $fieldnames, $selectedfields, true)}

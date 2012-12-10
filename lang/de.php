@@ -828,7 +828,15 @@ $translation = array(
 'notaskdependencies'      => 'Diese Aufgabe hängt von keiner anderen Aufgabe ab.',
 'dependson'               => 'Abhängig von',
 'blocks'                  => 'Blocks',
-'newdependency'           => 'Neue Abhängigkeit:'
+'newdependency'           => 'Neue Abhängigkeit:',
+'setparent'               => 'Übergeordnete Aufgabe setzen:',
+'parentmodified'          => 'Übergeordnete Aufgabe geändert',
+'set'                     => 'Setzen',
+'parenttask'              => 'Übergeordnete Aufgabe',
+'addnewsubtask'           => 'Neue untergeordnete Aufgabe',
+'addnewsubtaskin'         => 'Neue untergeordnete Aufgabe in',
+'hidesubtasks'            => 'Untergeordnete Aufgaben ausblenden',
+'selfparentnotallowed'    => 'Übergeordnete Aufgabe darf nicht ident mit der Aufgabe selbst sein',
 );
 
 ?>

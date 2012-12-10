@@ -60,6 +60,22 @@
 				>
 
   <div id="container">
+    <div id="showparentid" style="display: inline; position: absolute; top: 5px; left: 5px; color: white;">
+        <h4 style="display: inline; color: lightgreen;">
+        <?php 
+            $task_description = '';
+            if (isset($task_details) && $task_details['parent_id']) {
+                $task_description = L('parenttask') . ': ' . tpl_tasklink($task_details['parent_id'], null, true, array('style' => 'color: lightblue;'));
+            }
+            else
+            if (isset($parent_id) && $parent_id) {
+                $task_description = L('parenttask') . ': ' . tpl_tasklink($parent_id, null, true, array('style' => 'color: lightblue;'));
+            }
+            echo $task_description;
+        ?>
+        </h4>
+    </div>
+
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="{$baseurl}">
 	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>

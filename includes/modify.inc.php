@@ -1682,5 +1682,47 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('voteremovefailed'));
             break;
         }
+
+    // ##################
+    // set parent id
+    // ##################
+    case 'details.setparent':
+        if (!$user->can_edit_task($task)) {
+            break;
+        }
+
+        if (!Post::val('parent_id')) {
+            Flyspray::show_error(L('formnotcomplete'));
+            break;
+        }
+
+        // check that parent_id is not same as task_id
+        //  (prevent to refer to it self)
+        if ($task['task_id'] == Post::val('parent_id')) {
+            Flyspray::show_error(L('selfparentnotallowed'));
+            break;
+        }
+
+        // TODO: check that parent_id is a valid task id
+        //  (btw: what if a task is deleted later which was a parent?)
+
+        // TODO: check that task_id is not in the chain of parents
+        //  (for preventing cyclical dependencies)
+
+        // TODO: send notifications
+
+        // TODO: log in task history
+
+        // update the task's data in database
+        $db->Query('UPDATE  {tasks}
+                       SET  parent_id = ?
+                     WHERE  task_id = ?', 
+                     array(Post::val('parent_id'), $task['task_id']));
+
+        // set success message
+        $_SESSION['SUCCESS'] = L('parentmodified');
+
+        break;
+
 }
 ?>

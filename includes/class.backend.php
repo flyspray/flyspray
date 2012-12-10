@@ -769,6 +769,11 @@ abstract class Backend
             return 0;
         }
 
+        $parent_id = 0;
+        if (isset($args['parent_id'])) {
+            $parent_id = $args['parent_id'];
+        }
+
         // Some fields can have default values set
         if (!$user->perms('modify_all_tasks')) {
             $args['closedby_version'] = 0;
@@ -823,6 +828,9 @@ abstract class Backend
         }
 
         $sql_params = join(', ', $sql_params);
+
+        array_unshift($sql_values, $parent_id);
+
         // +1 for the task_id column;
         $sql_placeholder = $db->fill_placeholders($sql_values, 1);
 
@@ -834,7 +842,7 @@ abstract class Backend
         array_unshift($sql_values, $task_id);
 
         $result = $db->Query("INSERT INTO  {tasks}
-                                 ( task_id, date_opened, last_edited_time,
+                                 ( task_id, parent_id, date_opened, last_edited_time,
                                    project_id, item_summary,
                                    detailed_desc, opened_by,
                                    percent_complete, $sql_params )
@@ -1074,6 +1082,10 @@ abstract class Backend
             $where[] = 'att.attachment_id IS NOT NULL';
         }
 
+        if (array_get($args, 'hide_subtasks')) {
+            $where[] = 't.parent_id = 0';
+        }
+
         if ($proj->id) {
             $where[]       = 't.project_id = ?';
             $sql_params[]  = $proj->id;
@@ -1102,6 +1114,7 @@ abstract class Backend
                 'attachments'  => 'num_attachments',
                 'comments'     => 'num_comments',
                 'private'      => 'mark_private',
+                'parent'       => 't.parent_id',
         );
 
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)

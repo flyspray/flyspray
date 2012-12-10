@@ -851,7 +851,15 @@ Regards,',
 'dependson'               => 'Depends on',
 'blocks'                  => 'Blocks',
 'newdependency'           => 'New dependency:',
-'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.'
+'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.',
+'setparent'               => 'Set Parent:',
+'parentmodified'          => 'Parent Task ID has been modified',
+'set'                     => 'Set',
+'parenttask'              => 'Parent',
+'addnewsubtask'           => 'Add new sub-task',
+'addnewsubtaskin'         => 'Add new sub-task in',
+'hidesubtasks'            => 'Hide sub-tasks',
+'selfparentnotallowed'    => 'parent task id cannot be same as this task id',
 );
 
 ?>
