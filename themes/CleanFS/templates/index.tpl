@@ -63,7 +63,10 @@
 		
 						{!tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment')}
 						<label class="left" for="has_attachment">{L('hasattachment')}</label>	
-					</fieldset>
+        
+                        {!tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks')}
+                        <label class="left" for="hide_subtasks">{L('hidesubtasks')}</label>   
+                    </fieldset>
 	
 					<fieldset class="advsearch_task"><legend>{L('taskproperties')}</legend>
 						<div class="search_select">

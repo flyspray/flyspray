@@ -23,6 +23,12 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 	$do = 'index';
 }
 
+// parent_id for add new sub-task
+$parent_id = 0;
+if (Req::has('parent')) {
+    $parent_id = Req::val('parent');
+}
+
 
 /* permission stuff */
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -137,6 +143,8 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 
 $page->assign('do', $do);
+$page->assign('parent_id', $parent_id);
+
 $page->pushTpl('header.tpl');
 
 // DB modifications?

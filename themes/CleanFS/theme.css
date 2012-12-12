@@ -767,6 +767,8 @@ form #taskdetails #taskfields {
   width: 335px; }
 
 form #taskdetails #taskdetailsfull {
+  position: relative; 
+  top: -20px;
   margin-left: 355px; }
 
 
@@ -1020,7 +1022,7 @@ div.error, div.success, div.mixed {
   margin: 20px 20px 0 20px;
   color: white;
   position: absolute;
-  top: 110px;
+  top: -10px;
   width: 30%;
   left: 35%; }
 
@@ -1168,6 +1170,14 @@ div#taskclosed {
 
 
 div#taskdeps {
+  float: left;
+  width: 50%;
+  margin-bottom: 8px; }
+
+
+div#childtasks {
+  display: inline; 
+  align: right;
   float: left;
   width: 50%;
   margin-bottom: 8px; }

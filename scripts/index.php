@@ -106,6 +106,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'progress'   => '',
             'os'         => 'os_name',
             'private'    => 'mark_private',
+            'parent'     => 'parent_id',
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
@@ -162,6 +163,10 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
+            break;
+
+        case 'parent':
+            $value = tpl_tasklink($task, $task['parent_id']);
             break;
 
         default:

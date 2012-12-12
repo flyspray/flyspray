@@ -1,6 +1,11 @@
 <!--<h3>{$proj->prefs['project_title']} :: {L('newtask')}</h3>-->
-
-<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id)}" method="post">
+<?php
+    if (!isset($parent_id)) {
+        $parent_id = 0;
+    }
+?>
+<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id, $parent_id)}" method="post">
+  <input type="hidden" name="parent_id" value="{$parent_id}" />
   <div id="actionbar">
     <button class="button positive main" accesskey="s" type="submit">{L('addthistask')}</button>
     <div class="clear"></div>
