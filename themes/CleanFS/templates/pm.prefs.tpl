@@ -104,10 +104,10 @@
         <li>
           <label>{L('visiblecolumns')}</label>
           <?php // Set the selectable column names
-          $columnnames = array('id', 'tasktype', 'category', 'severity',
+          $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
           'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
           'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'parent_id');
+          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
           $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
           ?>
           {!tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true)}
@@ -115,8 +115,8 @@
         <li>
           <label>{L('visiblefields')}</label>
           <?php // Set the selectable field names
-          $fieldnames = array('tasktype', 'category', 'severity', 'priority', 'status', 'private',
-          'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes', 'parent_id');
+          $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
+          'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
           $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
           ?>
           {!tpl_double_select('visible_fields', $fieldnames, $selectedfields, true)}
