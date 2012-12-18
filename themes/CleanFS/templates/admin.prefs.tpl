@@ -31,6 +31,13 @@
         </li>   
 
         <li>
+          <?
+            if (! array_key_exists( 'logo', $fs->prefs) )
+            {
+              $fs->prefs['logo'] = '';
+            }
+
+          ?>
           <label for="logo">{L('showlogo')}</label>
           <input id="logo" name="logo" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['logo']}" />
         </li>
