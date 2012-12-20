@@ -1175,7 +1175,7 @@ div#taskdeps {
   margin-bottom: 8px; }
 
 
-div#childtasks {
+div#subtasks {
   display: inline; 
   align: right;
   float: left;
@@ -1599,3 +1599,4 @@ span.autocomplete ul li.selected {
 	margin-top: 15px;
 	min-height: 50px;
 	padding: 8px 5px; }
+

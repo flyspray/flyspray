@@ -1202,401 +1202,401 @@ a.datelink {
   width: 16px;
   vertical-align: middle; }
 
-
-hr {
-  /*color: $box_border;*/
-  border: none;
-  border-top: 1px solid #e1e1e1; }
-
-
-div#permissions {
-  width: 22em;
-  visibility: hidden;
-  position: absolute;
-  top: 25px !important;
-  top: 60px;
-  left: 0;
-  margin: 0;
-  z-index: 101;
-  padding: 5px; }
-
-  div#permissions td, div#permissions th {
-    padding: 2px 5px;
-    border: 0;
-    text-align: left;
-    font-weight: 400; }
-
-  div#permissions table {
-    color: #000;
-    background: #fff;
-    border: 1px dotted #000; }
-
-  div#permissions table thead th {
-    font-weight: 700; }
-
-  div#permissions td.good, div#permissions table td.bad {
-    text-align: right; }
-
-
-fieldset.advsearch_misc input {
-  vertical-align: middle; }
-
-fieldset.advsearch_misc label {
-  margin-right: 10px;
-  white-space: nowrap; }
-
-
-fieldset.advsearch_dates label {
-  margin: 0 5px; }
-
-
-.search_select {
-  float: left;
-  position: relative;
-  margin-right: 10px; }
-
-  .search_select .multisel {
-    position: absolute;
-    white-space: nowrap; }
-
-  .search_select select {
-    margin-top: 1.3em;
-    height: 7em; }
-
-
-fieldset.advsearch_users .multisel {
-  position: absolute;
-  white-space: nowrap; }
-
-fieldset.advsearch_users input {
-  margin-top: 1.3em; }
-
-/* --------------------------- FORMS -----------------------*/
-
-.bulkuser {
-  padding-left: 120px;
-}
-
-.account_header{
-	background: #999;
-	border: 1px solid #111;
-}
-.account_enabled{
-	background: #EAF7D9;
-	border: 1px solid #BBDF8D;
-}
-.account_enabled:hover {
-	background: #00FF00;
-}
-.account_disabled{
-	background: #FFD1D1;
-	border: 1px solid #F8ACAC;
-}
-.account_disabled:hover {
-	background: #FF0000;
-}
-
-ul.form_elements {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 1em; }
-
-  ul.form_elements li {
-    padding: 2px;
-    margin-bottom: 9px; }
-
-    ul.form_elements li label {
-      width: 200px;
-      display: -moz-inline-stack;
-      /* optional */
-      display: inline-block;
-      zoom: 1;
-      /* triggers hasLayout for IE */
-      *display: inline;
-      /* target IE7 only */
-      vertical-align: top;
-      text-align: right;
-      padding-right: 1ex;
-      padding-top: 2px;
-      color: #555555; }
-
-    ul.form_elements li label.inline {
-      display: inline; }
-
-    ul.form_elements li input {
-      vertical-align: middle; }
-
-    ul.form_elements li textarea {
-      width: 30em; }
-
-  ul.form_elements li.required label {
-    font-weight: bold; }
-
-  ul.form_elements li:hover label {
-    /*text-decoration: underline;*/ }
-
-  ul.form_elements span.note {
-    margin-left: 205px; }
-
-
-ul.wide li label {
-  width: 250px; }
-
-
-ul.slim {
-  width: 390px;
-  margin: 0; }
-
-  ul.slim li label {
-    width: 110px; }
-
-  ul.slim li div.userSelectWidget {
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-    ul.slim li div.userSelectWidget input {
-      width: 120px; }
-
-
-.dateselect {
-  clear: both; }
-
-  .dateselect label:first-child {
-    width: 120px;
-    text-align: right;
-    padding-right: 5px;
-    float: left; }
-
-/* fancy dual selects */
-
-.double_select {
-	padding-left: 100px;
-	position: relative;}
-
-  .double_select .dualselect_selectable {
-    height: 220px;
-    width: 40%;
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-  .double_select .dualselect_buttons {
-    width: 16%;
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-    .double_select .dualselect_buttons button {
-      width: 100%;
-      padding: 3px; }
-
-  .double_select .dualselect_selected {
-    height: 220px;
-    /*min-width: 12em;*/
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle;
-    width: 40%; }
-
-    .double_select .dualselect_selected select {
-      width: 100%;
-      height: 80%; }
-
-    .double_select .dualselect_selected button {
-      height: 10%;
-      width: 100%; }
-
-	.double_select .c1 select {
-      height: 24em;
-      min-width: 12em;
-      width: auto;}
-
-	.double_select td {
-	  text-align: center;
-	  vertical-align: middle;}
-
-	  .double_select .c3 button {
-		 height: 2em;
-		 width: 12em;}
-
-	  .double_select .c3 select {
-		height: 20em;
-		min-width: 12em;
-		width: auto;}
-/* closing task form */
-
-div#closeform {
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-box-shadow: 0px 1px 1px #dddddd;
-  -webkit-box-shadow: 0px 1px 1px #dddddd;
-  box-shadow: 0px 1px 1px #dddddd;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
-  padding: 2em;
-  position: absolute;
-  right: 5px;
-  top: 3em; }
-
-div#taskdeps h4 {
-  margin-bottom:0.3em;
-}
-
-div#taskdeps table {
-  margin:0 0 0.8em -0.2em;
-}
-
-div#taskdeps td {
-  padding:0.2em 0.4em;
-}
-
-div#taskdeps img {
-  vertical-align:middle;
-  margin-top:-1px;
-}
-
-input[type=text], input[type=password], select {
-    color: #000;
-    background: #fff;
-    border: 1px solid #ccc;
-    height: 19px;
-    padding: 2px;
-    vertical-align: middle;
-}
-
-input[type=submit], button {
-    background: #69C;
-    border:  1px solid #0a4193;
-    color: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 20px;
-    vertical-align: middle;
-}
-
-input[type=text], input[type=submit], button, select {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
-select {height: 23px; vertical-align: middle;}
-
-input[type=submit]:hover, button:hover {
-    background: #5F9729;
-    color: #fff;
-    border-color: #5F9729;
-}
-
-#show_loginbox {
-    background: #494D4E;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-}
-
-#menu #menu-list a#show_loginbox:hover {
-    background-color: #5f9729;
-}
-
-#login_hidelink {
-    float: right;
-    text-align: right;
-}
-
-#login_input {
-    height: 30px;
-}
-
-#login_links {
-    height: 30px;
-    padding: 5px 20px;
-}
-
-#login_button {vertical-align: baseline;}
-
-div.denyform {
-	visibility:hidden;
-	position:absolute;
-	background: none repeat scroll 0 0 #FAFAFA;
-	border: 1px solid #E1E1E1;
-	margin-top:5px;
-	display:block;
-	width:300px;
-	height:auto;
-	padding:5px 30px 5px 5px;
-}
-
-#notify_types {height: 10em;}
-
-#rassigned_to {height: 12em; }
-
-/* Stuff for the autocomplete lists {{{ */
-
-span.autocomplete {
-	background-color:#F5F5F5;
-	position: absolute;
-	width: auto !important;
-	border:1px solid gray;
-	padding: 0px;
-	margin:-1px 0 0;
-	text-align:left;
-	display:block;
-}
-
-span.autocomplete ul {
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px;
-}
-
-span.autocomplete ul li {
-	list-style-type: none;
-	display: block;
-	margin: 0;
-	padding:2px 4px;
-	height: 1.1em;
-	white-space:nowrap;
-}
-
-span.autocomplete ul li span.informal {
-	color: darkgray;
-	font-size:0.9em;
-}
-
-span.autocomplete ul li.selected {
-	background-color: #5F9729;
-	cursor:pointer;
-	color:HighlightText;
-}
-
-#actionbuttons {
-	margin-left: 300px;
-	margin-top: 15px;
-	min-height: 50px;
-	padding: 8px 5px; }
+
+hr {
+  /*color: $box_border;*/
+  border: none;
+  border-top: 1px solid #e1e1e1; }
+
+
+div#permissions {
+  width: 22em;
+  visibility: hidden;
+  position: absolute;
+  top: 25px !important;
+  top: 60px;
+  left: 0;
+  margin: 0;
+  z-index: 101;
+  padding: 5px; }
+
+  div#permissions td, div#permissions th {
+    padding: 2px 5px;
+    border: 0;
+    text-align: left;
+    font-weight: 400; }
+
+  div#permissions table {
+    color: #000;
+    background: #fff;
+    border: 1px dotted #000; }
+
+  div#permissions table thead th {
+    font-weight: 700; }
+
+  div#permissions td.good, div#permissions table td.bad {
+    text-align: right; }
+
+
+fieldset.advsearch_misc input {
+  vertical-align: middle; }
+
+fieldset.advsearch_misc label {
+  margin-right: 10px;
+  white-space: nowrap; }
+
+
+fieldset.advsearch_dates label {
+  margin: 0 5px; }
+
+
+.search_select {
+  float: left;
+  position: relative;
+  margin-right: 10px; }
+
+  .search_select .multisel {
+    position: absolute;
+    white-space: nowrap; }
+
+  .search_select select {
+    margin-top: 1.3em;
+    height: 7em; }
+
+
+fieldset.advsearch_users .multisel {
+  position: absolute;
+  white-space: nowrap; }
+
+fieldset.advsearch_users input {
+  margin-top: 1.3em; }
+
+/* --------------------------- FORMS -----------------------*/
+
+.bulkuser {
+  padding-left: 120px;
+}
+
+.account_header{
+ background: #999;
+ border: 1px solid #111;
+}
+.account_enabled{
+ background: #EAF7D9;
+ border: 1px solid #BBDF8D;
+}
+.account_enabled:hover {
+ background: #00FF00;
+}
+.account_disabled{
+ background: #FFD1D1;
+ border: 1px solid #F8ACAC;
+}
+.account_disabled:hover {
+ background: #FF0000;
+}
+
+ul.form_elements {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 1em; }
+
+  ul.form_elements li {
+    padding: 2px;
+    margin-bottom: 9px; }
+
+    ul.form_elements li label {
+      width: 200px;
+      display: -moz-inline-stack;
+      /* optional */
+      display: inline-block;
+      zoom: 1;
+      /* triggers hasLayout for IE */
+      *display: inline;
+      /* target IE7 only */
+      vertical-align: top;
+      text-align: right;
+      padding-right: 1ex;
+      padding-top: 2px;
+      color: #555555; }
+
+    ul.form_elements li label.inline {
+      display: inline; }
+
+    ul.form_elements li input {
+      vertical-align: middle; }
+
+    ul.form_elements li textarea {
+      width: 30em; }
+
+  ul.form_elements li.required label {
+    font-weight: bold; }
+
+  ul.form_elements li:hover label {
+    /*text-decoration: underline;*/ }
+
+  ul.form_elements span.note {
+    margin-left: 205px; }
+
+
+ul.wide li label {
+  width: 250px; }
+
+
+ul.slim {
+  width: 390px;
+  margin: 0; }
+
+  ul.slim li label {
+    width: 110px; }
+
+  ul.slim li div.userSelectWidget {
+    display: -moz-inline-stack;
+    /* optional */
+    display: inline-block;
+    zoom: 1;
+    /* triggers hasLayout for IE */
+    *display: inline;
+    /* target IE7 only */
+    vertical-align: middle; }
+
+    ul.slim li div.userSelectWidget input {
+      width: 120px; }
+
+
+.dateselect {
+  clear: both; }
+
+  .dateselect label:first-child {
+    width: 120px;
+    text-align: right;
+    padding-right: 5px;
+    float: left; }
+
+/* fancy dual selects */
+
+.double_select {
+ padding-left: 100px;
+ position: relative;}
+
+  .double_select .dualselect_selectable {
+    height: 220px;
+    width: 40%;
+    display: -moz-inline-stack;
+    /* optional */
+    display: inline-block;
+    zoom: 1;
+    /* triggers hasLayout for IE */
+    *display: inline;
+    /* target IE7 only */
+    vertical-align: middle; }
+
+  .double_select .dualselect_buttons {
+    width: 16%;
+    display: -moz-inline-stack;
+    /* optional */
+    display: inline-block;
+    zoom: 1;
+    /* triggers hasLayout for IE */
+    *display: inline;
+    /* target IE7 only */
+    vertical-align: middle; }
+
+    .double_select .dualselect_buttons button {
+      width: 100%;
+      padding: 3px; }
+
+  .double_select .dualselect_selected {
+    height: 220px;
+    /*min-width: 12em;*/
+    display: -moz-inline-stack;
+    /* optional */
+    display: inline-block;
+    zoom: 1;
+    /* triggers hasLayout for IE */
+    *display: inline;
+    /* target IE7 only */
+    vertical-align: middle;
+    width: 40%; }
+
+    .double_select .dualselect_selected select {
+      width: 100%;
+      height: 80%; }
+
+    .double_select .dualselect_selected button {
+      height: 10%;
+      width: 100%; }
+
+ .double_select .c1 select {
+      height: 24em;
+      min-width: 12em;
+      width: auto;}
+
+ .double_select td {
+   text-align: center;
+   vertical-align: middle;}
+
+   .double_select .c3 button {
+   height: 2em;
+   width: 12em;}
+
+   .double_select .c3 select {
+  height: 20em;
+  min-width: 12em;
+  width: auto;}
+/* closing task form */
+
+div#closeform {
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-box-shadow: 0px 1px 1px #dddddd;
+  -webkit-box-shadow: 0px 1px 1px #dddddd;
+  box-shadow: 0px 1px 1px #dddddd;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
+  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+  padding: 2em;
+  position: absolute;
+  right: 5px;
+  top: 3em; }
+
+div#taskdeps h4 {
+  margin-bottom:0.3em;
+}
+
+div#taskdeps table {
+  margin:0 0 0.8em -0.2em;
+}
+
+div#taskdeps td {
+  padding:0.2em 0.4em;
+}
+
+div#taskdeps img {
+  vertical-align:middle;
+  margin-top:-1px;
+}
+
+input[type=text], input[type=password], select {
+    color: #000;
+    background: #fff;
+    border: 1px solid #ccc;
+    height: 19px;
+    padding: 2px;
+    vertical-align: middle;
+}
+
+input[type=submit], button {
+    background: #69C;
+    border:  1px solid #0a4193;
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+input[type=text], input[type=submit], button, select {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
+select {height: 23px; vertical-align: middle;}
+
+input[type=submit]:hover, button:hover {
+    background: #5F9729;
+    color: #fff;
+    border-color: #5F9729;
+}
+
+#show_loginbox {
+    background: #494D4E;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#menu #menu-list a#show_loginbox:hover {
+    background-color: #5f9729;
+}
+
+#login_hidelink {
+    float: right;
+    text-align: right;
+}
+
+#login_input {
+    height: 30px;
+}
+
+#login_links {
+    height: 30px;
+    padding: 5px 20px;
+}
+
+#login_button {vertical-align: baseline;}
+
+div.denyform {
+ visibility:hidden;
+ position:absolute;
+ background: none repeat scroll 0 0 #FAFAFA;
+ border: 1px solid #E1E1E1;
+ margin-top:5px;
+ display:block;
+ width:300px;
+ height:auto;
+ padding:5px 30px 5px 5px;
+}
+
+#notify_types {height: 10em;}
+
+#rassigned_to {height: 12em; }
+
+/* Stuff for the autocomplete lists {{{ */
+
+span.autocomplete {
+ background-color:#F5F5F5;
+ position: absolute;
+ width: auto !important;
+ border:1px solid gray;
+ padding: 0px;
+ margin:-1px 0 0;
+ text-align:left;
+ display:block;
+}
+
+span.autocomplete ul {
+ list-style-type: none;
+ margin: 0px;
+ padding: 0px;
+}
+
+span.autocomplete ul li {
+ list-style-type: none;
+ display: block;
+ margin: 0;
+ padding:2px 4px;
+ height: 1.1em;
+ white-space:nowrap;
+}
+
+span.autocomplete ul li span.informal {
+ color: darkgray;
+ font-size:0.9em;
+}
+
+span.autocomplete ul li.selected {
+ background-color: #5F9729;
+ cursor:pointer;
+ color:HighlightText;
+}
+
+#actionbuttons {
+ margin-left: 300px;
+ margin-top: 15px;
+ min-height: 50px;
+ padding: 8px 5px; }
 

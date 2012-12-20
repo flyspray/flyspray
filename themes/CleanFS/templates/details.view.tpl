@@ -409,12 +409,12 @@
 			<?php endif; ?>
 		</div>
 
-        <div id="childtasks">
+        <div id="subtasks">
             <h4>Sub-Tasks:</h4>
             <div>
-                <?php foreach ($child_tasks as $child): ?>
+                <?php foreach ($subtasks as $subtask): ?>
                     <?php 
-                        $link = tpl_tasklink($child, null, true);
+                        $link = tpl_tasklink($subtask, null, true);
                         if(!$link) continue;
                     ?>
                     <div>{!$link}</div>
