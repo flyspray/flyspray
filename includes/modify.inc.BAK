@@ -1696,7 +1696,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        // check that supertask_id is not same as task_id
+        // check that parent_id is not same as task_id
         //  (prevent to refer to it self)
         if ($task['task_id'] == Post::val('supertask_id')) {
             Flyspray::show_error(L('selfsupertasknotallowed'));

@@ -78,7 +78,7 @@
             <h4 style="display: inline">{L('setparent')}</h4>
             <input type="hidden" name="action" value="details.setparent" />
             <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
-            <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+            <input class="text" type="text" value="" id="parent_id" name="parent_id" size="5" maxlength="10" />
             <button type="submit" name="submit">{L('set')}</button>
         </div>
         </form>

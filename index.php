@@ -23,10 +23,10 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 	$do = 'index';
 }
 
-// parent_id for add new sub-task
-$parent_id = 0;
-if (Req::has('parent')) {
-    $parent_id = Req::val('parent');
+// supertask_id for add new sub-task
+$supertask_id = 0;
+if (Req::has('supertask')) {
+    $supertask_id = Req::val('supertask');
 }
 
 
@@ -143,7 +143,7 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 
 $page->assign('do', $do);
-$page->assign('parent_id', $parent_id);
+$page->assign('supertask_id', $supertask_id);
 
 $page->pushTpl('header.tpl');
 

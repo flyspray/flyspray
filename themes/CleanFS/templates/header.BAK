@@ -64,12 +64,12 @@
         <h4 style="display: inline; color: lightgreen;">
         <?php 
             $task_description = '';
-            if (isset($task_details) && $task_details['supertask_id']) {
-                $task_description = L('supertask') . ': ' . tpl_tasklink($task_details['supertask_id'], null, true, array('style' => 'color: lightblue;'));
+            if (isset($task_details) && $task_details['parent_id']) {
+                $task_description = L('parenttask') . ': ' . tpl_tasklink($task_details['parent_id'], null, true, array('style' => 'color: lightblue;'));
             }
             else
             if (isset($parent_id) && $parent_id) {
-                $task_description = L('supertask') . ': ' . tpl_tasklink($supertask_id, null, true, array('style' => 'color: lightblue;'));
+                $task_description = L('parenttask') . ': ' . tpl_tasklink($parent_id, null, true, array('style' => 'color: lightblue;'));
             }
             echo $task_description;
         ?>
