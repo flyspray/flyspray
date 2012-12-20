@@ -829,14 +829,14 @@ $translation = array(
 'dependson'               => 'Abhängig von',
 'blocks'                  => 'Blocks',
 'newdependency'           => 'Neue Abhängigkeit:',
-'setparent'               => 'Übergeordnete Aufgabe setzen:',
-'parentmodified'          => 'Übergeordnete Aufgabe geändert',
+'setsupertask'            => 'Übergeordnete Aufgabe setzen (ID):',
+'supertaskmodified'       => 'Übergeordnete Aufgabe geändert',
 'set'                     => 'Setzen',
-'parenttask'              => 'Übergeordnete Aufgabe',
+'supertask'               => 'Übergeordnete Aufgabe',
 'addnewsubtask'           => 'Neue untergeordnete Aufgabe',
 'addnewsubtaskin'         => 'Neue untergeordnete Aufgabe in',
 'hidesubtasks'            => 'Untergeordnete Aufgaben ausblenden',
-'selfparentnotallowed'    => 'Übergeordnete Aufgabe darf nicht ident mit der Aufgabe selbst sein',
+'selfsupertasknotallowed' => 'Aufgabe darf nicht sich selbst Übergeordnete Aufgabe sein',
 );
 
 ?>

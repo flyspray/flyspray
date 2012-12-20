@@ -862,10 +862,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="parent_id" type="I" size="10">
+    <field name="supertask_id" type="I" size="10">
       <DEFAULT value="0"/>
     </field>
-    <field name="sibling_order" type="I" size="3">
+    <field name="list_order" type="I" size="3">
       <DEFAULT value="0"/>
     </field>
     <index name="attached_to_project">
@@ -892,9 +892,14 @@
     <index name="due_date">
       <col>due_date</col>
     </index>
-    <index name="task_to_project_and_parent">
+    <index name="task_project_super">
       <col>project_id</col>
-      <col>parent_id</col>
+      <col>supertask_id</col>
+      <col>list_order</col>
+    </index>
+    <index name="task_super">
+      <col>supertask_id</col>
+      <col>list_order</col>
     </index>
   </table>
   <table name="users">
@@ -1039,7 +1044,7 @@
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Researching', 4, 1, 0)</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Waiting on Customer', 5, 1, 0)</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Requires testing', 6, 1, 0)</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '1.0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '0.9.9');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'gravatars', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>

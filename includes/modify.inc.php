@@ -1684,29 +1684,29 @@ switch ($action = Req::val('action'))
         }
 
     // ##################
-    // set parent id
+    // set supertask id
     // ##################
-    case 'details.setparent':
+    case 'details.setsupertask':
         if (!$user->can_edit_task($task)) {
             break;
         }
 
-        if (!Post::val('parent_id')) {
+        if (!Post::val('supertask_id')) {
             Flyspray::show_error(L('formnotcomplete'));
             break;
         }
 
         // check that parent_id is not same as task_id
         //  (prevent to refer to it self)
-        if ($task['task_id'] == Post::val('parent_id')) {
-            Flyspray::show_error(L('selfparentnotallowed'));
+        if ($task['task_id'] == Post::val('supertask_id')) {
+            Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
         }
 
-        // TODO: check that parent_id is a valid task id
-        //  (btw: what if a task is deleted later which was a parent?)
+        // TODO: check that supertask_id is a valid task id
+        //  (btw: what if a task is deleted later which was a supertask?)
 
-        // TODO: check that task_id is not in the chain of parents
+        // TODO: check that task_id is not in the chain of supertasks
         //  (for preventing cyclical dependencies)
 
         // TODO: send notifications
@@ -1714,13 +1714,14 @@ switch ($action = Req::val('action'))
         // TODO: log in task history
 
         // update the task's data in database
+        // TODO: error checking!
         $db->Query('UPDATE  {tasks}
-                       SET  parent_id = ?
+                       SET  supertask_id = ?
                      WHERE  task_id = ?', 
-                     array(Post::val('parent_id'), $task['task_id']));
+                     array(Post::val('supertask_id'), $task['supertask_id']));
 
         // set success message
-        $_SESSION['SUCCESS'] = L('parentmodified');
+        $_SESSION['SUCCESS'] = L('supertaskmodified');
 
         break;
 

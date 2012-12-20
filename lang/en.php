@@ -852,14 +852,14 @@ Regards,',
 'blocks'                  => 'Blocks',
 'newdependency'           => 'New dependency:',
 'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.',
-'setparent'               => 'Set Parent:',
-'parentmodified'          => 'Parent Task ID has been modified',
+'setsupertask'            => 'Set Super-Task ID:',
+'supertaskmodified'       => 'Super-Task ID has been modified',
 'set'                     => 'Set',
-'parenttask'              => 'Parent',
+'supertask'               => 'Super-Task',
 'addnewsubtask'           => 'Add new sub-task',
 'addnewsubtaskin'         => 'Add new sub-task in',
 'hidesubtasks'            => 'Hide sub-tasks',
-'selfparentnotallowed'    => 'parent task id cannot be same as this task id',
+'selfsupertasknotallowed' => 'Super-Task ID cannot be same as self Task ID',
 );
 
 ?>
