@@ -60,7 +60,7 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
         </small>
       </dt>
       <dd id="dd{$task['task_id']}" style="display: none;">
-        {!TextFormatter::render($task['detailed_desc'], false, 'rota', $task['task_id'], $task['content'])}
+        {!TextFormatter::render($task['detailed_desc'], 'rota', $task['task_id'], $task['content'])}
         <br style="position:absolute;" />
       </dd>
     <?php endforeach; ?>
