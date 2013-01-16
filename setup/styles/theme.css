@@ -555,7 +555,7 @@ p.unregistered {
 /* Some generic classes; severity classes are used for colour
    indication of severities
    IE can't do hover on anything but A elements, so there is a
-   script in /javascript/ie_hover.js that fixes this with
+   script in /js/ie_hover.js that fixes this with
    javascript. That javascript only checks background-color and
    color. If you want to change other properties during the hover
    you'll have to adjust the javascript

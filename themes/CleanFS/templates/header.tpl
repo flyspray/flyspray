@@ -23,25 +23,25 @@
 	<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
 	      href="{$baseurl}feed.php?feed_type=atom&amp;project={$proj->id}" />
 
-    <script type="text/javascript" src="{$baseurl}javascript/prototype/prototype.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/script.aculo.us/scriptaculous.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/prototype/prototype.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/script.aculo.us/scriptaculous.js"></script>
     <?php if ('index' == $do || 'details' == $do): ?>
-        <script type="text/javascript" src="{$baseurl}javascript/{$do}.js"></script>
+        <script type="text/javascript" src="{$baseurl}js/{$do}.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'pm' || $do == 'admin'): ?>
-        <script type="text/javascript" src="{$baseurl}javascript/tablecontrol.js"></script>
+        <script type="text/javascript" src="{$baseurl}js/tablecontrol.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'depends'): ?>
-        <!--[if IE]><script type="text/javascript" src="{$baseurl}javascript/jit/excanvas.js"></script><![endif]-->
-        <script type="text/javascript" src="{$baseurl}javascript/jit/jit.js"></script>
+        <!--[if IE]><script type="text/javascript" src="{$baseurl}js/jit/excanvas.js"></script><![endif]-->
+        <script type="text/javascript" src="{$baseurl}js/jit/jit.js"></script>
     <?php endif; ?>
-    <script type="text/javascript" src="{$baseurl}javascript/tabs.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/functions.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar_stripped.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/calendar-setup_stripped.js"> </script>
-    <script type="text/javascript" src="{$baseurl}javascript/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
-    <script type="text/javascript" src="{$baseurl}javascript/lightbox/js/lightbox.js"></script>
-    <link rel="stylesheet" href="{$baseurl}javascript/lightbox/css/lightbox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="{$baseurl}js/tabs.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/functions.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/jscalendar/calendar-setup_stripped.js"> </script>
+    <script type="text/javascript" src="{$baseurl}js/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/lightbox/js/lightbox.js"></script>
+    <link rel="stylesheet" href="{$baseurl}js/lightbox/css/lightbox.css" type="text/css" media="screen" />
     <!--[if IE]>
     <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
     <![endif]-->

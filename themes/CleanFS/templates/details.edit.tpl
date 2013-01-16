@@ -1,6 +1,6 @@
 <form action="{CreateUrl('details', $task_details['task_id'])}" id="taskeditform" enctype="multipart/form-data" method="post">
 <div id="actionbar">
-	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('{#$baseurl}javascript/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>
+	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('{#$baseurl}js/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>
 	<div class="clear"></div>
 </div>
 
@@ -261,7 +261,7 @@
               </div>-->
           <?php endif; ?>
 		  <p class="buttons">
-              <!--<button type="submit" accesskey="s" onclick="return checkok('{#$baseurl}javascript/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>-->
+              <!--<button type="submit" accesskey="s" onclick="return checkok('{#$baseurl}js/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>-->
               <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
               <button tabindex="9" type="button" onclick="showPreview('details', '{#$baseurl}', 'preview')">{L('preview')}</button>
               <?php endif; ?>
