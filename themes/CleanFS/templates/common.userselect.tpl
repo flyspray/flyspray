@@ -2,5 +2,5 @@
 <span class="autocomplete" id="{$name}_complete"></span>
 <script type="text/javascript">
     showstuff('{#$name}_complete');
-    new Ajax.Autocompleter('{#$id}', '{#$name}_complete', '{$baseurl}javascript/callbacks/usersearch.php', {})
+    new Ajax.Autocompleter('{#$id}', '{#$name}_complete', '{$baseurl}js/callbacks/usersearch.php', {})
 </script>

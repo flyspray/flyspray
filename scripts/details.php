@@ -125,9 +125,9 @@ else {
                             array($task_id));
 
     if ($task_details['last_edited_time'] > $cached['last_updated'] || !defined('FLYSPRAY_USE_CACHE')) {
-        $task_text = TextFormatter::render($task_details['detailed_desc'], false, 'task', $task_details['task_id']);
+        $task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id']);
     } else {
-        $task_text = TextFormatter::render($task_details['detailed_desc'], false, 'task', $task_details['task_id'], $cached['content']);
+        $task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id'], $cached['content']);
     }
 
     $page->assign('prev_id',   $prev_id);

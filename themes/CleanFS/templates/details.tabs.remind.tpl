@@ -34,7 +34,7 @@
       }
      ?>
      <td>{$how_often}</td>
-     <td>{!TextFormatter::render($row['reminder_message'], true)}</td>
+     <td>{!TextFormatter::render($row['reminder_message'])}</td>
   </tr>
     <?php endforeach; ?>
     <tr><td colspan="4">

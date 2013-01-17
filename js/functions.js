@@ -299,7 +299,7 @@ function toggleSearchBox(themeurl) {
 }
 function deletesearch(id, url) {
     var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/CleanFS/ajax_load.gif';
-    url = url + 'javascript/callbacks/deletesearches.php';
+    url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {method: 'get', parameters: 'id=' + id,
                      onSuccess:function()
                      {
@@ -315,7 +315,7 @@ function deletesearch(id, url) {
                 });
 }
 function savesearch(query, baseurl, savetext) {
-    url = baseurl + 'javascript/callbacks/savesearches.php?' + query + '&search_name=' + encodeURIComponent($('save_search').value);
+    url = baseurl + 'js/callbacks/savesearches.php?' + query + '&search_name=' + encodeURIComponent($('save_search').value);
     if($('save_search').value != '') {
         var old_text = $('lblsaveas').firstChild.nodeValue;
         $('lblsaveas').firstChild.nodeValue = savetext;
@@ -323,7 +323,7 @@ function savesearch(query, baseurl, savetext) {
                      onComplete:function()
                      {
                         $('lblsaveas').firstChild.nodeValue=old_text;
-                        var myAjax2 = new Ajax.Updater('mysearches', baseurl + 'javascript/callbacks/getsearches.php', { method: 'get'});
+                        var myAjax2 = new Ajax.Updater('mysearches', baseurl + 'js/callbacks/getsearches.php', { method: 'get'});
                      }
                      });
     }
@@ -358,7 +358,7 @@ function showPreview(textfield, baseurl, field)
 
     var text = $(textfield).value;
     text = encodeURIComponent(text);
-    var url = baseurl + 'javascript/callbacks/getpreview.php';
+    var url = baseurl + 'js/callbacks/getpreview.php';
     var myAjax = new Ajax.Updater(field, url, {parameters:'text=' + text, method: 'post'});
 
     if (text == '') {
@@ -368,7 +368,7 @@ function showPreview(textfield, baseurl, field)
     }
 }
 function checkname(value){
-    new Ajax.Request('javascript/callbacks/searchnames.php?name='+value, {onSuccess: function(t){ allow(t.responseText); } });
+    new Ajax.Request('js/callbacks/searchnames.php?name='+value, {onSuccess: function(t){ allow(t.responseText); } });
 }
 function allow(booler){
     if(booler.indexOf('false') > -1) {
@@ -384,7 +384,7 @@ function allow(booler){
 }
 function getHistory(task_id, baseurl, field, details)
 {
-    var url = baseurl + 'javascript/callbacks/gethistory.php?task_id=' + task_id;
+    var url = baseurl + 'js/callbacks/gethistory.php?task_id=' + task_id;
     if (details) {
         url += '&details=' + details;
     }

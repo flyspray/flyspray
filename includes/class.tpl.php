@@ -574,7 +574,7 @@ class TextFormatter
         return $return;
     }
 
-    public static function render($text, $onlyfs = false, $type = null, $id = null, $instructions = null)
+    public static function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf;
 
@@ -582,13 +582,7 @@ class TextFormatter
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $onlyfs, $type, $id, $instructions);
         } else {
-            $text = ' ' . nl2br(htmlspecialchars($text, ENT_QUOTES, 'utf-8')) . ' ';
-
-            // Change URLs into hyperlinks
-            if (!$onlyfs) {
-                $text = preg_replace('|[[:space:]]+[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]|', '<a href="\0">\0</a>', $text);
-                $text = preg_replace('/[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}/', '<a href="mailto:\0">\0</a>', $text);
-            }
+            $text = ' ' . nl2br($text) . ' ';
 
             // Change FS#123 into hyperlinks to tasks
             return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));

@@ -42,7 +42,7 @@
     </ul>
     <?php endif; ?>
     <div class="commenttext">
-      {!TextFormatter::render($comment['comment_text'], false, 'comm', $comment['comment_id'], $comment['content'])}</div>
+      {!TextFormatter::render($comment['comment_text'], 'comm', $comment['comment_id'], $comment['content'])}</div>
       <?php if (isset($comment_attachments[$comment['comment_id']])) {
                 $this->display('common.attachments.tpl', 'attachments', $comment_attachments[$comment['comment_id']]);
             }
