@@ -634,8 +634,8 @@ class Flyspray
                                 FROM  {users_in_groups} uig
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
                            LEFT JOIN  {users} u ON uig.user_id = u.user_id
-                               WHERE  u.user_name = ? AND g.project_id = ?
-                            ORDER BY  g.group_id ASC", array($username, 0));
+                               WHERE  u.email_address = ? OR u.user_name = ? AND g.project_id = ?
+                            ORDER BY  g.group_id ASC", array($username, $username, 0));
 
         $auth_details = $db->FetchRow($result);
 

@@ -37,6 +37,7 @@ footer, header, hgroup, menu, nav, section {
 body {
   line-height: 1.5;
   background: white;
+/*  direction:rtl; */
 }
 
 /* Tables still need 'cellspacing="0"' in the markup. */
