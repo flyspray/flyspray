@@ -628,11 +628,12 @@ switch ($action = Req::val('action'))
             break;
         }
 
+	/* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
                 'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
                 'lang_code', 'logo', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
-                'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds');
+			  'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message');
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -640,6 +641,10 @@ switch ($action = Req::val('action'))
             $fs->prefs[$setting] = Post::val($setting, 0);
         }
 
+	/* seems visible column has something to do to
+	 * make intro_message visible to the user,
+	 * yet for now, let me just keep it like this*/
+	
         // Process the list of groups into a format we can store
         $viscols = trim(Post::val('visible_columns'));
         $db->Query("UPDATE  {prefs} SET pref_value = ?

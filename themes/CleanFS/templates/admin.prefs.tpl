@@ -62,7 +62,26 @@
           <select id="cache_feeds" name="cache_feeds">
           {!tpl_options(array('0' => L('no_cache'), '1' => L('cache_disk'), '2' => L('cache_db')), $fs->prefs['cache_feeds'])}
           </select>
-        </li>   
+        </li>
+
+<!-- Note this area has been edited -->
+<!-- On the webpage, "Introductory message" is left as it is, -->
+<!-- since replacing it would require replacement of {L('intromessage')} -->
+<!-- thus edit all <language>.php -->
+	<li>
+          <label for="intromesg">{L('intromessage')}</label>
+          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+          <div class="hide preview" id="preview"></div>
+          <?php endif; ?>
+	  <!-- The following line should be replaced -->
+          {!TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message']))}
+          <br />
+          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+          <button tabindex="9" type="button" onclick="showPreview('intromesg', '{#$baseurl}', 'preview')">{L('preview')}</button>
+          <?php endif; ?>
+      </li>
+<!-- Note this area has been edited -->
+
       </ul>
     </div>
 

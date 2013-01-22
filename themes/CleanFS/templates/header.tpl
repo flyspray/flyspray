@@ -68,7 +68,6 @@
 	{$proj->prefs['project_title']}
     </a></h1>
 
-
     <?php $this->display('links.tpl'); ?>
 
     <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>
@@ -81,9 +80,17 @@
 
     <div id="content">
       <div class="clear"></div>
+      <!-- intromessage of "all-project" -->
+      <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
+            $actions = explode('.', Req::val('action'));
+            if ($fs->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
+      <div id="intromessage">{!TextFormatter::render($fs->prefs['intro_message'])}</div>
+      <?php endif; ?>
+
+      <!-- intromessage of a specific project -->
       <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
             $actions = explode('.', Req::val('action'));
             if ($proj->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
-      <div id="intromessage">{!TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
+	<div id="intromessage">{!TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
                                ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : '')}</div>
       <?php endif; ?>
