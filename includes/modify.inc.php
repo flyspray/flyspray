@@ -641,10 +641,6 @@ switch ($action = Req::val('action'))
             $fs->prefs[$setting] = Post::val($setting, 0);
         }
 
-	/* seems visible column has something to do to
-	 * make intro_message visible to the user,
-	 * yet for now, let me just keep it like this*/
-	
         // Process the list of groups into a format we can store
         $viscols = trim(Post::val('visible_columns'));
         $db->Query("UPDATE  {prefs} SET pref_value = ?
@@ -676,7 +672,7 @@ switch ($action = Req::val('action'))
 
         $viscols =    $fs->prefs['visible_columns']
                     ? $fs->prefs['visible_columns']
-                    : 'id tasktype severity summary status dueversion progress';
+                    : 'id tasktype priority severity summary status dueversion progress';
 
         $visfields =  $fs->prefs['visible_fields']
                     ? $fs->prefs['visible_fields']
