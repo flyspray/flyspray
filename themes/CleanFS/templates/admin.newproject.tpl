@@ -46,6 +46,11 @@
         <label for="anonopen">{L('allowanonopentask')}</label>
         {!tpl_checkbox('anon_open', Req::val('anon_open'), 'anonopen')}
       </li>
+
+      <li>
+         <label for="disp_intro">{L('dispintro')}</label>
+	 {!tpl_checkbox('disp_intro', Req::val('disp_intro', 0), 'dispintro')}
+     </li>
       
       <li>
         <td class="buttons" colspan="2"><button type="submit">{L('createthisproject')}</button></td>

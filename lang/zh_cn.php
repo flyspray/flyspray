@@ -806,6 +806,9 @@ Username: ',
 'deletetip'               => '从列表中删除这一条',
 'csvexport'               => 'CSV 输出',
 'del'                     => '删除',
-); 
+'dispintro'               => '显示主介绍信息',
+'mainmessage'             => '主介绍信息'
+
+    ); 
 
 ?>

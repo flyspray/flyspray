@@ -686,12 +686,14 @@ switch ($action = Req::val('action'))
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
-                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)',
+                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber, disp_intro)
+                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
                         Post::val('intro_message'), Post::num('others_view', 0),
                         Post::num('anon_open', 0),  $viscols, $visfields,
-                        Post::val('lang_code', 'en'), '', ''));
+                        Post::val('lang_code', 'en'), '', '',
+		        Post::num('disp_intro')
+		      ));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         $pid = $db->fetchOne($sql);
@@ -772,6 +774,8 @@ switch ($action = Req::val('action'))
         $args[] = implode(' ', (array) Post::val('notify_types'));
         $cols[] = 'last_updated';
         $args[] = time();
+	$cols[] = 'disp_intro';
+	$args[] = Post::val('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
         $args[] = $proj->id;

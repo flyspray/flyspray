@@ -59,6 +59,11 @@
         </li>
 
         <li>
+          <label for="disp_intro">{L('dispintro')}</label>
+          {!tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro')}
+        </li>
+	
+        <li>
           <label>{!tpl_checkbox('delete_project', null)} {L('deleteproject')}</label>
           <select name="move_to">{!tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id)}</select>
         </li>
