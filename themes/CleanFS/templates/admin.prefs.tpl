@@ -31,7 +31,7 @@
         </li>   
 
         <li>
-          <?
+          <?php
             if (! array_key_exists( 'logo', $fs->prefs) )
             {
               $fs->prefs['logo'] = '';
