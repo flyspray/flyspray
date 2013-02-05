@@ -949,6 +949,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="lang_code" type="C" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>

@@ -35,16 +35,30 @@ function eL($key)
 
 function load_translations()
 {
-    global $proj, $language;
+    global $proj, $language,$user;
     // Load translations
     // if no valid lang_code, return english
     // valid == a-z and "_" case insensitive
-    if (!preg_match('/^[a-z_]+$/iD', $proj->prefs['lang_code'])) {
-        $proj->prefs['lang_code'] = 'en';
+
+    if($user->infos['lang_code'])
+    {
+        $lang_code=$user->infos['lang_code'];
+    }
+    elseif($proj->prefs['lang_code'])
+    {
+        $lang_code = $proj->prefs['lang_code'];
+    }
+    else
+    {
+        $lang_code = 'en';
     }
 
-    $translation = BASEDIR . "/lang/{$proj->prefs['lang_code']}.php";
-    if ($proj->prefs['lang_code'] != 'en' && is_readable($translation)) {
+    if (!preg_match('/^[a-z_]+$/iD', $lang_code)) {
+        $lang_code ='en';
+    }
+
+    $translation = BASEDIR . "/lang/{$lang_code}.php";
+    if ($lang_code != 'en' && is_readable($translation)) {
         include_once($translation);
         $language = is_array($translation) ? array_merge($language, $translation) : $language;
     }

@@ -33,6 +33,8 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(0, $proj);
 }
 
+
+
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
     $result = $db->Query("SELECT  t.project_id,
@@ -67,6 +69,16 @@ if (Get::val('getfile')) {
         Flyspray::show_error(1);
     }
     exit;
+}
+
+// Load translations
+load_translations();
+
+for ($i = 6; $i >= 1; $i--) {
+    $fs->priorities[$i] = L('priority' . $i);
+}
+for ($i = 5; $i >= 1; $i--) {
+    $fs->severities[$i] = L('severity' . $i);
 }
 
 /*******************************************************************************/
