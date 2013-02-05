@@ -55,12 +55,4 @@ if (!isset($project_id)) {
 $proj = new Project($project_id);
 $proj->setCookie();
 
-// Load translations
-load_translations();
 
-for ($i = 6; $i >= 1; $i--) {
-    $fs->priorities[$i] = L('priority' . $i);
-}
-for ($i = 5; $i >= 1; $i--) {
-    $fs->severities[$i] = L('severity' . $i);
-}

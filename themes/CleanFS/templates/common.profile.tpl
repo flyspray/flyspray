@@ -61,6 +61,13 @@
         </select> 
       </li>
 
+        <li>
+            <label for="langcode">{L('language')}</label>
+            <select id="langcode" name="lang_code">
+                {!tpl_options(Flyspray::listLangs(), Req::val('lang_code', $theuser->infos['lang_code']), true)}
+            </select>
+        </li>
+
       <li>
         <hr />
       </li>
