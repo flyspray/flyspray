@@ -33,6 +33,7 @@ class Project
         $this->prefs['feed_img_url'] = '';
         $this->prefs['default_entry'] = 'index';
         $this->prefs['notify_reply'] = '';
+        $this->prefs['default_due_version'] = 'Undecided';
     }
 
     function setCookie()

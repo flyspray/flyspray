@@ -646,6 +646,10 @@
       <NOTNULL/>
       <DEFAULT value="index"/>
     </field>
+    <field name="default_due_version" type="C" size="40">
+      <NOTNULL/>
+      <DEFAULT value="Undecided"/>
+     </field>
   </table>
   <table name="registrations">
     <field name="reg_id" type="I" size="10">
