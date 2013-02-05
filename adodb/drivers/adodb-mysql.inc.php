@@ -1,6 +1,6 @@
 <?php
 /*
-V4.93 10 Oct 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -23,7 +23,7 @@ class ADODB_mysql extends ADOConnection {
 	var $dataProvider = 'mysql';
 	var $hasInsertID = true;
 	var $hasAffectedRows = true;	
-	var $metaTablesSQL = "SHOW TABLES";	
+	var $metaTablesSQL = "SELECT TABLE_NAME, CASE WHEN TABLE_TYPE = 'VIEW' THEN 'V' ELSE 'T' END FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA()";
 	var $metaColumnsSQL = "SHOW COLUMNS FROM `%s`";
 	var $fmtTimeStamp = "'Y-m-d H:i:s'";
 	var $hasLimit = true;
@@ -36,6 +36,7 @@ class ADODB_mysql extends ADOConnection {
 	var $forceNewConnect = false;
 	var $poorAffectedRows = true;
 	var $clientFlags = 0;
+	var $charSet = '';
 	var $substr = "substring";
 	var $nameQuote = '`';		/// string to use to quote identifiers and names
 	var $compat323 = false; 		// true if compat with mysql 3.23
@@ -44,7 +45,25 @@ class ADODB_mysql extends ADOConnection {
 	{			
 		if (defined('ADODB_EXTENSION')) $this->rsPrefix .= 'ext_';
 	}
-	
+
+
+  // SetCharSet - switch the client encoding
+  function SetCharSet($charset_name)
+  {
+    if (!function_exists('mysql_set_charset'))
+    	return false;
+
+	if ($this->charSet !== $charset_name) {
+      $ok = @mysql_set_charset($charset_name,$this->_connectionID);
+      if ($ok) {
+		$this->charSet = $charset_name;
+        return true;
+      }
+	  return false;
+    }
+	return true;
+  }
+  
 	function ServerInfo()
 	{
 		$arr['description'] = ADOConnection::GetOne("select version()");
@@ -57,8 +76,67 @@ class ADODB_mysql extends ADOConnection {
 		return " IFNULL($field, $ifNull) "; // if MySQL
 	}
 	
+    function MetaProcedures($NamePattern = false, $catalog  = null, $schemaPattern  = null)
+    {
+        // save old fetch mode
+        global $ADODB_FETCH_MODE;
+
+        $false = false;
+        $save = $ADODB_FETCH_MODE;
+        $ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+
+        if ($this->fetchMode !== FALSE) {
+               $savem = $this->SetFetchMode(FALSE);
+        }
+
+        $procedures = array ();
+
+        // get index details
+
+        $likepattern = '';
+        if ($NamePattern) {
+           $likepattern = " LIKE '".$NamePattern."'";
+        }
+        $rs = $this->Execute('SHOW PROCEDURE STATUS'.$likepattern);
+        if (is_object($rs)) {
+
+	    // parse index data into array
+	    while ($row = $rs->FetchRow()) {
+		    $procedures[$row[1]] = array(
+				    'type' => 'PROCEDURE',
+				    'catalog' => '',
+
+				    'schema' => '',
+				    'remarks' => $row[7],
+			    );
+	    }
+	}
+
+        $rs = $this->Execute('SHOW FUNCTION STATUS'.$likepattern);
+        if (is_object($rs)) {
+            // parse index data into array
+            while ($row = $rs->FetchRow()) {
+                $procedures[$row[1]] = array(
+                        'type' => 'FUNCTION',
+                        'catalog' => '',
+                        'schema' => '',
+                        'remarks' => $row[7]
+                    );
+            }
+	    }
+
+        // restore fetchmode
+        if (isset($savem)) {
+                $this->SetFetchMode($savem);
+
+        }
+        $ADODB_FETCH_MODE = $save;
+
+
+        return $procedures;
+    }
 	
-	function &MetaTables($ttype=false,$showSchema=false,$mask=false) 
+	function MetaTables($ttype=false,$showSchema=false,$mask=false) 
 	{	
 		$save = $this->metaTablesSQL;
 		if ($showSchema && is_string($showSchema)) {
@@ -69,14 +147,14 @@ class ADODB_mysql extends ADOConnection {
 			$mask = $this->qstr($mask);
 			$this->metaTablesSQL .= " like $mask";
 		}
-		$ret =& ADOConnection::MetaTables($ttype,$showSchema);
+		$ret = ADOConnection::MetaTables($ttype,$showSchema);
 		
 		$this->metaTablesSQL = $save;
 		return $ret;
 	}
 	
 	
-	function &MetaIndexes ($table, $primary = FALSE, $owner=false)
+	function MetaIndexes ($table, $primary = FALSE, $owner=false)
 	{
         // save old fetch mode
         global $ADODB_FETCH_MODE;
@@ -129,19 +207,25 @@ class ADODB_mysql extends ADOConnection {
 	}
 
 	
-    // Quotes a string to be inserted to the database
-    // if $maqic_quotes is true then revert the effects
-    // bacause magic_quotes is not multibyte safe.
-
+	// if magic quotes disabled, use mysql_real_escape_string()
 	function qstr($s,$magic_quotes=false)
 	{
-        $s = $magic_quotes ? stripslashes($s) : $s;
+		if (is_null($s)) return 'NULL';
+		if (!$magic_quotes) {
 		
-			if (ADODB_PHPVER >= 0x4300 && is_resource($this->_connectionID)) {
-                    return "'". mysql_real_escape_string($s, $this->_connectionID) . "'";
-            } else {
-                    return "'" . mysql_escape_string($s) . "'";
-           }
+			if (ADODB_PHPVER >= 0x4300) {
+				if (is_resource($this->_connectionID))
+					return "'".mysql_real_escape_string($s,$this->_connectionID)."'";
+			}
+			if ($this->replaceQuote[0] == '\\'){
+				$s = adodb_str_replace(array('\\',"\0"),array('\\\\',"\\\0"),$s);
+			}
+			return  "'".str_replace("'",$this->replaceQuote,$s)."'"; 
+		}
+		
+		// undo magic quotes for "
+		$s = str_replace('\\"','"',$s);
+		return "'$s'";
 	}
 	
 	function _insertid()
@@ -152,11 +236,12 @@ class ADODB_mysql extends ADOConnection {
 	
 	function GetOne($sql,$inputarr=false)
 	{
+	global $ADODB_GETONE_EOF;
 		if ($this->compat323 == false && strncasecmp($sql,'sele',4) == 0) {
-			$rs =& $this->SelectLimit($sql,1,-1,$inputarr);
+			$rs = $this->SelectLimit($sql,1,-1,$inputarr);
 			if ($rs) {
 				$rs->Close();
-				if ($rs->EOF) return false;
+				if ($rs->EOF) return $ADODB_GETONE_EOF;
 				return reset($rs->fields);
 			}
 		} else {
@@ -175,10 +260,11 @@ class ADODB_mysql extends ADOConnection {
 			return mysql_affected_rows($this->_connectionID);
 	}
   
- 	// See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
+ 	 // See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
 	// Reference on Last_Insert_ID on the recommended way to simulate sequences
  	var $_genIDSQL = "update %s set id=LAST_INSERT_ID(id+1);";
 	var $_genSeqSQL = "create table %s (id int not null)";
+	var $_genSeqCountSQL = "select count(*) from %s";
 	var $_genSeq2SQL = "insert into %s values (%s)";
 	var $_dropSeqSQL = "drop table %s";
 	
@@ -207,18 +293,22 @@ class ADODB_mysql extends ADOConnection {
 			if ($holdtransOK) $this->_transOK = true; //if the status was ok before reset
 			$u = strtoupper($seqname);
 			$this->Execute(sprintf($this->_genSeqSQL,$seqname));
-			$this->Execute(sprintf($this->_genSeq2SQL,$seqname,$startID-1));
+			$cnt = $this->GetOne(sprintf($this->_genSeqCountSQL,$seqname));
+			if (!$cnt) $this->Execute(sprintf($this->_genSeq2SQL,$seqname,$startID-1));
 			$rs = $this->Execute($getnext);
 		}
-		$this->genID = mysql_insert_id($this->_connectionID);
 		
-		if ($rs) $rs->Close();
+		if ($rs) {
+			$this->genID = mysql_insert_id($this->_connectionID);
+			$rs->Close();
+		} else
+			$this->genID = 0;
 		
 		$this->_logsql = $savelog;
 		return $this->genID;
 	}
 	
-  	function &MetaDatabases()
+  	function MetaDatabases()
 	{
 		$qid = mysql_list_dbs($this->_connectionID);
 		$arr = array();
@@ -338,7 +428,7 @@ class ADODB_mysql extends ADOConnection {
 		if (!$date) $date = $this->sysDate;
 		
 		$fraction = $dayFraction * 24 * 3600;
-		return $date . ' + INTERVAL ' .	 $fraction.' SECOND';
+		return '('. $date . ' + INTERVAL ' .	 $fraction.' SECOND)';
 		
 //		return "from_unixtime(unix_timestamp($date)+$fraction)";
 	}
@@ -383,7 +473,7 @@ class ADODB_mysql extends ADOConnection {
 		return $this->_connect($argHostname, $argUsername, $argPassword, $argDatabasename);
 	}
 	
- 	function &MetaColumns($table) 
+ 	function MetaColumns($table, $normalize=true) 
 	{
 		$this->_findschema($table,$schema);
 		if ($schema) {
@@ -436,9 +526,10 @@ class ADODB_mysql extends ADOConnection {
 			$fld->not_null = ($rs->fields[2] != 'YES');
 			$fld->primary_key = ($rs->fields[3] == 'PRI');
 			$fld->auto_increment = (strpos($rs->fields[5], 'auto_increment') !== false);
-			$fld->binary = (strpos($type,'blob') !== false);
+			$fld->binary = (strpos($type,'blob') !== false || strpos($type,'binary') !== false);
 			$fld->unsigned = (strpos($type,'unsigned') !== false);
-				
+			$fld->zerofill = (strpos($type,'zerofill') !== false);
+
 			if (!$fld->binary) {
 				$d = $rs->fields[4];
 				if ($d != '' && $d != 'NULL') {
@@ -473,22 +564,21 @@ class ADODB_mysql extends ADOConnection {
 	}
 	
 	// parameters use PostgreSQL convention, not MySQL
-	function &SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs=0)
+	function SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs=0)
 	{
 		$offsetStr =($offset>=0) ? ((integer)$offset)."," : '';
-        // jason judge, see http://phplens.com/lens/lensforum/msgs.php?id=9220
-        $nrows = intval($nrows);
+		// jason judge, see http://phplens.com/lens/lensforum/msgs.php?id=9220
 		if ($nrows < 0) $nrows = '18446744073709551615'; 
 		
 		if ($secs)
-			$rs =& $this->CacheExecute($secs,$sql." LIMIT $offsetStr". $nrows,$inputarr);
+			$rs = $this->CacheExecute($secs,$sql." LIMIT $offsetStr".((integer)$nrows),$inputarr);
 		else
-			$rs =& $this->Execute($sql." LIMIT $offsetStr". $nrows, $inputarr);
+			$rs = $this->Execute($sql." LIMIT $offsetStr".((integer)$nrows),$inputarr);
 		return $rs;
 	}
 	
 	// returns queryID or false
-	function _query($sql,$inputarr)
+	function _query($sql,$inputarr=false)
 	{
 	//global $ADODB_COUNTRECS;
 		//if($ADODB_COUNTRECS) 
@@ -518,6 +608,8 @@ class ADODB_mysql extends ADOConnection {
 	function _close()
 	{
 		@mysql_close($this->_connectionID);
+		
+		$this->charSet = '';
 		$this->_connectionID = false;
 	}
 
@@ -548,8 +640,9 @@ class ADODB_mysql extends ADOConnection {
             $table = "$owner.$table";
          }
          $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
-		 if ($associative) $create_sql = $a_create_table["Create Table"];
-         else $create_sql  = $a_create_table[1];
+		 if ($associative) {
+		 	$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
+         } else $create_sql  = $a_create_table[1];
 
          $matches = array();
 
@@ -565,9 +658,12 @@ class ADODB_mysql extends ADOConnection {
                  $ref_table = strtoupper($ref_table);
              }
 
-             $foreign_keys[$ref_table] = array();
-             $num_fields = count($my_field);
-             for ( $j = 0;  $j < $num_fields;  $j ++ ) {
+			// see https://sourceforge.net/tracker/index.php?func=detail&aid=2287278&group_id=42718&atid=433976
+			if (!isset($foreign_keys[$ref_table])) {
+				$foreign_keys[$ref_table] = array();
+			}
+            $num_fields = count($my_field);
+            for ( $j = 0;  $j < $num_fields;  $j ++ ) {
                  if ( $associative ) {
                      $foreign_keys[$ref_table][$ref_field[$j]] = $my_field[$j];
                  } else {
@@ -578,49 +674,6 @@ class ADODB_mysql extends ADOConnection {
          
          return  $foreign_keys;
      }
-     
-    /**
-    * Added by cjunge@author-it.com, Dec 2006
-    *
-    * @return mixed
-    */
-    function GetCharSet()
-    {
-        if (!empty($this->_connectionID)) {
-    /*
-    below does not work if the charset has been changed, always shows the encoding when the connection was made.
-    $this->charSet = @mysql_client_encoding($this->_connectionID);
-    */
-            $charSet = @$this->GetAssoc('SHOW VARIABLES LIKE "character_set_client"');
-            
-            if (isset($charSet['character_set_client'])) {
-                $this->charSet = $charSet['character_set_client'];
-            }
-    }
-        if (!$this->charSet) {
-            return false;
-        } else {
-            return $this->charSet;
-        }
-
-    }
-
-    /**
-    * Added by cjunge@author-it.com, Dec 2006
-    *
-    * @return bool
-    */
-    
-    function SetCharSet($charset_name)
-    {
-        if (!empty($this->_connectionID) && $this->charSet !== $charset_name) {
-            $this->Execute(sprintf('SET NAMES %s', $this->qstr($charset_name)));
-                if ($this->GetCharSet() == $charset_name) {
-                    return true;
-                }
-        }
-            return false;
-    }
 	 
 	
 }
@@ -662,28 +715,28 @@ class ADORecordSet_mysql extends ADORecordSet{
 		$this->_numOfFields = @mysql_num_fields($this->_queryID);
 	}
 	
-	function &FetchField($fieldOffset = -1) 
+	function FetchField($fieldOffset = -1) 
 	{	
 		if ($fieldOffset != -1) {
 			$o = @mysql_fetch_field($this->_queryID, $fieldOffset);
 			$f = @mysql_field_flags($this->_queryID,$fieldOffset);
-			$o->max_length = @mysql_field_len($this->_queryID,$fieldOffset); // suggested by: Jim Nicholson (jnich@att.com)
+			if ($o) $o->max_length = @mysql_field_len($this->_queryID,$fieldOffset); // suggested by: Jim Nicholson (jnich#att.com)
 			//$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
-			$o->binary = (strpos($f,'binary')!== false);
+			if ($o) $o->binary = (strpos($f,'binary')!== false);
 		}
-		else if ($fieldOffset == -1) {	/*	The $fieldOffset argument is not provided thus its -1 	*/
+		else  {	/*	The $fieldOffset argument is not provided thus its -1 	*/
 			$o = @mysql_fetch_field($this->_queryID);
-		$o->max_length = @mysql_field_len($this->_queryID); // suggested by: Jim Nicholson (jnich@att.com)
-		//$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
+			//if ($o) $o->max_length = @mysql_field_len($this->_queryID); // suggested by: Jim Nicholson (jnich#att.com)
+			$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
 		}
 			
 		return $o;
 	}
 
-	function &GetRowAssoc($upper=true)
+	function GetRowAssoc($upper=true)
 	{
 		if ($this->fetchMode == MYSQL_ASSOC && !$upper) $row = $this->fields;
-		else $row =& ADORecordSet::GetRowAssoc($upper);
+		else $row = ADORecordSet::GetRowAssoc($upper);
 		return $row;
 	}
 	
@@ -765,6 +818,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 		case 'LONGBLOB': 
 		case 'BLOB':
 		case 'MEDIUMBLOB':
+		case 'BINARY':
 			return !empty($fieldobj->binary) ? 'B' : 'X';
 			
 		case 'YEAR':
