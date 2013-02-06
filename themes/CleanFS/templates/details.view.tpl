@@ -162,7 +162,7 @@
 					foreach ($assigned_users as $userid):
 					?>
 					<?php if($fs->prefs['gravatars'] == 1) {?>
-					{!tpl_userlinkgravatar($userid, 25)}
+					{!tpl_userlinkgravatar($userid, 25)} {!tpl_userlink($userid)}<hr>
 					<?php } else { ?>
 					{!tpl_userlink($userid)}
 					<?php } ?>
@@ -221,7 +221,18 @@
 		<? if (in_array('duedate', $fields)): ?>
 			<li>
 				<span class="label">{L('duedate')}</span>
-				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
+				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}<br><?php
+				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
+				if($days < 6)
+				{
+					echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+				}
+				else
+				{
+					echo $days." days left!";
+				}
+				?>
+				</span>
 			</li>
 		<? endif; ?>
 	</ul>
@@ -302,14 +313,22 @@
   <div id="fineprint">
 		{L('attachedtoproject')}: <a href="{$_SERVER['SCRIPT_NAME']}?project={$task_details['project_id']}">{$task_details['project_title']}</a>
 		<br />
+   		<?php if($fs->prefs['gravatars'] == 1) {?>
+		{L('openedby')} {!tpl_userlinkgravatar($task_details['opened_by'], 15)} {!tpl_userlink($task_details['opened_by'])}
+		<?php }else{ ?>
 		{L('openedby')} {!tpl_userlink($task_details['opened_by'])}
+		<?php } ?>
 			<?php if ($task_details['anon_email'] && $user->perms('view_tasks')): ?>
 				({$task_details['anon_email']})
 			<?php endif; ?>
 			- <span title="{formatDate($task_details['date_opened'], true)}">{formatDate($task_details['date_opened'], false)}</span>
 		<?php if ($task_details['last_edited_by']): ?>
 		<br />
+		<?php if($fs->prefs['gravatars'] == 1) {?>
+		{L('editedby')}  {!tpl_userlinkgravatar($task_details['last_edited_by'], 15)} {!tpl_userlink($task_details['last_edited_by'])}
+		<?php }else{ ?>
 		{L('editedby')}  {!tpl_userlink($task_details['last_edited_by'])}
+		<?php } ?>
 			- <span title="{formatDate($task_details['last_edited_time'], true)}">{formatDate($task_details['last_edited_time'], false)}</span>
 		<?php endif; ?>
   </div>
