@@ -223,13 +223,16 @@
 				<span class="label">{L('duedate')}</span>
 				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}<br><?php
 				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
-				if($days < 6)
+				if($task_details['due_date'] > 0)
 				{
-					echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
-				}
-				else
-				{
-					echo $days." days left!";
+					if($days < 6)
+					{
+						echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+					}
+					else
+					{
+						echo $days." days left!";
+					}
 				}
 				?>
 				</span>
