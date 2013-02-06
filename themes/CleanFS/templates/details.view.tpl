@@ -225,9 +225,17 @@
 				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
 				if($task_details['due_date'] > 0)
 				{
-					if($days < 6)
+					if($days < 6 && $days > 0)
 					{
 						echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+					}
+					elseif($days < 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)." days overdue!</font>";
+					}
+					elseif($days == 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>Due Today!</font>";
 					}
 					else
 					{
