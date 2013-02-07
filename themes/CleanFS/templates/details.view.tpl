@@ -100,7 +100,7 @@
   <div id="taskfields">
 	 <ul class="fieldslist">
 		<!-- Status -->
-		<? if (in_array('status', $fields)): ?>
+		<?php if (in_array('status', $fields)): ?>
 			<li>
 				<span class="label">{L('status')}</span>
 				<span class="value">
@@ -114,10 +114,10 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Progress -->
-		<? if (in_array('progress', $fields)): ?>
+		<?php if (in_array('progress', $fields)): ?>
 			<li>
 				<span class="label">{L('percentcomplete')}</span>
 				<span class="value">
@@ -127,19 +127,19 @@
 					</div>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 	</ul>
 	<ul class="fieldslist">
 		<!-- Task Type-->
-		<? if (in_array('tasktype', $fields)): ?>
+		<?php if (in_array('tasktype', $fields)): ?>
 			<li>
 				<span class="label">{L('tasktype')}</span>
 				<span class="value">{$task_details['tasktype_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Category -->
-		<? if (in_array('category', $fields)): ?>
+		<?php if (in_array('category', $fields)): ?>
 			<li>
 				<span class="label">{L('category')}</span>
 				<span class="value">
@@ -149,10 +149,10 @@
 					{$task_details['category_name']}
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Assigned To-->
-		<? if (in_array('assignedto', $fields)): ?>
+		<?php if (in_array('assignedto', $fields)): ?>
 			<li>
 				<span class="label">{L('assignedto')}</span>
 				<span class="value">
@@ -170,42 +170,42 @@
 					endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- OS -->
-		<? if (in_array('os', $fields)): ?>
+		<?php if (in_array('os', $fields)): ?>
 			<li>
 				<span class="label">{L('operatingsystem')}</span>
 				<span class="value">{$task_details['os_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Severity -->
-		<? if (in_array('severity', $fields)): ?>
+		<?php if (in_array('severity', $fields)): ?>
 			<li>
 				<span class="label">{L('severity')}</span>
 				<span class="value">{$task_details['severity_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Priority -->
-		<? if (in_array('priority', $fields)): ?>
+		<?php if (in_array('priority', $fields)): ?>
 			<li>
 				<span class="label">{L('priority')}</span>
 				<span class="value">{$task_details['priority_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Reported In -->
-		<? if (in_array('reportedin', $fields)): ?>
+		<?php if (in_array('reportedin', $fields)): ?>
 			<li>
 				<span class="label">{L('reportedversion')}</span>
 				<span class="value">{$task_details['reported_version_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Due -->
-		<? if (in_array('dueversion', $fields)): ?>
+		<?php if (in_array('dueversion', $fields)): ?>
 			<li>
 				<span class="label">{L('dueinversion')}</span>
 				<span class="value"><?php if ($task_details['due_in_version_name']): ?>
@@ -215,19 +215,19 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Due Date -->
-		<? if (in_array('duedate', $fields)): ?>
+		<?php if (in_array('duedate', $fields)): ?>
 			<li>
 				<span class="label">{L('duedate')}</span>
 				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 	</ul>
 	<ul class="fieldslist">
 		<!-- Votes-->
-		<? if (in_array('votes', $fields)): ?>
+		<?php if (in_array('votes', $fields)): ?>
 			<li class="votes">
 				<span class="label">{L('votes')}</span>
 				<span class="value">
@@ -253,10 +253,10 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Private -->
-		<? if (in_array('private', $fields)): ?>
+		<?php if (in_array('private', $fields)): ?>
 			<li>
 				<span class="label">{L('private')}</span>
 				<span class="value">
@@ -275,7 +275,7 @@
 						<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 
 		<!-- Watching -->

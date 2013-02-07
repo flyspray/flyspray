@@ -23,7 +23,7 @@
     <br />
 
 
-<? for ($i = 0 ; $i < 10 ; $i++) { ?>
+<?php for ($i = 0 ; $i < 10 ; $i++) { ?>
     <!-- User {$i} -->
     <tr>
       <td><input id="realname" name="real_name{$i}" class="text" value="{Req::val('real_name')}" type="text" size="20" maxlength="100" onblur="this.form.elements['user_name{$i}'].value = this.form.elements['real_name{$i}'].value.replace(/ /g,'');"/></td>
@@ -31,7 +31,7 @@
       <td><input id="emailaddress" name="email_address{$i}" class="text" value="{Req::val('email_address')}" type="text" size="20" maxlength="100" /></td>
     <tr>
      <tr></tr>
-<? } ?>
+<?php } ?>
     </table>
 
 
