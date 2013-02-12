@@ -87,6 +87,14 @@
           <label for="auto_assign">{L('autoassign')}</label>
           {!tpl_checkbox('auto_assign', Post::val('auto_assign', $proj->prefs['auto_assign']), 'auto_assign')}
         </li>
+
+        <li>
+          <label for="defaultdueversion">{L('defaultdueinversion')}</label>
+          <select id="defaultdueversion" name="default_due_version">
+              <option value="0">{L('undecided')}</option>
+              {!tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version']), true)}
+          </select>
+        </li>
       </ul>
     </div>
 

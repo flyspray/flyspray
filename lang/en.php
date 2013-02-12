@@ -200,6 +200,7 @@ $language = array(
 'severity'                => 'Severity',
 'reportedversion'         => 'Reported Version',
 'dueinversion'            => 'Due in Version',
+'defaultdueinversion'     => 'Default due in Version for new tasks',
 'undecided'               => 'Undecided',
 'percentcomplete'         => 'Percent Complete',
 'details'                 => 'Details',
