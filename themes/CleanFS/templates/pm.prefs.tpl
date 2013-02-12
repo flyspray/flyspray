@@ -59,6 +59,11 @@
         </li>
 
         <li>
+          <label for="disp_intro">{L('dispintro')}</label>
+          {!tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro')}
+        </li>
+	
+        <li>
           <label>{!tpl_checkbox('delete_project', null)} {L('deleteproject')}</label>
           <select name="move_to">{!tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id)}</select>
         </li>
@@ -112,7 +117,7 @@
         <li>
           <label>{L('visiblecolumns')}</label>
           <?php // Set the selectable column names
-          $columnnames = array('id', 'tasktype', 'category', 'severity',
+          $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
           'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
           'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
           'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
@@ -123,7 +128,7 @@
         <li>
           <label>{L('visiblefields')}</label>
           <?php // Set the selectable field names
-          $fieldnames = array('tasktype', 'category', 'severity', 'priority', 'status', 'private',
+          $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
           'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
           $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
           ?>

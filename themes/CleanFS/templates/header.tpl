@@ -60,6 +60,22 @@
 				>
 
   <div id="container">
+    <div id="showparentid" style="display: inline; position: absolute; top: 5px; left: 5px; color: white;">
+        <h4 style="display: inline; color: lightgreen;">
+        <?php 
+            $task_description = '';
+            if (isset($task_details) && $task_details['supertask_id']) {
+                $task_description = L('supertask') . ': ' . tpl_tasklink($task_details['supertask_id'], null, true, array('style' => 'color: lightblue;'));
+            }
+            else
+            if (isset($parent_id) && $parent_id) {
+                $task_description = L('supertask') . ': ' . tpl_tasklink($supertask_id, null, true, array('style' => 'color: lightblue;'));
+            }
+            echo $task_description;
+        ?>
+        </h4>
+    </div>
+
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="{$baseurl}">
 	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>
@@ -67,7 +83,6 @@
 	<?php } ?>
 	{$proj->prefs['project_title']}
     </a></h1>
-
 
     <?php $this->display('links.tpl'); ?>
 
@@ -81,9 +96,19 @@
 
     <div id="content">
       <div class="clear"></div>
+
+      <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
+            $actions = explode('.', Req::val('action'));
+            if ($fs->prefs['intro_message'] &&
+                    (  $proj->id== 0 || $proj->prefs['disp_intro'] ) &&
+                    (in_array($do, $show_message) || in_array(reset($actions), $show_message)) ): ?>
+      <div id="intromessage">{!TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id)}</div>
+      <?php endif; ?>
+
       <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
             $actions = explode('.', Req::val('action'));
             if ($proj->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
-      <div id="intromessage">{!TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
+	<div id="intromessage">{!TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
                                ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : '')}</div>
       <?php endif; ?>
+    

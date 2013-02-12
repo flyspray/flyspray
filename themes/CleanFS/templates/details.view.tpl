@@ -69,6 +69,20 @@
 			<a id="own_add" class="button" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;task_id={$task_details['task_id']}&amp;action=addtoassignees&amp;ids={$task_details['task_id']}"> {L('addmetoassignees')}</a>
 		<?php endif; ?>
 
+        <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+            <a id="newtask" class="button" href="{CreateURL('newtask', $proj->id, $task_details['task_id'])}" accesskey="a">{L('addnewsubtask')}</a>
+        <?php endif; ?>
+
+        <form action="{CreateUrl('details', $task_details['task_id'])}" method="post" style="display: inline">
+        <div style="display: inline">
+            <h4 style="display: inline">{L('setparent')}</h4>
+            <input type="hidden" name="action" value="details.setparent" />
+            <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
+            <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+            <button type="submit" name="submit">{L('set')}</button>
+        </div>
+        </form>
+
 	<?php endif; ?>
 </div>
 
@@ -162,7 +176,7 @@
 					foreach ($assigned_users as $userid):
 					?>
 					<?php if($fs->prefs['gravatars'] == 1) {?>
-					{!tpl_userlinkgravatar($userid, 25)}
+					{!tpl_userlinkgravatar($userid, 25)} {!tpl_userlink($userid)}<hr>
 					<?php } else { ?>
 					{!tpl_userlink($userid)}
 					<?php } ?>
@@ -221,7 +235,29 @@
 		<?php if (in_array('duedate', $fields)): ?>
 			<li>
 				<span class="label">{L('duedate')}</span>
-				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
+				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}<br><?php
+				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
+				if($task_details['due_date'] > 0)
+				{
+					if($days < 6 && $days > 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+					}
+					elseif($days < 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)." days overdue!</font>";
+					}
+					elseif($days == 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>Due Today!</font>";
+					}
+					else
+					{
+						echo $days." days left!";
+					}
+				}
+				?>
+				</span>
 			</li>
 		<?php endif; ?>
 	</ul>
@@ -302,14 +338,22 @@
   <div id="fineprint">
 		{L('attachedtoproject')}: <a href="{$_SERVER['SCRIPT_NAME']}?project={$task_details['project_id']}">{$task_details['project_title']}</a>
 		<br />
+   		<?php if($fs->prefs['gravatars'] == 1) {?>
+		{L('openedby')} {!tpl_userlinkgravatar($task_details['opened_by'], 15)} {!tpl_userlink($task_details['opened_by'])}
+		<?php }else{ ?>
 		{L('openedby')} {!tpl_userlink($task_details['opened_by'])}
+		<?php } ?>
 			<?php if ($task_details['anon_email'] && $user->perms('view_tasks')): ?>
 				({$task_details['anon_email']})
 			<?php endif; ?>
 			- <span title="{formatDate($task_details['date_opened'], true)}">{formatDate($task_details['date_opened'], false)}</span>
 		<?php if ($task_details['last_edited_by']): ?>
 		<br />
+		<?php if($fs->prefs['gravatars'] == 1) {?>
+		{L('editedby')}  {!tpl_userlinkgravatar($task_details['last_edited_by'], 15)} {!tpl_userlink($task_details['last_edited_by'])}
+		<?php }else{ ?>
 		{L('editedby')}  {!tpl_userlink($task_details['last_edited_by'])}
+		<?php } ?>
 			- <span title="{formatDate($task_details['last_edited_time'], true)}">{formatDate($task_details['last_edited_time'], false)}</span>
 		<?php endif; ?>
   </div>
@@ -394,6 +438,19 @@
 			</form>
 			<?php endif; ?>
 		</div>
+
+        <div id="subtasks">
+            <h4>Sub-Tasks:</h4>
+            <div>
+                <?php foreach ($subtasks as $subtask): ?>
+                    <?php 
+                        $link = tpl_tasklink($subtask, null, true);
+                        if(!$link) continue;
+                    ?>
+                    <div>{!$link}</div>
+                <?php endforeach; ?>
+            </div>
+        </div>
   </div>
 
   <?php if ($task_details['is_closed']): ?>

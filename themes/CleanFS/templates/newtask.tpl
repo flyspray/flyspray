@@ -1,6 +1,11 @@
 <!--<h3>{$proj->prefs['project_title']} :: {L('newtask')}</h3>-->
-
-<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id)}" method="post">
+<?php
+    if (!isset($supertask_id)) {
+        $supertask_id = 0;
+    }
+?>
+<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id, $supertask_id)}" method="post">
+  <input type="hidden" name="supertask_id" value="{$supertask_id}" />
   <div id="actionbar">
     <button class="button positive main" accesskey="s" type="submit">{L('addthistask')}</button>
     <div class="clear"></div>

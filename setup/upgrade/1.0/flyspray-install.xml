@@ -646,6 +646,9 @@
       <NOTNULL/>
       <DEFAULT value="index"/>
     </field>
+    <field name="disp_intro" type="I" size="1">
+      <DEFAULT value="0"/>
+    </field>
     <field name="default_due_version" type="C" size="40">
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
@@ -866,6 +869,12 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="supertask_id" type="I" size="10">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="list_order" type="I" size="3">
+      <DEFAULT value="0"/>
+    </field>
     <index name="attached_to_project">
       <col>project_id</col>
     </index>
@@ -889,6 +898,15 @@
     </index>
     <index name="due_date">
       <col>due_date</col>
+    </index>
+    <index name="task_project_super">
+      <col>project_id</col>
+      <col>supertask_id</col>
+      <col>list_order</col>
+    </index>
+    <index name="task_super">
+      <col>supertask_id</col>
+      <col>list_order</col>
     </index>
   </table>
   <table name="users">
@@ -1054,7 +1072,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'global_theme', 'CleanFS');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_columns', 'id project category tasktype severity summary status progress');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_columns', 'id project category tasktype priority severity summary status progress');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_fields', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_server', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_user', '');</query>
@@ -1063,9 +1081,10 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'notify_registration', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_ssl', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'last_update_check', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'intro_message', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'cache_feeds', '1');</query>
     <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index');</query>
-    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0');</query>
+    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0);</query>
     <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0, 0, 0);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>

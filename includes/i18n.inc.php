@@ -40,7 +40,7 @@ function load_translations()
     // if no valid lang_code, return english
     // valid == a-z and "_" case insensitive
 
-    if($user->infos['lang_code'])
+    if(array_key_exists('lang_code', $user->infos))
     {
         $lang_code=$user->infos['lang_code'];
     }

@@ -852,7 +852,20 @@ Regards,',
 'dependson'               => 'Depends on',
 'blocks'                  => 'Blocks',
 'newdependency'           => 'New dependency:',
-'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.'
+'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.',
+'dispintro'               => 'Display main introductory message',
+'mainmessage'             => 'Main introductory message',
+/* note only the English version for 'dispintro' is supported
+ * other languages should also be taken cared of in the future*/
+
+'setsupertask'            => 'Set Super-Task ID:',
+'supertaskmodified'       => 'Super-Task ID has been modified',
+'set'                     => 'Set',
+'supertask'               => 'Super-Task',
+'addnewsubtask'           => 'Add new sub-task',
+'addnewsubtaskin'         => 'Add new sub-task in',
+'hidesubtasks'            => 'Hide sub-tasks',
+'selfsupertasknotallowed' => 'Super-Task ID cannot be same as self Task ID',
 );
 
 ?>

@@ -628,11 +628,12 @@ switch ($action = Req::val('action'))
             break;
         }
 
+	/* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
                 'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
                 'lang_code', 'logo', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
-                'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds');
+			  'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message');
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -671,7 +672,7 @@ switch ($action = Req::val('action'))
 
         $viscols =    $fs->prefs['visible_columns']
                     ? $fs->prefs['visible_columns']
-                    : 'id tasktype severity summary status dueversion progress';
+                    : 'id tasktype priority severity summary status dueversion progress';
 
         $visfields =  $fs->prefs['visible_fields']
                     ? $fs->prefs['visible_fields']
@@ -681,12 +682,14 @@ switch ($action = Req::val('action'))
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
                                    others_view, anon_open, project_is_active,
-                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)',
+                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber, disp_intro)
+                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
                   array(Post::val('project_title'), Post::val('theme_style'),
                         Post::val('intro_message'), Post::num('others_view', 0),
                         Post::num('anon_open', 0),  $viscols, $visfields,
-                        Post::val('lang_code', 'en'), '', ''));
+                        Post::val('lang_code', 'en'), '', '',
+		        Post::num('disp_intro')
+		      ));
 
         $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         $pid = $db->fetchOne($sql);
@@ -767,6 +770,8 @@ switch ($action = Req::val('action'))
         $args[] = implode(' ', (array) Post::val('notify_types'));
         $cols[] = 'last_updated';
         $args[] = time();
+	$cols[] = 'disp_intro';
+	$args[] = Post::val('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
         $args[] = $proj->id;
@@ -1682,5 +1687,48 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('voteremovefailed'));
             break;
         }
+
+    // ##################
+    // set supertask id
+    // ##################
+    case 'details.setsupertask':
+        if (!$user->can_edit_task($task)) {
+            break;
+        }
+
+        if (!Post::val('supertask_id')) {
+            Flyspray::show_error(L('formnotcomplete'));
+            break;
+        }
+
+        // check that supertask_id is not same as task_id
+        //  (prevent to refer to it self)
+        if ($task['task_id'] == Post::val('supertask_id')) {
+            Flyspray::show_error(L('selfsupertasknotallowed'));
+            break;
+        }
+
+        // TODO: check that supertask_id is a valid task id
+        //  (btw: what if a task is deleted later which was a supertask?)
+
+        // TODO: check that task_id is not in the chain of supertasks
+        //  (for preventing cyclical dependencies)
+
+        // TODO: send notifications
+
+        // TODO: log in task history
+
+        // update the task's data in database
+        // TODO: error checking!
+        $db->Query('UPDATE  {tasks}
+                       SET  supertask_id = ?
+                     WHERE  task_id = ?', 
+                     array(Post::val('supertask_id'), $task['supertask_id']));
+
+        // set success message
+        $_SESSION['SUCCESS'] = L('supertaskmodified');
+
+        break;
+
 }
 ?>

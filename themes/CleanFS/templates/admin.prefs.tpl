@@ -62,7 +62,20 @@
           <select id="cache_feeds" name="cache_feeds">
           {!tpl_options(array('0' => L('no_cache'), '1' => L('cache_disk'), '2' => L('cache_db')), $fs->prefs['cache_feeds'])}
           </select>
-        </li>   
+        </li>
+
+	<li>
+          <label for="intromesg">{L('mainmessage')}</label>
+          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+          <div class="hide preview" id="preview"></div>
+          <?php endif; ?>
+          {!TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message']))}
+          <br />
+          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+          <button tabindex="9" type="button" onclick="showPreview('intromesg', '{#$baseurl}', 'preview')">{L('preview')}</button>
+          <?php endif; ?>
+      </li>
+
       </ul>
     </div>
 
@@ -171,7 +184,7 @@
           <li>
             <label>{L('visiblecolumns')}</label>
             <?php // Set the selectable column names
-            $columnnames = array('id', 'project', 'tasktype', 'category', 'severity',
+            $columnnames = array('id', 'parent', 'project', 'tasktype', 'category', 'severity',
             'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
             'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
             'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
@@ -183,7 +196,7 @@
           <li>
             <label>{L('visiblefields')}</label>
             <?php // Set the selectable field names
-            $fieldnames = array('tasktype', 'category', 'severity', 'priority', 'status', 'private',
+            $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
             'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
             $selectedfields = explode(" ", $fs->prefs['visible_fields']);
             ?>
