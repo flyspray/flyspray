@@ -294,7 +294,7 @@ function tpl_userlink($uid)
 
     if (isset($uname)) {
         $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-        $cache[$uid] = vsprintf('<a href="%s">%s (%s)</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
+        $cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
     } elseif (empty($cache[$uid])) {
         $cache[$uid] = eL('anonymous');
     }
