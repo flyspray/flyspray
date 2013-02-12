@@ -1687,5 +1687,48 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('voteremovefailed'));
             break;
         }
+
+    // ##################
+    // set supertask id
+    // ##################
+    case 'details.setsupertask':
+        if (!$user->can_edit_task($task)) {
+            break;
+        }
+
+        if (!Post::val('supertask_id')) {
+            Flyspray::show_error(L('formnotcomplete'));
+            break;
+        }
+
+        // check that supertask_id is not same as task_id
+        //  (prevent to refer to it self)
+        if ($task['task_id'] == Post::val('supertask_id')) {
+            Flyspray::show_error(L('selfsupertasknotallowed'));
+            break;
+        }
+
+        // TODO: check that supertask_id is a valid task id
+        //  (btw: what if a task is deleted later which was a supertask?)
+
+        // TODO: check that task_id is not in the chain of supertasks
+        //  (for preventing cyclical dependencies)
+
+        // TODO: send notifications
+
+        // TODO: log in task history
+
+        // update the task's data in database
+        // TODO: error checking!
+        $db->Query('UPDATE  {tasks}
+                       SET  supertask_id = ?
+                     WHERE  task_id = ?', 
+                     array(Post::val('supertask_id'), $task['supertask_id']));
+
+        // set success message
+        $_SESSION['SUCCESS'] = L('supertaskmodified');
+
+        break;
+
 }
 ?>

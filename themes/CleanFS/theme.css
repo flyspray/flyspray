@@ -767,7 +767,9 @@ form #taskdetails #taskfields {
   width: 335px; }
 
 form #taskdetails #taskdetailsfull {
-  margin-left: 355px; }
+  position: relative; 
+  top: -20px;
+  margin-left: 355px;}
 
 
 #taskdetails {
@@ -1020,7 +1022,7 @@ div.error, div.success, div.mixed {
   margin: 20px 20px 0 20px;
   color: white;
   position: absolute;
-  top: 110px;
+  top: -10px;
   width: 30%;
   left: 35%; }
 
@@ -1172,6 +1174,13 @@ div#taskdeps {
   width: 50%;
   margin-bottom: 8px; }
 
+div#subtasks {
+  display: inline; 
+  align: right;
+  float: left;
+  width: 50%;
+  margin-bottom: 8px; }
+
 
 div#taskblocks {
   float: left;
@@ -1191,7 +1200,6 @@ a.datelink {
   height: 16px;
   width: 16px;
   vertical-align: middle; }
-
 
 hr {
   /*color: $box_border;*/

@@ -23,6 +23,12 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 	$do = 'index';
 }
 
+// supertask_id for add new sub-task
+$supertask_id = 0;
+if (Req::has('supertask')) {
+    $supertask_id = Req::val('supertask');
+}
+
 
 /* permission stuff */
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -149,6 +155,8 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 
 $page->assign('do', $do);
+$page->assign('supertask_id', $supertask_id);
+
 $page->pushTpl('header.tpl');
 
 // DB modifications?

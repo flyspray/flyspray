@@ -69,6 +69,20 @@
 			<a id="own_add" class="button" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;task_id={$task_details['task_id']}&amp;action=addtoassignees&amp;ids={$task_details['task_id']}"> {L('addmetoassignees')}</a>
 		<?php endif; ?>
 
+        <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+            <a id="newtask" class="button" href="{CreateURL('newtask', $proj->id, $task_details['task_id'])}" accesskey="a">{L('addnewsubtask')}</a>
+        <?php endif; ?>
+
+        <form action="{CreateUrl('details', $task_details['task_id'])}" method="post" style="display: inline">
+        <div style="display: inline">
+            <h4 style="display: inline">{L('setparent')}</h4>
+            <input type="hidden" name="action" value="details.setparent" />
+            <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
+            <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+            <button type="submit" name="submit">{L('set')}</button>
+        </div>
+        </form>
+
 	<?php endif; ?>
 </div>
 
@@ -424,6 +438,19 @@
 			</form>
 			<?php endif; ?>
 		</div>
+
+        <div id="subtasks">
+            <h4>Sub-Tasks:</h4>
+            <div>
+                <?php foreach ($subtasks as $subtask): ?>
+                    <?php 
+                        $link = tpl_tasklink($subtask, null, true);
+                        if(!$link) continue;
+                    ?>
+                    <div>{!$link}</div>
+                <?php endforeach; ?>
+            </div>
+        </div>
   </div>
 
   <?php if ($task_details['is_closed']): ?>
