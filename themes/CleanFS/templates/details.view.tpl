@@ -172,15 +172,20 @@
 				<span class="value">
 					<?php if (empty($assigned_users)): ?>
 					{L('noone')}
-					<?php else:
+					<?php else: ?>
+					<table style='border: 0px; border-collapse: collapse'>
+					<?php
 					foreach ($assigned_users as $userid):
 					?>
 					<?php if($fs->prefs['gravatars'] == 1) {?>
-					{!tpl_userlinkgravatar($userid, 25)} {!tpl_userlink($userid)}<hr>
+					<tr><td>{!tpl_userlinkgravatar($userid, 25)}</td><td>{!tpl_userlink($userid)}</td></tr>
 					<?php } else { ?>
-					{!tpl_userlink($userid)}
+					<tr><td>{!tpl_userlink($userid)}</td></tr>
 					<?php } ?>
 					<?php endforeach;
+					?>
+					</table>
+					<?php 
 					endif; ?>
 				</span>
 			</li>
