@@ -479,7 +479,8 @@ abstract class Backend
     {
         global $fs, $db, $notify, $baseurl;
 
-        $user_name = Backend::clean_username($user_name);
+  Flyspray::show_error(strtolower($email));
+	$user_name = Backend::clean_username($user_name);
 
         // Limit length
         $real_name = substr(trim($real_name), 0, 100);
@@ -506,6 +507,24 @@ abstract class Backend
                                tasks_perpage, register_date, time_zone, dateformat, dateformat_extended)
                      VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?)",
             array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone, '', ''));
+
+        $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
+	$user_id = $db->fetchOne($temp);
+
+        $emailList = explode(';',$email);
+        foreach ($emailList as $mail)	//Still need to do: check email
+	{
+		$count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+		$count = $db->fetchOne($count);
+		if ($count > 0)
+		{
+		    Flyspray::show_error("Email address has alredy been taken");
+		    return false;
+		}
+		else if ($mail != '')
+	  	    $db->Query("INSERT INTO {user_emails}(id,email_address) VALUES (?,?)",array($user_id,strtolower($mail)));
+        }
+	Flyspray::show_error($i);
 
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
@@ -829,7 +848,7 @@ abstract class Backend
         $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);
-        $task_id = $task_id ? $task_id : 1;
+        $task_id = $task_id ? $task_id : 1; 
         //now, $task_id is always the first element of $sql_values
         array_unshift($sql_values, $task_id);
 
@@ -839,7 +858,17 @@ abstract class Backend
                                    detailed_desc, opened_by,
                                    percent_complete, $sql_params )
                          VALUES  ($sql_placeholder)", $sql_values);
+	/////////////////////////////////////Add tags///////////////////////////////////////
+	$tagList = explode(';',$args['tags']);
+	foreach ($tagList as $tag)
+	{
+	   if ($tag == '')
+		   continue;
+	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)	
+		                           VALUES (?,?)",array($task_id,$tag));
+        }
 
+        ////////////////////////////////////////////////////////////////////////////////////
         // Log the assignments and send notifications to the assignees
         if (isset($args['rassigned_to']) && is_array($args['rassigned_to']))
         {

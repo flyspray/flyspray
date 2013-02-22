@@ -16,7 +16,9 @@ if (Req::val('logout')) {
 
 if (Req::val('user_name') != '' && Req::val('password') != '') {
     // Otherwise, they requested login.  See if they provided the correct credentials...
-    $username = Backend::clean_username(Req::val('user_name'));
+    // FIXME: Do not do clean_username. Should not autostrip stuff
+    // $username = Backend::clean_username(Req::val('user_name'));
+    $username = Req::val('user_name');
     $password = Req::val('password');
 
     // Run the username and password through the login checker

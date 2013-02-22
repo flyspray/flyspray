@@ -15,7 +15,7 @@
 
     <li>
       <label for="emailaddress">{L('emailaddress')}</label>
-      <input id="emailaddress" value="{Req::val('email_address')}" name="email_address" class="required text" type="text" size="20" maxlength="100" />
+      <input id="emailaddress" value="{Req::val('email_address')}" name="email_address" class="required text" type="text" size="20" maxlength="100" /> {L('validemail')}
     </li>
 
     <li>

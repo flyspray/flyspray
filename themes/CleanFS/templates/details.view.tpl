@@ -329,6 +329,9 @@
 		<h2 class="summary severity{$task_details['task_severity']}">
 		 FS#{$task_details['task_id']} - {$task_details['item_summary']}
 		</h2>
+                <h4>
+                  Tags: {$tag_list}
+                </h4>
 		<!--<h3 class="taskdesc">{L('details')}</h3>-->
 
      <div id="taskdetailstext">{!$task_text}</div>

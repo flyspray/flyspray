@@ -158,6 +158,12 @@
           <label for="itemsummary">{L('summary')}</label>
           <input id="itemsummary" class="text severity{Req::val('task_severity', 2)}" type="text" value="{Req::val('item_summary')}"
             name="item_summary" size="80" maxlength="100" />
+
+          <br/>
+          <label for="tags">Tags:</label>
+          <input id="tags" class="text severity{Req::val('task_severity', 2)}" type="text" value="{Req::val('item_summary')}"
+            name="tags" size="80" maxlength="100" /> <!--hyz!!!!! -->
+
         </h2>
 
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>

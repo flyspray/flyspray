@@ -46,8 +46,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        list($task_id, $token) = Backend::create_task($_POST);
-
+	list($task_id, $token) = Backend::create_task($_POST);
         // Status and redirect
         if ($task_id) {
             $_SESSION['SUCCESS'] = L('newtaskadded');
@@ -440,8 +439,8 @@ switch ($action = Req::val('action'))
                            jabber_id = ? AND jabber_id != ''
                            OR email_address = ? AND email_address != ''",
                           array(Post::val('jabber_id'), Post::val('email_address')));
-            
-            if ($db->fetchOne($sql)) {
+
+	    if ($db->fetchOne($sql)) {
                 Flyspray::show_error(L('emailtaken'));
                 break;
             }

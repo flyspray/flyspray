@@ -1,5 +1,14 @@
 <?xml version="1.0"?>
 <schema version="0.3">
+  <table name="user_emails">
+	  <field name="id" type="I" size="5"></field>
+	  <field name="email_address" type="C" size="100"></field>
+  </table>
+  <table name="tags">
+          <field name="task_id" type="I" size="5"></field>
+	  <field name="tag" type="C" size="100"></field>
+  </table>
+
   <table name="admin_requests">
     <field name="request_id" type="I" size="5">
       <KEY/>

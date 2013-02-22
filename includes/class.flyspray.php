@@ -629,13 +629,18 @@ class Flyspray
     {
         global $db;
 
-        $result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
+	$email_address = $username;  //handle multiple email addresses
+        $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
+	$user_id = $db->FetchRow($temp);
+	$user_id = $user_id[id];
+      	
+	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
                            LEFT JOIN  {users} u ON uig.user_id = u.user_id
-                               WHERE  u.email_address = ? OR u.user_name = ? AND g.project_id = ?
-                            ORDER BY  g.group_id ASC", array($username, $username, 0));
+                               WHERE  u.user_id = ? OR u.user_name = ? AND g.project_id = ?
+                            ORDER BY  g.group_id ASC", array($user_id, $username, 0));
 
         $auth_details = $db->FetchRow($result);
 
