@@ -69,6 +69,20 @@
 			<a id="own_add" class="button" href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;task_id={$task_details['task_id']}&amp;action=addtoassignees&amp;ids={$task_details['task_id']}"> {L('addmetoassignees')}</a>
 		<?php endif; ?>
 
+        <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+            <a id="newtask" class="button" href="{CreateURL('newtask', $proj->id, $task_details['task_id'])}" accesskey="a">{L('addnewsubtask')}</a>
+        <?php endif; ?>
+
+        <form action="{CreateUrl('details', $task_details['task_id'])}" method="post" style="display: inline">
+        <div style="display: inline">
+            <h4 style="display: inline">{L('setparent')}</h4>
+            <input type="hidden" name="action" value="details.setparent" />
+            <input type="hidden" name="task_id" value="{$task_details['task_id']}" />
+            <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+            <button type="submit" name="submit">{L('set')}</button>
+        </div>
+        </form>
+
 	<?php endif; ?>
 </div>
 
@@ -100,7 +114,7 @@
   <div id="taskfields">
 	 <ul class="fieldslist">
 		<!-- Status -->
-		<? if (in_array('status', $fields)): ?>
+		<?php if (in_array('status', $fields)): ?>
 			<li>
 				<span class="label">{L('status')}</span>
 				<span class="value">
@@ -114,10 +128,10 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Progress -->
-		<? if (in_array('progress', $fields)): ?>
+		<?php if (in_array('progress', $fields)): ?>
 			<li>
 				<span class="label">{L('percentcomplete')}</span>
 				<span class="value">
@@ -127,19 +141,19 @@
 					</div>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 	</ul>
 	<ul class="fieldslist">
 		<!-- Task Type-->
-		<? if (in_array('tasktype', $fields)): ?>
+		<?php if (in_array('tasktype', $fields)): ?>
 			<li>
 				<span class="label">{L('tasktype')}</span>
 				<span class="value">{$task_details['tasktype_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Category -->
-		<? if (in_array('category', $fields)): ?>
+		<?php if (in_array('category', $fields)): ?>
 			<li>
 				<span class="label">{L('category')}</span>
 				<span class="value">
@@ -149,63 +163,68 @@
 					{$task_details['category_name']}
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Assigned To-->
-		<? if (in_array('assignedto', $fields)): ?>
+		<?php if (in_array('assignedto', $fields)): ?>
 			<li>
 				<span class="label">{L('assignedto')}</span>
-				<span class="value">
+				<span class="value assignedto">
 					<?php if (empty($assigned_users)): ?>
 					{L('noone')}
-					<?php else:
+					<?php else: ?>
+					<table class="assignedto">
+					<?php
 					foreach ($assigned_users as $userid):
 					?>
 					<?php if($fs->prefs['gravatars'] == 1) {?>
-					{!tpl_userlinkgravatar($userid, 25)}
+					<tr><td>{!tpl_userlinkgravatar($userid, 26)}</td><td>{!tpl_userlink($userid)}</td></tr>
 					<?php } else { ?>
-					{!tpl_userlink($userid)}
+					<tr><td class="assignedto_name">{!tpl_userlink($userid)}</td></tr>
 					<?php } ?>
 					<?php endforeach;
+					?>
+					</table>
+					<?php 
 					endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- OS -->
-		<? if (in_array('os', $fields)): ?>
+		<?php if (in_array('os', $fields)): ?>
 			<li>
 				<span class="label">{L('operatingsystem')}</span>
 				<span class="value">{$task_details['os_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Severity -->
-		<? if (in_array('severity', $fields)): ?>
+		<?php if (in_array('severity', $fields)): ?>
 			<li>
 				<span class="label">{L('severity')}</span>
 				<span class="value">{$task_details['severity_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Priority -->
-		<? if (in_array('priority', $fields)): ?>
+		<?php if (in_array('priority', $fields)): ?>
 			<li>
 				<span class="label">{L('priority')}</span>
 				<span class="value">{$task_details['priority_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Reported In -->
-		<? if (in_array('reportedin', $fields)): ?>
+		<?php if (in_array('reportedin', $fields)): ?>
 			<li>
 				<span class="label">{L('reportedversion')}</span>
 				<span class="value">{$task_details['reported_version_name']}</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Due -->
-		<? if (in_array('dueversion', $fields)): ?>
+		<?php if (in_array('dueversion', $fields)): ?>
 			<li>
 				<span class="label">{L('dueinversion')}</span>
 				<span class="value"><?php if ($task_details['due_in_version_name']): ?>
@@ -215,19 +234,41 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Due Date -->
-		<? if (in_array('duedate', $fields)): ?>
+		<?php if (in_array('duedate', $fields)): ?>
 			<li>
 				<span class="label">{L('duedate')}</span>
-				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}</span>
+				<span class="value">{formatDate($task_details['due_date'], false, L('undecided'))}<br><?php
+				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
+				if($task_details['due_date'] > 0)
+				{
+					if($days < 6 && $days > 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+					}
+					elseif($days < 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)." days overdue!</font>";
+					}
+					elseif($days == 0)
+					{
+						echo "<font style='color: red; font-weight: bold'>Due Today!</font>";
+					}
+					else
+					{
+						echo $days." days left!";
+					}
+				}
+				?>
+				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 	</ul>
 	<ul class="fieldslist">
 		<!-- Votes-->
-		<? if (in_array('votes', $fields)): ?>
+		<?php if (in_array('votes', $fields)): ?>
 			<li class="votes">
 				<span class="label">{L('votes')}</span>
 				<span class="value">
@@ -253,10 +294,10 @@
 					<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 		<!-- Private -->
-		<? if (in_array('private', $fields)): ?>
+		<?php if (in_array('private', $fields)): ?>
 			<li>
 				<span class="label">{L('private')}</span>
 				<span class="value">
@@ -275,7 +316,7 @@
 						<?php endif; ?>
 				</span>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 
 
 		<!-- Watching -->
@@ -397,6 +438,19 @@
 			</form>
 			<?php endif; ?>
 		</div>
+
+        <div id="subtasks">
+            <h4>Sub-Tasks:</h4>
+            <div>
+                <?php foreach ($subtasks as $subtask): ?>
+                    <?php 
+                        $link = tpl_tasklink($subtask, null, true);
+                        if(!$link) continue;
+                    ?>
+                    <div>{!$link}</div>
+                <?php endforeach; ?>
+            </div>
+        </div>
   </div>
 
   <?php if ($task_details['is_closed']): ?>

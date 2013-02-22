@@ -23,6 +23,12 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 	$do = 'index';
 }
 
+// supertask_id for add new sub-task
+$supertask_id = 0;
+if (Req::has('supertask')) {
+    $supertask_id = Req::val('supertask');
+}
+
 
 /* permission stuff */
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -32,6 +38,8 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 } else {
     $user = new User(0, $proj);
 }
+
+
 
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
@@ -67,6 +75,16 @@ if (Get::val('getfile')) {
         Flyspray::show_error(1);
     }
     exit;
+}
+
+// Load translations
+load_translations();
+
+for ($i = 6; $i >= 1; $i--) {
+    $fs->priorities[$i] = L('priority' . $i);
+}
+for ($i = 5; $i >= 1; $i--) {
+    $fs->severities[$i] = L('severity' . $i);
 }
 
 /*******************************************************************************/
@@ -137,6 +155,8 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 
 $page->assign('do', $do);
+$page->assign('supertask_id', $supertask_id);
+
 $page->pushTpl('header.tpl');
 
 // DB modifications?

@@ -266,8 +266,12 @@ class Notifications {
           
           if ($fs->prefs['smtp_user']) {
               $swiftconn->setUsername($fs->prefs['smtp_user']);
+          }
+
+          if ($fs->prefs['smtp_pass']){
               $swiftconn->setPassword($fs->prefs['smtp_pass']);
           }
+
           if(defined('FS_SMTP_TIMEOUT')) {
               $swiftconn->setTimeout(FS_SMTP_TIMEOUT);
           }

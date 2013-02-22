@@ -274,7 +274,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="parent_id" type="I" size="3">
+    <field name="supertask_id" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>

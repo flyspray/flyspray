@@ -63,6 +63,13 @@ else {
         $next_id = isset($id_list[$i + 1]) ? $id_list[$i + 1] : '';
     }
 
+    // Sub-Tasks
+    $subtasks = $db->Query('SELECT  task_id 
+                                 FROM  {tasks} 
+                                WHERE  supertask_id = ?
+                                ORDER BY list_order', 
+                                array($task_id));
+    
     // Parent categories
     $parent = $db->Query('SELECT  *
                             FROM  {list_category}
@@ -142,6 +149,7 @@ else {
     $page->assign('prev_id',   $prev_id);
     $page->assign('next_id',   $next_id);
     $page->assign('task_text', $task_text);
+    $page->assign('subtasks', $db->fetchAllArray($subtasks));
     $page->assign('deps',      $db->fetchAllArray($check_deps));
     $page->assign('parent',    $db->fetchAllArray($parent));
     $page->assign('blocks',    $db->fetchAllArray($check_blocks));

@@ -1,6 +1,11 @@
 <!--<h3>{$proj->prefs['project_title']} :: {L('newtask')}</h3>-->
-
-<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id)}" method="post">
+<?php
+    if (!isset($supertask_id)) {
+        $supertask_id = 0;
+    }
+?>
+<form enctype="multipart/form-data" action="{CreateUrl('newtask', $proj->id, $supertask_id)}" method="post">
+  <input type="hidden" name="supertask_id" value="{$supertask_id}" />
   <div id="actionbar">
     <button class="button positive main" accesskey="s" type="submit">{L('addthistask')}</button>
     <div class="clear"></div>
@@ -14,11 +19,11 @@
         <ul class="form_elements slim">
 
           <!-- Task Type -->
-          <? if (in_array('tasktype', $fields)) { ?>
+          <?php if (in_array('tasktype', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="tasktype">{L('tasktype')}</label>
             <select name="task_type" id="tasktype">
               {!tpl_options($proj->listTaskTypes(), Req::val('task_type'))}
@@ -26,11 +31,11 @@
           </li>
 
           <!-- Category -->
-          <? if (in_array('category', $fields)) { ?>
+          <?php if (in_array('category', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="category">{L('category')}</label>
             <select class="adminlist" name="product_category" id="category">
               {!tpl_options($proj->listCategories(), Req::val('product_category'))}
@@ -38,11 +43,11 @@
           </li>
 
           <!-- Status -->
-          <? if (in_array('status', $fields)) { ?>
+          <?php if (in_array('status', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="status">{L('status')}</label>
             <select id="status" name="item_status" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED)))}
@@ -51,11 +56,11 @@
 
           <?php if ($user->perms('modify_all_tasks')): ?>
           <!-- Assigned To -->
-          <? if (in_array('assignedto', $fields)) { ?>
+          <?php if (in_array('assignedto', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label>{L('assignedto')}</label>
             <?php if ($user->perms('modify_all_tasks')): ?>
             <?php $this->display('common.multiuserselect.tpl'); ?>
@@ -64,11 +69,11 @@
           <?php endif; ?>
 
           <!-- os -->
-          <? if (in_array('os', $fields)) { ?>
+          <?php if (in_array('os', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="os">{L('operatingsystem')}</label>
             <select id="os" name="operating_system">
               {!tpl_options($proj->listOs(), Req::val('operating_system'))}
@@ -76,11 +81,11 @@
           </li>
 
           <!-- Severity -->
-          <? if (in_array('severity', $fields)) { ?>
+          <?php if (in_array('severity', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="severity">{L('severity')}</label>
             <select onchange="getElementById('edit_summary').className = 'summary severity' + this.value;
                               getElementById('itemsummary').className = 'text severity' + this.value;"
@@ -90,11 +95,11 @@
           </li>
 
           <!-- Priority-->
-          <? if (in_array('priority', $fields)) { ?>
+          <?php if (in_array('priority', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="priority">{L('priority')}</label>
             <select id="priority" name="task_priority" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               {!tpl_options($fs->priorities, Req::val('task_priority', 4))}
@@ -102,11 +107,11 @@
           </li>
 
           <!-- Reported Version-->
-          <? if (in_array('reportedin', $fields)) { ?>
+          <?php if (in_array('reportedin', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="reportedver">{L('reportedversion')}</label>
             <select class="adminlist" name="product_version" id="reportedver">
               {!tpl_options($proj->listVersions(false, 2), Req::val('product_version'))}
@@ -114,25 +119,25 @@
           </li>
 
           <!-- Due Version -->
-          <? if (in_array('dueversion', $fields)) { ?>
+          <?php if (in_array('dueversion', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="dueversion">{L('dueinversion')}</label>
             <select id="dueversion" name="closedby_version" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               <option value="0">{L('undecided')}</option>
-              {!tpl_options($proj->listVersions(false, 3), Req::val('closedby_version'))}
+              {!tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true)}
             </select>
           </li>
 
           <?php if ($user->perms('modify_all_tasks')): ?>
           <!-- Due Date -->
-          <? if (in_array('duedate', $fields)) { ?>
+          <?php if (in_array('duedate', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="due_date">{L('duedate')}</label>
             {!tpl_datepicker('due_date', '', Req::val('due_date'))}
           </li>
@@ -140,11 +145,11 @@
 
           <?php if ($user->perms('manage_project')): ?>
           <!-- Private -->
-          <? if (in_array('private', $fields)) { ?>
+          <?php if (in_array('private', $fields)) { ?>
             <li>
-          <? } else { ?>
+          <?php } else { ?>
             <li style="display:none">
-          <? } ?>
+          <?php } ?>
             <label for="private">{L('private')}</label>
             {!tpl_checkbox('mark_private', Req::val('mark_private', 0), 'private')}
           </li>

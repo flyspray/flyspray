@@ -294,7 +294,7 @@ function tpl_userlink($uid)
 
     if (isset($uname)) {
         $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-        $cache[$uid] = vsprintf('<a href="%s">%s (%s)</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
+        $cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
     } elseif (empty($cache[$uid])) {
         $cache[$uid] = eL('anonymous');
     }
@@ -302,7 +302,7 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkgravatar($uid, $size, $float = '', $padding = '')
+function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 {
     global $db, $user;
 	if (is_array($uid)) {
@@ -739,7 +739,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'toplevel':
             case 'roadmap':
             case 'index':
-            case 'newtask':   $return = $url . $type .  '/proj' . $arg1; break;
+            case 'newtask':   $return = $url . $type .  '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : ''); break;
 
             case 'editgroup': $return = $url . $arg2 . '/' . $type . '/' . $arg1; break;
 
@@ -772,7 +772,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'roadmap':
             case 'toplevel':
             case 'index':
-            case 'newtask':   $return = $url . '&project=' . $arg1; break;
+            case 'newtask':   $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : ''); break;
 
             case 'editgroup': $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
 
