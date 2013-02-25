@@ -302,7 +302,7 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkgravatar($uid, $size, $float = '', $padding = '')
+function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 {
     global $db, $user;
 	if (is_array($uid)) {

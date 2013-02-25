@@ -169,18 +169,23 @@
 		<?php if (in_array('assignedto', $fields)): ?>
 			<li>
 				<span class="label">{L('assignedto')}</span>
-				<span class="value">
+				<span class="value assignedto">
 					<?php if (empty($assigned_users)): ?>
 					{L('noone')}
-					<?php else:
+					<?php else: ?>
+					<table class="assignedto">
+					<?php
 					foreach ($assigned_users as $userid):
 					?>
 					<?php if($fs->prefs['gravatars'] == 1) {?>
-					{!tpl_userlinkgravatar($userid, 25)} {!tpl_userlink($userid)}<hr>
+					<tr><td>{!tpl_userlinkgravatar($userid, 26)}</td><td>{!tpl_userlink($userid)}</td></tr>
 					<?php } else { ?>
-					{!tpl_userlink($userid)}
+					<tr><td class="assignedto_name">{!tpl_userlink($userid)}</td></tr>
 					<?php } ?>
 					<?php endforeach;
+					?>
+					</table>
+					<?php 
 					endif; ?>
 				</span>
 			</li>
@@ -338,22 +343,14 @@
   <div id="fineprint">
 		{L('attachedtoproject')}: <a href="{$_SERVER['SCRIPT_NAME']}?project={$task_details['project_id']}">{$task_details['project_title']}</a>
 		<br />
-   		<?php if($fs->prefs['gravatars'] == 1) {?>
-		{L('openedby')} {!tpl_userlinkgravatar($task_details['opened_by'], 15)} {!tpl_userlink($task_details['opened_by'])}
-		<?php }else{ ?>
 		{L('openedby')} {!tpl_userlink($task_details['opened_by'])}
-		<?php } ?>
 			<?php if ($task_details['anon_email'] && $user->perms('view_tasks')): ?>
 				({$task_details['anon_email']})
 			<?php endif; ?>
 			- <span title="{formatDate($task_details['date_opened'], true)}">{formatDate($task_details['date_opened'], false)}</span>
 		<?php if ($task_details['last_edited_by']): ?>
 		<br />
-		<?php if($fs->prefs['gravatars'] == 1) {?>
-		{L('editedby')}  {!tpl_userlinkgravatar($task_details['last_edited_by'], 15)} {!tpl_userlink($task_details['last_edited_by'])}
-		<?php }else{ ?>
 		{L('editedby')}  {!tpl_userlink($task_details['last_edited_by'])}
-		<?php } ?>
 			- <span title="{formatDate($task_details['last_edited_time'], true)}">{formatDate($task_details['last_edited_time'], false)}</span>
 		<?php endif; ?>
   </div>
