@@ -41,6 +41,7 @@
     <script type="text/javascript" src="{$baseurl}js/jscalendar/calendar-setup_stripped.js"> </script>
     <script type="text/javascript" src="{$baseurl}js/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
     <script type="text/javascript" src="{$baseurl}js/lightbox/js/lightbox.js"></script>
+    <script type="text/javascript" src="{$baseurl}js/ckeditor/ckeditor.js"></script>
     <link rel="stylesheet" href="{$baseurl}js/lightbox/css/lightbox.css" type="text/css" media="screen" />
     <!--[if IE]>
     <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
