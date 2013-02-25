@@ -608,6 +608,11 @@ class TextFormatter
             $return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
         }
         $return .= '</textarea>';
+
+        //Activate CkEditor on TextAreas.
+        $return .= "<script>
+                        CKEDITOR.replace( '".$name."' );
+                    </script>";
         return $return;
     }
 }
