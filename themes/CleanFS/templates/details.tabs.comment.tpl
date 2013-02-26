@@ -86,7 +86,7 @@
       <?php endif; ?>
       {!TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text'))}
 
-      <button tabindex="9" type="submit">{L('addcomment')}</button>
+      <button accesskey="s" tabindex="9" type="submit">{L('addcomment')}</button>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <button tabindex="9" type="button" onclick="showPreview('comment_text', '{#$baseurl}', 'preview')">{L('preview')}</button>
       <?php endif; ?>
