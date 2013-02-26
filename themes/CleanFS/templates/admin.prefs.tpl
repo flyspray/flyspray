@@ -64,7 +64,12 @@
           </select>
         </li>
 
-	<li>
+        <li>
+          <label for="disable_lostpw">{L('disable_lostpw')}</label>
+          {!tpl_checkbox('disable_lostpw', $fs->prefs['disable_lostpw'], 'disable_lostpw')}
+        </li>
+
+	    <li>
           <label for="intromesg">{L('mainmessage')}</label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
@@ -74,8 +79,7 @@
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <button tabindex="9" type="button" onclick="showPreview('intromesg', '{#$baseurl}', 'preview')">{L('preview')}</button>
           <?php endif; ?>
-      </li>
-
+        </li>
       </ul>
     </div>
 
