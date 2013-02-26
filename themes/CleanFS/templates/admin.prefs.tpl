@@ -69,6 +69,11 @@
           {!tpl_checkbox('disable_lostpw', $fs->prefs['disable_lostpw'], 'disable_lostpw')}
         </li>
 
+        <li>
+          <label for="disablechangepw">{L('disable_changepw')}</label>
+          {!tpl_checkbox('disable_changepw', $fs->prefs['disable_changepw'], 'disablechangepw')}
+        </li>
+
 	    <li>
           <label for="intromesg">{L('mainmessage')}</label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>

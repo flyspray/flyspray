@@ -35,6 +35,7 @@ class Project
         $this->prefs['notify_reply'] = '';
         $this->prefs['default_due_version'] = 'Undecided';
         $this->prefs['disable_lostpw']=0;
+        $this->prefs['disable_changepw'] = 0;
     }
 
     function setCookie()

@@ -13,6 +13,8 @@
       <br /><span id="errormessage"></span>
     </li>
 
+    <?php if (!$fs->prefs['disable_changepw']): ?>
+
     <li>
       <label for="userpass">{L('password')}</label>
       <input id="userpass" class="password" name="user_pass" value="{Req::val('user_pass')}" type="password" size="20" maxlength="100" /> <em>{L('minpwsize')}</em>
@@ -23,6 +25,8 @@
       <input id="userpass2" class="password" name="user_pass2" value="{Req::val('user_pass2')}" type="password" size="20" maxlength="100" /><br />
       <span class="note">{L('leaveemptyauto')}</span>
     </li>
+
+    <?php endif; ?>
 
     <li class="required">
       <label for="realname">{L('realname')}*</label>
