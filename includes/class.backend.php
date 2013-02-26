@@ -230,7 +230,7 @@ abstract class Backend
      */
     public static function add_vote($user_id, $task_id)
     {
-        global $db;
+        
 
         $user = $GLOBALS['user'];
         if ($user_id != $user->id) {
@@ -263,7 +263,7 @@ abstract class Backend
      */    
     public static function remove_vote($user_id, $task_id)
     {
-        global $db;
+        
 
         $user = $GLOBALS['user'];
         if ($user_id != $user->id) {

@@ -9,13 +9,17 @@ class Project
     {
         global $db, $fs;
 
-        if (is_numeric($id)) {
-            $sql = $db->Query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
-                                 FROM {projects} p
-                            LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
-                                WHERE p.project_id = ?", array($id));
-            if ($db->countRows($sql)) {
-                $this->prefs = $db->FetchRow($sql);
+		if (is_numeric($id)) {
+			Db::_get()->debug=true;
+			$res = Db::_get()->fetchAll(
+					 'SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update'
+					.'    FROM '.DB_PREFIX.'projects p'
+					.'    LEFT JOIN '.DB_PREFIX.'cache c ON c.topic = p.project_id AND c.type = "msg"'
+					.' WHERE p.project_id = ?'
+				,array($id)
+			);
+            if ($res !== false && is_array($res) && count($res)) {
+                $this->prefs = $res;
                 $this->id    = (int) $this->prefs['project_id'];
                 return;
             }
@@ -47,7 +51,7 @@ class Project
 
     function _pm_list_sql($type, $join)
     {
-        global $db;
+        
 
         // deny the possibility of shooting ourselves in the foot.
         // although there is no risky usage atm, the api should never do unexpected things.
@@ -97,7 +101,7 @@ class Project
 
     function listTaskTypes($pm = false)
     {
-        global $db;
+        
         if ($pm) {
             return $db->cached_query(
                     'pm_task_types',
@@ -111,7 +115,7 @@ class Project
 
     function listOs($pm = false)
     {
-        global $db;
+        
         if ($pm) {
             return $db->cached_query(
                     'pm_os',
@@ -125,7 +129,7 @@ class Project
 
     function listVersions($pm = false, $tense = null, $reported_version = null)
     {
-        global $db;
+        
 
         $params = array($this->id);
 
@@ -225,7 +229,7 @@ class Project
 
     function listResolutions($pm = false)
     {
-        global $db;
+        
         if ($pm) {
             return $db->cached_query(
                     'pm_resolutions',
@@ -239,7 +243,7 @@ class Project
 
     function listTaskStatuses($pm = false)
     {
-        global $db;
+        
         if ($pm) {
             return $db->cached_query(
                     'pm_statuses',
@@ -255,7 +259,7 @@ class Project
 
     function listUsersIn($group_id = null)
     {
-        global $db;
+        
         return $db->cached_query(
                 'users_in'.(is_null($group_id) ? $group_id : intval($group_id)),
                 "SELECT  u.*
@@ -269,7 +273,7 @@ class Project
 
     function listAttachments($cid)
     {
-        global $db;
+        
         return $db->cached_query(
                 'attach_'.intval($cid),
                 "SELECT  *
@@ -281,7 +285,7 @@ class Project
 
     function listTaskAttachments($tid)
     {
-        global $db;
+        
         return $db->cached_query(
                 'attach_'.intval($tid),
                 "SELECT  *
@@ -300,7 +304,7 @@ class Project
 	 */
 	function getActivityProjectCount($startdate, $enddate, $project_id)
 	{
-		global $db;
+		
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
 		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 		WHERE t.project_id = ?
@@ -316,7 +320,7 @@ class Project
 	 */
 	function getDayActivityByProject($date, $project_id)
 	{
-		global $db;
+		
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? 

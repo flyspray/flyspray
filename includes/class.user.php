@@ -12,18 +12,20 @@ class User
 
     public function __construct($uid = 0)
     {
-        global $db;
+        
 
         if ($uid > 0) {
-            $sql = $db->Query('SELECT *, g.group_id AS global_group, uig.record_id AS global_record_id
-                                 FROM {users} u, {users_in_groups} uig, {groups} g
-                                WHERE u.user_id = ? AND uig.user_id = ? AND g.project_id = 0
-                                      AND uig.group_id = g.group_id',
-                                array($uid, $uid));
+			$res = Db::_get()->fetch(
+					 'SELECT *, g.group_id AS global_group, uig.record_id AS global_record_id'
+                    .'    FROM '.DB_PREFIX.'users u, '.DB_PREFIX.'users_in_groups uig, '.DB_PREFIX.'groups g'
+                    .'    WHERE u.user_id = ? AND uig.user_id = ? AND g.project_id = 0'
+                    .'        AND uig.group_id = g.group_id'
+					,array($uid, $uid)
+			);
         }
 
-        if ($uid > 0 && $db->countRows($sql)) {
-            $this->infos = $db->FetchRow($sql);
+        if ($uid > 0 && $res !== false) {
+            $this->infos = $res;
             $this->id = intval($uid);
         } else {
             $this->infos['real_name'] = L('anonuser');
@@ -43,7 +45,7 @@ class User
      */
     public function save_search($do = 'index')
     {
-        global $db;
+        
 
         if($this->isAnon()) {
             return;
@@ -90,7 +92,7 @@ class User
 
     public function get_perms()
     {
-        global $db, $fs;
+        global $fs;
 
         $fields = array('is_admin', 'manage_project', 'view_tasks', 'edit_own_comments',
                 'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks',
@@ -102,11 +104,12 @@ class User
 
         $this->perms = array(0 => array());
         // Get project settings which are important for permissions
-        $sql = $db->Query('SELECT project_id, others_view, project_is_active, anon_open, comment_closed
-                             FROM {projects}');
-        while ($row = $db->FetchRow($sql)) {
-            $this->perms[$row['project_id']] = $row;
-        }
+		$res = Db::_get()->fetchAll(
+			'SELECT project_id, others_view, project_is_active, anon_open, comment_closed'
+			.'    FROM '.DB_PREFIX.'projects'
+		);
+		foreach($res as $row) $this->perms[$row['project_id']] = $row;
+
         // Fill permissions for global project
         $this->perms[0] = array_map(create_function('$x', 'return 1;'), end($this->perms));
 
@@ -261,7 +264,7 @@ class User
 
     public function can_vote($task)
     {
-        global $db;
+        
 
         if (!$this->perms('add_votes', $task['project_id'])) {
             return -1;
@@ -315,7 +318,7 @@ class User
 	 */
 	static function getActivityUserCount($startdate, $enddate, $project_id, $userid)
 	{
-		global $db;
+		
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? AND h.user_id = ?
@@ -334,7 +337,7 @@ class User
 	 */
 	static function getDayActivityByUser($date, $project_id, $userid)
 	{
-		global $db;
+		
 		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? AND h.user_id = ?

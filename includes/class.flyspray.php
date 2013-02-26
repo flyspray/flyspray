@@ -67,14 +67,12 @@ class Flyspray
      * @version 1.0
      */
     public function __construct()
-    {
-        global $db;
+    { 
 
         $this->startSession();
 
-        $res = $db->Query('SELECT pref_name, pref_value FROM {prefs}');
-
-        while ($row = $db->FetchRow($res)) {
+		$res = Db::_get()->fetchAll('SELECT pref_name, pref_value FROM '.DB_PREFIX.'prefs');
+		foreach($res as $row){
             $this->prefs[$row['pref_name']] = $row['pref_value'];
         }
         
@@ -383,7 +381,7 @@ class Flyspray
      */
     public static function listProjects($active_only = true)
     {
-        global $db;
+        
 
         $query = 'SELECT  project_id, project_title FROM {projects}';
 
@@ -426,7 +424,7 @@ class Flyspray
      */
     public static function listGroups($proj_id = 0)
     {
-        global $db;
+        
         $res = $db->Query('SELECT  *
                              FROM  {groups}
                             WHERE  project_id = ?
@@ -444,7 +442,7 @@ class Flyspray
      */
     public static function listUsers()
     {
-        global $db;
+        
         $res = $db->Query('SELECT  account_enabled, user_id, user_name, real_name, email_address
                              FROM  {users}
                          ORDER BY  account_enabled DESC, user_name ASC');
@@ -541,7 +539,7 @@ class Flyspray
      */
     public static function AdminRequest($type, $project_id, $task_id, $submitter, $reason)
     {
-        global $db;
+        
         $db->Query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
                          VALUES (?, ?, ?, ?, ?, ?, ?)',
                     array($project_id, $task_id, $submitter, $type, $reason, time(), ''));
@@ -557,7 +555,7 @@ class Flyspray
      */
     public static function AdminRequestCheck($type, $task_id)
     {
-        global $db;
+        
 
         $check = $db->Query("SELECT *
                                FROM {admin_requests}
@@ -575,7 +573,7 @@ class Flyspray
      */
    public static function getUserDetails($user_id)
     {
-        global $db;
+        
 
         // Get current user details.  We need this to see if their account is enabled or disabled
         $result = $db->Query('SELECT * FROM {users} WHERE user_id = ?', array(intval($user_id)));
@@ -591,7 +589,7 @@ class Flyspray
      */
     public static function getGroupDetails($group_id)
     {
-        global $db;
+        
         $sql = $db->Query('SELECT * FROM {groups} WHERE group_id = ?', array($group_id));
         return $db->FetchRow($sql);
     } // }}}
@@ -627,7 +625,7 @@ class Flyspray
      */
     public static function checkLogin($username, $password)
     {
-        global $db;
+        
 
 	$email_address = $username;  //handle multiple email addresses
         $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
@@ -818,7 +816,7 @@ class Flyspray
      */
     public static function GetAssignees($task_id, $name = false)
     {
-        global $db;
+        
 
         $sql = $db->Query('SELECT u.real_name, u.user_id
                              FROM {users} u, {assigned} a
@@ -929,7 +927,7 @@ class Flyspray
      */
     public static function ValidUserId($id)
     {
-        global $db;
+        
 
         $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array(intval($id)));
 
@@ -945,7 +943,7 @@ class Flyspray
      */
     public static function UserNameToId($name)
     {
-        global $db;
+        
 
         $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
 

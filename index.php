@@ -1,5 +1,8 @@
 <?php
 
+//set the timezone to reduce warning noise
+date_default_timezone_set('UTC');
+
 /*
    This is the main script that everything else is included
    in.  Mostly what it does is check the user permissions

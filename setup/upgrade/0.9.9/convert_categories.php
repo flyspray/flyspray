@@ -5,7 +5,7 @@
    \***********************************************************/
    
 function rebuild_tree($parent, $left, $pr) {
-    global $db;
+    
    // the right value of this node is the left value + 1
    $right = $left+1;
 

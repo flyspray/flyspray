@@ -6,7 +6,7 @@
 
 function get_events($task_id, $where = '')
 {
-    global $db;
+    
     return $db->Query("SELECT h.*,
                       tt1.tasktype_name AS task_type1,
                       tt2.tasktype_name AS task_type2,

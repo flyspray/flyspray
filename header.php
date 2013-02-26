@@ -1,5 +1,24 @@
 <?php
 
+//This function does not bleong here
+
+//prints web readable debug output when not in CLI mode
+//	exact same prototype as PHPs var_dump
+function debug_dump(){
+	if(php_sapi_name() != 'cli'){
+		//if(ob_start()){
+			echo '<pre>';
+			call_user_func_array('var_dump',func_get_args());
+			echo '</pre>';
+			//Tpl::_get()->addDebug(ob_get_contents());
+			//ob_end_clean();
+		//}
+	} else {
+		call_user_func_array('var_dump',func_get_args());
+	}
+}
+
+
 require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
@@ -15,14 +34,33 @@ if (!$conf) {
 
 require_once BASEDIR . '/includes/class.gpc.php';
 require_once BASEDIR . '/includes/utf8.inc.php';
-require_once BASEDIR . '/includes/class.database.php';
 require_once BASEDIR . '/includes/class.backend.php';
 require_once BASEDIR . '/includes/class.project.php';
 require_once BASEDIR . '/includes/class.user.php';
 require_once BASEDIR . '/includes/class.tpl.php';
+require_once BASEDIR . '/includes/db.php';
 
-$db = new Database();
-$db->dbOpenFast($conf['database']);
+//---------------------------------------------------------
+//startup the database
+//---------------------------------------------------------
+
+//figure out driver (backwards compat for incompat driver names
+if(strpos($conf['database']['dbtype'],'mysql') !== false) $dbtype = 'mysql';
+else $dbtype = $conf['database']['dbtype'];
+//set the DB_PREFIX constant
+define('DB_PREFIX',$conf['database']['dbprefix']);
+//connect to the database
+Db::_get()->setConfig(array(
+	 'driver'		=>	$dbtype
+	,'host'			=>	$conf['database']['dbhost']
+	,'port'			=>	3306
+	,'user'			=>	$conf['database']['dbuser']
+	,'password'		=>	$conf['database']['dbpass']
+	,'database'		=>	$conf['database']['dbname']
+));
+Db::_get()->connect();
+
+//start the FS main class
 $fs = new Flyspray();
 
 // If version number of database and files do not match, run upgrader
