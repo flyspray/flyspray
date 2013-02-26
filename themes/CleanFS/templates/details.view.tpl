@@ -58,7 +58,7 @@
 		<?php endif; ?>
 		
 		<?php if ($user->can_edit_task($task_details)): ?>
-			<a id="edittask" class="button" href="{CreateURL('edittask', $task_details['task_id'])}"> {L('edittask')}</a>
+			<a id="edittask" class="button" accesskey="e" href="{CreateURL('edittask', $task_details['task_id'])}"> {L('edittask')}</a>
 		<?php endif; ?>
 
 		<?php if ($user->can_take_ownership($task_details)): ?>
