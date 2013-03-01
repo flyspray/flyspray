@@ -452,6 +452,7 @@ Regards,',
 'nolongerassigned'        => 'The following task is no longer assigned to you.  It is now assigned to',
 'hasassigned'             => 'has assigned to you the following Flyspray task:',
 'taskupdated'             => 'Task has been updated.',
+'tasksupdated'            => 'Tasks have been updated.',
 'hasclosedassigned'       => 'has closed the following Flyspray task that you were assigned:',
 'unassigned'              => 'Unassigned',
 'hasclosed'               => 'has closed the following task.',
@@ -868,6 +869,10 @@ Regards,',
 'addnewsubtaskin'         => 'Add new sub-task in',
 'hidesubtasks'            => 'Hide sub-tasks',
 'selfsupertasknotallowed' => 'Super-Task ID cannot be same as self Task ID',
+'quickaction'             => 'Quick Actions',
+'updateselectedtasks'     => 'Update Selected Tasks',
+'notspecified'            => 'Not Specified',
+'editselectedtasks'       => 'Edit Selected Tasks'
 );
 
 ?>
