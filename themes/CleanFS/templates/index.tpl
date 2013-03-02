@@ -1,3 +1,26 @@
+<script type="text/javascript">
+    //Used for dynamically displaying the bulk edit pane, when Checkboxes are >1
+    function BulkEditCheck()
+    {
+        var form = document.getElementById('massops');
+        var count = 0;
+        for(var n=0;n < form.length;n++){
+            if(form[n].name == 'ids[]' && form[n].checked){
+                count++;
+            }
+        }
+
+        if(count == 0)
+        {
+            Effect.Fade('bulk_edit_selectedItems',{ duration: 0.2 });
+        }
+        if(count == 1)
+        {
+            Effect.Appear('bulk_edit_selectedItems',{ duration: 0.2 });
+        }
+    }
+</script>
+
 <?php if(isset($update_error)): ?>
 <div id="updatemsg">
     <span class="bad"> {L('updatewrong')}</span>
@@ -183,7 +206,7 @@
 <?php endif; ?>
 
 <div id="tasklist">
-<form action="{CreateURL('project', $proj->id, null, array('do' => 'index'))}" id="massops" method="post">
+<form action="{CreateURL('project', $proj->id, null, array('do' => 'index'))}" name="massops" id="massops" method="post">
 <div>
 <table id="tasklist_table">
     <thead>
@@ -210,7 +233,7 @@
         </td>
         <?php if (!$user->isAnon()): ?>
         <td class="ttcolumn">
-            <input class="ticktask" type="checkbox" name="ids[]" value="{$task_details['task_id']}"/>
+            <input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="{$task_details['task_id']}"/>
         </td>
         <?php endif;?>
 
@@ -237,7 +260,6 @@
             {!sprintf(L('taskrange'), $offset + 1,
             ($offset + $perpage > $total ? $total : $offset + $perpage), $total)}
             <?php if (!$proj->id == 0 && !$user->isAnon() && $total){ ?>
-            <a href="#" onclick="Effect.toggle('bulk_edit_selectedItems', 'appear'); return false;"> {L('editselectedtasks')}</a>
             <?php } ?>
         </td>
         <td id="numbers">
@@ -248,6 +270,8 @@
         <?php endif; ?>
     </tr>
 </table>
+
+
 
 <!--- Bulk editing Tasks --->
 <?php if (!$proj->id == 0): ?>
@@ -260,17 +284,17 @@
         <legend><b>{L('updateselectedtasks')}</b></legend>
         <ul class="form_elements slim">
             <input type="hidden" name="action" value="task.bulkupdate" />
+            <input type="hidden" name="user_id" value="{$user->id}"/>
             <!-- Quick Actions -->
             <li>
                 <label for="bulk_quick_action">{L('quickaction')}</label>
-                <select name="bulk_quick_action">
+                <select name="bulk_quick_action" id="bulk_quick_action">
                     <option value="0">{L('notspecified')}</option>
                     <option value="bulk_start_watching">{L('watchtasks')}</option>
                     <option value="bulk_stop_watching">{L('stopwatchingtasks')}</option>
                     <option value="bulk_take_ownership">{L('assigntaskstome')}</option>
                 </select>
             </li>
-            <input type="hidden" name="user_id" value="{$user->id}"/>
             <!-- Status -->
             <?php if (in_array('status', $fields)) { ?>
             <li>
@@ -423,7 +447,7 @@
                 <?php } else { ?>
             <li style="display:none">
                 <?php } ?>
-                <label for="bulk_duedate">{L('duedate')}</label>
+                <label for="bulk_due_date">{L('duedate')}</label>
                 {!tpl_datepicker('bulk_due_date')}
             </li>
 

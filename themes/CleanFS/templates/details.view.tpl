@@ -54,7 +54,20 @@
 									</div>
 								</form>
 							</div>
-
+        <?php elseif(!$user->isAnon()): ?>
+            <a href="#closedisabled" id="reqclose" class="tooltip button disabled main" ">{L('closetask')}
+                <span class="custom info">
+                    <em>{L('information')}</em>
+                    <br>
+                    {L('taskclosedisabled')}
+                    <br>
+                    <?php foreach ($deps as $dependency)
+                    {
+                        echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
+                    }
+                    ?>
+                </span>
+            </a>
 		<?php endif; ?>
 		
 		<?php if ($user->can_edit_task($task_details)): ?>
@@ -354,14 +367,6 @@
 			- <span title="{formatDate($task_details['last_edited_time'], true)}">{formatDate($task_details['last_edited_time'], false)}</span>
 		<?php endif; ?>
   </div>
-
-
-
-
-
-
-
-
 
   </div>
 

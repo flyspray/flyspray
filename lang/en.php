@@ -866,6 +866,7 @@ Regards,',
 'supertaskmodified'       => 'Super-Task ID has been modified',
 'set'                     => 'Set',
 'supertask'               => 'Super-Task',
+'setparent'               => 'Set parent task',
 'addnewsubtask'           => 'Add new sub-task',
 'addnewsubtaskin'         => 'Add new sub-task in',
 'hidesubtasks'            => 'Hide sub-tasks',
@@ -873,7 +874,9 @@ Regards,',
 'quickaction'             => 'Quick Actions',
 'updateselectedtasks'     => 'Update Selected Tasks',
 'notspecified'            => 'Not Specified',
-'editselectedtasks'       => 'Edit Selected Tasks'
+'editselectedtasks'       => 'Edit Selected Tasks',
+'information'             => 'Information',
+'taskclosedisabled'       => 'Close Task is currently disabled as the following dependant tasks are still open:-'
 );
 
 ?>
