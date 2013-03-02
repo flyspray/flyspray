@@ -873,7 +873,9 @@ Regards,',
 'quickaction'             => 'Quick Actions',
 'updateselectedtasks'     => 'Update Selected Tasks',
 'notspecified'            => 'Not Specified',
-'editselectedtasks'       => 'Edit Selected Tasks'
+'editselectedtasks'       => 'Edit Selected Tasks',
+'information'             => 'Information',
+'taskclosedisabled'       => 'Close Task is currently disabled as the following dependant tasks are still open:-'
 );
 
 ?>
