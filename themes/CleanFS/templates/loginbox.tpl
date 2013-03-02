@@ -24,6 +24,7 @@
         <?php if(isset($_GET['do']) and $_GET['do'] == 'register') echo $activeclass; ?>
         href="{CreateURL('register','')}">{L('register')}</a>
     <?php endif; ?>
+    <?php if ($user->isAnon() && !$fs->prefs['disable_lostpw']): ?>
     <?php if ($user->isAnon() && $fs->prefs['user_notify']): ?>
       <a id="forgotlink"
         <?php if(isset($_GET['do']) and $_GET['do'] == 'lostpw') echo $activeclass; ?>
@@ -37,6 +38,7 @@
               endif;
               ?>{rawurlencode(L('regards'))}">{L('lostpassword')}</a>
       <script type="text/javascript">var link = document.getElementById('forgotlink');link.href=link.href.replace(/#/g,"@");</script>
+    <?php endif; ?>
     <?php endif; ?>
 </div>
 </form>
