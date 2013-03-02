@@ -1801,10 +1801,10 @@ switch ($action = Req::val('action'))
             array_push($columns,'project_id');
             array_push($values, Post::val('bulk_projects'));
         }
-        if(!is_null(Post::val('bulk_duedate')))
+        if(!is_null(Post::val('bulk_due_date')))
         {
             array_push($columns,'due_date');
-            array_push($values, Post::val('bulk_duedate'));
+            array_push($values, Flyspray::strtotime(Post::val('bulk_due_date')));
         }
 
         //only process if one of the task fields has been updated.

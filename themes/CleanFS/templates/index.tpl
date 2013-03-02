@@ -423,7 +423,7 @@
                 <?php } else { ?>
             <li style="display:none">
                 <?php } ?>
-                <label for="bulk_duedate">{L('duedate')}</label>
+                <label for="bulk_due_date">{L('duedate')}</label>
                 {!tpl_datepicker('bulk_due_date')}
             </li>
 
