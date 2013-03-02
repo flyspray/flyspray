@@ -92,34 +92,32 @@ class Tpl
             return;
         }
 
-        if (!in_array('FSTpl', stream_get_wrappers()))
-        {
-            stream_wrapper_register('FSTpl', 'TemplateStreamWrapper');
-        }
-
         // theming part
-        // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
-        if (strlen($this->_theme) == 0)
-        {
-            $this->_theme = 'CleanFS/'; 
-        }
+	// FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
+	if (strlen($this->_theme) == 0)
+	{
+	  $this->_theme = 'CleanFS/'; 
+	}
 
-        $paths = array(
-            '/themes/' . $this->_theme,
-            '/themes/' . $this->_theme.'templates/',
-
+        if (is_readable(BASEDIR . '/themes/' . $this->_theme.$_tpl)) {
+            $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.$_tpl);
+        } else if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
+            $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl);
+        } else
+	{
             // This is needed to catch times when there is no theme (for example setup pages)
-            "/templates/"
-        );
+            $_tpl_data = file_get_contents(BASEDIR . "/templates/" . $_tpl);
+	}
 
-        foreach ($paths as $path)
-        {
-            $template_filename = BASEDIR.$path.$_tpl;
-            if (is_readable($template_filename))
-            {
-                break;
-            }
-        }
+        // compilation part
+        $_tpl_data = preg_split('!(<\?php.*\?>)!sU', $_tpl_data, -1,
+                PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        array_walk($_tpl_data, array(&$this, 'compile'));
+        $_tpl_data = join('', $_tpl_data);
+
+        $from = array('&lbrace;','&rbrace;');
+        $to = array('{','}');
+        $_tpl_data = str_replace($from, $to, $_tpl_data);
 
         // variables part
         if (!is_null($_arg0)) {
@@ -132,24 +130,10 @@ class Tpl
 
         extract($this->_vars, EXTR_REFS|EXTR_SKIP);
 
-        // Capture the view output
-        ob_start();
+        // XXX: if you find a clever way to remove the evil here,
+        // send us a patch, thanks.. we don't want this..really ;)
 
-        try
-        {
-            include 'FSTpl://'.$template_filename;
-        }
-        catch (Exception $e)
-        {
-            // Delete the output buffer
-            ob_end_clean();
-
-            // Re-throw the exception
-            throw $e;
-        }
-
-        // Get the captured output and close the buffer
-        echo ob_get_clean();
+        eval( '?>'. $_tpl_data );
     } // }}}
 
     public function render()
@@ -192,177 +176,6 @@ class FSTpl extends Tpl
         return '';
     }
 
-}
-
-/**
- * Stream wrapper to convert markup of mostly-PHP templates into PHP prior to
- * include().
- *
- * Based in large part on the example at
- * http://www.php.net/manual/en/function.stream-wrapper-register.php
- *
- * As well as the example provided at:
- * http://mikenaberezny.com/2006/02/19/symphony-templates-ruby-erb/
- * written by
- * Mike Naberezny (@link http://mikenaberezny.com)
- * Paul M. Jones (@link http://paul-m-jones.com)
- *
- * @copyright Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license http://framework.zend.com/license/new-bsd New BSD License
- */
-class TemplateStreamWrapper 
-{
-    /**
-     * Current stream position.
-     *
-     * @var int
-     */
-    protected $_pos = 0;
-
-    /**
-     * Data for streaming.
-     *
-     * @var string
-     */
-    protected $_data;
-
-    /**
-     * Stream stats.
-     *
-     * @var array
-     */
-    protected $_stat;
-
-    /**
-     * Opens the script file and converts markup.
-     */
-    public function stream_open($path, $mode, $options, &$opened_path)
-    {
-        // get the view script source
-        $path        = str_replace('FSTpl://', '', $path);
-        $this->_data = file_get_contents($path);
-
-        /**
-         * If reading the file failed, update our local stat store
-         * to reflect the real stat of the file, then return on failure
-         */
-        if ($this->_data === false)
-        {
-            $this->_stat = stat($path);
-            return false;
-        }
-
-        $regex = '/{!([^\s&][^{}]*)}(\n?)/';
-        $this->_data = preg_replace($regex, '<?php echo \1; ?>\2\2', $this->_data);
-
-        // For lang strings in Javascript
-        $regex = '/{#([^\s&][^{}]*)}(\n?)/';
-        $this->_data = preg_replace($regex, '<?php echo Filters::noJsXSS(\1); ?>\2\2', $this->_data);
-        
-        $regex = '/{([^\s&][^{}]*)}(\n?)/';
-        $this->_data = preg_replace($regex, '<?php echo Filters::noXSS(\1); ?>\2\2', $this->_data);
-
-        /**
-         * file_get_contents() won't update PHP's stat cache, so we grab a stat
-         * of the file to prevent additional reads should the script be
-         * requested again, which will make include() happy.
-         */
-        $this->_stat = stat($path);
-
-        return true;
-    }
-
-    /**
-     * Included so that __FILE__ returns the appropriate info
-     *
-     * @return array
-     */
-    public function url_stat()
-    {
-        return $this->_stat;
-    }
-
-    /**
-     * Reads from the stream.
-     */
-    public function stream_read($count)
-    {
-        $ret = substr($this->_data, $this->_pos, $count);
-        $this->_pos += strlen($ret);
-        return $ret;
-    }
-
-    /**
-     * Tells the current position in the stream.
-     */
-    public function stream_tell()
-    {
-        return $this->_pos;
-    }
-
-    /**
-     * Tells if we are at the end of the stream.
-     */
-    public function stream_eof()
-    {
-        return $this->_pos >= strlen($this->_data);
-    }
-
-    /**
-     * Stream statistics.
-     */
-    public function stream_stat()
-    {
-        return $this->_stat;
-    }
-
-    /**
-     * Seek to a specific point in the stream.
-     */
-    public function stream_seek($offset, $whence)
-    {
-        switch ($whence)
-        {
-            case SEEK_SET:
-                if ($offset < strlen($this->_data) && $offset >= 0)
-                {
-                    $this->_pos = $offset;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                break;
-
-            case SEEK_CUR:
-                if ($offset >= 0)
-                {
-                    $this->_pos += $offset;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                break;
-
-            case SEEK_END:
-                if (strlen($this->_data) + $offset >= 0)
-                {
-                    $this->_pos = strlen($this->_data) + $offset;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
 }
 
 // {{{ costful templating functions, TODO: optimize them
