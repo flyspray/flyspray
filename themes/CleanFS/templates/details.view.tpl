@@ -54,7 +54,7 @@
 									</div>
 								</form>
 							</div>
-        <?php else: ?>
+        <?php elseif(!$user->isAnon()): ?>
             <a href="#closedisabled" id="reqclose" class="tooltip button disabled main" ">{L('closetask')}
                 <span class="custom info">
                     <em>{L('information')}</em>
