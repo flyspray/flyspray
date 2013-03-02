@@ -107,12 +107,13 @@
       </li>
 
       <?php if (!$user->perms('is_admin') || $user->id == $theuser->id): ?>
+      <?php if (!$fs->prefs['disable_changepw']): ?>
       <li>
         <label for="oldpass">{L('oldpass')}</label>
         <input id="oldpass" class="password" type="password" name="oldpass" value="{Req::val('oldpass')}" size="40" maxlength="100" />
       </li>
 
-      <?php endif; ?>
+
       <li>
         <label for="changepass">{L('changepass')}</label>
         <input id="changepass" class="password" type="password" name="changepass" value="{Req::val('changepass')}" size="40" maxlength="100" />
@@ -122,7 +123,8 @@
         <label for="confirmpass">{L('confirmpass')}</label>
         <input id="confirmpass" class="password" type="password" name="confirmpass" value="{Req::val('confirmpass')}" size="40" maxlength="100" />
       </li>
-
+      <?php endif; ?>
+        <?php endif; ?>
       <li>
         <input type="hidden" name="action" value="{Req::val('action', $do . '.edituser')}" />
         <?php if (Req::val('area') || $do == 'admin'): ?><input type="hidden" name="area" value="users" /><?php endif; ?>

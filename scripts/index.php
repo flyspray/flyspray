@@ -6,6 +6,7 @@
    allowed to view.
 */
 
+
 if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
@@ -38,6 +39,23 @@ $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');
 // List of task IDs for next/previous links
 $_SESSION['tasklist'] = $id_list;
 $page->assign('total', count($id_list));
+
+// Send user variables to the template
+
+$result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
+                            FROM {users} u
+                       LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
+                       LEFT JOIN {groups} g ON g.group_id = uig.group_id
+                           WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
+                                 AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
+                        ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id || -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
+$userlist = array();
+while ($row = $db->FetchRow($result)) {
+    $userlist[$row['group_name']][] = array(0 => $row['user_id'],
+                                            1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']));
+}
+
+$page->assign('userlist', $userlist);
 
 // tpl function that Displays a header cell for report list {{{
 

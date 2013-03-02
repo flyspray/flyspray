@@ -632,7 +632,8 @@ switch ($action = Req::val('action'))
                 'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
                 'lang_code', 'logo', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
-			  'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message');
+			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
+                'disable_lostpw','disable_changepw');
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -1727,6 +1728,118 @@ switch ($action = Req::val('action'))
         // set success message
         $_SESSION['SUCCESS'] = L('supertaskmodified');
 
+        break;
+    case 'task.bulkupdate':
+
+        //process quick actions
+        switch(Post::val('bulk_quick_action'))
+        {
+            case 'bulk_take_ownership':
+                Backend::assign_to_me(Post::val('user_id'),Post::val('ids'));
+                break;
+            case 'bulk_start_watching':
+                Backend::add_notification(Post::val('user_id'),Post::val('ids'));
+                break;
+            case 'bulk_stop_watching':
+                Backend::remove_notification(Post::val('user_id'),Post::val('ids'));
+                break;
+        }
+
+        //Process the tasks.
+        $columns = array();
+        $values = array();
+
+        //determine the tasks properties that have been modified.
+        if(!Post::val('bulk_status')==0)
+        {
+            array_push($columns,'item_status');
+            array_push($values, Post::val('bulk_status'));
+        }
+        if(!Post::val('bulk_percent_complete')==0)
+        {
+            array_push($columns,'percent_complete');
+            array_push($values, Post::val('bulk_percent_complete'));
+        }
+        if(!Post::val('bulk_task_type')==0)
+        {
+            array_push($columns,'task_type');
+            array_push($values, Post::val('bulk_task_type'));
+        }
+        if(!Post::val('bulk_category')==0)
+        {
+            array_push($columns,'product_category');
+            array_push($values, Post::val('bulk_category'));
+        }
+        if(!Post::val('bulk_os')==0)
+        {
+            array_push($columns,'operating_system');
+            array_push($values, Post::val('bulk_os'));
+        }
+        if(!Post::val('bulk_severity')==0)
+        {
+            array_push($columns,'task_severity');
+            array_push($values, Post::val('bulk_severity'));
+        }
+        if(!Post::val('bulk_priority')==0)
+        {
+            array_push($columns,'task_priority');
+            array_push($values, Post::val('bulk_priority'));
+        }
+        if(!Post::val('bulk_reportedver')==0)
+        {
+            array_push($columns,'product_version');
+            array_push($values, Post::val('bulk_reportedver'));
+        }
+        if(!Post::val('bulk_due_version')==0)
+        {
+            array_push($columns,'closedby_version');
+            array_push($values, Post::val('bulk_due_version'));
+        }
+        if(!Post::val('bulk_projects')==0)
+        {
+            array_push($columns,'project_id');
+            array_push($values, Post::val('bulk_projects'));
+        }
+        if(!is_null(Post::val('bulk_duedate')))
+        {
+            array_push($columns,'due_date');
+            array_push($values, Post::val('bulk_duedate'));
+        }
+
+        //only process if one of the task fields has been updated.
+        if(!array_count_values($columns)==0 && Post::val('ids'))
+        {
+            //add the selected task id's to the query string
+            $task_ids = Post::val('ids');
+            $valuesAndTasks = array_merge_recursive($values,$task_ids);
+
+            //execute the database update on all selected queries
+            $update = $db->Query("UPDATE  {tasks}
+                                     SET  ".join('=?, ', $columns)."=?
+                                   WHERE". substr(str_repeat(' task_id = ? OR ', count(Post::val('ids'))), 0, -3), $valuesAndTasks);
+        }
+
+        //Set the assignments
+        if(Post::val('bulk_assignment'))
+        {
+            // Delete the current assignees for the selected tasks
+            $db->Query("DELETE FROM {assigned} WHERE". substr(str_repeat(' task_id = ? OR ', count(Post::val('ids'))), 0, -3),Post::val('ids'));
+
+            // Convert assigned_to and store them in the 'assigned' table
+            foreach ((array)Post::val('ids') as $id)
+            {
+                foreach ((array) Post::val('bulk_assignment') as $assignee)
+                {
+                    //insert the task and user id's into the assigned table.
+                    $db->Query('INSERT INTO  {assigned}
+                                         (task_id,user_id)
+                                 VALUES  (?, ?)',array($id,$assignee));
+                }
+            }
+        }
+
+        // set success message
+        $_SESSION['SUCCESS'] = L('tasksupdated');
         break;
 
 }
