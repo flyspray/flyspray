@@ -4,6 +4,8 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
+require_once(BASEDIR . '/plugins/dokuwiki/inc/utf8.php');
+
 // a-z A-Z . _ -, extended latin chars, Cyrillic and Greek
 $UTF8_ALPHA_CHARS = array(
   0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c,
