@@ -74,7 +74,12 @@
           {!tpl_checkbox('disable_changepw', $fs->prefs['disable_changepw'], 'disablechangepw')}
         </li>
 
-	    <li>
+        <li>
+          <label for="days_before_alert">{L('daysbeforealert')}</label>
+          <input id="days_before_alert" name="days_before_alert" type="text" class="text" size="3" maxlength="3" value="{$fs->prefs['days_before_alert']}" />
+        </li>
+
+          <li>
           <label for="intromesg">{L('mainmessage')}</label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>

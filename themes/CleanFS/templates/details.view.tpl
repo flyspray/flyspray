@@ -257,21 +257,21 @@
 				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
 				if($task_details['due_date'] > 0)
 				{
-					if($days < 6 && $days > 0)
+					if($days <$fs->prefs['days_before_alert'] && $days > 0)
 					{
-						echo "<font style='color: red; font-weight: bold'>".$days." days left!</font>";
+						echo "<font style='color: red; font-weight: bold'>".$days." ".L('daysleft')."</font>";
 					}
 					elseif($days < 0)
 					{
-						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)." days overdue!</font>";
+						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)." ".L('daysoverdue')."</font>";
 					}
 					elseif($days == 0)
 					{
-						echo "<font style='color: red; font-weight: bold'>Due Today!</font>";
+						echo "<font style='color: red; font-weight: bold'>".L('duetoday')."</font>";
 					}
 					else
 					{
-						echo $days." days left!";
+						echo $days." ".L('daysleft');
 					}
 				}
 				?>

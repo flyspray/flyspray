@@ -77,7 +77,7 @@ class Flyspray
         while ($row = $db->FetchRow($res)) {
             $this->prefs[$row['pref_name']] = $row['pref_value'];
         }
-        
+
         $this->setDefaultTimezone();
 
         $sizes = array();

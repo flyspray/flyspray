@@ -876,7 +876,11 @@ Regards,',
 'notspecified'            => 'Not Specified',
 'editselectedtasks'       => 'Edit Selected Tasks',
 'information'             => 'Information',
-'taskclosedisabled'       => 'Close Task is currently disabled as the following dependant tasks are still open:-'
+'taskclosedisabled'       => 'Close Task is currently disabled as the following dependant tasks are still open:-',
+'daysleft'                => 'days left',
+'dayoverdue'              => 'days overdue',
+'duetoday'                => 'Due today.',
+'daysbeforealert'         => 'Days before alert'
 );
 
 ?>
