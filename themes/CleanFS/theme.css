@@ -949,8 +949,23 @@ div.comment_container {
     border-radius: 3px;
     background-color: #fefefe; }
 
-  div.comment_container .commenttext {
-    padding-top: 7px; }
+  div.comment_container .commenttext em {
+      display: block;
+      float: none;
+      width: 100%;
+      margin: 0px 0px 0px 0px;
+      padding: 0px;
+      background: white;
+      border: none 0px #e1e1e1;
+      border-radius: 0px;
+      background-color: #fefefe; }
+
+  div.comment_container .commenttext p{
+      margin: .5em 0 .5em 0;
+      padding: 0 0 0 0;
+  }
+
+
 
   div.comment_container .comment {
     margin-left: 235px; }

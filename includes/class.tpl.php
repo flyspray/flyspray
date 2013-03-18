@@ -582,7 +582,11 @@ class TextFormatter
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $onlyfs, $type, $id, $instructions);
         } else {
-            $text = ' ' . nl2br($text) . ' ';
+            //TODO: Remove Redundant Code once tested completely
+            //Author: Steve Tredinnick
+            //Have removed this as creating additional </br> lines even though <p> is already dealing with it
+            //possibly an conversion from Dokuwiki syntax to html issue, left in in case anyone has issues and needs to comment out
+            //$text = ' ' . nl2br($text) . ' ';
 
             // Change FS#123 into hyperlinks to tasks
             return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
