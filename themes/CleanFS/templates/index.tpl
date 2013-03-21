@@ -19,6 +19,27 @@
             Effect.Appear('bulk_edit_selectedItems',{ duration: 0.2 });
         }
     }
+
+    function massSelectBulkEditCheck(itemsPerPage)
+    {
+        var form = document.getElementById('massops');
+        var count = 0;
+        for(var n=0;n < form.length;n++){
+            if(form[n].name == 'ids[]' && form[n].checked){
+                count++;
+            }
+        }
+
+        if(count == 0)
+        {
+            Effect.Appear('bulk_edit_selectedItems',{ duration: 0.2 });
+        }
+
+        if(count == itemsPerPage)
+        {
+            Effect.Fade('bulk_edit_selectedItems',{ duration: 0.2 });
+        }
+    }
 </script>
 
 <?php if(isset($update_error)): ?>
@@ -216,7 +237,7 @@
         <?php if (!$user->isAnon()): ?>
         <th class="ttcolumn">
             <?php if (!$user->isAnon() && $total): ?>
-            <a title="{L('toggleselected')}" href="javascript:ToggleSelected('massops')">
+            <a title="{L('toggleselected')}" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck({$perpage});">
             </a>
             <?php endif; ?>
         </th>
