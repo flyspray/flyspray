@@ -271,6 +271,15 @@ function event_description($history) {
     case '31': // user deleted
             $return .= eL('userdeleted');
             break;
+    case '32': // Subtask added
+        $return .= eL('subtaskadded') . ' ' . tpl_tasklink($new_value);
+        break;
+    case '33': // Subtask removed
+        $return .= eL('subtaskremoved') . ' ' . tpl_tasklink($new_value);
+        break;
+    case '34': // supertask added
+        $return .= eL('supertaskadded') . ' ' . tpl_tasklink($new_value);
+        break;
     }
 
     if (isset($details_previous)) $GLOBALS['details_previous'] = $details_previous;

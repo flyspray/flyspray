@@ -186,6 +186,39 @@ switch ($action = Req::val('action'))
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
         break;
 
+    case 'details.associatesubtask':
+
+        //check to see if associated subtask already has a parent task
+
+
+        //check to see if associated subtask is already the parent of this task
+        $sql = $db->Query("SELECT supertask_id FROM {tasks} WHERE task_id = ?",
+            array(Post::val('associate_subtask_id')));
+
+        $suptask = $db->FetchRow($sql);
+
+        if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
+            Flyspray::show_error(L('subtaskisparent'));
+            break;
+        }
+
+        //check to see if the subtask exists.
+        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
+                           WHERE  task_id = '.Post::val("associate_subtask_id").';');
+
+        if (!$db->fetchOne($sql)) {
+            Flyspray::show_error(L('subtasknotexist'));
+            break;
+        }
+
+        //associate the subtask
+        $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
+
+
+        $_SESSION['SUCCESS'] = L('associatedsubtask').Post::val('associate_subtask_id');
+        break;
+
+
     case 'reopen':
     // ##################
     // re-opening an task
@@ -1547,6 +1580,27 @@ switch ($action = Req::val('action'))
         break;
 
     // ##################
+    // removing a subtask
+    // ##################
+    case 'removesubtask':
+
+        //check if the user has permissions to remove the subtask
+        if (!$user->can_edit_task($task)) {
+            break;
+        }
+
+        //set the subtask supertask_id to 0 removing parent child relationship
+        $db->Query("UPDATE {tasks} SET supertask_id='0' WHERE task_id = '".Get::val('subtaskid')."'");
+
+        //write event log
+        Flyspray::logEvent(Get::val('taskid'), 33, Get::val('subtaskid'));
+        //post success message to the user
+        $_SESSION['SUCCESS'] = L('subtaskremovedmsg');
+        //redirect the user back to the right task
+        Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
+        break;
+
+    // ##################
     // removing a dependency
     // ##################
     case 'removedep':
@@ -1571,6 +1625,8 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('depremovedmsg');
+        //redirect the user back to the right task
+        Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
         break;
 
     // ##################
@@ -1691,7 +1747,7 @@ switch ($action = Req::val('action'))
     // ##################
     // set supertask id
     // ##################
-    case 'details.setsupertask':
+    case 'details.setparent':
         if (!$user->can_edit_task($task)) {
             break;
         }
@@ -1702,28 +1758,35 @@ switch ($action = Req::val('action'))
         }
 
         // check that supertask_id is not same as task_id
-        //  (prevent to refer to it self)
-        if ($task['task_id'] == Post::val('supertask_id')) {
+        // preventint it from referring to it self
+        if (Post::val('task_id') == Post::val('supertask_id')) {
             Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
         }
+        //Check that the supertask_id is a numeric value
+        if (!is_integer((int)Post::val('supertask_id')))
+        {
+            Flyspray::show_error(L('invalidsupertaskid'));
+            break;
+        }
 
-        // TODO: check that supertask_id is a valid task id
-        //  (btw: what if a task is deleted later which was a supertask?)
+        // check that supertask_id is a valid task id
+        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
+                           WHERE  task_id = '.Post::val("supertask_id").';');
 
-        // TODO: check that task_id is not in the chain of supertasks
-        //  (for preventing cyclical dependencies)
+        if (!$db->fetchOne($sql)) {
+            Flyspray::show_error(L('invalidsupertaskid'));
+            break;
+        }
 
-        // TODO: send notifications
+        // Log the event in the task history
+         Flyspray::logEvent(Get::val('taskid'), 34, Get::val('subtaskid'));
 
-        // TODO: log in task history
-
-        // update the task's data in database
-        // TODO: error checking!
+        //finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
                      WHERE  task_id = ?', 
-                     array(Post::val('supertask_id'), $task['supertask_id']));
+                     array(Post::val('supertask_id'),Post::val('task_id')));
 
         // set success message
         $_SESSION['SUCCESS'] = L('supertaskmodified');

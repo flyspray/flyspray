@@ -54,6 +54,10 @@ div.popup {
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
   filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color'); }
 
+
+
+
+
 /* ------------------ STYLE -------------------- */
 
 html, body {
@@ -1481,6 +1485,85 @@ div#closeform {
   position: absolute;
   right: 5px;
   top: 3em; }
+
+div#actionsform {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-box-shadow: 0px 1px 1px #dddddd;
+    -webkit-box-shadow: 0px 1px 1px #dddddd;
+    box-shadow: 0px 1px 1px #dddddd;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+    position: absolute;
+    right: 5px;
+    top: 3em;
+    z-index: 500;
+}
+
+div#actionsform ul {
+    font-family: Arial, Verdana;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+div#actionsform ul li {
+    display: block;
+    position: relative;
+
+}
+div#actionsform li ul { display: none; }
+div#actionsform ul li a {
+    display: block;
+    text-decoration: none;
+    color: #ffffff;
+    border-top: 1px solid #ffffff;
+    padding: 5px 15px 5px 15px;
+    background: #363a3b;
+    margin-left: 1px;
+    white-space: nowrap;
+}
+div#actionsform ul li a:hover { background: #617F8A; }
+div#actionsform li:hover ul {
+    display: block;
+    position: absolute;
+}
+div#actionsform li:hover li {
+    float: none;
+    font-size: 11px;
+}
+div#actionsform li:hover a { background: #617F8A; }
+div#actionsform li:hover li a:hover { background: #95A9B1; }
+
+
+div#actionsform button{
+    position:absolute;
+    right: 5px;
+}
+
+div#actionsform input{
+    position:absolute;
+    right: 50px;
+}
+
+div#setparentform{
+    background: #363a3b;
+    color:#ffffff;
+    padding-left: 5px;
+}
+
+div#associateform{
+    background: #363a3b;
+    color:#ffffff;
+    padding-left: 5px;
+}
+
+div#adddepform{
+    background: #363a3b;
+    color:#ffffff;
+    padding-left: 5px;
+}
 
 div#taskdeps h4 {
   margin-bottom:0.3em;

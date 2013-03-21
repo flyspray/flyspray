@@ -20,7 +20,7 @@
   <?php foreach($histories as $history): ?>
   <tr>
     <td>{formatDate($history['event_date'], false)}</td>
-    <?php if($fs->prefs['gravatars'] == 1) {?>
+    <?php if($fs->prefs['gravatars'] == 1) { ?>
     <td>{!tpl_userlinkgravatar($history['user_id'], 25, 'left', '0px 5px 0px 0px')} {!tpl_userlink($history['user_id'])}</td>
     <?php } else { ?>
     <td>{!tpl_userlink($history['user_id'])}</td>

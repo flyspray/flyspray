@@ -514,6 +514,8 @@ class Flyspray
         // 29: User added to the list of assignees
         // 30: New user registration
         // 31: User deletion
+        // 32: Add new subtask
+        // 33: Remove Subtask
 
         $query_params = array(intval($task_id), intval($user->id),
                              ((!is_numeric($time)) ? time() : $time),
