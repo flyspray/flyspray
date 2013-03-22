@@ -752,7 +752,7 @@ switch ($action = Req::val('action'))
 
         $visfields =  $fs->prefs['visible_fields']
                     ? $fs->prefs['visible_fields']
-                    : 'id tasktype severity summary status dueversion progress';
+                    : 'id tasktype priority severity summary status dueversion progress';
 
 
         $db->Query('INSERT INTO  {projects}
