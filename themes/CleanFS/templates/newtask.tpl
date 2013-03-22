@@ -143,6 +143,15 @@
           </li>
           <?php endif; ?>
 
+            <?php if($proj->prefs['use_effort_tracking']) {
+            ?>
+            <li style="...">
+                <label for="estimatedeffort">{L('estimatedeffort')}</label>
+                <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="0" />
+                {L('hours')}
+            </li>
+            <?php } ?>
+
           <?php if ($user->perms('manage_project')): ?>
           <!-- Private -->
           <?php if (in_array('private', $fields)) { ?>

@@ -114,6 +114,14 @@
         <td><label for="show_as_assignees">{L('showasassignees')}</label></td>
         <td>{!tpl_checkbox('show_as_assignees', Req::val('show_as_assignees', !Req::val('action') && $group_details['show_as_assignees']), 'show_as_assignees')}</td>
       </tr>
+        <tr>
+            <td><label for="vieweffort">{L('vieweffort')}</label></td>
+            <td>{!tpl_checkbox('view_effort', Req::val('view_effort', !Req::val('action') && $group_details['view_effort']), 'vieweffort')}</td>
+        </tr>
+        <tr>
+            <td><label for="trackeffort">{L('trackeffort')}</label></td>
+            <td>{!tpl_checkbox('track_effort', Req::val('track_effort', !Req::val('action') && $group_details['track_effort']), 'trackeffort')}</td>
+        </tr>
 
       <?php if (!$proj->id): ?>
       <tr>

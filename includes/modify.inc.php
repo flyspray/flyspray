@@ -79,6 +79,12 @@ switch ($action = Req::val('action'))
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
 
+        if (!is_integer((int)Post::val('estimated_effort')))
+        {
+            Flyspray::show_error(L('invalideffort'));
+            break;
+        }
+
         $time = time();
 
         $db->Query('UPDATE  {tasks}
@@ -86,7 +92,8 @@ switch ($action = Req::val('action'))
                             detailed_desc = ?, item_status = ?, mark_private = ?,
                             product_category = ?, closedby_version = ?, operating_system = ?,
                             task_severity = ?, task_priority = ?, last_edited_by = ?,
-                            last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?
+                            last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?,
+                            estimated_effort = ?
                      WHERE  task_id = ?',
                 array(Post::val('project_id'), Post::val('task_type'),
                     Post::val('item_summary'), Post::val('detailed_desc'),
@@ -94,7 +101,7 @@ switch ($action = Req::val('action'))
                     Post::val('product_category'), Post::val('closedby_version', 0),
                     Post::val('operating_system'), Post::val('task_severity'),
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-                    Post::val('percent_complete'), Post::val('reportedver'),
+                    Post::val('percent_complete'), Post::val('reportedver'),Post::val('estimated_effort'),
                     $task['task_id']));
         
         // Update the list of users assigned this task
@@ -283,6 +290,42 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('commentaddedmsg');
+        break;
+
+    // ##################
+    // Tracking
+    // ##################
+    case 'details.efforttracking':
+
+        require_once BASEDIR . '/includes/class.effort.php';
+        $effort = new effort($task['task_id'],$user->id);
+
+
+        if(Post::val('start_tracking')){
+            if($effort->startTracking())
+            {
+                $_SESSION['SUCCESS'] = L('efforttrackingstarted');
+            }
+            else
+            {
+                $_SESSION['ERROR'] = L('efforttrackingnotstarted');
+            }
+        }
+
+        if(Post::val('stop_tracking')){
+            $effort->stopTracking();
+            $_SESSION['SUCCESS'] = L('efforttrackingstopped');
+        }
+
+        if(Post::val('cancel_tracking')){
+            $effort->cancelTracking();
+            $_SESSION['SUCCESS'] = L('efforttrackingcancelled');
+        }
+
+        if(Post::val('manual_effort')){
+                $effort->addEffort(Post::val('effort_to_add'));
+                $_SESSION['SUCCESS'] = L('efforttrackingadded');
+        }
         break;
 
     // ##################
@@ -638,7 +681,7 @@ switch ($action = Req::val('action'))
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
-                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
+                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open','view_effort','track_effort');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -795,7 +838,7 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version');
+                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -991,7 +1034,7 @@ switch ($action = Req::val('action'))
                                   'create_attachments', 'delete_attachments', 'show_as_assignees',
                                   'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
                                   'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-                                  'add_votes', 'group_open'));
+                                  'add_votes', 'group_open','view_effort','track_effort'));
         }
 
         $args = array_map('Post_to0', $cols);

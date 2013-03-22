@@ -7,6 +7,7 @@
    <li><a href="#lookandfeel">{L('lookandfeel')}</a></li>
    <li><a href="#notifications">{L('notifications')}</a></li>
    <li><a href="#feeds">{L('feeds')}</a></li>
+   <li><a href="#effort">{L('efforttracking')}</a></li>
   </ul>
 
   <div id="general" class="tab">
@@ -199,6 +200,15 @@
         </li>
       </ul>
     </div>
+
+  <div id="effort" class="tab">
+      <ul class="form_elements">
+          <li>
+              <label for="useeffort">{L('useeffort')}</label>
+              {!tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort')}
+          </li>
+      </ul>
+  </div>
 
     <div class="tbuttons">
       <input type="hidden" name="action" value="pm.updateproject" />

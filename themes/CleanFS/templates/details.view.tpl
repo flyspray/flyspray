@@ -393,6 +393,23 @@
 				</span>
         </li>
         <?php endif; ?>
+        <?php if($proj->prefs['use_effort_tracking']) {
+        ?>
+        <li style="...">
+            <span class="label">{L('estimatedeffort')}</span>
+            <span class="value"><?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?></span>
+        </li>
+        <li style="...">
+            <span class="label">{L('actualeffort')}</span>
+            <?php
+            $total_effort = 0;
+            foreach($effort->details as $details){
+            $total_effort += $details['effort'];
+            }
+            ?>
+            <span class="value"><?php echo ConvertSeconds($total_effort); ?> </span>
+        </li>
+        <?php } ?>
     </ul>
     <ul class="fieldslist">
         <!-- Votes-->

@@ -26,4 +26,14 @@
        href="{CreateURL('details', $task_details['task_id'], null)}#history">{L('history')}</a>
   </li>
   <?php endif; ?>
+
+    <?php if ($proj->prefs['use_effort_tracking']){ ?>
+    <?php if ($user->perms('view_effort')){ ?>
+    <li id="efforttab">
+        <a href="#effort">{L('efforttracking')}</a>
+    </li>
+
+    <?php
+     }
+   } ?>
 </ul>

@@ -23,6 +23,14 @@ if (!$user->can_view_task($task_details)) {
 
 require_once(BASEDIR . '/includes/events.inc.php');
 
+if($proj->prefs['use_effort_tracking'])
+{
+    require_once(BASEDIR . '/includes/class.effort.php');
+    $effort = new effort($task_id,$user->id);
+    $effort->populateDetails();
+    $page->assign('effort',$effort);
+}
+
 $page->uses('task_details');
 
 // Send user variables to the template
@@ -240,5 +248,7 @@ else {
     }
 
     $page->pushTpl('details.tabs.history.tpl');
+
+    $page->pushTpl('details.tabs.efforttracking.tpl');
 }
 ?>

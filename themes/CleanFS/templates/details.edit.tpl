@@ -172,7 +172,14 @@
 				</li>
 				<?php endif; ?>
 
-
+          <?php if($proj->prefs['use_effort_tracking']) {
+          ?>
+          <li style="...">
+              <label for="estimatedeffort">{L('estimatedeffort')}</label>
+              <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="{$task_details['estimated_effort']}" />
+              {L('hours')}
+          </li>
+          <?php } ?>
 
 		<!-- If no currently selected project is not there, push it on there so don't have to change things -->
 		<?php

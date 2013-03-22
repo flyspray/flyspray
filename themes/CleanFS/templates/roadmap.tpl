@@ -47,6 +47,27 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
    <?php if(count($milestone['open_tasks'])): ?>
    <a href="{$baseurl}index.php?do=index&amp;tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}">{count($milestone['open_tasks'])} {L('opentasks')}:</a>
    <?php endif; ?>
+    <?php
+    if($proj->prefs['use_effort_tracking']) {
+    $total_estimated = 0;
+    $actual_effort = 0;
+    foreach($milestone['open_tasks'] as $task)
+    {
+    $total_estimated += $task['estimated_effort'];
+    $effort = new effort($task['task_id'],0);
+    $effort->populateDetails();
+    foreach($effort->details as $details)
+    {
+    $actual_effort += $details['effort'];
+    }
+    $effort = null;
+    }
+    ?>
+    </br>
+    {L('opentasks')} - {L('totalestimatedeffort')}: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
+    </br>
+    {L('opentasks')} - {L('actualeffort')}: <?php echo ConvertSeconds($actual_effort); ?>
+    <?php } ?>
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>

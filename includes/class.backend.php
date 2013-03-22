@@ -831,6 +831,10 @@ abstract class Backend
         $sql_params[] = 'closure_comment';
         $sql_values[] = '';
 
+        $sql_params[] = 'estimated_effort';
+        $sql_values[] = $args['estimated_effort'];
+
+
         // Token for anonymous users
         $token = '';
         if ($user->isAnon()) {
