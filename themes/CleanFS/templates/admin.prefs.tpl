@@ -1,3 +1,20 @@
+<script type="text/javascript">
+
+    function ShowHidePassword(id)
+    {
+        if(document.getElementById(id).type=="text")
+        {
+            document.getElementById(id).type="password";
+        }
+        else
+        {
+            document.getElementById(id).type="text";
+        }
+    }
+
+</script>
+
+
 <div id="toolbox">
   <h3>{L('admintoolboxlong')} :: {L('preferences')}</h3>
 
@@ -152,7 +169,11 @@
   
           <li>
             <label for="smtppass">{L('smtppass')}</label>
-            <input id="smtppass" name="smtp_pass" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['smtp_pass']}" />
+            <input id="smtppass" name="smtp_pass" class="text" type="password" size="40" maxlength="100" value="{$fs->prefs['smtp_pass']}" />
+          </li>
+          <li>
+              <label for="showsmtppass">{L('showpass')}</label>
+              <input id="showsmtppass" name="show_smtp_pass" class="text" type="checkbox"  onclick="ShowHidePassword('smtppass')"/>
           </li>
         </ul>
       </fieldset>
@@ -179,8 +200,14 @@
   
           <li>
             <label for="jabberpassword">{L('jabberpass')}</label>
-            <input id="jabberpassword" name="jabber_password" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['jabber_password']}" />
+            <input id="jabberpassword" name="jabber_password" class="text" type="password" size="40" maxlength="100" value="{$fs->prefs['jabber_password']}" />
           </li>
+
+          <li>
+              <label for="showjabberppass">{L('showpass')}</label>
+              <input id="showjabberpass" name="show_jabber_pass" class="text" type="checkbox"  onclick="ShowHidePassword('jabberpassword')"/>
+          </li>
+
         </ul>
       </fieldset>
     </div>
