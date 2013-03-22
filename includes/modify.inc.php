@@ -1891,12 +1891,17 @@ switch ($action = Req::val('action'))
             // Convert assigned_to and store them in the 'assigned' table
             foreach ((array)Post::val('ids') as $id)
             {
+                //iterate the users that are selected on the user list.
                 foreach ((array) Post::val('bulk_assignment') as $assignee)
                 {
-                    //insert the task and user id's into the assigned table.
-                    $db->Query('INSERT INTO  {assigned}
-                                         (task_id,user_id)
-                                 VALUES  (?, ?)',array($id,$assignee));
+                    //if 'noone' has been selected then dont do the database update.
+                    if(!$assignee == 0)
+                    {
+                        //insert the task and user id's into the assigned table.
+                        $db->Query('INSERT INTO  {assigned}
+                                             (task_id,user_id)
+                                     VALUES  (?, ?)',array($id,$assignee));
+                    }
                 }
             }
         }

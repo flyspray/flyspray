@@ -40,6 +40,11 @@
             Effect.Fade('bulk_edit_selectedItems',{ duration: 0.2 });
         }
     }
+
+    function ClearAssignments()
+    {
+        document.getElementById('bulk_assignment').options.length = 0;
+    }
 </script>
 
 <?php if(isset($update_error)): ?>
@@ -378,9 +383,14 @@
             <li>
                 <?php if ($user->perms('edit_assignments')): ?>
                 <label for="bulk_assignment">{L('assignedto')}</label>
+                <?php
+                        //insert a noone into the list in order to bulk de-assign tasks
+                        $noone[0]=array(0,L('noone'));
+                        array_unshift($userlist,$noone);
+                ?>
                 <select size="8" style="height: 200px;" name="bulk_assignment[]" id="bulk_assignment" multiple>
                     <?php foreach ($userlist as $group => $users): ?>
-                    <optgroup label="{$group}">
+                    <optgroup <?php if($group == '0'){ ?> label='Please Select... ' <?php } else { ?> label='{$group}' <?php } ?> >
                         <?php foreach ($users as $info): ?>
                         <option value="{$info[0]}">{$info[1]}</option>
                         <?php endforeach; ?>
