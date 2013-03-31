@@ -693,6 +693,9 @@
     <field name="disp_intro" type="I" size="1">
       <DEFAULT value="0"/>
     </field>
+    <field name="use_effort_tracking" type="I" size="1">
+      <DEFAULT value="0"/>
+    </field>
     <field name="default_due_version" type="C" size="40">
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
@@ -917,6 +920,9 @@
       <DEFAULT value="0"/>
     </field>
     <field name="list_order" type="I" size="3">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="estimated_effort" type="I" size="3">
       <DEFAULT value="0"/>
     </field>
     <index name="attached_to_project">
