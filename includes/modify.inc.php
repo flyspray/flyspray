@@ -79,7 +79,7 @@ switch ($action = Req::val('action'))
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
 
-        if (!is_integer((int)Post::val('estimated_effort')))
+        if (!is_integer((int)Post::num('estimated_effort')))
         {
             Flyspray::show_error(L('invalideffort'));
             break;
@@ -101,7 +101,7 @@ switch ($action = Req::val('action'))
                     Post::val('product_category'), Post::val('closedby_version', 0),
                     Post::val('operating_system'), Post::val('task_severity'),
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-                    Post::val('percent_complete'), Post::val('reportedver'),Post::val('estimated_effort'),
+                    Post::val('percent_complete'), Post::val('reportedver'),Post::num('estimated_effort'),
                     $task['task_id']));
 
         // Update the list of users assigned this task

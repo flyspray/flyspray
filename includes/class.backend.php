@@ -238,11 +238,11 @@ abstract class Backend
         }
 
         $task = Flyspray::GetTaskDetails($task_id);
-        
+
         if (!$task) {
             return false;
         }
-        
+
         if ($user->can_vote($task) > 0) {
 
             if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
@@ -260,7 +260,7 @@ abstract class Backend
      * @access public
      * @return bool
      * @version 1.0
-     */    
+     */
     public static function remove_vote($user_id, $task_id)
     {
         global $db;
@@ -832,7 +832,7 @@ abstract class Backend
         $sql_values[] = '';
 
         $sql_params[] = 'estimated_effort';
-        $sql_values[] = $args['estimated_effort'];
+        $sql_values[] = $proj->prefs['use_effort_tracking'] ? $args['estimated_effort'] : 0;
 
 
         // Token for anonymous users
@@ -862,7 +862,7 @@ abstract class Backend
         $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);
-        $task_id = $task_id ? $task_id : 1; 
+        $task_id = $task_id ? $task_id : 1;
         //now, $task_id is always the first element of $sql_values
         array_unshift($sql_values, $task_id);
 
@@ -878,7 +878,7 @@ abstract class Backend
 	{
 	   if ($tag == '')
 		   continue;
-	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)	
+	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
 		                           VALUES (?,?)",array($task_id,$tag));
         }
 
