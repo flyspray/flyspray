@@ -199,7 +199,7 @@ abstract class Backend
         $sql = $db->Query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
-                          array($tasks));
+                          $tasks);
 
         while ($row = $db->FetchRow($sql)) {
             if (!$user->can_add_to_assignees($row) && !$do) {
