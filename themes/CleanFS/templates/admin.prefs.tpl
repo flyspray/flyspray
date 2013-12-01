@@ -183,9 +183,12 @@
           <li>
             <label for="jabberserver">{L('jabberserver')}</label>
             <input id="jabberserver" class="text" type="text" name="jabber_server" size="25" maxlength="100" value="{$fs->prefs['jabber_server']}" />
-                <?php if(extension_loaded('openssl')) : ?>
-            {!tpl_checkbox('jabber_ssl', $fs->prefs['jabber_ssl'], 'jabber_ssl')} <label class="inline" for="jabber_ssl">{L('ssl')}</label>
-                    <?php endif; ?>
+            <?php if(extension_loaded('openssl')) : ?>
+              <select id="jabber_ssl" name="jabber_ssl">
+                {!tpl_options(array('0' => L('none'), '1' => L('ssl'), '2' => L('tls')), $fs->prefs['jabber_ssl'])}
+              </select>
+              <label class="inline" for="jabber_ssl">{L('ssl')} / {L('tls')}</label>
+            <?php endif; ?>
           </li>
   
           <li>
