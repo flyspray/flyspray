@@ -48,6 +48,11 @@
         </li>   
 
         <li>
+          <label for="emailNoHTML">{L('emailNoHTML')}</label>
+        	{!tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML')}
+        </li>	
+		
+        <li>
           <?php
             if (! array_key_exists( 'logo', $fs->prefs) )
             {

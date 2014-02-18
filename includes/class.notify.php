@@ -288,6 +288,9 @@ class Notifications {
         $swift = Swift_Mailer::newInstance($swiftconn);
 
         $message = new Swift_Message($subject);
+        if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
+            $body=html_entity_decode(strip_tags($body));
+        }
         $message->setBody($body);
         $type = $message->getHeaders()->get('Content-Type');
         $type->setValue('text/plain');

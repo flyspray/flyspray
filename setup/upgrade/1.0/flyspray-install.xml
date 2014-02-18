@@ -1108,6 +1108,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '1.0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'gravatars', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'emailNoHTML', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_port', '5222');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_username', '');</query>
