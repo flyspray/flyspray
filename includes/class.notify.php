@@ -285,7 +285,7 @@ class Notifications {
             $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
         }
 
-        // Make plaitext URLs into hyperlinks, but don't disturb existing ones!
+        // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
         $body = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
 
         // Make newlines into HTML line breaks
