@@ -381,15 +381,17 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    public static function listProjects($active_only = true)
+    public static function listProjects(/*$active_only = true*/) // FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
     {
         global $db;
 
         $query = 'SELECT  project_id, project_title FROM {projects}';
 
-        if ($active_only)  {
-            $query .= ' WHERE  project_is_active = 1';
-        }
+//         if ($active_only)  {
+//             $query .= ' WHERE  project_is_active = 1';
+//         }
+
+        $query .= ' ORDER BY  project_id ASC';
 
         $sql = $db->Query($query);
         return $db->fetchAllArray($sql);
@@ -634,7 +636,7 @@ class Flyspray
 	$email_address = $username;  //handle multiple email addresses
         $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
 	$user_id = $db->FetchRow($temp);
-	$user_id = $user_id[id];
+	$user_id = $user_id["id"];
       	
 	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts

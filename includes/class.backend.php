@@ -186,6 +186,8 @@ abstract class Backend
     {
         global $db, $notify;
 
+        settype($tasks, 'array');
+
         $user = $GLOBALS['user'];
         if ($user_id != $user->id) {
             $user = new User($user_id);
@@ -199,7 +201,7 @@ abstract class Backend
         $sql = $db->Query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
-                          array($tasks));
+                             $tasks);
 
         while ($row = $db->FetchRow($sql)) {
             if (!$user->can_add_to_assignees($row) && !$do) {
@@ -479,7 +481,6 @@ abstract class Backend
     {
         global $fs, $db, $notify, $baseurl;
 
-  Flyspray::show_error(strtolower($email));
 	$user_name = Backend::clean_username($user_name);
 
         // Limit length
@@ -524,7 +525,6 @@ abstract class Backend
 		else if ($mail != '')
 	  	    $db->Query("INSERT INTO {user_emails}(id,email_address) VALUES (?,?)",array($user_id,strtolower($mail)));
         }
-	Flyspray::show_error($i);
 
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
@@ -775,103 +775,111 @@ abstract class Backend
     public static function create_task($args)
     {
         global $db, $user, $proj;
+
+        if (!isset($args)) return 0;
+
+        // these are the POST variables that the user MUST send, if one of
+        // them is missing or if one of them is empty, then we have to abort
+        $requiredPostArgs = array('item_summary', 'detailed_desc', 'project_id');
+        foreach ($requiredPostArgs as $required) {
+            if (empty($args[$required])) return 0;
+        }
+
         $notify = new Notifications();
-        if ($proj->id !=  $args['project_id']) {
+        if ($proj->id != $args['project_id']) {
             $proj = new Project($args['project_id']);
         }
 
-        if (!$user->can_open_task($proj) || count($args) < 3) {
+        if (!$user->can_open_task($proj)) {
             return 0;
         }
 
-        if (!(($item_summary = $args['item_summary']) && ($detailed_desc = $args['detailed_desc']))) {
-            return 0;
+        // first populate map with default values
+        $sql_args = array(
+            'project_id' => $proj->id,
+            'date_opened' => time(),
+            'last_edited_time' => time(),
+            'opened_by' => intval($user->id),
+            'percent_complete' => 0,
+            'mark_private' => 0,
+            'supertask_id' => 0,
+            'closedby_version' => 0,
+            'closure_comment' => '',
+            'task_priority' => 2,
+            'due_date' => 0,
+            'anon_email' => '',
+            'item_status'=> STATUS_UNCONFIRMED
+        );
+
+        // POST variables the user is ALLOWED to provide
+        $allowedPostArgs = array(
+            'task_type', 'product_category', 'product_version',
+            'operating_system', 'task_severity', 'estimated_effort',
+            'supertask_id', 'item_summary', 'detailed_desc'
+        );
+        // these POST variables the user is only ALLOWED to provide if he got the permissions
+        if ($user->perms('modify_all_tasks')) {
+            $allowedPostArgs[] = 'closedby_version';
+            $allowedPostArgs[] = 'task_priority';
+            $allowedPostArgs[] = 'due_date';
+            $allowedPostArgs[] = 'item_status';
         }
-
-        // 2012-12-20 (oliverkoenig): set id of super task
-        $supertask_id = 0;
-        if (isset($args['supertask_id'])) {
-            $supertask_id = $args['supertask_id'];
+        if ($user->perms('manage_project')) {
+            $allowedPostArgs[] = 'mark_private';
         }
-
-        // Some fields can have default values set
-        if (!$user->perms('modify_all_tasks')) {
-            $args['closedby_version'] = 0;
-            $args['task_priority'] = 2;
-            $args['due_date'] = 0;
-            $args['item_status'] = STATUS_UNCONFIRMED;
-        }
-
-        $param_names = array('task_type', 'item_status',
-                'product_category', 'product_version', 'closedby_version',
-                'operating_system', 'task_severity', 'task_priority');
-
-        $sql_values = array(time(), time(), $args['project_id'], $item_summary,
-                $detailed_desc, intval($user->id), 0);
-
-        $sql_params = array();
-        foreach ($param_names as $param_name) {
-            if (isset($args[$param_name])) {
-                $sql_params[] = $param_name;
-                $sql_values[] = $args[$param_name];
+        // now copy all over all POST variables the user is ALLOWED to provide
+        // (but only if they are not empty)
+        foreach ($allowedPostArgs as $allowed) {
+            if (!empty($args[$allowed])) {
+                $sql_args[$allowed] = $args[$allowed];
             }
         }
 
-        // Process the due_date
-        if ( isset($args['due_date']) && ($due_date = $args['due_date']) || ($due_date = 0) ) {
-            $due_date = Flyspray::strtotime($due_date);
-        }
-
-        $sql_params[] = 'mark_private';
-        $sql_values[] = intval($user->perms('manage_project') && isset($args['mark_private']) && $args['mark_private'] == '1');
-
-        $sql_params[] = 'due_date';
-        $sql_values[] = $due_date;
-
-        $sql_params[] = 'closure_comment';
-        $sql_values[] = '';
-
-        $sql_params[] = 'estimated_effort';
-        $sql_values[] = $args['estimated_effort'];
-
+        // generate unique ID for the new task
+        //FIXME: This is not concurrency safe. Preferably "INSERT .. RETURNING id" shall be used, which however does not work with all DBs.
+        $result = $db->Query('SELECT  MAX(task_id)+1  FROM  {tasks}');
+        if (!$result) return 0;
+        $task_id = $db->FetchOne($result);
+        $task_id = $task_id ? $task_id : 1;
+        $sql_args['task_id'] = $task_id;
 
         // Token for anonymous users
         $token = '';
         if ($user->isAnon()) {
+            if (empty($args['anon_email'])) {
+                return 0;
+            }
             $token = md5(function_exists('openssl_random_pseudo_bytes') ?
                               openssl_random_pseudo_bytes(32) :
                               uniqid(mt_rand(), true));
-            $sql_params[] = 'task_token';
-            $sql_values[] = $token;
-
-            $sql_params[] = 'anon_email';
-            $sql_values[] = $args['anon_email'];
-        } else {
-            $sql_params[] = 'anon_email';
-            $sql_values[] = '';
+            $sql_args['task_token'] = $token;
+            $sql_args['anon_email'] = $args['anon_email'];
         }
 
-        $sql_params = join(', ', $sql_params);
+        // ensure all variables are in correct format
+        if (!empty($sql_args['due_date'])) {
+            $sql_args['due_date'] = Flyspray::strtotime($sql_args['due_date']);
+        }
+        if (isset($sql_args['mark_private'])) {
+            $sql_args['mark_private'] = intval($sql_args['mark_private'] == '1');
+        }
 
-        // 2012-12-20 (oliverkoenig): include id of super task
-        array_unshift($sql_values, $supertask_id);
+        // split keys and values into two separate arrays
+        $sql_keys   = array();
+        $sql_values = array();
+        foreach ($sql_args as $key => $value) {
+            $sql_keys[]   = $key;
+            $sql_values[] = $value;
+        }
 
-        // +1 for the task_id column;
-        $sql_placeholder = $db->fill_placeholders($sql_values, 1);
+        $sql_keys_string = join(', ', $sql_keys);
 
-        $result = $db->Query('SELECT  MAX(task_id)+1
-                                FROM  {tasks}');
-        $task_id = $db->FetchOne($result);
-        $task_id = $task_id ? $task_id : 1; 
-        //now, $task_id is always the first element of $sql_values
-        array_unshift($sql_values, $task_id);
+        $sql_placeholder = $db->fill_placeholders($sql_values);
 
         $result = $db->Query("INSERT INTO  {tasks}
-                                 ( task_id, supertask_id, date_opened, last_edited_time,
-                                   project_id, item_summary,
-                                   detailed_desc, opened_by,
-                                   percent_complete, $sql_params )
+                                 ($sql_keys_string)
                          VALUES  ($sql_placeholder)", $sql_values);
+
 	/////////////////////////////////////Add tags///////////////////////////////////////
 	$tagList = explode(';',$args['tags']);
 	foreach ($tagList as $tag)
@@ -939,7 +947,7 @@ abstract class Backend
         }
 
         // Reminder for due_date field
-        if ($due_date) {
+        if (!empty($sql_args['due_date'])) {
             Backend::add_reminder($task_id, L('defaultreminder') . "\n\n" . CreateURL('details', $task_id), 2*24*60*60, time());
         }
 

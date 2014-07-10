@@ -102,6 +102,7 @@ function ConnectsTo($id, $down, $up) {
     if ($down > $levelsdown) { $levelsdown = $down; }
     if ($up   > $levelsup  ) { $levelsup   = $up  ; }
 #echo "$id ($down d, $up u) => $levelsdown d $levelsup u<br>\n";
+    if (empty($node_list)) return;
     $selfclosed = $node_list[$id]['clsd'];
     if (isset($edge_list[$id])) {
         foreach ($edge_list[$id] as $neighbor) {

@@ -67,6 +67,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.update':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -101,7 +102,7 @@ switch ($action = Req::val('action'))
                     Post::val('product_category'), Post::val('closedby_version', 0),
                     Post::val('operating_system'), Post::val('task_severity'),
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-                    Post::val('percent_complete'), Post::val('reportedver'),Post::val('estimated_effort'),
+                    Post::val('percent_complete'), Post::val('reportedver'),intval(Post::val('estimated_effort')),
                     $task['task_id']));
         
         // Update the list of users assigned this task
@@ -1263,6 +1264,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.add_related':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1303,7 +1305,12 @@ switch ($action = Req::val('action'))
     // Removing a related task entry
     // ##################
     case 'remove_related':
-        if (!$user->can_edit_task($task)  || !is_array(Post::val('related_id'))) {
+        if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
+            break;
+        }
+        if (!is_array(Post::val('related_id'))) {
+            Flyspray::show_error(L('formnotcomplete'));
             break;
         }
 
@@ -1578,6 +1585,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.newdep':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1629,11 +1637,13 @@ switch ($action = Req::val('action'))
 
         //check if the user has permissions to remove the subtask
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
         //set the subtask supertask_id to 0 removing parent child relationship
-        $db->Query("UPDATE {tasks} SET supertask_id='0' WHERE task_id = '".Get::val('subtaskid')."'");
+        $db->Query("UPDATE {tasks} SET supertask_id=0 WHERE task_id = ?",
+                   array(Get::val('subtaskid')));
 
         //write event log
         Flyspray::logEvent(Get::val('taskid'), 33, Get::val('subtaskid'));
@@ -1648,6 +1658,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'removedep':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1665,9 +1676,12 @@ switch ($action = Req::val('action'))
 
             Flyspray::logEvent($dep_info['task_id'], 24, $dep_info['dep_task_id']);
             Flyspray::logEvent($dep_info['dep_task_id'], 25, $dep_info['task_id']);
+
+            $_SESSION['SUCCESS'] = L('depremovedmsg');
+        } else {
+            Flyspray::show_error(L('erroronform'));
         }
 
-        $_SESSION['SUCCESS'] = L('depremovedmsg');
         //redirect the user back to the right task
         Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
         break;
@@ -1792,6 +1806,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.setparent':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 

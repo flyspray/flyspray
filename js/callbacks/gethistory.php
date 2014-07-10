@@ -16,12 +16,17 @@ $baseurl = dirname(dirname($baseurl)) .'/' ;
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));
     $user->check_account_ok();
+} else {
+    $user = new User(0, $proj);
 }
 
 // Check permissions
 if (!$user->perms('view_history')) {
     die();
 }
+
+// Load translations
+load_translations();
 
 if ($details = Get::num('details')) {
     $details = " AND h.history_id = $details";

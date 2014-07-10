@@ -562,7 +562,7 @@
                 <td>Assignees TODO</td>
                 <td>
                     <a class="removedeplink"
-                       href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$dependency['task_id']}&amp;taskid={$task_details['task_id']}">
+                       href="{$_SERVER['SCRIPT_NAME']}?do=details&amp;action=removedep&amp;depend_id={$dependency['depend_id']}&amp;task_id={$task_details['task_id']}&amp;taskid={$task_details['task_id']}">
                         <img src="{$this->get_image('button_cancel')}" alt="{L('remove')}" title="{L('remove')}"/>
                     </a>
                 </td>

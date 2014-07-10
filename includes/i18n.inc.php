@@ -35,7 +35,7 @@ function eL($key)
 
 function load_translations()
 {
-    global $proj, $language,$user;
+    global $proj, $language, $user, $fs;
     // Load translations
     // if no valid lang_code, return english
     // valid == a-z and "_" case insensitive
@@ -67,6 +67,13 @@ function load_translations()
     if (!$proj->id) {
         $proj->prefs['project_title'] = L('allprojects');
         $proj->prefs['feed_description']  = L('feedforall');
+    }
+
+    for ($i = 6; $i >= 1; $i--) {
+        $fs->priorities[$i] = L('priority' . $i);
+    }
+    for ($i = 5; $i >= 1; $i--) {
+        $fs->severities[$i] = L('severity' . $i);
     }
 }
 
