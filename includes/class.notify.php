@@ -15,7 +15,7 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/swift_required.php';
+require_once dirname(__DIR__) . '/vendor/swiftmailer/swiftmailer/lib/swift_required.php';
 
 class Notifications {
 
