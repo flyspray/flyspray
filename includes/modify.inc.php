@@ -9,9 +9,6 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-// Include the notifications class
-require_once BASEDIR . '/includes/class.notify.php';
-require_once BASEDIR . '/includes/class.jabber2.php';
 $notify = new Notifications;
 
 $lt = Post::isAlnum('list_type') ? Post::val('list_type') : '';

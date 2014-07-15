@@ -308,8 +308,6 @@ if (!function_exists('ctype_digit')) {
 	}
 }
 
-require dirname(__FILE__) . '/external/http_build_query.php';
-
 if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
     $_SERVER['SERVER_NAME'] = php_uname('n');
 }

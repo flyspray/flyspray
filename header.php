@@ -1,9 +1,14 @@
 <?php
 
+// cant easly for the time being because of globals
 require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
+
+// Use composer autoloader
+require 'vendor/autoload.php';
+
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
@@ -12,14 +17,6 @@ setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
 if (!$conf) {
     Flyspray::Redirect('setup/index.php');
 }
-
-require_once BASEDIR . '/includes/class.gpc.php';
-require_once BASEDIR . '/includes/utf8.inc.php';
-require_once BASEDIR . '/includes/class.database.php';
-require_once BASEDIR . '/includes/class.backend.php';
-require_once BASEDIR . '/includes/class.project.php';
-require_once BASEDIR . '/includes/class.user.php';
-require_once BASEDIR . '/includes/class.tpl.php';
 
 $db = new Database();
 $db->dbOpenFast($conf['database']);

@@ -16,8 +16,6 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
-
 class Database
 {
     /**
