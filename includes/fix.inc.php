@@ -103,6 +103,7 @@ if (!isset($_SERVER['QUERY_STRING']))
  *
  * @see glob()
  * @require     PHP 4.3.0 (fnmatch)
+ * @todo is this still required?
  */
 function glob_compat($pattern, $flags = 0) {
 
@@ -127,6 +128,7 @@ function glob_compat($pattern, $flags = 0) {
 }
 
 // now for all those borked PHP installations...
+// TODO still required. Enabled by default since 4.2
 if (!function_exists('ctype_alnum')) {
 	function ctype_alnum($text) {
 		return is_string($text) && preg_match('/^[a-z0-9]+$/iD', $text);
@@ -146,8 +148,6 @@ if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
 // for a good example see this article
 // http://ilia.ws/archives/107-Another-unserialize-abuse.html
 
-if(PHP_VERSION >= 5) {
-
 function flyspray_exception_handler($exception) {
 
     die("Completely unexpected exception: " .
@@ -156,7 +156,7 @@ function flyspray_exception_handler($exception) {
 
 }
     set_exception_handler('flyspray_exception_handler');
-}
+
 
 // We don't need session IDs in URLs
 output_reset_rewrite_vars();
