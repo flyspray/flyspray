@@ -106,12 +106,6 @@ if (!isset($_SERVER['QUERY_STRING']))
  */
 function glob_compat($pattern, $flags = 0) {
 
-    if (!function_exists('fnmatch')) {
-        function fnmatch($pattern, $string) {
-            return @preg_match('/^'.strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
-        }
-    }
-
     $split = explode('/', $pattern);
     $match = array_pop($split);
     $path = implode('/', $split);
