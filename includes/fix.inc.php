@@ -23,7 +23,7 @@ ini_set('arg_separator.output','&amp;');
 
 // no transparent session id improperly configured servers
 
-@ini_set('session.use_trans_sid', 0); // might cause error in setup
+ini_set('session.use_trans_sid', 0); // might cause error in setup
 
 //see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
 ini_set('session.use_only_cookies',1);
@@ -45,57 +45,11 @@ ini_set('session.entropy_length', 16);
 // use sha-1 for sessions
 ini_set('session.hash_function',1);
 
-
 ini_set('auto_detect_line_endings', 0);
 
 ini_set('include_path', join( PATH_SEPARATOR, array(
   dirname(__FILE__) . '/external' ,
   ini_get('include_path'))));
-
-
-// we live is register_globals Off world forever..
-//This code was written By Stefan Esser from the hardened PHP project (sesser@php.net)
-// it's now part of the PHP manual
-
-function unregister_GLOBALS()
-{
-   if (!ini_get('register_globals')) {
-       return;
-   }
-
-   // Might want to change this perhaps to a nicer error
-   if (isset($_REQUEST['GLOBALS']) || isset($_FILES['GLOBALS'])) {
-       die('GLOBALS overwrite attempt detected');
-   }
-
-   // Variables that shouldn't be unset
-   $noUnset = array('GLOBALS',  '_GET',
-                     '_POST',    '_COOKIE',
-                     '_REQUEST', '_SERVER',
-                     '_ENV',    '_FILES');
-
-   $input = array_merge($_GET,    $_POST,
-                         $_COOKIE, $_SERVER,
-                         $_ENV,    $_FILES,
-                         isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array());
-
-   foreach ($input as $k => $v) {
-       if (!in_array($k, $noUnset) && isset($GLOBALS[$k])) {
-
-           unset($GLOBALS[$k]);
-           /* no, this is not a bug, we use double unset() .. it is to circunvent
-           /* this PHP critical vulnerability
-            * http://www.hardened-php.net/hphp/zend_hash_del_key_or_index_vulnerability.html
-            * this is intended to minimize the catastrophic effects that has on systems with
-            * register_globals on.. users with register_globals off are still vulnerable but
-            * afaik,there is nothing we can do for them.
-            */
-           unset($GLOBALS[$k]);
-       }
-   }
-}
-
-unregister_GLOBALS();
 
 
 /*unless we want to use this in the future, get rid of the
