@@ -52,38 +52,27 @@ ini_set('include_path', join( PATH_SEPARATOR, array(
   ini_get('include_path'))));
 
 
-/*unless we want to use this in the future, get rid of the
-* the PHP >= 5.2 , input filter extension, if not, it
-* will mess with user input if sysadmin or webmaster use a filter different
-* than the default.
-* This is based on work by Tobias Schlitt <toby@php.net> available under
-* the BSD license, but has been slightly  modified for Flyspray.
-*/
-
-if (PHP_VERSION >= 5.2 && extension_loaded('filter') && filter_id(ini_get('filter.default')) !== FILTER_UNSAFE_RAW) {
-
-    if(count($_GET)) {
-        foreach ($_GET as $key => $value) {
-            $_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
-        }
+if(count($_GET)) {
+    foreach ($_GET as $key => $value) {
+        $_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
     }
-    if(count($_POST)) {
-        foreach ($_POST as $key => $value) {
-            $_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
-        }
-    }
-    if(count($_COOKIE)) {
-        foreach ($_COOKIE as $key => $value) {
-            $_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
-        }
-    }
-    if(isset($_SESSION) && is_array($_SESSION) && count($_SESSION)) {
-        foreach ($_SESSION as $key => $value) {
-            $_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
-        }
-    }
-
 }
+if(count($_POST)) {
+    foreach ($_POST as $key => $value) {
+        $_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+    }
+}
+if(count($_COOKIE)) {
+    foreach ($_COOKIE as $key => $value) {
+        $_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
+    }
+}
+if(isset($_SESSION) && is_array($_SESSION) && count($_SESSION)) {
+    foreach ($_SESSION as $key => $value) {
+        $_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
+    }
+}
+
 
 // This is for retarded Windows servers not having REQUEST_URI
 
