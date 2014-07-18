@@ -21,13 +21,6 @@ ini_set('default_charset','utf-8');
 // This to stop PHP being retarded and using the '&' char for session id delimiters
 ini_set('arg_separator.output','&amp;');
 
-//we don't want magic_quotes_runtime ..
-
-ini_set('magic_quotes_runtime',0);
-
-//this one too
-ini_set('magic_quotes_sybase',0);
-
 // no transparent session id improperly configured servers
 
 @ini_set('session.use_trans_sid', 0); // might cause error in setup
