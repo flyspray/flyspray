@@ -285,12 +285,18 @@ class Notifications {
             $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
         }
 
+        // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
+        $body = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+
+        // Make newlines into HTML line breaks
+        $body = str_replace("\n","<br>",$body);
+
         $swift = Swift_Mailer::newInstance($swiftconn);
 
         $message = new Swift_Message($subject);
         $message->setBody($body);
         $type = $message->getHeaders()->get('Content-Type');
-        $type->setValue('text/plain');
+        $type->setValue('text/html');
         $type->setParameter('charset', 'utf-8');
 
         $message->getHeaders()->addTextHeader('Precedence', 'list');
