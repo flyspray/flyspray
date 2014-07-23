@@ -15,8 +15,6 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/swift_required.php';
-
 class Notifications {
 
    // {{{ Wrapper function for all others

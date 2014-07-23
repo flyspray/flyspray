@@ -1,9 +1,14 @@
 <?php
 
+// cant easly for the time being because of globals
 require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
+
+// Use composer autoloader
+require 'vendor/autoload.php';
+
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');

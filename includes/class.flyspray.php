@@ -965,9 +965,7 @@ class Flyspray
      */
     public static function check_email($email)
     {
-        include_once dirname(__FILE__) . '/external/Validate.php';
-
-        return is_string($email) && Validate::email($email);
+        return is_string($email) && filter_var($email, \FILTER_VALIDATE_EMAIL);
     }
 
     /**

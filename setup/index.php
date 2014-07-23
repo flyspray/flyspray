@@ -1120,8 +1120,7 @@ class Setup extends Flyspray
             break;
 
             case 'email address':
-             include_once OBJECTS_PATH . '/external/Validate.php';
-             return Validate::email($value);
+             return filter_var($value, \FILTER_VALIDATE_EMAIL);
              break;
 
             case 'boolean':
