@@ -240,11 +240,11 @@ abstract class Backend
         }
 
         $task = Flyspray::GetTaskDetails($task_id);
-        
+
         if (!$task) {
             return false;
         }
-        
+
         if ($user->can_vote($task) > 0) {
 
             if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
@@ -262,7 +262,7 @@ abstract class Backend
      * @access public
      * @return bool
      * @version 1.0
-     */    
+     */
     public static function remove_vote($user_id, $task_id)
     {
         global $db;
@@ -835,13 +835,22 @@ abstract class Backend
             }
         }
 
-        // generate unique ID for the new task
-        //FIXME: This is not concurrency safe. Preferably "INSERT .. RETURNING id" shall be used, which however does not work with all DBs.
-        $result = $db->Query('SELECT  MAX(task_id)+1  FROM  {tasks}');
-        if (!$result) return 0;
-        $task_id = $db->FetchOne($result);
-        $task_id = $task_id ? $task_id : 1;
-        $sql_args['task_id'] = $task_id;
+        // Process the due_date
+        if ( isset($args['due_date']) && ($due_date = $args['due_date']) || ($due_date = 0) ) {
+            $due_date = Flyspray::strtotime($due_date);
+        }
+
+        $sql_params[] = 'mark_private';
+        $sql_values[] = intval($user->perms('manage_project') && isset($args['mark_private']) && $args['mark_private'] == '1');
+
+        $sql_params[] = 'due_date';
+        $sql_values[] = $due_date;
+
+        $sql_params[] = 'closure_comment';
+        $sql_values[] = '';
+
+        $sql_params[] = 'estimated_effort';
+        $sql_values[] = $proj->prefs['use_effort_tracking'] ? $args['estimated_effort'] : 0;
 
         // Token for anonymous users
         $token = '';
@@ -875,6 +884,12 @@ abstract class Backend
         $sql_keys_string = join(', ', $sql_keys);
 
         $sql_placeholder = $db->fill_placeholders($sql_values);
+        $result = $db->Query('SELECT  MAX(task_id)+1
+                                FROM  {tasks}');
+        $task_id = $db->FetchOne($result);
+        $task_id = $task_id ? $task_id : 1;
+        //now, $task_id is always the first element of $sql_values
+        array_unshift($sql_values, $task_id);
 
         $result = $db->Query("INSERT INTO  {tasks}
                                  ($sql_keys_string)
@@ -886,7 +901,7 @@ abstract class Backend
 	{
 	   if ($tag == '')
 		   continue;
-	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)	
+	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
 		                           VALUES (?,?)",array($task_id,$tag));
         }
 

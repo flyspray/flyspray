@@ -129,7 +129,7 @@ switch ($action = Req::val('action'))
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
 
-        if (!is_integer((int)Post::val('estimated_effort')))
+        if (!is_integer((int)Post::num('estimated_effort')))
         {
             Flyspray::show_error(L('invalideffort'));
             break;
@@ -153,7 +153,7 @@ switch ($action = Req::val('action'))
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
                     Post::val('percent_complete'), Post::val('reportedver'),intval(Post::val('estimated_effort')),
                     $task['task_id']));
-        
+
         // Update the list of users assigned this task
         $assignees = (array) Post::val('rassigned_to');
         $assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
@@ -445,7 +445,7 @@ switch ($action = Req::val('action'))
 
         foreach(array('randval','magic_url') as $genrandom) {
 
-            $$genrandom = md5(function_exists('openssl_random_pseudo_bytes') ? 
+            $$genrandom = md5(function_exists('openssl_random_pseudo_bytes') ?
                               openssl_random_pseudo_bytes(32) :
                               uniqid(mt_rand(), true));
         }
@@ -560,7 +560,7 @@ switch ($action = Req::val('action'))
         }
 
         if(!$user->perms('is_admin')) {
-            
+
             $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE
                            jabber_id = ? AND jabber_id != ''
                            OR email_address = ? AND email_address != ''",
@@ -695,7 +695,7 @@ switch ($action = Req::val('action'))
 	{
 		$sql = $db->Query("DELETE FROM {users} WHERE user_id IN $ids");
 	}
-	
+
 	// Show success message and exit
         $_SESSION['SUCCESS'] = L('usersupdated');
         break;
@@ -905,7 +905,7 @@ switch ($action = Req::val('action'))
         $cols[] = 'last_updated';
         $args[] = time();
 	$cols[] = 'disp_intro';
-	$args[] = Post::val('disp_intro');
+	$args[] = Post::num('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
         $args[] = $proj->id;
@@ -1762,7 +1762,7 @@ switch ($action = Req::val('action'))
         $magic_url    = md5(function_exists('openssl_random_pseudo_bytes') ?
                               openssl_random_pseudo_bytes(32) :
                               uniqid(mt_rand(), true));
- 
+
 
         // Insert the random "magic url" into the user's profile
         $db->Query('UPDATE {users}
@@ -1900,7 +1900,7 @@ switch ($action = Req::val('action'))
         //finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
-                     WHERE  task_id = ?', 
+                     WHERE  task_id = ?',
                      array(Post::val('supertask_id'),Post::val('task_id')));
 
         // set success message
