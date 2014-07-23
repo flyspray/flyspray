@@ -76,6 +76,11 @@
 				<?php if(isset($_GET['do']) and $_GET['do'] == 'newtask'): ?> class="active" <?php endif; ?>
 				accesskey="a">{L('addnewtask')}</a>
 			</li>
+			<li>
+			<a id="newmultitaskslink" href="{CreateURL('newmultitasks', $proj->id)}"
+				<?php if(isset($_GET['do']) and $_GET['do'] == 'newmultitasks'): ?> class="active" <?php endif; ?>
+				accesskey="a">Add multiple tasks</a>
+			</li>
 		<?php elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?>
 			<li>
 				<a id="anonopen"

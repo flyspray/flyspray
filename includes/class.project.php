@@ -303,10 +303,11 @@ class Project
 	function getActivityProjectCount($startdate, $enddate, $project_id)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+		$result = $db->Query("SELECT count(date(to_timestamp(event_date))) as val
 		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 		WHERE t.project_id = ?
-		AND date(from_unixtime(event_date)) BETWEEN str_to_date(?, '%m/%d/%Y') and str_to_date(?, '%m/%d/%Y')", array($project_id, $startdate, $enddate));
+		AND date(to_timestamp(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
 		return $db->fetchCol($result);
 	}
 	/**
@@ -319,10 +320,11 @@ class Project
 	function getDayActivityByProject($date, $project_id)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+		$result = $db->Query("SELECT count(date(to_timestamp(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? 
-							  AND date(from_unixtime(event_date)) = str_to_date(?, '%m/%d/%Y')", array($project_id, $date));
+							  AND date(to_timestamp(event_date)) = date(?)", array($project_id, $date));
 		return $db->fetchCol($result);
 	}
     /* }}} */

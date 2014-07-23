@@ -21,24 +21,24 @@ $sparkline->SetBarSpacing(1);
 if(Get::has('project_id') && !Get::has('graph'))
 {
     $thirtyDays = array();
-    $today = date('m/j/Y');
+    $today = date('Y-m-d');
     $daythirtyone = '';
     for($i = 1; $i < 31; $i++)
     {
-        $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($today)));
+        $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($today)));
         $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
         $sparkline->SetData($i, $val[0]);
         $daythirtyone = $newday;
     }
-    $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
-    $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
+    $daythirtyone = date( 'Y-m-d' , strtotime("-2 day", strtotime($daythirtyone)));
+    $daysixtyone = date( 'Y-m-d' , strtotime("-32 day", strtotime($daythirtyone)));
     //look 30 days more and if found scale
     $projectCheck = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
     if($projectCheck[0] > 0)
     {
         for($i = 30; $i < 61; $i++)
         {
-            $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($daythirtyone)));
+            $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($daythirtyone)));
             $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
             $sparkline->SetBarWidth(2);
             $sparkline->SetBarSpacing(0.5);
@@ -49,17 +49,17 @@ if(Get::has('project_id') && !Get::has('graph'))
 elseif(Get::has('project_id') && Get::has('graph') && Get::val('graph') == 'project')
 {
     $thirtyDays = array();
-    $today = date('m/j/Y');
+    $today = date('Y-m-d');
     $daythirtyone = '';
     for($i = 1; $i < 31; $i++)
     {
-        $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($today)));
+        $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($today)));
         $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
         $sparkline->SetData($i, $val[0]);
         $daythirtyone = $newday;
     }
-    $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
-    $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
+    $daythirtyone = date( 'Y-m-d' , strtotime("-2 day", strtotime($daythirtyone)));
+    $daysixtyone = date( 'Y-m-d' , strtotime("-32 day", strtotime($daythirtyone)));
     //look 30 days more and if found scale
     $projectCheck = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
     $userCheck = User::getActivityUserCount($daysixtyone, $daythirtyone, Get::num('project_id'), Get::num('user_id'));
@@ -67,7 +67,7 @@ elseif(Get::has('project_id') && Get::has('graph') && Get::val('graph') == 'proj
     {
         for($i = 30; $i < 61; $i++)
         {
-            $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($daythirtyone)));
+            $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($daythirtyone)));
             $val = Project::getDayActivityByProject($newday, Get::num('project_id'));
             $sparkline->SetBarWidth(2);
             $sparkline->SetBarSpacing(0.5);
@@ -78,24 +78,24 @@ elseif(Get::has('project_id') && Get::has('graph') && Get::val('graph') == 'proj
 elseif(Get::has('user_id') && Get::has('project_id') && Get::val('graph') == 'user')
 {
     $thirtyDays = array();
-    $today = date('m/j/Y');
+    $today = date('Y-m-d');
     $daythirtyone = '';
     for($i = 1; $i < 31; $i++)
     {
-        $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($today)));
+        $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($today)));
         $val = User::getDayActivityByUser($newday, Get::num('project_id'), Get::num('user_id'));
         $sparkline->SetData($i, $val[0]);
         $daythirtyone = $newday;
     }
-    $daythirtyone = date( 'm/j/Y' , strtotime("-2 day", strtotime($daythirtyone)));
-    $daysixtyone = date( 'm/j/Y' , strtotime("-32 day", strtotime($daythirtyone)));
+    $daythirtyone = date( 'Y-m-d' , strtotime("-2 day", strtotime($daythirtyone)));
+    $daysixtyone = date( 'Y-m-d' , strtotime("-32 day", strtotime($daythirtyone)));
     //look 30 days more and if found scale
     $check = Project::getActivityProjectCount($daysixtyone, $daythirtyone, Get::num('project_id'));
     if($check[0] > 0)
     {
         for($i = 30; $i < 61; $i++)
         {
-            $newday = date( 'm/j/Y' , strtotime("-$i day", strtotime($daythirtyone)));
+            $newday = date( 'Y-m-d' , strtotime("-$i day", strtotime($daythirtyone)));
             $val = User::getDayActivityByUser($newday, Get::num('project_id'), Get::num('user_id'));
             $sparkline->SetBarWidth(2);
             $sparkline->SetBarSpacing(0.5);

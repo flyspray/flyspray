@@ -316,7 +316,8 @@ div#mysearches {
 
 #newtasklink {
   background-image: url("img/gray/document_alt_stroke_9x12.png"); }
-
+#newmultitaskslink {
+	  background-image: url("img/gray/document_alt_stroke_9x12.png"); }
 
 #reportslink {
   background-image: url("img/gray/calendar_alt_stroke_12x12.png"); }

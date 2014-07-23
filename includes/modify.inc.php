@@ -60,13 +60,66 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('databasemodfailed'));
             break;
         }
-        break;
+	break;
+
+    // ##################
+    // Adding multiple new tasks
+    // ##################
+    case 'newmultitasks.newmultitasks':
+	if(!isset($_POST['item_summary']) || !isset($_POST['detailed_desc'])) {
+            Flyspray::show_error(L('summaryanddetails'));
+               break;
+	}
+	$flag = true;
+	foreach($_POST['item_summary'] as $summary) {
+	    if(!$summary || $summary == "") {
+		$flag = false;
+		break;
+	    }
+	}
+	foreach($_POST['detailed_desc'] as $detail) {
+	    if(!$detail || $detail == "") {
+		$flag = false;
+		break;
+	    }
+	}
+	if(!$flag) {
+            Flyspray::show_error(L('summaryanddetails'));
+	     break;
+	}
+
+	$flag = true;
+	$length = count($_POST['detailed_desc']);
+	for($i = 0; $i < $length; $i++) {
+	    $ticket = array();
+	    foreach($_POST as $key => $value) {
+	    if(is_array($value))
+		    $ticket[$key] = $value[$i];
+		else
+		    $ticket[$key] = $value;
+	    }
+	    list($task_id, $token) = Backend::create_task($ticket);
+	    if (!$task_id) {
+		$flag = false;
+		break;
+            }
+	}
+
+	if(!$flag) {
+	    Flyspray::show_error(L('databasemodfailed'));
+	    break;
+	}
+
+	$_SESSION['SUCCESS'] = L('newtaskadded');
+	Flyspray::Redirect(CreateURL('index', $proj->id));
+	break;
 
     // ##################
     // Modifying an existing task
     // ##################
     case 'details.update':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -101,7 +154,7 @@ switch ($action = Req::val('action'))
                     Post::val('product_category'), Post::val('closedby_version', 0),
                     Post::val('operating_system'), Post::val('task_severity'),
                     Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-                    Post::val('percent_complete'), Post::val('reportedver'),Post::val('estimated_effort'),
+                    Post::val('percent_complete'), Post::val('reportedver'),intval(Post::val('estimated_effort')),
                     $task['task_id']));
         
         // Update the list of users assigned this task
@@ -706,7 +759,7 @@ switch ($action = Req::val('action'))
 	/* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
                 'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-                'lang_code', 'logo', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
+                'lang_code', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert');
@@ -728,8 +781,16 @@ switch ($action = Req::val('action'))
         $db->Query("UPDATE  {prefs} SET pref_value = ?
                      WHERE  pref_name = 'visible_fields'",
                 array($visfields));
-        $fs->prefs['visible_fields'] = $visfields;
- 
+	$fs->prefs['visible_fields'] = $visfields;
+
+	//save logo
+	if($_FILES["logo"]["error"] == 0 && exif_imagetype($_FILES["logo"]["tmp_name"]) ) {
+
+		move_uploaded_file($_FILES["logo"]["tmp_name"], "./" . $_FILES["logo"]["name"]);
+		$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES["logo"]["name"]);
+	}
+	//saved logo
+
         $_SESSION['SUCCESS'] = L('optionssaved');
         break;
 
@@ -1263,6 +1324,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.add_related':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1303,7 +1365,12 @@ switch ($action = Req::val('action'))
     // Removing a related task entry
     // ##################
     case 'remove_related':
-        if (!$user->can_edit_task($task)  || !is_array(Post::val('related_id'))) {
+        if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
+            break;
+        }
+        if (!is_array(Post::val('related_id'))) {
+            Flyspray::show_error(L('formnotcomplete'));
             break;
         }
 
@@ -1578,6 +1645,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.newdep':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1629,11 +1697,13 @@ switch ($action = Req::val('action'))
 
         //check if the user has permissions to remove the subtask
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
         //set the subtask supertask_id to 0 removing parent child relationship
-        $db->Query("UPDATE {tasks} SET supertask_id='0' WHERE task_id = '".Get::val('subtaskid')."'");
+        $db->Query("UPDATE {tasks} SET supertask_id=0 WHERE task_id = ?",
+                   array(Get::val('subtaskid')));
 
         //write event log
         Flyspray::logEvent(Get::val('taskid'), 33, Get::val('subtaskid'));
@@ -1648,6 +1718,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'removedep':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1665,9 +1736,12 @@ switch ($action = Req::val('action'))
 
             Flyspray::logEvent($dep_info['task_id'], 24, $dep_info['dep_task_id']);
             Flyspray::logEvent($dep_info['dep_task_id'], 25, $dep_info['task_id']);
+
+            $_SESSION['SUCCESS'] = L('depremovedmsg');
+        } else {
+            Flyspray::show_error(L('erroronform'));
         }
 
-        $_SESSION['SUCCESS'] = L('depremovedmsg');
         //redirect the user back to the right task
         Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
         break;
@@ -1792,6 +1866,7 @@ switch ($action = Req::val('action'))
     // ##################
     case 'details.setparent':
         if (!$user->can_edit_task($task)) {
+            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
 
@@ -1837,6 +1912,7 @@ switch ($action = Req::val('action'))
         break;
     case 'task.bulkupdate':
 
+	if(Post::val('updateselectedtasks') == "true") {
         //process quick actions
         switch(Post::val('bulk_quick_action'))
         {
@@ -1952,6 +2028,28 @@ switch ($action = Req::val('action'))
         // set success message
         $_SESSION['SUCCESS'] = L('tasksupdated');
         break;
+	}
+	//bulk close
+	else {
+	        if (!Post::val('resolution_reason')) {
+	            Flyspray::show_error(L('noclosereason'));
+	            break;
+	        }
+	        $task_ids = Post::val('ids');
+		foreach($task_ids as $task_id) {
+		$task = Flyspray::GetTaskDetails($task_id);
+		    if (!$user->can_close_task($task)) {
+			continue;
+		    }
 
+		    if ($task['is_closed']) {
+			continue;
+		    }
+
+		    Backend::close_task($task_id, Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
+		}
+		$_SESSION['SUCCESS'] = L('taskclosedmsg');
+		break;
+	}
 }
 ?>

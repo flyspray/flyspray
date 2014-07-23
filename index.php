@@ -80,13 +80,6 @@ if (Get::val('getfile')) {
 // Load translations
 load_translations();
 
-for ($i = 6; $i >= 1; $i--) {
-    $fs->priorities[$i] = L('priority' . $i);
-}
-for ($i = 5; $i >= 1; $i--) {
-    $fs->severities[$i] = L('severity' . $i);
-}
-
 /*******************************************************************************/
 /* Here begins the deep flyspray : html rendering                              */
 /*******************************************************************************/
@@ -109,6 +102,12 @@ if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 }
 
 $page = new FSTpl();
+
+// make sure people are not attempting to manually fiddle with projects they are not allowed to play with
+if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
+    Flyspray::show_error( L('nopermission') );
+    exit;
+}
 
 if ($show_task = Get::val('show_task')) {
     // If someone used the 'show task' form, redirect them
