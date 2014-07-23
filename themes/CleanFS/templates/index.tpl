@@ -228,7 +228,15 @@
 
             </div>
             <input type="hidden" name="do" value="index"/>
+
+ <!--- Added 2/1/2014 LAE --!>
+
+ <form action="{$baseurl}/scripts/index.php" method="post">
+  &nbsp;&nbsp;&nbsp&nbsp<input type='submit' name='export_list' value='Export Tasklist'>
+ </form>
+
 </div>
+
 </form>
 </map>
 </div>

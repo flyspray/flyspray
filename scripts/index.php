@@ -15,7 +15,7 @@ if (!$user->can_view_project($proj->id)) {
     $proj = new Project(0);
 }
 
-$perpage = '20';
+$perpage = '250';
 if (isset($user->infos['tasks_perpage']) && $user->infos['tasks_perpage'] > 0) {
     $perpage = $user->infos['tasks_perpage'];
 }
@@ -33,6 +33,11 @@ if (!is_array($visible) || !count($visible) || !$visible[0]) {
 }
 
 list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
+
+//-- Added 2/1/2014 LAE. See if user wants to export the task list
+if (Get::has('export_list')) {
+ export_task_list();
+}
 
 $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');
 
@@ -197,13 +202,141 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 
 // } }}
 
+// }}}
+// Added LAE 2/1/2014 - little function to export the tasklist into a .csv file and upload it to user browser {{{
+
+$sort;
+$orderby;
+
+/*********************************************
+*
+* comparison function used by export_task_list
+*
+**********************************************
+*/
+
+function do_cmp($a, $b)
+{
+ global $sort,$orderby;
+
+ if ($a[ $orderby ] == $b[ $orderby ]) { return 0; }
+
+ if ($sort == 'asc')
+   return ($a[ $orderby ] < $b[ $orderby ]) ? -1 : 1;
+ else
+   return ($a[ $orderby ] > $b[ $orderby ]) ? -1 : 1;
+}
+
+
+/*********************************************
+*
+* Export the task list as a .csv file
+*
+*********************************************
+*/
+
+function export_task_list() {
+
+ global $tasks, $fs, $sort, $orderby;
+
+ if (!is_array($tasks))
+  return;
+
+ $indexes = array (
+            'id'         => 'task_id',
+            'project'    => 'project_title',
+            'tasktype'   => 'task_type',
+            'category'   => 'category_name',
+            'severity'   => 'task_severity',
+            'priority'   => 'task_priority',
+            'summary'    => 'item_summary',
+            'dateopened' => 'date_opened',
+            'status'     => 'status_name',
+            'openedby'   => 'opened_by_name',
+            'assignedto' => 'assigned_to_name',
+            'lastedit'   => 'max_date',
+            'reportedin' => 'product_version',
+            'dueversion' => 'closedby_version',
+            'duedate'    => 'due_date',
+            'comments'   => 'num_comments',
+            'votes'      => 'num_votes',
+            'attachments'=> 'num_attachments',
+            'dateclosed' => 'date_closed',
+            'progress'   => 'percent_complete',
+            'os'         => 'os_name',
+            'private'    => 'mark_private',
+            'supertask'  => 'supertask_id',
+        );
+
+
+ // first line of .csv will be project name
+
+ $result = "Project: " .$tasks[0]['project_title'] . " - " . date("H:i:s d-m-Y") . "\r\n\r\n";
+
+ // insert column headers
+
+ $result .= '"ID","Category","Task Type","Severity","Summary","Status","Progress"' . "\r\n";
+
+
+ // sort the tasks into the order selected by the user. Set
+ // global vars for use by sort comparison function
+
+ $sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
+ $field = Get::safe('order', 'id');
+
+ if ($field == '') $field = 'id';
+ $orderby = $indexes[ $field ];
+
+ usort($tasks, "do_cmp");	// sort the items
+
+ // for each task create a line showing values
+ // get the items
+
+ foreach ($tasks as $task) {
+
+  $array = array(
+	$task['task_id'],
+	$task['category_name'],
+	$task['task_type'],
+        $fs->severities[ $task['task_severity'] ],
+	$task['item_summary'],
+	$task['status_name'],
+	$task['percent_complete'],
+	);
+
+  // create comma seperated values from array and append it to $result
+ 
+  $result .= implode(',', $array) . "\r\n";
+ }
+
+ // now send data to user to download to their machine. First create
+ // HTML header
+
+ $outfile = "tasklist_" . date("Y-m-d") . ".csv";	// name user sees to save file as
+
+ header('Content-Type: application/csv');
+ header('Content-Disposition: attachment; filename=' . $outfile);
+ header('Content-Transfer-Encoding: text');
+ header('Expires: 0');
+ header('Cache-Control: must-revalidate');
+ header('Pragma: public');
+ header('Content-Length: ' . strlen($result)); 
+ ob_clean();
+ flush();
+
+ // finally send out our data
+
+ printf ("%s", $result);
+}
+
+// } }}
+
 // Javascript replacement
 if (Get::val('toggleadvanced')) {
     $advanced_search = intval(!Req::val('advancedsearch'));
     Flyspray::setCookie('advancedsearch', $advanced_search, time()+60*60*24*30);
     $_COOKIE['advancedsearch'] = $advanced_search;
 }
-
 // Update check {{{
 if(Get::has('hideupdatemsg')) {
     unset($_SESSION['latest_version']);
