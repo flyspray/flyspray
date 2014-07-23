@@ -17,9 +17,9 @@
 		</tr>
 	<?php
 		/* FIXME: each TR should have an onclick that selects/deselects the checkbox for that user */
-		foreach (Flyspray::ListUsers() as $user)
+		foreach (Flyspray::ListUsers() as $usr)
 		{ 
-			if ( $user['account_enabled'] )
+			if ( $usr['account_enabled'] )
 			{
 				echo '<tr class="account_enabled">';
 			}
@@ -30,10 +30,10 @@
         ?>
 
 
-		        <td><input type="checkbox" name="checkedUsers[]" value="<?= $user['user_id'] ?>"></td>
-		        <td><a href=<?= CreateURL('edituser', $user['user_id'] )?>><?= $user['real_name'] ?></a></td>
-		        <td><?= $user['user_name'] ?></td>
-		        <td><?= $user['email_address'] ?></td>
+		        <td><input type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
+		        <td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo $usr['real_name']; ?></a></td>
+		        <td><?php echo $usr['user_name']; ?></td>
+		        <td><?php echo $usr['email_address']; ?></td>
 		</tr>
 
 	<?php
