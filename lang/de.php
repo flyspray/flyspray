@@ -837,6 +837,7 @@ $translation = array(
 'addnewsubtaskin'         => 'Neue untergeordnete Aufgabe in',
 'hidesubtasks'            => 'Untergeordnete Aufgaben ausblenden',
 'selfsupertasknotallowed' => 'Aufgabe darf nicht sich selbst Übergeordnete Aufgabe sein',
+'emailNoHTML'             => 'kein HTML in E-Mails',
 );
 
 ?>

@@ -87,6 +87,7 @@ $language = array(
 'projectlists'            => 'Project lists',
 'showlogo'                => 'Show title logo image',
 'showgravatars'		  => 'Show Gravatars',
+'emailNoHTML'             => 'no HTML in E-Mails',
 'intromessage'            => 'Introductory message',
 'isactive'                => 'Project is active',
 'createproject'           => 'Create a new Project',

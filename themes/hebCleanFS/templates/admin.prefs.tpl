@@ -29,6 +29,11 @@
             {!tpl_options(Flyspray::listLangs(), $fs->prefs['lang_code'], true)}
           </select>
         </li>   
+		
+        <li>
+          <label for="emailNoHTML">{L('emailNoHTML')}</label>
+        	{!tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML')}
+        </li>			
 
         <li>
           <label for="dateformat">{L('dateformat')}</label>
