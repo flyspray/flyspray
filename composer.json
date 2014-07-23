@@ -1,0 +1,20 @@
+{
+    "name": "flyspray/flyspray",
+    "type": "application",
+    "description": "The Flyspray bug tracking system.",
+    "keywords": ["bug","bugs","tracker","issue","issues", "web"],
+    "homepage": "http://flyspray.org",
+    "license": "",
+    "require": {
+        "swiftmailer/swiftmailer": "@stable",
+        "adodb/adodb-php": "5.*"
+
+    },
+    "autoload": {
+        "classmap": ["includes"],
+        "files": ["includes/utf8.inc.php"],
+        "psr-4": {
+            "Flyspray\\": "src/"
+        }
+    }
+}
