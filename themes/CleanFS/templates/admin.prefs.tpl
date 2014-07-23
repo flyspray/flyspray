@@ -18,7 +18,7 @@
 <div id="toolbox">
   <h3>{L('admintoolboxlong')} :: {L('preferences')}</h3>
 
-  <form action="{CreateURL('admin', 'prefs')}" method="post">
+  <form action="{CreateURL('admin', 'prefs')}" method="post" enctype="multipart/form-data">
   <ul id="submenu">
    <li><a href="#general">{L('general')}</a></li>
    <li><a href="#userregistration">{L('userregistration')}</a></li>
@@ -56,7 +56,7 @@
 
           ?>
           <label for="logo">{L('showlogo')}</label>
-          <input id="logo" name="logo" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['logo']}" />
+          <input id="logo" name="logo" type="file" accept="image/*" value="{$fs->prefs['logo']}" />
         </li>
 
         <li>

@@ -748,7 +748,8 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'toplevel':
             case 'roadmap':
             case 'index':
-            case 'newtask':   $return = $url . $type .  '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : ''); break;
+	    case 'newtask':
+	    case 'newmultitasks':   $return = $url . $type .  '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : ''); break;
 
             case 'editgroup': $return = $url . $arg2 . '/' . $type . '/' . $arg1; break;
 
@@ -781,7 +782,8 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'roadmap':
             case 'toplevel':
             case 'index':
-            case 'newtask':   $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : ''); break;
+	    case 'newtask':
+	    case 'newmultitasks': $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : ''); break;
 
             case 'editgroup': $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
 

@@ -20,22 +20,25 @@
         }
     }
 
-    function massSelectBulkEditCheck(itemsPerPage)
+    function massSelectBulkEditCheck()
     {
         var form = document.getElementById('massops');
-        var count = 0;
+        var check_count = 0, uncheck_count;
         for(var n=0;n < form.length;n++){
-            if(form[n].name == 'ids[]' && form[n].checked){
-                count++;
+            if(form[n].name == 'ids[]'){
+		if(form[n].checked)
+		    ckeck_count++;
+		else
+		    uncheck_count++;
             }
         }
 
-        if(count == 0)
+        if(check_count == 0)
         {
             Effect.Appear('bulk_edit_selectedItems',{ duration: 0.2 });
         }
 
-        if(count == itemsPerPage)
+        if(uncheck_count == 0)
         {
             Effect.Fade('bulk_edit_selectedItems',{ duration: 0.2 });
         }
@@ -242,7 +245,7 @@
         <?php if (!$user->isAnon()): ?>
         <th class="ttcolumn">
             <?php if (!$user->isAnon() && $total): ?>
-            <a title="{L('toggleselected')}" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck({$perpage});">
+            <a title="{L('toggleselected')}" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();">
             </a>
             <?php endif; ?>
         </th>
@@ -502,6 +505,22 @@
 
         <button type="submit" name="updateselectedtasks" value="true">{L('updateselectedtasks')}</button>
     </fieldset>
+    <fieldset>
+	<legend><b>Close selected tasks</b></legend>
+            <div>
+                <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
+                    <option value="0">{L('selectareason')}</option>
+                    {!tpl_options($proj->listResolutions(), Req::val('resolution_reason'))}
+                </select>
+                <button type="submit" name="updateselectedtasks" value="false">close tasks</button>
+                <br/>
+                <label class="default text" for="closure_comment">{L('closurecomment')}</label>
+                <textarea class="text" id="closure_comment" name="closure_comment" rows="3"
+                          cols="25">{Req::val('closure_comment')}</textarea>
+                <label>{!tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')))}&nbsp;&nbsp;{L('mark100')}</label>
+            </div>
+    </fiedlset>
+
 </div>
 
 <?php endif ?>
