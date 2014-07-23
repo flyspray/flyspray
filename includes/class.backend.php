@@ -881,15 +881,18 @@ abstract class Backend
             $sql_values[] = $value;
         }
 
-        $sql_keys_string = join(', ', $sql_keys);
 
-        $sql_placeholder = $db->fill_placeholders($sql_values);
         $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);
         $task_id = $task_id ? $task_id : 1;
+
         //now, $task_id is always the first element of $sql_values
+        array_unshift($sql_keys, 'task_id');
         array_unshift($sql_values, $task_id);
+
+        $sql_keys_string = join(', ', $sql_keys);
+        $sql_placeholder = $db->fill_placeholders($sql_values);
 
         $result = $db->Query("INSERT INTO  {tasks}
                                  ($sql_keys_string)
