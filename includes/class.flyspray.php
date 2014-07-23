@@ -220,7 +220,7 @@ class Flyspray
             list($host) = explode(':', $_SERVER['HTTP_HOST']);
 
             if (strpos($_SERVER['HTTP_HOST'], ':') !== false && !isset($port)) {
-                $port = explode(':', $_SERVER['HTTP_HOST'])[1];
+                $port = explode(':', $_SERVER['HTTP_HOST']);
             }
         } elseif (!empty($_SERVER['SERVER_NAME'])) {
             list($host) = explode(':', $_SERVER['SERVER_NAME']);
