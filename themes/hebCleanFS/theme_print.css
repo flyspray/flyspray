@@ -12,32 +12,18 @@
 ----------------------------------------------------------------------- */
 
 /* print.css */
-body <?php echo Filters::noXSS(line-height:1.5;font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;color:#000;background:none;font-size:10pt;); ?>
-
-.container <?php echo Filters::noXSS(background:none;); ?>
-
-hr <?php echo Filters::noXSS(background:#ccc;color:#ccc;width:100%;height:2px;margin:2em 0;padding:0;border:none;); ?>
-
-hr.space <?php echo Filters::noXSS(background:#fff;color:#fff;visibility:hidden;); ?>
-
-h1, h2, h3, h4, h5, h6 <?php echo Filters::noXSS(font-family:"Helvetica Neue", Arial, "Lucida Grande", sans-serif;); ?>
-
-code <?php echo Filters::noXSS(font:.9em "Courier New", Monaco, Courier, monospace;); ?>
-
-a img <?php echo Filters::noXSS(border:none;); ?>
-
-p img.top <?php echo Filters::noXSS(margin-top:0;); ?>
-
-blockquote <?php echo Filters::noXSS(margin:1.5em;padding:1em;font-style:italic;font-size:.9em;); ?>
-
-.small <?php echo Filters::noXSS(font-size:.9em;); ?>
-
-.large <?php echo Filters::noXSS(font-size:1.1em;); ?>
-
-.quiet <?php echo Filters::noXSS(color:#999;); ?>
-
-.hide <?php echo Filters::noXSS(display:none;); ?>
-
-a:link, a:visited <?php echo Filters::noXSS(background:transparent;font-weight:700;text-decoration:underline;); ?>
-
-a:link:after, a:visited:after <?php echo Filters::noXSS(content:" (" attr(href) ")";font-size:90%;); ?>
+body {line-height:1.5;font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;color:#000;background:none;font-size:10pt;}
+.container {background:none;}
+hr {background:#ccc;color:#ccc;width:100%;height:2px;margin:2em 0;padding:0;border:none;}
+hr.space {background:#fff;color:#fff;visibility:hidden;}
+h1, h2, h3, h4, h5, h6 {font-family:"Helvetica Neue", Arial, "Lucida Grande", sans-serif;}
+code {font:.9em "Courier New", Monaco, Courier, monospace;}
+a img {border:none;}
+p img.top {margin-top:0;}
+blockquote {margin:1.5em;padding:1em;font-style:italic;font-size:.9em;}
+.small {font-size:.9em;}
+.large {font-size:1.1em;}
+.quiet {color:#999;}
+.hide {display:none;}
+a:link, a:visited {background:transparent;font-weight:700;text-decoration:underline;}
+a:link:after, a:visited:after {content:" (" attr(href) ")";font-size:90%;}

@@ -1103,8 +1103,7 @@ a#show_loginbox {
   #loginbox #login a {
     color: #222222;
     text-decoration: underline; }
-  #loginbox #login a:hover <?php echo Filters::noXSS(color: #fff;); ?>
-
+  #loginbox #login a:hover {color: #fff;}
 
 
 form#login {
@@ -1610,10 +1609,8 @@ input[type=text], input[type=submit], button, select {
     border-radius: 3px;
 }
 
-button <?php echo Filters::noXSS(vertical-align: middle; margin-bottom: 2px; line-height: 20px;); ?>
-
-select <?php echo Filters::noXSS(height: 23px; vertical-align: middle;); ?>
-
+button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
+select {height: 23px; vertical-align: middle;}
 
 input[type=submit]:hover, button:hover {
     background: #5F9729;
@@ -1646,8 +1643,7 @@ input[type=submit]:hover, button:hover {
     padding: 5px 20px;
 }
 
-#login_button <?php echo Filters::noXSS(vertical-align: baseline;); ?>
-
+#login_button {vertical-align: baseline;}
 
 div.denyform {
 	visibility:hidden;
@@ -1661,11 +1657,9 @@ div.denyform {
 	padding:5px 30px 5px 5px;
 }
 
-#notify_types <?php echo Filters::noXSS(height: 10em;); ?>
+#notify_types {height: 10em;}
 
-
-#rassigned_to <?php echo Filters::noXSS(height: 12em; ); ?>
-
+#rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
 
@@ -1729,12 +1723,9 @@ span.autocomplete ul li.selected {
 .assignedto img {
 	padding-top: 2px;
 }
-a.tooltip <?php echo Filters::noXSS(outline:none; ); ?>
-
-a.tooltip strong <?php echo Filters::noXSS(line-height:30px;); ?>
-
-a.tooltip:hover <?php echo Filters::noXSS(text-decoration:none;); ?>
-
+a.tooltip {outline:none; }
+a.tooltip strong {line-height:30px;}
+a.tooltip:hover {text-decoration:none;}
 a.tooltip span {
     z-index:10;display:none; padding:14px 20px;
     margin-top:60px; margin-left:-160px;
@@ -1745,8 +1736,7 @@ a.tooltip:hover span{
     border:2px solid #FFF;  color:#EEE;
     background:#000;
 }
-.callout <?php echo Filters::noXSS(z-index:20;position:absolute;border:0;top:-14px;left:120px;); ?>
-
+.callout {z-index:20;position:absolute;border:0;top:-14px;left:120px;}
 
 /*CSS3 extras*/
 a.tooltip span
