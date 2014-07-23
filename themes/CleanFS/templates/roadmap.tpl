@@ -24,28 +24,32 @@ function showAll(allTasks)
 <?php foreach($data as $milestone): ?>
 
 <script type="text/javascript">
-allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
+allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
 </script>
 
 <div class="box roadmap">
-<h3>{L('roadmapfor')} {$milestone['name']}
+<h3><?php echo Filters::noXSS(L('roadmapfor')); ?> <?php echo Filters::noXSS($milestone['name']); ?>
+
     <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
-      <a href="javascript:showAll(allTasks{$milestone['id']})">{L('expandall')}</a> |
-      <a href="javascript:hideAll(allTasks{$milestone['id']})">{L('collapseall')}</a>
+      <a href="javascript:showAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('expandall')); ?></a> |
+      <a href="javascript:hideAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('collapseall')); ?></a>
     </small>
     <?php endif; ?>
 </h3>
 <div class="progress_bar_container" style="width: 250px;">
-	<span>{$milestone['percent_complete']}%</span>
-	<div class="progress_bar" style="width:{$milestone['percent_complete']}%"></div>
+	<span><?php echo Filters::noXSS($milestone['percent_complete']); ?>%</span>
+	<div class="progress_bar" style="width:<?php echo Filters::noXSS($milestone['percent_complete']); ?>%"></div>
 </div>
-<p style="margin-top: 5px;">{$milestone['percent_complete']}{L('of')}
-   <a href="{$baseurl}index.php?do=index&amp;tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}&amp;status[]=">
-     {count($milestone['all_tasks'])} {L('tasks')}
-   </a> {L('completed')}
+<p style="margin-top: 5px;"><?php echo Filters::noXSS($milestone['percent_complete']); ?><?php echo Filters::noXSS(L('of')); ?>
+
+   <a href="<?php echo Filters::noXSS($baseurl); ?>index.php?do=index&amp;tasks=&amp;project=<?php echo Filters::noXSS($proj->id); ?>&amp;due=<?php echo Filters::noXSS($milestone['id']); ?>&amp;status[]=">
+     <?php echo Filters::noXSS(count($milestone['all_tasks'])); ?> <?php echo Filters::noXSS(L('tasks')); ?>
+
+   </a> <?php echo Filters::noXSS(L('completed')); ?>
+
    <?php if(count($milestone['open_tasks'])): ?>
-   <a href="{$baseurl}index.php?do=index&amp;tasks=&amp;project={$proj->id}&amp;due={$milestone['id']}">{count($milestone['open_tasks'])} {L('opentasks')}:</a>
+   <a href="<?php echo Filters::noXSS($baseurl); ?>index.php?do=index&amp;tasks=&amp;project=<?php echo Filters::noXSS($proj->id); ?>&amp;due=<?php echo Filters::noXSS($milestone['id']); ?>"><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:</a>
    <?php endif; ?>
     <?php
     if($proj->prefs['use_effort_tracking']) {
@@ -64,24 +68,26 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
     }
     ?>
     </br>
-    {L('opentasks')} - {L('totalestimatedeffort')}: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
     </br>
-    {L('opentasks')} - {L('actualeffort')}: <?php echo ConvertSeconds($actual_effort); ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo ConvertSeconds($actual_effort); ?>
     <?php } ?>
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>
 <dl class="roadmap">
     <?php foreach($milestone['open_tasks'] as $task): ?>
-      <dt class="severity{$task['task_severity']}">
-        {!tpl_tasklink($task['task_id'])}
+      <dt class="severity<?php echo Filters::noXSS($task['task_severity']); ?>">
+        <?php echo tpl_tasklink($task['task_id']); ?>
+
         <small class="DoNotPrint">
-          <a id="expand{$task['task_id']}" href="javascript:showstuff('dd{$task['task_id']}');hidestuff('expand{$task['task_id']}');showstuff('hide{$task['task_id']}', 'inline')">{L('expand')}</a>
-          <a class="hide" id="hide{$task['task_id']}" href="javascript:hidestuff('dd{$task['task_id']}');hidestuff('hide{$task['task_id']}');showstuff('expand{$task['task_id']}', 'inline')">{L('collapse')}</a>
+          <a id="expand<?php echo Filters::noXSS($task['task_id']); ?>" href="javascript:showstuff('dd<?php echo Filters::noXSS($task['task_id']); ?>');hidestuff('expand<?php echo Filters::noXSS($task['task_id']); ?>');showstuff('hide<?php echo Filters::noXSS($task['task_id']); ?>', 'inline')"><?php echo Filters::noXSS(L('expand')); ?></a>
+          <a class="hide" id="hide<?php echo Filters::noXSS($task['task_id']); ?>" href="javascript:hidestuff('dd<?php echo Filters::noXSS($task['task_id']); ?>');hidestuff('hide<?php echo Filters::noXSS($task['task_id']); ?>');showstuff('expand<?php echo Filters::noXSS($task['task_id']); ?>', 'inline')"><?php echo Filters::noXSS(L('collapse')); ?></a>
         </small>
       </dt>
-      <dd id="dd{$task['task_id']}" style="display: none;">
-        {!TextFormatter::render($task['detailed_desc'], 'rota', $task['task_id'], $task['content'])}
+      <dd id="dd<?php echo Filters::noXSS($task['task_id']); ?>" style="display: none;">
+        <?php echo TextFormatter::render($task['detailed_desc'], 'rota', $task['task_id'], $task['content']); ?>
+
         <br style="position:absolute;" />
       </dd>
     <?php endforeach; ?>
@@ -93,9 +99,9 @@ allTasks{$milestone['id']} = [<?php foreach($milestone['open_tasks'] as $task): 
 
 <?php if (!count($data)): ?>
 <div class="box roadmap">
-<p><em>{L('noroadmap')}</em></p>
+<p><em><?php echo Filters::noXSS(L('noroadmap')); ?></em></p>
 </div>
 <?php else: ?>
-<p><a href="{CreateURL('roadmap', $proj->id, null, array('txt' => 'true'))}">
-<!--<img src="{$this->get_image('mime/text')}" alt="" />--> {L('textversion')}</a></p>
+<p><a href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id, null, array('txt' => 'true'))); ?>">
+<!--<img src="<?php echo Filters::noXSS($this->get_image('mime/text')); ?>" alt="" />--> <?php echo Filters::noXSS(L('textversion')); ?></a></p>
 <?php endif; ?>

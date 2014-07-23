@@ -1,14 +1,14 @@
                <div class="userSelectWidget">
-                   <label for="find_user" class="inline" style="margin:0;padding:0;">{L('find')}:</label>
-                   <input type="text" class="text" value="{Post::val('find_user')}" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
-                   <a href="javascript:unselectAll()">{L('noone')}</a>
+                   <label for="find_user" class="inline" style="margin:0;padding:0;"><?php echo Filters::noXSS(L('find')); ?>:</label>
+                   <input type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
+                   <a href="javascript:unselectAll()"><?php echo Filters::noXSS(L('noone')); ?></a>
                    <br />
 
                    <select size="8" style="width:200px;" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
                      <?php foreach ($userlist as $group => $users): ?>
-                        <optgroup label="{$group}">
+                        <optgroup label="<?php echo Filters::noXSS($group); ?>">
                         <?php foreach ($users as $info): ?>
-                        <option value="{$info[0]}" <?php if (in_array($info[0], $assignees)): ?>selected="selected"<?php endif; ?>>{$info[1]}</option>
+                        <option value="<?php echo Filters::noXSS($info[0]); ?>" <?php if (in_array($info[0], $assignees)): ?>selected="selected"<?php endif; ?>><?php echo Filters::noXSS($info[1]); ?></option>
                         <?php endforeach; ?>
                         </optgroup>
                      <?php endforeach; ?>

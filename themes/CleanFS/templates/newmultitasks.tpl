@@ -6,23 +6,23 @@
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 
-<form enctype="multipart/form-data" action="{CreateUrl('newmultitasks', $proj->id, $supertask_id)}" method="post">
-  <input type="hidden" name="supertask_id" value="{$supertask_id}" />
+<form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id)); ?>" method="post">
+  <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
     <table class="list">
        <thead>
        <tr>
 	 <th></th>
-         <?php if (in_array('tasktype', $fields)) { ?><th>{L('tasktype')}</th><?php } ?>
-         <?php if (in_array('category', $fields)) { ?><th>{L('category')}</th><?php } ?>
-         <?php if (in_array('status', $fields)) { ?><th>{L('status')}</th><?php } ?>
-         <?php if (in_array('os', $fields)) { ?><th>{L('operatingsystem')}</th><?php } ?>
-         <?php if (in_array('severity', $fields)) { ?><th>{L('severity')}</th><?php } ?>
-         <?php if (in_array('priority', $fields)) { ?><th>{L('priority')}</th><?php } ?>
-         <?php if (in_array('reportedin', $fields)) { ?><th>{L('reportedversion')}</th><?php } ?>
-         <?php if (in_array('dueversion', $fields)) { ?><th>{L('dueinversion')}</th><?php } ?>
-         <th>{L('summary')}</th>
-         <th>{L('details')}</th>
+         <?php if (in_array('tasktype', $fields)) { ?><th><?php echo Filters::noXSS(L('tasktype')); ?></th><?php } ?>
+         <?php if (in_array('category', $fields)) { ?><th><?php echo Filters::noXSS(L('category')); ?></th><?php } ?>
+         <?php if (in_array('status', $fields)) { ?><th><?php echo Filters::noXSS(L('status')); ?></th><?php } ?>
+         <?php if (in_array('os', $fields)) { ?><th><?php echo Filters::noXSS(L('operatingsystem')); ?></th><?php } ?>
+         <?php if (in_array('severity', $fields)) { ?><th><?php echo Filters::noXSS(L('severity')); ?></th><?php } ?>
+         <?php if (in_array('priority', $fields)) { ?><th><?php echo Filters::noXSS(L('priority')); ?></th><?php } ?>
+         <?php if (in_array('reportedin', $fields)) { ?><th><?php echo Filters::noXSS(L('reportedversion')); ?></th><?php } ?>
+         <?php if (in_array('dueversion', $fields)) { ?><th><?php echo Filters::noXSS(L('dueinversion')); ?></th><?php } ?>
+         <th><?php echo Filters::noXSS(L('summary')); ?></th>
+         <th><?php echo Filters::noXSS(L('details')); ?></th>
        </tr>
      </thead>
      <tbody id="table">
@@ -32,57 +32,65 @@
         <?php if (in_array('tasktype', $fields)) { ?>
 	<td>
             <select name="task_type[]" id="tasktype">
-              {!tpl_options($proj->listTaskTypes(), Req::val('task_type'))}
+              <?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type')); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('category', $fields)) { ?>
 	<td>
             <select class="adminlist" name="product_category[]" id="category">
-              {!tpl_options($proj->listCategories(), Req::val('product_category'))}
+              <?php echo tpl_options($proj->listCategories(), Req::val('product_category')); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('status', $fields)) { ?>
 	<td>
-            <select id="status" name="item_status[]" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
-              {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED)))}
+            <select id="status" name="item_status[]" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
+              <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED))); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('os', $fields)) { ?>
 	<td>
             <select id="os" name="operating_system[]">
-              {!tpl_options($proj->listOs(), Req::val('operating_system'))}
+              <?php echo tpl_options($proj->listOs(), Req::val('operating_system')); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('severity', $fields)) { ?>
 	<td>
             <select id="severity" class="adminlist" name="task_severity[]">
-              {!tpl_options($fs->severities, Req::val('task_severity', 2))}
+              <?php echo tpl_options($fs->severities, Req::val('task_severity', 2)); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('priority', $fields)) { ?>
 	<td>
-            <select id="priority" name="task_priority[]" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
-              {!tpl_options($fs->priorities, Req::val('task_priority', 4))}
+            <select id="priority" name="task_priority[]" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
+              <?php echo tpl_options($fs->priorities, Req::val('task_priority', 4)); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('reportedin', $fields)) { ?>
 	<td>
             <select class="adminlist" name="product_version[]" id="reportedver">
-              {!tpl_options($proj->listVersions(false, 2), Req::val('product_version'))}
+              <?php echo tpl_options($proj->listVersions(false, 2), Req::val('product_version')); ?>
+
             </select>
 	</td>
 	<?php } ?>
 	<?php if (in_array('dueversion', $fields)) { ?>
 	<td>
-            <select id="dueversion" name="closedby_version[]" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
-              <option value="0">{L('undecided')}</option>
-              {!tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true)}
+            <select id="dueversion" name="closedby_version[]" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
+              <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
+              <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true); ?>
+
             </select>
 	</td>
 	<?php } ?>
@@ -100,8 +108,8 @@
           <button class="button positive main" accesskey="s" type="button" style="margin-left:148px" onClick="createRow('','')">new task</button>
         </td>
         <td class="buttons">
-          <input type="hidden" name="project_id" value="{$proj->id}" />
-          <button class="button positive main" accesskey="s" type="submit">{L('addthistask')}</button>
+          <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
+          <button class="button positive main" accesskey="s" type="submit"><?php echo Filters::noXSS(L('addthistask')); ?></button>
         </td>
       </tr>
 

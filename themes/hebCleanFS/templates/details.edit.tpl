@@ -1,6 +1,6 @@
-<form action="{CreateUrl('details', $task_details['task_id'])}" id="taskeditform" enctype="multipart/form-data" method="post">
+<form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" id="taskeditform" enctype="multipart/form-data" method="post">
 <div id="actionbar">
-	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('{#$baseurl}javascript/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>
+	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>javascript/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 	<div class="clear"></div>
 </div>
 
@@ -8,122 +8,137 @@
 	 <div>
 		<input type="hidden" name="action" value="details.update" />
         <input type="hidden" name="edit" value="1" />
-		<input type="hidden" name="task_id" value="{$task_details['task_id']}" />
-		<input type="hidden" name="edit_start_time" value="{Req::val('edit_start_time', time())}" />
+		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+		<input type="hidden" name="edit_start_time" value="<?php echo Filters::noXSS(Req::val('edit_start_time', time())); ?>" />
 
     <div id="taskfields">
       <ul class="form_elements slim">
 				<li>
-					<label for="status">{L('status')}</label>
+					<label for="status"><?php echo Filters::noXSS(L('status')); ?></label>
 					<select id="status" name="item_status">
-					 {!tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status']))}
+					 <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
+
 					</select>
 				</li>
 
 				<li>
-					<label for="percent">{L('percentcomplete')}</label>
+					<label for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
 					<select id="percent" name="percent_complete">
 					 <?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
-					 {!tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete']))}
+					 <?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
+
 					</select>
 				</li>
 				
 				<li>
-					<label for="tasktype">{L('tasktype')}</label>
+					<label for="tasktype"><?php echo Filters::noXSS(L('tasktype')); ?></label>
 					<select id="tasktype" name="task_type">
-					 {!tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type']))}
+					 <?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="category">{L('category')}</label>
+					<label for="category"><?php echo Filters::noXSS(L('category')); ?></label>
 					<select id="category" name="product_category">
-					 {!tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category']))}
+					 <?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label>{L('assignedto')}</label>
+					<label><?php echo Filters::noXSS(L('assignedto')); ?></label>
 									<?php if ($user->perms('edit_assignments')): ?>
 	
-					<input type="hidden" name="old_assigned" value="{$old_assigned}" />
+					<input type="hidden" name="old_assigned" value="<?php echo Filters::noXSS($old_assigned); ?>" />
 									<?php $this->display('common.multiuserselect.tpl'); ?>
 									<?php else: ?>
 											<?php if (empty($assigned_users)): ?>
-											 {L('noone')}
+											 <?php echo Filters::noXSS(L('noone')); ?>
+
 											 <?php else:
 											 foreach ($assigned_users as $userid):
 											 ?>
-											 {!tpl_userlink($userid)}<br />
+											 <?php echo tpl_userlink($userid); ?><br />
 											 <?php endforeach;
 											 endif; ?>
 									<?php endif; ?>
 				</li>
 	
 				<li>
-					<label for="os">{L('operatingsystem')}</label>
+					<label for="os"><?php echo Filters::noXSS(L('operatingsystem')); ?></label>
 					<select id="os" name="operating_system">
-					 {!tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system']))}
+					 <?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="severity">{L('severity')}</label>
+					<label for="severity"><?php echo Filters::noXSS(L('severity')); ?></label>
 					<select id="severity" name="task_severity">
-					 {!tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity']))}
+					 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="priority">{L('priority')}</label>
+					<label for="priority"><?php echo Filters::noXSS(L('priority')); ?></label>
 					<select id="priority" name="task_priority">
-					 {!tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority']))}
+					 <?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="reportedver">{L('reportedversion')}</label>
+					<label for="reportedver"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
 					<select id="reportedver" name="reportedver">
-					{!tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version']))}
+					<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="dueversion">{L('dueinversion')}</label>
+					<label for="dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
 					<select id="dueversion" name="closedby_version">
-					 <option value="0">{L('undecided')}</option>
-					 {!tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version']))}
+					 <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
+					 <?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
+
 					</select>
 				</li>
 	
 				<li>
-					<label for="duedate">{L('duedate')}</label>
-					{!tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date']))}
+					<label for="duedate"><?php echo Filters::noXSS(L('duedate')); ?></label>
+					<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
+
 				</li>
 		
 				<?php if ($user->can_change_private($task_details)): ?>
 				<li>
-					<label for="private">{L('private')}</label>
-					{!tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private')}
+					<label for="private"><?php echo Filters::noXSS(L('private')); ?></label>
+					<?php echo tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private'); ?>
+
 				</li>
 				<?php endif; ?>
 
 				<li>
-					<label for="tasktype">{L('attachedtoproject')}</label>		  
+					<label for="tasktype"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>		  
 					<select name="project_id">
-					{!tpl_options($fs->projects, Req::val('project_id', $proj->id))}
+					<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
+
 					</select>
 				</li>
 				
 		  </ul>
 
 		<div id="fineprint">
-		  {L('openedby')} {!tpl_userlink($task_details['opened_by'])}
-		  - <span title="{!formatDate($task_details['date_opened'], true)}">{!formatDate($task_details['date_opened'], false)}</span>
+		  <?php echo Filters::noXSS(L('openedby')); ?> <?php echo tpl_userlink($task_details['opened_by']); ?>
+
+		  - <span title="<?php echo formatDate($task_details['date_opened'], true); ?>"><?php echo formatDate($task_details['date_opened'], false); ?></span>
 		  <?php if ($task_details['last_edited_by']): ?>
 		  <br />
-		  {L('editedby')}  {!tpl_userlink($task_details['last_edited_by'])}
-		  - <span title="{formatDate($task_details['last_edited_time'], true)}">{formatDate($task_details['last_edited_time'], false)}</span>
+		  <?php echo Filters::noXSS(L('editedby')); ?>  <?php echo tpl_userlink($task_details['last_edited_by']); ?>
+
+		  - <span title="<?php echo Filters::noXSS(formatDate($task_details['last_edited_time'], true)); ?>"><?php echo Filters::noXSS(formatDate($task_details['last_edited_time'], false)); ?></span>
 		  <?php endif; ?>
 		</div>
 
@@ -131,36 +146,37 @@
 
 		<div id="taskdetailsfull">
 
-				<h2 class="summary severity{Req::val('task_severity', $task_details['task_severity'])}">
-					<a href="{CreateUrl('details', $task_details['task_id'])}">FS#{$task_details['task_id']}</a> -
-					<input class="text severity{Req::val('task_severity', $task_details['task_severity'])}" type="text"
+				<h2 class="summary severity<?php echo Filters::noXSS(Req::val('task_severity', $task_details['task_severity'])); ?>">
+					<a href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>">FS#<?php echo Filters::noXSS($task_details['task_id']); ?></a> -
+					<input class="text severity<?php echo Filters::noXSS(Req::val('task_severity', $task_details['task_severity'])); ?>" type="text"
 					name="item_summary" size="80" maxlength="100"
-					value="{Req::val('item_summary', $task_details['item_summary'])}" />
+					value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 				</h2>
 
-          <!--<h3 class="taskdesc">{L('details')}</h3>-->
+          <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 						<div class="hide preview" id="preview"></div>
           <?php endif; ?>
-          {!TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc']))}
+          <?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
+
           <br />
           <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?><!--
-              <button type="button" onclick="showstuff('edit_add_comment');this.style.display='none';">{L('addcomment')}</button>
+              <button type="button" onclick="showstuff('edit_add_comment');this.style.display='none';"><?php echo Filters::noXSS(L('addcomment')); ?></button>
               <div id="edit_add_comment" class="hide">
-              <label for="comment_text">{L('comment')}</label>
+              <label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
 
               <?php if ($user->perms('create_attachments')): ?>
               <div id="uploadfilebox_c">
                 <span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
                   <input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-                    <a href="javascript://" tabindex="6" onclick="removeUploadField(this, 'uploadfilebox_c');">{L('remove')}</a><br />
+                    <a href="javascript://" tabindex="6" onclick="removeUploadField(this, 'uploadfilebox_c');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
                 </span>
               </div>
               <button id="uploadfilebox_c_attachafile" tabindex="7" type="button" onclick="addUploadFields('uploadfilebox_c')">
-                {L('uploadafile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
+                <?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
               </button>
               <button id="uploadfilebox_c_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields('uploadfilebox_c')">
-                 {L('attachanotherfile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
+                 <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
               </button>
               <?php endif; ?>
 
@@ -168,11 +184,11 @@
               </div>-->
           <?php endif; ?>
 		  <p class="buttons">
-              <!--<button type="submit" accesskey="s" onclick="return checkok('{#$baseurl}javascript/callbacks/checksave.php?time={time()}&amp;taskid={$task_details['task_id']}', '{#L('alreadyedited')}', 'taskeditform')">{L('savedetails')}</button>-->
+              <!--<button type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>javascript/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>-->
               <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-              <button tabindex="9" type="button" onclick="showPreview('details', '{#$baseurl}', 'preview')">{L('preview')}</button>
+              <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
               <?php endif; ?>
-              <button type="reset">{L('reset')}</button>
+              <button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
       </p>
 
 					<?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
@@ -182,20 +198,20 @@
 						<div id="uploadfilebox">
 							<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
 								<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-									<a href="javascript://" tabindex="6" onclick="removeUploadField(this);">{L('remove')}</a><br />
+									<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 							</span>
 							<noscript>
 									<span>
 										<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-											<a href="javascript://" tabindex="6" onclick="removeUploadField(this);">{L('remove')}</a><br />
+											<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 									</span>
 							</noscript>
 						</div>
 						<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
-							{L('uploadafile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
+							<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 						</button>
 						<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
-							 {L('attachanotherfile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
+							 <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 						</button>
           <?php endif; ?>
 

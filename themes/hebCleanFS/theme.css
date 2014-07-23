@@ -1099,7 +1099,8 @@ a#show_loginbox {
   #loginbox #login a {
     color: #222222;
     text-decoration: underline; }
-  #loginbox #login a:hover {color: #fff;}
+  #loginbox #login a:hover <?php echo Filters::noXSS(color: #fff;); ?>
+
 
 
 form#login {
@@ -1500,8 +1501,10 @@ input[type=text], input[type=submit], button, select {
     border-radius: 3px;
 }
 
-button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
-select {height: 23px; vertical-align: middle;}
+button <?php echo Filters::noXSS(vertical-align: middle; margin-bottom: 2px; line-height: 20px;); ?>
+
+select <?php echo Filters::noXSS(height: 23px; vertical-align: middle;); ?>
+
 
 input[type=submit]:hover, button:hover {
     background: #5F9729;
@@ -1534,7 +1537,8 @@ input[type=submit]:hover, button:hover {
     padding: 5px 20px;
 }
 
-#login_button {vertical-align: baseline;}
+#login_button <?php echo Filters::noXSS(vertical-align: baseline;); ?>
+
 
 div.denyform {
 	visibility:hidden;
@@ -1548,9 +1552,11 @@ div.denyform {
 	padding:5px 30px 5px 5px;
 }
 
-#notify_types {height: 10em;}
+#notify_types <?php echo Filters::noXSS(height: 10em;); ?>
 
-#rassigned_to {height: 12em; }
+
+#rassigned_to <?php echo Filters::noXSS(height: 12em; ); ?>
+
 
 /* Stuff for the autocomplete lists {{{ */
 
