@@ -16,40 +16,43 @@
 
 
 <div id="toolbox">
-  <h3>{L('admintoolboxlong')} :: {L('preferences')}</h3>
+  <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('preferences')); ?></h3>
 
-  <form action="{CreateURL('admin', 'prefs')}" method="post" enctype="multipart/form-data">
+  <form action="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" method="post" enctype="multipart/form-data">
   <ul id="submenu">
-   <li><a href="#general">{L('general')}</a></li>
-   <li><a href="#userregistration">{L('userregistration')}</a></li>
-   <li><a href="#notifications">{L('notifications')}</a></li>
-   <li><a href="#lookandfeel">{L('lookandfeel')}</a></li>
+   <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
+   <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
+   <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
+   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
   </ul>
   
    <div id="general" class="tab">
       <ul class="form_elements">
         <li>
-          <label for="pagetitle">{L('pagetitle')}</label>
-          <input id="pagetitle" name="page_title" type="text" class="text" size="40" maxlength="100" value="{$fs->prefs['page_title']}" />
+          <label for="pagetitle"><?php echo Filters::noXSS(L('pagetitle')); ?></label>
+          <input id="pagetitle" name="page_title" type="text" class="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
         </li>   
 
         <li>
-          <label for="defaultproject">{L('defaultproject')}</label>
+          <label for="defaultproject"><?php echo Filters::noXSS(L('defaultproject')); ?></label>
           <select id="defaultproject" name="default_project">
-            {!tpl_options(array_merge(array(0 => L('allprojects')), Flyspray::listProjects()), $fs->prefs['default_project'])}
+            <?php echo tpl_options(array_merge(array(0 => L('allprojects')), Flyspray::listProjects()), $fs->prefs['default_project']); ?>
+
           </select>
         </li>   
 
         <li>
-          <label for="langcode">{L('language')}</label>
+          <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
           <select id="langcode" name="lang_code">
-            {!tpl_options(Flyspray::listLangs(), $fs->prefs['lang_code'], true)}
+            <?php echo tpl_options(Flyspray::listLangs(), $fs->prefs['lang_code'], true); ?>
+
           </select>
         </li>   
 
         <li>
-          <label for="emailNoHTML">{L('emailNoHTML')}</label>
-        	{!tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML')}
+          <label for="emailNoHTML"><?php echo Filters::noXSS(L('emailNoHTML')); ?></label>
+        	<?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
+
         </li>	
 		
         <li>
@@ -60,56 +63,61 @@
             }
 
           ?>
-          <label for="logo">{L('showlogo')}</label>
-          <input id="logo" name="logo" type="file" accept="image/*" value="{$fs->prefs['logo']}" />
+          <label for="logo"><?php echo Filters::noXSS(L('showlogo')); ?></label>
+          <input id="logo" name="logo" type="file" accept="image/*" value="<?php echo Filters::noXSS($fs->prefs['logo']); ?>" />
         </li>
 
         <li>
-          <label for="gravatars">{L('showgravatars')}</label>
-        	{!tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars')}
+          <label for="gravatars"><?php echo Filters::noXSS(L('showgravatars')); ?></label>
+        	<?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
+
         </li>
         
         <li>
-          <label for="dateformat">{L('dateformat')}</label>
-          <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="{$fs->prefs['dateformat']}" />
+          <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
+          <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat']); ?>" />
         </li>   
 
         <li>
-          <label for="dateformat_extended">{L('dateformat_extended')}</label>
-          <input id="dateformat_extended" name="dateformat_extended" class="text" type="text" size="40" maxlength="30" value="{$fs->prefs['dateformat_extended']}" />
+          <label for="dateformat_extended"><?php echo Filters::noXSS(L('dateformat_extended')); ?></label>
+          <input id="dateformat_extended" name="dateformat_extended" class="text" type="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat_extended']); ?>" />
         </li>   
 
         <li>
-          <label for="cache_feeds">{L('cache_feeds')}</label>
+          <label for="cache_feeds"><?php echo Filters::noXSS(L('cache_feeds')); ?></label>
           <select id="cache_feeds" name="cache_feeds">
-          {!tpl_options(array('0' => L('no_cache'), '1' => L('cache_disk'), '2' => L('cache_db')), $fs->prefs['cache_feeds'])}
+          <?php echo tpl_options(array('0' => L('no_cache'), '1' => L('cache_disk'), '2' => L('cache_db')), $fs->prefs['cache_feeds']); ?>
+
           </select>
         </li>
 
         <li>
-          <label for="disable_lostpw">{L('disable_lostpw')}</label>
-          {!tpl_checkbox('disable_lostpw', $fs->prefs['disable_lostpw'], 'disable_lostpw')}
+          <label for="disable_lostpw"><?php echo Filters::noXSS(L('disable_lostpw')); ?></label>
+          <?php echo tpl_checkbox('disable_lostpw', $fs->prefs['disable_lostpw'], 'disable_lostpw'); ?>
+
         </li>
 
         <li>
-          <label for="disablechangepw">{L('disable_changepw')}</label>
-          {!tpl_checkbox('disable_changepw', $fs->prefs['disable_changepw'], 'disablechangepw')}
+          <label for="disablechangepw"><?php echo Filters::noXSS(L('disable_changepw')); ?></label>
+          <?php echo tpl_checkbox('disable_changepw', $fs->prefs['disable_changepw'], 'disablechangepw'); ?>
+
         </li>
 
         <li>
-          <label for="days_before_alert">{L('daysbeforealert')}</label>
-          <input id="days_before_alert" name="days_before_alert" type="text" class="text" size="3" maxlength="3" value="{$fs->prefs['days_before_alert']}" />
+          <label for="days_before_alert"><?php echo Filters::noXSS(L('daysbeforealert')); ?></label>
+          <input id="days_before_alert" name="days_before_alert" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['days_before_alert']); ?>" />
         </li>
 
           <li>
-          <label for="intromesg">{L('mainmessage')}</label>
+          <label for="intromesg"><?php echo Filters::noXSS(L('mainmessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
           <?php endif; ?>
-          {!TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message']))}
+          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
+
           <br />
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <button tabindex="9" type="button" onclick="showPreview('intromesg', '{#$baseurl}', 'preview')">{L('preview')}</button>
+          <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
         </li>
       </ul>
@@ -118,24 +126,28 @@
     <div id="userregistration" class="tab">
       <ul class="form_elements">
         <li>
-          <label for="allowusersignups">{L('anonreg')}</label>
-          {!tpl_checkbox('anon_reg', $fs->prefs['anon_reg'], 'allowusersignups')}
+          <label for="allowusersignups"><?php echo Filters::noXSS(L('anonreg')); ?></label>
+          <?php echo tpl_checkbox('anon_reg', $fs->prefs['anon_reg'], 'allowusersignups'); ?>
+
         </li>   
 
         <li>
-          <label for="spamproof">{L('spamproof')}</label>
-          {!tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof')}
+          <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
+          <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof'); ?>
+
         </li>   
 
         <li>
-          <label for="notify_registration">{L('notify_registration')}</label>
-          {!tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration')}
+          <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
+          <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
+
         </li>   
 
         <li>
-          <label for="defaultglobalgroup">{L('defaultglobalgroup')}</label>
+          <label for="defaultglobalgroup"><?php echo Filters::noXSS(L('defaultglobalgroup')); ?></label>
           <select id="defaultglobalgroup" name="anon_group">
-            {!tpl_options(Flyspray::listGroups(), $fs->prefs['anon_group'])}
+            <?php echo tpl_options(Flyspray::listGroups(), $fs->prefs['anon_group']); ?>
+
           </select>
         </li>   
       </ul>
@@ -144,75 +156,77 @@
     <div id="notifications" class="tab">
       <ul class="form_elements">
         <li>
-          <label for="usernotify">{L('forcenotify')}</label>
+          <label for="usernotify"><?php echo Filters::noXSS(L('forcenotify')); ?></label>
           <select id="usernotify" name="user_notify">
-            {!tpl_options(array(L('neversend'), L('userchoose'), L('email'), L('jabber')), $fs->prefs['user_notify'])}
+            <?php echo tpl_options(array(L('neversend'), L('userchoose'), L('email'), L('jabber')), $fs->prefs['user_notify']); ?>
+
           </select>
         </li>
       </ul>
       
-      <fieldset><legend>{L('emailnotify')}</legend>
+      <fieldset><legend><?php echo Filters::noXSS(L('emailnotify')); ?></legend>
         <ul class="form_elements">
           <li>
-            <label for="adminemail">{L('fromaddress')}</label>
-            <input id="adminemail" name="admin_email" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['admin_email']}" />
+            <label for="adminemail"><?php echo Filters::noXSS(L('fromaddress')); ?></label>
+            <input id="adminemail" name="admin_email" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
           </li>
   
           <li>
-            <label for="smtpserv">{L('smtpserver')}</label>
-            <input id="smtpserv" name="smtp_server" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['smtp_server']}" />
+            <label for="smtpserv"><?php echo Filters::noXSS(L('smtpserver')); ?></label>
+            <input id="smtpserv" name="smtp_server" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
             <?php if (extension_loaded('openssl')) : ?>
-            {!tpl_checkbox('email_ssl', $fs->prefs['email_ssl'], 'email_ssl')} <label class="inline" for="email_ssl">{L('ssl')}</label>
-            {!tpl_checkbox('email_tls', $fs->prefs['email_tls'], 'email_tls')} <label class="inline" for="email_tls">{L('tls')}</label>
+            <?php echo tpl_checkbox('email_ssl', $fs->prefs['email_ssl'], 'email_ssl'); ?> <label class="inline" for="email_ssl"><?php echo Filters::noXSS(L('ssl')); ?></label>
+            <?php echo tpl_checkbox('email_tls', $fs->prefs['email_tls'], 'email_tls'); ?> <label class="inline" for="email_tls"><?php echo Filters::noXSS(L('tls')); ?></label>
             <?php endif; ?>
           </li>
   
           <li>
-            <label for="smtpuser">{L('smtpuser')}</label>
-            <input id="smtpuser" name="smtp_user" class="text" type="text" size="40" maxlength="100" value="{$fs->prefs['smtp_user']}" />
+            <label for="smtpuser"><?php echo Filters::noXSS(L('smtpuser')); ?></label>
+            <input id="smtpuser" name="smtp_user" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
           </li>
   
           <li>
-            <label for="smtppass">{L('smtppass')}</label>
-            <input id="smtppass" name="smtp_pass" class="text" type="password" size="40" maxlength="100" value="{$fs->prefs['smtp_pass']}" />
+            <label for="smtppass"><?php echo Filters::noXSS(L('smtppass')); ?></label>
+            <input id="smtppass" name="smtp_pass" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
           </li>
           <li>
-              <label for="showsmtppass">{L('showpass')}</label>
+              <label for="showsmtppass"><?php echo Filters::noXSS(L('showpass')); ?></label>
               <input id="showsmtppass" name="show_smtp_pass" class="text" type="checkbox"  onclick="ShowHidePassword('smtppass')"/>
           </li>
         </ul>
       </fieldset>
   
-      <fieldset><legend>{L('jabbernotify')}</legend>
+      <fieldset><legend><?php echo Filters::noXSS(L('jabbernotify')); ?></legend>
         <ul class="form_elements">
           <li>
-            <label for="jabberserver">{L('jabberserver')}</label>
-            <input id="jabberserver" class="text" type="text" name="jabber_server" size="25" maxlength="100" value="{$fs->prefs['jabber_server']}" />
+            <label for="jabberserver"><?php echo Filters::noXSS(L('jabberserver')); ?></label>
+            <input id="jabberserver" class="text" type="text" name="jabber_server" size="25" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_server']); ?>" />
             <?php if(extension_loaded('openssl')) : ?>
               <select id="jabber_ssl" name="jabber_ssl">
-                {!tpl_options(array('0' => L('none'), '1' => L('ssl'), '2' => L('tls')), $fs->prefs['jabber_ssl'])}
+                <?php echo tpl_options(array('0' => L('none'), '1' => L('ssl'), '2' => L('tls')), $fs->prefs['jabber_ssl']); ?>
+
               </select>
-              <label class="inline" for="jabber_ssl">{L('ssl')} / {L('tls')}</label>
+              <label class="inline" for="jabber_ssl"><?php echo Filters::noXSS(L('ssl')); ?> / <?php echo Filters::noXSS(L('tls')); ?></label>
             <?php endif; ?>
           </li>
   
           <li>
-            <label for="jabberport">{L('jabberport')}</label>
-            <input id="jabberport" class="text" type="text" name="jabber_port" size="40" maxlength="100" value="{$fs->prefs['jabber_port']}" />
+            <label for="jabberport"><?php echo Filters::noXSS(L('jabberport')); ?></label>
+            <input id="jabberport" class="text" type="text" name="jabber_port" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
           </li>
   
           <li>
-            <label for="jabberusername">{L('jabberuser')}</label>
-            <input id="jabberusername" class="text" type="text" name="jabber_username" size="40" maxlength="100" value="{$fs->prefs['jabber_username']}" />
+            <label for="jabberusername"><?php echo Filters::noXSS(L('jabberuser')); ?></label>
+            <input id="jabberusername" class="text" type="text" name="jabber_username" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
           </li>
   
           <li>
-            <label for="jabberpassword">{L('jabberpass')}</label>
-            <input id="jabberpassword" name="jabber_password" class="text" type="password" size="40" maxlength="100" value="{$fs->prefs['jabber_password']}" />
+            <label for="jabberpassword"><?php echo Filters::noXSS(L('jabberpass')); ?></label>
+            <input id="jabberpassword" name="jabber_password" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
           </li>
 
           <li>
-              <label for="showjabberppass">{L('showpass')}</label>
+              <label for="showjabberppass"><?php echo Filters::noXSS(L('showpass')); ?></label>
               <input id="showjabberpass" name="show_jabber_pass" class="text" type="checkbox"  onclick="ShowHidePassword('jabberpassword')"/>
           </li>
 
@@ -224,14 +238,15 @@
 
       <ul class="form_elements">
         <li>
-          <label for="globaltheme">{L('globaltheme')}</label>
+          <label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
           <select id="globaltheme" name="global_theme">
-            {!tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true)}
+            <?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
+
           </select>
         </li>
   
           <li>
-            <label>{L('visiblecolumns')}</label>
+            <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php // Set the selectable column names
             $columnnames = array('id', 'parent', 'project', 'tasktype', 'category', 'severity',
             'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
@@ -239,26 +254,28 @@
             'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
             $selectedcolumns = explode(" ", $fs->prefs['visible_columns']);
             ?>
-            {!tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true)}
+            <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
+
           </li>
 
           <li>
-            <label>{L('visiblefields')}</label>
+            <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
             <?php // Set the selectable field names
             $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
             'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
             $selectedfields = explode(" ", $fs->prefs['visible_fields']);
             ?>
-            {!tpl_double_select('visible_fields', $fieldnames, $selectedfields, true)}
+            <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, true); ?>
+
           </li>
 
         </ul>
     </div>
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
-      <button type="submit">{L('saveoptions')}</button>
+      <button type="submit"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
 
-      <button type="reset">{L('resetoptions')}</button>
+      <button type="reset"><?php echo Filters::noXSS(L('resetoptions')); ?></button>
     </div>
   </form>
 </div>
