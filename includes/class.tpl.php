@@ -548,10 +548,13 @@ class TextFormatter
     public static function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf;
-
-        if (@in_array('render', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter')) && !$onlyfs) {
+        
+        $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+        $methods = is_array($methods) ? $methods : [];
+        
+        if (in_array('render', $methods)) {
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
-                                  $text, $onlyfs, $type, $id, $instructions);
+                                  $text, $type, $id, $instructions);
         } else {
             //TODO: Remove Redundant Code once tested completely
             //Author: Steve Tredinnick
