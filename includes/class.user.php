@@ -317,10 +317,12 @@ class User
 	{
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
-		$result = $db->Query("SELECT count(date(to_timestamp(event_date))) as val
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+        
+        $result = $db->Query("SELECT count(date({$func}(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? AND h.user_id = ?
-							  AND date(to_timestamp(event_date)) 
+							  AND date({$func}(event_date)) 
 							  BETWEEN date(?) 
 							  AND date(?)", array($project_id, $userid, $startdate, $enddate));
 		return $db->fetchCol($result);

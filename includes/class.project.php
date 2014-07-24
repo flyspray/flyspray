@@ -304,10 +304,12 @@ class Project
 	{
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
-		$result = $db->Query("SELECT count(date(to_timestamp(event_date))) as val
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+        
+		$result = $db->Query("SELECT count(date({$func}(event_date))) as val
 		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 		WHERE t.project_id = ?
-		AND date(to_timestamp(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
+		AND date({$func}(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
 		return $db->fetchCol($result);
 	}
 	/**
@@ -321,10 +323,12 @@ class Project
 	{
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
-		$result = $db->Query("SELECT count(date(to_timestamp(event_date))) as val
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+        
+		$result = $db->Query("SELECT count(date({$func}(event_date))) as val
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? 
-							  AND date(to_timestamp(event_date)) = date(?)", array($project_id, $date));
+							  AND date({$func}(event_date)) = date(?)", array($project_id, $date));
 		return $db->fetchCol($result);
 	}
     /* }}} */
