@@ -54,22 +54,34 @@ ini_set('include_path', join( PATH_SEPARATOR, array(
 
 if(count($_GET)) {
     foreach ($_GET as $key => $value) {
-        $_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
+	if(is_array($value))
+        	$_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+	else
+        	$_GET[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
     }
 }
 if(count($_POST)) {
     foreach ($_POST as $key => $value) {
-        $_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+	if(is_array($value))
+        	$_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+	else
+		$_POST[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
     }
 }
 if(count($_COOKIE)) {
     foreach ($_COOKIE as $key => $value) {
-        $_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
+	if(is_array($value))
+        	$_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+	else
+		$_COOKIE[$key] = filter_input(INPUT_COOKIE, $key, FILTER_UNSAFE_RAW);
     }
 }
 if(isset($_SESSION) && is_array($_SESSION) && count($_SESSION)) {
     foreach ($_SESSION as $key => $value) {
-        $_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
+	if(is_array($value))
+        	$_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+	else
+		$_SESSION[$key] = filter_input(INPUT_SESSION, $key, FILTER_UNSAFE_RAW);
     }
 }
 
