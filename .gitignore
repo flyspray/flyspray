@@ -5,3 +5,4 @@ attachments/*
 /nbproject/*
 vendor/*
 composer.lock
+composer.phar
