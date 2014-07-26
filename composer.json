@@ -7,8 +7,8 @@
     "license": "",
     "require": {
         "swiftmailer/swiftmailer": "@stable",
-        "adodb/adodb-php": "5.*"
-
+        "adodb/adodb-php": "5.*",
+        "league/oauth2-client": "@dev"
     },
     "autoload": {
         "classmap": ["includes"],

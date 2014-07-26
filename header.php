@@ -26,13 +26,6 @@ else if (isset($_POST["taskid"]))  $_POST["task_id"] = $_POST["taskid"];
 if      (isset($_REQUEST["task_id"])) $_REQUEST["taskid"]  = $_REQUEST["task_id"];
 else if (isset($_REQUEST["taskid"]))  $_REQUEST["task_id"] = $_REQUEST["taskid"];
 
-require_once BASEDIR . '/includes/class.gpc.php';
-require_once BASEDIR . '/includes/utf8.inc.php';
-require_once BASEDIR . '/includes/class.database.php';
-require_once BASEDIR . '/includes/class.backend.php';
-require_once BASEDIR . '/includes/class.project.php';
-require_once BASEDIR . '/includes/class.user.php';
-require_once BASEDIR . '/includes/class.tpl.php';
 
 $db = new Database();
 $db->dbOpenFast($conf['database']);

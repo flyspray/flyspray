@@ -1090,7 +1090,6 @@ a#show_loginbox {
   border: solid 3px #5f9729;
   right: 5px;
   z-index: 200;
-  height: 60px;
   width: 450px;
   padding-top: 15px;
   margin-top: 1px;
@@ -1750,4 +1749,9 @@ a.tooltip span
     box-shadow: 0px 0px 8px 4px #666;
 
     opacity: 0.8;
+}
+
+span.warning {
+    color: red;
+    font-weight: bold;
 }

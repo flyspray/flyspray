@@ -808,6 +808,8 @@ Regards,',
 'error23'                 => 'User or group not enabled for login.',
 'error24'                 => 'Neither the dot executable nor a public dot server has been set.',
 'error25'                 => 'Roadmap only available for a specific project.',
+'error26'                 => 'Unsupported oauth provider.',
+'error27'                 => 'Unable to login in. Authorize us to view your email address.',
 'done'                    => 'done',
 'rss'                     => 'RSS',
 'atom'                    => 'Atom',
@@ -917,7 +919,7 @@ Regards,',
 'vieweffort'              => 'Can View Effort Tracking',
 'trackeffort'             => 'Can Track Effort',
 'invalideffort'           => 'The effort entered is invalid. Must be a number',
-'showpass'                => 'Show Password'
+'showpass'                => 'Show Password',
+'oauthreqpass'            => 'No password to request. You registered through %s',
 );
 
-?>
