@@ -49,18 +49,18 @@ foreach ($projects as $project): ?>
   <?php if (!$user->isAnon()): ?>
   <tr>
   	<th><strong>Activity</strong>
-  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></td>
+  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></td>
   </tr>
  
   <tr>
   	<th><strong>My Activity</strong>
-  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></td>
+  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></td>
   </tr>
   <?php endif; ?>
   <?php if ($user->isAnon()): ?>
     <tr>
   	<th><strong>Activity</strong>
-  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></td>
+  	<td><img src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></td>
   </tr>
   <?php endif; ?>
   <tr>
