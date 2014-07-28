@@ -300,7 +300,7 @@ class Project
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getActivityProjectCount($startdate, $enddate, $project_id)
+	static function getActivityProjectCount($startdate, $enddate, $project_id)
 	{
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
@@ -310,7 +310,9 @@ class Project
 		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 		WHERE t.project_id = ?
 		AND date({$func}(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
-		return $db->fetchCol($result);
+        
+        $result = $db->fetchCol($result);
+		return $result[0];
 	}
 	/**
 	 * Returns the day activity by the date for a project.
@@ -319,17 +321,36 @@ class Project
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getDayActivityByProject($date, $project_id)
+	static function getDayActivityByProject($date_start, $date_end, $project_id)
 	{
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
         
-		$result = $db->Query("SELECT count(date({$func}(event_date))) as val
+		$result = $db->Query("SELECT count(date({$func}(event_date))) as val, event_date
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? 
-							  AND date({$func}(event_date)) = date(?)", array($project_id, $date));
-		return $db->fetchCol($result);
+							  AND date({$func}(event_date)) BETWEEN date(?) and date(?)
+                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC", 
+                              array($project_id, $date_start, $date_end));
+        
+        $date1   = new \DateTime($date_start);
+        $date2   = new \DateTime($date_end);
+        $days    = $date1->diff($date2);
+        $days    = $days->format('%a');
+        $results = [];
+         
+        for ($i = 0; $i < $days; $i++) {
+            $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
+            $results[date('Y-m-d', $event_date)] = 0;
+        }
+        
+        while ($row = $result->fetchRow()) {
+            $event_date           = date('Y-m-d', $row['event_date']);
+            $results[$event_date] = (integer) $row['val'];
+        }
+        
+		return array_values($results);
 	}
     /* }}} */
 }
