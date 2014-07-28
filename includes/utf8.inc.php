@@ -4,7 +4,7 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-require_once(BASEDIR . '/plugins/dokuwiki/inc/utf8.php');
+require_once(dirname(__DIR__) . '/plugins/dokuwiki/inc/utf8.php');
 
 // a-z A-Z . _ -, extended latin chars, Cyrillic and Greek
 $UTF8_ALPHA_CHARS = array(
