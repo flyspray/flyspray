@@ -784,6 +784,9 @@ switch ($action = Req::val('action'))
 	if($_FILES["logo"]["error"] == 0 && exif_imagetype($_FILES["logo"]["tmp_name"]) ) {
 
 		move_uploaded_file($_FILES["logo"]["tmp_name"], "./" . $_FILES["logo"]["name"]);
+		$sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
+		if(!$db->fetchOne($sql))
+			$db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
 		$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES["logo"]["name"]);
 	}
 	//saved logo

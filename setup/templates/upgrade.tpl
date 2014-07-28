@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>{$title} Flyspray</title>
+<title><?php echo Filters::noXSS($title); ?> Flyspray</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="styles/setup.css" type="text/css" media="screen" />
 </head>
@@ -10,7 +10,7 @@
   <div id="container">
     <div id="header">
       <div id="logo">
-        <h1><a href="{$index}" title="Flyspray - The bug Killer!">Upgrade</a></h1>
+        <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - The bug Killer!">Upgrade</a></h1>
       </div><!-- End of logo -->
     </div><!-- End of header -->
     <div id="content">
@@ -20,11 +20,11 @@
         <div class="install">
             <h2>Precondition checks</h2>
             <p>
-            Your current version is <strong>{$installed_version}</strong> and the version we can upgrade to is <strong>{$short_version}</strong>.
+            Your current version is <strong><?php echo Filters::noXSS($installed_version); ?></strong> and the version we can upgrade to is <strong><?php echo Filters::noXSS($short_version); ?></strong>.
             <div class="installBlock">
 				<table class="formBlock">
 				<tr>
-					<td valign="top">../{basename(CONFIG_PATH)}</td>
+					<td valign="top">../<?php echo Filters::noXSS(basename(CONFIG_PATH)); ?></td>
 					<td align="left"><b><?php if ($checks['config_writable']): ?><span class="green">writeable</span><?php else: ?><span class="red">not writeable</span><?php endif; ?></b></td>
 					<td>&nbsp;</td>
                 </tr><tr>
@@ -39,7 +39,8 @@
 				</p>
 			</div>
             <?php if (!$upgrade_possible): ?>
-            Apparently, an upgrade is not possible. {$todo}
+            Apparently, an upgrade is not possible. <?php echo Filters::noXSS($todo); ?>
+
             <?php else: ?>
             Apparently, an upgrade is possible.
             </p>
@@ -49,7 +50,7 @@
 
             <?php if (isset($upgrade_options)): ?>
             <h2>Upgrade options</h2>
-            <p>{!$upgrade_options}</p>
+            <p><?php echo $upgrade_options; ?></p>
             <?php endif; ?>
 
             <h2>Perform Upgrade</h2>
@@ -70,8 +71,8 @@
     </div><!-- End of content -->
     <div id="footer">
       <p>
-        Flyspray {$fs->version} [Fly Flapper]<br />
-        Copyright 2004-{date('Y')} &copy; The Flyspray team.  All rights reserved.
+        Flyspray <?php echo Filters::noXSS($fs->version); ?> [Fly Flapper]<br />
+        Copyright 2004-<?php echo Filters::noXSS(date('Y')); ?> &copy; The Flyspray team.  All rights reserved.
       </p>
     </div><!-- End of footer -->
   </div><!-- End of container -->
