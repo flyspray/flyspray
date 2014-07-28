@@ -8,8 +8,16 @@
     "require": {
         "swiftmailer/swiftmailer": "@stable",
         "adodb/adodb-php": "5.*",
+        "jamiebicknell/Sparkline": "1.*"
+
         "league/oauth2-client": "@dev"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/jamiebicknell/Sparkline"
+        }
+    ],
     "autoload": {
         "classmap": ["includes"],
         "files": ["includes/utf8.inc.php"],

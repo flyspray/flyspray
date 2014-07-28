@@ -4,7 +4,7 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-require_once(BASEDIR . '/plugins/dokuwiki/inc/utf8.php');
+require_once(dirname(__DIR__) . '/plugins/dokuwiki/inc/utf8.php');
 
 
 function utf8_keepalphanum($string)

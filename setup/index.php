@@ -37,9 +37,9 @@ $conf['general']['syntax_plugin'] = '';
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
-require_once OBJECTS_PATH . '/class.flyspray.php';
-require_once OBJECTS_PATH . '/class.tpl.php';
-require_once BASEDIR . '/array_combine.php';
+
+// Use composer autoloader
+require dirname(__DIR__) . '/vendor/autoload.php';
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
@@ -88,7 +88,7 @@ class Setup extends Flyspray
    public function __construct()
    {
       // Look for ADOdb
-      $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
+      $this->mAdodbPath         = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
       $this->mProductName       = 'Flyspray';
       $this->mMinPasswordLength	= 8;
 
