@@ -88,7 +88,7 @@ class Setup extends Flyspray
    public function __construct()
    {
       // Look for ADOdb
-      $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
+      $this->mAdodbPath         = APPLICATION_PATH . '/vendor/adodb/adodb-php/adodb.inc.php';
       $this->mProductName       = 'Flyspray';
       $this->mMinPasswordLength	= 8;
 

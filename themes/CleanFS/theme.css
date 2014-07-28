@@ -1592,6 +1592,10 @@ input[type=text], input[type=password], select {
     vertical-align: middle;
 }
 
+#table input[type=text] {
+    width: 120px;
+}
+
 input[type=submit], button {
     background: #69C;
     border:  1px solid #0a4193;

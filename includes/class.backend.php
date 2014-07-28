@@ -780,7 +780,7 @@ abstract class Backend
 
         // these are the POST variables that the user MUST send, if one of
         // them is missing or if one of them is empty, then we have to abort
-        $requiredPostArgs = array('item_summary', 'detailed_desc', 'project_id');
+        $requiredPostArgs = array('item_summary', 'project_id');//modify: made description not required
         foreach ($requiredPostArgs as $required) {
             if (empty($args[$required])) return 0;
         }
