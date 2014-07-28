@@ -959,6 +959,12 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('nooldpass'));
             break;
         }
+
+        if ($user->infos['oauth_uid'] && Post::val('changepass')) {
+            Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($uesr->infos['oauth_provider'])));
+            break;
+        }
+        
         if (Post::val('changepass') || Post::val('confirmpass')) {
             if (Post::val('changepass') != Post::val('confirmpass')) {
                 Flyspray::show_error(L('passnomatch'));

@@ -8,8 +8,7 @@
     "require": {
         "swiftmailer/swiftmailer": "@stable",
         "adodb/adodb-php": "5.*",
-        "jamiebicknell/Sparkline": "1.*"
-
+        "jamiebicknell/Sparkline": "1.*",
         "league/oauth2-client": "@dev"
     },
     "repositories": [

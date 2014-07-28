@@ -106,5 +106,5 @@ $_SESSION['SUCCESS'] = L('loginsuccessful');
 
 $return_to = $_SESSION['return_to'];
 unset($_SESSION['return_to']);
-//var_dump(($return_to)); exit;
+
 Flyspray::Redirect($return_to);
