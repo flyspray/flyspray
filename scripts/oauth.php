@@ -19,7 +19,33 @@ $providers = [
             'scopes'       => ['user:email']
         ));
     },
+    'google' => function() use ($conf) {
+        if (empty($conf['oauth']['google_secret']) ||
+            empty($conf['oauth']['google_id'])     ||
+            empty($conf['oauth']['google_redirect'])) {
     
+            throw new Exception('Config error make sure the google_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Google(array(
+            'clientId'     =>  $conf['oauth']['google_id'],
+            'clientSecret' =>  $conf['oauth']['google_secret'],
+            'redirectUri'  =>  $conf['oauth']['google_redirect'],
+            'scopes'       => ['email', 'profile']
+        ));
+    },
+    'facebook' => function() use ($conf) {
+        if (empty($conf['oauth']['facebook_secret']) ||
+            empty($conf['oauth']['facebook_id'])     ||
+            empty($conf['oauth']['facebook_redirect'])) {
+    
+            throw new Exception('Config error make sure the facebook_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Facebook(array(
+            'clientId'     =>  $conf['oauth']['facebook_id'],
+            'clientSecret' =>  $conf['oauth']['facebook_secret'],
+            'redirectUri'  =>  $conf['oauth']['facebook_redirect'],
+        ));
+    },
 ];
 
 if (! isset($_SESSION['return_to'])) {

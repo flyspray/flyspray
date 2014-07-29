@@ -168,7 +168,7 @@ function flyspray_exception_handler($exception) {
 
 }
 
-set_exception_handler('flyspray_exception_handler');
+//set_exception_handler('flyspray_exception_handler');
 
 
 // We don't need session IDs in URLs
