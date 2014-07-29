@@ -119,7 +119,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (!Post::val('item_summary') || !Post::val('detailed_desc')) {
+        if (!Post::val('item_summary')) {//description can be empty now
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
