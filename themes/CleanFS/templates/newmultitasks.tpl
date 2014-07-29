@@ -124,7 +124,7 @@
 	    <input type="text" class="text" size="30" id="summary" name="item_summary[]" onPaste="pasteMultiLines(this, event);return false"/>
 	</td>
 	<td>
-	    <input type="text" class="text" size="20" id="details" name="detailed_desc[]" onPaste="pasteMultiLines(this, event);return false"/>
+	    <input type="text" class="text" size="20" id="details" name="detailed_desc[]" onkeydown="TabandCreate(this, event);return false" onPaste="pasteMultiLines(this, event);return false"/>
 	</td>
       </tr>
 
@@ -233,6 +233,24 @@
 				{
 					select[0].value = fields[j].getElementsByTagName("select")[0].value;
 				}
+			}
+		}
+	}
+	function TabandCreate(elem, e)
+	{
+		if(e.keyCode != 9)
+			return;
+		var table = document.getElementById("table");
+		var rows = table.getElementsByTagName("tr");
+		var length = rows.length;
+		if(elem.parentNode.parentNode == rows[length-2])
+			createRow('','');
+		for(var i = 0; i < length-1; i++)
+		{
+			if(elem.parentNode.parentNode == rows[i])
+			{
+				rows[i+1].getElementsByTagName("input")[1].focus();
+				break;
 			}
 		}
 	}
