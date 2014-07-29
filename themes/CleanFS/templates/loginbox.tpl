@@ -45,20 +45,10 @@
       $providers = $conf['oauth']['enabled'];
 ?>
 <div id="login_oauth">
-    <?php if (in_array('github', $providers)): ?>
-    <a class="oauth btn-github" href="index.php?do=oauth&provider=github<?php echo $return; ?>">
-        <i class="fa fa-github"></i> Sign in with Github
+    <?php foreach($providers as $provider): ?>
+    <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+        <i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
     </a>
-    <?php endif; ?>
-    <?php if (in_array('google', $providers)): ?>
-    <a class="oauth btn-google" href="index.php?do=oauth&provider=google<?php echo $return; ?>">
-        <i class="fa fa-google"></i> Sign in with Google
-    </a>
-    <?php endif; ?>
-    <?php if (in_array('facebook', $providers)): ?>
-    <a class="oauth btn-facebook" href="index.php?do=oauth&provider=facebook<?php echo $return; ?>">
-        <i class="fa fa-facebook"></i> Sign in with Facebook
-    </a>
-    <?php endif; ?>
-</div>
+    <?php endforeach; ?>
+    
 </form>
