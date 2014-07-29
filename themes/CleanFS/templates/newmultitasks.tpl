@@ -17,6 +17,7 @@
 <form enctype="multipart/form-data" action="{CreateUrl('newmultitasks', $proj->id, $supertask_id)}" method="post">
   <input type="hidden" name="supertask_id" value="{$supertask_id}" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
+
     <table class="list">
        <thead>
        <tr>
@@ -35,7 +36,7 @@
        </tr>
      </thead>
      <tbody id="table">
-
+      <button class="button positive main" accesskey="s" type="button" onClick="Apply()">Apply first line</button>
       <tr id="row">
 	<td><input type="image" src="themes/CleanFS/img/red/x_alt_24x24.png" onClick="removeRow(this);return false;"/></td>
         <?php if (in_array('tasktype', $fields)) { ?>
@@ -173,7 +174,6 @@
 			return false;
 		for(var i = 0; i < length -1; i++)
 		{
-			var row = rows[i];
 			if(rows[i] == elem.parentNode.parentNode) {
 				table.deleteRow(i);
 				break;
@@ -213,6 +213,28 @@
 			}
 		}
 	}
-
+	function Apply()
+	{
+		var table = document.getElementById("table");
+		var rows = table.getElementsByTagName("tr");
+		var fields = rows[0].getElementsByTagName("td");
+		for(var i = 1; i < rows.length-1; i++)
+		{
+			var tds = rows[i].getElementsByTagName("td");
+			for(var j = 1; j < tds.length; j++)
+			{
+				var input = tds[j].getElementsByTagName("input");
+				var select = tds[j].getElementsByTagName("select");
+				if(input != null && input.length > 0)
+				{
+					input[0].value = fields[j].getElementsByTagName("input")[0].value;
+				}
+				if(select != null && select.length > 0)
+				{
+					select[0].value = fields[j].getElementsByTagName("select")[0].value;
+				}
+			}
+		}
+	}
   </script>
 </form>
