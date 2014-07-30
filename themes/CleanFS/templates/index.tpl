@@ -66,6 +66,7 @@
 <?php endif; ?>
 
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
+<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 <div id="search">
     <map id="projectsearchform" name="projectsearchform">
         <form action="{$baseurl}index.php" method="get">
@@ -129,49 +130,84 @@
 
                 <fieldset class="advsearch_task">
                     <legend>{L('taskproperties')}</legend>
+            <!-- Task Type -->
+		    <?php if (in_array('tasktype', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="type">{L('tasktype')}</label>
                         <select name="type[]" id="type" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', ''))}
                         </select>
                     </div>
 
+            <!-- Severity -->
+		    <?php if (in_array('severity', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="sev">{L('severity')}</label>
                         <select name="sev[]" id="sev" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', ''))}
                         </select>
                     </div>
 
+            <!-- Priority -->
+		    <?php if (in_array('priority', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="pri">{L('priority')}</label>
                         <select name="pri[]" id="pri" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', ''))}
                         </select>
                     </div>
 
+            <!-- Due Version -->
+		    <?php if (in_array('dueversion', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="due">{L('dueversion')}</label>
                         <select name="due[]" id="due" multiple="multiple" size="5">
                             {!tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', ''))}
                         </select>
                     </div>
 
+            <!-- Reportedin -->
+		    <?php if (in_array('reportedin', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="reported">{L('reportedversion')}</label>
                         <select name="reported[]" id="reported" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', ''))}
                         </select>
                     </div>
 
+            <!-- Category -->
+		    <?php if (in_array('category', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="cat">{L('category')}</label>
                         <select name="cat[]" id="cat" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', ''))}
                         </select>
                     </div>
 
+            <!-- Status -->
+		    <?php if (in_array('status', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="status">{L('status')}</label>
                         <select name="status[]" id="status" multiple="multiple" size="5">
                             {!tpl_options(array('' => L('allstatuses')) +
@@ -181,7 +217,12 @@
                         </select>
                     </div>
 
+            <!-- Progress -->
+		    <?php if (in_array('progress', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="percent">{L('percentcomplete')}</label>
                         <select name="percent[]" id="percent" multiple="multiple" size="5">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
@@ -196,16 +237,22 @@
                     <label class="default multisel" for="opened">{L('openedby')}</label>
                     {!tpl_userselect('opened', Get::val('opened'), 'opened')}
 
+		    <?php if (in_array('assignedto', $fields)) { ?>
                     <label class="default multisel" for="dev">{L('assignedto')}</label>
                     {!tpl_userselect('dev', Get::val('dev'), 'dev')}
-
+		    <?php } ?>
                     <label class="default multisel" for="closed">{L('closedby')}</label>
                     {!tpl_userselect('closed', Get::val('closed'), 'closed')}
                 </fieldset>
 
                 <fieldset class="advsearch_dates">
                     <legend>{L('dates')}</legend>
+            <!-- Due Date -->
+		    <?php if (in_array('duedate', $fields)) { ?>
                     <div class="dateselect">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         {!tpl_datepicker('duedatefrom', L('selectduedatefrom'))}
                         {!tpl_datepicker('duedateto', L('selectduedateto'))}
                     </div>
@@ -314,7 +361,6 @@
 <?php if (!$proj->id == 0): ?>
 <?php if (!$user->isAnon() && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
-<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 <script>Effect.Fade('bulk_edit_selectedItems');</script>
 <div id="bulk_edit_selectedItems" style="display:none">
     <fieldset>
