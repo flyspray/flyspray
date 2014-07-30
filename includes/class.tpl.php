@@ -56,17 +56,6 @@ class Tpl
         return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
     }
 
-    public function compile(&$item)
-    {
-        if (strncmp($item, '<?', 2)) {
-            $item = preg_replace( '/{!([^\s&][^{}]*)}(\n?)/', '<?php echo \1; ?>\2\2', $item);
-            // For lang strings in Javascript
-            $item = preg_replace( '/{#([^\s&][^{}]*)}(\n?)/',
-                    '<?php echo Filters::noJsXSS(\1); ?>\2\2', $item);
-            $item = preg_replace( '/{([^\s&][^{}]*)}(\n?)/',
-                    '<?php echo Filters::noXSS(\1); ?>\2\2', $item);
-        }
-    }
     // {{{ Display page
     public function pushTpl($_tpl)
     {
@@ -93,31 +82,10 @@ class Tpl
         }
 
         // theming part
-	// FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
-	if (strlen($this->_theme) == 0)
-	{
-	  $this->_theme = 'CleanFS/'; 
-	}
-
-        if (is_readable(BASEDIR . '/themes/' . $this->_theme.$_tpl)) {
-            $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.$_tpl);
-        } else if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
-            $_tpl_data = file_get_contents(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl);
-        } else
-	{
-            // This is needed to catch times when there is no theme (for example setup pages)
-            $_tpl_data = file_get_contents(BASEDIR . "/templates/" . $_tpl);
-	}
-
-        // compilation part
-        $_tpl_data = preg_split('!(<\?php.*\?>)!sU', $_tpl_data, -1,
-                PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-        array_walk($_tpl_data, array(&$this, 'compile'));
-        $_tpl_data = join('', $_tpl_data);
-
-        $from = array('&lbrace;','&rbrace;');
-        $to = array('{','}');
-        $_tpl_data = str_replace($from, $to, $_tpl_data);
+        // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
+        if (strlen($this->_theme) == 0) {
+            $this->_theme = 'CleanFS/'; 
+        }
 
         // variables part
         if (!is_null($_arg0)) {
@@ -130,10 +98,13 @@ class Tpl
 
         extract($this->_vars, EXTR_REFS|EXTR_SKIP);
 
-        // XXX: if you find a clever way to remove the evil here,
-        // send us a patch, thanks.. we don't want this..really ;)
-
-        eval( '?>'. $_tpl_data );
+        if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
+            require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
+        } else {
+            // This is needed to catch times when there is no theme (for example setup pages)
+            require BASEDIR . "/templates/" . $_tpl;
+        }
+        
     } // }}}
 
     public function render()
@@ -577,10 +548,13 @@ class TextFormatter
     public static function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf;
-
-        if (@in_array('render', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter')) && !$onlyfs) {
+        
+        $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+        $methods = is_array($methods) ? $methods : array();
+        
+        if (in_array('render', $methods)) {
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
-                                  $text, $onlyfs, $type, $id, $instructions);
+                                  $text, $type, $id, $instructions);
         } else {
             //TODO: Remove Redundant Code once tested completely
             //Author: Steve Tredinnick

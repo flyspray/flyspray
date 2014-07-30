@@ -1,81 +1,82 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{L('locale')}" xml:lang="{L('locale')}">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo Filters::noXSS(L('locale')); ?>" xml:lang="<?php echo Filters::noXSS(L('locale')); ?>">
   <head>
-    <title>{$this->_title}</title>
+    <title><?php echo Filters::noXSS($this->_title); ?></title>
 
     <meta name="description" content="Flyspray, a Bug Tracking System written in PHP." />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <?php if(trim($this->get_image('favicon'))): ?>
-    <link rel="icon" type="image/png" href="{$this->get_image('favicon')}" />
+    <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
     <?php endif; ?>
-    <link rel="index" id="indexlink" type="text/html" href="{$baseurl}" />
+    <link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
     <?php foreach ($fs->projects as $project): ?>
-    <link rel="section" type="text/html" href="{$baseurl}?project={$project[0]}" />
+    <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
     <?php endforeach; ?>
-    <link media="screen" href="{$this->themeUrl()}theme.css" rel="stylesheet" type="text/css" />
-    <link media="print"  href="{$this->themeUrl()}theme_print.css" rel="stylesheet" type="text/css" />
+    <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
+    <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
-          href="{$baseurl}feed.php?feed_type=rss1&amp;project={$proj->id}" />
+          href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
-          href="{$baseurl}feed.php?feed_type=rss2&amp;project={$proj->id}" />
+          href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
 	<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
-	      href="{$baseurl}feed.php?feed_type=atom&amp;project={$proj->id}" />
+	      href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
 
-    <script type="text/javascript" src="{$baseurl}js/prototype/prototype.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/script.aculo.us/scriptaculous.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/prototype/prototype.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/script.aculo.us/scriptaculous.js"></script>
     <?php if ('index' == $do || 'details' == $do): ?>
-        <script type="text/javascript" src="{$baseurl}js/{$do}.js"></script>
+        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/<?php echo Filters::noXSS($do); ?>.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'pm' || $do == 'admin'): ?>
-        <script type="text/javascript" src="{$baseurl}js/tablecontrol.js"></script>
+        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'depends'): ?>
-        <!--[if IE]><script type="text/javascript" src="{$baseurl}js/jit/excanvas.js"></script><![endif]-->
-        <script type="text/javascript" src="{$baseurl}js/jit/jit.js"></script>
+        <!--[if IE]><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/excanvas.js"></script><![endif]-->
+        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/jit.js"></script>
     <?php endif; ?>
-    <script type="text/javascript" src="{$baseurl}js/tabs.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/functions.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/jscalendar/calendar_stripped.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/jscalendar/calendar-setup_stripped.js"> </script>
-    <script type="text/javascript" src="{$baseurl}js/jscalendar/lang/calendar-{substr(L('locale'), 0, 2)}.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/lightbox/js/lightbox.js"></script>
-    <script type="text/javascript" src="{$baseurl}js/ckeditor/ckeditor.js"></script>
-    <link rel="stylesheet" href="{$baseurl}js/lightbox/css/lightbox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tabs.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/functions.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
     <!--[if IE]>
-    <link media="screen" href="{$this->themeUrl()}ie.css" rel="stylesheet" type="text/css" />
+    <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>ie.css" rel="stylesheet" type="text/css" />
     <![endif]-->
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
-        <script type="text/javascript" src="{$baseurl}plugins/{$file}"></script>
+        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
   </head>
   <body onload="perms = new Perms('permissions');<?php
         if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'mixedbar\', &lbrace;duration:.3&rbrace;)', 10000);<?php
+        ?>window.setTimeout('Effect.Fade(\'mixedbar\', {duration:.3})', 10000);<?php
         elseif (isset($_SESSION['SUCCESS'])):
-        ?>window.setTimeout('Effect.Fade(\'successbar\', &lbrace;duration:.3&rbrace;)', 8000);<?php
+        ?>window.setTimeout('Effect.Fade(\'successbar\', {duration:.3})', 8000);<?php
         elseif (isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'errorbar\', &lbrace;duration:.3&rbrace;)', 8000);<?php endif ?>"
+        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>"
 				<?php if(isset($_GET['do'])) echo 'class="'.$_GET['do'].'"'; else echo 'class="index"'; ?>
 				>
 
     <!-- Display title and logo if desired -->
-    <h1 id="title"><a href="{$baseurl}">
+    <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
 	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>
-		<img src="{$fs->prefs['logo']}">
+		<img src="<?php echo Filters::noXSS($fs->prefs['logo']); ?>">
 	<?php } ?>
-	{$proj->prefs['project_title']}
+	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
+
     </a></h1>
 
     <?php $this->display('links.tpl'); ?>
 
     <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>
-    <div id="mixedbar" class="mixed bar" onclick="this.style.display='none'"><div class="errpadding">{$_SESSION['SUCCESS']}<br />{$_SESSION['ERROR']}</div></div>
+    <div id="mixedbar" class="mixed bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?><br /><?php echo Filters::noXSS($_SESSION['ERROR']); ?></div></div>
     <?php elseif (isset($_SESSION['ERROR'])): ?>
-    <div id="errorbar" class="error bar" onclick="this.style.display='none'"><div class="errpadding">{$_SESSION['ERROR']}</div></div>
+    <div id="errorbar" class="error bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['ERROR']); ?></div></div>
     <?php elseif (isset($_SESSION['SUCCESS'])): ?>
-    <div id="successbar" class="success bar" onclick="this.style.display='none'"><div class="errpadding">{$_SESSION['SUCCESS']}</div></div>
+    <div id="successbar" class="success bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div></div>
     <?php endif; ?>
 
     <div id="content">
@@ -86,13 +87,13 @@
             if ($fs->prefs['intro_message'] &&
                     (  $proj->id== 0 || $proj->prefs['disp_intro'] ) &&
                     (in_array($do, $show_message) || in_array(reset($actions), $show_message)) ): ?>
-      <div id="intromessage">{!TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id)}</div>
+      <div id="intromessage"><?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?></div>
       <?php endif; ?>
 
       <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
             $actions = explode('.', Req::val('action'));
             if ($proj->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
-	<div id="intromessage">{!TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
-                               ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : '')}</div>
+	<div id="intromessage"><?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
+                               ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?></div>
       <?php endif; ?>
     

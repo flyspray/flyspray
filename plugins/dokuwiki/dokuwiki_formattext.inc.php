@@ -1,7 +1,7 @@
 <?php
 class dokuwiki_TextFormatter
 {    
-    function render($text, $onyfs = false, $type = null, $id = null, $instructions = null)
+    function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf, $baseurl, $db;
         

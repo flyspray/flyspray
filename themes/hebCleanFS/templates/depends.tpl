@@ -1,12 +1,12 @@
 <div style="text-align:center;" class="box">
-  <p><b>{L('pruninglevel')}: </b>{!implode(" &nbsp;|&nbsp; \n", $strlist)}</p>
-  <h2><a href="{CreateUrl('details', $task_id)}">FS#{!$task_id}</a>: {L('dependencygraph')}</h2>
+  <p><b><?php echo Filters::noXSS(L('pruninglevel')); ?>: </b><?php echo implode(" &nbsp;|&nbsp; \n", $strlist); ?></p>
+  <h2><a href="<?php echo Filters::noXSS(CreateUrl('details', $task_id)); ?>">FS#<?php echo $task_id; ?></a>: <?php echo Filters::noXSS(L('dependencygraph')); ?></h2>
 
 <div id="infovis" style="width:90%;height:50em"></div>    
 
 <script type="text/javascript">
   // init data
-  var json = {!$jasonData};  
+  var json = <?php echo $jasonData; ?>;  
    
    // init ForceDirected
   var fd = new $jit.ForceDirected({
@@ -53,7 +53,7 @@
 
         // Display node info in tooltip
         tip.innerHTML = "<div class=\"popup\" style=\"width:200px\">" + node.name
-          + "<div><b>{L('connectedtasks')}</b> " + count + "</div></div>";
+          + "<div><b><?php echo Filters::noXSS(L('connectedtasks')); ?></b> " + count + "</div></div>";
       }
     },
     // Add node events
