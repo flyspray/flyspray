@@ -109,7 +109,7 @@
 	<?php } ?>
             <select id="dueversion" name="closedby_version[]" {!tpl_disableif(!$user->perms('modify_all_tasks'))}>
               <option value="0">{L('undecided')}</option>
-              {!tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true)}
+              {!tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], false)}
             </select>
 	</td>
 	<?php if ($user->perms('modify_all_tasks')){ ?><?php if (in_array('assignedto', $fields)) { ?>
