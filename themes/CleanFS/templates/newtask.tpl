@@ -134,7 +134,7 @@
             <label for="dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
             <select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
               <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
-              <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true); ?>
+              <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], false); ?>
 
             </select>
           </li>

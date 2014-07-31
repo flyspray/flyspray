@@ -38,7 +38,7 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary') || !Post::val('detailed_desc')) {
+        if (!Post::val('item_summary')) {//description not required
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
@@ -63,7 +63,7 @@ switch ($action = Req::val('action'))
     // Adding multiple new tasks
     // ##################
     case 'newmultitasks.newmultitasks':
-	if(!isset($_POST['item_summary']) || !isset($_POST['detailed_desc'])) {
+	if(!isset($_POST['item_summary'])) {
             Flyspray::show_error(L('summaryanddetails'));
                break;
 	}
@@ -74,11 +74,9 @@ switch ($action = Req::val('action'))
 		break;
 	    }
 	}
-	foreach($_POST['detailed_desc'] as $detail) {
-	    if(!$detail || $detail == "") {
-		$flag = false;
-		break;
-	    }
+	foreach($_POST['details_desc'] as $detail) {
+		if($detail)
+			$detail = "<p>" . $detail . "</p>";
 	}
 	if(!$flag) {
             Flyspray::show_error(L('summaryanddetails'));
@@ -90,7 +88,12 @@ switch ($action = Req::val('action'))
 	for($i = 0; $i < $length; $i++) {
 	    $ticket = array();
 	    foreach($_POST as $key => $value) {
-	    if(is_array($value))
+		if($key == "assigned_to") {
+		    $sql = $db->Query("SELECT user_id FROM {users} WHERE user_name = ? or real_name = ?", array($value[$i], $value[$i]));
+		    $ticket["rassigned_to"] = array(intval($db->FetchOne($sql)));
+		    continue;
+		}
+		if(is_array($value))
 		    $ticket[$key] = $value[$i];
 		else
 		    $ticket[$key] = $value;
@@ -120,7 +123,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (!Post::val('item_summary') || !Post::val('detailed_desc')) {
+        if (!Post::val('item_summary')) {//description can be empty now
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
