@@ -74,6 +74,10 @@ switch ($action = Req::val('action'))
 		break;
 	    }
 	}
+	foreach($_POST['details_desc'] as $detail) {
+		if($detail)
+			$detail = "<p>" . $detail . "</p>";
+	}
 	if(!$flag) {
             Flyspray::show_error(L('summaryanddetails'));
 	     break;

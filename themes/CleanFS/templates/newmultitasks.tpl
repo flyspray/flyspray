@@ -144,7 +144,7 @@
 	    <input type="text" class="text" size="30" id="summary" name="item_summary[]" onPaste="pasteMultiLines(this, event);return false"/>
 	</td>
 	<td>
-	    <input type="text" class="text" size="20" id="details" name="detailed_desc[]" onkeydown="TabandCreate(this, event);return false" onPaste="pasteMultiLines(this, event);return false"/>
+	    <input type="text" class="text" size="20" id="details" name="detailed_desc[]" onkeydown="return TabandCreate(this, event);" onPaste="pasteMultiLines(this, event);return false"/>
 	</td>
       </tr>
 
@@ -259,7 +259,7 @@
 	function TabandCreate(elem, e)
 	{
 		if(e.keyCode != 9)
-			return;
+			return true;
 		var table = document.getElementById("table");
 		var rows = table.getElementsByTagName("tr");
 		var length = rows.length;
@@ -273,6 +273,7 @@
 				break;
 			}
 		}
+		return false;
 	}
   </script>
 </form>

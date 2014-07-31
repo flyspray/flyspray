@@ -138,7 +138,7 @@
                 </fieldset>
 
                 <fieldset class="advsearch_task">
-<<<<<<< HEAD
+
                     <legend><?php echo Filters::noXSS(L('taskproperties')); ?></legend>
             <!-- Task Type -->
 		    <?php if (in_array('tasktype', $fields)) { ?>
@@ -146,7 +146,7 @@
 		    <?php } else { ?>
 		    <div style="display:none">
 		    <?php } ?>
-                        <label class="default multisel" for="type">{L('tasktype')}</label>
+                        <label class="default multisel" for="type"><?php echo Filters::noXSS(L('tasktype')); ?></label>
                         <select name="type[]" id="type" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', '')); ?>
 
@@ -339,8 +339,46 @@
     </tr>
     </thead>
     <tbody>
+    <script type="text/javascript">
+	var cX = 0; var cY = 0; var rX = 0; var rY = 0;
+	function UpdateCursorPosition(e){ cX = e.pageX; cY = e.pageY;}
+	function UpdateCursorPositionDocAll(e){ cX = e.clientX; cY = e.clientY;}
+	if(document.all) { document.onmousemove = UpdateCursorPositionDocAll; }
+	else { document.onmousemove = UpdateCursorPosition; }
+	function AssignPosition(d) {
+		if(self.pageYOffset)
+		{
+			rX = self.pageXOffset;
+			rY = self.pageYOffset;
+		}
+		else if(document.documentElement && document.documentElement.scrollTop) {
+			rX = document.documentElement.scrollLeft;
+			rY = document.documentElement.scrollTop;
+		}
+		else if(document.body) {
+			rX = document.body.scrollLeft;
+			rY = document.body.scrollTop;
+		}
+		if(document.all) {
+			cX += rX; 
+			cY += rY;
+		}
+		d.style.left = (cX+10) + "px";
+		d.style.top = (cY+10) + "px";
+	}
+	function Show(elem, id)
+	{
+		var div = document.getElementById("desc_"+id);
+		AssignPosition(div);
+		div.style.display = "block";
+	}
+	function Hide(elem, id)
+	{
+		document.getElementById("desc_"+id).style.display = "none";
+	}
+    </script>
     <?php foreach ($tasks as $task_details):?>
-    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
+    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?=$task_details['task_id']?>)" onmouseout="Hide(this, <?=$task_details['task_id']?>)">
         <td class="caret">
         </td>
         <?php if (!$user->isAnon()): ?>
@@ -362,6 +400,10 @@
         <?php echo tpl_draw_cell($task_details, $col); ?>
 
         <?php endif; endforeach; ?>
+<div id="desc_<?=$task_details['task_id']?>" class="box">
+Description:
+<?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
+</div>
     </tr>
     <?php endforeach; ?>
     </tbody>
