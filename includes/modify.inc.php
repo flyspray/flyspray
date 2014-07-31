@@ -74,9 +74,11 @@ switch ($action = Req::val('action'))
 		break;
 	    }
 	}
-	foreach($_POST['details_desc'] as $detail) {
+	$i = 0;
+	foreach($_POST['detailed_desc'] as $detail) {
 		if($detail)
-			$detail = "<p>" . $detail . "</p>";
+			$_POST['detailed_desc'][$i] = "<p>" . $detail . "</p>";
+		$i++;
 	}
 	if(!$flag) {
             Flyspray::show_error(L('summaryanddetails'));

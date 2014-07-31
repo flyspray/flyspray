@@ -400,8 +400,8 @@
         <?php echo tpl_draw_cell($task_details, $col); ?>
 
         <?php endif; endforeach; ?>
-<div id="desc_<?=$task_details['task_id']?>" class="box">
-Description:
+<div id="desc_<?=$task_details['task_id']?>" class="descbox box">
+<b>Task Description:</b>
 <?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
 </div>
     </tr>
