@@ -640,6 +640,10 @@ switch ($action = Req::val('action'))
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
                 continue;
             }
+	    else
+	    {
+		$success .= " " . $user_name . " ";
+	    }
         }
 
         if ($error != '')
@@ -652,7 +656,8 @@ switch ($action = Req::val('action'))
         }
         else
         {
-          $_SESSION['SUCCESS'] = L('newusercreated');
+	  //need translate
+          $_SESSION['SUCCESS'] = "New User Accounts" . $success . "have been created.";
           if (!$user->perms('is_admin')) {
               define('NO_DO', true);
               $page->pushTpl('register.ok.tpl');
