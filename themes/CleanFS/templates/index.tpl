@@ -317,7 +317,7 @@
 <?php endif; ?>
 
 <div id="tasklist">
-<form action="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index'))); ?>" name="massops" id="massops" method="post">
+<form action="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)); ?>" name="massops" id="massops" method="post">
 <div>
 <table id="tasklist_table">
     <thead>
