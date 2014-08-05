@@ -38,7 +38,7 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary')) {//description not required
+        if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
@@ -69,7 +69,7 @@ switch ($action = Req::val('action'))
 	}
 	$flag = true;
 	foreach($_POST['item_summary'] as $summary) {
-	    if(!$summary || $summary == "") {
+	    if(!$summary || trim($summary) == "") {
 		$flag = false;
 		break;
 	    }
