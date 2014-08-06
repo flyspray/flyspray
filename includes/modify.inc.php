@@ -221,7 +221,9 @@ switch ($action = Req::val('action'))
 
         Backend::add_comment($task, Post::val('comment_text'), $time);
         Backend::delete_files(Post::val('delete_att'));
-        Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+	Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+	Backend::delete_links(Post::val('delete_link'));
+	Backend::upload_links($task['task_id'], '0', 'userlink');
 
         $_SESSION['SUCCESS'] = L('taskupdated');
         break;
@@ -1454,7 +1456,9 @@ switch ($action = Req::val('action'))
                 Post::val('previous_text'), Post::val('comment_id'));
 
         Backend::upload_files($task['task_id'], Post::val('comment_id'));
-        Backend::delete_files(Post::val('delete_att'));
+	Backend::delete_files(Post::val('delete_att'));
+	Backend::upload_links($task['task_id'], Post::val('comment_id'));
+	Backend::delete_links(Post::val('delete_link'));
 
         $_SESSION['SUCCESS'] = L('editcommentsaved');
         break;

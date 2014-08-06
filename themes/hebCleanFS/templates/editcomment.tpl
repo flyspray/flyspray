@@ -28,6 +28,31 @@
          <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
       </button>
     <?php endif; ?>
+
+    <?php
+    $links = $proj->listLinks($comment['comment_id']);
+    $this->display('common.editlinks.tpl', 'links', $links);
+
+    if ($user->perms('create_attachments')): ?>
+<div id="addlinkbox">
+    <span style="display: none">
+	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+    </span>
+    <noscript>
+	 <span>
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+	 </span>
+    </noscript>
+</div>
+<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addalink')); ?>
+</button>
+<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addanotherlink')); ?>
+</button>
+    <?php endif; ?>
     
     <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
     <div class="hide preview" id="preview"></div>
