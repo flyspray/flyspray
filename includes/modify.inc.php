@@ -38,7 +38,7 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary')) {//description not required
+        if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
@@ -69,7 +69,7 @@ switch ($action = Req::val('action'))
 	}
 	$flag = true;
 	foreach($_POST['item_summary'] as $summary) {
-	    if(!$summary || $summary == "") {
+	    if(!$summary || trim($summary) == "") {
 		$flag = false;
 		break;
 	    }
@@ -640,6 +640,10 @@ switch ($action = Req::val('action'))
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
                 continue;
             }
+	    else
+	    {
+		$success .= " " . $user_name . " ";
+	    }
         }
 
         if ($error != '')
@@ -652,7 +656,8 @@ switch ($action = Req::val('action'))
         }
         else
         {
-          $_SESSION['SUCCESS'] = L('newusercreated');
+	  //need translate
+          $_SESSION['SUCCESS'] = "New User Accounts" . $success . "have been created.";
           if (!$user->perms('is_admin')) {
               define('NO_DO', true);
               $page->pushTpl('register.ok.tpl');
