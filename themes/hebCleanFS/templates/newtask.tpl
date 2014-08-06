@@ -145,6 +145,25 @@
         <button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields('uploadfilebox')">
            {L('attachanotherfile')} ({L('max')} {$fs->max_file_size} {L('MiB')})
         </button>
+
+<div id="addlinkbox">
+    <span style="display: none">
+    	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');">{L('remove')}</a><br />
+    </span>
+    <noscript>
+	 <span>
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');">{L('remove')}</a><br />
+	 </span>
+    </noscript>
+</div>
+<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
+	{L('addalink')}
+</button>
+<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
+	{L('addanotherlink')}
+</button>
         <?php endif; ?>
   
       </div>

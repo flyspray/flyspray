@@ -199,6 +199,17 @@ else {
     }
     $page->assign('comment_attachments', $attachments);
 
+    // Comment links
+    $links = array();
+    $sql = $db->Query('SELECT *
+	                 FROM {links} l, {comments} c
+			WHERE c.task_id = ? AND l.comment_id = c.comment_id',
+	               array($task_id));
+    while ($row = $db->FetchRow($sql)) {
+	$links[$row['comment_id']][] = $row;
+    }
+    $page->assign('comment_links', $links);
+
     // Relations, notifications and reminders
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r

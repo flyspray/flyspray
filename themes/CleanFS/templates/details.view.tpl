@@ -523,6 +523,9 @@
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
+
+        <?php $links = $proj->listTaskLinks($task_details['task_id']);
+        $this->display('common.links.tpl', 'links', $links); ?>
     </div>
 
     <div id="taskinfo">

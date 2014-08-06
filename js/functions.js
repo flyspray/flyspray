@@ -130,7 +130,7 @@ function addUploadFields(id) {
   if ('none' == span.style.display) {
     // Show the file upload box
     span.style.display = 'inline';
-    // Switch the buttons
+    // Switch the buttns
     $(id + '_attachafile').style.display = 'none';
     $(id + '_attachanotherfile').style.display = 'inline';
 
@@ -141,6 +141,27 @@ function addUploadFields(id) {
     el.appendChild(newBox);
   }
 }
+
+function addLinkField(id) {
+     if(!id) {
+	 id = 'addlinkbox';
+     }
+     var el = $(id);
+     var span = el.getElementsByTagName('span')[0];
+     if('none' == span.style.display) {
+				      
+         span.style.display = 'inline';
+				            
+         $(id + '_addalink').style.display = 'none';
+	 $(id + '_addanotherlink').style.display = 'inline';
+      } else {
+							            
+        var newBox = span.cloneNode(true);
+        newBox.getElementsByTagName('input')[0].value = '';
+        el.appendChild(newBox);
+      }
+}
+
 function adduserselect(url, user, selectid, error)
 {
     var myAjax = new Ajax.Request(url, {method: 'post', parameters: 'id=' + user, onComplete:function(originalRequest)
@@ -154,7 +175,7 @@ function adduserselect(url, user, selectid, error)
                 }
             }
 
-            opt = new Option(user_info[0], user_info[1]);
+            opt = new Option(user_info[0], user_info[1]);OB
             try {
                 $('r' + selectid).options[$('r' + selectid).options.length]=opt;
                 updateDualSelectValue(selectid);
@@ -192,6 +213,23 @@ function removeUploadField(element, id) {
   } else {
     el.removeChild(element.parentNode);
   }
+}
+
+function removeLinkField(element, id) {
+    if(!id) {
+        id = 'addlinkbox';
+    }
+    var el = $(id);
+    var span = el.getElementsByTagName('span');
+    if (1 == span.length) {
+       span[0].style.display='none';
+       span[0].getElementsByTagName('input')[0].value = '';
+					  
+       $(id + '_addalink').style.display = 'inline';
+       $(id + '_addanotherlink').style.display = 'none';
+    } else {
+       el.removeChild(element.parentNode);
+    }
 }
 
 function updateDualSelectValue(id)
