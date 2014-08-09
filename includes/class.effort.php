@@ -23,7 +23,7 @@ function ConvertSeconds ($seconds)
 class effort
 {
 
-    private $_taskId;
+    private $_task_id;
     private $_userId;
     public $details;
 
@@ -35,7 +35,7 @@ class effort
      */
     public function __construct($task_id,$user_id)
     {
-        $this->_taskId = $task_id;
+        $this->_task_id = $task_id;
         $this->_userId = $user_id;
     }
 
@@ -60,7 +60,7 @@ class effort
         $db->Query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
                                  VALUES  ( ?, ?, ?, ?,?,? )',
-            array   ($this->_taskId, time(), $this->_userId,time(),time(),$effort));
+            array   ($this->_task_idd, time(), $this->_userId,time(),time(),$effort));
     }
 
     /**
@@ -73,7 +73,7 @@ class effort
         global $db;
 
         //check if the user is already tracking time against this task.
-        $result = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_taskId.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
+        $result = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
         if($db->CountRows($result)>0)
         {
             return false;
@@ -83,7 +83,7 @@ class effort
                 $db->Query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp)
                                  VALUES  ( ?, ?, ?, ? )',
-                                 array   ($this->_taskId, time(), $this->_userId,time()));
+                                 array   ($this->_task_id, time(), $this->_userId,time()));
 
                 return true;
         }
@@ -101,12 +101,12 @@ class effort
         $time = time();
 
 
-        $sql = $db->Query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_taskId.' AND end_timestamp IS NULL;');
+        $sql = $db->Query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
         $result = $db->FetchRow($sql);
         $start_time = $result[0];
         $effort = $time - $start_time;
 
-        $sql = $db->Query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_taskId." AND end_timestamp IS NULL;");
+        $sql = $db->Query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_task_id." AND end_timestamp IS NULL;");
     }
 
     /**
@@ -117,7 +117,7 @@ class effort
     {
         global $db;
 
-        $db->Query('DELETE FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_taskId.' AND end_timestamp IS NULL;');
+        $db->Query('DELETE FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
 
     }
 
@@ -125,6 +125,6 @@ class effort
     {
         global $db;
 
-        $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_taskId.';');
+        $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
     }
 }

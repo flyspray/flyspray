@@ -715,8 +715,8 @@ abstract class Backend
 
         // Delete all project's tasks related information
         if (!$move_to) {
-            $taskIds = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
-            $taskIds = $db->FetchCol($taskIds);
+            $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
+            $task_ids = $db->FetchCol($task_ids);
             $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
                             'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
             foreach ($tables as $table) {
@@ -725,7 +725,7 @@ abstract class Backend
                 } else {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE task_id = ?');
                 }
-                foreach ($taskIds as $id) {
+                foreach ($task_ids as $id) {
                     $db->dblink->Execute($stmt, ($table == 'related') ? array($id, $id) : array($id));
                 }
             }
