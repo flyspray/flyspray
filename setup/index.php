@@ -785,6 +785,8 @@ class Setup extends Flyspray
       $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
+      $config[] = "[oauth]";
+      $config[] = 'enabled[] = ""';
 
       $config_text = $config_intro . implode( "\n", $config );
 

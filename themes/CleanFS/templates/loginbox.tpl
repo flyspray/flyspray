@@ -41,4 +41,14 @@
     <?php endif; ?>
     <?php endif; ?>
 </div>
+<?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']); 
+      $providers = $conf['oauth']['enabled'];
+?>
+<div id="login_oauth">
+    <?php foreach($providers as $provider): ?>
+    <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+        <i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
+    </a>
+    <?php endforeach; ?>
+    
 </form>

@@ -18,13 +18,14 @@ if (!$conf) {
     Flyspray::Redirect('setup/index.php');
 }
 
-require_once BASEDIR . '/includes/class.gpc.php';
-require_once BASEDIR . '/includes/utf8.inc.php';
-require_once BASEDIR . '/includes/class.database.php';
-require_once BASEDIR . '/includes/class.backend.php';
-require_once BASEDIR . '/includes/class.project.php';
-require_once BASEDIR . '/includes/class.user.php';
-require_once BASEDIR . '/includes/class.tpl.php';
+//FIXME: This is currently a workaround for the fact that parts of the code/templates use i.e. "taskid" and "task_id" for the same thing. This should be fixed cleanly, means a bit of work though.
+if      (isset($_GET["task_id"])) $_GET["taskid"]  = $_GET["task_id"];
+else if (isset($_GET["taskid"]))  $_GET["task_id"] = $_GET["taskid"];
+if      (isset($_POST["task_id"])) $_POST["taskid"]  = $_POST["task_id"];
+else if (isset($_POST["taskid"]))  $_POST["task_id"] = $_POST["taskid"];
+if      (isset($_REQUEST["task_id"])) $_REQUEST["taskid"]  = $_REQUEST["task_id"];
+else if (isset($_REQUEST["taskid"]))  $_REQUEST["task_id"] = $_REQUEST["taskid"];
+
 
 $db = new Database();
 $db->dbOpenFast($conf['database']);

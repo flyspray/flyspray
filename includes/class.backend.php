@@ -528,11 +528,11 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in)
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $oauth_uid = null, $oauth_provider = null)
     {
         global $fs, $db, $notify, $baseurl;
-
-	$user_name = Backend::clean_username($user_name);
+        
+        $user_name = Backend::clean_username($user_name);
 
         // Limit length
         $real_name = substr(trim($real_name), 0, 100);
@@ -552,29 +552,30 @@ abstract class Backend
             $auto = true;
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
         }
-
+        
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, magic_url,
                                email_address, notify_type, account_enabled,
-                               tasks_perpage, register_date, time_zone, dateformat, dateformat_extended)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone, '', ''));
+                               tasks_perpage, register_date, time_zone, dateformat, 
+                               dateformat_extended, oauth_uid, oauth_provider)
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), 
+                '', strtolower($email), $notify_type, time(), $time_zone, '', '', $oauth_uid, $oauth_provider));
 
         $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
-	$user_id = $db->fetchOne($temp);
+        $user_id = $db->fetchOne($temp);
 
         $emailList = explode(';',$email);
         foreach ($emailList as $mail)	//Still need to do: check email
-	{
-		$count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
-		$count = $db->fetchOne($count);
-		if ($count > 0)
-		{
-		    Flyspray::show_error("Email address has alredy been taken");
-		    return false;
-		}
-		else if ($mail != '')
-	  	    $db->Query("INSERT INTO {user_emails}(id,email_address) VALUES (?,?)",array($user_id,strtolower($mail)));
+        {
+            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->fetchOne($count);
+            if ($count > 0)
+            {
+                Flyspray::show_error("Email address has alredy been taken");
+                return false;
+            } else if ($mail != '')
+                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",array($user_id,strtolower($mail),$oauth_uid, $oauth_provider));
         }
 
         // Get this user's id for the record
@@ -640,7 +641,8 @@ abstract class Backend
         }
 
         // Send a user his details (his username might be altered, password auto-generated)
-        if ($fs->prefs['notify_registration']) {
+        // dont send notifications if the user logged in using oauth
+        if (! $oauth_provider && $fs->prefs['notify_registration']) {
             // Gather list of admin users
             $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
