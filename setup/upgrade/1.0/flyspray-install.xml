@@ -1089,6 +1089,34 @@
   	<col>task_id</col>
   </index>
   </table>
+  <table name="links">
+    <field name="link_id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="url" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="added_by" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_time" type="I" size="11">
+      <NONULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_links">
+	<col>task_id</col>
+    </index>
+  </table>
   <sql>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1);</query>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1);</query>
@@ -1122,7 +1150,7 @@
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Waiting on Customer', 5, 1, 0)</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Requires testing', 6, 1, 0)</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '1.0');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', 'flyspray.png');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'gravatars', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'emailNoHTML', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>

@@ -281,6 +281,18 @@ class Project
                array($cid));
     }
 
+    function listLinks($cid)
+    {
+        global $db;
+	return $db->cached_query(
+		'link_'.intval($cid),
+		"SELECT *
+		   FROM {links}
+		   WHERE comment_id = ?
+		ORDER BY link_id ASC",
+		array($cid));
+    }
+
     function listTaskAttachments($tid)
     {
         global $db;
@@ -291,6 +303,18 @@ class Project
                   WHERE  task_id = ? AND comment_id = 0
                ORDER BY  attachment_id ASC",
                array($tid));
+    }
+
+    function listTaskLinks($tid)
+    {
+        global $db;
+	return $db->cached_query(
+		'link_'.intval($tid),
+		"SELECT *
+		FROM {links}
+		WHERE task_id = ? AND comment_id = 0
+		ORDER BY link_id ASC",
+		array($tid));
     }
 	/**
 	 * Returns the activity by between dates for a project.
@@ -338,7 +362,7 @@ class Project
         $date2   = new \DateTime($date_end);
         $days    = $date1->diff($date2);
         $days    = $days->format('%a');
-        $results = [];
+        $results = array();
          
         for ($i = 0; $i < $days; $i++) {
             $event_date = (string) strtotime("-{$i} day", strtotime($date_end));

@@ -353,7 +353,7 @@ class User
         $date2   = new \DateTime($date_end);
         $days    = $date1->diff($date2);
         $days    = $days->format('%a');
-        $results = [];
+        $results = array();
          
         for ($i = 0; $i < $days; $i++) {
             $event_date = (string) strtotime("-{$i} day", strtotime($date_end));

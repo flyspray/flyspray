@@ -550,7 +550,7 @@ class TextFormatter
         global $conf;
         
         $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
-        $methods = is_array($methods) ? $methods : [];
+        $methods = is_array($methods) ? $methods : array();
         
         if (in_array('render', $methods)) {
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),

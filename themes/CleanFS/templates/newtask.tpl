@@ -4,9 +4,36 @@
         $supertask_id = 0;
     }
 ?>
-<form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)); ?>" method="post">
+  <script type="text/javascript">
+	function checkContent()
+	{//I'm thinking about changing javascript to jquery
+		var instance;
+		for(instance in CKEDITOR.instances)
+			CKEDITOR.instances[instance].updateElement();
+		var summary = document.getElementById("itemsummary").value;
+		if(summary.trim().length == 0)
+			return true;
+		var detail = document.getElementById("details").value;
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
+		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xmlHttp.send("summary=" + summary + "&detail=" + detail);
+		if(xmlHttp.status === 200)
+		{
+			if(xmlHttp.responseText > 0)
+			{
+				var res = confirm("There is already a similar task, do you still want to create?");
+				return res;
+			}
+			return true;
+		}
+		return false;
+	}
+  </script>
+<form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)); ?>" method="post" onsubmit="return checkContent()">
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <div id="actionbar">
+
     <button class="button positive main" accesskey="s" type="submit"><?php echo Filters::noXSS(L('addthistask')); ?></button>
     <div class="clear"></div>
   </div>
@@ -134,7 +161,7 @@
             <label for="dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
             <select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
               <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
-              <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], true); ?>
+              <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], false); ?>
 
             </select>
           </li>
@@ -237,6 +264,25 @@
         <button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields('uploadfilebox')">
            <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
         </button>
+
+        <div id="addlinkbox">
+    <span style="display: none">
+	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+    </span>
+    <noscript>
+	 <span>
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+	 </span>
+    </noscript>
+</div>
+<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addalink')); ?>
+</button>
+<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addanotherlink')); ?>
+</button>
         <?php endif; ?>
 
       </div>

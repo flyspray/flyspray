@@ -1,6 +1,6 @@
 <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" id="taskeditform" enctype="multipart/form-data" method="post">
 <div id="actionbar">
-	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
+	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 	<div class="clear"></div>
 </div>
 
@@ -314,6 +314,30 @@
 						<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 							 <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 						</button>
+<?php endif; ?>
+
+<?php $links = $proj->listTaskLinks($task_details['task_id']);
+                  $this->display('common.editlinks.tpl', 'links', $links); ?>
+
+          <?php if ($user->perms('create_attachments')): ?>
+<div id="addlinkbox">
+    <span style="display: none">
+	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+    </span>
+    <noscript>
+	 <span>
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+	 </span>
+    </noscript>
+</div>
+<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addalink')); ?>
+</button>
+<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
+	<?php echo Filters::noXSS(L('addalink')); ?>
+</button>
           <?php endif; ?>
 
 			</div>

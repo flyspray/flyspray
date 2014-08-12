@@ -38,7 +38,7 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary') || !Post::val('detailed_desc')) {
+        if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
@@ -63,22 +63,22 @@ switch ($action = Req::val('action'))
     // Adding multiple new tasks
     // ##################
     case 'newmultitasks.newmultitasks':
-	if(!isset($_POST['item_summary']) || !isset($_POST['detailed_desc'])) {
+	if(!isset($_POST['item_summary'])) {
             Flyspray::show_error(L('summaryanddetails'));
                break;
 	}
 	$flag = true;
 	foreach($_POST['item_summary'] as $summary) {
-	    if(!$summary || $summary == "") {
+	    if(!$summary || trim($summary) == "") {
 		$flag = false;
 		break;
 	    }
 	}
+	$i = 0;
 	foreach($_POST['detailed_desc'] as $detail) {
-	    if(!$detail || $detail == "") {
-		$flag = false;
-		break;
-	    }
+		if($detail)
+			$_POST['detailed_desc'][$i] = "<p>" . $detail . "</p>";
+		$i++;
 	}
 	if(!$flag) {
             Flyspray::show_error(L('summaryanddetails'));
@@ -90,7 +90,12 @@ switch ($action = Req::val('action'))
 	for($i = 0; $i < $length; $i++) {
 	    $ticket = array();
 	    foreach($_POST as $key => $value) {
-	    if(is_array($value))
+		if($key == "assigned_to") {
+		    $sql = $db->Query("SELECT user_id FROM {users} WHERE user_name = ? or real_name = ?", array($value[$i], $value[$i]));
+		    $ticket["rassigned_to"] = array(intval($db->FetchOne($sql)));
+		    continue;
+		}
+		if(is_array($value))
 		    $ticket[$key] = $value[$i];
 		else
 		    $ticket[$key] = $value;
@@ -120,7 +125,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (!Post::val('item_summary') || !Post::val('detailed_desc')) {
+        if (!Post::val('item_summary')) {//description can be empty now
             Flyspray::show_error(L('summaryanddetails'));
             break;
         }
@@ -216,7 +221,9 @@ switch ($action = Req::val('action'))
 
         Backend::add_comment($task, Post::val('comment_text'), $time);
         Backend::delete_files(Post::val('delete_att'));
-        Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+	Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+	Backend::delete_links(Post::val('delete_link'));
+	Backend::upload_links($task['task_id'], '0', 'userlink');
 
         $_SESSION['SUCCESS'] = L('taskupdated');
         break;
@@ -635,6 +642,10 @@ switch ($action = Req::val('action'))
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
                 continue;
             }
+	    else
+	    {
+		$success .= " " . $user_name . " ";
+	    }
         }
 
         if ($error != '')
@@ -647,7 +658,8 @@ switch ($action = Req::val('action'))
         }
         else
         {
-          $_SESSION['SUCCESS'] = L('newusercreated');
+	  //need translate
+          $_SESSION['SUCCESS'] = "New User Accounts" . $success . "have been created.";
           if (!$user->perms('is_admin')) {
               define('NO_DO', true);
               $page->pushTpl('register.ok.tpl');
@@ -1450,7 +1462,9 @@ switch ($action = Req::val('action'))
                 Post::val('previous_text'), Post::val('comment_id'));
 
         Backend::upload_files($task['task_id'], Post::val('comment_id'));
-        Backend::delete_files(Post::val('delete_att'));
+	Backend::delete_files(Post::val('delete_att'));
+	Backend::upload_links($task['task_id'], Post::val('comment_id'));
+	Backend::delete_links(Post::val('delete_link'));
 
         $_SESSION['SUCCESS'] = L('editcommentsaved');
         break;
@@ -1712,11 +1726,11 @@ switch ($action = Req::val('action'))
                    array(Get::val('subtaskid')));
 
         //write event log
-        Flyspray::logEvent(Get::val('taskid'), 33, Get::val('subtaskid'));
+        Flyspray::logEvent(Get::val('task_id'), 33, Get::val('subtaskid'));
         //post success message to the user
         $_SESSION['SUCCESS'] = L('subtaskremovedmsg');
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
+        Flyspray::Redirect(CreateURL('details', Get::val('task_id')));
         break;
 
     // ##################
@@ -1749,7 +1763,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('taskid')));
+        Flyspray::Redirect(CreateURL('details', Get::val('task_id')));
         break;
 
     // ##################
@@ -1911,7 +1925,7 @@ switch ($action = Req::val('action'))
         }
 
         // Log the event in the task history
-         Flyspray::logEvent(Get::val('taskid'), 34, Get::val('subtaskid'));
+         Flyspray::logEvent(Get::val('task_id'), 34, Get::val('subtaskid'));
 
         //finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}

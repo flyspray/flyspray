@@ -67,6 +67,7 @@
 <?php endif; ?>
 
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
+<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 <div id="search">
     <map id="projectsearchform" name="projectsearchform">
         <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
@@ -137,8 +138,14 @@
                 </fieldset>
 
                 <fieldset class="advsearch_task">
+
                     <legend><?php echo Filters::noXSS(L('taskproperties')); ?></legend>
+            <!-- Task Type -->
+		    <?php if (in_array('tasktype', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="type"><?php echo Filters::noXSS(L('tasktype')); ?></label>
                         <select name="type[]" id="type" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', '')); ?>
@@ -146,7 +153,12 @@
                         </select>
                     </div>
 
+            <!-- Severity -->
+		    <?php if (in_array('severity', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="sev"><?php echo Filters::noXSS(L('severity')); ?></label>
                         <select name="sev[]" id="sev" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', '')); ?>
@@ -154,7 +166,12 @@
                         </select>
                     </div>
 
+            <!-- Priority -->
+		    <?php if (in_array('priority', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="pri"><?php echo Filters::noXSS(L('priority')); ?></label>
                         <select name="pri[]" id="pri" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', '')); ?>
@@ -162,7 +179,12 @@
                         </select>
                     </div>
 
+            <!-- Due Version -->
+		    <?php if (in_array('dueversion', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="due"><?php echo Filters::noXSS(L('dueversion')); ?></label>
                         <select name="due[]" id="due" multiple="multiple" size="5">
                             <?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', '')); ?>
@@ -170,7 +192,12 @@
                         </select>
                     </div>
 
+            <!-- Reportedin -->
+		    <?php if (in_array('reportedin', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="reported"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
                         <select name="reported[]" id="reported" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', '')); ?>
@@ -178,7 +205,12 @@
                         </select>
                     </div>
 
+            <!-- Category -->
+		    <?php if (in_array('category', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="cat"><?php echo Filters::noXSS(L('category')); ?></label>
                         <select name="cat[]" id="cat" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', '')); ?>
@@ -186,7 +218,12 @@
                         </select>
                     </div>
 
+            <!-- Status -->
+		    <?php if (in_array('status', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="status"><?php echo Filters::noXSS(L('status')); ?></label>
                         <select name="status[]" id="status" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allstatuses')) +
@@ -197,7 +234,12 @@
                         </select>
                     </div>
 
+            <!-- Progress -->
+		    <?php if (in_array('progress', $fields)) { ?>
                     <div class="search_select">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <label class="default multisel" for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
                         <select name="percent[]" id="percent" multiple="multiple" size="5">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
@@ -213,9 +255,9 @@
                     <label class="default multisel" for="opened"><?php echo Filters::noXSS(L('openedby')); ?></label>
                     <?php echo tpl_userselect('opened', Get::val('opened'), 'opened'); ?>
 
-
+		    <?php if (in_array('assignedto', $fields)) { ?>
                     <label class="default multisel" for="dev"><?php echo Filters::noXSS(L('assignedto')); ?></label>
-                    <?php echo tpl_userselect('dev', Get::val('dev'), 'dev'); ?>
+                    <?php echo tpl_userselect('dev', Get::val('dev'), 'dev'); } ?>
 
 
                     <label class="default multisel" for="closed"><?php echo Filters::noXSS(L('closedby')); ?></label>
@@ -225,11 +267,15 @@
 
                 <fieldset class="advsearch_dates">
                     <legend><?php echo Filters::noXSS(L('dates')); ?></legend>
+            <!-- Due Date -->
+		    <?php if (in_array('duedate', $fields)) { ?>
                     <div class="dateselect">
+		    <?php } else { ?>
+		    <div style="display:none">
+		    <?php } ?>
                         <?php echo tpl_datepicker('duedatefrom', L('selectduedatefrom')); ?>
 
                         <?php echo tpl_datepicker('duedateto', L('selectduedateto')); ?>
-
                     </div>
 
                     <div class="dateselect">
@@ -271,7 +317,7 @@
 <?php endif; ?>
 
 <div id="tasklist">
-<form action="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index'))); ?>" name="massops" id="massops" method="post">
+<form action="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)); ?>" name="massops" id="massops" method="post">
 <div>
 <table id="tasklist_table">
     <thead>
@@ -293,8 +339,46 @@
     </tr>
     </thead>
     <tbody>
+    <script type="text/javascript">
+	var cX = 0; var cY = 0; var rX = 0; var rY = 0;
+	function UpdateCursorPosition(e){ cX = e.pageX; cY = e.pageY;}
+	function UpdateCursorPositionDocAll(e){ cX = e.clientX; cY = e.clientY;}
+	if(document.all) { document.onmousemove = UpdateCursorPositionDocAll; }
+	else { document.onmousemove = UpdateCursorPosition; }
+	function AssignPosition(d) {
+		if(self.pageYOffset)
+		{
+			rX = self.pageXOffset;
+			rY = self.pageYOffset;
+		}
+		else if(document.documentElement && document.documentElement.scrollTop) {
+			rX = document.documentElement.scrollLeft;
+			rY = document.documentElement.scrollTop;
+		}
+		else if(document.body) {
+			rX = document.body.scrollLeft;
+			rY = document.body.scrollTop;
+		}
+		if(document.all) {
+			cX += rX; 
+			cY += rY;
+		}
+		d.style.left = (cX+10) + "px";
+		d.style.top = (cY+10) + "px";
+	}
+	function Show(elem, id)
+	{
+		var div = document.getElementById("desc_"+id);
+		AssignPosition(div);
+		div.style.display = "block";
+	}
+	function Hide(elem, id)
+	{
+		document.getElementById("desc_"+id).style.display = "none";
+	}
+    </script>
     <?php foreach ($tasks as $task_details):?>
-    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
+    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?=$task_details['task_id']?>)" onmouseout="Hide(this, <?=$task_details['task_id']?>)">
         <td class="caret">
         </td>
         <?php if (!$user->isAnon()): ?>
@@ -316,6 +400,10 @@
         <?php echo tpl_draw_cell($task_details, $col); ?>
 
         <?php endif; endforeach; ?>
+<div id="desc_<?=$task_details['task_id']?>" class="descbox box">
+<b>Task Description:</b>
+<?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
+</div>
     </tr>
     <?php endforeach; ?>
     </tbody>
@@ -346,7 +434,6 @@
 <?php if (!$proj->id == 0): ?>
 <?php if (!$user->isAnon() && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
-<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 <script>Effect.Fade('bulk_edit_selectedItems');</script>
 <div id="bulk_edit_selectedItems" style="display:none">
     <fieldset>

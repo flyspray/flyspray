@@ -22,8 +22,10 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 if ($user->isAnon()) {
     die();
 }
-
-$searchterm = '%' . reset($_POST) . '%';
+$first = reset($_POST);
+if(is_array($first))
+	$first = reset($first);
+$searchterm = '%' . $first . '%';
 
 // Get the list of users from the global groups above
 $get_users = $db->Query('SELECT u.real_name, u.user_name

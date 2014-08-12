@@ -149,7 +149,7 @@
 				<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 					<div>
 						<button type="submit"><?php echo Filters::noXSS(L('showtask')); ?> #</button>
-						<input id="taskid" name="show_task" class="text" type="text" size="10" accesskey="t" />
+						<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" />
 					</div>
 				</form>
 			</div>

@@ -150,15 +150,15 @@ foreach (array("edge_list", "rvrs_list", "node_list") as $l) {
 
 // Now we've got everything we need... prepare JSON data
 $resultData = array();
-foreach ($node_list as $taskid => $taskInfo) {
+foreach ($node_list as $task_id => $taskInfo) {
 	$adjacencies = array();
-	if (isset($edge_list[$taskid])) {
-		foreach ($edge_list[$taskid] as $dst) {
-			array_push($adjacencies, array('nodeTo' => $dst, 'nodeFrom' => $taskid));
+	if (isset($edge_list[$task_id])) {
+		foreach ($edge_list[$task_id] as $dst) {
+			array_push($adjacencies, array('nodeTo' => $dst, 'nodeFrom' => $task_id));
 		}
 	}
 
-    if ($taskid == $id) {
+    if ($task_id == $id) {
         $color = '#5F9729';
     } else if ($taskInfo['clsd']) {
         $color = '#808080';
@@ -166,8 +166,8 @@ foreach ($node_list as $taskid => $taskInfo) {
         $color = '#83548B';
     }
     
-	$newTask = array('id' => $taskid,
-					 'name' => tpl_tasklink($taskid),
+	$newTask = array('id' => $task_id,
+					 'name' => tpl_tasklink($task_id),
 					 'data' => array('$color' => $color,
                                      '$type' => 'circle',
                                      '$dim' => 15),
@@ -178,7 +178,7 @@ foreach ($node_list as $taskid => $taskInfo) {
 
 $jasonData = json_encode($resultData);
 $page->assign('jasonData', $jasonData);
-$page->assign('taskid', $id);
+$page->assign('task_id', $id);
 
 $page->setTitle(sprintf('FS#%d : %s', $id, L('dependencygraph')));
 $page->pushTpl('depends.tpl');

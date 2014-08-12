@@ -1591,6 +1591,10 @@ input[type=text], input[type=password], select {
     vertical-align: middle;
 }
 
+#table input[type=text] {
+    width: 120px;
+}
+
 input[type=submit], button {
     background: #69C;
     border:  1px solid #0a4193;
@@ -1750,6 +1754,24 @@ a.tooltip span
 
     opacity: 0.8;
 }
+/*for float box in ticket list*/
+.descbox {
+	display:none;
+	border: 3px solid #e1e1e1;
+	border-radius: 3px;
+	background: none repeat scroll 0 0 white;
+    	margin: 10px 0;
+    	padding: 10px;
+	height: 144px;
+	width: 400px;
+	position: absolute;
+	z-index: 1000;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	color: #686868;
+	font-weight: normal;
+	text-overflow:ellipsis;
+	overflow:hidden;
 
 span.warning {
     color: red;

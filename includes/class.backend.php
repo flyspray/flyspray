@@ -412,6 +412,35 @@ abstract class Backend
         return $res;
     }
 
+    public static function upload_links($task_id, $comment_id = 0, $source = 'userlink')
+    {
+	    global $db, $user;
+
+	    $task = Flyspray::GetTaskDetails($task_id);
+
+	    if (!$user->perms('create_attachments', $task['project_id'])) {
+		    return false;
+	    }
+
+	    if (!isset($_POST[$source])) {
+		    return false;
+	    }
+
+	    foreach($_POST[$source] as $text) {
+		    if(empty($text)) {
+			    continue;
+		    }
+
+		    $res = true;
+
+		    // Insert into database
+		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
+			    array($task_id, $comment_id, $text, $user->id, time()));
+	    }
+
+	    return $res;
+    }
+
     /**
      * Delete one or more attachments of a task or comment
      * @param array $attachments
@@ -444,6 +473,28 @@ abstract class Backend
             @unlink(BASEDIR . '/attachments/' . $task['file_name']);
             Flyspray::logEvent($task['task_id'], 8, $task['orig_name']);
         }
+    }
+
+    public static function delete_links($links)
+    {
+	    global $db, $user;
+
+	    settype($links, 'array');
+
+	    if(!count($links)) {
+		    return;
+	    }
+
+	    $sql = $db->Query('SELECT t.*, l.* FROM {links} l LEFT JOIN {tasks} t ON t.task_id = l.task_id WHERE '.substr(str_repeat('link_id = ? OR ', count($links)), 0, -3), $links);
+
+	    //Delete from database
+	    while($task = $db->FetchRow($sql)) {
+		    if (!$user->perms('delete_attachments', $task['project_id'])) {
+			    continue;
+		    }
+
+		    $db->Query('DELETE FROM {links} WHERE link_id = ?', array($task['link_id']));
+	    }
     }
 
     /**
@@ -666,8 +717,8 @@ abstract class Backend
 
         // Delete all project's tasks related information
         if (!$move_to) {
-            $taskIds = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
-            $taskIds = $db->FetchCol($taskIds);
+            $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
+            $task_ids = $db->FetchCol($task_ids);
             $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
                             'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
             foreach ($tables as $table) {
@@ -676,7 +727,7 @@ abstract class Backend
                 } else {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE task_id = ?');
                 }
-                foreach ($taskIds as $id) {
+                foreach ($task_ids as $id) {
                     $db->dblink->Execute($stmt, ($table == 'related') ? array($id, $id) : array($id));
                 }
             }
@@ -782,7 +833,7 @@ abstract class Backend
 
         // these are the POST variables that the user MUST send, if one of
         // them is missing or if one of them is empty, then we have to abort
-        $requiredPostArgs = array('item_summary', 'detailed_desc', 'project_id');
+        $requiredPostArgs = array('item_summary', 'project_id');//modify: made description not required
         foreach ($requiredPostArgs as $required) {
             if (empty($args[$required])) return 0;
         }
