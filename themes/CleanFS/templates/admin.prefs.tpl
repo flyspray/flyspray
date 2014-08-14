@@ -131,16 +131,30 @@
 
         </li>   
 
-<!-- register needs approval by admin !-->
+<!-- register needs approved by admin !-->
         <li>
-          <label for="needapproval"><?php echo Filters::noXSS("Registration needs approval by admins"); ?></label>
-          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval'); ?>
+	  <script>
+		function check_change()
+		{
+			if(document.getElementById("needapproval").checked)
+			{
+				document.getElementById("spamproof").checked = false;
+				document.getElementById("spamproof").disabled = true;
+			}
+			else
+			{
+				document.getElementById("spamproof").disabled = false;
+			}
+		}
+	  </script>
+          <label for="needapproval"><?php echo Filters::noXSS("Registrations approved by admins (disable confirmation code)"); ?></label>
+          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, array('onclick'=>'check_change()')); ?>
 
         </li>
 
         <li>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
-          <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof'); ?>
+          <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, $fs->prefs['need_approval']?array('disabled'=>'true'):''); ?>
 
         </li>   
 

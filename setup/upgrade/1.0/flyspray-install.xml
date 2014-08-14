@@ -1145,6 +1145,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'user_notify', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'admin_email', 'flyspray@example.com');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'lang_code', 'en');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'need_approval', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>

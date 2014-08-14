@@ -256,7 +256,7 @@ class User
     public function can_register()
     {
         global $fs;
-        return $this->isAnon() && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
+        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
     }
 
     public function can_open_task($proj)
