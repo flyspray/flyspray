@@ -31,7 +31,27 @@
       <td><?php echo Filters::noXSS($req['reason_given']); ?></td>
       <td>
         <?php if ($req['request_type'] == 1) : ?>
-        <a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $req['task_id'], null, array('showclose' => 1))); ?>#formclosetask"><?php echo Filters::noXSS(L('accept')); ?></a>
+        <a class="button" href="#" onclick="showhidestuff('closeform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('accept')); ?></a>
+    <div id="closeform<?php echo Filters::noXSS($req['request_id']); ?>"
+         class="denyform">
+        <form action="" method="post" id="formclosetask">
+            <div>
+                <input type="hidden" name="action" value="details.close"/>
+                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>"/>
+                <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
+                    <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
+                    <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
+
+                </select>
+                <button type="submit"><?php echo Filters::noXSS(L('closetask')); ?></button>
+                <br/>
+                <label class="default text" for="closure_comment"><?php echo Filters::noXSS(L('closurecomment')); ?></label>
+                <textarea class="text" id="closure_comment" name="closure_comment" rows="3"
+                          cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+                <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
+            </div>
+        </form>
+    </div>
         <?php elseif ($req['request_type'] == 2) : ?>
         <a class="button" href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=reopen&task_id=<?php echo Filters::noXSS($req['task_id']); ?>"><?php echo Filters::noXSS(L('accept')); ?></a>
         <?php endif; ?>
