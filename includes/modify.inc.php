@@ -534,7 +534,7 @@ switch ($action = Req::val('action'))
         break;
 
     // ##################
-    // new user self-registration with a confirmation code
+    // new user self-registration without a confirmation code
     // ##################
     case 'register.newuser':
     case 'admin.newuser':
@@ -578,16 +578,18 @@ switch ($action = Req::val('action'))
                 break;
             }
         }
-
+	
+	$enabled = 1;
+	if($user->need_admin_approval()) $enabled = 0;
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
                               Post::val('real_name'), Post::val('jabber_id'),
                               Post::val('email_address'), Post::num('notify_type'),
-                              Post::num('time_zone'), $group_in)) {
+                              Post::num('time_zone'), $group_in, $enabled)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
-
         $_SESSION['SUCCESS'] = L('newusercreated');
+
         if (!$user->perms('is_admin')) {
             define('NO_DO', true);
             $page->pushTpl('register.ok.tpl');
@@ -771,7 +773,10 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval');
+	if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
+		unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
+					    //if you think different, modify functions in class.user.php directing different regiser tpl
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -1045,7 +1050,20 @@ switch ($action = Req::val('action'))
 
         $_SESSION['SUCCESS'] = L('userupdated');
         break;
+    // ##################
+    // approving a new user registration
+    // ##################
+    case 'approve.user':
+	if($user->perms('is_admin')) {
+            $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
+                    array(1, Post::val('user_id')));
 
+	    $db->Query('UPDATE  {admin_requests}
+                       SET  resolved_by = ?, time_resolved = ?
+                     WHERE  submitted_by = ? AND request_type = ?',
+                    array($user->id, time(), Post::val('user_id'), 3));
+	}
+	break;
     // ##################
     // updating a group definition
     // ##################
@@ -1653,6 +1671,20 @@ switch ($action = Req::val('action'))
 
         $_SESSION['SUCCESS'] = L('pmreqdeniedmsg');
         break;
+
+    // ##################
+    // deny a new user request
+    // ##################
+    case 'denyuserreq':
+	if($user->perms('is_admin')) {
+	     $db->Query("UPDATE  {admin_requests}
+                       SET  resolved_by = ?, time_resolved = ?, deny_reason = ?
+                     WHERE  request_id = ?",
+                    array($user->id, time(), Req::val('deny_reason'), Req::val('req_id')));
+	Flyspray::logEvent(0, 28, Req::val('deny_reason'));//nee a new event number. need notification. fix smtp first
+	$_SESSION['SUCCESS'] = "New user register request denied";
+	}
+	break;
 
     // ##################
     // adding a dependency

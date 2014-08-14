@@ -120,6 +120,12 @@
 					 href="<?php echo Filters::noXSS(CreateURL('pm', 'pendingreq', $proj->id)); ?>"><?php echo Filters::noXSS($pm_pendingreq_num); ?> <?php echo Filters::noXSS(L('pendingreq')); ?></a>
 			</li>
 		<?php endif; ?>
+		<?php if (!$proj->id && $user->perms('is_admin') && isset($admin_pendingreq_num) && $admin_pendingreq_num): ?>
+			<li>
+				<a class="pendingreq attention"
+					href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS("Admin requests waiting"); ?></a>
+			</li>
+		<?php endif; ?>
 		
 		<li id="pmcontrol">
 			<div id="projectselector">

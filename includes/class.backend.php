@@ -528,7 +528,7 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in)
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled = 1)
     {
         global $fs, $db, $notify, $baseurl;
 
@@ -557,11 +557,13 @@ abstract class Backend
                              ( user_name, user_pass, real_name, jabber_id, magic_url,
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone, dateformat, dateformat_extended)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, time(), $time_zone, '', ''));
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', ''));
 
         $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
 	$user_id = $db->fetchOne($temp);
+	if(!$enabled)
+	Flyspray::AdminRequest(3, 0, 0, $user_id, '');//pending request for admin, this should better not be here but something in user info may lead to error below
 
         $emailList = explode(';',$email);
         foreach ($emailList as $mail)	//Still need to do: check email
