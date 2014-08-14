@@ -27,7 +27,7 @@
         for(var n=0;n < form.length;n++){
             if(form[n].name == 'ids[]'){
 		if(form[n].checked)
-		    ckeck_count++;
+		    check_count++;
 		else
 		    uncheck_count++;
             }
