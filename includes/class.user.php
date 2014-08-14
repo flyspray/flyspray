@@ -236,6 +236,17 @@ class User
                 || $this->perms('close_other_tasks', $task['project_id']);
     }
 
+//admin approve user registration
+    public function need_admin_approval()
+    {
+	global $fs;
+	return $this->isAnon() && $fs->prefs['need_approval'] && $fs->prefs['anon_reg'];
+    }
+
+    public function get_group_id()
+    {
+    }
+
     public function can_self_register()
     {
         global $fs;

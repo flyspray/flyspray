@@ -67,7 +67,7 @@
 <?php endif; ?>
 
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
-<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
+<?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <div id="search">
     <map id="projectsearchform" name="projectsearchform">
         <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
@@ -141,7 +141,7 @@
 
                     <legend><?php echo Filters::noXSS(L('taskproperties')); ?></legend>
             <!-- Task Type -->
-		    <?php if (in_array('tasktype', $fields)) { ?>
+		    <?php if (!$filter || in_array('tasktype', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -154,7 +154,7 @@
                     </div>
 
             <!-- Severity -->
-		    <?php if (in_array('severity', $fields)) { ?>
+		    <?php if (!$filter || in_array('severity', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -167,7 +167,7 @@
                     </div>
 
             <!-- Priority -->
-		    <?php if (in_array('priority', $fields)) { ?>
+		    <?php if (!$filter || in_array('priority', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -180,7 +180,7 @@
                     </div>
 
             <!-- Due Version -->
-		    <?php if (in_array('dueversion', $fields)) { ?>
+		    <?php if (!$filter || in_array('dueversion', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -193,7 +193,7 @@
                     </div>
 
             <!-- Reportedin -->
-		    <?php if (in_array('reportedin', $fields)) { ?>
+		    <?php if (!$filter || in_array('reportedin', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -206,7 +206,7 @@
                     </div>
 
             <!-- Category -->
-		    <?php if (in_array('category', $fields)) { ?>
+		    <?php if (!$filter || in_array('category', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -219,7 +219,7 @@
                     </div>
 
             <!-- Status -->
-		    <?php if (in_array('status', $fields)) { ?>
+		    <?php if (!$filter || in_array('status', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -235,7 +235,7 @@
                     </div>
 
             <!-- Progress -->
-		    <?php if (in_array('progress', $fields)) { ?>
+		    <?php if (!$filter || in_array('progress', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
 		    <div style="display:none">
@@ -255,7 +255,7 @@
                     <label class="default multisel" for="opened"><?php echo Filters::noXSS(L('openedby')); ?></label>
                     <?php echo tpl_userselect('opened', Get::val('opened'), 'opened'); ?>
 
-		    <?php if (in_array('assignedto', $fields)) { ?>
+		    <?php if (!$filter || in_array('assignedto', $fields)) { ?>
                     <label class="default multisel" for="dev"><?php echo Filters::noXSS(L('assignedto')); ?></label>
                     <?php echo tpl_userselect('dev', Get::val('dev'), 'dev'); } ?>
 
@@ -268,7 +268,7 @@
                 <fieldset class="advsearch_dates">
                     <legend><?php echo Filters::noXSS(L('dates')); ?></legend>
             <!-- Due Date -->
-		    <?php if (in_array('duedate', $fields)) { ?>
+		    <?php if (!$filter || in_array('duedate', $fields)) { ?>
                     <div class="dateselect">
 		    <?php } else { ?>
 		    <div style="display:none">

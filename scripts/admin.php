@@ -49,6 +49,13 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'newuserbulk':
     case 'editallusers':
         $page->assign('groups', Flyspray::ListGroups());
+    case 'userrequest':
+	$sql = $db->Query("SELECT  *
+                             FROM  {admin_requests}
+                            WHERE  request_type = 3 AND project_id = 0 AND resolved_by = 0
+                         ORDER BY  time_submitted ASC");
+
+        $page->assign('pendings', $db->fetchAllArray($sql));
     case 'newproject':
     case 'os':
     case 'prefs':

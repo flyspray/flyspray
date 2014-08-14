@@ -131,6 +131,13 @@
 
         </li>   
 
+<!-- register needs approval by admin !-->
+        <li>
+          <label for="needapproval"><?php echo Filters::noXSS("Registration needs approval by admins"); ?></label>
+          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval'); ?>
+
+        </li>
+
         <li>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
           <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof'); ?>
