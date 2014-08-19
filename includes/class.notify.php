@@ -677,22 +677,25 @@ class Notifications {
       // {{{ Password change 
       if ($type == NOTIFY_PW_CHANGE)
       {
-          $body = L('messagefrom'). $arg1[0] . "\n\n"
-                  . L('magicurlmessage')." \n"
-                  . "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n";
+          $body =       L('magicurlmessage')." \n";
+			. "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n\n";
+			. L('messagefrom'). $arg1[0];
+
       } // } }}
       // {{{ New user
       if ($type == NOTIFY_NEW_USER)
       {
-          $body = L('messagefrom'). $arg1[0] . "\n\n"
-                  . L('newuserregistered')." \n\n"
-                  . L('username') . ': ' . $arg1[1] . "\n" .
-                    L('realname') . ': ' . $arg1[2] . "\n";
-          if ($arg1[6]) {
-              $body .= L('password') . ': ' . $arg1[5] . "\n";
-          }
-              $body .= L('emailaddress') . ': ' . $arg1[3] . "\n" .
-                    L('jabberid') . ':' . $arg1[4] . "\n\n";
+		$body =	L('newuserregistered')." \n\n"
+                	. L('username') . ': ' . $arg1[1] . "\n" .
+			L('realname') . ': ' . $arg1[2] . "\n";
+
+		if ($arg1[6]) {
+			$body .= L('password') . ': ' . $arg1[5] . "\n";
+		}
+
+		$body .= L('emailaddress') . ': ' . $arg1[3] . "\n";
+		$body .= L('jabberid') . ':' . $arg1[4] . "\n\n";
+		$body . = L('messagefrom'). $arg1[0];
       } // }}}
 
       $body .= L('disclaimer');
