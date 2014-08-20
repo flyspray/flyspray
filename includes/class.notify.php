@@ -677,8 +677,8 @@ class Notifications {
       // {{{ Password change 
       if ($type == NOTIFY_PW_CHANGE)
       {
-          $body =       L('magicurlmessage')." \n";
-			. "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n\n";
+          $body =       L('magicurlmessage')." \n"
+			. "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n\n"
 			. L('messagefrom'). $arg1[0];
 
       } // } }}
@@ -695,7 +695,7 @@ class Notifications {
 
 		$body .= L('emailaddress') . ': ' . $arg1[3] . "\n";
 		$body .= L('jabberid') . ':' . $arg1[4] . "\n\n";
-		$body . = L('messagefrom'). $arg1[0];
+		$body .= L('messagefrom'). $arg1[0];
       } // }}}
 
       $body .= L('disclaimer');
