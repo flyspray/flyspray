@@ -263,16 +263,10 @@
 		var table = document.getElementById("table");
 		var rows = table.getElementsByTagName("tr");
 		var length = rows.length;
-		if(elem.parentNode.parentNode == rows[length-2])
+		var parent = elem.parentNode.parentNode;
+		if(parent == rows[length-2])
 			createRow('','');
-		for(var i = 0; i < length-1; i++)
-		{
-			if(elem.parentNode.parentNode == rows[i])
-			{
-				rows[i+1].getElementsByTagName("input")[1].focus();
-				break;
-			}
-		}
+		parent.nextElementSibling.getElementsByTagName("input")[1].focus();
 		return false;
 	}
   </script>
