@@ -214,6 +214,29 @@
     <?php endif; ?>
 </div>
 
+<script type="text/javascript">
+
+function show_hide(elem, flag)
+{
+	elem.style.display = "none";
+	if(flag)
+		elem.nextElementSibling.style.display = "block";
+	else
+		elem.previousElementSibling.style.display = "block";
+}
+function quick_edit(elem, id)
+{
+	var e = document.getElementById(id);
+	var name = e.name;
+	var value = e.value;
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", false);
+	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>");
+
+	show_hide(elem, false);
+}
+</script>
 
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
@@ -243,12 +266,13 @@
 	</span>
 
     <div id="taskfields">
+    <div id="intromessage" align="center">Click on each field to quick edit</div>
     <ul class="fieldslist">
         <!-- Status -->
         <?php if (in_array('status', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('status')); ?></span>
-				<span class="value">
+				<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
 					<?php if ($task_details['is_closed']): ?>
                     <?php echo Filters::noXSS(L('closed')); ?>
 
@@ -260,6 +284,17 @@
                     <?php endif; ?>
                     <?php endif; ?>
 				</span>
+
+		<?php if ($user->can_edit_task($task_details)): ?>
+			<span style="display:none">
+				<div style="float:right"><select id="status" name="item_status">
+				 <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
+
+				</select>
+				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			</span>
+		<?php endif; ?>
+
         </li>
         <?php endif; ?>
 
@@ -267,13 +302,25 @@
         <?php if (in_array('progress', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('percentcomplete')); ?></span>
-				<span class="value">
+				<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
 					<div class="progress_bar_container" style="width: 90px">
                         <span><?php echo Filters::noXSS($task_details['percent_complete']); ?>%</span>
 
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($task_details['percent_complete']); ?>%"></div>
                     </div>
 				</span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="percent" name="percent_complete">
+			<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
+			<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+	<?php endif; ?>
+
         </li>
         <?php endif; ?>
     </ul>
@@ -282,7 +329,18 @@
         <?php if (in_array('tasktype', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span>
-            <span class="value"><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="tasktype" name="task_type">
+			<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
+
         </li>
         <?php endif; ?>
 
@@ -290,13 +348,23 @@
         <?php if (in_array('category', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('category')); ?></span>
-				<span class="value">
+				<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
 					<?php foreach ($parent as $cat): ?>
                     <?php echo Filters::noXSS($cat['category_name']); ?> &#8594;
                     <?php endforeach; ?>
                     <?php echo Filters::noXSS($task_details['category_name']); ?>
 
 				</span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="category" name="product_category">
+			 <?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
         </li>
         <?php endif; ?>
 
@@ -333,7 +401,17 @@
         <?php if (in_array('os', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('operatingsystem')); ?></span>
-            <span class="value"><?php echo Filters::noXSS($task_details['os_name']); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['os_name']); ?></span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="os" name="operating_system">
+			 <?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
         </li>
         <?php endif; ?>
 
@@ -341,7 +419,17 @@
         <?php if (in_array('severity', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('severity')); ?></span>
-            <span class="value"><?php echo Filters::noXSS($task_details['severity_name']); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['severity_name']); ?></span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="severity" name="task_severity">
+			 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
         </li>
         <?php endif; ?>
 
@@ -349,7 +437,17 @@
         <?php if (in_array('priority', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('priority')); ?></span>
-            <span class="value"><?php echo Filters::noXSS($task_details['priority_name']); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['priority_name']); ?></span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="priority" name="task_priority">
+			 <?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
         </li>
         <?php endif; ?>
 
@@ -357,7 +455,17 @@
         <?php if (in_array('reportedin', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('reportedversion')); ?></span>
-            <span class="value"><?php echo Filters::noXSS($task_details['reported_version_name']); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['reported_version_name']); ?></span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="reportedver" name="product_version">
+			<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
+
+			</select>
+			<a id="test" onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
         </li>
         <?php endif; ?>
 
@@ -365,7 +473,7 @@
         <?php if (in_array('dueversion', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('dueinversion')); ?></span>
-				<span class="value"><?php if ($task_details['due_in_version_name']): ?>
+				<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php if ($task_details['due_in_version_name']): ?>
                     <?php echo Filters::noXSS($task_details['due_in_version_name']); ?>
 
                     <?php else: ?>
@@ -373,6 +481,18 @@
 
                     <?php endif; ?>
 				</span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><select id="dueversion" name="closedby_version">
+			 <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
+			 <?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
+
+			</select>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
+
         </li>
         <?php endif; ?>
 
@@ -380,7 +500,8 @@
         <?php if (in_array('duedate', $fields)): ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('duedate')); ?></span>
-				<span class="value"><?php echo Filters::noXSS(formatDate($task_details['due_date'], false, L('undecided'))); ?><br><?php
+	    <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
+			<?php echo Filters::noXSS(formatDate($task_details['due_date'], false, L('undecided'))); ?><br><?php
 				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
 				if($task_details['due_date'] > 0)
 				{
@@ -404,6 +525,14 @@
 				}
 				?>
 				</span>
+
+	<?php if ($user->can_edit_task($task_details)): ?>
+		<span style="display:none">
+			<div style="float:right"><?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
+			<a onclick="quick_edit(this.parentNode, 'due_date')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+		</span>
+        <?php endif; ?>
+
         </li>
         <?php endif; ?>
         <?php if($proj->prefs['use_effort_tracking']) {

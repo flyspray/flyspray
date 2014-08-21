@@ -426,6 +426,7 @@ abstract class Backend
 		    return false;
 	    }
 
+	    $res = false;
 	    foreach($_POST[$source] as $text) {
 		    if(empty($text)) {
 			    continue;
