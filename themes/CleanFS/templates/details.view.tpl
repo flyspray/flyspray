@@ -230,10 +230,28 @@ function quick_edit(elem, id)
 	var name = e.name;
 	var value = e.value;
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", false);
+	xmlHttp.onreadystatechange = function()
+	{
+	console.log(xmlHttp.responseText);
+		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+		{
+			if(e.selectedIndex)
+				var text = e.options[e.selectedIndex].text;
+			else
+				var text = document.getElementById("due_date").value;//for due date
+			var target = elem.previousElementSibling;
+			if(target.getElementsByTagName("span").length > 0)//for progress
+			{
+				target.getElementsByTagName("span")[0].innerHTML = text;
+				target.getElementsByClassName("progress_bar")[0].style.width = text;
+			}
+			else
+				target.innerHTML = text; 
+		}
+	}
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>");
-
 	show_hide(elem, false);
 }
 </script>
@@ -291,7 +309,7 @@ function quick_edit(elem, id)
 				 <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
 
 				</select>
-				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)">cancel</a></div>
 			</span>
 		<?php endif; ?>
 
@@ -317,7 +335,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
 	<?php endif; ?>
 
@@ -337,7 +355,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
 
@@ -362,7 +380,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -409,7 +427,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -427,7 +445,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -445,7 +463,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -463,7 +481,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
 
 			</select>
-			<a id="test" onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -489,7 +507,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
 
@@ -529,7 +547,7 @@ function quick_edit(elem, id)
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
 			<div style="float:right"><?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
-			<a onclick="quick_edit(this.parentNode, 'due_date')" href="">confirm</a>&nbsp;&nbsp;<a style="cursor:pointer" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
         <?php endif; ?>
 
