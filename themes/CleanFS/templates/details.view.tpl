@@ -230,22 +230,28 @@ function quick_edit(elem, id)
 	var name = e.name;
 	var value = e.value;
 	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function()
+	{
+	console.log(xmlHttp.responseText);
+		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+		{
+			if(e.selectedIndex)
+				var text = e.options[e.selectedIndex].text;
+			else
+				var text = document.getElementById("due_date").value;//for due date
+			var target = elem.previousElementSibling;
+			if(target.getElementsByTagName("span").length > 0)//for progress
+			{
+				target.getElementsByTagName("span")[0].innerHTML = text;
+				target.getElementsByClassName("progress_bar")[0].style.width = text;
+			}
+			else
+				target.innerHTML = text; 
+		}
+	}
 	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>");
-
-	if(e.selectedIndex)
-		var text = e.options[e.selectedIndex].text;
-	else
-		var text = document.getElementById("due_date").value;//for due date
-	var target = elem.previousElementSibling;
-	if(target.getElementsByTagName("span"))//for progress
-	{
-		target.getElementsByTagName("span")[0].innerHTML = text;
-		target.getElementsByClassName("progress_bar")[0].style.width = text;
-	}
-	else
-		target.innerHTML = text; 
 	show_hide(elem, false);
 }
 </script>
