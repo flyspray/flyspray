@@ -229,16 +229,17 @@ function quick_edit(elem, id)
 	var e = document.getElementById(id);
 	var name = e.name;
 	var value = e.value;
+	var text;
+	if(e.selectedIndex != null)
+		text = e.options[e.selectedIndex].text;
+	else
+		text = document.getElementById("due_date").value;//for due date
 	var xmlHttp = new XMLHttpRequest();
+
 	xmlHttp.onreadystatechange = function()
 	{
-	console.log(xmlHttp.responseText);
 		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
 		{
-			if(e.selectedIndex)
-				var text = e.options[e.selectedIndex].text;
-			else
-				var text = document.getElementById("due_date").value;//for due date
 			var target = elem.previousElementSibling;
 			if(target.getElementsByTagName("span").length > 0)//for progress
 			{
