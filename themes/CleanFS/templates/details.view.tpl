@@ -230,7 +230,7 @@ function quick_edit(elem, id)
 	var name = e.name;
 	var value = e.value;
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", false);
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>");
 
@@ -539,7 +539,7 @@ function quick_edit(elem, id)
 				</span>
 
 	<?php if ($user->can_edit_task($task_details)): ?>
-		<span id="test" style="display:none">
+		<span style="display:none">
 			<div style="float:right"><?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
 			<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)">confirm</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)">cancel</a></div>
 		</span>
