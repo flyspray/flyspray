@@ -7,10 +7,15 @@
  * @author Steven Tredinnick
  */
 
+
+require_once("../vendor/restler/framework/Luracast/Restler/AutoLoader.php");
 require_once('database.php');
 
-require_once('apis/api_effort.php');
-require_once('apis/api_groups.php');
-require_once('apis/api_projects.php');
-require_once('apis/api_tasks.php');
-require_once('apis/api_users.php');
+$config = parse_ini_file('../flyspray.conf.php');
+
+//include all of the files in the apis folder
+
+foreach (glob("apis/*.php") as $filename)
+{
+    include $filename;
+}
