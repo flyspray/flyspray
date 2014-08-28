@@ -25,7 +25,11 @@ class api_Projects
 
     /**
      * Lists basic details of all projects listed in the database.
+     *
+     * Note this only returns projects that are public or where the user is a member of the project.
      * @return array
+     *
+     * todo: Need to add access control to this section.
      */
     public function getProjects()
     {
@@ -36,7 +40,11 @@ class api_Projects
 
     /**
      * Lists extended details of all projects in the database.
+     *
+     * Note this only returns projects that are public or where the user is a member of the project.
      * @return array
+     *
+     * todo: Need to add access control to this section.
      */
     public function getProjectsExtended()
     {
@@ -53,6 +61,8 @@ class api_Projects
      *
      * @param int $projectId The ID of the project to return
      * @return array
+     *
+     * todo: Need to add access control to this section.
      */
     public function getProject($projectId)
     {
@@ -64,7 +74,6 @@ class api_Projects
 
 
     /**
-     * <p>
      * Gets all data fields for a project by its project id.
      *
      * Invoking this will return all of the data fields that are available for a project from the database, filtered by
@@ -74,6 +83,8 @@ class api_Projects
      * @class  AccessControl {@requires user}
      * @param int $projectId The ID of the project to return
      * @return array
+     *
+     * todo: Need to add access control to this section.
      */
     public function getProjectExtended($projectId)
     {
@@ -83,7 +94,50 @@ class api_Projects
         return($query->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    /**
+     * Gets all groups that are associated to a project.
+     *
+     * Invoking this will return a list of groups that are associated to a project., filtered by
+     * the project id of the project that you want to return.
+     *
+     * @access protected
+     * @class  AccessControl {@requires user}
+     * @param int $projectId The ID of the project to return
+     * @return array
+     *
+     * todo: Need to add access control to this section.
+     * todo: Need to code the api for this section.
+     */
+    public function getProjectGroups($projectId)
+    {
+        return "Not implemented yet...come back later, or contribute at flyspray.github.com";
+    }
+
+    /**
+     * Gets all data fields for a project by its project id.
+     *
+     * Invoking this will return all project members and the groups they are associated to, filtered by
+     * the project id of the project that you want to return.
+     *
+     * @access protected
+     * @class  AccessControl {@requires user}
+     * @param int $projectId The ID of the project to return
+     * @return array
+     *
+     * todo: Need to add access control to this section.
+     * todo: Need to code the api for this section.
+     */
     public function getProjectMembers($projectId)
+    {
+        return "Not implemented yet...come back later, or contribute at flyspray.github.com";
+    }
+
+    public function postNewProject($projectName)
+    {
+
+    }
+
+    public function putUpdateProject($projectId)
     {
 
     }
