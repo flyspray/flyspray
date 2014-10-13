@@ -920,7 +920,9 @@ $translation = array(
 'invalideffort'           => 'Úsilie ktoré ste zadali, je neplatné. Musíte zadať číslo',
 'showpass'                => 'Zobraz heslo',
 'addmultipletasks'        => 'Pridať viac úloh',
-'pendingnewuserrequest'   => 'Čakajúce požiadavky nových používateľov'
+'pendingnewuserrequest'   => 'Čakajúce požiadavky nových používateľov',
+'adminrequestswaiting'    => 'Čakajúce požiadavkz administrátora',
+'regapprovedbyadmin'      => 'Registrácia schválená administrátorom (zakázaný potvrdzovací kód)'
 );
 
 ?>

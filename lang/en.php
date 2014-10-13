@@ -925,7 +925,9 @@ Regards,',
 'invalideffort'           => 'The effort entered is invalid. Must be a number',
 'showpass'                => 'Show Password',
 'addmultipletasks'        => 'Add multiple tasks',
-'pendingnewuserrequest'   => 'Pending New User Request'
+'pendingnewuserrequest'   => 'Pending New User Request',
+'adminrequestswaiting'    => 'Admin requests waiting',
+'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)'
 );
 
 ?>
