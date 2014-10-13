@@ -12,6 +12,7 @@
  * Last modified:     10/13/14
  ******************************************************************************/
 
+
 $translation = array(
 'edituser'                => 'Edituj užívateľa',
 'accountenabled'          => 'Konto povolené',
@@ -918,6 +919,7 @@ $translation = array(
 'trackeffort'             => 'Je možné sledovať úsilie',
 'invalideffort'           => 'Úsilie ktoré ste zadali, je neplatné. Musíte zadať číslo',
 'showpass'                => 'Zobraz heslo',
+'addmultipletasks'        => 'Pridať viac úloh',
 );
 
 ?>

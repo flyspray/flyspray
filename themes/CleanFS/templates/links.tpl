@@ -80,7 +80,7 @@
 			<li>
 			<a id="newmultitaskslink" href="<?php echo Filters::noXSS(CreateURL('newmultitasks', $proj->id)); ?>"
 				<?php if(isset($_GET['do']) and $_GET['do'] == 'newmultitasks'): ?> class="active" <?php endif; ?>
-				accesskey="a">Add multiple tasks</a>
+				accesskey="a"><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
 			</li>
 		<?php elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?>
 			<li>

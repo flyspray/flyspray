@@ -923,7 +923,8 @@ Regards,',
 'vieweffort'              => 'Can View Effort Tracking',
 'trackeffort'             => 'Can Track Effort',
 'invalideffort'           => 'The effort entered is invalid. Must be a number',
-'showpass'                => 'Show Password'
+'showpass'                => 'Show Password',
+'addmultipletasks'        => 'Add multiple tasks'
 );
 
 ?>
