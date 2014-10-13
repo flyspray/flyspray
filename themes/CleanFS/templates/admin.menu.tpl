@@ -30,5 +30,5 @@
      href="<?php echo Filters::noXSS(CreateURL('admin', 'newproject')); ?>"><?php echo Filters::noXSS(L('newproject')); ?></a>
   <a id="userrequestlink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'userreqeust') echo $activeclass; ?>
-     href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS('Pending New User Reqeust'); ?></a>
+     href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS(L('pendingnewuserrequest')); ?></a>
 </div>

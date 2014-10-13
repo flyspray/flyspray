@@ -920,6 +920,7 @@ $translation = array(
 'invalideffort'           => 'Úsilie ktoré ste zadali, je neplatné. Musíte zadať číslo',
 'showpass'                => 'Zobraz heslo',
 'addmultipletasks'        => 'Pridať viac úloh',
+'pendingnewuserrequest'   => 'Čakajúce požiadavky nových používateľov'
 );
 
 ?>

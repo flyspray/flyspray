@@ -924,7 +924,8 @@ Regards,',
 'trackeffort'             => 'Can Track Effort',
 'invalideffort'           => 'The effort entered is invalid. Must be a number',
 'showpass'                => 'Show Password',
-'addmultipletasks'        => 'Add multiple tasks'
+'addmultipletasks'        => 'Add multiple tasks',
+'pendingnewuserrequest'   => 'Pending New User Request'
 );
 
 ?>
