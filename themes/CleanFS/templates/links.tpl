@@ -123,7 +123,7 @@
 		<?php if (!$proj->id && $user->perms('is_admin') && isset($admin_pendingreq_num) && $admin_pendingreq_num): ?>
 			<li>
 				<a class="pendingreq attention"
-					href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS(L('adminrequestswaiting'); ?></a>
+					href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS(L('adminrequestswaiting')); ?></a>
 			</li>
 		<?php endif; ?>
 		
