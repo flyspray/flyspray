@@ -285,7 +285,14 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
             list($uname, $rname, $email) = $db->fetchRow($sql);
         }
 	$email = md5(strtolower(trim($email)));
-	$image = "<img src='http://www.gravatar.com/avatar/".$email."?s=".$size."'/>";
+
+	$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+	if ($sql && $db->countRows($sql)) {
+		$avatar_name = $db->fetchRow($sql); 
+		$image = "<img src='"."/themes/CleanFS/images/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+	} else {
+		$image = "<img src='http://www.gravatar.com/avatar/".$email."?s=".$size."'/>";
+	}
     if (isset($uname)) {
         $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
         //$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));

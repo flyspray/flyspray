@@ -1,4 +1,4 @@
-<form action="<?php if ($do == 'admin'): ?><?php echo Filters::noXSS(CreateURL($do, 'newuser')); ?><?php else: ?><?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?><?php endif; ?>" method="post" id="registernewuser">
+<form action="<?php if ($do == 'admin'): ?><?php echo Filters::noXSS(CreateURL($do, 'newuser')); ?><?php else: ?><?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?><?php endif; ?>" method="post" enctype="multipart/form-data" id="registernewuser">
   <ul class="form_elements">
     <li class="required">
       <?php if ($do == 'admin'): ?>
@@ -41,6 +41,11 @@
     <li>
       <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
       <input id="jabberid" name="jabber_id" class="text" type="text" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" size="20" maxlength="100" />
+    </li>
+
+    <li>
+      <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
+      <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
     </li>
 
     <li>

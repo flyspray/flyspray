@@ -9,6 +9,7 @@ $language = array(
 'realname'                => 'Real Name',
 'emailaddress'            => 'Email Address',
 'jabberid'                => 'Jabber ID',
+'profileimage'            => 'Profile Image',
 'notifytype'              => 'Notify Type',
 'group'                   => 'Group',
 'enableaccounts'          => 'Enable Accounts',
@@ -923,7 +924,9 @@ Regards,',
 'vieweffort'              => 'Can View Effort Tracking',
 'trackeffort'             => 'Can Track Effort',
 'invalideffort'           => 'The effort entered is invalid. Must be a number',
-'showpass'                => 'Show Password'
+'showpass'                => 'Show Password',
+'chooseafile'             => 'Please choose a file!',
+'incorrectfiletype'       => 'Incorrect file type. Allowed: jpg, jpeg, gif, png.'
 );
 
 ?>

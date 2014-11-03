@@ -1,4 +1,4 @@
-  <form action="<?php if ($do == 'myprofile'): ?><?php echo Filters::noXSS(CreateUrl('myprofile')); ?><?php else: ?><?php echo Filters::noXSS(CreateUrl('edituser', $theuser->id)); ?><?php endif; ?>" method="post">
+  <form action="<?php if ($do == 'myprofile'): ?><?php echo Filters::noXSS(CreateUrl('myprofile')); ?><?php else: ?><?php echo Filters::noXSS(CreateUrl('edituser', $theuser->id)); ?><?php endif; ?>" method="post" enctype="multipart/form-data">
     <ul class="form_elements">
       <li>
         <label for="realname"><?php echo Filters::noXSS(L('realname')); ?></label>
@@ -17,6 +17,11 @@
         <input id="jabberid" class="text" type="text" name="jabber_id" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('jabber_id', $theuser->infos['jabber_id'])); ?>" />
         <input type="hidden" name="old_jabber_id" value="<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>" />
+      </li>
+
+      <li>
+        <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
+        <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
       </li>
 
       <li>

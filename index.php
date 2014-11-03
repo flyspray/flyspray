@@ -1,5 +1,4 @@
 <?php
-
 /*
    This is the main script that everything else is included
    in.  Mostly what it does is check the user permissions

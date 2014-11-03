@@ -517,13 +517,37 @@ switch ($action = Req::val('action'))
         if ($reg_details['confirm_code'] != trim(Post::val('confirmation_code'))) {
             Flyspray::show_error(L('confirmwrong'));
             break;
-        }
+	}
+      
+        $profile_image = 'profile_image';
 
-        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'],
-                         $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'])) {
+	if(isset($_FILES[$profile_image]) === true) {
+		if(empty($_FILES[$profile_image]['name']) === true) {
+			Flyspray::show_error(L('choosefile'));
+			break;
+		} else {
+			$allowed = array('jpg', 'jpeg', 'gif', 'png');
+
+			$image_name = $_FILES[$profile_image]['name'];
+			$image_extn = strtolower(end(explode('.', $image_name)));
+			$image_temp = $_FILES[$profile_image]['tmp_name'];
+
+			if(in_array($image_extn, $allowed) === true) {
+				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
+				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+				move_uploaded_file($image_temp, $image_path);
+			} else {
+				Flyspray::show_error(L('incorrectfiletype'));
+				break;
+			}
+		}
+	}
+
+        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'], $image_path, $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'])) {
             Flyspray::show_error(L('usernametaken'));
             break;
-        }
+	}
+
         $db->Query('DELETE FROM {registrations} WHERE magic_url = ? AND confirm_code = ?',
                    array(Post::val('magic_url'), Post::val('confirmation_code')));
 
@@ -581,13 +605,40 @@ switch ($action = Req::val('action'))
 	
 	$enabled = 1;
 	if($user->need_admin_approval()) $enabled = 0;
+	 
+	$profile_image = 'profile_image';
+
+	if(isset($_FILES[$profile_image]) === true) {
+		if(empty($_FILES[$profile_image]['name']) === true) {
+			Flyspray::show_error(L('chooseafile'));
+			break;
+		} else {
+			$allowed = array('jpg', 'jpeg', 'gif', 'png');
+
+			$image_name = $_FILES[$profile_image]['name'];
+			$image_extn = strtolower(end(explode('.', $image_name)));
+			$image_temp = $_FILES[$profile_image]['tmp_name'];
+			
+			if(in_array($image_extn, $allowed) === true) {
+				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
+				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+				move_uploaded_file($image_temp, $image_path);
+				
+			} else {
+				Flyspray::show_error(L('incorrectfiletype'));
+				break;
+			}
+		}
+	}
+
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
-                              Post::val('real_name'), Post::val('jabber_id'),
+                              Post::val('real_name'), Post::val('jabber_id'), $image_path,
                               Post::val('email_address'), Post::num('notify_type'),
                               Post::num('time_zone'), $group_in, $enabled)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
+
         $_SESSION['SUCCESS'] = L('newusercreated');
 
         if (!$user->perms('is_admin')) {
@@ -1013,7 +1064,7 @@ switch ($action = Req::val('action'))
         }
         if (Post::val('old_jabber_id') != Post::val('jabber_id')) {
             Notifications::JabberRequestAuth(Post::val('jabber_id'));
-        }
+	}
 
         $db->Query('UPDATE  {users}
                        SET  real_name = ?, email_address = ?, notify_own = ?,
@@ -1025,6 +1076,36 @@ switch ($action = Req::val('action'))
                     Post::val('jabber_id', 0), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'),Post::val('lang_code', 'en'), Post::num('user_id')));
+
+	$profile_image = 'profile_image';
+
+	if(isset($_FILES[$profile_image]) === true) {
+		if(empty($_FILES[$profile_image]['name']) === true) {
+			Flyspray::show_error(L('chooseafile'));
+			break;
+		} else {
+			$allowed = array('jpg', 'jpeg', 'gif', 'png');
+
+			$image_name = $_FILES[$profile_image]['name'];
+			$image_extn = strtolower(end(explode('.', $image_name)));
+			$image_temp = $_FILES[$profile_image]['tmp_name'];
+
+			if(in_array($image_extn, $allowed) === true) {
+                                $sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
+				$avatar_oldname = $db->FetchRow($sql);
+				unlink(BASEDIR . '/themes/CleanFS/images/' . $avatar_oldname['profile_image']);
+				
+				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;	
+				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+				move_uploaded_file($image_temp, $image_path);
+				$db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
+					array($avatar_name, Post::num('user_id')));
+			} else {
+				Flyspray::show_error(L('incorrectfiletype'));
+				break;
+			}
+		}
+	}
 
         endif; // end only admin or user himself can change
 

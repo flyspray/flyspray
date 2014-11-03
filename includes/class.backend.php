@@ -529,7 +529,7 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled = 1)
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $profile_image, $email, $notify_type, $time_zone, $group_in, $enabled = 1)
     {
         global $fs, $db, $notify, $baseurl;
 
@@ -552,14 +552,14 @@ abstract class Backend
         if (!$password) {
             $auto = true;
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
-        }
+	}
 
         $db->Query("INSERT INTO  {users}
-                             ( user_name, user_pass, real_name, jabber_id, magic_url,
+                             ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone, dateformat, dateformat_extended)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', ''));
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', ''));
 
         $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
 	$user_id = $db->fetchOne($temp);
