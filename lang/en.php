@@ -929,7 +929,7 @@ Regards,',
 'showpass'                => 'Show Password',
 'chooseafile'             => 'Please choose a file!',
 'incorrectfiletype'       => 'Incorrect file type. Allowed: jpg, jpeg, gif, png.',
-'oauthreqpass'            => 'No password to request. You registered through %s'
+'oauthreqpass'            => 'No password to request. You registered through %s',
 'addmultipletasks'        => 'Add multiple tasks',
 'pendingnewuserrequest'   => 'Pending New User Request',
 'adminrequestswaiting'    => 'Admin requests waiting',
