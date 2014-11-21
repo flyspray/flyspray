@@ -1027,6 +1027,12 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('nooldpass'));
             break;
         }
+
+        if ($user->infos['oauth_uid'] && Post::val('changepass')) {
+            Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($uesr->infos['oauth_provider'])));
+            break;
+        }
+        
         if (Post::val('changepass') || Post::val('confirmpass')) {
             if (Post::val('changepass') != Post::val('confirmpass')) {
                 Flyspray::show_error(L('passnomatch'));
@@ -1888,6 +1894,13 @@ switch ($action = Req::val('action'))
         }
 
         $user_details = $db->FetchRow($sql);
+        
+        if ($user_details['oauth_provider']) {
+            Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($user_details['oauth_provider'])));
+            Flyspray::Redirect($baseurl);
+            break;
+        }
+        
         //no microtime(), time,even with microseconds is predictable ;-)
         $magic_url    = md5(function_exists('openssl_random_pseudo_bytes') ?
                               openssl_random_pseudo_bytes(32) :
@@ -2179,4 +2192,3 @@ switch ($action = Req::val('action'))
 		break;
 	}
 }
-?>

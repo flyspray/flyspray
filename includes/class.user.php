@@ -159,7 +159,7 @@ class User
         if ($this->isAnon()) {
             return;
         }
-        $saltedpass = md5($this->infos['user_pass'] . $conf['general']['cookiesalt']);
+        $saltedpass = crypt($this->infos['user_pass'], $conf['general']['cookiesalt']);
 
         if (Cookie::val('flyspray_passhash') !== $saltedpass || !$this->infos['account_enabled']
                 || !$this->perms('group_open', 0))

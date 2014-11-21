@@ -34,13 +34,13 @@ if(!isset($borked[-1])) {
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
-require_once OBJECTS_PATH . '/class.database.php';
 
-@require_once OBJECTS_PATH . '/class.tpl.php';
+// Use composer autoloader
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 // Initialise DB
-require_once APPLICATION_PATH . '/adodb/adodb.inc.php';
-require_once APPLICATION_PATH . '/adodb/adodb-xmlschema03.inc.php';
+require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
+require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-xmlschema03.inc.php';
 
 $db = new Database;
 $db->dbOpenFast($conf['database']);
@@ -253,7 +253,13 @@ class ConfUpdater
         foreach ($this->new_config as $group => $settings) {
             $new_config .= "[{$group}]\n";
             foreach ($settings as $key => $value) {
-                $new_config .= sprintf('%s="%s"', $key, addslashes($value)). "\n";
+                if (is_array($value)) {
+                    foreach ($value as $_key => $_value) {
+                        $new_config .= sprintf('%s="%s"', "{$key}[{$_key}]", addslashes($_value)). "\n";
+                    }
+                } else {
+                    $new_config .= sprintf('%s="%s"', $key, addslashes($value)). "\n";
+                }
             }
             $new_config .= "\n";
         }

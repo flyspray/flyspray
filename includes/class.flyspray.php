@@ -158,7 +158,6 @@ class Flyspray
 
         $url = FlySpray::absoluteURI($url);
 
-
         header('Location: '. $url);
 
         if ($rfc2616 && isset($_SERVER['REQUEST_METHOD']) &&
@@ -633,7 +632,7 @@ class Flyspray
      * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
      * @version 1.0
      */
-    public static function checkLogin($username, $password)
+    public static function checkLogin($username, $password, $method = 'native')
     {
         global $db;
 
@@ -680,7 +679,8 @@ class Flyspray
         }
 
         // Compare the crypted password to the one in the database
-        $pwOk = ($password == $auth_details['user_pass']);
+        // skip password check if the user is using oauth
+        $pwOk = ($method == 'oauth') ?: ($password == $auth_details['user_pass']);
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
             return $auth_details['user_id'];
@@ -692,6 +692,25 @@ class Flyspray
 
         return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
     } // }}}
+    
+    static public function checkForOauthUser($uid, $provider)
+    {
+        global $db;
+        
+        if(empty($uid) || empty($provider)) {
+            return false;
+        }
+        
+        $sql = $db->Query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
+        
+        if ($db->fetchOne($sql)) { 
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     // Set cookie {{{
     /**
      * Sets a cookie, automatically setting the URL
@@ -909,6 +928,7 @@ class Flyspray
      * @return void
      * @version 1.0
      * @notes if a success and error happens on the same page, a mixed error message will be shown
+     * @todo is the if ($die) meant to be inside the else clause?
      */
     public static function show_error($error_message, $die = true, $advanced_info = null, $url = null)
     {

@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
 <schema version="0.3">
   <table name="user_emails">
-	  <field name="id" type="I" size="5"></field>
-	  <field name="email_address" type="C" size="100"></field>
+    <field name="id" type="I" size="5"></field>
+    <field name="email_address" type="C" size="100"></field>
+    <field name="oauth_uid" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="oauth_provider" type="C" size="10">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
   </table>
   <table name="tags">
           <field name="task_id" type="I" size="5"></field>
@@ -1024,6 +1032,14 @@
     <field name="lang_code" type="C" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
+    </field>
+    <field name="oauth_uid" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="oauth_provider" type="C" size="10">
+      <NOTNULL/>
+      <DEFAULT value=""/>
     </field>
     <index name="user_name">
       <UNIQUE/>

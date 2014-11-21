@@ -267,12 +267,12 @@ function quick_edit(elem, id)
         <?php endif; ?>
         <?php if ($prev_id): ?> | <?php endif; ?>
         <?php
-		if($_COOKIE['tasklist_type'] == 'project'):
+		if(isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'project'):
 			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']); 
 			?>
         <a href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
         <?php endif; ?>
-        <?php if ($_COOKIE['tasklist_type'] == 'assignedtome'): ?>
+        <?php if (isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'assignedtome'): ?>
         <a href="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index', 'dev' => $user->id))); ?>">My Assigned
             Tasks</a>
         <?php endif; ?>

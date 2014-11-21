@@ -5,13 +5,13 @@
         <input id="realname" class="text" type="text" name="real_name" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('real_name', $theuser->infos['real_name'])); ?>" />
       </li>
-
+      
       <li>
         <label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label>
         <input id="emailaddress" class="text" type="text" name="email_address" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('email_address', $theuser->infos['email_address'])); ?>" />
       </li>
-
+      
       <li>
         <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
         <input id="jabberid" class="text" type="text" name="jabber_id" size="50" maxlength="100"
@@ -120,6 +120,7 @@
         <hr />
       </li>
 
+      <?php if (! $theuser->infos['oauth_uid']): ?>
       <?php if (!$user->perms('is_admin') || $user->id == $theuser->id): ?>
       <?php if (!$fs->prefs['disable_changepw']): ?>
       <li>
@@ -138,7 +139,8 @@
         <input id="confirmpass" class="password" type="password" name="confirmpass" value="<?php echo Filters::noXSS(Req::val('confirmpass')); ?>" size="40" maxlength="100" />
       </li>
       <?php endif; ?>
-        <?php endif; ?>
+      <?php endif; ?>
+      <?php endif; ?>
       <li>
         <input type="hidden" name="action" value="<?php echo Filters::noXSS(Req::val('action', $do . '.edituser')); ?>" />
         <?php if (Req::val('area') || $do == 'admin'): ?><input type="hidden" name="area" value="users" /><?php endif; ?>
