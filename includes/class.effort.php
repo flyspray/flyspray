@@ -60,7 +60,7 @@ class effort
         $db->Query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
                                  VALUES  ( ?, ?, ?, ?,?,? )',
-            array   ($this->_task_idd, time(), $this->_userId,time(),time(),$effort));
+            array   ($this->_task_id, time(), $this->_userId,time(),time(),$effort));
     }
 
     /**

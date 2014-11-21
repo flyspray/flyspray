@@ -80,7 +80,7 @@
 			<li>
 			<a id="newmultitaskslink" href="<?php echo Filters::noXSS(CreateURL('newmultitasks', $proj->id)); ?>"
 				<?php if(isset($_GET['do']) and $_GET['do'] == 'newmultitasks'): ?> class="active" <?php endif; ?>
-				accesskey="a">Add multiple tasks</a>
+				accesskey="a"><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
 			</li>
 		<?php elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?>
 			<li>
@@ -123,7 +123,7 @@
 		<?php if (!$proj->id && $user->perms('is_admin') && isset($admin_pendingreq_num) && $admin_pendingreq_num): ?>
 			<li>
 				<a class="pendingreq attention"
-					href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS("Admin requests waiting"); ?></a>
+					href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS(L('adminrequestswaiting')); ?></a>
 			</li>
 		<?php endif; ?>
 		

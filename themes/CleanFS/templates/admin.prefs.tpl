@@ -147,7 +147,7 @@
 			}
 		}
 	  </script>
-          <label for="needapproval"><?php echo Filters::noXSS("Registrations approved by admins (disable confirmation code)"); ?></label>
+          <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin'); ?></label>
           <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, array('onclick'=>'check_change()')); ?>
 
         </li>
