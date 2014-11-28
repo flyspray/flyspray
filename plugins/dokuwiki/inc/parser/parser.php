@@ -647,6 +647,8 @@ class Doku_Parser_Mode_smiley extends Doku_Parser_Mode {
         if(!count($this->smileys)) return;
 
         $sep = '';
+        // Nux: fix for potential pattern overflow...
+        $this->pattern =  '';
         foreach ( $this->smileys as $smiley ) {
             $this->pattern .= $sep.Doku_Lexer_Escape($smiley);
             $sep = '|';
@@ -683,6 +685,8 @@ class Doku_Parser_Mode_wordblock extends Doku_Parser_Mode {
         }
 
         $sep = '';
+        // Nux: fix for potential pattern overflow...
+        $this->pattern =  '';
         foreach ( $this->badwords as $badword ) {
             $this->pattern .= $sep.'(?<=\b)(?i)'.Doku_Lexer_Escape($badword).'(?-i)(?=\b)';
             $sep = '|';
@@ -718,6 +722,8 @@ class Doku_Parser_Mode_entity extends Doku_Parser_Mode {
         if(!count($this->entities)) return;
 
         $sep = '';
+        // Nux: fix for potential pattern overflow...
+        $this->pattern =  '';
         foreach ( $this->entities as $entity ) {
             $this->pattern .= $sep.Doku_Lexer_Escape($entity);
             $sep = '|';
