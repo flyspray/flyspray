@@ -378,7 +378,7 @@
 	}
     </script>
     <?php foreach ($tasks as $task_details):?>
-    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?=$task_details['task_id']?>)" onmouseout="Hide(this, <?=$task_details['task_id']?>)">
+    <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?php echo $task_details['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task_details['task_id']; ?>)">
         <td class="caret">
         </td>
         <?php if (!$user->isAnon()): ?>
@@ -400,7 +400,7 @@
         <?php echo tpl_draw_cell($task_details, $col); ?>
 
         <?php endif; endforeach; ?>
-<div id="desc_<?=$task_details['task_id']?>" class="descbox box">
+<div id="desc_<?php echo $task_details['task_id']; ?>" class="descbox box">
 <b>Task Description:</b>
 <?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
 </div>

@@ -149,7 +149,7 @@
       </tr>
 
       <tr>
-        <td colspan="<?=$field_num-2;?>"></td>
+        <td colspan="<?php echo $field_num-2;?>"></td>
         <td class="buttons">
           <button class="button positive main" accesskey="s" type="button" onClick="createRow('','')">Add more rows</button>
         </td>
