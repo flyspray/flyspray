@@ -1643,7 +1643,7 @@ input[type=submit]:hover, button:hover {
 
 #login_links {
     height: 30px;
-    padding: 5px 20px;
+    padding: 5px 50px;
 }
 
 #login_button {vertical-align: baseline;}
