@@ -529,7 +529,7 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $oauth_uid = null, $oauth_provider = null)
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = null, $oauth_provider = null, $profile_image = '')
     {
         global $fs, $db, $notify, $baseurl;
         
@@ -559,9 +559,9 @@ abstract class Backend
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone, dateformat, 
                                dateformat_extended, oauth_uid, oauth_provider)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, 1, 25, ?, ?, ?, ?, ?, ?)",
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?)",
             array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), 
-                '', strtolower($email), $notify_type, time(), $time_zone, '', '', $oauth_uid, $oauth_provider));
+                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider));
 
         $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
         $user_id = $db->fetchOne($temp);

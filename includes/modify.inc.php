@@ -543,7 +543,8 @@ switch ($action = Req::val('action'))
 		}
 	}
 
-        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'], $image_path, $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'])) {
+        $enabled = 1;
+        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'], $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'], $enabled ,'', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
 	}
@@ -632,9 +633,9 @@ switch ($action = Req::val('action'))
 	}
 
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
-                              Post::val('real_name'), Post::val('jabber_id'), $image_path,
+                              Post::val('real_name'), Post::val('jabber_id'),
                               Post::val('email_address'), Post::num('notify_type'),
-                              Post::num('time_zone'), $group_in, $enabled)) {
+                              Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
@@ -678,6 +679,8 @@ switch ($action = Req::val('action'))
                 $noUsers = false;
             }
 
+            $enabled = 1;
+
             // Avoid dups
             $sql = $db->Query("SELECT COUNT(*) FROM {users} WHERE email_address = ?",
                               array($email_address));
@@ -690,7 +693,7 @@ switch ($action = Req::val('action'))
 
             if (!Backend::create_user($user_name, Post::val('user_pass'),
                                   $real_name, '', $email_address, Post::num('notify_type'),
-                                  Post::num('time_zone'), $group_in))
+                                  Post::num('time_zone'), $group_in, $enabled, '', '', ''))
             {
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
                 continue;
