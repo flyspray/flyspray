@@ -74,6 +74,10 @@
       <NOTNULL/>
       <DEFAULT value=""/>
     </field>
+    <field name="profile_image" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>
