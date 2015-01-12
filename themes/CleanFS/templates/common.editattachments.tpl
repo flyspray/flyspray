@@ -12,8 +12,8 @@
           <?php
           // Strip the mimetype to get the icon image name
           list($main) = explode('/', $attachment['file_type']);
-          $imgdir = BASEDIR . "/themes/<?php echo Filters::noXSS($proj->prefs['theme_style']); ?>/mime/";
-          $imgpath = "<?php echo Filters::noXSS($baseurl); ?>themes/<?php echo Filters::noXSS($proj->prefs['theme_style']); ?>/mime/";
+           $imgdir = BASEDIR . "/themes/".Filters::noXSS($proj->prefs['theme_style'])."/mime/";
+           $imgpath = Filters::noXSS($baseurl)."themes/".Filters::noXSS($proj->prefs['theme_style'])."/mime/";
           if (file_exists($imgdir.$attachment['file_type'] . '.png')):
           ?>
           <img src="<?php echo Filters::noXSS($imgpath); ?><?php echo Filters::noXSS($attachment['file_type']); ?>.png" alt="(<?php echo Filters::noXSS($attachment['file_type']); ?>)" title="<?php echo Filters::noXSS($attachment['file_type']); ?>" />
