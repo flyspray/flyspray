@@ -95,4 +95,436 @@
       <DEFAULT value=""/>
     </field>
   </table>
+    <table name="effort">
+        <field name="effort_id" type="I" size="10">
+            <KEY/>
+            <AUTOINCREMENT/>
+        </field>
+        <field name="task_id" type="I" size="10">
+            <NOTNULL/>
+            <DEFAULT value="0"/>
+        </field>
+        <field name="date_added" type="I" size="11">
+            <NOTNULL/>
+            <DEFAULT value="0"/>
+        </field>
+        <field name="user_id" type="I" size="3">
+            <NOTNULL/>
+            <DEFAULT value="0"/>
+        </field>
+        <field name="start_timestamp" type="I" size="11"/>
+        <field name="end_timestamp" type="I" size="11"/>
+        <field name="effort" type="I" size="15">
+            <NOTNULL/>
+            <DEFAULT value="0"/>
+        </field>
+        <index name="task_id_effort">
+            <col>task_id</col>
+        </index>
+    </table>
+  <table name="groups">
+    <field name="group_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="group_name" type="C" size="20">
+      <NOTNULL/>
+    </field>
+    <field name="group_desc" type="C" size="150">
+      <NOTNULL/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="is_admin" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="manage_project" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="open_new_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="modify_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="modify_all_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_own_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="delete_comments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="create_attachments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="delete_attachments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_history" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="close_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="close_other_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="assign_to_self" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="assign_others_to_self" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_to_assignees" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_reports" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="add_votes" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="edit_assignments" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_as_assignees" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_effort" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="track_effort" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="group_open" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="group_name">
+      <UNIQUE/>
+      <col>group_name</col>
+      <col>project_id</col>
+    </index>
+    <index name="belongs_to_project">
+      <col>project_id</col>
+    </index>
+  </table>
+  <table name="projects">
+    <field name="project_id" type="I" size="3">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_title" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="theme_style" type="C" size="20">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_cat_owner" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="intro_message" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="project_is_active" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="visible_columns" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="visible_fields" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="others_view" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="anon_open" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notify_email" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_jabber" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_reply" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_types" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="feed_img_url" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="feed_description" type="X">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="notify_subject" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="lang_code" type="C" size="10">
+      <NOTNULL/>
+    </field>
+    <field name="comment_closed" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="auto_assign" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_updated" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_task" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="default_entry" type="C" size="8">
+      <NOTNULL/>
+      <DEFAULT value="index"/>
+    </field>
+    <field name="disp_intro" type="I" size="1">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_effort_tracking" type="I" size="1">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_due_version" type="C" size="40">
+      <NOTNULL/>
+      <DEFAULT value="Undecided"/>
+     </field>
+  </table>
+  <table name="tasks">
+    <field name="task_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_type" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_opened" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="opened_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="is_closed" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_closed" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closed_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closure_comment" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="item_summary" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="detailed_desc" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="item_status" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="resolution_reason" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="product_category" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="product_version" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="closedby_version" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="operating_system" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_severity" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="task_priority" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_edited_by" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="last_edited_time" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="percent_complete" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="mark_private" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="due_date" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="anon_email" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="task_token" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="supertask_id" type="I" size="10">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="list_order" type="I" size="3">
+      <DEFAULT value="0"/>
+    </field>
+    <field name="estimated_effort" type="I" size="3">
+      <DEFAULT value="0"/>
+    </field>
+    <index name="attached_to_project">
+      <col>project_id</col>
+    </index>
+    <index name="task_severity">
+      <col>task_severity</col>
+    </index>
+    <index name="task_type">
+      <col>task_type</col>
+    </index>
+    <index name="product_category">
+      <col>product_category</col>
+    </index>
+    <index name="item_status">
+      <col>item_status</col>
+    </index>
+    <index name="is_closed">
+      <col>is_closed</col>
+    </index>
+    <index name="closedby_version">
+      <col>closedby_version</col>
+    </index>
+    <index name="due_date">
+      <col>due_date</col>
+    </index>
+    <index name="task_project_super">
+      <col>project_id</col>
+      <col>supertask_id</col>
+      <col>list_order</col>
+    </index>
+    <index name="task_super">
+      <col>supertask_id</col>
+      <col>list_order</col>
+    </index>
+  </table>
+  <table name="links">
+    <field name="link_id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="url" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="added_by" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_time" type="I" size="11">
+      <NONULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_links">
+	<col>task_id</col>
+    </index>
+  </table>
+  <table name="tags">
+          <field name="task_id" type="I" size="5"></field>
+	  <field name="tag" type="C" size="100"></field>
+  </table>
 </schema>
