@@ -31,6 +31,8 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
     }
     
     require_once('en.php');
+    // while the en.php and $lang.php both defines $language, the english one should be keept 
+    $orig_language = $language;
     
     $translation = "$lang.php";
     if ($lang != 'en' && file_exists($translation)) {
@@ -39,8 +41,8 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
         echo '<h2>The following translations (keys) are missing in the translation:</h2>';
 	echo '<table cellspacing="0">';
 	$i = 0;
-        foreach ($language as $key => $val) {
-            if (!isset($translation[$key])) {
+        foreach ($orig_language as $key => $val) {
+            if (!isset($language[$key])) {
                 echo '<tr class="line',($i%2),'"><th>',$key,'</th><td><pre>\'',$val,'\'</pre></td></tr>',"\n";
 		$i++;
             }
@@ -52,8 +54,8 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
 	echo '<h2>The following translations (keys) should be deleted in the translation:</h2>';
 	echo '<table cellspacing="0">';
 	$i = 0;
-	foreach ($translation as $key => $val) {
-		if ( !isset($language[$key])) {
+	foreach ($language as $key => $val) {
+		if ( !isset($orig_language[$key])) {
 			  echo '<tr class="line',($i%2),'"><th>',$key,'</th><td><pre>\'',$val,'\'</pre></td></tr>',"\n";
 			  $i++;
 		}
