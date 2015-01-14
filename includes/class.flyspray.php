@@ -408,10 +408,10 @@ class Flyspray
      */
     public static function listThemes()
     {
+        $theme_array = array();
         if ($handle = opendir(dirname(dirname(__FILE__)) . '/themes/')) {
-            $theme_array = array();
             while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..' && is_file("themes/$file/theme.css")) {
+                if ($file != '.' && $file != '..' && is_file(dirname(dirname(__FILE__)) . "/themes/$file/theme.css")) {
                     $theme_array[] = $file;
                 }
             }

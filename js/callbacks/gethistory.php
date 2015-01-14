@@ -38,6 +38,7 @@ $sql = get_events(Get::num('task_id'), $details);
 $histories = $db->fetchAllArray($sql);
 
 $page = new FSTpl;
+$page->setTheme($proj->prefs['theme_style']);
 $page->uses('histories', 'details');
 if ($details) {
     event_description($histories[0]); // modifies global variables
