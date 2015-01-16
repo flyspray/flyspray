@@ -26,5 +26,6 @@ if ($user->isAnon()) {
 
 $user->save_search();
 $page = new FSTpl;
+$page->setTheme($proj->prefs['theme_style']);
 $page->display('links.searches.tpl');
 ?>
