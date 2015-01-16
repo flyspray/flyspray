@@ -555,6 +555,7 @@ function quick_edit(elem, id)
         </li>
         <?php endif; ?>
         <?php if($proj->prefs['use_effort_tracking']) {
+                if ($user->perms('view_effort')) {
         ?>
         <li style="...">
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
@@ -570,7 +571,8 @@ function quick_edit(elem, id)
             ?>
             <span class="value"><?php echo ConvertSeconds($total_effort); ?> </span>
         </li>
-        <?php } ?>
+        <?php } 
+        } ?>
     </ul>
     <ul class="fieldslist">
         <!-- Votes-->

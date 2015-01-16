@@ -180,6 +180,8 @@
           <?php endif; ?>
 
             <?php if($proj->prefs['use_effort_tracking']) {
+                    if ($user->perms('view_effort')) {
+
             ?>
             <li style="...">
                 <label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
@@ -187,7 +189,8 @@
                 <?php echo Filters::noXSS(L('hours')); ?>
 
             </li>
-            <?php } ?>
+            <?php } 
+            } ?>
 
           <?php if ($user->perms('manage_project')): ?>
           <!-- Private -->

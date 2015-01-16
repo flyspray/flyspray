@@ -10,6 +10,7 @@
    endif; ?>
 <?php
     if($proj->prefs['use_effort_tracking'])
+    if ($user->perms('view_effort')) {
     {
 
     $total_estimated = 0;
@@ -27,7 +28,7 @@
     }
     $effort = null;
     }
-
+    }
 ?>
 
 <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo ConvertSeconds($total_estimated *60 *60); ?>

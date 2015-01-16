@@ -53,6 +53,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
    <?php endif; ?>
     <?php
     if($proj->prefs['use_effort_tracking']) {
+    if ($user->perms('view_effort')) {
     $total_estimated = 0;
     $actual_effort = 0;
     foreach($milestone['open_tasks'] as $task)
@@ -71,7 +72,8 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
     <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
     </br>
     <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo ConvertSeconds($actual_effort); ?>
-    <?php } ?>
+    <?php } 
+    } ?>
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>
