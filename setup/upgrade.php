@@ -84,6 +84,9 @@ if (Post::val('upgrade')) {
             $installed_version = $folder;
         }
     }
+    // Update existing projects to default field visibility.
+    $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
+    
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
