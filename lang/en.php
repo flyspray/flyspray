@@ -934,4 +934,8 @@ Regards,',
 'pendingnewuserrequest'   => 'Pending New User Request',
 'adminrequestswaiting'    => 'Admin requests waiting',
 'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)'
+'clicktoedit'             => 'Click on each field to quick edit',
+'confirmedit'             => 'confirm',
+'canceledit'              => 'cancel',
+
 );
