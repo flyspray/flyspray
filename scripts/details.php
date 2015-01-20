@@ -72,10 +72,11 @@ else {
     }
 
     // Sub-Tasks
-    $subtasks = $db->Query('SELECT  task_id 
-                                 FROM  {tasks} 
-                                WHERE  supertask_id = ?
-                                ORDER BY list_order', 
+    $subtasks = $db->Query('SELECT  t.task_id, p.project_title 
+                                 FROM  {tasks} t
+			    LEFT JOIN  {projects} p ON t.project_id = p.project_id
+                                WHERE  t.supertask_id = ?
+                                ORDER BY t.list_order', 
                                 array($task_id));
     
     // Parent categories
@@ -86,11 +87,12 @@ else {
                         array($task_details['lft'], $task_details['rgt'], $task_details['cproj']));
 
     // Check for task dependencies that block closing this task
-    $check_deps   = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id
+    $check_deps   = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.dep_task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
+			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.task_id = ?', array($task_id));
 
     // Check for tasks that this task blocks
