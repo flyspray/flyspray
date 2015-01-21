@@ -897,7 +897,7 @@ Regards,',
 'subtaskadded'            => 'Sub task added',
 'subtaskremoved'          => 'Sub task removed',
 'addnewsubtask'           => 'Add new sub task',
-    'hidesubtasks'      => 'Hide SubTasks',
+'hidesubtasks'            => 'Hide SubTasks',
 'voteforthistask'         => 'Vote for this task',
 'watchthistask'           => 'Watch this task',
 'privatethistask'         => 'Make this task private',
@@ -933,5 +933,8 @@ Regards,',
 'addmultipletasks'        => 'Add multiple tasks',
 'pendingnewuserrequest'   => 'Pending New User Request',
 'adminrequestswaiting'    => 'Admin requests waiting',
-'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)'
+'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)',
+'activity'                => 'Activity',
+'myactivity'              => 'My activity'
 );
+?>

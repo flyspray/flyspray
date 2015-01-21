@@ -841,6 +841,8 @@ $language = array(
 'dependson'               => 'תלויה ב',
 'blocks'                  => 'חוסמת',
 'newdependency'           => 'תלות חדשה:'
+'activity'                => 'פעילות',
+'myactivity'              => 'פעילות שלי',
 );
 
 ?>
