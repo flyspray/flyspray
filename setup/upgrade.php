@@ -273,6 +273,23 @@ class ConfUpdater
     }
 }
 
+function postgresql_adodb() {
+    if (class_exists('ReflectionClass')) {
+        require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-datadict.inc.php';
+        require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/datadict/datadict-postgres.inc.php';
+	$refclass = new ReflectionClass('ADODB2_postgres');
+	$refmethod = $refclass->getMethod('ChangeTableSQL');
+	$implclass = $refmethod->getDeclaringClass();
+	if ($implclass->name === 'ADODB2_postgres') {
+	    return true;
+	}
+	return false;
+    } else {
+	// Can't even do the test, hope the user is able to handle the situation him/serself.
+	return true;
+    }
+}
+
 $checks = $todo = array();
 $checks['version_compare'] = version_compare($installed_version, UPGRADE_VERSION) === -1;
 $checks['config_writable'] = is_writable(CONFIG_PATH);
@@ -283,6 +300,13 @@ $todo['db_connect'] = 'Connection to the database could not be established. Chec
 $todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
 $todo['installed_version'] = 'An upgrade from Flyspray versions lower than 0.9.6 is not possible.
                               You will have to upgrade manually to at least 0.9.6, the scripts which do that are included in all Flyspray releases <= 0.9.8.';
+
+if ($conf['database']['dbtype'] == 'pgsql') {
+    $checks['postgresql_adodb'] = (bool) postgresql_adodb();
+    $todo['postgresql_adodb'] = 'You have a version of ADOdb that does not contain overridden version of method ChangeTableSQL for PostgreSQL. '
+	    . 'Please copy setup/upgrade/1.0/datadict-postgres.inc.php to '
+	    . 'vendor/adodb/adodb-php/datadict/ before proceeding with the upgrade process.';
+}
 
 $upgrade_possible = true;
 foreach ($checks as $check => $result) {
