@@ -718,7 +718,7 @@ function quick_edit(elem, id)
             <?php foreach ($deps as $dependency): ?>
             <tr>
                 <td><?php echo $dependency['task_id'] ?></td>
-                <td><?php echo $projects[$dependency['project_id']-1]['project_title'] ?></td>
+                <td><?php echo $dependency['project_title'] ?></td>
                 <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
                 <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
@@ -772,7 +772,7 @@ function quick_edit(elem, id)
             <?php $subtask = $fs->GetTaskDetails($subtaskOrgin['task_id']); ?>
             <tr id="task<?php echo $subtask['task_id']; ?>" class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>">
                 <td><?php echo $subtask['task_id'] ?></td>
-                <td><?php echo $projects[$subtask['project_id']-1]['project_title'] ?></td>
+                <td><?php echo $subtask['project_title'] ?></td>
                 <td><?php echo tpl_tasklink($subtask['task_id']); ?></td>
                 <td><?php echo $fs->priorities[$subtask['task_priority']] ?></td>
                 <td class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>"><?php echo $fs->severities[$subtask['task_severity']]
