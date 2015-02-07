@@ -1,5 +1,6 @@
+https://travis-ci.org/peterdd/flyspray.svg?branch=master
+
 www.flyspray.org
-========
 
 Flyspray Bug Tracking System
 
