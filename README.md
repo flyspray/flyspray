@@ -1,4 +1,4 @@
-https://travis-ci.org/peterdd/flyspray.svg?branch=master
+[![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray)
 
 www.flyspray.org
 
