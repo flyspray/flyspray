@@ -36,7 +36,7 @@
  */
 
 # Currently only for development
-#die("Comment me out to use this tool, I'm in line " . __LINE__ .'.');
+die("Comment me out to use this tool, I'm in line " . __LINE__ .'.');
 
 require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
 
