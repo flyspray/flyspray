@@ -23,6 +23,9 @@
  * 2006-06-12 Version 1.3
  *  Writes correct array name for english
  *
+ * 2015-02-09
+ * use flyspray theme, add button targeting translation overview for better workflow
+ *
  * Usage: http://.../flyspray/lang/.langedit.php?lang=sv
  *       "sv" represents your language code.
  *
@@ -32,7 +35,8 @@
  * !!!
  */
 
-die("I am in line " . __LINE__ . ",remove me to use this tool");
+# Currently only for development
+#die("Comment me out to use this tool, I'm in line " . __LINE__ .'.');
 
 require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
 
@@ -76,21 +80,19 @@ header("Pragma: no-cache");
 header('Content-type: text/html; charset=utf-8');
 ?>
 <title>Lang edit</title>
+<link type="text/css" rel="stylesheet" href="/themes/CleanFS/theme.css" media="screen">
 <style type="text/css">
-pre, body, input, textarea, td
-{
+pre, body, input, textarea, td{
   font-family: Verdana;
   font-size: 8pt;
 }
-th
-{
+th{
   font-family: Verdana;
   font-size: 10pt;
   text-align: left;
 }
-textarea, input.edit
-{
-  background-color: transparent;
+textarea, input.edit{
+  background-color: rgba(255,255,255,0.5);
   border-style: solid;
   border-width: 1px;
   border-color: '#ccb';
@@ -98,8 +100,7 @@ textarea, input.edit
 </style>
 <script language="javascript">
 // Indicate which texts are changed, called from input and textarea onchange
-function set(id)
-{
+function set(id){
   var checkbox = document.getElementById('id_checkbox_' + id);
   if(checkbox)
     checkbox.checked = true;
@@ -118,8 +119,9 @@ chdir("../lang");
 
 $lang = @$_GET['lang'];
 $fail = '';
-if(!$lang || !ctype_alnum($lang))
-  $fail .= "Language code not supplied correctly<br>\n";
+if(!$lang || !preg_match('/^[a-zA-Z0-9_]+$/', $lang)){
+	$fail .= "Language code not supplied correctly<br>\n";
+}
 if(!file_exists('en.php'))
   $fail .= "The english language file <code>en.php</code> is missing. Make sure this script is run from the same directory as the language files <code>.../flyspray/lang/</code><br>\n";
 if($fail)
@@ -197,11 +199,11 @@ else if(isset($_POST['submit']) && isset($_POST['L']))
 }
 
 // One form for all buttons and inputs
+echo '<a class="button" href="./.langdiff.php">Overview</a>';
 echo "<form action=\"$self&begin=$begin". ($show_empty? "&empty=": "") . "\" method=\"post\">\n";
 echo "<table cellspacing=0 cellpadding=1>\n<tr><td colspan=3>";
 // Make page links
-for($p = 0; $p < $count; $p += $limit)
-{
+for($p = 0; $p < $count; $p += $limit){
   if($p)
     echo " | ";
   $bgn = $p+1;
@@ -239,7 +241,7 @@ foreach ($language as $key => $val)
   {
     $bg = ($j++ & 1)? '#fff': '#eed';
     // Key
-    echo "<tr style=\"background-color:'$bg';\" valign=\"top\"><td align=\"right\">".($i+1)."</td><td><b>$key</b></td>";
+    echo '<tr style="background-color:'.$bg.'" valign="top"><td align="right">'.($i+1).'</td><td><b>'.$key.'</b></td>';
     // English (underline leading and trailing spaces)
     $space = "<b style=\"color:red;\" title=\"Remember to include a space in the translation!\">_</b>";
     echo "<td>". (preg_match("/^[ \t]/",$val)? $space: "") . nl2br(htmlentities($val)). (preg_match("/[ \t]$/",$val)? $space: "") ."</td>\n";
