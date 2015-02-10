@@ -1,0 +1,23 @@
+language: php
+php:
+  - 5.4
+  
+# no extensive travis testing before we have some real tests and project stable
+#  - 5.5
+#  - 5.6
+#  - hhvm
+
+# optionally specify a list of environments, for example to test different RDBMS
+env:
+- DB=mysql
+- DB=pgsql
+
+# execute any number of scripts before the test run, custom env's are available as variables
+before_script:
+- if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS flyspray_test;" -U postgres; fi
+- if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE flyspray_test;" -U postgres; fi
+- if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS flyspray_test;" -uroot; fi
+
+# omitting "script:" will default to phpunit
+# use the $DB env variable to determine the phpunit.xml to use
+script: phpunit --configuration phpunit_$DB.xml --coverage-text
