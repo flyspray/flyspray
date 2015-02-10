@@ -250,10 +250,11 @@ div#mysearches {
     font-weight: bold; }
 
 #pm-menu-list {
-    list-style: none;
-    border-bottom: solid 4px #5f9729;
-    margin: 0;
-    padding: 0px 0px 0px 10px;
+	background-color:#000;
+	list-style: none;
+	border-bottom: solid 4px #5f9729;
+	margin: 0;
+	padding: 0px 0px 0px 10px;
 }
 #pm-menu-list li {
   display: inline-block;
