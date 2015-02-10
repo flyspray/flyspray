@@ -99,9 +99,7 @@ a:hover {
   border-top: #e1e1e1 solid 1px;
   text-align: right; }
 
-
 #title {
-  height: 120px;
   background-color: #3c4041;
   /* fallback/image non-cover color */
   background-image: -moz-linear-gradient(#3c4041, #242627);
@@ -116,15 +114,14 @@ a:hover {
   /*border-bottom: 4px solid $dominant;*/
   margin: 0; }
 
-  #title a {
+#title a {
     color: white;
     text-decoration: none;
     display: block;
     padding: 25px 50px;
-    float: left;
-    width: 50%; }
+}
 
-  #title img {
+ #title img {
     float: left;
     margin-right: 20px;
     height: 36px;}
@@ -135,24 +132,24 @@ a:hover {
   top: 5px;
   right: 5px; }
 
-  #menu #menu-list {
+#menu #menu-list {
     display: inline;
     margin: 0;
     padding: 0;
     list-style: none; }
 
-    #menu #menu-list a {
-      color: #dddddd;
+#menu #menu-list a {
+      color: #ddd;
       text-decoration: none;
       padding: 3px 7px; }
 
-    #menu #menu-list a:hover {
+#menu #menu-list a:hover {
       background: #494d4e;
       border-radius: 10px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 
-    tr.active, #menu #menu-list a.active {
+tr.active, #menu #menu-list a.active {
       /*background: $inverse_link;      */
       color: white;
       background: #5f9729;
@@ -228,12 +225,6 @@ div#mysearches {
   div#mysearches td {
     vertical-align: middle; }
 
-
-#pmcontrol {
-  position: absolute;
-  right: 20px;}
-
-
 #pmcontrol div {
   display: -moz-inline-stack;
   /* optional */
@@ -258,26 +249,16 @@ div#mysearches {
   #projectselector option[selected] {
     font-weight: bold; }
 
-
-#pm-menu {
-  height: 40px;
-  position: absolute;
-  top: 81px;
-  width: 100%;
-  min-width: 660px; }
-
-  #pm-menu #pm-menu-list {
+#pm-menu-list {
     list-style: none;
-    height: 40px;
     border-bottom: solid 4px #5f9729;
     margin: 0;
-    padding: 0px 0px 0px 10px; }
-
-    #pm-menu #pm-menu-list li {
-      display: block;
-      float: left; }
-
-      #pm-menu #pm-menu-list li a {
+    padding: 0px 0px 0px 10px;
+}
+#pm-menu-list li {
+  display: inline-block;
+}
+#pm-menu-list li a {
         display: block;
         line-height: 1.4em;
         padding: 11px 11px 8px 35px;
@@ -288,31 +269,29 @@ div#mysearches {
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         background-repeat: no-repeat;
-        background-position: 12px 50%; }
-
-      #pm-menu #pm-menu-list li a:hover {
+        background-position: 12px 50%;
+}
+#pm-menu-list li a:hover {
         background-color: #3c4041;
-        border-left: 1px solid #3c4041; }
-
-      #pm-menu #pm-menu-list li a.active {
+        border-left: 1px solid #3c4041;
+}
+#pm-menu-list li a.active {
         /*color: darken($top2, 10%);*/
         background-color: #5f9729;
         border-left: none;
         border-bottom: 3px solid #5f9729;
         border-top: 1px solid #6cab2e;
-        border-right: 1px solid #6cab2e; }
-
-    #pm-menu #pm-menu-list li.first a {
-      border-left: none; }
-
+        border-right: 1px solid #6cab2e;
+}
+#pm-menu-list li.first a {
+      border-left: none;
+}
 
 #toplevellink {
   background-image: url("img/gray/folder_stroke_12x12.png"); }
 
-
 #homelink {
   background-image: url("img/gray/list_12x11.png"); }
-
 
 #newtasklink {
   background-image: url("img/gray/document_alt_stroke_9x12.png"); }
