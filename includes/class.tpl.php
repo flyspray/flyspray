@@ -283,6 +283,8 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 					array(intval($uid)));
 	if ($sql && $db->countRows($sql))
 		list($uname, $rname, $email) = $db->fetchRow($sql);
+	else
+		return;
 
 	$email = md5(strtolower(trim($email)));
 	$default = 'mm';
