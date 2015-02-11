@@ -11,12 +11,9 @@
   <input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
 </div>
 <div id="login_links">
-    <div id="login_hidelink">
-        <a href="#" onclick="return toggleLoginBox(document.getElementById('show_loginbox'));"><small>hide</small></a>
-    </div>
     <div class="remember_me">
-        <label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
-        <input type="checkbox" id="lbl_remember" name="remember_login" />
+      <input type="checkbox" id="lbl_remember" name="remember_login" />
+      <label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
     </div>
     <?php $activeclass = ' class="active" '; ?>
     <?php if ($user->isAnon() && $fs->prefs['anon_reg']): ?>
