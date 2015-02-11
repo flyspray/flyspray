@@ -518,7 +518,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('confirmwrong'));
             break;
 	}
-      
+
         $profile_image = 'profile_image';
 
 	if(isset($_FILES[$profile_image]) === true) {
@@ -603,10 +603,10 @@ switch ($action = Req::val('action'))
                 break;
             }
         }
-	
+
 	$enabled = 1;
 	if($user->need_admin_approval()) $enabled = 0;
-	 
+
 	$profile_image = 'profile_image';
 
 	if(isset($_FILES[$profile_image]) === true) {
@@ -619,12 +619,12 @@ switch ($action = Req::val('action'))
 			$image_name = $_FILES[$profile_image]['name'];
 			$image_extn = strtolower(end(explode('.', $image_name)));
 			$image_temp = $_FILES[$profile_image]['tmp_name'];
-			
+
 			if(in_array($image_extn, $allowed) === true) {
 				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
 				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
 				move_uploaded_file($image_temp, $image_path);
-				
+
 			} else {
 				Flyspray::show_error(L('incorrectfiletype'));
 				break;
@@ -654,12 +654,12 @@ switch ($action = Req::val('action'))
     // ##################
     case 'register.newuserbulk':
     case 'admin.newuserbulk':
-        if (!($user->perms('is_admin'))) {
+        if (!($user->perms('is_admin')))
             break;
-        }
 
         $group_in = Post::val('group_in');
         $error = '';
+    	$success = '';
         $noUsers = true;
 
         // For each user in post, add them
@@ -671,13 +671,9 @@ switch ($action = Req::val('action'))
 
 
             if( $user_name == '' || $real_name == '' || $email_address == '')
-            {
                 continue;
-            }
             else
-            {
                 $noUsers = false;
-            }
 
             $enabled = 1;
 
@@ -698,28 +694,21 @@ switch ($action = Req::val('action'))
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
                 continue;
             }
-	    else
-	    {
-		$success .= " " . $user_name . " ";
-	    }
+	    	else
+				$success .= ' '.$user_name.' ';
         }
 
         if ($error != '')
-        {
           Flyspray::show_error($error);
-        }
         else if ( $noUsers == true)
-        {
           Flyspray::show_error(L('nouserstoadd'));
-        }
         else
         {
-	  //need translate
-          $_SESSION['SUCCESS'] = "New User Accounts" . $success . "have been created.";
-          if (!$user->perms('is_admin')) {
-              define('NO_DO', true);
-              $page->pushTpl('register.ok.tpl');
-          }
+			$_SESSION['SUCCESS'] = L('created').$success;
+			if (!$user->perms('is_admin')) {
+				define('NO_DO', true);
+				$page->pushTpl('register.ok.tpl');
+			}
         }
         break;
 
@@ -1035,7 +1024,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($uesr->infos['oauth_provider'])));
             break;
         }
-        
+
         if (Post::val('changepass') || Post::val('confirmpass')) {
             if (Post::val('changepass') != Post::val('confirmpass')) {
                 Flyspray::show_error(L('passnomatch'));
@@ -1103,8 +1092,8 @@ switch ($action = Req::val('action'))
                                 $sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
 				$avatar_oldname = $db->FetchRow($sql);
 				unlink(BASEDIR . '/themes/CleanFS/images/' . $avatar_oldname['profile_image']);
-				
-				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;	
+
+				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
 				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
 				move_uploaded_file($image_temp, $image_path);
 				$db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
@@ -1897,13 +1886,13 @@ switch ($action = Req::val('action'))
         }
 
         $user_details = $db->FetchRow($sql);
-        
+
         if ($user_details['oauth_provider']) {
             Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($user_details['oauth_provider'])));
             Flyspray::Redirect($baseurl);
             break;
         }
-        
+
         //no microtime(), time,even with microseconds is predictable ;-)
         $magic_url    = md5(function_exists('openssl_random_pseudo_bytes') ?
                               openssl_random_pseudo_bytes(32) :
