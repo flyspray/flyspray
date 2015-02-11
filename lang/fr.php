@@ -901,9 +901,9 @@ Veuillez visiter le site de Flyspray pour vous assurer que vous avez la dernièr
 'incorrectfiletype'       => 'Type de fichier incorrect. Autorisé : jpg, jpeg, gif, png.',
 'oauthreqpass'            => 'Aucun mot de passe nécessaire. Enregistrement via %s',
 'addmultipletasks'        => 'Ajouter des tâches multiples',
-'pendingnewuserrequest'   => 'Attente d\'une nouvelle demande de l\'utilisateur',
-'adminrequestswaiting'    => 'Demandes en attente pour l\'administrateur',
-'regapprovedbyadmin'      => 'Inscriptions approuvés par les administrateurs (code de confirmation inutile)',
+'pendingnewuserrequest'   => 'Demande d\'utilisateur en attente',
+'adminrequestswaiting'    => 'Demandes pour l\'administrateur en attente',
+'regapprovedbyadmin'      => 'Inscriptions approuvées par les administrateurs (code de confirmation inutile)',
 'activity'                => 'Activité',
 'myactivity'              => 'Mon activité'
 );
