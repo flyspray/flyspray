@@ -1088,36 +1088,40 @@ a#show_loginbox {
   margin-top: 1px;
   box-shadow: none; }
 
-  #loginbox #login label {
-    color: #222222; }
+#loginbox #login label {
+    color: #222; }
 
-  #loginbox #login a {
-    color: #222222;
+#loginbox #login a {
+    color: #222;
     text-decoration: underline; }
-  #loginbox #login a:hover {color: #fff;}
+#loginbox #login a:hover {color: #fff;}
 
 
 form#login {
   position: relative; }
 
-  form#login #lbl_user_name, form#login #lbl_password {
-    width: 90px; }
-
-  form#login label {
+form#login #lbl_user_name, form#login #lbl_password {
+	display:block;margin:auto;
+}
+#login_input label{
+	/* use html5 placeholder attribute instead */
+	display:none;
+}
+form#login label {
     width: 50px;
-    color: #dddddd;
+    color: #ddd;
     width: 100px;
     margin: 0 2px 0 20px; }
 
-  form#login #links {
+form#login #links {
     position: absolute;
     top: 30px;
     left: 20px; }
 
-    form#login #links a {
+form#login #links a {
       padding: 3px 7px; }
 
-    form#login #links a:hover {
+form#login #links a:hover {
       background: #494d4e;
       text-decoration: none;
       color: #dddddd;
@@ -1125,14 +1129,14 @@ form#login {
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 
-    form#login #links a.active {
+form#login #links a.active {
       background: #dddddd;
       color: #3c4041;
       border-radius: 10px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 
-  form#login .remember_me {
+form#login .remember_me {
     float: right;}
 
 
