@@ -260,9 +260,14 @@ div#mysearches {
 	background-color:#222;
 	border-bottom: solid 4px #5f9729;
 	padding: 0px 0px 0px 10px;
+	text-align:center;
 }
 #pm-menu-list {
 	list-style: none;
+	display: inline-block;
+}
+#pmcontrol{
+	display:inline-block;
 }
 #pm-menu-list li {
 	display: inline-block;
