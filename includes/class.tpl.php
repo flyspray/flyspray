@@ -276,15 +276,18 @@ function tpl_userlink($uid)
 function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 {
 	global $db, $user;
-	if (is_array($uid))
+	if (is_array($uid)) {
 		list($uid, $uname, $rname) = $uid;
+	}
 
 	$sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
 					array(intval($uid)));
-	if ($sql && $db->countRows($sql))
+	if ($sql && $db->countRows($sql)) {
 		list($uname, $rname, $email) = $db->fetchRow($sql);
-	else
+	}
+	else {
 		return;
+	}
 
 	$email = md5(strtolower(trim($email)));
 	$default = 'mm';
@@ -293,8 +296,9 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 	if ($sql && $db->countRows($sql))
 	{
 		$avatar_name = $db->fetchRow($sql);
-		if (!empty($avatar_name['profile_image']) && file_exists(BASEDIR.'/themes/CleanFS/images/'.$avatar_name['profile_image']))
+		if (!empty($avatar_name['profile_image']) && file_exists(BASEDIR.'/themes/CleanFS/images/'.$avatar_name['profile_image'])) {
 			$image = "<img src='./themes/CleanFS/images/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+		}
 		else
 		{
 			$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
