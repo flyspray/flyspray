@@ -1101,7 +1101,9 @@ form#login {
   position: relative; }
 
 form#login #lbl_user_name, form#login #lbl_password {
-	display:block;margin:auto;
+	display:block;
+	margin: 10px auto;
+	padding: 5px 2px;
 }
 #login_input label{
 	/* use html5 placeholder attribute instead */
