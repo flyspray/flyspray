@@ -532,7 +532,7 @@ abstract class Backend
     public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = null, $oauth_provider = null, $profile_image = '')
     {
         global $fs, $db, $notify, $baseurl;
-        
+
         $user_name = Backend::clean_username($user_name);
 
         // Limit length
@@ -553,15 +553,15 @@ abstract class Backend
             $auto = true;
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
         }
-        
+
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
-                               tasks_perpage, register_date, time_zone, dateformat, 
-                               dateformat_extended, oauth_uid, oauth_provider)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), 
-                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider));
+                               tasks_perpage, register_date, time_zone, dateformat,
+                               dateformat_extended, oauth_uid, oauth_provider, lang_code)
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id),
+                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']));
 
         $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
         $user_id = $db->fetchOne($temp);
