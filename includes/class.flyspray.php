@@ -104,7 +104,7 @@ class Flyspray
         $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
-    
+
     protected function setDefaultTimezone()
     {
         $default_timezone = isset($this->prefs['default_timezone']) && !empty($this->prefs['default_timezone']) ? $this->prefs['default_timezone'] : 'UTC';
@@ -640,7 +640,7 @@ class Flyspray
         $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
 	$user_id = $db->FetchRow($temp);
 	$user_id = $user_id["id"];
-      	
+
 	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
@@ -680,7 +680,7 @@ class Flyspray
 
         // Compare the crypted password to the one in the database
         // skip password check if the user is using oauth
-        $pwOk = ($method == 'oauth') ?: ($password == $auth_details['user_pass']);
+        $pwOk = ($method == 'oauth') ? true : ($password == $auth_details['user_pass']);
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
             return $auth_details['user_id'];
@@ -692,18 +692,18 @@ class Flyspray
 
         return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
     } // }}}
-    
+
     static public function checkForOauthUser($uid, $provider)
     {
         global $db;
-        
+
         if(empty($uid) || empty($provider)) {
             return false;
         }
-        
+
         $sql = $db->Query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
-        
-        if ($db->fetchOne($sql)) { 
+
+        if ($db->fetchOne($sql)) {
             return true;
         } else {
             return false;
@@ -963,7 +963,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-    
+
     /**
      * Returns the ID of a user with $name
      * @param string $name
@@ -979,7 +979,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-    
+
     /**
      * check_email
      *  checks if an email is valid
@@ -989,7 +989,7 @@ class Flyspray
      */
     public static function check_email($email)
     {
-        return is_string($email) && filter_var($email, \FILTER_VALIDATE_EMAIL);
+        return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -1100,14 +1100,14 @@ class Flyspray
     public static function write_lock($filename, $content)
     {
         if ($f = fopen($filename, 'wb')) {
-            if(flock($f, LOCK_EX)) {                
+            if(flock($f, LOCK_EX)) {
                 fwrite($f, $content);
                 flock($f, LOCK_UN);
             }
             fclose($f);
         }
     }
-    
+
     /**
      * file_get_contents replacement for remote files
      * @access public
@@ -1134,7 +1134,7 @@ class Flyspray
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
             $out .= "Host: {$url['host']}\r\n\r\n";
             $out .= "Connection: Close\r\n\r\n";
-            
+
             stream_set_timeout($conn, 5);
             fwrite($conn, $out);
 
@@ -1164,7 +1164,7 @@ class Flyspray
      */
     public function GetNotificationOptions($noneAllowed = true)
     {
-        switch ($this->prefs['user_notify']) 
+        switch ($this->prefs['user_notify'])
         {
             case 0:
                 return array(0             => L('none'));
@@ -1172,9 +1172,9 @@ class Flyspray
                 return array(NOTIFY_EMAIL  => L('email'));
             case 3:
                 return array(NOTIFY_JABBER => L('jabber'));
-                
+
         }
-        
+
         $return = array(0             => L('none'),
                         NOTIFY_EMAIL  => L('email'),
                         NOTIFY_JABBER => L('jabber'),
@@ -1182,10 +1182,10 @@ class Flyspray
         if (!$noneAllowed) {
             unset($return[0]);
         }
-        
+
         return $return;
     }
-    
+
     /**
      * getSvnRev
      *  For internal use
