@@ -147,35 +147,43 @@ a:hover {
       background: #494d4e;
       border-radius: 10px;
       -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
-tr.active, #menu #menu-list a.active {
+      -webkit-border-radius: 10px;
+}
+#s_loginbox, #s_quickactions {
+    display: none;
+}
+#loginbox, #actionsform {
+    display: none;
+}
+#s_loginbox:checked ~ #loginbox, #s_quickactions:checked ~ #actionsform {
+    display: block;
+}
+tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
       /*background: $inverse_link;      */
-      color: white;
+      color: #fff;
       background: #5f9729;
       border-radius: 10px;
       -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
-    #menu #menu-list a#lastsearchlink.active {
+      -webkit-border-radius: 10px;
+}
+#menu-list a#lastsearchlink.active {
       border-radius: 10px 10px 0px 0px;
       -moz-border-radius: 10px 10px 0px 0px;
       -webkit-border-radius: 10px 10px 0px 0px; }
 
-    #menu #menu-list li {
+#menu-list li {
       display: block;
       padding: 0px 2px;
       float: left;
       height: 1.4em;
       border-left: dotted 1px #888888; }
 
-    #menu #menu-list li.first {
+#menu-list li.first {
       border: none; }
 
-    #menu #menu-list #locked {
+#menu-list #locked {
       margin-left: 7px; 
       color: red }
-
 
 div#mysearches {
   border-radius: 4px;
@@ -248,16 +256,16 @@ div#mysearches {
 
   #projectselector option[selected] {
     font-weight: bold; }
-
-#pm-menu-list {
-	background-color:#000;
-	list-style: none;
+#pm-menu{
+	background-color:#222;
 	border-bottom: solid 4px #5f9729;
-	margin: 0;
 	padding: 0px 0px 0px 10px;
 }
+#pm-menu-list {
+	list-style: none;
+}
 #pm-menu-list li {
-  display: inline-block;
+	display: inline-block;
 }
 #pm-menu-list li a {
         display: block;
