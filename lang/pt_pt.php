@@ -871,7 +871,7 @@ Atenciosamente,',
 'supertask'               => 'Super-Tarefa',
 'setparent'               => 'Modificar o id da tarefa mãe desta tarefa',
 'selfsupertasknotallowed' => 'ID da Super-Tarefa não pode ser igual ao ID da própria tarefa',
-'quickaction'             => 'Acções rápidas
+'quickaction'             => 'Acções rápidas',
 'updateselectedtasks'     => 'Atualizar tarefas selecionadas',
 'notspecified'            => 'Não especificado',
 'editselectedtasks'       => 'Editar tarefas selecionadas',
@@ -919,7 +919,7 @@ Atenciosamente,',
 'vieweffort'              => 'Pode ver seguir esforço',
 'trackeffort'             => 'Pode seguir esforço',
 'invalideffort'           => 'O Esforço é inválido. Tem de inserir um número.',
-'showpass'                => 'Mostrar password'
+'showpass'                => 'Mostrar password',
 );
 
 ?>
