@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'		=>'Уреди корисника',
 'username'		=>'Корисничко име',
 'realname'		=>'Стварно име',
