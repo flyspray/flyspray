@@ -2,10 +2,10 @@
 <div id="login_input">
   <label for="lbl_user_name"><?php echo Filters::noXSS(L('username')); ?></label>
   <input class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="30" />
-  
+
   <label for="lbl_password"><?php echo Filters::noXSS(L('password')); ?></label>
   <input class="password" type="password" id="lbl_password" name="password" size="17" maxlength="30" />
-  
+
   <input type="hidden" name="return_to" value="<?php echo Filters::noXSS($_SERVER['REQUEST_URI']); ?>" />
 
   <input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
@@ -41,14 +41,15 @@
     <?php endif; ?>
     <?php endif; ?>
 </div>
-<?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']); 
+<?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']);
       $providers = $conf['oauth']['enabled'];
 ?>
 <div id="login_oauth">
     <?php foreach($providers as $provider): ?>
-    <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
-        <i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
-    </a>
+    <?php if (!empty($provider)): ?>
+    	<a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+        	<i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
+    	</a>
+    <?php endif; ?>
     <?php endforeach; ?>
-    
 </form>
