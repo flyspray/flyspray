@@ -905,6 +905,8 @@ Veuillez visiter le site de Flyspray pour vous assurer que vous avez la dernièr
 'adminrequestswaiting'    => 'Demandes pour l\'administrateur en attente',
 'regapprovedbyadmin'      => 'Inscriptions approuvées par les administrateurs (code de confirmation inutile)',
 'activity'                => 'Activité',
-'myactivity'              => 'Mon activité'
+'myactivity'              => 'Mon activité',
+'emailverificationwrong'  => 'La confirmation d\'e-mail ne correspond pas à l\'e-mail',
+'verifyemailaddress'      => 'Confirmer l\'adresse e-mail'
 );
 ?>

@@ -401,6 +401,12 @@ switch ($action = Req::val('action'))
             break;
         }
 
+    	if (Post::val('email_address') != Post::val('verify_email_address'))
+    	{
+    		Flyspray::show_error(L('emailverificationwrong'));
+    		break;
+    	}
+
         $email =  strtolower(Post::val('email_address'));
         $jabber_id = strtolower(Post::val('jabber_id'));
 
@@ -567,13 +573,18 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (!Post::val('user_name') || !Post::val('real_name')
-            || !Post::val('email_address'))
+        if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
         {
             // If the form wasn't filled out correctly, show an error
             Flyspray::show_error(L('registererror'));
             break;
         }
+
+    	if (Post::val('email_address') != Post::val('verify_email_address'))
+    	{
+    		Flyspray::show_error(L('emailverificationwrong'));
+    		break;
+    	}
 
         if (Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));

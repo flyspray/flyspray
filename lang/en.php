@@ -938,6 +938,8 @@ Regards,',
 'canceledit'              => 'cancel',
 'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)',
 'activity'                => 'Activity',
-'myactivity'              => 'My activity'
+'myactivity'              => 'My activity',
+'emailverificationwrong'  => 'The email confirmation doesn\'t match the given email address',
+'verifyemailaddress'      => 'Confirm email address'
 );
 ?>
