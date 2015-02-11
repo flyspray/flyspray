@@ -665,39 +665,44 @@ abstract class Backend
         return true;
     }
 
-    /**
-     * Deletes a user
-     * @param integer $uid
-     * @access public
-     * @return bool
-     * @version 1.0
-     */
-    public static function delete_user($uid)
-    {
-        global $db, $user;
+	/**
+	 * Deletes a user
+	 * @param integer $uid
+	 * @access public
+	 * @return bool
+	 * @version 1.0
+	 */
+	public static function delete_user($uid)
+	{
+		global $db, $user;
 
-        if (!$user->perms('is_admin')) {
-            return false;
-        }
+		if (!$user->perms('is_admin')) {
+			return false;
+		}
 
-        $user_data = serialize(Flyspray::getUserDetails($uid));
-        $tables = array('users', 'users_in_groups', 'searches',
-                        'notifications', 'assigned');
+		$userDetails = Flyspray::getUserDetails($uid);
 
-        foreach ($tables as $table) {
-            if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
-                return false;
-            }
-        }
+		$tables = array('users', 'users_in_groups', 'searches', 'notifications', 'assigned', 'votes', 'effort');
 
-        // for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
-        // get permissions for a task automatically
-        $db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
+		foreach ($tables as $table) {
+			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
+				return false;
+			}
+		}
 
-        Flyspray::logEvent(0, 31, $user_data);
+		$db->Query('DELETE FROM {registrations} WHERE email_address = "'.$userDetails['email_address'].'"');
+		$db->Query('DELETE FROM {user_emails} WHERE email_address = "'.$userDetails['email_address'].'"');
+		$db->Query('DELETE FROM {reminders} WHERE to_user_id = '.$uid.' OR from_user_id = '.$uid);
 
-        return true;
-    }
+		// for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
+		// get permissions for a task automatically
+		$db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
+
+		Flyspray::logEvent(0, 31, serialize($userDetails));
+
+		return true;
+	}
+
 
     /**
      * Deletes a project

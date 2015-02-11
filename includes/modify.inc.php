@@ -723,11 +723,11 @@ switch ($action = Req::val('action'))
 
         $users = Post::val('checkedUsers');
 
-	if (count($users) == 0)
-	{
+		if (count($users) == 0)
+		{
         	Flyspray::show_error(L('nouserselected'));
-		break;
-	}
+			break;
+		}
 
 
 	// Make array of users to modify
@@ -749,7 +749,10 @@ switch ($action = Req::val('action'))
 	}
 	else if (isset($_POST['delete']))
 	{
-		$sql = $db->Query("DELETE FROM {users} WHERE user_id IN $ids");
+		//$sql = $db->Query("DELETE FROM {users} WHERE user_id IN $ids");
+		foreach ($users as $uid) {
+			Backend::delete_user($uid);
+		}
 	}
 
 	// Show success message and exit
