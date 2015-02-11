@@ -132,18 +132,18 @@ a:hover {
   top: 5px;
   right: 5px; }
 
-#menu #menu-list {
+#menu-list {
     display: inline;
     margin: 0;
     padding: 0;
     list-style: none; }
 
-#menu #menu-list a {
+#menu-list a, #menu-list label{
       color: #ddd;
       text-decoration: none;
       padding: 3px 7px; }
 
-#menu #menu-list a:hover {
+#menu-list a:hover {
       background: #494d4e;
       border-radius: 10px;
       -moz-border-radius: 10px;
@@ -1074,14 +1074,13 @@ a#show_loginbox {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #dddddd;
+  background: #ddd;
   border: solid 3px #5f9729;
   right: 5px;
   z-index: 200;
-  width: 550px;
+  min-width: 240px;
   padding-top: 15px;
   margin-top: 1px;
-  top: 1.4em;
   box-shadow: none; }
 
   #loginbox #login label {
@@ -1620,21 +1619,11 @@ input[type=submit]:hover, button:hover {
     background-color: #5f9729;
 }
 
-#login_hidelink {
-    float: right;
-    text-align: right;
+#login_button {
+	display: block;
+	margin: 6px auto;
+	vertical-align: baseline;
 }
-
-#login_input {
-    height: 30px;
-}
-
-#login_links {
-    height: 30px;
-    padding: 5px 50px;
-}
-
-#login_button {vertical-align: baseline;}
 
 div.denyform {
 	visibility:hidden;
