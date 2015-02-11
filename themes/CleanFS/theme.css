@@ -265,6 +265,7 @@ div#mysearches {
 #pm-menu-list {
 	list-style: none;
 	display: inline-block;
+	margin:0;
 }
 #pmcontrol{
 	display:inline-block;
