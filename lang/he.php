@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'ערוך משתמש',
 'username'                => 'שם משתמש',
 'realname'                => 'שם מלא',
