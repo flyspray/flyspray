@@ -840,7 +840,7 @@ $translation = array(
 'notaskdependencies'      => 'משימה זו אינה תלויה במשימות אחרות.',
 'dependson'               => 'תלויה ב',
 'blocks'                  => 'חוסמת',
-'newdependency'           => 'תלות חדשה:'
+'newdependency'           => 'תלות חדשה:',
 'activity'                => 'פעילות',
 'myactivity'              => 'פעילות שלי',
 );
