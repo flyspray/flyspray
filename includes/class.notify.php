@@ -104,7 +104,7 @@ class Notifications {
 
       return true;
    } // }}}
-   function JabberRequestAuth($email)
+   static function JabberRequestAuth($email)
    {
         global $fs;
 
@@ -116,7 +116,7 @@ class Notifications {
             || empty($fs->prefs['jabber_password'])) {
             return false;
         }
-        
+
         $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                    $fs->prefs['jabber_password'],
                    $fs->prefs['jabber_ssl'],
@@ -125,7 +125,7 @@ class Notifications {
         $JABBER->send("<presence to='" . Jabber::jspecialchars($email) . "' type='subscribe'/>");
         $JABBER->disconnect();
    }
-   
+
    // {{{ Send Jabber messages that were stored earlier
    function SendJabber()
    {
@@ -150,7 +150,7 @@ class Notifications {
       {
          return false;
       }
-      
+
       $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                    $fs->prefs['jabber_password'],
                    $fs->prefs['jabber_ssl'],
@@ -252,7 +252,7 @@ class Notifications {
 
         // Do we want to use a remote mail server?
         if (!empty($fs->prefs['smtp_server'])) {
-          
+
           // connection... SSL, TLS or none
           if ($fs->prefs['email_tls']) {
               $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server'], 587, 'tls');
@@ -261,7 +261,7 @@ class Notifications {
           } else {
               $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server']);
           }
-          
+
           if ($fs->prefs['smtp_user']) {
               $swiftconn->setUsername($fs->prefs['smtp_user']);
           }
@@ -280,7 +280,7 @@ class Notifications {
 
         if(defined( 'FS_MAIL_LOGFILE')) {
             $log = Swift_LogContainer::getLog();
-            $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
+            $log->setLogLevel(SWIFT_LOG_EVERYTHING);
         }
 
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
@@ -327,9 +327,9 @@ class Notifications {
                     fwrite($fh, php_uname());
                     fclose($fh);
                 }
-            }          
+            }
         }
-        
+
         return true;
     } //}}}
     // {{{ Create a message for any occasion
@@ -674,7 +674,7 @@ class Notifications {
          $body .= L('thankyouforbug') . "\n\n";
          $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1)) . "\n\n";
       } // }}}
-      // {{{ Password change 
+      // {{{ Password change
       if ($type == NOTIFY_PW_CHANGE)
       {
           $body =       L('magicurlmessage')." \n"
@@ -837,11 +837,11 @@ class Notifications {
       return array($email_users, array_unique($jabber_users));
 
    } // }}}
-    // {{{ Fix the message data 
+    // {{{ Fix the message data
         /**
-         * fixMsgData 
+         * fixMsgData
          * a 0.9.9.x ONLY workaround for the "truncated email problem"
-         * based on code Henri Sivonen (http://hsivonen.iki.fi) 
+         * based on code Henri Sivonen (http://hsivonen.iki.fi)
          * @param mixed $data
          * @access public
          * @return void
