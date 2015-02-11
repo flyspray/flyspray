@@ -791,6 +791,18 @@ class Setup extends Flyspray
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
       $config[] = "[oauth]";
       $config[] = 'enabled[] = ""';
+      $config[] = ';enabled[] = "github"';
+      $config[] = ';enabled[] = "google"';
+      $config[] = ';enabled[] = "facebook"';
+      $config[] = 'github_secret = ""';
+      $config[] = 'github_id = ""';
+      $config[] = 'github_redirect = ""';
+      $config[] = 'google_secret = ""';
+      $config[] = 'google_id = ""';
+      $config[] = 'google_redirect = ""';
+      $config[] = 'facebook_secret = ""';
+      $config[] = 'facebook_id = ""';
+      $config[] = 'facebook_redirect = ""';
 
       $config_text = $config_intro . implode( "\n", $config );
 
