@@ -31,7 +31,7 @@ class FlysprayTest extends PHPUnit_Framework_TestCase{
     }
 
     foreach($langfiles as $lang){
-      $this->assertEquals('', shell_exec("php -l lang/$lang"));
+      $this->assertStringStartsWith('No syntax errors', shell_exec("php -l lang/$lang"));
     }
   }
 }
