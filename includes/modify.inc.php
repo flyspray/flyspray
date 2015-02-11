@@ -519,23 +519,23 @@ switch ($action = Req::val('action'))
             break;
 	}
 
-        $profile_image = 'profile_image';
+		$profile_image = 'profile_image';
+		$image_path = '';
 
-	if(isset($_FILES[$profile_image]) === true) {
-		if(empty($_FILES[$profile_image]['name']) === true) {
-			Flyspray::show_error(L('choosefile'));
-			break;
-		} else {
+	if(isset($_FILES[$profile_image])) {
+		if(!empty($_FILES[$profile_image]['name'])) {
 			$allowed = array('jpg', 'jpeg', 'gif', 'png');
 
 			$image_name = $_FILES[$profile_image]['name'];
-			$image_extn = strtolower(end(explode('.', $image_name)));
+			$explode = explode('.', $image_name);
+			$image_extn = strtolower(end($explode));
 			$image_temp = $_FILES[$profile_image]['tmp_name'];
 
-			if(in_array($image_extn, $allowed) === true) {
-				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
-				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+			if(in_array($image_extn, $allowed)) {
+				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
+				$image_path = BASEDIR .'/themes/CleanFS/images/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
+				chmod($image_path, 0777);
 			} else {
 				Flyspray::show_error(L('incorrectfiletype'));
 				break;
@@ -608,23 +608,22 @@ switch ($action = Req::val('action'))
 	if($user->need_admin_approval()) $enabled = 0;
 
 	$profile_image = 'profile_image';
+	$image_path = '';
 
-	if(isset($_FILES[$profile_image]) === true) {
-		if(empty($_FILES[$profile_image]['name']) === true) {
-			Flyspray::show_error(L('chooseafile'));
-			break;
-		} else {
+	if(isset($_FILES[$profile_image])) {
+		if(!empty($_FILES[$profile_image]['name'])) {
 			$allowed = array('jpg', 'jpeg', 'gif', 'png');
 
 			$image_name = $_FILES[$profile_image]['name'];
-			$image_extn = strtolower(end(explode('.', $image_name)));
+			$explode = explode('.', $image_name);
+			$image_extn = strtolower(end($explode));
 			$image_temp = $_FILES[$profile_image]['tmp_name'];
 
-			if(in_array($image_extn, $allowed) === true) {
-				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
-				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+			if(in_array($image_extn, $allowed)) {
+				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
+				$image_path = BASEDIR.'/themes/CleanFS/images/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
-
+				chmod($image_path, 0777);
 			} else {
 				Flyspray::show_error(L('incorrectfiletype'));
 				break;
@@ -1077,25 +1076,26 @@ switch ($action = Req::val('action'))
 
 	$profile_image = 'profile_image';
 
-	if(isset($_FILES[$profile_image]) === true) {
-		if(empty($_FILES[$profile_image]['name']) === true) {
-			Flyspray::show_error(L('chooseafile'));
-			break;
-		} else {
+	if(isset($_FILES[$profile_image])) {
+		if(!empty($_FILES[$profile_image]['name'])) {
 			$allowed = array('jpg', 'jpeg', 'gif', 'png');
 
 			$image_name = $_FILES[$profile_image]['name'];
-			$image_extn = strtolower(end(explode('.', $image_name)));
+			$explode = explode('.', $image_name);
+			$image_extn = strtolower(end($explode));
 			$image_temp = $_FILES[$profile_image]['tmp_name'];
 
-			if(in_array($image_extn, $allowed) === true) {
-                                $sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
+			if(in_array($image_extn, $allowed)) {
+				$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
 				$avatar_oldname = $db->FetchRow($sql);
-				unlink(BASEDIR . '/themes/CleanFS/images/' . $avatar_oldname['profile_image']);
 
-				$avatar_name = substr(md5(time()), 0, 10) . '.' . $image_extn;
-				$image_path = BASEDIR . '/themes/CleanFS/images/' . $avatar_name;
+				if (file_exists(BASEDIR.'/themes/CleanFS/images/'.$avatar_oldname['profile_image']))
+					unlink(BASEDIR.'/themes/CleanFS/images/'.$avatar_oldname['profile_image']);
+
+				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
+				$image_path = BASEDIR.'/themes/CleanFS/images/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
+				chmod($image_path, 0777);
 				$db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
 					array($avatar_name, Post::num('user_id')));
 			} else {
