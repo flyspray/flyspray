@@ -926,6 +926,7 @@ $translation = array(
 'pendingnewuserrequest'   => 'wartende neue Nutzeranfrage',
 'adminrequestswaiting'    => 'wartende Administratoranfragen',
 'regapprovedbyadmin'      => 'Die Registrierung wurde durch Administrator bestätigt und der Bestätigungscode wurde entwertet.',
+'exporttasklist'          => 'Aufgabenliste exportieren',
 );
 
 ?>
