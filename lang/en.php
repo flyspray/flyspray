@@ -938,6 +938,7 @@ Regards,',
 'canceledit'              => 'cancel',
 'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)',
 'activity'                => 'Activity',
-'myactivity'              => 'My activity'
+'myactivity'              => 'My activity',
+'exporttasklist'          => 'Export Tasklist',
 );
 ?>
