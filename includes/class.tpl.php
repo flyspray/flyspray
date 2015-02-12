@@ -296,8 +296,8 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 	if ($sql && $db->countRows($sql))
 	{
 		$avatar_name = $db->fetchRow($sql);
-		if (!empty($avatar_name['profile_image']) && file_exists(BASEDIR.'/themes/CleanFS/images/'.$avatar_name['profile_image'])) {
-			$image = "<img src='./themes/CleanFS/images/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+		if (is_file(BASEDIR.'/avatars/'.$avatar_name['profile_image'])) {
+			$image = "<img src='./avatars/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
 		}
 		else
 		{
@@ -305,8 +305,9 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 			$image = '<img src='.$url.'/>';
 		}
 	}
-	else
+	else {
 		$image = '';
+	}
 
 	if (isset($uname)) {
 		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);

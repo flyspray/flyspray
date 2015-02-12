@@ -539,9 +539,8 @@ switch ($action = Req::val('action'))
 
 			if(in_array($image_extn, $allowed)) {
 				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
-				$image_path = BASEDIR .'/themes/CleanFS/images/'.$avatar_name;
+				$image_path = BASEDIR.'/avatars/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
-				chmod($image_path, 0777);
 			} else {
 				Flyspray::show_error(L('incorrectfiletype'));
 				break;
@@ -632,9 +631,8 @@ switch ($action = Req::val('action'))
 
 			if(in_array($image_extn, $allowed)) {
 				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
-				$image_path = BASEDIR.'/themes/CleanFS/images/'.$avatar_name;
+				$image_path = BASEDIR.'/avatars/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
-				chmod($image_path, 0777);
 			} else {
 				Flyspray::show_error(L('incorrectfiletype'));
 				break;
@@ -1104,13 +1102,12 @@ switch ($action = Req::val('action'))
 				$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
 				$avatar_oldname = $db->FetchRow($sql);
 
-				if (file_exists(BASEDIR.'/themes/CleanFS/images/'.$avatar_oldname['profile_image']))
-					unlink(BASEDIR.'/themes/CleanFS/images/'.$avatar_oldname['profile_image']);
+				if (is_file(BASEDIR.'/avatars/'.$avatar_oldname['profile_image']))
+					unlink(BASEDIR.'/avatars/'.$avatar_oldname['profile_image']);
 
 				$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
-				$image_path = BASEDIR.'/themes/CleanFS/images/'.$avatar_name;
+				$image_path = BASEDIR.'/avatars/'.$avatar_name;
 				move_uploaded_file($image_temp, $image_path);
-				chmod($image_path, 0777);
 				$db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
 					array($avatar_name, Post::num('user_id')));
 			} else {

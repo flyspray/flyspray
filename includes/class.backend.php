@@ -682,12 +682,20 @@ abstract class Backend
 
 		$userDetails = Flyspray::getUserDetails($uid);
 
+		if (is_file(BASEDIR.'/avatars/'.$userDetails['profile_image'])) {
+			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
+		}
+
 		$tables = array('users', 'users_in_groups', 'searches', 'notifications', 'assigned', 'votes', 'effort');
 
 		foreach ($tables as $table) {
 			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
 				return false;
 			}
+		}
+
+		if (!empty($userDetails['profile_image']) && is_file(BASEDIR.'/avatars/'.$userDetails['profile_image'])) {
+			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
 		}
 
 		$db->Query('DELETE FROM {registrations} WHERE email_address = "'.$userDetails['email_address'].'"');
