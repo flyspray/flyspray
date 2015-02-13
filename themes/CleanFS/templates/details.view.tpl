@@ -557,11 +557,18 @@ function quick_edit(elem, id)
         <?php if($proj->prefs['use_effort_tracking']) {
                 if ($user->perms('view_effort')) {
         ?>
-        <li style="...">
+        <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span class="value"><?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?></span>
+        	<?php if ($user->can_edit_task($task_details)): ?>
+        	<span style="display:none">
+        	<div style="float:right">
+        	<input type="text" name="estimated_effort" value="<?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?>">
+        	<a class="button" onclick="quick_edit(this.parentNode.parentNode, 'estimated_effort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a class="button" href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        	</span>
+        	<?php endif; ?>
         </li>
-        <li style="...">
+        <li>
             <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
             <?php
             $total_effort = 0;
