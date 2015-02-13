@@ -98,7 +98,7 @@
     <?php endif; ?>
 	<input type="checkbox" id="s_quickactions">
 	<label class="button main" id="actions" for="s_quickactions"><?php echo Filters::noXSS(L('quickaction')); ?></label>
-	<div id="actionsform" class="popup hide">
+	<div id="actionsform">
         <ul>
             <?php if ($user->can_edit_task($task_details)): ?>
             <li>
