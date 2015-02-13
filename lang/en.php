@@ -940,6 +940,8 @@ Regards,',
 'activity'                => 'Activity',
 'myactivity'              => 'My activity',
 'emailverificationwrong'  => 'The email confirmation doesn\'t match the given email address',
-'verifyemailaddress'      => 'Confirm email address'
+'verifyemailaddress'      => 'Confirm email address',
+'hideemails'              => 'Hide users email addresses',
+'hidemyemail'             => 'Hide my email address'
 );
 ?>

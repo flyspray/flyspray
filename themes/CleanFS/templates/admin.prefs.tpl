@@ -25,13 +25,13 @@
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
   </ul>
-  
+
    <div id="general" class="tab">
       <ul class="form_elements">
         <li>
           <label for="pagetitle"><?php echo Filters::noXSS(L('pagetitle')); ?></label>
           <input id="pagetitle" name="page_title" type="text" class="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
-        </li>   
+        </li>
 
         <li>
           <label for="defaultproject"><?php echo Filters::noXSS(L('defaultproject')); ?></label>
@@ -39,7 +39,7 @@
             <?php echo tpl_options(array_merge(array(0 => L('allprojects')), Flyspray::listProjects()), $fs->prefs['default_project']); ?>
 
           </select>
-        </li>   
+        </li>
 
         <li>
           <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
@@ -47,14 +47,14 @@
             <?php echo tpl_options(Flyspray::listLangs(), $fs->prefs['lang_code'], true); ?>
 
           </select>
-        </li>   
+        </li>
 
         <li>
           <label for="emailNoHTML"><?php echo Filters::noXSS(L('emailNoHTML')); ?></label>
         	<?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
 
-        </li>	
-		
+        </li>
+
         <li>
           <?php
             if (! array_key_exists( 'logo', $fs->prefs) )
@@ -70,18 +70,22 @@
         <li>
           <label for="gravatars"><?php echo Filters::noXSS(L('showgravatars')); ?></label>
         	<?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
-
         </li>
-        
+
+        <li>
+          <label for="hide_emails"><?php echo Filters::noXSS(L('hideemails')); ?></label>
+        	<?php echo tpl_checkbox('hide_emails', $fs->prefs['hide_emails'], 'hide_emails'); ?>
+        </li>
+
         <li>
           <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
           <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat']); ?>" />
-        </li>   
+        </li>
 
         <li>
           <label for="dateformat_extended"><?php echo Filters::noXSS(L('dateformat_extended')); ?></label>
           <input id="dateformat_extended" name="dateformat_extended" class="text" type="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat_extended']); ?>" />
-        </li>   
+        </li>
 
         <li>
           <label for="cache_feeds"><?php echo Filters::noXSS(L('cache_feeds')); ?></label>
@@ -129,7 +133,7 @@
           <label for="allowusersignups"><?php echo Filters::noXSS(L('anonreg')); ?></label>
           <?php echo tpl_checkbox('anon_reg', $fs->prefs['anon_reg'], 'allowusersignups'); ?>
 
-        </li>   
+        </li>
 
 <!-- register needs approved by admin !-->
         <li>
@@ -156,13 +160,13 @@
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
           <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, $fs->prefs['need_approval']?array('disabled'=>'true'):''); ?>
 
-        </li>   
+        </li>
 
         <li>
           <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
           <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
 
-        </li>   
+        </li>
 
         <li>
           <label for="defaultglobalgroup"><?php echo Filters::noXSS(L('defaultglobalgroup')); ?></label>
@@ -170,7 +174,7 @@
             <?php echo tpl_options(Flyspray::listGroups(), $fs->prefs['anon_group']); ?>
 
           </select>
-        </li>   
+        </li>
       </ul>
     </div>
 
@@ -184,14 +188,14 @@
           </select>
         </li>
       </ul>
-      
+
       <fieldset><legend><?php echo Filters::noXSS(L('emailnotify')); ?></legend>
         <ul class="form_elements">
           <li>
             <label for="adminemail"><?php echo Filters::noXSS(L('fromaddress')); ?></label>
             <input id="adminemail" name="admin_email" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
           </li>
-  
+
           <li>
             <label for="smtpserv"><?php echo Filters::noXSS(L('smtpserver')); ?></label>
             <input id="smtpserv" name="smtp_server" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
@@ -200,12 +204,12 @@
             <?php echo tpl_checkbox('email_tls', $fs->prefs['email_tls'], 'email_tls'); ?> <label class="inline" for="email_tls"><?php echo Filters::noXSS(L('tls')); ?></label>
             <?php endif; ?>
           </li>
-  
+
           <li>
             <label for="smtpuser"><?php echo Filters::noXSS(L('smtpuser')); ?></label>
             <input id="smtpuser" name="smtp_user" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
           </li>
-  
+
           <li>
             <label for="smtppass"><?php echo Filters::noXSS(L('smtppass')); ?></label>
             <input id="smtppass" name="smtp_pass" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
@@ -216,7 +220,7 @@
           </li>
         </ul>
       </fieldset>
-  
+
       <fieldset><legend><?php echo Filters::noXSS(L('jabbernotify')); ?></legend>
         <ul class="form_elements">
           <li>
@@ -230,17 +234,17 @@
               <label class="inline" for="jabber_ssl"><?php echo Filters::noXSS(L('ssl')); ?> / <?php echo Filters::noXSS(L('tls')); ?></label>
             <?php endif; ?>
           </li>
-  
+
           <li>
             <label for="jabberport"><?php echo Filters::noXSS(L('jabberport')); ?></label>
             <input id="jabberport" class="text" type="text" name="jabber_port" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
           </li>
-  
+
           <li>
             <label for="jabberusername"><?php echo Filters::noXSS(L('jabberuser')); ?></label>
             <input id="jabberusername" class="text" type="text" name="jabber_username" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
           </li>
-  
+
           <li>
             <label for="jabberpassword"><?php echo Filters::noXSS(L('jabberpass')); ?></label>
             <input id="jabberpassword" name="jabber_password" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
@@ -265,7 +269,7 @@
 
           </select>
         </li>
-  
+
           <li>
             <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php // Set the selectable column names

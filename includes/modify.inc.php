@@ -824,7 +824,7 @@ switch ($action = Req::val('action'))
 	/* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
                 'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-                'lang_code', 'gravatars', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
+                'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval');
@@ -1080,12 +1080,13 @@ switch ($action = Req::val('action'))
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
-                            tasks_perpage = ?, time_zone = ?, lang_code = ?
+                            tasks_perpage = ?, time_zone = ?, lang_code = ?, hide_my_email = ?
                      WHERE  user_id = ?',
-                array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
-                    Post::val('jabber_id', 0), Post::num('notify_type'),
-                    Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
-                    Post::num('tasks_perpage'), Post::num('time_zone'),Post::val('lang_code', 'en'), Post::num('user_id')));
+            array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
+                Post::val('jabber_id', 0), Post::num('notify_type'),
+                Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
+                Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
+                Post::num('hide_my_email', 0), Post::num('user_id')));
 
 	$profile_image = 'profile_image';
 

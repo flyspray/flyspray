@@ -907,6 +907,9 @@ Veuillez visiter le site de Flyspray pour vous assurer que vous avez la dernièr
 'activity'                => 'Activité',
 'myactivity'              => 'Mon activité',
 'emailverificationwrong'  => 'La confirmation d\'e-mail ne correspond pas à l\'e-mail',
-'verifyemailaddress'      => 'Confirmer l\'adresse e-mail'
+'verifyemailaddress'      => 'Confirmer l\'adresse e-mail',
+'hideemails'              => 'Cacher adresses email',
+'hidemyemail'             => 'Cacher mon adresse email',
+'emailNoHTML'             => 'Désactiver HTML dans les emails'
 );
 ?>
