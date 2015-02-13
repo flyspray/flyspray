@@ -96,12 +96,10 @@
     <a id="own_add" class="button"
        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=addtoassignees&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('addmetoassignees')); ?></a>
     <?php endif; ?>
-
-    <a href="#" id="actions" class="button main" onclick="showhidestuff('actionsform');"><?php echo Filters::noXSS(L('quickaction')); ?></a>
-
-    <div id="actionsform" class="popup hide">
+	<input type="checkbox" id="s_quickactions">
+	<label class="button main" id="actions" for="s_quickactions"><?php echo Filters::noXSS(L('quickaction')); ?></label>
+	<div id="actionsform" class="popup hide">
         <ul>
-
             <?php if ($user->can_edit_task($task_details)): ?>
             <li>
                 <a accesskey="e" href="<?php echo Filters::noXSS(CreateURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
@@ -209,8 +207,7 @@
             <?php endif; ?>
 
         </ul>
-    </div>
-
+	</div>
     <?php endif; ?>
 </div>
 
