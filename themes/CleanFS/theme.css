@@ -364,7 +364,7 @@ div#mysearches {
     float: right; }
 
 
-a.button, button.button {
+.button {
   display: -moz-inline-stack;
   /* optional */
   display: inline-block;
