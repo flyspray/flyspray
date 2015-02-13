@@ -65,7 +65,7 @@
         </form>
     </div>
     <?php elseif(!$user->isAnon()): ?>
-    <a href="#closedisabled" id="reqclose" class="tooltip button disabled main" "><?php echo Filters::noXSS(L('closetask')); ?>
+    <a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?php echo Filters::noXSS(L('closetask')); ?>
 
     <span class="custom info">
                     <em><?php echo Filters::noXSS(L('information')); ?></em>
