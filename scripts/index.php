@@ -104,9 +104,9 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 // tpl function that  draws a cell {{{
 
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
-    global $fs, $proj, $page;
+	global $fs, $proj, $page;
 
-    $indexes = array (
+	$indexes = array (
             'id'         => 'task_id',
             'project'    => 'project_title',
             'tasktype'   => 'task_type',
@@ -138,7 +138,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         return '';
     }
 
-    switch ($colname) {
+	switch ($colname) {
         case 'id':
             $value = tpl_tasklink($task, $task['task_id']);
             break;
@@ -191,13 +191,24 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         case 'supertask':
             $value = tpl_tasklink($task, $task['supertask_id']);
             break;
-
+            
+	case 'estimated_effort':
+		if ($task['estimated_effort']>0){
+			$value=$task['estimated_effort'];
+		}else{
+			$value='';
+		}
+		break;
+	
+	case 'effort':
+		$value=$task['effort'];
+		break;
+		
         default:
-            $value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
-            break;
-    }
-
-    return sprintf($format, 'task_'.$colname, $value);
+        	$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
+        	break;
+	}
+	return sprintf($format, 'task_'.$colname, $value);
 }
 
 // } }}
