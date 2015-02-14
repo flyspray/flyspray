@@ -1,22 +1,16 @@
 <form id="login" action="<?php echo Filters::noXSS($baseurl); ?>index.php?do=authenticate" method="post">
 <div id="login_input">
-  <label for="lbl_user_name"><?php echo Filters::noXSS(L('username')); ?></label>
-  <input class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="30" />
-
-  <label for="lbl_password"><?php echo Filters::noXSS(L('password')); ?></label>
-  <input class="password" type="password" id="lbl_password" name="password" size="17" maxlength="30" />
-
-  <input type="hidden" name="return_to" value="<?php echo Filters::noXSS($_SERVER['REQUEST_URI']); ?>" />
-
-  <input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
+	<input placeholder="<?php echo Filters::noXSS(L('username')); ?>" class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="30" />
+	<label for="lbl_user_name"><?php echo Filters::noXSS(L('username')); ?></label>
+	<input placeholder="<?php echo Filters::noXSS(L('password')); ?>" class="password" type="password" id="lbl_password" name="password" size="17" maxlength="30" />
+	<label for="lbl_password"><?php echo Filters::noXSS(L('password')); ?></label>
+	<input type="hidden" name="return_to" value="<?php echo Filters::noXSS($_SERVER['REQUEST_URI']); ?>" />
+	<input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
 </div>
 <div id="login_links">
-    <div id="login_hidelink">
-        <a href="#" onclick="return toggleLoginBox(document.getElementById('show_loginbox'));"><small>hide</small></a>
-    </div>
     <div class="remember_me">
-        <label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
-        <input type="checkbox" id="lbl_remember" name="remember_login" />
+      <input type="checkbox" id="lbl_remember" name="remember_login" />
+      <label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
     </div>
     <?php $activeclass = ' class="active" '; ?>
     <?php if ($user->isAnon() && $fs->prefs['anon_reg']): ?>
@@ -47,9 +41,9 @@
 <div id="login_oauth">
     <?php foreach($providers as $provider): ?>
     <?php if (!empty($provider)): ?>
-    	<a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
-        	<i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
-    	</a>
+        <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+            <i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
+        </a>
     <?php endif; ?>
     <?php endforeach; ?>
 </form>

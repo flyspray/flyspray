@@ -1194,6 +1194,12 @@ abstract class Backend
             $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
         }
 
+	# 20150213 currently without recursive subtasks!
+	if (in_array('effort', $visible)) {
+		$from   .= ' LEFT JOIN  {effort} ef   ON t.task_id = ef.task_id ';
+		$select .= ' SUM( ef.effort) AS effort, ';
+	}
+
         $from   .= ' LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
         $from   .= ' LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {

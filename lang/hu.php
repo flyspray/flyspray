@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'Felhasználó szerkesztése',
 'username'                => 'Felhasználói név',
 'realname'                => 'Teljes név',

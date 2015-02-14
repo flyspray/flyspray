@@ -99,9 +99,7 @@ a:hover {
   border-top: #e1e1e1 solid 1px;
   text-align: right; }
 
-
 #title {
-  height: 120px;
   background-color: #3c4041;
   /* fallback/image non-cover color */
   background-image: -moz-linear-gradient(#3c4041, #242627);
@@ -116,15 +114,14 @@ a:hover {
   /*border-bottom: 4px solid $dominant;*/
   margin: 0; }
 
-  #title a {
+#title a {
     color: white;
     text-decoration: none;
     display: block;
     padding: 25px 50px;
-    float: left;
-    width: 50%; }
+}
 
-  #title img {
+ #title img {
     float: left;
     margin-right: 20px;
     height: 36px;}
@@ -135,50 +132,58 @@ a:hover {
   top: 5px;
   right: 5px; }
 
-  #menu #menu-list {
+#menu-list {
     display: inline;
     margin: 0;
     padding: 0;
     list-style: none; }
 
-    #menu #menu-list a {
-      color: #dddddd;
+#menu-list a, #menu-list label{
+      color: #ddd;
       text-decoration: none;
       padding: 3px 7px; }
 
-    #menu #menu-list a:hover {
+#menu-list a:hover {
       background: #494d4e;
       border-radius: 10px;
       -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
-    tr.active, #menu #menu-list a.active {
+      -webkit-border-radius: 10px;
+}
+#s_loginbox, #s_quickactions {
+    display: none;
+}
+#loginbox, #actionsform {
+    display: none;
+}
+#s_loginbox:checked ~ #loginbox, #s_quickactions:checked ~ #actionsform {
+    display: block;
+}
+tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
       /*background: $inverse_link;      */
-      color: white;
+      color: #fff;
       background: #5f9729;
       border-radius: 10px;
       -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
-    #menu #menu-list a#lastsearchlink.active {
+      -webkit-border-radius: 10px;
+}
+#menu-list a#lastsearchlink.active {
       border-radius: 10px 10px 0px 0px;
       -moz-border-radius: 10px 10px 0px 0px;
       -webkit-border-radius: 10px 10px 0px 0px; }
 
-    #menu #menu-list li {
+#menu-list li {
       display: block;
       padding: 0px 2px;
       float: left;
       height: 1.4em;
       border-left: dotted 1px #888888; }
 
-    #menu #menu-list li.first {
+#menu-list li.first {
       border: none; }
 
-    #menu #menu-list #locked {
+#menu-list #locked {
       margin-left: 7px; 
       color: red }
-
 
 div#mysearches {
   border-radius: 4px;
@@ -228,12 +233,6 @@ div#mysearches {
   div#mysearches td {
     vertical-align: middle; }
 
-
-#pmcontrol {
-  position: absolute;
-  right: 20px;}
-
-
 #pmcontrol div {
   display: -moz-inline-stack;
   /* optional */
@@ -257,27 +256,24 @@ div#mysearches {
 
   #projectselector option[selected] {
     font-weight: bold; }
-
-
-#pm-menu {
-  height: 40px;
-  position: absolute;
-  top: 81px;
-  width: 100%;
-  min-width: 660px; }
-
-  #pm-menu #pm-menu-list {
-    list-style: none;
-    height: 40px;
-    border-bottom: solid 4px #5f9729;
-    margin: 0;
-    padding: 0px 0px 0px 10px; }
-
-    #pm-menu #pm-menu-list li {
-      display: block;
-      float: left; }
-
-      #pm-menu #pm-menu-list li a {
+#pm-menu{
+	background-color:#222;
+	border-bottom: solid 4px #5f9729;
+	padding: 0px 0px 0px 10px;
+	text-align:center;
+}
+#pm-menu-list {
+	list-style: none;
+	display: inline-block;
+	margin:0;
+}
+#pmcontrol{
+	display:inline-block;
+}
+#pm-menu-list li {
+	display: inline-block;
+}
+#pm-menu-list li a {
         display: block;
         line-height: 1.4em;
         padding: 11px 11px 8px 35px;
@@ -288,31 +284,29 @@ div#mysearches {
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         background-repeat: no-repeat;
-        background-position: 12px 50%; }
-
-      #pm-menu #pm-menu-list li a:hover {
+        background-position: 12px 50%;
+}
+#pm-menu-list li a:hover {
         background-color: #3c4041;
-        border-left: 1px solid #3c4041; }
-
-      #pm-menu #pm-menu-list li a.active {
+        border-left: 1px solid #3c4041;
+}
+#pm-menu-list li a.active {
         /*color: darken($top2, 10%);*/
         background-color: #5f9729;
         border-left: none;
         border-bottom: 3px solid #5f9729;
         border-top: 1px solid #6cab2e;
-        border-right: 1px solid #6cab2e; }
-
-    #pm-menu #pm-menu-list li.first a {
-      border-left: none; }
-
+        border-right: 1px solid #6cab2e;
+}
+#pm-menu-list li.first a {
+      border-left: none;
+}
 
 #toplevellink {
   background-image: url("img/gray/folder_stroke_12x12.png"); }
 
-
 #homelink {
   background-image: url("img/gray/list_12x11.png"); }
-
 
 #newtasklink {
   background-image: url("img/gray/document_alt_stroke_9x12.png"); }
@@ -370,7 +364,7 @@ div#mysearches {
     float: right; }
 
 
-a.button, button.button {
+.button {
   display: -moz-inline-stack;
   /* optional */
   display: inline-block;
@@ -1086,46 +1080,51 @@ a#show_loginbox {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #dddddd;
+  background: #ddd;
   border: solid 3px #5f9729;
   right: 5px;
   z-index: 200;
-  width: 550px;
+  min-width: 240px;
   padding-top: 15px;
   margin-top: 1px;
-  top: 1.4em;
   box-shadow: none; }
 
-  #loginbox #login label {
-    color: #222222; }
+#loginbox #login label {
+    color: #222; }
 
-  #loginbox #login a {
-    color: #222222;
+#loginbox #login a {
+    color: #222;
     text-decoration: underline; }
-  #loginbox #login a:hover {color: #fff;}
+#loginbox #login a:hover {color: #fff;}
 
 
 form#login {
   position: relative; }
 
-  form#login #lbl_user_name, form#login #lbl_password {
-    width: 90px; }
-
-  form#login label {
+form#login #lbl_user_name, form#login #lbl_password {
+	display:block;
+	margin: 10px auto;
+	padding: 5px 2px;
+}
+#login_input label{
+	/* use html5 placeholder attribute instead */
+	display:none;
+}
+form#login label {
     width: 50px;
-    color: #dddddd;
+    color: #ddd;
     width: 100px;
     margin: 0 2px 0 20px; }
 
-  form#login #links {
+form#login #links {
     position: absolute;
     top: 30px;
     left: 20px; }
 
-    form#login #links a {
+form#login #links a {
       padding: 3px 7px; }
 
-    form#login #links a:hover {
+form#login #links a:hover {
       background: #494d4e;
       text-decoration: none;
       color: #dddddd;
@@ -1133,14 +1132,14 @@ form#login {
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 
-    form#login #links a.active {
+form#login #links a.active {
       background: #dddddd;
       color: #3c4041;
       border-radius: 10px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px; }
 
-  form#login .remember_me {
+form#login .remember_me {
     float: right;}
 
 
@@ -1632,21 +1631,11 @@ input[type=submit]:hover, button:hover {
     background-color: #5f9729;
 }
 
-#login_hidelink {
-    float: right;
-    text-align: right;
+#login_button {
+	display: block;
+	margin: 6px auto;
+	vertical-align: baseline;
 }
-
-#login_input {
-    height: 30px;
-}
-
-#login_links {
-    height: 30px;
-    padding: 5px 50px;
-}
-
-#login_button {vertical-align: baseline;}
 
 div.denyform {
 	visibility:hidden;

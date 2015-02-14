@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'ערוך משתמש',
 'username'                => 'שם משתמש',
 'realname'                => 'שם מלא',
@@ -840,7 +840,7 @@ $language = array(
 'notaskdependencies'      => 'משימה זו אינה תלויה במשימות אחרות.',
 'dependson'               => 'תלויה ב',
 'blocks'                  => 'חוסמת',
-'newdependency'           => 'תלות חדשה:'
+'newdependency'           => 'תלות חדשה:',
 'activity'                => 'פעילות',
 'myactivity'              => 'פעילות שלי',
 );
