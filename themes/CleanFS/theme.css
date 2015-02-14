@@ -67,7 +67,7 @@ html, body {
 
 
 body {
-  background: #f9f9f9; 
+  background: #f9f9f9;
  /* direction:rtl;*/
 }
 
@@ -83,7 +83,7 @@ a:hover {
 
 #container {
   min-width: 1000px;
-  position: relative; 
+  position: relative;
   text-align: left;}
 
 
@@ -182,7 +182,7 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
       border: none; }
 
 #menu-list #locked {
-      margin-left: 7px; 
+      margin-left: 7px;
       color: red }
 
 div#mysearches {
@@ -775,7 +775,7 @@ form #taskdetails #taskfields {
   width: 335px; }
 
 form #taskdetails #taskdetailsfull {
-  position: relative; 
+  position: relative;
   top: -20px;
   margin-left: 355px;}
 
@@ -873,7 +873,7 @@ form #taskdetails #taskdetailsfull {
 #related .related {
   float: left;
   margin-right: 0; }
-  
+
 #duplicate_tasks th
 {
   height: 30px;
@@ -1089,6 +1089,16 @@ a#show_loginbox {
   margin-top: 1px;
   box-shadow: none; }
 
+#login_input
+{
+	text-align: center;
+}
+
+#login_links
+{
+	text-align: center;
+}
+
 #loginbox #login label {
     color: #222; }
 
@@ -1107,8 +1117,8 @@ form#login #lbl_user_name, form#login #lbl_password {
 	padding: 5px 2px;
 }
 #login_input label{
-	/* use html5 placeholder attribute instead */
-	display:none;
+	/* use html5 placeholder attribute instead
+	display:none;*/
 }
 form#login label {
     width: 50px;
@@ -1202,7 +1212,7 @@ div#taskdeps {
   margin-bottom: 8px; }
 
 div#subtasks {
-  display: inline; 
+  display: inline;
   align: right;
   float: left;
   width: 50%;

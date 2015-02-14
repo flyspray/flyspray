@@ -1,17 +1,13 @@
 <form id="login" action="<?php echo Filters::noXSS($baseurl); ?>index.php?do=authenticate" method="post">
 <div id="login_input">
 	<input placeholder="<?php echo Filters::noXSS(L('username')); ?>" class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="30" />
-	<label for="lbl_user_name"><?php echo Filters::noXSS(L('username')); ?></label>
 	<input placeholder="<?php echo Filters::noXSS(L('password')); ?>" class="password" type="password" id="lbl_password" name="password" size="17" maxlength="30" />
-	<label for="lbl_password"><?php echo Filters::noXSS(L('password')); ?></label>
+	<label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
+	<input type="checkbox" id="lbl_remember" name="remember_login" />
 	<input type="hidden" name="return_to" value="<?php echo Filters::noXSS($_SERVER['REQUEST_URI']); ?>" />
 	<input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
 </div>
 <div id="login_links">
-    <div class="remember_me">
-      <input type="checkbox" id="lbl_remember" name="remember_login" />
-      <label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
-    </div>
     <?php $activeclass = ' class="active" '; ?>
     <?php if ($user->isAnon() && $fs->prefs['anon_reg']): ?>
       <a id="registerlink"
