@@ -4,7 +4,7 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-$providers = [
+$providers = array(
     'github' => function() use ($conf) {
         if (empty($conf['oauth']['github_secret']) ||
             empty($conf['oauth']['github_id'])     ||
@@ -16,7 +16,7 @@ $providers = [
             'clientId'     =>  $conf['oauth']['github_id'],
             'clientSecret' =>  $conf['oauth']['github_secret'],
             'redirectUri'  =>  $conf['oauth']['github_redirect'],
-            'scopes'       => ['user:email']
+            'scopes'       => array('user:email')
         ));
     },
     'google' => function() use ($conf) {
@@ -30,7 +30,7 @@ $providers = [
             'clientId'     =>  $conf['oauth']['google_id'],
             'clientSecret' =>  $conf['oauth']['google_secret'],
             'redirectUri'  =>  $conf['oauth']['google_redirect'],
-            'scopes'       => ['email', 'profile']
+            'scopes'       => array('email', 'profile')
         ));
     },
     'facebook' => function() use ($conf) {
@@ -46,7 +46,7 @@ $providers = [
             'redirectUri'  =>  $conf['oauth']['facebook_redirect'],
         ));
     },
-];
+);
 
 if (! isset($_SESSION['return_to'])) {
     $_SESSION['return_to'] = base64_decode(Get::val('return_to', ''));
@@ -75,10 +75,7 @@ if (isset($_SESSION['oauth_token'])) {
 } else {
     // Try to get an access token 
     try {
-        $token = $obj->getAccessToken('authorization_code', [
-            'code' => $_GET['code']
-        ]);
-
+        $token = $obj->getAccessToken('authorization_code', array('code' => $_GET['code']));
     } catch (\League\OAuth2\Client\Exception\IDPException $e) {
         throw new Exception($e->getMessage());
     }

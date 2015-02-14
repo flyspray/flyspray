@@ -306,7 +306,7 @@
  <!--- Added 2/1/2014 LAE --!>
 
  <form action="<?php echo Filters::noXSS($baseurl); ?>/scripts/index.php" method="post">
-  &nbsp;&nbsp;&nbsp&nbsp<input type='submit' name='export_list' value='Export Tasklist'>
+ <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
  </form>
 
 </div>

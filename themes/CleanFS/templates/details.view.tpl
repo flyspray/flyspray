@@ -65,7 +65,7 @@
         </form>
     </div>
     <?php elseif(!$user->isAnon()): ?>
-    <a href="#closedisabled" id="reqclose" class="tooltip button disabled main" "><?php echo Filters::noXSS(L('closetask')); ?>
+    <a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?php echo Filters::noXSS(L('closetask')); ?>
 
     <span class="custom info">
                     <em><?php echo Filters::noXSS(L('information')); ?></em>
@@ -96,12 +96,10 @@
     <a id="own_add" class="button"
        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=addtoassignees&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('addmetoassignees')); ?></a>
     <?php endif; ?>
-
-    <a href="#" id="actions" class="button main" onclick="showhidestuff('actionsform');"><?php echo Filters::noXSS(L('quickaction')); ?></a>
-
-    <div id="actionsform" class="popup hide">
+	<input type="checkbox" id="s_quickactions">
+	<label class="button main" id="actions" for="s_quickactions"><?php echo Filters::noXSS(L('quickaction')); ?></label>
+	<div id="actionsform">
         <ul>
-
             <?php if ($user->can_edit_task($task_details)): ?>
             <li>
                 <a accesskey="e" href="<?php echo Filters::noXSS(CreateURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
@@ -209,8 +207,7 @@
             <?php endif; ?>
 
         </ul>
-    </div>
-
+	</div>
     <?php endif; ?>
 </div>
 
@@ -557,11 +554,18 @@ function quick_edit(elem, id)
         <?php if($proj->prefs['use_effort_tracking']) {
                 if ($user->perms('view_effort')) {
         ?>
-        <li style="...">
+        <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span class="value"><?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?></span>
+        	<?php if ($user->can_edit_task($task_details)): ?>
+        	<span style="display:none">
+        	<div style="float:right">
+        	<input type="text" name="estimated_effort" value="<?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?>">
+        	<a class="button" onclick="quick_edit(this.parentNode.parentNode, 'estimated_effort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a class="button" href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        	</span>
+        	<?php endif; ?>
         </li>
-        <li style="...">
+        <li>
             <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
             <?php
             $total_effort = 0;
