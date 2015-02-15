@@ -272,7 +272,6 @@ div#mysearches {
 }
 #pmcontrol{
 	display: inline-block;
-	vertical-align: baseline;
 	float: right;
 	margin: 4px 20px 0px 0px;
 }
@@ -1103,6 +1102,16 @@ a#show_loginbox {
 #login_links
 {
 	text-align: center;
+}
+
+#login_oauth
+{
+	margin-top: 10px;
+}
+
+.oauth
+{
+	display: block;
 }
 
 #loginbox #login label {
