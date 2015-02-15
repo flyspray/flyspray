@@ -129,7 +129,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'progress'   => '',
             'os'         => 'os_name',
             'private'    => 'mark_private',
-            'supertask'  => 'supertask_id',
+            'parent'     => 'supertask_id',
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
@@ -188,8 +188,11 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
 
-        case 'supertask':
-            $value = tpl_tasklink($task, $task['supertask_id']);
+        case 'parent':
+            $value = '';
+            if ($task['supertask_id'] > 0) {
+                $value = tpl_tasklink($task, $task['supertask_id']);
+            }
             break;
             
 	case 'estimated_effort':
