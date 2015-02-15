@@ -1111,7 +1111,7 @@ a#show_loginbox {
 
 .oauth
 {
-	display: block;
+	display: inline-block;
 }
 
 #loginbox #login label {
