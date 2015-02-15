@@ -353,7 +353,7 @@ class User
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
         
-        $result = $db->Query("SELECT count(date({$func}(event_date))) as val, min(event_date) as event_date
+        $result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
 							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
 							  WHERE t.project_id = ? AND h.user_id = ?
                               AND date({$func}(event_date)) BETWEEN date(?) and date(?)
