@@ -110,7 +110,7 @@ a:hover {
   /* Safari 5.1+, Chrome 10+ */
   background-image: -o-linear-gradient(#3c4041, #242627);
   /* Opera 11.10+ */
-  border-bottom: 1px solid #6cab2e;
+  /*border-bottom: 1px solid #6cab2e;*/
   /*border-bottom: 4px solid $dominant;*/
   margin: 0; }
 
@@ -251,16 +251,19 @@ div#mysearches {
   /*margin-top: 3px;*/
   margin-right: 10px; }
 
-  #projectselector button {
-    margin-bottom: 2px; }
+#projectselector button {
+    margin-bottom: 2px;
+}
 
-  #projectselector option[selected] {
-    font-weight: bold; }
+#projectselector option[selected] {
+    font-weight: bold;
+}
+
 #pm-menu{
 	background-color:#222;
 	border-bottom: solid 4px #5f9729;
 	padding: 0px 0px 0px 10px;
-	text-align:center;
+	/*text-align:center;*/
 }
 #pm-menu-list {
 	list-style: none;
@@ -268,7 +271,9 @@ div#mysearches {
 	margin:0;
 }
 #pmcontrol{
-	display:inline-block;
+	display: inline-block;
+	float: right;
+	margin: 4px 20px 0px 0px;
 }
 #pm-menu-list li {
 	display: inline-block;
@@ -1097,6 +1102,16 @@ a#show_loginbox {
 #login_links
 {
 	text-align: center;
+}
+
+#login_oauth
+{
+	margin-top: 10px;
+}
+
+.oauth
+{
+	display: inline-block;
 }
 
 #loginbox #login label {
