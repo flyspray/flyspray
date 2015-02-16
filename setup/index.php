@@ -794,15 +794,19 @@ class Setup extends Flyspray
       $config[] = ';enabled[] = "github"';
       $config[] = ';enabled[] = "google"';
       $config[] = ';enabled[] = "facebook"';
+      $config[] = ';enabled[] = "microsoft"';
       $config[] = 'github_secret = ""';
       $config[] = 'github_id = ""';
-      $config[] = 'github_redirect = ""';
+      $config[] = 'github_redirect = "YOURDOMAIN/index.php?do=oauth&provider=github"';
       $config[] = 'google_secret = ""';
       $config[] = 'google_id = ""';
-      $config[] = 'google_redirect = ""';
+      $config[] = 'google_redirect = "YOURDOMAIN/index.php?do=oauth&provider=google"';
       $config[] = 'facebook_secret = ""';
       $config[] = 'facebook_id = ""';
-      $config[] = 'facebook_redirect = ""';
+      $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
+      $config[] = 'microsoft_secret = ""';
+      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
 
