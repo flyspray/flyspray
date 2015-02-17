@@ -5,13 +5,18 @@
         <input id="realname" class="text" type="text" name="real_name" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('real_name', $theuser->infos['real_name'])); ?>" />
       </li>
-      
+
       <li>
         <label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label>
         <input id="emailaddress" class="text" type="text" name="email_address" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('email_address', $theuser->infos['email_address'])); ?>" />
       </li>
-      
+
+      <li>
+        <label for="hide_my_email"><?php echo Filters::noXSS(L('hidemyemail')); ?></label>
+        <?php echo tpl_checkbox('hide_my_email', Req::val('hide_my_email', !Post::val('action') && $theuser->infos['hide_my_email']), 'hide_my_email'); ?>
+      </li>
+
       <li>
         <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
         <input id="jabberid" class="text" type="text" name="jabber_id" size="50" maxlength="100"
@@ -67,7 +72,7 @@
           ?>
           <?php echo tpl_options($times, Req::val('time_zone', $theuser->infos['time_zone'])); ?>
 
-        </select> 
+        </select>
       </li>
 
         <li>

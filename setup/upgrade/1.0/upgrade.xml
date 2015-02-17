@@ -78,6 +78,10 @@
       <NOTNULL/>
       <DEFAULT value=""/>
     </field>
+    <field name="hide_my_email" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>

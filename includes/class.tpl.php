@@ -33,7 +33,7 @@ class Tpl
     {
         return $this->_theme;
     }
-    
+
     public function setTheme($theme)
     {
         // Check available themes
@@ -84,7 +84,7 @@ class Tpl
         // theming part
         // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
         if (strlen($this->_theme) == 0) {
-            $this->_theme = 'CleanFS/'; 
+            $this->_theme = 'CleanFS/';
         }
 
         // variables part
@@ -104,7 +104,7 @@ class Tpl
             // This is needed to catch times when there is no theme (for example setup pages)
             require BASEDIR . "/templates/" . $_tpl;
         }
-        
+
     } // }}}
 
     public function render()
@@ -275,31 +275,46 @@ function tpl_userlink($uid)
 
 function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 {
-    global $db, $user;
+	global $db, $user;
 	if (is_array($uid)) {
-        list($uid, $uname, $rname) = $uid;
+		list($uid, $uname, $rname) = $uid;
 	}
-        $sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
-                           array(intval($uid)));
-        if ($sql && $db->countRows($sql)) {
-            list($uname, $rname, $email) = $db->fetchRow($sql);
-        }
+
+	$sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
+					array(intval($uid)));
+	if ($sql && $db->countRows($sql)) {
+		list($uname, $rname, $email) = $db->fetchRow($sql);
+	}
+	else {
+		return;
+	}
+
 	$email = md5(strtolower(trim($email)));
+	$default = 'mm';
 
 	$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
-	if ($sql && $db->countRows($sql)) {
-		$avatar_name = $db->fetchRow($sql); 
-		$image = "<img src='"."/themes/CleanFS/images/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
-	} else {
-		$image = "<img src='http://www.gravatar.com/avatar/".$email."?s=".$size."'/>";
+	if ($sql && $db->countRows($sql))
+	{
+		$avatar_name = $db->fetchRow($sql);
+		if (is_file(BASEDIR.'/avatars/'.$avatar_name['profile_image'])) {
+			$image = "<img src='./avatars/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+		}
+		else
+		{
+			$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+			$image = '<img src='.$url.'/>';
+		}
 	}
-    if (isset($uname)) {
-        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-        //$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
-        $link = "<a style='float: ".$float."; padding: ".$padding."' href=".$url." title='".$rname."'>".$image."</a>";
-    }
+	else {
+		$image = '';
+	}
 
-    return $link;
+	if (isset($uname)) {
+		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+		//$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
+		$link = "<a style='float: ".$float."; padding: ".$padding."' href=".$url." title='".$rname."'>".$image."</a>";
+	}
+	return $link;
 }
 
 
@@ -555,10 +570,10 @@ class TextFormatter
     public static function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf;
-        
+
         $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
         $methods = is_array($methods) ? $methods : array();
-        
+
         if (in_array('render', $methods)) {
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $type, $id, $instructions);
@@ -873,12 +888,12 @@ class Url {
             $append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
-        
+
         $separator = ini_get('arg_separator.output');
         if (strlen($separator) != 0) {
             $append = str_replace($separator, '&', $append);
         }
-        
+
         if ($this->getinfo('query')) {
             $this->parsed['query'] .= '&' . $append;
         } else {
@@ -893,7 +908,7 @@ class Url {
         if (strlen($separator) != 0) {
             $append = str_replace($separator, '&', $append);
         }
-        
+
         if ($this->getinfo('query')) {
             $this->parsed['query'] .= '&' . $append;
         } else {

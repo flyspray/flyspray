@@ -9,7 +9,7 @@ $providers = array(
         if (empty($conf['oauth']['github_secret']) ||
             empty($conf['oauth']['github_id'])     ||
             empty($conf['oauth']['github_redirect'])) {
-    
+
             throw new Exception('Config error make sure the github_* variables are set.');
         }
         return new GithubProvider(array(
@@ -23,7 +23,7 @@ $providers = array(
         if (empty($conf['oauth']['google_secret']) ||
             empty($conf['oauth']['google_id'])     ||
             empty($conf['oauth']['google_redirect'])) {
-    
+
             throw new Exception('Config error make sure the google_* variables are set.');
         }
         return new League\OAuth2\Client\Provider\Google(array(
@@ -37,13 +37,26 @@ $providers = array(
         if (empty($conf['oauth']['facebook_secret']) ||
             empty($conf['oauth']['facebook_id'])     ||
             empty($conf['oauth']['facebook_redirect'])) {
-    
+
             throw new Exception('Config error make sure the facebook_* variables are set.');
         }
         return new League\OAuth2\Client\Provider\Facebook(array(
             'clientId'     =>  $conf['oauth']['facebook_id'],
             'clientSecret' =>  $conf['oauth']['facebook_secret'],
             'redirectUri'  =>  $conf['oauth']['facebook_redirect'],
+        ));
+    },
+    'microsoft' => function() use ($conf) {
+        if (empty($conf['oauth']['microsoft_secret']) ||
+            empty($conf['oauth']['microsoft_id'])     ||
+            empty($conf['oauth']['microsoft_redirect'])) {
+
+            throw new Exception('Config error make sure the microsoft_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Microsoft(array(
+            'clientId'     =>  $conf['oauth']['microsoft_id'],
+            'clientSecret' =>  $conf['oauth']['microsoft_secret'],
+            'redirectUri'  =>  $conf['oauth']['microsoft_redirect'],
         ));
     },
 );
@@ -73,7 +86,7 @@ if (isset($_SESSION['oauth_token'])) {
     $token = unserialize($_SESSION['oauth_token']);
     unset($_SESSION['oauth_token']);
 } else {
-    // Try to get an access token 
+    // Try to get an access token
     try {
         $token = $obj->getAccessToken('authorization_code', array('code' => $_GET['code']));
     } catch (\League\OAuth2\Client\Exception\IDPException $e) {
@@ -95,17 +108,17 @@ if (! Flyspray::checkForOauthUser($uid, $provider)) {
     if (! $user_details->email) {
         Flyspray::show_error(27);
     }
-    
+
     $success = false;
-    
+
     if ($username) {
         $group_in = $fs->prefs['anon_group'];
         $name     = $user_details->name ?: $username;
-        $success  = Backend::create_user($username, null, $name, '', $user_details->email, 0, 0, $group_in, $uid, $provider);
+        $success  = Backend::create_user($username, null, $name, '', $user_details->email, 0, 0, $group_in, 1, $uid, $provider);
     }
-    
+
     // username taken or not provided, ask for it
-    if (! $success) {
+    if (!$success) {
         $_SESSION['oauth_token']    = serialize($token);
         $_SESSION['oauth_provider'] = $provider;
         $page->assign('provider', ucfirst($provider));

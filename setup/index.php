@@ -7,6 +7,10 @@
 // +----------------------------------------------------------------------
 
 @set_time_limit(0);
+
+// no transparent session id improperly configured servers
+ini_set('session.use_trans_sid', 0);
+
 session_start();
 //do it fastest as possible.
 ini_set('memory_limit', '64M');
@@ -209,7 +213,7 @@ class Setup extends Flyspray
        if(!is_array($expectedFields)){
            $expectedFields = array();
        }
-       
+
       // Grab the posted data and trim it.
       $data = array_filter($_POST, array(&$this, "TrimArgs"));
 
@@ -787,6 +791,22 @@ class Setup extends Flyspray
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
       $config[] = "[oauth]";
       $config[] = 'enabled[] = ""';
+      $config[] = ';enabled[] = "github"';
+      $config[] = ';enabled[] = "google"';
+      $config[] = ';enabled[] = "facebook"';
+      $config[] = ';enabled[] = "microsoft"';
+      $config[] = 'github_secret = ""';
+      $config[] = 'github_id = ""';
+      $config[] = 'github_redirect = "YOURDOMAIN/index.php?do=oauth&provider=github"';
+      $config[] = 'google_secret = ""';
+      $config[] = 'google_id = ""';
+      $config[] = 'google_redirect = "YOURDOMAIN/index.php?do=oauth&provider=google"';
+      $config[] = 'facebook_secret = ""';
+      $config[] = 'facebook_id = ""';
+      $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
+      $config[] = 'microsoft_secret = ""';
+      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
 
@@ -963,10 +983,10 @@ class Setup extends Flyspray
       usort($folders, 'version_compare'); // start with lowest version
       $folders = array_reverse($folders); // start with highest version
       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/flyspray-install.xml';
-      
+
       $upgradeInfo = APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/upgrade.info';
       $upgradeInfo = parse_ini_file($upgradeInfo, true);
-      
+
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
 
@@ -979,7 +999,7 @@ class Setup extends Flyspray
        if (!isset($db_prefix)) {
             $db_prefix = '';
        }
-       
+
        if(is_numeric($db_prefix)) {
            $_SESSION['page_message'][] = 'database prefix cannot be numeric only';
            return false;
@@ -990,7 +1010,7 @@ class Setup extends Flyspray
       $this->mXmlSchema->ParseSchema($sql_file);
 
       $this->mXmlSchema->ExecuteSchema();
-      
+
       // Last but not least global prefs update
         if (isset($upgradeInfo['fsprefs'])) {
             $existing = $this->mDbConnection->GetCol("SELECT pref_name FROM {$db_prefix}prefs");
@@ -1007,7 +1027,7 @@ class Setup extends Flyspray
                 }
             }
         }
-    
+
       $this->mDbConnection->Execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
 
       if (($error_no = $this->mDbConnection->MetaError()))

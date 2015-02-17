@@ -9,7 +9,7 @@
     </td>
   </tr>
   <tr>
-  <?php if (!$user->isAnon()): ?>
+  <?php if ((!$user->isAnon() && !$fs->prefs['hide_emails'] && !$theuser->infos['hide_my_email']) || $user->perms('is_admin')): ?>
     <th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
     <td>
       <a href="mailto:<?php echo Filters::noXSS($theuser->infos['email_address']); ?>"><?php echo Filters::noXSS($theuser->infos['email_address']); ?></a>

@@ -67,7 +67,7 @@ html, body {
 
 
 body {
-  background: #f9f9f9; 
+  background: #f9f9f9;
  /* direction:rtl;*/
 }
 
@@ -83,7 +83,7 @@ a:hover {
 
 #container {
   min-width: 1000px;
-  position: relative; 
+  position: relative;
   text-align: left;}
 
 
@@ -110,7 +110,7 @@ a:hover {
   /* Safari 5.1+, Chrome 10+ */
   background-image: -o-linear-gradient(#3c4041, #242627);
   /* Opera 11.10+ */
-  border-bottom: 1px solid #6cab2e;
+  /*border-bottom: 1px solid #6cab2e;*/
   /*border-bottom: 4px solid $dominant;*/
   margin: 0; }
 
@@ -182,7 +182,7 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
       border: none; }
 
 #menu-list #locked {
-      margin-left: 7px; 
+      margin-left: 7px;
       color: red }
 
 div#mysearches {
@@ -251,16 +251,19 @@ div#mysearches {
   /*margin-top: 3px;*/
   margin-right: 10px; }
 
-  #projectselector button {
-    margin-bottom: 2px; }
+#projectselector button {
+    margin-bottom: 2px;
+}
 
-  #projectselector option[selected] {
-    font-weight: bold; }
+#projectselector option[selected] {
+    font-weight: bold;
+}
+
 #pm-menu{
 	background-color:#222;
 	border-bottom: solid 4px #5f9729;
 	padding: 0px 0px 0px 10px;
-	text-align:center;
+	/*text-align:center;*/
 }
 #pm-menu-list {
 	list-style: none;
@@ -268,7 +271,9 @@ div#mysearches {
 	margin:0;
 }
 #pmcontrol{
-	display:inline-block;
+	display: inline-block;
+	float: right;
+	margin: 4px 20px 0px 0px;
 }
 #pm-menu-list li {
 	display: inline-block;
@@ -775,7 +780,7 @@ form #taskdetails #taskfields {
   width: 335px; }
 
 form #taskdetails #taskdetailsfull {
-  position: relative; 
+  position: relative;
   top: -20px;
   margin-left: 355px;}
 
@@ -873,7 +878,7 @@ form #taskdetails #taskdetailsfull {
 #related .related {
   float: left;
   margin-right: 0; }
-  
+
 #duplicate_tasks th
 {
   height: 30px;
@@ -1089,6 +1094,26 @@ a#show_loginbox {
   margin-top: 1px;
   box-shadow: none; }
 
+#login_input
+{
+	text-align: center;
+}
+
+#login_links
+{
+	text-align: center;
+}
+
+#login_oauth
+{
+	margin-top: 10px;
+}
+
+.oauth
+{
+	display: inline-block;
+}
+
 #loginbox #login label {
     color: #222; }
 
@@ -1107,8 +1132,8 @@ form#login #lbl_user_name, form#login #lbl_password {
 	padding: 5px 2px;
 }
 #login_input label{
-	/* use html5 placeholder attribute instead */
-	display:none;
+	/* use html5 placeholder attribute instead
+	display:none;*/
 }
 form#login label {
     width: 50px;
@@ -1202,7 +1227,7 @@ div#taskdeps {
   margin-bottom: 8px; }
 
 div#subtasks {
-  display: inline; 
+  display: inline;
   align: right;
   float: left;
   width: 50%;
