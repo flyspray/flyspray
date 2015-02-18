@@ -915,8 +915,15 @@ abstract class Backend
         $sql_params[] = 'closure_comment';
         $sql_values[] = '';
 
+        // Process estimated effort
+        $estimated_effort = 0;
+        if ($proj->prefs['use_effort_tracking']) {
+            if (($estimated_effort = effort::ConvertStringToSeconds(Post::val('estimated_effort'))) === FALSE) {
+                Flyspray::show_error(L('invalideffort'));
+            }
+        }
         $sql_params[] = 'estimated_effort';
-        $sql_values[] = $proj->prefs['use_effort_tracking'] ? $args['estimated_effort'] : 0;
+        $sql_values[] = $estimated_effort;
 
         // Token for anonymous users
         $token = '';

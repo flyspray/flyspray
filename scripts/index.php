@@ -11,6 +11,9 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
+// Need to get function ConvertSeconds
+require_once(BASEDIR . '/includes/class.effort.php');
+
 if (!$user->can_view_project($proj->id)) {
     $proj = new Project(0);
 }
@@ -197,14 +200,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             
 	case 'estimated_effort':
 		if ($task['estimated_effort']>0){
-			$value=$task['estimated_effort'];
+			$value = effort::ConvertSecondsToString($task['estimated_effort']);
 		}else{
 			$value='';
 		}
 		break;
 	
 	case 'effort':
-		$value=$task['effort'];
+		$value = effort::ConvertSecondsToString($task['effort']);
 		break;
 		
         default:

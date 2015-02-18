@@ -69,9 +69,9 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
     }
     ?>
     </br>
-    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::ConvertSecondsToString($total_estimated); ?>
     </br>
-    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo ConvertSeconds($actual_effort); ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo effort::ConvertSecondsToString($actual_effort); ?>
     <?php } 
     } ?>
 </p>

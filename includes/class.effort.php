@@ -47,7 +47,7 @@ class effort
     public function addEffort($effort_to_add)
     {
         global $db;
-
+        /*
         $add = explode(':',$effort_to_add);
 
         if(!isset($add[1]))
@@ -56,6 +56,8 @@ class effort
         }
 
         $effort = ($add[0] * 60 * 60) + ($add[1]*60);
+        */
+        $effort = self::ConvertStringToSeconds($effort_to_add);
 
         $db->Query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
@@ -126,5 +128,31 @@ class effort
         global $db;
 
         $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
+    }
+    
+    public static function ConvertSecondsToString($seconds) {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds - ($hours * 3600)) / 60);
+        return sprintf('%01u:%02u', $hours, $minutes);
+    }
+
+    public static function ConvertStringToSeconds($string) {
+        if (!isset($string) || empty($string)) {
+            // echo "returning ZERO";
+            return 0;
+        }
+        
+        $matches = array();
+        if (preg_match('/(\d+)(:(\d{2}))?/', $string, $matches) !== 1) {
+            // echo "returning FALSE";
+            return FALSE;
+        }
+
+        if(!isset($matches[3])) {
+            $matches[3]=0;
+        }
+
+        $effort = ($matches[1] * 60 * 60) + ($matches[3]*60);
+        return $effort;
     }
 }

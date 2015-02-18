@@ -189,7 +189,7 @@
           ?>
           <li style="...">
               <label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
-              <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="<?php echo Filters::noXSS($task_details['estimated_effort']); ?>" />
+              <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="<?php echo Filters::noXSS(effort::ConvertSecondsToString($task_details['estimated_effort'])); ?>" />
               <?php echo Filters::noXSS(L('hours')); ?>
 
           </li>
