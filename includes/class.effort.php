@@ -6,7 +6,7 @@ function ConvertSeconds ($seconds)
     $mandays= ceil($hours /8); # normally 8 hours = 1 man-day
     if ($hours>0){
         $out= $hours==1? '1 h': "$hours h";
-        $out.= $mandays==1 ? ' (1 '.eL('manday').')':' ('.$manntage.' '.eL('mandays').')';
+        $out.= $mandays==1 ? ' (1 '.eL('manday').')':' ('.$mandays.' '.eL('mandays').')';
     }else{  
         $out= '';
     }
