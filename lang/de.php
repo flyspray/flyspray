@@ -902,6 +902,7 @@ $translation = array(
 'efforttracking'          => 'Aufwandmessung',
 'useeffort'               => 'Projekt nutzt Aufwandmessung',
 'estimatedeffort'         => 'geschätzter Aufwand',
+'estimated_effort'        => 'geschätzter Aufwand',
 'totalestimatedeffort'    => 'geschätzter Gesamtaufwand',
 'actualeffort'            => 'bisher erfolgter Aufwand',
 'starteffort'             => 'Starte Aufwandmessung',
