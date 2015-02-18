@@ -943,6 +943,8 @@ Regards,',
 'verifyemailaddress'      => 'Confirm email address',
 'hideemails'              => 'Hide users email addresses',
 'hidemyemail'             => 'Hide my email address',
-'exporttasklist'          => 'Export Tasklist'
+'exporttasklist'          => 'Export Tasklist',
+'manday'                  => 'man-day',
+'mandays'                 => 'may-days',
 );
 ?>
