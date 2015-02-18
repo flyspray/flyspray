@@ -204,7 +204,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		break;
 	
 	case 'effort':
-		$value=(ceil($task['effort']/360)/10).' h';
+		$value=$task['effort']>0 ? (ceil($task['effort']/360)/10).' h':'';
 		break;
 		
         default:
