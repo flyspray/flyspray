@@ -23,6 +23,7 @@ function ConvertSeconds ($seconds)
 
     return gmdate ('H:i', $seconds);
 */
+    return $out;
 }
 
 /**
