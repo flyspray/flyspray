@@ -2,6 +2,15 @@
 //TODO: Move to a more sensible place!
 function ConvertSeconds ($seconds)
 {
+    $hours=ceil($seconds / 3600); # calculate with whole hours ...
+    $mandays= ceil($hours /8); # normally 8 hours = 1 man-day
+    if ($hours>0){
+        $out= $hours==1? '1 h': "$hours h";
+        $out.= $mandays==1 ? ' (1 '.eL('manday').')':' ('.$manntage.' '.eL('mandays').')';
+    }else{  
+        $out= '';
+    }
+/*
     $days = floor ($seconds / 86400);
     if ($days > 1) // 2 days+, we need days to be in plural
     {
@@ -13,6 +22,7 @@ function ConvertSeconds ($seconds)
     }
 
     return gmdate ('H:i', $seconds);
+*/
 }
 
 /**
