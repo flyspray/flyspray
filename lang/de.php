@@ -928,6 +928,8 @@ $translation = array(
 'adminrequestswaiting'    => 'wartende Administratoranfragen',
 'regapprovedbyadmin'      => 'Die Registrierung wurde durch Administrator bestätigt und der Bestätigungscode wurde entwertet.',
 'exporttasklist'          => 'Aufgabenliste exportieren',
+'manday'                  => 'Manntag', # Personentag
+'mandays'                 => 'Manntage', # Personentage
 );
 
 ?>
