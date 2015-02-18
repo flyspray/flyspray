@@ -197,14 +197,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             
 	case 'estimated_effort':
 		if ($task['estimated_effort']>0){
-			$value=$task['estimated_effort'];
+			$value=$task['estimated_effort'].' h';
 		}else{
 			$value='';
 		}
 		break;
 	
 	case 'effort':
-		$value=$task['effort'];
+		$value=(ceil($task['effort']/360)/10).' h';
 		break;
 		
         default:
