@@ -1,4 +1,12 @@
-  <form action="<?php if ($do == 'myprofile'): ?><?php echo Filters::noXSS(CreateUrl('myprofile')); ?><?php else: ?><?php echo Filters::noXSS(CreateUrl('edituser', $theuser->id)); ?><?php endif; ?>" method="post" enctype="multipart/form-data">
+<!--
+<form action="<?php
+if ($do == 'myprofile'):
+        echo Filters::noXSS(CreateUrl('myprofile'));
+else:
+        echo Filters::noXSS(CreateUrl('edituser', $theuser->id));
+endif; ?>" method="post" enctype="multipart/form-data">
+-->
+<?php echo tpl_form( $do=='myprofile' ? Filters::noXSS(CreateUrl('myprofile')) : Filters::noXSS(CreateUrl('edituser', $theuser->id))); ?>
     <ul class="form_elements">
       <li>
         <label for="realname"><?php echo Filters::noXSS(L('realname')); ?></label>
