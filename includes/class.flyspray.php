@@ -749,7 +749,8 @@ class Flyspray
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
-
+        /*
+        # commented out IMHO weired obfuscating session names
         $names = array( 'GetFirefox',
                         'UseLinux',
                         'NoMicrosoft',
@@ -784,6 +785,15 @@ class Flyspray
             session_name($sessname);
             session_start();
             $_SESSION['SESSNAME'] = $sessname;
+        }
+        */
+        
+        $url = parse_url($GLOBALS['baseurl']);
+        session_name('flyspray');
+        session_set_cookie_params(0,$url['path'],'','', TRUE);
+        session_start();
+        if(!isset($_SESSION['csrftoken'])){
+                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
         }
     }  // }}}
 
