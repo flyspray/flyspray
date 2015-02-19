@@ -233,24 +233,27 @@ function quick_edit(elem, id)
 		text = document.getElementById("due_date").value;//for due date
 	var xmlHttp = new XMLHttpRequest();
 
-	xmlHttp.onreadystatechange = function()
-	{
-		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
-		{
-			var target = elem.previousElementSibling;
-			if(target.getElementsByTagName("span").length > 0)//for progress
-			{
-				target.getElementsByTagName("span")[0].innerHTML = text;
-				target.getElementsByClassName("progress_bar")[0].style.width = text;
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState == 4){
+			if(xmlHttp.status == 200){
+				var target = elem.previousElementSibling;
+				if(target.getElementsByTagName("span").length > 0)//for progress
+				{
+					target.getElementsByTagName("span")[0].innerHTML = text;
+					target.getElementsByClassName("progress_bar")[0].style.width = text;
+				}else{
+					target.innerHTML = text;
+				}
+				// TODO show some kind of ok sign icon for a successful save
+				show_hide(elem, false);
+			}else{
+				// TODO show error message returned from the server and let quickedit form open
 			}
-			else
-				target.innerHTML = text; 
 		}
 	}
 	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>");
-	show_hide(elem, false);
+	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&token=<?php echo $_SESSION['csrftoken'] ?>");
 }
 </script>
 
