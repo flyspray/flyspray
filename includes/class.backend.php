@@ -1272,13 +1272,13 @@ abstract class Backend
             if (in_array('', $type)) continue;
 
             if ($key == 'dev') {
-            	setcookie('tasklist_type', 'assignedtome');
+            	#setcookie('tasklist_type', 'assignedtome');
                 $from .= 'LEFT JOIN {assigned} a  ON t.task_id = a.task_id ';
                 $from .= 'LEFT JOIN {users} us  ON a.user_id = us.user_id ';
             }
             else
             {
-            	setcookie('tasklist_type', 'project');
+            	#setcookie('tasklist_type', 'project');
             }
 
             $temp = '';
