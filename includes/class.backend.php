@@ -917,13 +917,13 @@ abstract class Backend
 
         // Process estimated effort
         $estimated_effort = 0;
-        if ($proj->prefs['use_effort_tracking']) {
-            if (($estimated_effort = effort::ConvertStringToSeconds(Post::val('estimated_effort'))) === FALSE) {
+        if ($proj->prefs['use_effort_tracking'] && isset($sql_args['estimated_effort'])) {
+            if (($estimated_effort = effort::ConvertStringToSeconds($sql_args['estimated_effort'])) === FALSE) {
                 Flyspray::show_error(L('invalideffort'));
+                $estimated_effort = 0;
             }
+            $sql_args['estimated_effort'] = $estimated_effort;
         }
-        $sql_params[] = 'estimated_effort';
-        $sql_values[] = $estimated_effort;
 
         // Token for anonymous users
         $token = '';

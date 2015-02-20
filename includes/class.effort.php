@@ -47,17 +47,12 @@ class effort
     public function addEffort($effort_to_add)
     {
         global $db;
-        /*
-        $add = explode(':',$effort_to_add);
 
-        if(!isset($add[1]))
-        {
-            $add[1]=0;
-        }
-
-        $effort = ($add[0] * 60 * 60) + ($add[1]*60);
-        */
         $effort = self::ConvertStringToSeconds($effort_to_add);
+        if ($effort === FALSE) {
+            Flyspray::show_error(L('invalideffort'));
+            return;
+        }
 
         $db->Query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
@@ -138,18 +133,23 @@ class effort
 
     public static function ConvertStringToSeconds($string) {
         if (!isset($string) || empty($string)) {
-            // echo "returning ZERO";
+            echo "returning ZERO";
             return 0;
         }
         
         $matches = array();
-        if (preg_match('/(\d+)(:(\d{2}))?/', $string, $matches) !== 1) {
-            // echo "returning FALSE";
+        if (preg_match('/^(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
+            echo "returning FALSE";
             return FALSE;
         }
 
-        if(!isset($matches[3])) {
+        if (!isset($matches[3])) {
             $matches[3]=0;
+        } else {
+            if ($matches[3] > 59) {
+                echo "returning FALSE";
+                return FALSE;
+            }
         }
 
         $effort = ($matches[1] * 60 * 60) + ($matches[3]*60);
