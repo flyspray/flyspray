@@ -789,7 +789,11 @@ class Setup extends Flyspray
       $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
+      $config[] = "\n";
       $config[] = "[oauth]";
+      $config[] = "; Uncomment the oauth providers you want your users be able to use.";
+      $config[] = "; Don't forget to uncomment and set their corresponding configs \"secret\", \"id\" and \"redirect\"";
+      $config[] = "\n";
       $config[] = 'enabled[] = ""';
       $config[] = ';enabled[] = "github"';
       $config[] = ';enabled[] = "google"';

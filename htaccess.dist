@@ -8,8 +8,7 @@ AddDefaultCharset utf-8
 
 DirectoryIndex index.php index.html
 
-#mod security conflicts with flyspray and you do not need it here
-# see also http://blog.php-security.org/archives/70-Modsecurity-vs.-PHP.html
+# Mod security conflicts with flyspray and you do not need it here
 
 #for mod_security 1
 <IfModule mod_security.c>
@@ -20,7 +19,7 @@ DirectoryIndex index.php index.html
    SecRuleEngine Off
 </IfModule>
 
-# php5 as  apache 1/2 module 
+# php5 as  apache 1/2 module
 <IfModule mod_php5.c>
 php_flag register_globals Off
 php_flag magic_quotes_gpc Off
