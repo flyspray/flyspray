@@ -230,7 +230,7 @@ function quick_edit(elem, id)
 	if(e.selectedIndex != null)
 		text = e.options[e.selectedIndex].text;
 	else
-		text = document.getElementById("due_date").value;//for due date
+		text = document.getElementById(id).value; // for due date and estimated effort
 	var xmlHttp = new XMLHttpRequest();
 
 	xmlHttp.onreadystatechange = function()
