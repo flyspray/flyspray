@@ -25,13 +25,13 @@
              { ?>
                     <?php echo Filters::noXSS(L('trackinginprogress')); ?> (<?php
 
-                    echo ConvertSeconds(time()-$details['start_timestamp']);
+                    echo effort::ConvertSecondsToString(time()-$details['start_timestamp']);
 
                     ?>)
                     <?php }
              else
              {
-                echo ConvertSeconds($details['effort']);
+                echo effort::ConvertSecondsToString($details['effort']);
              } ?>
                 </td>
                 <td>

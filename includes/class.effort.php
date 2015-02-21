@@ -133,13 +133,11 @@ class effort
 
     public static function ConvertStringToSeconds($string) {
         if (!isset($string) || empty($string)) {
-            echo "returning ZERO";
             return 0;
         }
         
         $matches = array();
         if (preg_match('/^(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
-            echo "returning FALSE";
             return FALSE;
         }
 
@@ -147,7 +145,6 @@ class effort
             $matches[3]=0;
         } else {
             if ($matches[3] > 59) {
-                echo "returning FALSE";
                 return FALSE;
             }
         }

@@ -136,7 +136,6 @@ switch ($action = Req::val('action'))
 
         $estimated_effort = 0;
         if (($estimated_effort = effort::ConvertStringToSeconds(Post::val('estimated_effort'))) === FALSE) {
-            echo "Failing HERE";
             Flyspray::show_error(L('invalideffort'));
             break;
         }
