@@ -708,6 +708,10 @@
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
      </field>
+    <field name="hours_is_manday" type="C" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
   </table>
   <table name="registrations">
     <field name="reg_id" type="I" size="10">

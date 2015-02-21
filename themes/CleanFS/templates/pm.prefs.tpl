@@ -224,6 +224,10 @@
               <?php echo tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort'); ?>
 
           </li>
+          <li>
+              <label for="hours_is_manday"><?php echo Filters::noXSS(L('hoursismanday')); ?></label>
+              <input id="hours_is_manday" class="text" name="hours_is_manday" type="text" value="<?php echo Filters::noXSS(Post::val('hours_is_manday', $proj->prefs['hours_is_manday'])); ?>" />
+          </li>
       </ul>
   </div>
 
