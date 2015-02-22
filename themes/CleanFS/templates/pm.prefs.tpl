@@ -226,8 +226,22 @@
           </li>
           <li>
               <label for="hours_is_manday"><?php echo Filters::noXSS(L('hoursismanday')); ?></label>
-              <input id="hours_is_manday" class="text" name="hours_is_manday" type="text" value="<?php echo Filters::noXSS(Post::val('hours_is_manday', $proj->prefs['hours_is_manday'])); ?>" />
+              <input id="hours_is_manday" class="text" name="hours_is_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_is_manday', $proj->prefs['hours_is_manday']), $proj)); ?>" />
           </li>
+        <li>
+          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
+          <select id="effort_format" name="effort_format">
+            <?php echo tpl_options(array(
+            effort::FORMAT_HOURS_MINUTES => L('hours') . ", " . L('minutes'),
+            effort::FORMAT_HOURS => L('hours'),
+            effort::FORMAT_MINUTES => L('minutes'),
+            effort::FORMAT_DAYS => L('days'),
+            effort::FORMAT_DAYS_HOURS => L('days') . ", " . L('hours'),
+            effort::FORMAT_DAYS_HOURS_MINUTES => L('days') . ", " . L('hours') . ", " . L('minutes'),
+            ),
+            Post::val('effort_format', $proj->prefs['effort_format'])); ?>
+          </select>
+        </li>
       </ul>
   </div>
 

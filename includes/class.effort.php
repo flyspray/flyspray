@@ -22,6 +22,12 @@ function ConvertSeconds ($seconds)
  */
 class effort
 {
+    const FORMAT_HOURS_MINUTES = 0; // Default value in database
+    const FORMAT_HOURS = 1;
+    const FORMAT_MINUTES = 2;
+    const FORMAT_DAYS = 3;
+    const FORMAT_DAYS_HOURS = 4;
+    const FORMAT_DAYS_HOURS_MINUTES = 5;
 
     private $_task_id;
     private $_userId;
@@ -142,20 +148,42 @@ class effort
             return 0;
         }
         
-        $matches = array();
-        if (preg_match('/^(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
-            return FALSE;
+        $factor = ($proj->prefs['hours_is_manday'] > 0 ? $proj->prefs['hours_is_manday'] : 86400);
+        
+        // Only a single number and project uses a display/edit format that
+        // has working days. Assume the user expressed time in (working) days.
+        // Note: accepts 0xff and several other formats also...
+        if (is_numeric($string) &&
+           ($proj->prefs['effort_format'] == self::FORMAT_DAYS ||
+            $proj->prefs['effort_format'] == self::FORMAT_DAYS_HOURS ||
+            $proj->prefs['effort_format'] == self::FORMAT_DAYS_HOURS_MINUTES)) {
+            $effort = floor(($string + 0) * $factor);
         }
-
-        if (!isset($matches[3])) {
-            $matches[3]=0;
-        } else {
-            if ($matches[3] > 59) {
+        // Only a single number and project uses a display/edit format that
+        // has only hours. Assume the user expressed time in hours.
+        elseif (is_numeric($string) && $proj->prefs['effort_format'] == self::FORMAT_HOURS) {
+            $effort = floor(($string + 0) * 3600);
+        }
+        else {
+            $matches = array();
+            if (preg_match('/^((\d+)\w)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
                 return FALSE;
             }
-        }
 
-        $effort = ($matches[1] * 60 * 60) + ($matches[3]*60);
+            if (!isset($matches[1])) {
+                $matches[1] = 0;
+            }
+            
+            if (!isset($matches[5])) {
+                $matches[5] = 0;
+            } else {
+                if ($matches[5] > 59) {
+                    return FALSE;
+                }
+            }
+
+            $effort = ($matches[1] * $factor) + ($matches[3] * 60 * 60) + ($matches[5] * 60);
+        }
         return $effort;
     }
 }
