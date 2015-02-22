@@ -557,11 +557,11 @@ function quick_edit(elem, id)
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
-                class="value"><?php echo effort::ConvertSecondsToString($task_details['estimated_effort']); ?></span>
+                class="value"><?php echo effort::SecondsToString($task_details['estimated_effort'], $proj); ?></span>
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
-        	<input type="text" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::ConvertSecondsToString($task_details['estimated_effort']); ?>">
+        	<input type="text" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToString($task_details['estimated_effort'], $proj); ?>">
         	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
         	</span>
         	<?php endif; ?>
@@ -574,7 +574,7 @@ function quick_edit(elem, id)
             $total_effort += $details['effort'];
             }
             ?>
-            <span class="value"><?php echo effort::ConvertSecondsToString($total_effort); ?> </span>
+            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj); ?> </span>
         </li>
         <?php } 
         } ?>

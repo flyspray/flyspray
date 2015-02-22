@@ -44,11 +44,11 @@ class effort
      *
      * @param $effort_to_add int Amount of Effort in hours to add to effort table.
      */
-    public function addEffort($effort_to_add)
+    public function addEffort($effort_to_add, $proj)
     {
         global $db;
 
-        $effort = self::ConvertStringToSeconds($effort_to_add);
+        $effort = self::EditStringToSeconds($effort_to_add, $proj);
         if ($effort === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             return;
@@ -125,13 +125,19 @@ class effort
         $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
     }
     
-    public static function ConvertSecondsToString($seconds) {
+    public static function SecondsToString($seconds, $proj) {
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds - ($hours * 3600)) / 60);
         return sprintf('%01u:%02u', $hours, $minutes);
     }
 
-    public static function ConvertStringToSeconds($string) {
+    public static function SecondsToEditString($seconds, $proj) {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds - ($hours * 3600)) / 60);
+        return sprintf('%01u:%02u', $hours, $minutes);
+    }
+
+    public static function EditStringToSeconds($string, $proj) {
         if (!isset($string) || empty($string)) {
             return 0;
         }

@@ -32,7 +32,7 @@ if(Post::val('name') == "due_date"){
     $value = intval($value);
 }
 elseif(Post::val('name') == "estimated_effort"){
-    $value = effort::ConvertStringToSeconds(Post::val('value'));
+    $value = effort::EditStringToSeconds(Post::val('value'), $proj);
     $value = intval($value);
 }
 else {

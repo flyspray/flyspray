@@ -135,7 +135,7 @@ switch ($action = Req::val('action'))
         }
 
         $estimated_effort = 0;
-        if (($estimated_effort = effort::ConvertStringToSeconds(Post::val('estimated_effort'))) === FALSE) {
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj)) === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             break;
         }
@@ -380,7 +380,7 @@ switch ($action = Req::val('action'))
         }
 
         if(Post::val('manual_effort')){
-            $effort->addEffort(Post::val('effort_to_add'));
+            $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
         break;
