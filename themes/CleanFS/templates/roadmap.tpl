@@ -79,7 +79,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
         echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
     } ?>
     <?php } 
-    } ?>
+    ?>
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>
