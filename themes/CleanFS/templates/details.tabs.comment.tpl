@@ -63,7 +63,7 @@
 
   <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
   <h4><?php echo Filters::noXSS(L('addcomment')); ?></h4>
-  <form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
+  <?php echo tpl_form(CreateUrl('details', $task_details['task_id']), 'comment', 'post', 'multipart/form-data'); ?>
     <div>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <div class="hide preview" id="preview"></div>
