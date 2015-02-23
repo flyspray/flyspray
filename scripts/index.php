@@ -200,14 +200,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             
 	case 'estimated_effort':
 		if ($task['estimated_effort']>0){
-			$value = effort::SecondsToString($task['estimated_effort'], $proj);
+			$value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
 		}else{
 			$value='';
 		}
 		break;
 	
 	case 'effort':
-		$value = effort::SecondsToString($task['effort'], $proj);
+		$value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
 		break;
 		
         default:

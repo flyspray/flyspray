@@ -918,7 +918,7 @@ abstract class Backend
         // Process estimated effort
         $estimated_effort = 0;
         if ($proj->prefs['use_effort_tracking'] && isset($sql_args['estimated_effort'])) {
-            if (($estimated_effort = effort::EditStringToSeconds($sql_args['estimated_effort'], $proj)) === FALSE) {
+            if (($estimated_effort = effort::EditStringToSeconds($sql_args['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format'])) === FALSE) {
                 Flyspray::show_error(L('invalideffort'));
                 $estimated_effort = 0;
             }

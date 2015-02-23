@@ -36,7 +36,7 @@ class Project
         $this->prefs['default_due_version'] = 'Undecided';
         $this->prefs['disable_lostpw'] = 0;
         $this->prefs['disable_changepw'] = 0;
-        $this->prefs['hours_is_manday'] = 0;
+        $this->prefs['hours_per_manday'] = 0;
         $this->prefs['effort_format'] = 0;
     }
 

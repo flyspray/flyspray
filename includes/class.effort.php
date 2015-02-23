@@ -54,7 +54,7 @@ class effort
     {
         global $db;
 
-        $effort = self::EditStringToSeconds($effort_to_add, $proj);
+        $effort = self::EditStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
         if ($effort === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             return;
@@ -131,32 +131,100 @@ class effort
         $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
     }
     
-    public static function SecondsToString($seconds, $proj) {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds - ($hours * 3600)) / 60);
-        return sprintf('%01u:%02u', $hours, $minutes);
+    public static function SecondsToString($seconds, $factor, $format) {
+        if ($seconds == 0) {
+            return '';
+        }
+        
+        $factor = ($factor == 0 ? 86400 : $factor);
+
+        switch ($format) {
+            case self::FORMAT_HOURS_MINUTES:
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds - ($hours * 3600)) / 60);
+                return sprintf('%01u:%02u', $hours, $minutes);
+                break;
+            case self::FORMAT_HOURS:
+                $hours = round($seconds / 3600, 1);
+                return sprintf('%01.1f %s', $hours, L('hourabbrev'));
+                break;
+            case self::FORMAT_MINUTES:
+                $minutes = floor($seconds / 60);
+                return sprintf('%01u', $minutes);
+                break;
+            case self::FORMAT_DAYS:
+                $days = round($seconds / $factor, 1);
+                return sprintf('%01.1f', $days);
+            case self::FORMAT_DAYS_HOURS:
+                $days = floor($seconds / $factor);
+                $hours = round(($seconds - ($days * $factor)) / 3600, 1);
+                if ($days == 0) {
+                    return sprintf('%01.1f %s', $hours, L('hourabbrev'));
+                } else {
+                    return sprintf('%u %s %01.1f %s', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, L('hourabbrev'));
+                }
+            case self::FORMAT_DAYS_HOURS_MINUTES:
+                $days = floor($seconds / $factor);
+                $hours = floor(($seconds - ($days * $factor)) / 3600);
+                $minutes = floor(($seconds - (($days * $factor) + ($hours * 3600))) / 60);
+                if ($days == 0) {
+                    return sprintf('%01u:%02u', $hours, $minutes);
+                } else {
+                    return sprintf('%u %s %02u:%02u', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, $minutes);
+                }
+                break;
+            default:
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds - ($hours * 3600)) / 60);
+                return sprintf('%01u:%02u', $hours, $minutes);
+        }
     }
 
-    public static function SecondsToEditString($seconds, $proj) {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds - ($hours * 3600)) / 60);
-        return sprintf('%01u:%02u', $hours, $minutes);
+    public static function SecondsToEditString($seconds, $factor, $format) {
+        $factor = ($factor == 0 ? 86400 : $factor);
+
+        switch ($format) {
+            case self::FORMAT_HOURS_MINUTES:
+            case self::FORMAT_HOURS:
+            case self::FORMAT_MINUTES:
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds - ($hours * 3600)) / 60);
+                return sprintf('%01u:%02u', $hours, $minutes);
+                break;
+            case self::FORMAT_DAYS:
+            case self::FORMAT_DAYS_HOURS:
+            case self::FORMAT_DAYS_HOURS_MINUTES:
+                $days = floor($seconds / $factor);
+                $hours = floor(($seconds - ($days * $factor)) / 3600);
+                $minutes = floor(($seconds - ($hours * 3600)) / 60);
+                if ($days == 0) {
+                    return sprintf('%01u:%02u', $hours, $minutes);
+                } else {
+                    return sprintf('%u %02u:%02u', $days, $hours, $minutes);
+                }
+                break;
+            default:
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds - (($days * $factor) + ($hours * 3600))) / 60);
+                return sprintf('%01u:%02u', $hours, $minutes);
+        }
     }
 
-    public static function EditStringToSeconds($string, $proj) {
+    public static function EditStringToSeconds($string, $factor, $format) {
         if (!isset($string) || empty($string)) {
             return 0;
         }
         
-        $factor = ($proj->prefs['hours_is_manday'] > 0 ? $proj->prefs['hours_is_manday'] : 86400);
+        $factor = ($factor == 0 ? 86400 : $factor);
         
+        /* Maybe I shouldn't try to parse everything possible...
         // Only a single number and project uses a display/edit format that
         // has working days. Assume the user expressed time in (working) days.
         // Note: accepts 0xff and several other formats also...
         if (is_numeric($string) &&
-           ($proj->prefs['effort_format'] == self::FORMAT_DAYS ||
-            $proj->prefs['effort_format'] == self::FORMAT_DAYS_HOURS ||
-            $proj->prefs['effort_format'] == self::FORMAT_DAYS_HOURS_MINUTES)) {
+           ($format == self::FORMAT_DAYS ||
+            $format == self::FORMAT_DAYS_HOURS ||
+            $format == self::FORMAT_DAYS_HOURS_MINUTES)) {
             $effort = floor(($string + 0) * $factor);
         }
         // Only a single number and project uses a display/edit format that
@@ -165,13 +233,14 @@ class effort
             $effort = floor(($string + 0) * 3600);
         }
         else {
+         */
             $matches = array();
-            if (preg_match('/^((\d+)\w)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
+            if (preg_match('/^((\d+)\s)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
                 return FALSE;
             }
 
-            if (!isset($matches[1])) {
-                $matches[1] = 0;
+            if (!isset($matches[2])) {
+                $matches[2] = 0;
             }
             
             if (!isset($matches[5])) {
@@ -182,8 +251,10 @@ class effort
                 }
             }
 
-            $effort = ($matches[1] * $factor) + ($matches[3] * 60 * 60) + ($matches[5] * 60);
-        }
+            // echo $factor . ":" . $matches[1] . ":" . $matches[2] . ":" . $matches[3] . ":" . $matches[5]; 
+            
+            $effort = ($matches[2] * $factor) + ($matches[3] * 3600) + ($matches[5] * 60);
+        // }
         return $effort;
     }
 }

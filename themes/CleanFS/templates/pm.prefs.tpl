@@ -225,8 +225,8 @@
 
           </li>
           <li>
-              <label for="hours_is_manday"><?php echo Filters::noXSS(L('hoursismanday')); ?></label>
-              <input id="hours_is_manday" class="text" name="hours_is_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_is_manday', $proj->prefs['hours_is_manday']), $proj)); ?>" />
+              <label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
+              <input id="hours_per_manday" class="text" name="hours_per_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_per_manday', $proj->prefs['hours_per_manday']), $proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_MINUTES)); ?>" />
           </li>
         <li>
           <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>

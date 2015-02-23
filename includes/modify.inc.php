@@ -135,7 +135,7 @@ switch ($action = Req::val('action'))
         }
 
         $estimated_effort = 0;
-        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj)) === FALSE) {
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format'])) === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             break;
         }
@@ -985,9 +985,9 @@ switch ($action = Req::val('action'))
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
 
         // Convert to seconds.
-        if (Post::val('hours_is_manday')) {
-            $args[] = effort::EditStringToSeconds(Post::val('hours_is_manday'), $proj);
-            $cols[] = 'hours_is_manday'; 
+        if (Post::val('hours_per_manday')) {
+            $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+            $cols[] = 'hours_per_manday'; 
         }
 
         $args[] = $proj->id;
