@@ -799,7 +799,8 @@ switch ($action = Req::val('action'))
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
-                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open','view_effort','track_effort');
+                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
+                        'view_effort', 'track_effort', 'view_actual_effort');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -1225,7 +1226,7 @@ switch ($action = Req::val('action'))
               'create_attachments', 'delete_attachments', 'show_as_assignees',
               'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
               'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open','view_effort','track_effort'));
+              'add_votes', 'group_open','view_effort','track_effort','view_actual_effort'));
         }
 
         $args = array_map('Post_to0', $cols);

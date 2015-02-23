@@ -237,6 +237,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="view_actual_effort" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="track_effort" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -353,7 +357,7 @@
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
      </field>
-    <field name="hours_is_manday" type="I" size="11">
+    <field name="hours_per_manday" type="I" size="11">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>

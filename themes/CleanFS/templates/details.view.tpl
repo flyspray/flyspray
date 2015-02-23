@@ -566,6 +566,9 @@ function quick_edit(elem, id)
         	</span>
         	<?php endif; ?>
         </li>
+        <?php }
+                if ($user->perms('view_actual_effort')) {
+        ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
             <?php

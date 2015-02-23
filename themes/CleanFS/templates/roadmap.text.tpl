@@ -9,31 +9,32 @@
    ?><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:<?php
    endif; ?>
 <?php
-    if($proj->prefs['use_effort_tracking'])
-    if ($user->perms('view_effort')) {
-    {
+    if($proj->prefs['use_effort_tracking']) {
+        $total_estimated = 0;
+        $actual_effort = 0;
 
-    $total_estimated = 0;
-    $actual_effort = 0;
+        foreach($milestone['open_tasks'] as $task) {
+            $total_estimated += $task['estimated_effort'];
+            $effort = new effort($task['task_id'],0);
+            $effort->populateDetails();
 
-    foreach($milestone['open_tasks'] as $task)
-    {
-    $total_estimated += $task['estimated_effort'];
-    $effort = new effort($task['task_id'],0);
-    $effort->populateDetails();
-
-    foreach($effort->details as $details)
-    {
-    $actual_effort += $details['effort'];
-    }
-    $effort = null;
-    }
-    }
+            foreach($effort->details as $details) {
+                $actual_effort += $details['effort'];
+            }
+            $effort = null;
+        }
+    // }
 ?>
 
-<?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+<?php
+    if ($user->perms('view_effort')) {
+        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+} ?>
 
-<?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+<?php
+    if ($user->perms('view_actual_effort')) {
+        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+} ?>
 <?php } ?>
 
 <?php if(count($milestone['open_tasks'])): ?>

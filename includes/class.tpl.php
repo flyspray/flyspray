@@ -662,7 +662,7 @@ function tpl_draw_perms($perms)
             'create_attachments', 'delete_attachments',
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
-            'add_votes', 'edit_own_comments','view_effort','track_effort');
+            'add_votes', 'edit_own_comments','view_effort','track_effort','view_actual_effort');
 
     $yesno = array(
             '<td class="bad">' . eL('no') . '</td>',

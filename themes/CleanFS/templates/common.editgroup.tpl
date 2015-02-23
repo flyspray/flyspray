@@ -119,6 +119,10 @@
             <td><?php echo tpl_checkbox('view_effort', Req::val('view_effort', !Req::val('action') && $group_details['view_effort']), 'vieweffort'); ?></td>
         </tr>
         <tr>
+            <td><label for="viewactualeffort"><?php echo Filters::noXSS(L('viewactualeffort')); ?></label></td>
+            <td><?php echo tpl_checkbox('view_actual_effort', Req::val('view_actual_effort', !Req::val('action') && $group_details['view_actual_effort']), 'viewactualeffort'); ?></td>
+        </tr>
+        <tr>
             <td><label for="trackeffort"><?php echo Filters::noXSS(L('trackeffort')); ?></label></td>
             <td><?php echo tpl_checkbox('track_effort', Req::val('track_effort', !Req::val('action') && $group_details['track_effort']), 'trackeffort'); ?></td>
         </tr>
