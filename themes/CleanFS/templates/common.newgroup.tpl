@@ -1,5 +1,4 @@
-<form action="<?php echo Filters::noXSS(CreateUrl($do, 'newgroup', $proj->id)); ?>" method="post" id="newgroup">
-    
+<?php echo tpl_form(Filters::noXSS(CreateUrl($do,'newgroup',$proj->id)),null,null,null,'id="newgroup"'); ?>
     <ul class="form_elements">
       <li class="required">
         <label for="groupname"><?php echo Filters::noXSS(L('groupname')); ?> *</label>
