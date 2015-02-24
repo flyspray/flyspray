@@ -5,9 +5,9 @@
        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=reopen&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>"><?php echo Filters::noXSS(L('reopenthistask')); ?></a>
     <?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
     <div id="closeform" class="popup hide">
-        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))),'form3',null,null,'id="formclosetask"'); ?>
-            <input type="hidden" name="action" value="requestreopen"/>
-            <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+            <input type="hidden" name="action" value="requestreopen" />
+            <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
             <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
             <textarea id="reason" name="reason_given"></textarea><br/>
             <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
