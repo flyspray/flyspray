@@ -73,7 +73,7 @@
 <input class="text" id="searchtext" name="string" type="text" size="20"
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
 <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
-<a id="searchstate" onclick="toggleSearchBox('<?php echo Filters::noJsXSS($this->themeUrl()); ?>');return false;"
+<a class="button" id="searchstate" onclick="toggleSearchBox('<?php echo Filters::noJsXSS($this->themeUrl()); ?>');return false;"
    href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))); ?>">
 	<span id="advancedsearchstate" class="showstate"><img id="advancedsearchstateimg"
                 src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
