@@ -69,32 +69,29 @@
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-<button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
-<input class="text" id="searchtext" name="string" type="text" size="20"
+  <button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
+  <input class="text" id="searchtext" name="string" type="text" size="20"
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
-<input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
-<a class="button" id="searchstate" onclick="toggleSearchBox('<?php echo Filters::noJsXSS($this->themeUrl()); ?>');return false;"
-   href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))); ?>">
-	<span id="advancedsearchstate" class="showstate"><img id="advancedsearchstateimg"
-                src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
-                alt="<?php echo (Cookie::val('advancedsearch')) ? '-' : '+'; ?>"/>
-	</span><?php echo Filters::noXSS(L('advanced')); ?></a>
-<div id="sc2" class="switchcontent"
-        <?php if (!Cookie::val('advancedsearch')):?>style="display:none;"<?php endif; ?> >
-        <?php if (!$user->isAnon()): ?>
-                <fieldset>
-                    <div class="save_search"><label for="save_search" id="lblsaveas"><?php echo Filters::noXSS(L('saveas')); ?></label>
-                        <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search"
-                               name="search_name" size="15"/>
-                        &nbsp;
-                        <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?php echo Filters::noXSS(L('saving')); ?>')"
-                                type="button"><?php echo Filters::noXSS(L('OK')); ?></button>
-                    </div>
-                </fieldset>
-                <?php endif; ?>
-                <fieldset class="advsearch_misc">
-                    <legend><?php echo Filters::noXSS(L('miscellaneous')); ?></legend>
-                    <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
+  <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
+<style>
+#sc2,#s_searchstate{display:none;}
+#s_searchstate:checked ~ #sc2 {display:block;}
+</style>
+<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>>
+<label id="searchstateactions" class="button main" for="s_searchstate"><?php echo Filters::noXSS(L('advanced')); ?></label>
+<div id="sc2" class="switchcontent">
+<?php if (!$user->isAnon()): ?>
+<div id="sc2" class="switchcontent">
+<?php if (!$user->isAnon()): ?>
+<fieldset>
+  <div class="save_search"><label for="save_search" id="lblsaveas"><?php echo Filters::noXSS(L('saveas'));?></label>
+   <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/> <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?php echo Filters::noXSS(L('saving')); ?>')" type="button"><?php echo Filters::noXSS(L('OK')); ?></button>
+  </div>
+</fieldset>
+<?php endif; ?>
+<fieldset class="advsearch_misc">
+   <legend><?php echo Filters::noXSS(L('miscellaneous')); ?></legend>
+   <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
                     <label class="left" for="sic"><?php echo Filters::noXSS(L('searchcomments')); ?></label>
 
                     <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
