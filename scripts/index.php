@@ -35,6 +35,14 @@ if (!is_array($visible) || !count($visible) || !$visible[0]) {
     $visible = array('id');
 }
 
+// Remove columns the user is not allowed to see
+if (in_array('estimated_effort', $visible) && !$user->perms('view_effort')) {
+    unset($visible[array_search('estimated_effort', $visible)]);
+}
+if (in_array('effort', $visible) && !$user->perms('view_actual_effort')) {
+    unset($visible[array_search('effort', $visible)]);
+}
+
 list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
 //-- Added 2/1/2014 LAE. See if user wants to export the task list

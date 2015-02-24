@@ -303,7 +303,7 @@
             </div>
             <input type="hidden" name="do" value="index"/>
 
- <!--- Added 2/1/2014 LAE --!>
+ <!-- Added 2/1/2014 LAE -->
 
  <form action="<?php echo Filters::noXSS($baseurl); ?>/scripts/index.php" method="post">
  <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
@@ -430,7 +430,7 @@
 
 
 
-<!--- Bulk editing Tasks --->
+<!--- Bulk editing Tasks -->
 <?php if (!$proj->id == 0): ?>
 <?php if (!$user->isAnon() && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
