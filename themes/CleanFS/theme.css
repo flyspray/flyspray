@@ -512,8 +512,6 @@ body.toplevel .box {
   border-radius: 3px;
   margin: 10px 0 0 10px;
   width: 400px;
-  height: 275px;
-  /*height: 280px;*/
   /*@include inline-block;*/
   /*vertical-align: middle;*/
   float: left; }
