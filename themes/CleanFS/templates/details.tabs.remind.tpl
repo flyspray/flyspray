@@ -1,7 +1,6 @@
 <?php if (!$task_details['is_closed']): ?>
   <div id="remind" class="tab">
-  
-  <form method="post" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>#remind" >
+  <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#remind'); ?>
     <?php if (count($reminders)): ?>
     <table id="reminders" class="userlist">
     <tr>
@@ -46,7 +45,7 @@
   </form>
 
   <fieldset><legend><?php echo Filters::noXSS(L('addreminder')); ?></legend>
-  <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>#remind" method="post" id="formaddreminder">
+  <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#remind',null,null,null,'id="formaddreminder"'); ?>
     <div>
       <input type="hidden" name="action" value="details.addreminder" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -62,12 +61,8 @@
         <?php echo tpl_options(array(3600 => L('hours'), 86400 => L('days'), 604800 => L('weeks')), Req::val('timetype1')); ?>
 
       </select>
-
       <br />
-
       <?php echo tpl_datepicker('timeamount2', L('startat'), Req::val('timeamount2', formatDate(time()))); ?>
-
-
       <br />
       <textarea class="text" name="reminder_message"
         rows="10" cols="72"><?php echo Filters::noXSS(Req::val('reminder_message', L('defaultreminder') . "\n\n" . CreateURL('details', $task_details['task_id']))); ?></textarea>
