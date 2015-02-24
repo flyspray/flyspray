@@ -224,6 +224,24 @@
               <?php echo tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort'); ?>
 
           </li>
+          <li>
+              <label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
+              <input id="hours_per_manday" class="text" name="hours_per_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_per_manday', $proj->prefs['hours_per_manday']), $proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_MINUTES)); ?>" />
+          </li>
+        <li>
+          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
+          <select id="effort_format" name="effort_format">
+            <?php echo tpl_options(array(
+            effort::FORMAT_HOURS_MINUTES => L('hours') . ", " . L('minutes'),
+            effort::FORMAT_HOURS => L('hours'),
+            effort::FORMAT_MINUTES => L('minutes'),
+            effort::FORMAT_DAYS => L('days'),
+            effort::FORMAT_DAYS_HOURS => L('days') . ", " . L('hours'),
+            effort::FORMAT_DAYS_HOURS_MINUTES => L('days') . ", " . L('hours') . ", " . L('minutes'),
+            ),
+            Post::val('effort_format', $proj->prefs['effort_format'])); ?>
+          </select>
+        </li>
       </ul>
   </div>
 

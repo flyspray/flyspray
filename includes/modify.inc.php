@@ -134,8 +134,8 @@ switch ($action = Req::val('action'))
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
 
-        if (!is_integer((int)Post::num('estimated_effort')))
-        {
+        $estimated_effort = 0;
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format'])) === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             break;
         }
@@ -156,7 +156,7 @@ switch ($action = Req::val('action'))
             Post::val('product_category'), Post::val('closedby_version', 0),
             Post::val('operating_system'), Post::val('task_severity'),
             Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-            Post::val('percent_complete'), Post::val('reportedver'),intval(Post::val('estimated_effort')),
+            Post::val('percent_complete'), Post::val('reportedver'),intval($estimated_effort),
             $task['task_id']));
 
         // Update the list of users assigned this task
@@ -380,7 +380,7 @@ switch ($action = Req::val('action'))
         }
 
         if(Post::val('manual_effort')){
-            $effort->addEffort(Post::val('effort_to_add'));
+            $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
         break;
@@ -799,7 +799,8 @@ switch ($action = Req::val('action'))
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
-                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open','view_effort','track_effort');
+                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
+                        'view_effort', 'track_effort', 'view_actual_effort');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -970,7 +971,8 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking');
+                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
+                'effort_format');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -982,8 +984,15 @@ switch ($action = Req::val('action'))
         $args[] = Post::num('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
-        $args[] = $proj->id;
 
+        // Convert to seconds.
+        if (Post::val('hours_per_manday')) {
+            $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+            $cols[] = 'hours_per_manday'; 
+        }
+
+        $args[] = $proj->id;
+        
         $update = $db->Query("UPDATE  {projects}
                                  SET  ".join('=?, ', $cols)."=?
                                WHERE  project_id = ?", $args);
@@ -1217,7 +1226,7 @@ switch ($action = Req::val('action'))
               'create_attachments', 'delete_attachments', 'show_as_assignees',
               'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
               'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open','view_effort','track_effort'));
+              'add_votes', 'group_open','view_effort','track_effort','view_actual_effort'));
         }
 
         $args = array_map('Post_to0', $cols);

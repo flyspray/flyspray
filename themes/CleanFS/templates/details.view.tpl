@@ -230,7 +230,7 @@ function quick_edit(elem, id)
 	if(e.selectedIndex != null)
 		text = e.options[e.selectedIndex].text;
 	else
-		text = document.getElementById("due_date").value;//for due date
+		text = document.getElementById(id).value; // for due date and estimated effort
 	var xmlHttp = new XMLHttpRequest();
 
 	xmlHttp.onreadystatechange = function()
@@ -556,15 +556,19 @@ function quick_edit(elem, id)
         ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
-            <span class="value"><?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
+                class="value"><?php echo effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?></span>
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
-        	<input type="text" name="estimated_effort" value="<?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?>">
-        	<a class="button" onclick="quick_edit(this.parentNode.parentNode, 'estimated_effort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a class="button" href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        	<input type="text" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>">
+        	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
         	</span>
         	<?php endif; ?>
         </li>
+        <?php }
+                if ($user->perms('view_actual_effort')) {
+        ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
             <?php
@@ -573,7 +577,7 @@ function quick_edit(elem, id)
             $total_effort += $details['effort'];
             }
             ?>
-            <span class="value"><?php echo ConvertSeconds($total_effort); ?> </span>
+            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?> </span>
         </li>
         <?php } 
         } ?>

@@ -11,6 +11,9 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
+// Need to get function ConvertSeconds
+require_once(BASEDIR . '/includes/class.effort.php');
+
 if (!$user->can_view_project($proj->id)) {
     $proj = new Project(0);
 }
@@ -104,7 +107,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 // tpl function that  draws a cell {{{
 
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
-	global $fs, $proj, $page;
+	global $fs, $proj, $page, $user;
 
 	$indexes = array (
             'id'         => 'task_id',
@@ -196,16 +199,22 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
             
 	case 'estimated_effort':
-		if ($task['estimated_effort']>0){
-			$value=$task['estimated_effort'].' h';
-		}else{
-			$value='';
+            $value = '';
+            if ($user->perms('view_effort')) {
+		if ($task['estimated_effort'] > 0){
+                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
 		}
-		break;
+            }
+            break;
 	
 	case 'effort':
-		$value=$task['effort']>0 ? (ceil($task['effort']/360)/10).' h':'';
-		break;
+            $value = '';
+            if ($user->perms('view_actual_effort')) {
+		if ($task['effort'] > 0){
+                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                }
+            }
+            break;
 		
         default:
         	$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');

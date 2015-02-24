@@ -24,14 +24,19 @@ if ($user->isAnon()) {
 
 $task = Flyspray::GetTaskDetails(Post::val('task_id'));
 if (!$user->can_edit_task($task)){
-	Flyspray::show_error(L('nopermission'));
-	die();
+    Flyspray::show_error(L('nopermission'));
+    die();
 }
 if(Post::val('name') == "due_date"){
-	$value = Flyspray::strtotime(Post::val('value'));
-	$value = intval($value);
+    $value = Flyspray::strtotime(Post::val('value'));
+    $value = intval($value);
 }
-else
-	$value = Post::val('value');
+elseif(Post::val('name') == "estimated_effort"){
+    $value = effort::EditStringToSeconds(Post::val('value'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+    $value = intval($value);
+}
+else {
+    $value = Post::val('value');
+}
 $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_time = ? WHERE task_id = ?", array($value, time(), Post::val('task_id')));
 ?>
