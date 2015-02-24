@@ -52,7 +52,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
    <a href="<?php echo Filters::noXSS($baseurl); ?>index.php?do=index&amp;tasks=&amp;project=<?php echo Filters::noXSS($proj->id); ?>&amp;due=<?php echo Filters::noXSS($milestone['id']); ?>"><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:</a>
    <?php endif; ?>
     <?php
-    if($proj->prefs['use_effort_tracking']) {
+    if ($proj->prefs['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
 

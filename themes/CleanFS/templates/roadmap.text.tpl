@@ -9,7 +9,7 @@
    ?><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:<?php
    endif; ?>
 <?php
-    if($proj->prefs['use_effort_tracking']) {
+    if ($proj->prefs['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
 

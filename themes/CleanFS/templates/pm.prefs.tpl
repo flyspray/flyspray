@@ -232,12 +232,12 @@
           <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
           <select id="effort_format" name="effort_format">
             <?php echo tpl_options(array(
-            effort::FORMAT_HOURS_MINUTES => L('hours') . ", " . L('minutes'),
-            effort::FORMAT_HOURS => L('hours'),
-            effort::FORMAT_MINUTES => L('minutes'),
+            effort::FORMAT_HOURS_MINUTES => L('hourplural') . ":" . L('minuteplural'),
+            effort::FORMAT_HOURS => L('hourplural'),
+            effort::FORMAT_MINUTES => L('minuteplural'),
             effort::FORMAT_DAYS => L('days'),
-            effort::FORMAT_DAYS_HOURS => L('days') . ", " . L('hours'),
-            effort::FORMAT_DAYS_HOURS_MINUTES => L('days') . ", " . L('hours') . ", " . L('minutes'),
+            effort::FORMAT_DAYS_HOURS => L('days') . " " . L('hourplural'),
+            effort::FORMAT_DAYS_HOURS_MINUTES => L('days') . " " . L('hourplural') . ":" . L('minuteplural'),
             ),
             Post::val('effort_format', $proj->prefs['effort_format'])); ?>
           </select>

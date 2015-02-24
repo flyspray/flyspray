@@ -80,6 +80,43 @@ foreach ($projects as $project): ?>
         </div>        
     </td>
   </tr>
+  <?php if ($proj->prefs['use_effort_tracking']) {
+        $total_estimated = 0;
+        $actual_effort = 0;
+
+        foreach($stats[$project['project_id']]['tasks'] as $task) {
+            $total_estimated += $task['estimated_effort'];
+            $effort = new effort($task['task_id'],0);
+            $effort->populateDetails();
+
+            foreach($effort->details as $details) {
+                $actual_effort += $details['effort'];
+            }
+            $effort = null;
+        }
+
+  ?>
+  <?php if ($user->perms('view_effort')) { ?>
+  <tr>
+      <th>
+          <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>
+      </th>
+      <td>
+          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+      </td>
+  </tr>
+  <?php } ?>
+  <?php if ($user->perms('view_actual_effort')) { ?>
+  <tr>
+      <th>
+          <?php echo Filters::noXSS(L('actualeffort')); ?>
+      </th>
+      <td>
+          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+      </td>
+  </tr>
+  <?php } ?>
+  <?php } ?>
   <tr>
     <th><?php echo Filters::noXSS(L('feeds')); ?></th>
     <td>
