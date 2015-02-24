@@ -1881,7 +1881,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('task_id')));
+        Flyspray::Redirect(CreateURL('details', Get::val('return_task_id')));
         break;
 
         // ##################
