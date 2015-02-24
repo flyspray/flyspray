@@ -1,6 +1,6 @@
 <div id="toolbox">
   <h3><?php echo Filters::noXSS(L('createnewproject')); ?></h3>
-  <form action="<?php echo Filters::noXSS(CreateURL('admin', 'newproject')); ?>" method="post">
+  <?php echo tpl_form(CreateURL('admin', 'newproject')); ?>
     <div>
       <input type="hidden" name="action" value="admin.newproject" />
       <input type="hidden" name="area" value="newproject" />
