@@ -1303,15 +1303,14 @@ fieldset.advsearch_dates label {
   position: relative;
   margin-right: 10px; }
 
-  .search_select .multisel {
+.search_select .multisel {
     position: absolute;
-    white-space: nowrap; }
+    white-space: nowrap;
 
-  .search_select select {
+}
+.search_select select {
     margin-top: 1.3em;
-    height: 7em; }
-
-
+}
 fieldset.advsearch_users .multisel {
   position: absolute;
   white-space: nowrap; }
@@ -1608,11 +1607,12 @@ input[type=text], input[type=password], select {
     color: #000;
     background: #fff;
     border: 1px solid #ccc;
-    height: 19px;
     padding: 2px;
     vertical-align: middle;
 }
-
+input[type=text], input[type=password]{
+    height: 19px;
+}
 #table input[type=text] {
     width: 120px;
 }
@@ -1635,7 +1635,6 @@ input[type=text], input[type=submit], button, select {
 }
 
 button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
-select {height: 23px; vertical-align: middle;}
 
 input[type=submit]:hover, button:hover {
     background: #5F9729;
