@@ -68,9 +68,7 @@
 
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
-<div id="search">
-    <map id="projectsearchform" name="projectsearchform">
-        <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+<form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
             <div>
                 <button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
                 <input class="text" id="searchtext" name="string" type="text" size="20"
@@ -302,18 +300,10 @@
 
             </div>
             <input type="hidden" name="do" value="index"/>
-
- <!--- Added 2/1/2014 LAE --!>
-
- <form action="<?php echo Filters::noXSS($baseurl); ?>/scripts/index.php" method="post">
- <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
- </form>
-
-</div>
-
 </form>
-</map>
-</div>
+<form action="<?php echo Filters::noXSS($baseurl); ?>/scripts/index.php" method="post">
+<input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
+</form>
 <?php endif; ?>
 
 <div id="tasklist">
