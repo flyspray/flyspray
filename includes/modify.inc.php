@@ -1603,7 +1603,7 @@ switch ($action = Req::val('action'))
 
         if ($db->AffectedRows()) {
             Flyspray::logEvent($task['task_id'], 6, $comment['user_id'],
-                    $comment['comment_text'], $comment['date_added']);
+                    $comment['comment_text'], '', $comment['date_added']);
         }
 
         while ($attachment = $db->FetchRow($check_attachments)) {
