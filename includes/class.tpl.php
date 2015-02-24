@@ -149,9 +149,15 @@ class FSTpl extends Tpl
 
 }
 # draws the form start tag and the important anticsrftoken on 'post'-forms
-function tpl_form($action, $name=false, $method='post', $enctype='multipart/form-data', $attr='')
+function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
 {
         global $baseurl;
+        if (null === $method) {
+                $method='post';
+        }
+        if (null === $enctype) {
+                $enctype='multipart/form-data';
+        }
 
         if(substr($action,0,4)!='http'){$action=$baseurl.$action;}
         return '<form action="'.$action.'"'.($method=='get'?' method="get"':' method="post"').
