@@ -674,7 +674,8 @@ function quick_edit(elem, id)
         <?php if(!count($deps)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
         <table id="dependency_table" class="table" width="100%">
-            <caption>This task depends on the following tasks.</caption>
+            <!-- <caption>This task depends on the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskdependson')); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
@@ -720,7 +721,8 @@ function quick_edit(elem, id)
         <?php if(!count($blocks)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
         <table id="blocking_table" class="table" width="100%">
-            <caption>This task prevents closing the following tasks.</caption>
+            <!-- <caption>This task prevents closing the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskblocks')); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
