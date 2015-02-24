@@ -1535,17 +1535,17 @@ div#closeform {
 	position: relative;
 	background: #363a3b;
 	color:#fff;
-	padding: 5px 15px;
+	padding: 0px;
 }
-#actionsform li ul { display: none; }
-#actionsform ul li a {
+#actionsform li a, #actionsform li label{
     display: block;
     text-decoration: none;
     color: #fff;
-    margin-left: 1px;
     white-space: nowrap;
+    padding:5px 15px;
 }
 #actionsform ul li:hover { background: #617F8A; }
+#actionsform li:hover ul {display:none;}
 #actionsform li:hover ul {
     display: block;
     position: absolute;
@@ -1554,28 +1554,20 @@ div#closeform {
     float: none;
     font-size: 11px;
 }
-#actionsform li:hover a { background: #617F8A; }
-#actionsform li:hover li a:hover { background: #95A9B1; }
 
-#setparentform{
+#setparentform, #associateform,#adddepform {
 	display:none;
 	background: #363a3b;
 	color:#fff;
 	padding-left: 5px;
 }
-#s_parent{display:none;}
-#s_parent:checked ~ #setparentform{display:block;}
-
-#associateform{
-    background: #363a3b;
-    color:#ffffff;
-    padding-left: 5px;
+#s_parent, #s_associate, #s_adddependent {
+	display:none;
 }
-
-#adddepform{
-    background: #363a3b;
-    color:#ffffff;
-    padding-left: 5px;
+#s_parent:checked ~ #setparentform,
+#s_associate:checked ~ #associateform,
+#s_adddependent:checked ~ #adddepform{
+	display:block;
 }
 
 #taskdeps h4 {
