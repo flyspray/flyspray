@@ -107,23 +107,15 @@
             <?php endif; ?>
 
             <?php if ($user->can_edit_task($task_details)): ?>
-            <li>
-                <a href="#" onclick="showhidestuff('setparentform');"><?php echo Filters::noXSS(L('setparent')); ?></a>
-
-                <div id="setparentform" class="hide">
-                    </br>
-                    <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
-                        <?php echo Filters::noXSS(L('parenttaskid')); ?>
-
-                        <input type="hidden" name="action" value="details.setparent"/>
-                        <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-                        <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5"
-                               maxlength="10"/>
-                        <button type="submit" name="submit"><?php echo Filters::noXSS(L('set')); ?></button>
-                    </form>
-                    </br>
-                </div>
-            </li>
+            <li><input type="checkbox" id="s_parent"><label for="s_parent"><?php echo Filters::noXSS(L('setparent')); ?></label>
+                <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?> 
+                <?php echo Filters::noXSS(L('parenttaskid')); ?>
+                <input type="hidden" name="action" value="details.setparent" />
+                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" /> 
+                <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+                <button type="submit" name="submit"><?php echo Filters::noXSS(L('set')); ?></button>
+                </form>
+            </li> 
             <?php endif; ?>
             <?php if ($user->can_edit_task($task_details)): ?>
             <li>
