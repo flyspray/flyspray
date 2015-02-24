@@ -123,7 +123,7 @@
             <?php endif; ?>
             <?php if ($user->can_edit_task($task_details)): ?>
             <li><input type="checkbox" id="s_associate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
-              <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null.null,null,'id="associateform"'); ?>
+              <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
               <?php echo Filters::noXSS(L('associatetaskid')); ?>
               <input type="hidden" name="action" value="details.associatesubtask"/>
               <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
