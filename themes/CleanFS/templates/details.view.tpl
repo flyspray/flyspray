@@ -307,7 +307,7 @@ function quick_edit(elem, id)
 				 <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
 
 				</select>
-				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 			</span>
 		<?php endif; ?>
 
@@ -333,7 +333,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
 	<?php endif; ?>
 
@@ -353,7 +353,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"></a><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
 
@@ -378,7 +378,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -425,7 +425,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -443,7 +443,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -461,7 +461,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -479,7 +479,7 @@ function quick_edit(elem, id)
 			<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -505,7 +505,7 @@ function quick_edit(elem, id)
 			 <?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
 
 			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
 
@@ -545,7 +545,7 @@ function quick_edit(elem, id)
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
 			<div style="float:right"><?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
 

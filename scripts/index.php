@@ -197,14 +197,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             
 	case 'estimated_effort':
 		if ($task['estimated_effort']>0){
-			$value=$task['estimated_effort'];
+			$value=$task['estimated_effort'].' h';
 		}else{
 			$value='';
 		}
 		break;
 	
 	case 'effort':
-		$value=$task['effort'];
+		$value=$task['effort']>0 ? (ceil($task['effort']/360)/10).' h':'';
 		break;
 		
         default:
@@ -248,15 +248,18 @@ function do_cmp($a, $b)
 *
 *********************************************
 */
+function export_task_list()
+{
+        global $tasks, $fs, $sort, $orderby;
 
-function export_task_list() {
+        if (!is_array($tasks)){
+                return;
+        }
 
- global $tasks, $fs, $sort, $orderby;
-
- if (!is_array($tasks))
-  return;
-
- $indexes = array (
+        # TODO enforcing user permissions on allowed fields
+        # TODO Flyspray 1.1 or later: selected fields by user request, saved user settings, tasklist settings or project defined list which fields should appear in an export
+        # TODO Flyspray 1.1 or later: export in .ods open document spreadsheet, .xml ....
+        $indexes = array (
             'id'         => 'task_id',
             'project'    => 'project_title',
             'tasktype'   => 'task_type',
@@ -280,69 +283,59 @@ function export_task_list() {
             'os'         => 'os_name',
             'private'    => 'mark_private',
             'supertask'  => 'supertask_id',
+                'detailed_desc'=>'detailed_desc',
         );
 
 
- // first line of .csv will be project name
+        # we can put this info also in the filename ...
+        #$projectinfo = array('Project ', $tasks[0]['project_title'], date("H:i:s d-m-Y") );
 
- $result = "Project: " .$tasks[0]['project_title'] . " - " . date("H:i:s d-m-Y") . "\r\n\r\n";
+        $headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
+        # TODO maybe if user just want localized headings for nonenglish speaking audience..
+        #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
 
- // insert column headers
+        // sort the tasks into the order selected by the user. Set
+        // global vars for use by sort comparison function
 
- $result .= '"ID","Category","Task Type","Severity","Summary","Status","Progress"' . "\r\n";
+        $sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
+        $field = Get::safe('order', 'id');
 
+        if ($field == '') $field = 'id';
+        $orderby = $indexes[ $field ];
 
- // sort the tasks into the order selected by the user. Set
- // global vars for use by sort comparison function
+        usort($tasks, "do_cmp");
 
- $sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
- $field = Get::safe('order', 'id');
+        $outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
 
- if ($field == '') $field = 'id';
- $orderby = $indexes[ $field ];
+        #header('Content-Type: application/csv');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename='.$outfile);
+        header('Content-Transfer-Encoding: text');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        #header('Pragma: public');
+        #header('Content-Length: '.strlen($result)); # unknown at this time..
+        ob_clean();
+        flush();
 
- usort($tasks, "do_cmp");	// sort the items
-
- // for each task create a line showing values
- // get the items
-
- foreach ($tasks as $task) {
-
-  $array = array(
-	$task['task_id'],
-	$task['category_name'],
-	$task['task_type'],
-        $fs->severities[ $task['task_severity'] ],
-	$task['item_summary'],
-	$task['status_name'],
-	$task['percent_complete'],
-	);
-
-  // create comma seperated values from array and append it to $result
- 
-  $result .= implode(',', $array) . "\r\n";
- }
-
- // now send data to user to download to their machine. First create
- // HTML header
-
- $outfile = "tasklist_" . date("Y-m-d") . ".csv";	// name user sees to save file as
-
- header('Content-Type: application/csv');
- header('Content-Disposition: attachment; filename=' . $outfile);
- header('Content-Transfer-Encoding: text');
- header('Expires: 0');
- header('Cache-Control: must-revalidate');
- header('Pragma: public');
- header('Content-Length: ' . strlen($result)); 
- ob_clean();
- flush();
-
- // finally send out our data
-
- printf ("%s", $result);
+        $output = fopen('php://output', 'w');
+        #fputcsv($output, $projectinfo);
+        fputcsv($output, $headings);
+        foreach ($tasks as $task) {
+                $row = array(
+                        $task['task_id'],
+                        $task['category_name'],
+                        $task['task_type'],
+                        $fs->severities[ $task['task_severity'] ],
+                        $task['item_summary'],
+                        $task['status_name'],
+                        $task['percent_complete']
+                );
+                fputcsv($output, $row);
+        }
+        fclose($output);
+        exit();
 }
-
 // } }}
 
 // Javascript replacement
