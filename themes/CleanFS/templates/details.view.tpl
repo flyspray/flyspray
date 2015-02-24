@@ -88,8 +88,12 @@
     <?php endif; ?>
 
     <?php if ($user->can_take_ownership($task_details)): ?>
-    <a id="own" class="button"
-       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=takeownership&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('assigntome')); ?></a>
+    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+      <input type="hidden" name="action" value="takeownership" /> 
+      <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+      <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+      <button type="submit" id="own"><?php echo Filters::noXSS(L('assigntome')); ?></button>
+    </form>
     <?php endif; ?>
 
     <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
@@ -118,7 +122,7 @@
             </li> 
             <?php endif; ?>
             <?php if ($user->can_edit_task($task_details)): ?>
-            <li><input type="checkbox" id="s_assosciate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
+            <li><input type="checkbox" id="s_associate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
               <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null.null,null,'id="associateform"'); ?>
               <?php echo Filters::noXSS(L('associatetaskid')); ?>
               <input type="hidden" name="action" value="details.associatesubtask"/>
