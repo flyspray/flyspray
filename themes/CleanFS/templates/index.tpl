@@ -69,29 +69,19 @@
 <?php if (!($user->isAnon() && count($fs->projects) == 0)): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-            <div>
-                <button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
-                <input class="text" id="searchtext" name="string" type="text" size="20"
-                       maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
-
-                <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
-
-        <span id="searchstate" style="cursor:pointer">
-	        <a onclick="toggleSearchBox('<?php echo Filters::noJsXSS($this->themeUrl()); ?>');return false;"
-               href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))); ?>">
-						<span id="advancedsearchstate" class="showstate">
-							<img id="advancedsearchstateimg"
-                                 src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
-                                 alt="<?php echo (Cookie::val('advancedsearch')) ? '-' : '+'; ?>"/>
-						</span><?php echo Filters::noXSS(L('advanced')); ?>
-
-            </a>
-        </span>
-
-                <div id="sc2" class="switchcontent"
-                <?php if (!Cookie::val('advancedsearch')):?>style="display:none;"<?php endif; ?> >
-
-                <?php if (!$user->isAnon()): ?>
+<button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
+<input class="text" id="searchtext" name="string" type="text" size="20"
+   maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
+<input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
+<a id="searchstate" onclick="toggleSearchBox('<?php echo Filters::noJsXSS($this->themeUrl()); ?>');return false;"
+   href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array_merge($_GET, array('toggleadvanced' => 1)))); ?>">
+	<span id="advancedsearchstate" class="showstate"><img id="advancedsearchstateimg"
+                src="<?php echo (Cookie::val('advancedsearch')) ? $this->get_image('edit_remove') : $this->get_image('edit_add'); ?>"
+                alt="<?php echo (Cookie::val('advancedsearch')) ? '-' : '+'; ?>"/>
+	</span><?php echo Filters::noXSS(L('advanced')); ?></a>
+<div id="sc2" class="switchcontent"
+        <?php if (!Cookie::val('advancedsearch')):?>style="display:none;"<?php endif; ?> >
+        <?php if (!$user->isAnon()): ?>
                 <fieldset>
                     <div class="save_search"><label for="save_search" id="lblsaveas"><?php echo Filters::noXSS(L('saveas')); ?></label>
                         <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search"
@@ -102,41 +92,31 @@
                     </div>
                 </fieldset>
                 <?php endif; ?>
-
-
                 <fieldset class="advsearch_misc">
                     <legend><?php echo Filters::noXSS(L('miscellaneous')); ?></legend>
                     <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
-
                     <label class="left" for="sic"><?php echo Filters::noXSS(L('searchcomments')); ?></label>
 
                     <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
-
                     <label class="left" for="search_in_details"><?php echo Filters::noXSS(L('searchindetails')); ?></label>
 
                     <?php echo tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa'); ?>
-
                     <label class="left" for="sfa"><?php echo Filters::noXSS(L('searchforall')); ?></label>
 
                     <?php echo tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched'); ?>
-
                     <label class="left" for="only_watched"><?php echo Filters::noXSS(L('taskswatched')); ?></label>
 
                     <?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?>
-
                     <label class="left" for="only_primary"><?php echo Filters::noXSS(L('onlyprimary')); ?></label>
 
                     <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
-
                     <label class="left" for="has_attachment"><?php echo Filters::noXSS(L('hasattachment')); ?></label>
 
                     <?php echo tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks'); ?>
-
                     <label class="left" for="hide_subtasks"><?php echo Filters::noXSS(L('hidesubtasks')); ?></label>
                 </fieldset>
 
                 <fieldset class="advsearch_task">
-
                     <legend><?php echo Filters::noXSS(L('taskproperties')); ?></legend>
             <!-- Task Type -->
 		    <?php if (!$filter || in_array('tasktype', $fields)) { ?>
@@ -147,7 +127,6 @@
                         <label class="default multisel" for="type"><?php echo Filters::noXSS(L('tasktype')); ?></label>
                         <select name="type[]" id="type" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', '')); ?>
-
                         </select>
                     </div>
 
@@ -160,7 +139,6 @@
                         <label class="default multisel" for="sev"><?php echo Filters::noXSS(L('severity')); ?></label>
                         <select name="sev[]" id="sev" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', '')); ?>
-
                         </select>
                     </div>
 
@@ -173,7 +151,6 @@
                         <label class="default multisel" for="pri"><?php echo Filters::noXSS(L('priority')); ?></label>
                         <select name="pri[]" id="pri" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', '')); ?>
-
                         </select>
                     </div>
 
@@ -186,7 +163,6 @@
                         <label class="default multisel" for="due"><?php echo Filters::noXSS(L('dueversion')); ?></label>
                         <select name="due[]" id="due" multiple="multiple" size="5">
                             <?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', '')); ?>
-
                         </select>
                     </div>
 
@@ -199,7 +175,6 @@
                         <label class="default multisel" for="reported"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
                         <select name="reported[]" id="reported" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', '')); ?>
-
                         </select>
                     </div>
 
@@ -212,7 +187,6 @@
                         <label class="default multisel" for="cat"><?php echo Filters::noXSS(L('category')); ?></label>
                         <select name="cat[]" id="cat" multiple="multiple" size="5">
                             <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', '')); ?>
-
                         </select>
                     </div>
 
@@ -228,7 +202,6 @@
                             array('open' => L('allopentasks')) +
                             array('closed' => L('allclosedtasks')) +
                             $proj->listTaskStatuses(), Get::val('status', 'open')); ?>
-
                         </select>
                     </div>
 
@@ -242,7 +215,6 @@
                         <select name="percent[]" id="percent" multiple="multiple" size="5">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
                             <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', '')); ?>
-
                         </select>
                     </div>
                     <div class="clear"></div>
@@ -256,11 +228,8 @@
 		    <?php if (!$filter || in_array('assignedto', $fields)) { ?>
                     <label class="default multisel" for="dev"><?php echo Filters::noXSS(L('assignedto')); ?></label>
                     <?php echo tpl_userselect('dev', Get::val('dev'), 'dev'); } ?>
-
-
                     <label class="default multisel" for="closed"><?php echo Filters::noXSS(L('closedby')); ?></label>
                     <?php echo tpl_userselect('closed', Get::val('closed'), 'closed'); ?>
-
                 </fieldset>
 
                 <fieldset class="advsearch_dates">
@@ -272,37 +241,24 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <?php echo tpl_datepicker('duedatefrom', L('selectduedatefrom')); ?>
-
                         <?php echo tpl_datepicker('duedateto', L('selectduedateto')); ?>
                     </div>
-
                     <div class="dateselect">
                         <?php echo tpl_datepicker('changedfrom', L('selectsincedatefrom')); ?>
-
                         <?php echo tpl_datepicker('changedto', L('selectsincedateto')); ?>
-
                     </div>
-
                     <div class="dateselect">
                         <?php echo tpl_datepicker('openedfrom', L('selectopenedfrom')); ?>
-
                         <?php echo tpl_datepicker('openedto', L('selectopenedto')); ?>
-
                     </div>
-
                     <div class="dateselect">
                         <?php echo tpl_datepicker('closedfrom', L('selectclosedfrom')); ?>
-
                         <?php echo tpl_datepicker('closedto', L('selectclosedto')); ?>
-
                     </div>
                 </fieldset>
-
             </div>
-            <input type="hidden" name="do" value="index"/>
-</form>
-<form action="<?php echo Filters::noXSS($baseurl); ?>/scripts/index.php" method="post">
-<input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
+        <input type="hidden" name="do" value="index"/>
+	<input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
 </form>
 <?php endif; ?>
 
@@ -324,7 +280,6 @@
         <?php endif; ?>
         <?php foreach ($visible as $col): ?>
         <?php echo tpl_list_heading($col, "<th%s>%s</th>"); ?>
-
         <?php endforeach; ?>
     </tr>
     </thead>
@@ -378,18 +333,18 @@
         <?php endif;?>
 
         <?php foreach ($visible as $col):
-						if($col == 'progress'):?>
-        <td class="task_progress">
+		if($col == 'progress'):?>
+        	<td class="task_progress">
             <div class="progress_bar_container">
                 <span><?php echo Filters::noXSS($task_details['percent_complete']); ?>%</span>
 
                 <div class="progress_bar" style="width:<?php echo Filters::noXSS($task_details['percent_complete']); ?>%"></div>
             </div>
         </td>
-        <?php else: ?>
-        <?php echo tpl_draw_cell($task_details, $col); ?>
-
-        <?php endif; endforeach; ?>
+        	<?php else: ?>
+        	<?php echo tpl_draw_cell($task_details, $col); ?>
+        	<?php endif;
+        endforeach; ?>
 <div id="desc_<?php echo $task_details['task_id']; ?>" class="descbox box">
 <b>Task Description:</b>
 <?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
@@ -408,17 +363,12 @@
             <?php if (!$proj->id == 0 && !$user->isAnon() && $total){ ?>
             <?php } ?>
         </td>
-        <td id="numbers">
-            <?php echo pagenums($pagenum, $perpage, $total); ?>
-
-        </td>
+        <td id="numbers"><?php echo pagenums($pagenum, $perpage, $total); ?></td>
         <?php else: ?>
         <td id="taskrange"><strong><?php echo Filters::noXSS(L('noresults')); ?></strong></td>
         <?php endif; ?>
     </tr>
 </table>
-
-
 
 <!--- Bulk editing Tasks --->
 <?php if (!$proj->id == 0): ?>
@@ -482,7 +432,6 @@
                 <label for="bulk_tasktype"><?php echo Filters::noXSS(L('tasktype')); ?></label>
                 <select id="bulk_tasktype" name="bulk_task_type">
                     <?php echo tpl_options($taskTypeList); ?>
-
                 </select>
 
             </li>
@@ -498,7 +447,6 @@
                 <label for="bulk_category"><?php echo Filters::noXSS(L('category')); ?></label>
                 <select id="bulk_category" name="bulk_category">
                     <?php echo tpl_options($categoryTypeList); ?>
-
                 </select>
 
             </li>
@@ -535,7 +483,6 @@
                 <label for="bulk_os"><?php echo Filters::noXSS(L('operatingsystem')); ?></label>
                 <select id="bulk_os" name="bulk_os">
                     <?php echo tpl_options($osTypeList); ?>
-
                 </select>
             </li>
 
@@ -550,7 +497,6 @@
                 <label for="bulk_severity"><?php echo Filters::noXSS(L('severity')); ?></label>
                 <select id="bulk_severity" name="bulk_severity">
                     <?php echo tpl_options($severityTypeList); ?>
-
                 </select>
             </li>
 
@@ -566,7 +512,6 @@
                 <label for="bulk_priority"><?php echo Filters::noXSS(L('priority')); ?></label>
                 <select id="bulk_priority" name="bulk_priority">
                     <?php echo tpl_options($priorityTypeList); ?>
-
                 </select>
             </li>
 
@@ -581,7 +526,6 @@
                 <label for="bulk_reportedver"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
                 <select id="bulk_reportedver" name="bulk_reportedver">
                     <?php echo tpl_options($reportedVerList); ?>
-
                 </select>
             </li>
 
@@ -597,7 +541,6 @@
                 <label for="bulk_dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
                 <select id="bulk_dueversion" name="bulk_due_version">
                     <?php echo tpl_options($dueInVerList); ?>
-
                 </select>
             </li>
 
@@ -609,7 +552,6 @@
                 <?php } ?>
                 <label for="bulk_due_date"><?php echo Filters::noXSS(L('duedate')); ?></label>
                 <?php echo tpl_datepicker('bulk_due_date'); ?>
-
             </li>
 
             <!-- Projects -->
@@ -624,13 +566,11 @@
                 <label for="bulk_projects"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
                 <select id="bulk_projects" name="bulk_projects">
                     <?php echo tpl_options($projectsList); ?>
-
                 </select>
             </li>
             </li>
 
         </ul>
-
         <button type="submit" name="updateselectedtasks" value="true"><?php echo Filters::noXSS(L('updateselectedtasks')); ?></button>
     </fieldset>
     <fieldset>
@@ -639,7 +579,6 @@
                 <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
                     <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
                     <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
-
                 </select>
                 <button type="submit" name="updateselectedtasks" value="false">close tasks</button>
                 <br/>
@@ -648,7 +587,7 @@
                           cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
                 <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
             </div>
-    </fiedlset>
+    </fieldset>
 
 </div>
 
