@@ -118,41 +118,28 @@
             </li> 
             <?php endif; ?>
             <?php if ($user->can_edit_task($task_details)): ?>
-            <li>
-                <a href="#" onclick="showhidestuff('associateform');"><?php echo Filters::noXSS(L('associatesubtask')); ?></a>
-
-                <div id="associateform" class="hide">
-                    <br>
-                    <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
-                        <?php echo Filters::noXSS(L('associatetaskid')); ?>
-
-                        <input type="hidden" name="action" value="details.associatesubtask"/>
-                        <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-                        <input class="text" type="text" value="" id="associate_subtask_id" name="associate_subtask_id"
-                               size="5" maxlength="10"/>
-                        <button type="submit" name="submit"><?php echo Filters::noXSS(L('set')); ?></button>
-                    </form>
-                    </br>
-                </div>
+            <li><input type="checkbox" id="s_assosciate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
+              <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null.null,null,'id="associateform"'); ?>
+              <?php echo Filters::noXSS(L('associatetaskid')); ?>
+              <input type="hidden" name="action" value="details.associatesubtask"/>
+              <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+              <input class="text" type="text" value="" id="associate_subtask_id" name="associate_subtask_id" size="5" maxlength="10"/>
+              <button type="submit" name="submit"><?php echo Filters::noXSS(L('set')); ?></button>
+              </form>
             </li>
             <?php endif; ?>
             <li>
                 <a href="<?php echo Filters::noXSS(CreateURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
             </li>
             <?php if ($user->can_edit_task($task_details)): ?>
-            <li>
-                <a href="#" onclick="showhidestuff('adddepform');"><?php echo Filters::noXSS(L('adddependenttask')); ?></a>
-                <div id="adddepform" class="hide">
-                    <br>
-                    <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
-                        <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
-                        <input type="hidden" name="action" value="details.newdep" />
-                        <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-                        <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
-                        <button type="submit" name="submit"><?php echo Filters::noXSS(L('add')); ?></button>
-                    </form>
-                    </br>
-                </div>
+            <li><input type="checkbox" id="s_adddependent"><label for="s_adddependent"><?php echo Filters::noXSS(L('adddependenttask')); ?></label>
+              <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
+              <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
+              <input type="hidden" name="action" value="details.newdep" />
+              <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+              <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
+              <button type="submit" name="submit"><?php echo Filters::noXSS(L('add')); ?></button>
+              </form>
             </li>
             <?php endif; ?>
 
