@@ -1,56 +1,44 @@
 <div id="actionbar">
-    <?php if ($task_details['is_closed']): //if task is closed ?>
-
-    <?php if ($user->can_close_task($task_details)): ?>
+<?php if ($task_details['is_closed']): //if task is closed ?>
+  <?php if ($user->can_close_task($task_details)): ?>
     <a class="button"
        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=reopen&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>"><?php echo Filters::noXSS(L('reopenthistask')); ?></a>
     <?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
-    <a href="#close" id="reqclose" class="button" onclick="showhidestuff('closeform');"><?php echo Filters::noXSS(L('reopenrequest')); ?></a>
-
     <div id="closeform" class="popup hide">
-        <form name="form3" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post" id="formclosetask">
-            <div>
-                <input type="hidden" name="action" value="requestreopen"/>
-                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-                <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
-                <textarea id="reason" name="reason_given"></textarea><br/>
-                <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
-            </div>
-        </form>
+        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))),'form3',null,null,'id="formclosetask"'); ?>
+            <input type="hidden" name="action" value="requestreopen"/>
+            <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+            <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
+            <textarea id="reason" name="reason_given"></textarea><br/>
+            <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
+        </form> 
     </div>
-    <?php endif; ?>
-
-    <?php else:  //if task is open  ?>
-
-    <?php if ($user->can_close_task($task_details) && !$d_open): ?>
+  <?php endif; ?>
+<?php else:  //if task is open  ?>
+  <?php if ($user->can_close_task($task_details) && !$d_open): ?>
     <a href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))); ?>"
        id="closetask" class="button main" accesskey="y"
        onclick="showhidestuff('closeform');return false;"> <?php echo Filters::noXSS(L('closetask')); ?></a>
 
-    <div id="closeform"
-         class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
-        <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post" id="formclosetask">
-            <div>
-                <input type="hidden" name="action" value="details.close"/>
-                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-                <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
-                    <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
-                    <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
-
-                </select>
-                <button type="submit"><?php echo Filters::noXSS(L('closetask')); ?></button>
-                <br/>
-                <label class="default text" for="closure_comment"><?php echo Filters::noXSS(L('closurecomment')); ?></label>
-                <textarea class="text" id="closure_comment" name="closure_comment" rows="3"
-                          cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
-                <?php if($task_details['percent_complete'] != '100'): ?>
-                <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
-                <?php endif; ?>
-            </div>
-        </form>
+    <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
+        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
+        <input type="hidden" name="action" value="details.close"/>
+        <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+        <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
+        <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
+        <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
+        </select>
+        <button type="submit"><?php echo Filters::noXSS(L('closetask')); ?></button>
+        <br/>   
+        <label class="default text" for="closure_comment"><?php echo Filters::noXSS(L('closurecomment')); ?></label>
+        <textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+        <?php if($task_details['percent_complete'] != '100'): ?>
+        <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
+        <?php endif; ?>
+        </form> 
     </div>
 
-    <?php elseif (!$d_open && !$user->isAnon() && !Flyspray::AdminRequestCheck(1, $task_details['task_id'])): ?>
+  <?php elseif (!$d_open && !$user->isAnon() && !Flyspray::AdminRequestCheck(1, $task_details['task_id'])): ?>
     <a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?php echo Filters::noXSS(L('requestclose')); ?></a>
 
     <div id="closeform" class="popup hide">
@@ -64,7 +52,7 @@
             </div>
         </form>
     </div>
-    <?php elseif(!$user->isAnon()): ?>
+  <?php elseif(!$user->isAnon()): ?>
     <a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?php echo Filters::noXSS(L('closetask')); ?>
 
     <span class="custom info">
@@ -80,26 +68,26 @@
                     ?>
                 </span>
     </a>
-    <?php endif; ?>
+  <?php endif; ?>
 
-    <?php if ($user->can_edit_task($task_details)): ?>
+  <?php if ($user->can_edit_task($task_details)): ?>
     <a id="edittask" class="button" accesskey="e"
        href="<?php echo Filters::noXSS(CreateURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
-    <?php endif; ?>
+  <?php endif; ?>
 
-    <?php if ($user->can_take_ownership($task_details)): ?>
+  <?php if ($user->can_take_ownership($task_details)): ?>
     <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
       <input type="hidden" name="action" value="takeownership" /> 
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <button type="submit" id="own"><?php echo Filters::noXSS(L('assigntome')); ?></button>
     </form>
-    <?php endif; ?>
+  <?php endif; ?>
 
-    <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
+  <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
     <a id="own_add" class="button"
        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=addtoassignees&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('addmetoassignees')); ?></a>
-    <?php endif; ?>
+  <?php endif; ?>
 	<input type="checkbox" id="s_quickactions">
 	<label class="button main" id="actions" for="s_quickactions"><?php echo Filters::noXSS(L('quickaction')); ?></label>
 	<div id="actionsform">
@@ -194,11 +182,10 @@
 
         </ul>
 	</div>
-    <?php endif; ?>
+<?php endif; ?>
 </div>
 
 <script type="text/javascript">
-
 function show_hide(elem, flag)
 {
 	elem.style.display = "none";
