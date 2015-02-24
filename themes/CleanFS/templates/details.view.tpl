@@ -150,11 +150,14 @@
             <?php endif; ?>
 
             <?php if ($user->can_take_ownership($task_details)): ?>
-            <li>
-                <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=takeownership&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('assigntome')); ?></a>
+            <li><?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+              <input type="hidden" name="action" value="takeownership" />
+              <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+              <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+              <button type="submit"><?php echo Filters::noXSS(L('assigntome')); ?></button>
+              </form>
             </li>
             <?php endif; ?>
-
 
             <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
             <li>
