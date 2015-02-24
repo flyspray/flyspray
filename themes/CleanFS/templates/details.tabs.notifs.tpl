@@ -8,7 +8,7 @@
   <?php endforeach; ?>
 
   <?php if ($user->perms('manage_project')): ?>
-  <form action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>#notify" method="post">
+  <?php tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#notify'); ?>
     <div>
         <label class="default multisel" for="notif_user_id"><?php echo Filters::noXSS(L('addusertolist')); ?></label>
         <?php echo tpl_userselect('user_name', Req::val('user_name'), 'notif_user_id'); ?>
