@@ -14,7 +14,7 @@
     3. There are suggestions when you assign to someone, and to no-one if there is no matched name.
 
 </div>
-<form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id)); ?>" method="post">
+<?php echo tpl_form(Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id))); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
 
