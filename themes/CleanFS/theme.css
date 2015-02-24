@@ -1529,10 +1529,12 @@ div#closeform {
     padding: 0;
     list-style: none;
 }
-#actionsform ul li {
+#actionsform li {
     display: block;
     position: relative;
     background: #363a3b;
+    color:#fff;
+    padding: 5px 15px 5px 15px;
 }
 #actionsform li ul { display: none; }
 #actionsform ul li a {
