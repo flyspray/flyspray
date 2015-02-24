@@ -81,8 +81,6 @@
 <label id="searchstateactions" class="button main" for="s_searchstate"><?php echo Filters::noXSS(L('advanced')); ?></label>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
-<div id="sc2" class="switchcontent">
-<?php if (!$user->isAnon()): ?>
 <fieldset>
   <div class="save_search"><label for="save_search" id="lblsaveas"><?php echo Filters::noXSS(L('saveas'));?></label>
    <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/> <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?php echo Filters::noXSS(L('saving')); ?>')" type="button"><?php echo Filters::noXSS(L('OK')); ?></button>
