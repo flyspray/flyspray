@@ -1249,9 +1249,20 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-
-                // FIXME: Check that a similar entry does not already exist in this project or project 0
-
+                
+                $check = $db->Query("SELECT COUNT(*)
+                                       FROM $list_table_name
+                                      WHERE (project_id = 0 OR project_id = ?)
+                                        AND $list_column_name = ?
+                                        AND $list_id <> ?",
+                                    array($proj->id, $listnames[$id], $id));
+                $itemexists = $db->FetchOne($check);
+                
+                if ($itemexists) {
+                    Flyspray::show_error(L('itemexists'));
+                    return;
+                }
+                
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
@@ -1291,8 +1302,18 @@ switch ($action = Req::val('action'))
             array($proj->id))));
         }
 
-        // FIXME: Check that a similar entry does not already exist in this project or project 0
+        $check = $db->Query("SELECT COUNT(*)
+                               FROM $list_table_name
+                              WHERE (project_id = 0 OR project_id = ?)
+                                AND $list_column_name = ?",
+                            array($proj->id, Post::val('list_name')));
+        $itemexists = $db->FetchOne($check);
 
+        if ($itemexists) {
+            Flyspray::show_error(L('itemexists'));
+            return;
+        }
+                
         $db->Query("INSERT INTO  $list_table_name
                                  (project_id, $list_column_name, list_position, show_in_list)
                          VALUES  (?, ?, ?, ?)",
@@ -1320,9 +1341,20 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-
-                // FIXME: Check that a similar entry does not already in this project or project 0
-
+                
+                $check = $db->Query("SELECT COUNT(*)
+                                       FROM $list_table_name
+                                      WHERE (project_id = 0 OR project_id = ?)
+                                        AND $list_column_name = ?
+                                        AND $list_id <> ?",
+                                    array($proj->id, $listnames[$id], $id));
+                $itemexists = $db->FetchOne($check);
+                
+                if ($itemexists) {
+                    Flyspray::show_error(L('itemexists'));
+                    return;
+                }
+                
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
@@ -1364,8 +1396,18 @@ switch ($action = Req::val('action'))
             array($proj->id)));
         }
 
-        // FIXME: Check that a similar entry does not already exist in this project or project 0
+        $check = $db->Query("SELECT COUNT(*)
+                               FROM $list_table_name
+                              WHERE (project_id = 0 OR project_id = ?)
+                                AND $list_column_name = ?",
+                            array($proj->id, Post::val('list_name')));
+        $itemexists = $db->FetchOne($check);
 
+        if ($itemexists) {
+            Flyspray::show_error(L('itemexists'));
+            return;
+        }
+                
         $db->Query("INSERT INTO  $list_table_name
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
                         VALUES  (?, ?, ?, ?, ?)",
@@ -1896,7 +1938,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('task_id')));
+        Flyspray::Redirect(CreateURL('details', Get::val('return_task_id')));
         break;
 
         // ##################

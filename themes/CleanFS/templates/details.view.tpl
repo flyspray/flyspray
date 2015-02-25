@@ -674,7 +674,8 @@ function quick_edit(elem, id)
         <?php if(!count($deps)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
         <table id="dependency_table" class="table" width="100%">
-            <caption>This task depends on the following tasks.</caption>
+            <!-- <caption>This task depends on the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskdependson')); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
@@ -683,7 +684,7 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <th><?php echo Filters::noXSS(L('assignedto')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -704,10 +705,10 @@ function quick_edit(elem, id)
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <td>Assignees TODO</td>
+                <!-- <td>Assignees TODO</td> -->
                 <td>
                     <a class="removedeplink"
-                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
+                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
                         <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
                     </a>
                 </td>
@@ -716,6 +717,103 @@ function quick_edit(elem, id)
             </tbody>
         </table>
         <?php endif; ?>
+        
+        <!-- This task blocks the following tasks: -->
+        <?php if(!count($blocks)==0): ?>
+        <?php $projects = $fs->listProjects(); ?>
+        <table id="blocking_table" class="table" width="100%">
+            <!-- <caption>This task prevents closing the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskblocks')); ?></caption>
+            <thead>
+            <tr>
+                <th><?php echo Filters::noXSS(L('id')); ?></th>
+                <th><?php echo Filters::noXSS(L('project')); ?></th>
+                <th><?php echo Filters::noXSS(L('summary')); ?></th>
+                <th><?php echo Filters::noXSS(L('priority')); ?></th>
+                <th><?php echo Filters::noXSS(L('severity')); ?></th>
+                <th><?php echo Filters::noXSS(L('progress')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($blocks as $dependency): ?>
+            <tr>
+                <td><?php echo $dependency['task_id'] ?></td>
+                <td><?php echo $dependency['project_title'] ?></td>
+                <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
+                <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
+                <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
+                    severities[$dependency['task_severity']] ?>
+                </td>
+                <td class="task_progress">
+                    <div class="progress_bar_container">
+                        <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
+
+                        <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
+                    </div>
+                </td>
+                <!-- <td>Assignees TODO</td> -->
+                <td>
+                    <a class="removedeplink"
+                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($dependency['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
+                        <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+        <!-- This task blocks the following tasks: -->
+        <?php if(!count($blocks)==0): ?>
+        <?php $projects = $fs->listProjects(); ?>
+        <table id="blocking_table" class="table" width="100%">
+            <!-- <caption>This task prevents closing the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskblocks')); ?></caption>
+            <thead>
+            <tr>
+                <th><?php echo Filters::noXSS(L('id')); ?></th>
+                <th><?php echo Filters::noXSS(L('project')); ?></th>
+                <th><?php echo Filters::noXSS(L('summary')); ?></th>
+                <th><?php echo Filters::noXSS(L('priority')); ?></th>
+                <th><?php echo Filters::noXSS(L('severity')); ?></th>
+                <th><?php echo Filters::noXSS(L('progress')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($blocks as $dependency): ?>
+            <tr>
+                <td><?php echo $dependency['task_id'] ?></td>
+                <td><?php echo $dependency['project_title'] ?></td>
+                <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
+                <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
+                <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
+                    severities[$dependency['task_severity']] ?>
+                </td>
+                <td class="task_progress">
+                    <div class="progress_bar_container">
+                        <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
+
+                        <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
+                    </div>
+                </td>
+                <!-- <td>Assignees TODO</td> -->
+                <td>
+                    <a class="removedeplink"
+                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($dependency['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
+                        <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+        <!-- End blocking tasks. -->
+        
         <?php
             if (!$task_details['supertask_id']==0)
             {
@@ -736,7 +834,7 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <th><?php echo Filters::noXSS(L('assignedto')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -758,7 +856,7 @@ function quick_edit(elem, id)
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($subtask['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <td>Assignees TODO</td>
+                <!-- <td>Assignees TODO</td> -->
                 <td>
                     <a class="removedeplink"
                        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removesubtask&amp;subtaskid=<?php echo Filters::noXSS($subtask['task_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
