@@ -8,7 +8,7 @@
     </div>
 </div>
 <?php endif; ?>
-<form action="<?php echo Filters::noXSS(CreateURL($do, $list_type, $proj->id)); ?>" method="post">
+<?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
   <table class="list" id="listTable">
    <thead>
      <tr>
@@ -85,7 +85,7 @@
   <?php endif; ?>
 </form>
 <hr />
-<form action="<?php echo Filters::noXSS(CreateURL($do, $list_type, $proj->id)); ?>" method="post">
+<?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
   <table class="list">
     <tr>
       <td>

@@ -714,27 +714,42 @@ class Flyspray
     // Set cookie {{{
     /**
      * Sets a cookie, automatically setting the URL
+     * Now same params as PHP's builtin setcookie()
      * @param string $name
      * @param string $val
      * @param integer $time
+     * @param string $path
+     * @param string $domain
+     * @param bool $secure
+     * @param bool $httponly
      * @access public static
      * @return bool
-     * @version 1.0
+     * @version 1.1
      */
-    public static function setCookie($name, $val, $time = null)
+    public static function setCookie($name, $val, $time = null, $path=null, $domain=null, $secure=false, $httponly=false)
     {
-        $url = parse_url($GLOBALS['baseurl']);
+        if (null===$path){
+            $url = parse_url($GLOBALS['baseurl']);
+        }else{
+            $url['path']=$path;
+        }
+
         if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
-
+        if(null===$domain){
+            $domain='';
+        }
+        if(null===$secure){
+            $secure=false;
+        }
         if((strlen($name) + strlen($val)) > 4096) {
             //violation of the protocol
             trigger_error("Flyspray sent a too big cookie, browsers will not handle it");
             return false;
         }
 
-        return setcookie($name, $val, $time, $url['path']);
+        return setcookie($name, $val, $time, $url['path'],$domain,$secure,$httponly);
     } // }}}
             // Start the session {{{
     /**
@@ -749,7 +764,8 @@ class Flyspray
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
-
+        /*
+        # commented out IMHO weired obfuscating session names
         $names = array( 'GetFirefox',
                         'UseLinux',
                         'NoMicrosoft',
@@ -784,6 +800,15 @@ class Flyspray
             session_name($sessname);
             session_start();
             $_SESSION['SESSNAME'] = $sessname;
+        }
+        */
+        
+        $url = parse_url($GLOBALS['baseurl']);
+        session_name('flyspray');
+        session_set_cookie_params(0,$url['path'],'','', TRUE);
+        session_start();
+        if(!isset($_SESSION['csrftoken'])){
+                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
         }
     }  // }}}
 

@@ -16,7 +16,7 @@ if (count($categories)) : ?>
   </div>
 </div>
 <?php endif; ?>
-  <form action="<?php echo Filters::noXSS(CreateURL($do, 'cat', $proj->id)); ?>" method="post">
+<?php echo tpl_form(Filters::noXSS(CreateURL($do, 'cat', $proj->id))); ?>
     <table class="list" id="catTable">
        <thead>
        <tr>
@@ -81,12 +81,9 @@ if (count($categories)) : ?>
       ?>
     </script>
     <?php endif; ?>
-  </form>
-
-  <hr />
-
-  <!-- Form to add a new category to the list -->
-  <form action="<?php echo Filters::noXSS(CreateURL($do, 'cat', $proj->id)); ?>" method="post">
+</form>
+<hr />
+<?php echo tpl_form(Filters::noXSS(CreateURL($do, 'cat', $proj->id))); ?>
     <table class="list">
       <tr>
         <td>
@@ -112,4 +109,4 @@ if (count($categories)) : ?>
         </td>
       </tr>
     </table>
-  </form>
+</form>

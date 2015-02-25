@@ -136,11 +136,12 @@ $user = new User($user_id);
 
 // Set a couple of cookies
 $passweirded = crypt($user->infos['user_pass'], $conf['general']['cookiesalt']);
-Flyspray::setcookie('flyspray_userid', $user->id, 0);
-Flyspray::setcookie('flyspray_passhash', $passweirded, 0);
+Flyspray::setCookie('flyspray_userid', $user->id, 0,null,null,null,true);
+Flyspray::setCookie('flyspray_passhash', $passweirded, 0,null,null,null,true);
 $_SESSION['SUCCESS'] = L('loginsuccessful');
 
 $return_to = $_SESSION['return_to'];
 unset($_SESSION['return_to']);
 
 Flyspray::Redirect($return_to);
+?>

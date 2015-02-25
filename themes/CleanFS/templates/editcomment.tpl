@@ -1,7 +1,7 @@
 <h3><?php echo Filters::noXSS(L('editcomment')); ?></h3>
 <div class="box">
-<form action="<?php echo Filters::noXSS(CreateUrl('details', $comment['task_id'])); ?>" enctype="multipart/form-data" method="post">
-    <div>
+<?php echo tpl_form(CreateUrl('details', $comment['task_id'])); ?>
+  <div>
     <p><?php echo Filters::noXSS(L('commentby')); ?> <?php echo Filters::noXSS($comment['real_name']); ?> - <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></p>
     <?php 
     $attachments = $proj->listAttachments($comment['comment_id']);

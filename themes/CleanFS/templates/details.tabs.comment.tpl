@@ -26,10 +26,11 @@
         <?php endif; ?>
     
         <?php if ($user->perms('delete_comments')): ?>
-         |
-        <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=details.deletecomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;comment_id=<?php echo Filters::noXSS($comment['comment_id']); ?>"
-          onclick="return confirm('<?php echo Filters::noJsXSS(L('confirmdeletecomment')); ?>');">
-          <?php echo Filters::noXSS(L('delete')); ?></a>
+        <?php echo tpl_form(CreateUrl('details', $task_details['task_id'])); ?>
+        <input type="hidden" name="action" value="details.deletecomment">
+        <input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>">
+        <button type="submit" onclick="return confirm('<?php echo Filters::noJsXSS(L('confirmdeletecomment')); ?>');"><?php echo Filters::noXSS(L('delete')); ?></button>
+        </form>
         <?php endif ?>
       </span>
 
@@ -63,7 +64,7 @@
 
   <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
   <h4><?php echo Filters::noXSS(L('addcomment')); ?></h4>
-  <form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
+  <?php echo tpl_form(CreateUrl('details', $task_details['task_id']), 'comment', 'post', 'multipart/form-data'); ?>
     <div>
       <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
       <div class="hide preview" id="preview"></div>

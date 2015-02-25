@@ -1,7 +1,6 @@
 <h3><?php echo Filters::noXSS(L('registernewuser')); ?></h3>
 <div class="box">
-  
-<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" name="registernewuser" method="post" id="registernewuser">
+<?php echo tpl_form(Filters::noXSS($baseurl).'index.php','registernewuser',null,null,'id="registernewuser"'); ?>  
   <p><?php echo Filters::noXSS(L('entercode')); ?></p>
   <ul class="form_elements wide">
     <li>
@@ -19,12 +18,10 @@
       <input id="user_pass2" class="password" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" />
     </li>
   </ul>
-
-    <div>
-        <input type="hidden" name="action" value="register.registeruser" />
-        <input type="hidden" name="magic_url" value="<?php echo Filters::noXSS(Req::val('magic_url')); ?>" />
-        <button type="submit" name="buSubmit"><?php echo Filters::noXSS(L('registeraccount')); ?></button>
-    </div>
+  <div>
+    <input type="hidden" name="action" value="register.registeruser" />
+    <input type="hidden" name="magic_url" value="<?php echo Filters::noXSS(Req::val('magic_url')); ?>" />
+    <button type="submit" name="buSubmit"><?php echo Filters::noXSS(L('registeraccount')); ?></button>
+  </div>
 </form>
-
 </div>

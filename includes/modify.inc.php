@@ -1067,8 +1067,8 @@ switch ($action = Req::val('action'))
 
                     // If the user is changing their password, better update their cookie hash
                     if ($user->id == Post::val('user_id')) {
-                        Flyspray::setcookie('flyspray_passhash',
-                                crypt($new_hash, $conf['general']['cookiesalt']), time()+3600*24*30);
+                        Flyspray::setCookie('flyspray_passhash',
+                                crypt($new_hash, $conf['general']['cookiesalt']), time()+3600*24*30,null,null,null,true);
                     }
                 }
                 $jabId = Post::val('jabber_id');
@@ -1618,7 +1618,7 @@ switch ($action = Req::val('action'))
 
         if ($db->AffectedRows()) {
             Flyspray::logEvent($task['task_id'], 6, $comment['user_id'],
-                    $comment['comment_text'], $comment['date_added']);
+                    $comment['comment_text'], '', $comment['date_added']);
         }
 
         while ($attachment = $db->FetchRow($check_attachments)) {

@@ -182,3 +182,4 @@ $page->assign('task_id', $id);
 
 $page->setTitle(sprintf('FS#%d : %s', $id, L('dependencygraph')));
 $page->pushTpl('depends.tpl');
+?>

@@ -1,7 +1,7 @@
 <div id="toolbox">
   <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('preferences')); ?></h3>
 
-  <form action="<?php echo Filters::noXSS(CreateUrl('pm', 'prefs', $proj->id)); ?>" method="post">
+  <?php echo tpl_form(CreateUrl('pm', 'prefs', $proj->id)); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>

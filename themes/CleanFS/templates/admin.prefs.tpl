@@ -17,8 +17,7 @@
 
 <div id="toolbox">
   <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('preferences')); ?></h3>
-
-  <form action="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" method="post" enctype="multipart/form-data">
+  <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
