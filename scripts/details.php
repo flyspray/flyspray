@@ -96,11 +96,12 @@ else {
                                  WHERE  d.task_id = ?', array($task_id));
 
     // Check for tasks that this task blocks
-    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name
+    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
+			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.dep_task_id = ?', array($task_id));
 
     // Check for pending PM requests
