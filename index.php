@@ -168,7 +168,15 @@ $page->pushTpl('header.tpl');
 
 // DB modifications?
 if (Req::has('action')) {
-    require_once(BASEDIR . '/includes/modify.inc.php');
+    # enforcing if the form sent the correct anti csrf token
+    # only allow token by post
+    if( !Post::has('csrftoken') ){
+        die('missingtoken');
+    }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
+        require_once(BASEDIR . '/includes/modify.inc.php');
+    }else{   
+        die('wrongtoken');
+    }
 }
 
 if (!defined('NO_DO')) {

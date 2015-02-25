@@ -1,7 +1,7 @@
 <div id="toolbox">
   <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('preferences')); ?></h3>
 
-  <form action="<?php echo Filters::noXSS(CreateUrl('pm', 'prefs', $proj->id)); ?>" method="post">
+  <?php echo tpl_form(CreateUrl('pm', 'prefs', $proj->id)); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
@@ -30,6 +30,15 @@
             <?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
 
           </select>
+        </li>
+
+        <li>
+          <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+          <?php
+            $pages = array('index', 'toplevel', 'newmultitasks', 'details', 'roadmap', 'newtask', 'reports', 'depends', 'pm');
+            $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
+            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, true, false);
+          ?>
         </li>
 
         <li>
@@ -69,7 +78,7 @@
           <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
 
         </li>
-	
+
         <li>
           <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
           <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
@@ -127,7 +136,7 @@
 
           </select>
         </li>
-  
+
         <li>
           <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
           <?php // Set the selectable column names

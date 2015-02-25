@@ -41,9 +41,12 @@ class Project
         $this->prefs['actual_effort_format'] = 0;
     }
 
+    # 20150219 peterdd: deprecated
     function setCookie()
     {
-        Flyspray::setCookie('flyspray_project', $this->id);
+        # 20150219 peterdd: unnecessary, setting and using a projectid-cookie makes parallel handling of 2 or more projects in different browser tabs impossible.
+        # instead, use form variables or variables from the url!
+        #Flyspray::setCookie('flyspray_project', $this->id);
     }
 
     /* cached list functions {{{ */

@@ -9,7 +9,7 @@
         </div>
     </form>
     <hr />
-  <form action="<?php echo Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do)); ?>" method="post">
+  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
     <table class="box">
       <tr>
         <td>
@@ -162,10 +162,8 @@
       </tr>
     </table>
   </form>
-
   <hr />
-
-  <form action="<?php echo Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do)); ?>" method="post">
+  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
    <div>
     <h3><?php echo Filters::noXSS(L('groupmembers')); ?></h3>
     <table id="manage_users_in_groups" class="userlist">

@@ -14,11 +14,9 @@
 
 </script>
 
-
 <div id="toolbox">
   <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('preferences')); ?></h3>
-
-  <form action="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" method="post" enctype="multipart/form-data">
+  <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
@@ -37,7 +35,6 @@
           <label for="defaultproject"><?php echo Filters::noXSS(L('defaultproject')); ?></label>
           <select id="defaultproject" name="default_project">
             <?php echo tpl_options(array_merge(array(0 => L('allprojects')), Flyspray::listProjects()), $fs->prefs['default_project']); ?>
-
           </select>
         </li>
 
@@ -45,20 +42,17 @@
           <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
           <select id="langcode" name="lang_code">
             <?php echo tpl_options(Flyspray::listLangs(), $fs->prefs['lang_code'], true); ?>
-
           </select>
         </li>
 
         <li>
           <label for="emailNoHTML"><?php echo Filters::noXSS(L('emailNoHTML')); ?></label>
         	<?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
-
         </li>
 
         <li>
           <?php
-            if (! array_key_exists( 'logo', $fs->prefs) )
-            {
+            if (! array_key_exists( 'logo', $fs->prefs) ) {
               $fs->prefs['logo'] = '';
             }
 
@@ -91,7 +85,6 @@
           <label for="cache_feeds"><?php echo Filters::noXSS(L('cache_feeds')); ?></label>
           <select id="cache_feeds" name="cache_feeds">
           <?php echo tpl_options(array('0' => L('no_cache'), '1' => L('cache_disk'), '2' => L('cache_db')), $fs->prefs['cache_feeds']); ?>
-
           </select>
         </li>
 
@@ -104,7 +97,6 @@
         <li>
           <label for="disablechangepw"><?php echo Filters::noXSS(L('disable_changepw')); ?></label>
           <?php echo tpl_checkbox('disable_changepw', $fs->prefs['disable_changepw'], 'disablechangepw'); ?>
-
         </li>
 
         <li>
@@ -112,16 +104,24 @@
           <input id="days_before_alert" name="days_before_alert" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['days_before_alert']); ?>" />
         </li>
 
-          <li>
+        <li>
+          <label><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
+          <?php
+            $pages = array('index', 'toplevel', 'reports');
+            $selectedPages = explode(' ', $fs->prefs['pages_welcome_msg']);
+            echo tpl_double_select('pages_welcome_msg', $pages, $selectedPages, true, false);
+          ?>
+        </li>
+
+        <li>
           <label for="intromesg"><?php echo Filters::noXSS(L('mainmessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <div class="hide preview" id="preview"></div>
+            <div class="hide preview" id="preview"></div>
           <?php endif; ?>
           <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
-
           <br />
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+            <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
         </li>
       </ul>
@@ -132,7 +132,6 @@
         <li>
           <label for="allowusersignups"><?php echo Filters::noXSS(L('anonreg')); ?></label>
           <?php echo tpl_checkbox('anon_reg', $fs->prefs['anon_reg'], 'allowusersignups'); ?>
-
         </li>
 
 <!-- register needs approved by admin !-->
@@ -153,26 +152,22 @@
 	  </script>
           <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin')); ?></label>
           <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, array('onclick'=>'check_change()')); ?>
-
         </li>
 
         <li>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
           <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, $fs->prefs['need_approval']?array('disabled'=>'true'):''); ?>
-
         </li>
 
         <li>
           <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
           <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
-
         </li>
 
         <li>
           <label for="defaultglobalgroup"><?php echo Filters::noXSS(L('defaultglobalgroup')); ?></label>
           <select id="defaultglobalgroup" name="anon_group">
             <?php echo tpl_options(Flyspray::listGroups(), $fs->prefs['anon_group']); ?>
-
           </select>
         </li>
       </ul>
@@ -184,7 +179,6 @@
           <label for="usernotify"><?php echo Filters::noXSS(L('forcenotify')); ?></label>
           <select id="usernotify" name="user_notify">
             <?php echo tpl_options(array(L('neversend'), L('userchoose'), L('email'), L('jabber')), $fs->prefs['user_notify']); ?>
-
           </select>
         </li>
       </ul>
@@ -266,7 +260,6 @@
           <label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
           <select id="globaltheme" name="global_theme">
             <?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
-
           </select>
         </li>
 
@@ -291,7 +284,6 @@
             $selectedfields = explode(" ", $fs->prefs['visible_fields']);
             ?>
             <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, true); ?>
-
           </li>
 
         </ul>
@@ -299,7 +291,6 @@
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
       <button type="submit"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
-
       <button type="reset"><?php echo Filters::noXSS(L('resetoptions')); ?></button>
     </div>
   </form>

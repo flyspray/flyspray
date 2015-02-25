@@ -512,8 +512,6 @@ body.toplevel .box {
   border-radius: 3px;
   margin: 10px 0 0 10px;
   width: 400px;
-  height: 275px;
-  /*height: 280px;*/
   /*@include inline-block;*/
   /*vertical-align: middle;*/
   float: left; }
@@ -1305,15 +1303,14 @@ fieldset.advsearch_dates label {
   position: relative;
   margin-right: 10px; }
 
-  .search_select .multisel {
+.search_select .multisel {
     position: absolute;
-    white-space: nowrap; }
+    white-space: nowrap;
 
-  .search_select select {
+}
+.search_select select {
     margin-top: 1.3em;
-    height: 7em; }
-
-
+}
 fieldset.advsearch_users .multisel {
   position: absolute;
   white-space: nowrap; }
@@ -1510,7 +1507,7 @@ div#closeform {
   right: 5px;
   top: 3em; }
 
-div#actionsform {
+#actionsform {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -1525,83 +1522,67 @@ div#actionsform {
     z-index: 500;
 }
 
-div#actionsform ul {
+#actionsform ul {
     font-family: Arial, Verdana;
     font-size: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
 }
-div#actionsform ul li {
-    display: block;
-    position: relative;
-
+#actionsform li {
+	border-top: 1px solid #fff;
+	display: block;
+	position: relative;
+	background: #363a3b;
+	color:#fff;
+	padding: 0px;
 }
-div#actionsform li ul { display: none; }
-div#actionsform ul li a {
+#actionsform li a, #actionsform li label{
     display: block;
     text-decoration: none;
-    color: #ffffff;
-    border-top: 1px solid #ffffff;
-    padding: 5px 15px 5px 15px;
-    background: #363a3b;
-    margin-left: 1px;
+    color: #fff;
     white-space: nowrap;
+    padding:5px 15px;
 }
-div#actionsform ul li a:hover { background: #617F8A; }
-div#actionsform li:hover ul {
+#actionsform ul li:hover { background: #617F8A; }
+#actionsform li:hover ul {display:none;}
+#actionsform li:hover ul {
     display: block;
     position: absolute;
 }
-div#actionsform li:hover li {
+#actionsform li:hover li {
     float: none;
     font-size: 11px;
 }
-div#actionsform li:hover a { background: #617F8A; }
-div#actionsform li:hover li a:hover { background: #95A9B1; }
 
-
-div#actionsform button{
-    position:absolute;
-    right: 5px;
+#setparentform, #associateform,#adddepform {
+	display:none;
+	background: #363a3b;
+	color:#fff;
+	padding-left: 5px;
+}
+#s_parent, #s_associate, #s_adddependent {
+	display:none;
+}
+#s_parent:checked ~ #setparentform,
+#s_associate:checked ~ #associateform,
+#s_adddependent:checked ~ #adddepform{
+	display:block;
 }
 
-div#actionsform input{
-    position:absolute;
-    right: 50px;
-}
-
-div#setparentform{
-    background: #363a3b;
-    color:#ffffff;
-    padding-left: 5px;
-}
-
-div#associateform{
-    background: #363a3b;
-    color:#ffffff;
-    padding-left: 5px;
-}
-
-div#adddepform{
-    background: #363a3b;
-    color:#ffffff;
-    padding-left: 5px;
-}
-
-div#taskdeps h4 {
+#taskdeps h4 {
   margin-bottom:0.3em;
 }
 
-div#taskdeps table {
+#taskdeps table {
   margin:0 0 0.8em -0.2em;
 }
 
-div#taskdeps td {
+#taskdeps td {
   padding:0.2em 0.4em;
 }
 
-div#taskdeps img {
+#taskdeps img {
   vertical-align:middle;
   margin-top:-1px;
 }
@@ -1610,11 +1591,12 @@ input[type=text], input[type=password], select {
     color: #000;
     background: #fff;
     border: 1px solid #ccc;
-    height: 19px;
     padding: 2px;
     vertical-align: middle;
 }
-
+input[type=text], input[type=password]{
+    height: 19px;
+}
 #table input[type=text] {
     width: 120px;
 }
@@ -1637,7 +1619,6 @@ input[type=text], input[type=submit], button, select {
 }
 
 button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
-select {height: 23px; vertical-align: middle;}
 
 input[type=submit]:hover, button:hover {
     background: #5F9729;

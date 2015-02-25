@@ -356,6 +356,10 @@
     <field name="default_due_version" type="C" size="40">
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
+    </field>
+    <field name="pages_intro_msg" type="C" size="80">
+      <NOTNULL/>
+      <DEFAULT value="index"/>
      </field>
     <field name="hours_per_manday" type="I" size="11">
       <NOTNULL/>

@@ -148,6 +148,24 @@ class FSTpl extends Tpl
     }
 
 }
+# draws the form start tag and the important anticsrftoken on 'post'-forms
+function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
+{
+        global $baseurl;
+        if (null === $method) {
+                $method='post';
+        }
+        if (null === $enctype) {
+                $enctype='multipart/form-data';
+        }
+
+        if(substr($action,0,4)!='http'){$action=$baseurl.$action;}
+        return '<form action="'.$action.'"'.($method=='get'?' method="get"':' method="post"').
+                ( $name!='' ? ' name="'.$name.'"':'').    
+                ( ' enctype="'.$enctype.'"').
+                ( ' '.$attr).'>'.
+                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'">':'');
+}
 
 // {{{ costful templating functions, TODO: optimize them
 

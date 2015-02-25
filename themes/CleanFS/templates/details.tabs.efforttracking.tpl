@@ -1,5 +1,5 @@
 <div id="effort" class="tab">
-    <form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post">
+    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#effort'); ?>
         <?php if ($user->perms('track_effort')) { ?>
         <input type="hidden" name="action" value="details.efforttracking"/>
         <button type="submit" name="start_tracking" value="true"><?php echo Filters::noXSS(L('starteffort')); ?></button>
