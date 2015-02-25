@@ -69,7 +69,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
-    $html    = eL($colname);
+    $html    = eL(str_replace('_', '', $colname));
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
@@ -183,7 +183,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value .= ', +' . ($task['num_assigned'] - 1);
             }
             break;
-        
+
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
@@ -194,7 +194,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value = tpl_tasklink($task, $task['supertask_id']);
             }
             break;
-            
+
 	case 'estimated_effort':
 		if ($task['estimated_effort']>0){
 			$value=$task['estimated_effort'].' h';
@@ -202,11 +202,11 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$value='';
 		}
 		break;
-	
+
 	case 'effort':
 		$value=$task['effort']>0 ? (ceil($task['effort']/360)/10).' h':'';
 		break;
-		
+
         default:
         	$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
         	break;
