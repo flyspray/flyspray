@@ -190,7 +190,7 @@ class effort
         $factor = ($factor == 0 ? 86400 : $factor);
 
         // Adjust seconds to be evenly dividable by 60, so
-        // 3595 -> 3600, floor can be safely used for minutes if formats
+        // 3595 -> 3600, floor can be safely used for minutes in formats
         // and the result will be 1:00 instead of 0:60 (if ceil would be used).
         
         $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);

@@ -245,6 +245,23 @@
             Post::val('effort_format', $proj->prefs['effort_format'])); ?>
           </select>
         </li>
+        <li>
+          <label for="actual_effort_format"><?php echo Filters::noXSS(L('actualeffortformat')); ?></label>
+          <select id="actual_effort_format" name="actual_effort_format">
+            <?php echo tpl_options(array(
+            effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
+            effort::FORMAT_HOURS_PLAIN => L('hourplural'),
+            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_MINUTES => L('minuteplural'),
+            effort::FORMAT_DAYS_PLAIN => L('days'),
+            effort::FORMAT_DAYS_ONE_DECIMAL => L('days') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('days') . ' ' . L('hourplural'),
+            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('days') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES => L('days') . ' ' . L('hourplural') . ":" . L('minuteplural'),
+            ),
+            Post::val('actual_effort_format', $proj->prefs['actual_effort_format'])); ?>
+          </select>
+        </li>
       </ul>
   </div>
 

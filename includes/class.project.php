@@ -38,6 +38,7 @@ class Project
         $this->prefs['disable_changepw'] = 0;
         $this->prefs['hours_per_manday'] = 0;
         $this->prefs['effort_format'] = 0;
+        $this->prefs['actual_effort_format'] = 0;
     }
 
     function setCookie()
