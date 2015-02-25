@@ -7,7 +7,7 @@
 ; a web browser, and editing header.php to point to wherever you put this file.
 
 
-         
+
 [general]
 cookiesalt = "f1s"            ; Randomisation value for cookie encoding
 output_buffering = "on"                       ; Available options: "off", "on" and "gzip"
@@ -19,7 +19,7 @@ syntax_plugin = "none"                               ; Plugin name for Flyspray'
 update_check = "1"                               ; Boolean. 0 = off, 1 = on.
 
 [database]
-dbtype = "mysql"        ; Type of database ("mysql" or "pgsql" are currently supported) 
+dbtype = "mysql"        ; Type of database ("mysql" or "pgsql" are currently supported)
 dbhost = "localhost"        ; Name or IP of your database server
 dbname = "DBNAME"        ; The name of the database
 dbuser = "DBUSER"        ; The user to access the database
@@ -30,4 +30,23 @@ dbprefix = "flyspray_" ; Prefix of the Flyspray tables
 zip = "application/zip" ; MIME-type for ZIP files
 
 [oauth]
+; Uncomment the oauth providers you want your users be able to use.
+; Don't forget to uncomment and set their corresponding configs "secret", "id" and "redirect".
+
 enabled[] = ""
+;enabled[] = "github"
+;enabled[] = "google"
+;enabled[] = "facebook"
+;enabled[] = "microsoft"
+;github_secret = ""
+;github_id = ""
+;github_redirect = "YOURDOMAIN/index.php?do=oauth&provider=github"
+;google_secret = ""
+;google_id = ""
+;google_redirect = "YOURDOMAIN/index.php?do=oauth&provider=google"
+;facebook_secret = ""
+;facebook_id = ""
+;facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"
+;microsoft_secret = ""
+;microsoft_id = ""
+;microsoft_redirect = "YOURDOMAIN/index.php"

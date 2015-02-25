@@ -73,10 +73,6 @@
       <col>task_id</col>
       <col>user_id</col>
     </index>
-    <index name="task_id_assigned">
-      <col>task_id</col>
-      <col>user_id</col>
-    </index>
   </table>
   <table name="attachments">
     <field name="attachment_id" type="I" size="5">
@@ -442,7 +438,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_os">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>os_name</col>
     </index>
   </table>
   <table name="list_resolution">
@@ -466,7 +464,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_res">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>resolution_name</col>
     </index>
   </table>
   <table name="list_status">
@@ -490,7 +490,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_status">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>status_name</col>
     </index>
   </table>
   <table name="list_tasktype">
@@ -514,7 +516,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_tt">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>tasktype_name</col>
     </index>
   </table>
   <table name="list_version">
@@ -541,6 +545,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <index name="project_id_version_name">
+      <UNIQUE/>
+      <col>project_id</col>
+      <col>version_name</col>
+    </index>
     <index name="project_id_version">
       <col>project_id</col>
       <col>version_tense</col>
@@ -1193,7 +1202,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'hide_emails', '1');</query>
     <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided');</query>
     <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
-    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '');</query>
+    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>
 </schema>
