@@ -1,7 +1,6 @@
 <h3><?php echo Filters::noXSS(L('registernewuser')); ?></h3>
 <div class="box">
-
-<form action="<?php echo Filters::noXSS(CreateUrl('register')); ?>" method="post" id="registernewuser">
+<?php echo tpl_form(Filters::noXSS(CreateUrl('register')),null,null,null,'id="registernewuser"'); ?>
 	<ul class="form_elements wide">
 		<li>
 			<label for="username"><?php echo Filters::noXSS(L('username')); ?></label>
