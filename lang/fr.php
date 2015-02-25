@@ -935,6 +935,8 @@ $translation = array(
 'hideemails'              => 'Cacher adresses email',
 'hidemyemail'             => 'Cacher mon adresse email',
 'exporttasklist'          => 'Exporter la liste des tâches',
+'pageswelcomemsg'         => 'Pages sur lesquelles afficher le message de bienvenue',
+'pagesintromsg'           => 'Pages sur lesquelles afficher le message d\'intro'
 );
 
 ?>
