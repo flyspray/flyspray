@@ -20,7 +20,7 @@ http://flyspray.org/manual:installation
 
 ## Upgrading
 1. Create a backup of your files and database  
-2. Remove all files _except the attachments directory, avatars directory and flyspray.conf.php_  
+2. Remove all files **except the attachments directory, avatars directory and flyspray.conf.php**  
 3. Copy the new files to the Flyspray directory
 4. Make sure flyspray.conf.php is writeable by the webserver.
 5. TODO Composer stuff???
