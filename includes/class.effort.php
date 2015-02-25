@@ -128,17 +128,17 @@ class effort
 
         switch ($format) {
             case self::FORMAT_HOURS_PLAIN_MINUTES:
-                $seconds = floor($seconds / 60) * 60 + 60;
+                $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds - ($hours * 3600)) / 60);
                 return sprintf('%01u:%02u', $hours, $minutes);
                 break;
             case self::FORMAT_HOURS_PLAIN:
-                $hours = ceil($seconds / 3600, 1);
+                $hours = ceil($seconds / 3600);
                 return sprintf('%01u %s', $hours, L('hourabbrev'));
                 break;
             case self::FORMAT_HOURS_ONE_DECIMAL:
-                $hours = round($seconds / 3600, 1);
+                $hours = round(ceil($seconds * 10 / 3600) / 10, 1);
                 return sprintf('%01.1f %s', $hours, L('hourabbrev'));
                 break;
             case self::FORMAT_MINUTES:
@@ -146,14 +146,14 @@ class effort
                 return sprintf('%01u', $minutes);
                 break;
             case self::FORMAT_DAYS_PLAIN:
-                $days = ceil($seconds / $factor, 1);
+                $days = ceil($seconds / $factor);
                 return sprintf('%01u', $days);
             case self::FORMAT_DAYS_ONE_DECIMAL:
-                $days = round($seconds / $factor, 1);
+                $days = round(ceil($seconds * 10 / $factor) / 10, 1);
                 return sprintf('%01.1f', $days);
             case self::FORMAT_DAYS_PLAIN_HOURS_PLAIN:
                 $days = floor($seconds / $factor);
-                $hours = ceil(($seconds - ($days * $factor)) / 3600, 1);
+                $hours = ceil(($seconds - ($days * $factor)) / 3600);
                 if ($days == 0) {
                     return sprintf('%01u %s', $hours, L('hourabbrev'));
                 } else {
@@ -161,14 +161,14 @@ class effort
                 }
             case self::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL:
                 $days = floor($seconds / $factor);
-                $hours = round(($seconds - ($days * $factor)) / 3600, 1);
+                $hours = round(ceil($seconds * 10 / 3600) / 10, 1);
                 if ($days == 0) {
                     return sprintf('%01.1f %s', $hours, L('hourabbrev'));
                 } else {
                     return sprintf('%u %s %01.1f %s', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, L('hourabbrev'));
                 }
             case self::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES:
-                $seconds = floor($seconds / 60) * 60 + 60;
+                $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
                 $days = floor($seconds / $factor);
                 $hours = floor(($seconds - ($days * $factor)) / 3600);
                 $minutes = floor(($seconds - (($days * $factor) + ($hours * 3600))) / 60);
@@ -179,7 +179,7 @@ class effort
                 }
                 break;
             default:
-                $seconds = floor($seconds / 60) * 60 + 60;
+                $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds - ($hours * 3600)) / 60);
                 return sprintf('%01u:%02u', $hours, $minutes);
@@ -193,7 +193,7 @@ class effort
         // 3595 -> 3600, floor can be safely used for minutes if formats
         // and the result will be 1:00 instead of 0:60 (if ceil would be used).
         
-        $seconds = floor($seconds / 60) * 60 + 60;
+        $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
         
         switch ($format) {
             case self::FORMAT_HOURS_PLAIN_MINUTES:

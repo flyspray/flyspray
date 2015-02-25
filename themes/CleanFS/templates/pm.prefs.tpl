@@ -234,12 +234,12 @@
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
             effort::FORMAT_HOURS_PLAIN => L('hourplural'),
-            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . '(' . L('onedecimal') . ')',
+            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
             effort::FORMAT_MINUTES => L('minuteplural'),
             effort::FORMAT_DAYS_PLAIN => L('days'),
-            effort::FORMAT_DAYS_ONE_DECIMAL => L('days') . '(' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_ONE_DECIMAL => L('days') . ' (' . L('onedecimal') . ')',
             effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('days') . ' ' . L('hourplural'),
-            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('days') . ' ' . L('hourplural') . '(' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('days') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
             effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES => L('days') . ' ' . L('hourplural') . ":" . L('minuteplural'),
             ),
             Post::val('effort_format', $proj->prefs['effort_format'])); ?>
