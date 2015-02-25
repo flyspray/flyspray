@@ -40,18 +40,16 @@
 
   <?php elseif (!$d_open && !$user->isAnon() && !Flyspray::AdminRequestCheck(1, $task_details['task_id'])): ?>
     <a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?php echo Filters::noXSS(L('requestclose')); ?></a>
-
     <div id="closeform" class="popup hide">
-        <form name="form3" action="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>" method="post" id="formclosetask">
-            <div>
-                <input type="hidden" name="action" value="requestclose"/>
-                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-                <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
-                <textarea id="reason" name="reason_given"></textarea><br/>
-                <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
-            </div>
-        </form>
+    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+      <input type="hidden" name="action" value="requestclose"/>
+      <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+      <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
+      <textarea id="reason" name="reason_given"></textarea><br/>
+      <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
+    </form>
     </div>
+
   <?php elseif(!$user->isAnon()): ?>
     <a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?php echo Filters::noXSS(L('closetask')); ?>
 
