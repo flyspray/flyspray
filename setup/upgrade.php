@@ -78,6 +78,7 @@ usort($folders, 'version_compare'); // start with lowest version
 
 if (Post::val('upgrade')) {
     $db->dblink->StartTrans();
+    find_duplicate_list_entries();
     foreach ($folders as $folder) {
         if (version_compare($installed_version, $folder, '<=')) {
             execute_upgrade_file($folder, $installed_version);
@@ -328,3 +329,189 @@ $page->assign('installed_version', $installed_version);
 
 $page->display('upgrade.tpl');
 
+// Functions for checking and fixing possible duplicate entries
+// in database for those tables that now have a unique index.
+
+function find_duplicate_list_entries() {
+    global $db;
+
+    // Categories need a bit more thinking. A real life example from
+    // my own database: A big project originally written (horrible!)
+    // in VB6, that I ported to .NET -environment. Categories:
+    // BackOfficer (main category)
+    // -> Reports (subcategory - should be allowed)
+    // BackOfficer.NET (main category)
+    // -> Reports (subcategory - should be allowed)
+    // -> Reports (I added a fake duplicate - should not be allowed)
+    
+    $sql = $db->Query('SELECT MIN(os_id) id, project_id, os_name
+                          FROM {list_os}
+                      GROUP BY project_id, os_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        fix_os_table($dups);   
+    }
+    
+    $sql = $db->Query('SELECT MIN(resolution_id) id, project_id, resolution_name
+                          FROM {list_resolution}
+                      GROUP BY project_id, resolution_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        fix_resolution_table($dups);   
+    }
+    
+    $sql = $db->Query('SELECT MIN(status_id) id, project_id, status_name
+                          FROM {list_status}
+                      GROUP BY project_id, status_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        fix_status_table($dups);   
+    }
+    $sql = $db->Query('SELECT MIN(tasktype_id) id, project_id, tasktype_name
+                          FROM {list_tasktype}
+                      GROUP BY project_id, tasktype_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        fix_tasktype_table($dups);   
+    }
+    
+    $sql = $db->Query('SELECT MIN(version_id) id, project_id, version_name
+                          FROM {list_version}
+                      GROUP BY project_id, version_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        fix_version_table($dups);   
+    }
+}
+
+function fix_os_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+        
+        $sql = $db->Query('SELECT os_id id
+                             FROM {list_os}
+                            WHERE project_id = ? AND os_name = ?',
+                          array($dup['project_id'], $dup['os_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+            
+            $db->Query('UPDATE {tasks}
+                           SET operating_system = ?
+                         WHERE operating_system = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_os} WHERE os_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_resolution_table($dups) {
+    global $db;
+    
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+        
+        $sql = $db->Query('SELECT resolution_id id
+                             FROM {list_resolution}
+                            WHERE project_id = ? AND resolution_name = ?',
+                          array($dup['project_id'], $dup['resolution_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+            
+            $db->Query('UPDATE {tasks}
+                           SET resolution_reason = ?
+                         WHERE resolution_reason = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_resolution} WHERE resolution_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_status_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+        
+        $sql = $db->Query('SELECT status_id id
+                             FROM {list_status}
+                            WHERE project_id = ? AND status_name = ?',
+                          array($dup['project_id'], $dup['status_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+            
+            $db->Query('UPDATE {tasks}
+                           SET item_status = ?
+                         WHERE item_status = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_status} WHERE status_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_tasktype_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+        
+        $sql = $db->Query('SELECT tasktype_id id
+                             FROM {list_tasktype}
+                            WHERE project_id = ? AND tasktype_name = ?',
+                          array($dup['project_id'], $dup['tasktype_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                echo "Skipping id " . $entry['id'];
+                continue;
+            }
+            
+                echo "Fixing id " . $entry['id'];
+            $db->Query('UPDATE {tasks}
+                           SET task_type = ?
+                         WHERE task_type = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_tasktype} WHERE tasktype_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_version_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+        
+        $sql = $db->Query('SELECT version_id id
+                             FROM {list_version}
+                            WHERE project_id = ? AND version_name = ?',
+                          array($dup['project_id'], $dup['version_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+            
+            $db->Query('UPDATE {tasks}
+                           SET product_version = ?
+                         WHERE product_version = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_version} WHERE version_id = ?', array($entry['id']));
+        }
+    }
+}

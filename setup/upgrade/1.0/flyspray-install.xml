@@ -414,9 +414,7 @@
       <UNSIGNED/>
     </field>
     <index name="project_id_cat">
-      <UNIQUE/>
       <col>project_id</col>
-      <col>category_name</col>
     </index>
   </table>
   <table name="list_os">

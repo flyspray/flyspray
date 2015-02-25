@@ -531,42 +531,6 @@
           <field name="task_id" type="I" size="5"></field>
 	  <field name="tag" type="C" size="100"></field>
   </table>
-  <table name="list_category">
-    <field name="category_id" type="I" size="3">
-      <KEY/>
-      <AUTOINCREMENT/>
-    </field>
-    <field name="project_id" type="I" size="3">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="category_name" type="C" size="30">
-      <NOTNULL/>
-    </field>
-    <field name="show_in_list" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="category_owner" type="I" size="3">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="lft" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="rgt" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <index name="project_id_cat">
-      <UNIQUE/>
-      <col>project_id</col>
-      <col>category_name</col>
-    </index>
-  </table>
   <table name="list_os">
     <field name="os_id" type="I" size="3">
       <KEY/>
