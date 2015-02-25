@@ -19,18 +19,18 @@ homepage, and a nice testimonial if you are in the mood and we'll have it added 
 http://flyspray.org/manual:installation
 
 ## Upgrading
-Create a backup of your files and database  
-Remove all files except the attachments directory and flyspray.conf.php  
-Copy the new files to the Flyspray directory  
-Make sure flyspray.conf.php is writeable by the webserver.  
-Run the upgrader at http://yourflyspray/setup/upgrade.php  
-
+1. Create a backup of your files and database  
+2. Remove all files _except the attachments directory, avatars directory and flyspray.conf.php_  
+3. Copy the new files to the Flyspray directory
+4. Make sure flyspray.conf.php is writeable by the webserver.
+5. TODO Composer stuff???
+5. Run the upgrader at http://yourflyspray/setup/upgrade.php  
 
 ## Dependencies
 
 ### Install php
-sudo apt-get install php
+    sudo apt-get install php
 
 ### Install composer
-curl -sS https://getcomposer.org/installer | php  
-php composer.phar install  
+    curl -sS https://getcomposer.org/installer | php  
+    php composer.phar install  
