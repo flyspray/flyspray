@@ -1258,6 +1258,9 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
+                
+                // FIXME: Check that a similar entry does not already in this project or project 0
+                
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
@@ -1297,6 +1300,8 @@ switch ($action = Req::val('action'))
             array($proj->id))));
         }
 
+        // FIXME: Check that a similar entry does not already in this project or project 0
+
         $db->Query("INSERT INTO  $list_table_name
                                  (project_id, $list_column_name, list_position, show_in_list)
                          VALUES  (?, ?, ?, ?)",
@@ -1324,6 +1329,9 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
+                
+                // FIXME: Check that a similar entry does not already in this project or project 0
+                
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
@@ -1365,6 +1373,8 @@ switch ($action = Req::val('action'))
             array($proj->id)));
         }
 
+        // FIXME: Check that a similar entry does not already in this project or project 0
+
         $db->Query("INSERT INTO  $list_table_name
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
                         VALUES  (?, ?, ?, ?, ?)",
@@ -1394,6 +1404,9 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
+                
+                // FIXME: Check that a similar entry does not already in this project or project 0
+
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
                                               show_in_list = ?, category_owner = ?,
@@ -1434,6 +1447,8 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('fillallfields'));
             break;
         }
+
+        // FIXME: Check that a similar entry does not already in this project or project 0
 
         // Get right value of last node
         $right = $db->Query('SELECT rgt FROM {list_category} WHERE category_id = ?', array(Post::val('parent_id', -1)));
