@@ -70,7 +70,8 @@ $provider = isset($_SESSION['oauth_provider']) ? $_SESSION['oauth_provider'] : '
 $provider = strtolower(Get::val('provider', $provider));
 unset($_SESSION['oauth_provider']);
 
-if (!in_array($provider, $conf['oauth']['enabled'])) {
+$active_oauths = explode(' ', $fs->prefs['active_oauths']);
+if (!in_array($provider, $active_oauths)) {
     Flyspray::show_error(26);
 }
 
