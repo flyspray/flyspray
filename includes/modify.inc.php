@@ -827,7 +827,7 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1249,7 +1249,7 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
+
                 $check = $db->Query("SELECT COUNT(*)
                                        FROM $list_table_name
                                       WHERE (project_id = 0 OR project_id = ?)
@@ -1257,12 +1257,12 @@ switch ($action = Req::val('action'))
                                         AND $list_id <> ?",
                                     array($proj->id, $listnames[$id], $id));
                 $itemexists = $db->FetchOne($check);
-                
+
                 if ($itemexists) {
                     Flyspray::show_error(L('itemexists'));
                     return;
                 }
-                
+
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
@@ -1313,7 +1313,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('itemexists'));
             return;
         }
-                
+
         $db->Query("INSERT INTO  $list_table_name
                                  (project_id, $list_column_name, list_position, show_in_list)
                          VALUES  (?, ?, ?, ?)",
@@ -1341,7 +1341,7 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
+
                 $check = $db->Query("SELECT COUNT(*)
                                        FROM $list_table_name
                                       WHERE (project_id = 0 OR project_id = ?)
@@ -1349,12 +1349,12 @@ switch ($action = Req::val('action'))
                                         AND $list_id <> ?",
                                     array($proj->id, $listnames[$id], $id));
                 $itemexists = $db->FetchOne($check);
-                
+
                 if ($itemexists) {
                     Flyspray::show_error(L('itemexists'));
                     return;
                 }
-                
+
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
@@ -1407,7 +1407,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('itemexists'));
             return;
         }
-                
+
         $db->Query("INSERT INTO  $list_table_name
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
                         VALUES  (?, ?, ?, ?, ?)",

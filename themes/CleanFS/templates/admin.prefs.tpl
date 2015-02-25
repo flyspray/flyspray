@@ -170,6 +170,16 @@
             <?php echo tpl_options(Flyspray::listGroups(), $fs->prefs['anon_group']); ?>
           </select>
         </li>
+
+        <li>
+          <label><?php echo Filters::noXSS(L('activeoauths')); ?></label>
+          <?php
+            $oauths = array('github', 'google', 'facebook', 'microsoft'); //TODO Implement league supported, missing Eventbrite, Instagram, LinkedIn, VKontakte
+            $selectedOauths = explode(' ', $fs->prefs['active_oauths']);
+            echo tpl_double_select('active_oauths', $oauths, $selectedOauths, true, false);
+          ?>
+        </li>
+
       </ul>
     </div>
 

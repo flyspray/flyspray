@@ -948,6 +948,7 @@ Regards,',
 'mandays'                 => 'may-days',
 'itemexists'              => 'Item already exists in database.',
 'pageswelcomemsg'         => 'Pages where to show main intro message',
-'pagesintromsg'           => 'Pages where to show intro message'
+'pagesintromsg'           => 'Pages where to show intro message',
+'activeoauths'            => 'Active Oauth providers'
 );
 ?>

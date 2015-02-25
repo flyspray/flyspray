@@ -791,14 +791,8 @@ class Setup extends Flyspray
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
       $config[] = "\n";
       $config[] = "[oauth]";
-      $config[] = "; Uncomment the oauth providers you want your users be able to use.";
-      $config[] = "; Don't forget to uncomment and set their corresponding configs \"secret\", \"id\" and \"redirect\"";
+      $config[] = "; These are only needed if you plan to use them. You can turn them on in the admin panel.";
       $config[] = "\n";
-      $config[] = 'enabled[] = ""';
-      $config[] = ';enabled[] = "github"';
-      $config[] = ';enabled[] = "google"';
-      $config[] = ';enabled[] = "facebook"';
-      $config[] = ';enabled[] = "microsoft"';
       $config[] = 'github_secret = ""';
       $config[] = 'github_id = ""';
       $config[] = 'github_redirect = "YOURDOMAIN/index.php?do=oauth&provider=github"';
