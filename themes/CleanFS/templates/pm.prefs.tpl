@@ -33,6 +33,15 @@
         </li>
 
         <li>
+          <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+          <?php
+            $pages = array('index', 'toplevel', 'newmultitasks', 'details', 'roadmap', 'newtask', 'reports', 'depends', 'pm');
+            $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
+            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, true, false);
+          ?>
+        </li>
+
+        <li>
           <label for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
@@ -69,7 +78,7 @@
           <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
 
         </li>
-	
+
         <li>
           <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
           <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
@@ -127,7 +136,7 @@
 
           </select>
         </li>
-  
+
         <li>
           <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
           <?php // Set the selectable column names

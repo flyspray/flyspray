@@ -352,7 +352,11 @@
     <field name="default_due_version" type="C" size="40">
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
-     </field>
+    </field>
+    <field name="pages_intro_msg" type="C" size="80">
+      <NOTNULL/>
+      <DEFAULT value="index"/>
+    </field>
   </table>
   <table name="tasks">
     <field name="task_id" type="I" size="10">

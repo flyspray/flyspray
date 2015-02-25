@@ -827,7 +827,7 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -970,7 +970,7 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking');
+                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking', 'pages_intro_msg');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1437,8 +1437,8 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
-                // FIXME: Check that a similar entry does not already in this project or project 0
+
+                // FIXME: Check that a similar entry does not already exist in this project or project 0
 
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
@@ -1481,7 +1481,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        // FIXME: Check that a similar entry does not already in this project or project 0
+        // FIXME: Check that a similar entry does not already exist in this project or project 0
 
         // Get right value of last node
         $right = $db->Query('SELECT rgt FROM {list_category} WHERE category_id = ?', array(Post::val('parent_id', -1)));
