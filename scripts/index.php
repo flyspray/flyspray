@@ -250,7 +250,7 @@ function do_cmp($a, $b)
 */
 function export_task_list()
 {
-        global $tasks, $fs, $sort, $orderby;
+        global $tasks, $fs, $user, $sort, $orderby;
 
         if (!is_array($tasks)){
                 return;
