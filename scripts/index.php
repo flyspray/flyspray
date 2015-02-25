@@ -283,16 +283,12 @@ function export_task_list()
             'os'         => 'os_name',
             'private'    => 'mark_private',
             'supertask'  => 'supertask_id',
-                'detailed_desc'=>'detailed_desc',
+            'detailed_desc'=>'detailed_desc',
         );
 
 
         # we can put this info also in the filename ...
         #$projectinfo = array('Project ', $tasks[0]['project_title'], date("H:i:s d-m-Y") );
-
-        $headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
-        # TODO maybe if user just want localized headings for nonenglish speaking audience..
-        #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
 
         // sort the tasks into the order selected by the user. Set
         // global vars for use by sort comparison function
@@ -320,6 +316,20 @@ function export_task_list()
 
         $output = fopen('php://output', 'w');
         #fputcsv($output, $projectinfo);
+        $headings= array(
+        	'ID',
+        	'Category',
+        	'Task Type',
+        	'Severity',
+        	'Summary',
+        	'Status',
+        	'Progress',
+        	$user->perms('view_effort') ?'Estimated Effort':'',
+        	$user->perms('view_actual_effort') ?'Done Effort':'',
+        	'Description',
+        );
+        # TODO maybe if user just want localized headings for nonenglish speaking audience..
+        #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
         fputcsv($output, $headings);
         foreach ($tasks as $task) {
                 $row = array(
@@ -329,7 +339,14 @@ function export_task_list()
                         $fs->severities[ $task['task_severity'] ],
                         $task['item_summary'],
                         $task['status_name'],
-                        $task['percent_complete']
+                        $task['percent_complete'],
+                        # better permission namings
+                        #$user->perms('view_estimated_effort')? $task['estimated_effort']:'',
+                        #$user->perms('view_done_effort')? $task['effort']:'',
+                        # current permission naming
+                        $user->perms('view_effort') ? $task['estimated_effort']:'',
+                        $user->perms('view_actual_effort') ? $task['effort']:'',
+                        $task['detailed_desc']
                 );
                 fputcsv($output, $row);
         }
