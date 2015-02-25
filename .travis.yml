@@ -1,5 +1,6 @@
 language: php
 php:
+  - 5.2
   - 5.4
   
 # no extensive travis testing before we have some real tests and project stable
