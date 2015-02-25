@@ -73,10 +73,6 @@
       <col>task_id</col>
       <col>user_id</col>
     </index>
-    <index name="task_id_assigned">
-      <col>task_id</col>
-      <col>user_id</col>
-    </index>
   </table>
   <table name="attachments">
     <field name="attachment_id" type="I" size="5">
@@ -442,7 +438,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_os">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>os_name</col>
     </index>
   </table>
   <table name="list_resolution">
@@ -466,7 +464,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_res">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>resolution_name</col>
     </index>
   </table>
   <table name="list_status">
@@ -490,7 +490,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_status">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>status_name</col>
     </index>
   </table>
   <table name="list_tasktype">
@@ -514,7 +516,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_tt">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>tasktype_name</col>
     </index>
   </table>
   <table name="list_version">
@@ -541,6 +545,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <index name="project_id_version_name">
+      <UNIQUE/>
+      <col>project_id</col>
+      <col>version_name</col>
+    </index>
     <index name="project_id_version">
       <col>project_id</col>
       <col>version_tense</col>
