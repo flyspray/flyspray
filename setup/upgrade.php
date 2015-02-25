@@ -477,11 +477,9 @@ function fix_tasktype_table($dups) {
         $entries = $db->fetchAllArray($sql);
         foreach ($entries as $entry) {
             if ($entry['id'] == $update_id) {
-                echo "Skipping id " . $entry['id'];
                 continue;
             }
             
-                echo "Fixing id " . $entry['id'];
             $db->Query('UPDATE {tasks}
                            SET task_type = ?
                          WHERE task_type = ?',
