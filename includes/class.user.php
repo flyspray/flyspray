@@ -250,13 +250,13 @@ class User
     public function can_self_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
+        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
     }
 
     public function can_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
+        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
     }
 
     public function can_open_task($proj)
@@ -329,12 +329,12 @@ class User
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
-        
+
         $result = $db->Query("SELECT count(date({$func}(event_date))) as val
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
 							  WHERE t.project_id = ? AND h.user_id = ?
-							  AND date({$func}(event_date)) 
-							  BETWEEN date(?) 
+							  AND date({$func}(event_date))
+							  BETWEEN date(?)
 							  AND date(?)", array($project_id, $userid, $startdate, $enddate));
         $result = $db->fetchCol($result);
 		return $result[0];
@@ -352,30 +352,30 @@ class User
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
-        
+
         $result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
 							  WHERE t.project_id = ? AND h.user_id = ?
                               AND date({$func}(event_date)) BETWEEN date(?) and date(?)
-                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC", 
+                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
                               array($project_id, $userid, $date_start, $date_end));
-                              
+
 		$date1   = new \DateTime($date_start);
         $date2   = new \DateTime($date_end);
         $days    = $date1->diff($date2);
         $days    = $days->format('%a');
         $results = array();
-         
+
         for ($i = 0; $i < $days; $i++) {
             $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
             $results[date('Y-m-d', $event_date)] = 0;
         }
-        
+
         while ($row = $result->fetchRow()) {
             $event_date           = date('Y-m-d', $row['event_date']);
             $results[$event_date] = (integer) $row['val'];
         }
-        
+
 		return array_values($results);
 	}
 

@@ -827,7 +827,7 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths', 'only_oauth_reg');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1445,9 +1445,9 @@ switch ($action = Req::val('action'))
                                     WHERE project_id = ? AND lft < ? and rgt > ?
                                       AND lft = (SELECT MAX(lft) FROM flyspray_list_category WHERE lft < ? and rgt > ?)',
                                   array($proj->id, intval($listlft[$id]), intval($listrgt[$id]), intval($listlft[$id]), intval($listrgt[$id])));
-                
+
                 $parent = $db->FetchRow($sql);
-                
+
                 $check = $db->Query('SELECT COUNT(*)
                                       FROM {list_category} c
                                      WHERE project_id = ? AND category_name = ? AND lft > ? AND rgt < ?
@@ -1461,12 +1461,12 @@ switch ($action = Req::val('action'))
                 $itemexists = $db->FetchOne($check);
 
                 // echo "<pre>" . $parent['category_name'] . "," . $listname . ", " . intval($id) . ", " . intval($listlft[$id]) . ", " . intval($listrgt[$id]) . ", " . $itemexists ."</pre>";
-            
+
                 if ($itemexists) {
                     Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
                     return;
                 }
-        
+
 
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
@@ -1517,7 +1517,7 @@ switch ($action = Req::val('action'))
         $left = $parent['lft'];
 
         // echo "<pre>Parent: " . Post::val('parent_id', -1) . ", left: $left, right: $right</pre>";
-        
+
         // If parent has subcategories, check for possible duplicates
         // on the same sub-level and under the same parent.
         if ($left + 1 != $right) {
@@ -1537,7 +1537,7 @@ switch ($action = Req::val('action'))
                 return;
             }
         }
-        
+
         $db->Query('UPDATE {list_category} SET rgt=rgt+2 WHERE rgt >= ? AND project_id = ?', array($right, $proj->id));
         $db->Query('UPDATE {list_category} SET lft=lft+2 WHERE lft >= ? AND project_id = ?', array($right, $proj->id));
 

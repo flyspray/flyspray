@@ -950,6 +950,7 @@ Regards,',
 'categoryitemexists'      => 'Item %s already exists under category %s in database.',
 'pageswelcomemsg'         => 'Pages where to show main intro message',
 'pagesintromsg'           => 'Pages where to show intro message',
-'activeoauths'            => 'Active Oauth providers'
+'activeoauths'            => 'Active Oauth providers',
+'onlyoauthreg'            => 'Only allow Oauths registrations'
 );
 ?>
