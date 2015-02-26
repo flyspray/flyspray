@@ -135,38 +135,42 @@ class effort
                 break;
             case self::FORMAT_HOURS_PLAIN:
                 $hours = ceil($seconds / 3600);
-                return sprintf('%01u %s', $hours, L('hourabbrev'));
+                return sprintf('%01u %s', $hours, ($hours == 1 ? L('hoursingular') : L('hourplural')));
                 break;
             case self::FORMAT_HOURS_ONE_DECIMAL:
                 $hours = round(ceil($seconds * 10 / 3600) / 10, 1);
-                return sprintf('%01.1f %s', $hours, L('hourabbrev'));
+                return sprintf('%01.1f %s', $hours, ($hours == 1 ? L('hoursingular') : L('hourplural')));
                 break;
             case self::FORMAT_MINUTES:
                 $minutes = ceil($seconds / 60);
-                return sprintf('%01u', $minutes);
+                return sprintf('%01u %s', $minutes, L('minuteabbrev'));
                 break;
             case self::FORMAT_DAYS_PLAIN:
                 $days = ceil($seconds / $factor);
-                return sprintf('%01u', $days);
+                return sprintf('%01u %s', $days, ($days == 1 ? L('manday') : L('mandays')));
+                break;
             case self::FORMAT_DAYS_ONE_DECIMAL:
                 $days = round(ceil($seconds * 10 / $factor) / 10, 1);
-                return sprintf('%01.1f', $days);
+                return sprintf('%01.1f %s', $days, ($days == 1 ? L('manday') : L('mandays')));
+                break;
             case self::FORMAT_DAYS_PLAIN_HOURS_PLAIN:
                 $days = floor($seconds / $factor);
                 $hours = ceil(($seconds - ($days * $factor)) / 3600);
                 if ($days == 0) {
-                    return sprintf('%01u %s', $hours, L('hourabbrev'));
+                    return sprintf('%1u %s', $hours, L('hourabbrev'));
                 } else {
-                    return sprintf('%u %s %02u %s', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, L('hourabbrev'));
+                    return sprintf('%u %s %1u %s', $days, L('mandayabbrev'), $hours, L('hourabbrev'));
                 }
+                break;
             case self::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL:
                 $days = floor($seconds / $factor);
-                $hours = round(ceil($seconds * 10 / 3600) / 10, 1);
+                $hours = round(ceil(($seconds - ($days * $factor)) * 10 / 3600) / 10, 1);
                 if ($days == 0) {
                     return sprintf('%01.1f %s', $hours, L('hourabbrev'));
                 } else {
-                    return sprintf('%u %s %01.1f %s', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, L('hourabbrev'));
+                    return sprintf('%u %s %01.1f %s', $days, L('mandayabbrev'), $hours, L('hourabbrev'));
                 }
+                break;
             case self::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES:
                 $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
                 $days = floor($seconds / $factor);
@@ -175,7 +179,7 @@ class effort
                 if ($days == 0) {
                     return sprintf('%01u:%02u', $hours, $minutes);
                 } else {
-                    return sprintf('%u %s %02u:%02u', $days, ($days == 1 ? L('manday') : L('mandays')), $hours, $minutes);
+                    return sprintf('%u %s %01u:%02u', $days, L('mandayabbrev'), $hours, $minutes);
                 }
                 break;
             default:

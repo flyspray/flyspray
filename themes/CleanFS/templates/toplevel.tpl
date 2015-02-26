@@ -99,7 +99,7 @@ foreach ($projects as $project): ?>
   <?php if ($user->perms('view_effort')) { ?>
   <tr>
       <th>
-          <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>
+          <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
       </th>
       <td>
           <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
@@ -109,7 +109,7 @@ foreach ($projects as $project): ?>
   <?php if ($user->perms('view_actual_effort')) { ?>
   <tr>
       <th>
-          <?php echo Filters::noXSS(L('actualeffort')); ?>
+          <?php echo Filters::noXSS(L('actualeffortopen')); ?>
       </th>
       <td>
           <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?>
