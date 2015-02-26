@@ -174,7 +174,7 @@
         <li>
           <label><?php echo Filters::noXSS(L('activeoauths')); ?></label>
           <?php
-            $oauths = array('github', 'google', 'facebook', 'microsoft'); //TODO Implement league supported, missing Eventbrite, Instagram, LinkedIn, VKontakte
+            $oauths = array('github', 'google', 'facebook', 'microsoft'/*, 'instagram', 'eventbrite', 'linkedin', 'vkontakte'*/); //TODO try the commented out for FS 1.1
             $selectedOauths = explode(' ', $fs->prefs['active_oauths']);
             echo tpl_double_select('active_oauths', $oauths, $selectedOauths, true, false);
           ?>
