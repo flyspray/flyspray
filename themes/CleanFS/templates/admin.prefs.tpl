@@ -14,6 +14,34 @@
 
 </script>
 
+<script>
+    /*
+    First argument is always the parent calling to deactivate not needed childs
+    Next args are all childsto be deactivated
+    */
+    function check_change()
+    {
+    	var i;
+    	var parent = arguments[0];
+
+        if(document.getElementById(parent).checked)
+        {
+            for (i = 1; i < arguments.length; i++)
+            {
+                document.getElementById(arguments[i]).checked = false;
+                document.getElementById(arguments[i]).disabled = true;
+            }
+        }
+        else
+        {
+            for (i = 1; i < arguments.length; i++)
+            {
+                document.getElementById(arguments[i]).disabled = false;
+            }
+        }
+    }
+</script>
+
 <div id="toolbox">
   <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('preferences')); ?></h3>
   <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
@@ -134,29 +162,19 @@
           <?php echo tpl_checkbox('anon_reg', $fs->prefs['anon_reg'], 'allowusersignups'); ?>
         </li>
 
-<!-- register needs approved by admin !-->
         <li>
-	  <script>
-		function check_change()
-		{
-			if(document.getElementById("needapproval").checked)
-			{
-				document.getElementById("spamproof").checked = false;
-				document.getElementById("spamproof").disabled = true;
-			}
-			else
-			{
-				document.getElementById("spamproof").disabled = false;
-			}
-		}
-	  </script>
+          <label for="onlyoauthreg"><?php echo Filters::noXSS(L('onlyoauthreg')); ?></label>
+          <?php echo tpl_checkbox('only_oauth_reg', $fs->prefs['only_oauth_reg'], 'onlyoauthreg', 1, array('onclick'=>'check_change("onlyoauthreg", "needapproval", "spamproof")')); ?>
+        </li>
+
+        <li>
           <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin')); ?></label>
-          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, array('onclick'=>'check_change()')); ?>
+          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change("needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
         </li>
 
         <li>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
-          <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, $fs->prefs['need_approval']?array('disabled'=>'true'):''); ?>
+          <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, ($fs->prefs['need_approval'] || $fs->prefs['only_oauth_reg'] ) ? array('disabled' => 'true') : ''); ?>
         </li>
 
         <li>
@@ -174,7 +192,7 @@
         <li>
           <label><?php echo Filters::noXSS(L('activeoauths')); ?></label>
           <?php
-            $oauths = array('github', 'google', 'facebook', 'microsoft'); //TODO Implement league supported, missing Eventbrite, Instagram, LinkedIn, VKontakte
+            $oauths = array('github', 'google', 'facebook', 'microsoft'/*, 'instagram', 'eventbrite', 'linkedin', 'vkontakte'*/); //TODO try the commented out for FS 1.1
             $selectedOauths = explode(' ', $fs->prefs['active_oauths']);
             echo tpl_double_select('active_oauths', $oauths, $selectedOauths, true, false);
           ?>

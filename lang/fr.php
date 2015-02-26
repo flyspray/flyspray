@@ -937,7 +937,8 @@ $translation = array(
 'exporttasklist'          => 'Exporter la liste des tâches',
 'pageswelcomemsg'         => 'Pages sur lesquelles afficher le message de bienvenue',
 'pagesintromsg'           => 'Pages sur lesquelles afficher le message d\'intro',
-'activeoauths'            => 'Fournisseurs Oauth actifs'
+'activeoauths'            => 'Fournisseurs Oauth actifs',
+'onlyoauthreg'            => 'Autoriser uniquement les inscriptions via Oauths'
 );
 
 ?>
