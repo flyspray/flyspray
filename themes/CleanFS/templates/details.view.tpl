@@ -524,7 +524,13 @@ function quick_edit(elem, id)
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
-                class="value"><?php echo effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?></span>
+                class="value"><?php
+                $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                if ($displayedeffort === '') {
+                    $displayedeffort = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                }
+                echo $displayedeffort;
+                ?></span>
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
