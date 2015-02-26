@@ -336,6 +336,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="view_actual_effort" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="track_effort" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -720,6 +724,18 @@
     <field name="pages_intro_msg" type="C" size="80">
       <NOTNULL/>
       <DEFAULT value="index"/>
+     </field>
+    <field name="hours_per_manday" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="effort_format" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="actual_effort_format" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="registrations">
@@ -1139,12 +1155,12 @@
     </index>
   </table>
   <sql>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1);</query>
     <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'Backend / Core', 1, 0, 2, 3);</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 0, 'root', 0, 0, 1, 2);</query>
@@ -1207,8 +1223,8 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'pages_welcome_msg', 'index');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'active_oauths', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'only_oauth_reg', '0');</query>
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0, 'Undecided', 'index');</query>
-    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided');</query>
+    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0, 0, 0);</query>
     <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>

@@ -40,9 +40,17 @@ foreach ($projects as $project) {
     $sql = $db->Query('SELECT count(*) FROM {tasks} WHERE project_id = ? AND is_closed = 0',
                       array($project['project_id']));
     $stats[$project['project_id']]['open'] = $db->fetchOne($sql);
-    $sql = $db->Query('SELECT avg(percent_complete) FROM {tasks} WHERE project_id = ? AND is_closed =0',
+    $sql = $db->Query('SELECT avg(percent_complete) FROM {tasks} WHERE project_id = ? AND is_closed = 0',
                       array($project['project_id']));
     $stats[$project['project_id']]['average_done'] = round($db->fetchOne($sql), 0);
+    
+    if ($proj->prefs['use_effort_tracking']) {
+        $sql = $db->Query('SELECT t.task_id, t.estimated_effort
+                             FROM {tasks} t
+                            WHERE project_id = ? AND is_closed = 0',
+                          array($project['project_id']));
+        $stats[$project['project_id']]['tasks'] = $db->FetchAllArray($sql);
+    }
 }
 
 // Assigned to myself

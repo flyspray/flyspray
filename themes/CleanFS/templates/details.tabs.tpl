@@ -28,7 +28,7 @@
   <?php endif; ?>
 
     <?php if ($proj->prefs['use_effort_tracking']){ ?>
-    <?php if ($user->perms('view_effort')){ ?>
+    <?php if ($user->perms('view_actual_effort')){ ?>
     <li id="efforttab">
         <a href="#effort"><?php echo Filters::noXSS(L('efforttracking')); ?></a>
     </li>

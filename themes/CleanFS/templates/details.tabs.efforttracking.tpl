@@ -1,12 +1,13 @@
 <div id="effort" class="tab">
     <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#effort'); ?>
+        <?php if ($user->perms('track_effort')) { ?>
         <input type="hidden" name="action" value="details.efforttracking"/>
         <button type="submit" name="start_tracking" value="true"><?php echo Filters::noXSS(L('starteffort')); ?></button>
         </br>
         <label for="effort_to_add"><?php echo Filters::noXSS(L('manualeffort')); ?></label>
         <input id="effort_to_add" name="effort_to_add" class="text" type="text" size="5" maxlength="100" value='00:00'>
         <button type="submit" name="manual_effort" value="true"><?php echo Filters::noXSS(L('addeffort')); ?></button>
-
+        <?php } ?>
         <table class="userlist history">
             <tr>
                 <th><?php echo Filters::noXSS(L('date')); ?></th>
@@ -25,13 +26,13 @@
              { ?>
                     <?php echo Filters::noXSS(L('trackinginprogress')); ?> (<?php
 
-                    echo ConvertSeconds(time()-$details['start_timestamp']);
+                    echo effort::SecondsToString(time()-$details['start_timestamp'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
 
                     ?>)
                     <?php }
              else
              {
-                echo ConvertSeconds($details['effort']);
+                echo effort::SecondsToString($details['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
              } ?>
                 </td>
                 <td>
