@@ -143,7 +143,7 @@
           $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
           'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
           'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'estimated_effort','effort');
+          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'estimatedeffort','effort');
           $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
           ?>
           <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>

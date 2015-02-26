@@ -80,7 +80,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
-    $html    = eL(str_replace('_', '', $colname));
+    $html    = eL($colname);
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
@@ -141,6 +141,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'os'         => 'os_name',
             'private'    => 'mark_private',
             'parent'     => 'supertask_id',
+            'estimatedeffort' => 'estimated_effort',
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
@@ -206,7 +207,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             }
             break;
 
-	case 'estimated_effort':
+	case 'estimatedeffort':
             $value = '';
             if ($user->perms('view_effort')) {
 		if ($task['estimated_effort'] > 0){
