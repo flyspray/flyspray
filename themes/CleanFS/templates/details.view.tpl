@@ -675,7 +675,7 @@ function quick_edit(elem, id)
         </h4>
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
 
-        <div id="taskdetailstext"><?php echo $task_text; ?></div>
+        <div id="taskdetailstext"><?php echo Filters::noXSS($task_text); ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
