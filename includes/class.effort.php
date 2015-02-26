@@ -95,8 +95,11 @@ class effort
         $sql = $db->Query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
         $result = $db->FetchRow($sql);
         $start_time = $result[0];
-        $effort = $time - $start_time;
-
+        $seconds = $time - $start_time;
+        
+        // Round to full minutes upwards.
+        $effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
+ 
         $sql = $db->Query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_task_id." AND end_timestamp IS NULL;");
     }
 
