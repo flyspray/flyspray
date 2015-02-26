@@ -526,6 +526,10 @@ function quick_edit(elem, id)
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
                 class="value"><?php
                 $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                /* Quick-editing can be launched by clicking the value, but it's almost
+                   impossible to hit a zero-width field... so put something in there.
+                   Could be something else too, like 'None', 'Not defined' etc.
+                */
                 if ($displayedeffort === '') {
                     $displayedeffort = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 }
