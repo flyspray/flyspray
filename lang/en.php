@@ -946,7 +946,8 @@ Regards,',
 'exporttasklist'          => 'Export Tasklist',
 'manday'                  => 'man-day',
 'mandays'                 => 'may-days',
-'itemexists'              => 'Item already exists in database.',
+'itemexists'              => 'Item %s already exists in database.',
+'categoryitemexists'      => 'Item %s already exists under category %s in database.',
 'pageswelcomemsg'         => 'Pages where to show main intro message',
 'pagesintromsg'           => 'Pages where to show intro message'
 );
