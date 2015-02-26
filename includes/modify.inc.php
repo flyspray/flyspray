@@ -24,6 +24,47 @@ if (strlen($lt)) {
 
 function Post_to0($key) { return Post::val($key, 0); }
 
+function resizeImage($file, $max_x, $max_y, $forcePng = false)
+{
+	$src = BASEDIR.'/avatars/'.$file;
+
+	list($width, $height, $type) = getImageSize($src);
+
+	$scale = min($max_x / $width, $max_y / $height);
+	$newWidth = $width * $scale;
+	$newHeight = $height * $scale;
+
+	$img = imagecreatefromstring(file_get_contents($src));
+	$black = imagecolorallocate($img, 0, 0, 0);
+	$resizedImage = imageCreateTrueColor($newWidth, $newHeight);
+	imagecolortransparent($resizedImage, $black);
+	imageCopyResampled($resizedImage, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+	imageDestroy($img);
+	unlink($src);
+
+	if (!$forcePng) {
+		switch ($type) {
+			case IMAGETYPE_JPEG:
+				imageJpeg($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			case IMAGETYPE_GIF:
+				imageGif($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			case IMAGETYPE_PNG:
+				imagePng($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			default:
+				imagePng($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+		}
+	}
+	else {
+		imagePng($resizedImage, BASEDIR.'/avatars/'.$file.'.png');
+	}
+
+	return;
+}
+
 if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
@@ -541,6 +582,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
+                	resizeImage($avatar_name, 50, 50);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -633,6 +675,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
+                	resizeImage($avatar_name, 50, 50);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -1118,6 +1161,7 @@ switch ($action = Req::val('action'))
                             $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                             $image_path = BASEDIR.'/avatars/'.$avatar_name;
                             move_uploaded_file($image_temp, $image_path);
+                        	resizeImage($avatar_name, 50, 50);
                             $db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
                             	array($avatar_name, Post::num('user_id')));
                         } else {
