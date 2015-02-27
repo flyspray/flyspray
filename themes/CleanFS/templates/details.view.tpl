@@ -538,8 +538,8 @@ function quick_edit(elem, id)
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
-        	<input type="text" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>">
-        	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        	<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>">
+        	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" class="button" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
         	</span>
         	<?php endif; ?>
         </li>
