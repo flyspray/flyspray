@@ -20,6 +20,7 @@
         <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
         <input type="hidden" name="do" value="pm" />
         <input type="hidden" name="area" value="editgroup" />
+        <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
       </li>
     </ul>
   </form>
@@ -32,6 +33,7 @@
         <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
   
         <input type="hidden" name="do" value="user" />
+        <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
       </li>
     </ul>
   </form>
