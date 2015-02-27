@@ -33,6 +33,15 @@
         </li>
 
         <li>
+          <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+          <?php
+            $pages = array('index', 'toplevel', 'newmultitasks', 'details', 'roadmap', 'newtask', 'reports', 'depends', 'pm');
+            $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
+            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, true, false);
+          ?>
+        </li>
+
+        <li>
           <label for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
@@ -69,7 +78,7 @@
           <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
 
         </li>
-	
+
         <li>
           <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
           <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
@@ -127,14 +136,14 @@
 
           </select>
         </li>
-  
+
         <li>
           <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
           <?php // Set the selectable column names
           $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
           'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
           'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'estimated_effort','effort');
+          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'estimatedeffort','effort');
           $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
           ?>
           <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
@@ -224,6 +233,44 @@
               <?php echo tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort'); ?>
 
           </li>
+          <li>
+              <label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
+              <input id="hours_per_manday" class="text" name="hours_per_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_per_manday', $proj->prefs['hours_per_manday']), $proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_PLAIN_MINUTES)); ?>" />
+          </li>
+        <li>
+          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
+          <select id="effort_format" name="effort_format">
+            <?php echo tpl_options(array(
+            effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
+            effort::FORMAT_HOURS_PLAIN => L('hourplural'),
+            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_MINUTES => L('minuteplural'),
+            effort::FORMAT_DAYS_PLAIN => L('mandays'),
+            effort::FORMAT_DAYS_ONE_DECIMAL => L('mandays') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('mandays') . ' ' . L('hourplural'),
+            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('mandays') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
+            ),
+            Post::val('effort_format', $proj->prefs['effort_format'])); ?>
+          </select>
+        </li>
+        <li>
+          <label for="actual_effort_format"><?php echo Filters::noXSS(L('actualeffortformat')); ?></label>
+          <select id="actual_effort_format" name="actual_effort_format">
+            <?php echo tpl_options(array(
+            effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
+            effort::FORMAT_HOURS_PLAIN => L('hourplural'),
+            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_MINUTES => L('minuteplural'),
+            effort::FORMAT_DAYS_PLAIN => L('mandays'),
+            effort::FORMAT_DAYS_ONE_DECIMAL => L('mandays') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('mandays') . ' ' . L('hourplural'),
+            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('mandays') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
+            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
+            ),
+            Post::val('actual_effort_format', $proj->prefs['actual_effort_format'])); ?>
+          </select>
+        </li>
       </ul>
   </div>
 

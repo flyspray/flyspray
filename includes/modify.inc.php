@@ -24,6 +24,47 @@ if (strlen($lt)) {
 
 function Post_to0($key) { return Post::val($key, 0); }
 
+function resizeImage($file, $max_x, $max_y, $forcePng = false)
+{
+	$src = BASEDIR.'/avatars/'.$file;
+
+	list($width, $height, $type) = getImageSize($src);
+
+	$scale = min($max_x / $width, $max_y / $height);
+	$newWidth = $width * $scale;
+	$newHeight = $height * $scale;
+
+	$img = imagecreatefromstring(file_get_contents($src));
+	$black = imagecolorallocate($img, 0, 0, 0);
+	$resizedImage = imageCreateTrueColor($newWidth, $newHeight);
+	imagecolortransparent($resizedImage, $black);
+	imageCopyResampled($resizedImage, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+	imageDestroy($img);
+	unlink($src);
+
+	if (!$forcePng) {
+		switch ($type) {
+			case IMAGETYPE_JPEG:
+				imageJpeg($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			case IMAGETYPE_GIF:
+				imageGif($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			case IMAGETYPE_PNG:
+				imagePng($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+			default:
+				imagePng($resizedImage, BASEDIR.'/avatars/'.$file);
+				break;
+		}
+	}
+	else {
+		imagePng($resizedImage, BASEDIR.'/avatars/'.$file.'.png');
+	}
+
+	return;
+}
+
 if (Req::num('task_id')) {
     $task = Flyspray::GetTaskDetails(Req::num('task_id'));
 }
@@ -134,8 +175,8 @@ switch ($action = Req::val('action'))
             $due_date = Flyspray::strtotime(Post::val('due_date'));
         }
 
-        if (!is_integer((int)Post::num('estimated_effort')))
-        {
+        $estimated_effort = 0;
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format'])) === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             break;
         }
@@ -156,7 +197,7 @@ switch ($action = Req::val('action'))
             Post::val('product_category'), Post::val('closedby_version', 0),
             Post::val('operating_system'), Post::val('task_severity'),
             Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-            Post::val('percent_complete'), Post::val('reportedver'),intval(Post::val('estimated_effort')),
+            Post::val('percent_complete'), Post::val('reportedver'),intval($estimated_effort),
             $task['task_id']));
 
         // Update the list of users assigned this task
@@ -380,7 +421,7 @@ switch ($action = Req::val('action'))
         }
 
         if(Post::val('manual_effort')){
-            $effort->addEffort(Post::val('effort_to_add'));
+            $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
         break;
@@ -541,6 +582,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
+                	resizeImage($avatar_name, 50, 50);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -633,6 +675,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
+                	resizeImage($avatar_name, 50, 50);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -799,7 +842,8 @@ switch ($action = Req::val('action'))
                         'edit_comments', 'delete_comments', 'create_attachments',
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
-                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open','view_effort','track_effort');
+                        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
+                        'view_effort', 'track_effort', 'view_actual_effort');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -827,7 +871,7 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths', 'only_oauth_reg');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -970,7 +1014,8 @@ switch ($action = Req::val('action'))
 
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking');
+                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
+                'pages_intro_msg', 'effort_format', 'actual_effort_format');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -982,8 +1027,15 @@ switch ($action = Req::val('action'))
         $args[] = Post::num('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
-        $args[] = $proj->id;
 
+        // Convert to seconds.
+        if (Post::val('hours_per_manday')) {
+            $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+            $cols[] = 'hours_per_manday'; 
+        }
+
+        $args[] = $proj->id;
+        
         $update = $db->Query("UPDATE  {projects}
                                  SET  ".join('=?, ', $cols)."=?
                                WHERE  project_id = ?", $args);
@@ -1109,6 +1161,7 @@ switch ($action = Req::val('action'))
                             $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                             $image_path = BASEDIR.'/avatars/'.$avatar_name;
                             move_uploaded_file($image_temp, $image_path);
+                        	resizeImage($avatar_name, 50, 50);
                             $db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
                             	array($avatar_name, Post::num('user_id')));
                         } else {
@@ -1217,7 +1270,7 @@ switch ($action = Req::val('action'))
               'create_attachments', 'delete_attachments', 'show_as_assignees',
               'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
               'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open','view_effort','track_effort'));
+              'add_votes', 'group_open','view_effort','track_effort','view_actual_effort'));
         }
 
         $args = array_map('Post_to0', $cols);
@@ -1249,9 +1302,20 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
-                // FIXME: Check that a similar entry does not already in this project or project 0
-                
+
+                $check = $db->Query("SELECT COUNT(*)
+                                       FROM $list_table_name
+                                      WHERE (project_id = 0 OR project_id = ?)
+                                        AND $list_column_name = ?
+                                        AND $list_id <> ?",
+                                    array($proj->id, $listnames[$id], $id));
+                $itemexists = $db->FetchOne($check);
+
+                if ($itemexists) {
+                    Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+                    return;
+                }
+
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?, show_in_list = ?
                                        WHERE  $list_id = ? AND project_id = ?",
@@ -1291,7 +1355,17 @@ switch ($action = Req::val('action'))
             array($proj->id))));
         }
 
-        // FIXME: Check that a similar entry does not already in this project or project 0
+        $check = $db->Query("SELECT COUNT(*)
+                               FROM $list_table_name
+                              WHERE (project_id = 0 OR project_id = ?)
+                                AND $list_column_name = ?",
+                            array($proj->id, Post::val('list_name')));
+        $itemexists = $db->FetchOne($check);
+
+        if ($itemexists) {
+            Flyspray::show_error(sprintf(L('itemexists'), Post::val('list_name')));
+            return;
+        }
 
         $db->Query("INSERT INTO  $list_table_name
                                  (project_id, $list_column_name, list_position, show_in_list)
@@ -1320,9 +1394,20 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
-                // FIXME: Check that a similar entry does not already in this project or project 0
-                
+
+                $check = $db->Query("SELECT COUNT(*)
+                                       FROM $list_table_name
+                                      WHERE (project_id = 0 OR project_id = ?)
+                                        AND $list_column_name = ?
+                                        AND $list_id <> ?",
+                                    array($proj->id, $listnames[$id], $id));
+                $itemexists = $db->FetchOne($check);
+
+                if ($itemexists) {
+                    Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+                    return;
+                }
+
                 $update = $db->Query("UPDATE  $list_table_name
                                          SET  $list_column_name = ?, list_position = ?,
                                               show_in_list = ?, version_tense = ?
@@ -1364,7 +1449,17 @@ switch ($action = Req::val('action'))
             array($proj->id)));
         }
 
-        // FIXME: Check that a similar entry does not already in this project or project 0
+        $check = $db->Query("SELECT COUNT(*)
+                               FROM $list_table_name
+                              WHERE (project_id = 0 OR project_id = ?)
+                                AND $list_column_name = ?",
+                            array($proj->id, Post::val('list_name')));
+        $itemexists = $db->FetchOne($check);
+
+        if ($itemexists) {
+            Flyspray::show_error(sprintf(L('itemexists'), Post::val('list_name')));
+            return;
+        }
 
         $db->Query("INSERT INTO  $list_table_name
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
@@ -1395,8 +1490,36 @@ switch ($action = Req::val('action'))
                 if (!isset($listshow[$id])) {
                     $listshow[$id] = 0;
                 }
-                
-                // FIXME: Check that a similar entry does not already in this project or project 0
+
+                // Check for duplicates on the same sub-level under same parent category.
+                // First, we'll have to find the right parent for the current category.
+                $sql = $db->Query('SELECT *
+                                     FROM flyspray_list_category
+                                    WHERE project_id = ? AND lft < ? and rgt > ?
+                                      AND lft = (SELECT MAX(lft) FROM flyspray_list_category WHERE lft < ? and rgt > ?)',
+                                  array($proj->id, intval($listlft[$id]), intval($listrgt[$id]), intval($listlft[$id]), intval($listrgt[$id])));
+
+                $parent = $db->FetchRow($sql);
+
+                $check = $db->Query('SELECT COUNT(*)
+                                      FROM {list_category} c
+                                     WHERE project_id = ? AND category_name = ? AND lft > ? AND rgt < ?
+                                       AND category_id <> ?
+                            AND NOT EXISTS (SELECT *
+                                              FROM {list_category}
+                                             WHERE project_id = ?
+                                               AND lft > ? AND rgt < ?
+                                               AND lft < c.lft AND rgt > c.rgt)',
+                                array($proj->id, $listname, $parent['lft'], $parent['rgt'], intval($id), $proj->id, $parent['lft'], $parent['rgt']));
+                $itemexists = $db->FetchOne($check);
+
+                // echo "<pre>" . $parent['category_name'] . "," . $listname . ", " . intval($id) . ", " . intval($listlft[$id]) . ", " . intval($listrgt[$id]) . ", " . $itemexists ."</pre>";
+
+                if ($itemexists) {
+                    Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
+                    return;
+                }
+
 
                 $update = $db->Query('UPDATE  {list_category}
                                          SET  category_name = ?,
@@ -1439,11 +1562,35 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        // FIXME: Check that a similar entry does not already in this project or project 0
-
         // Get right value of last node
-        $right = $db->Query('SELECT rgt FROM {list_category} WHERE category_id = ?', array(Post::val('parent_id', -1)));
-        $right = $db->FetchOne($right);
+        // Need also left value of parent for duplicate check and category name for errormessage.
+        $sql = $db->Query('SELECT rgt, lft, category_name FROM {list_category} WHERE category_id = ?', array(Post::val('parent_id', -1)));
+        $parent = $db->FetchRow($sql);
+        $right = $parent['rgt'];
+        $left = $parent['lft'];
+
+        // echo "<pre>Parent: " . Post::val('parent_id', -1) . ", left: $left, right: $right</pre>";
+
+        // If parent has subcategories, check for possible duplicates
+        // on the same sub-level and under the same parent.
+        if ($left + 1 != $right) {
+            $check = $db->Query('SELECT COUNT(*)
+                                  FROM {list_category} c
+                                 WHERE project_id = ? AND category_name = ? AND lft > ? AND rgt < ?
+                        AND NOT EXISTS (SELECT *
+                                          FROM {list_category}
+                                         WHERE project_id = ?
+                                           AND lft > ? AND rgt < ?
+                                           AND lft < c.lft AND rgt > c.rgt)',
+                                array($proj->id, Post::val('list_name'), $left, $right, $proj->id, $left, $right));
+            $itemexists = $db->FetchOne($check);
+
+            if ($itemexists) {
+                Flyspray::show_error(sprintf(L('categoryitemexists'), Post::val('list_name'), $parent['category_name']));
+                return;
+            }
+        }
+
         $db->Query('UPDATE {list_category} SET rgt=rgt+2 WHERE rgt >= ? AND project_id = ?', array($right, $proj->id));
         $db->Query('UPDATE {list_category} SET lft=lft+2 WHERE lft >= ? AND project_id = ?', array($right, $proj->id));
 
@@ -1896,7 +2043,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('task_id')));
+        Flyspray::Redirect(CreateURL('details', Get::val('return_task_id')));
         break;
 
         // ##################

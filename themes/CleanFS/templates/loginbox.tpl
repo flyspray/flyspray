@@ -9,7 +9,7 @@
 </div>
 <div id="login_links">
     <?php $activeclass = ' class="active" '; ?>
-    <?php if ($user->isAnon() && $fs->prefs['anon_reg']): ?>
+    <?php if ($user->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg']): ?>
       <a id="registerlink"
         <?php if(isset($_GET['do']) and $_GET['do'] == 'register') echo $activeclass; ?>
         href="<?php echo Filters::noXSS(CreateURL('register','')); ?>"><?php echo Filters::noXSS(L('register')); ?></a>
@@ -31,15 +31,13 @@
     <?php endif; ?>
     <?php endif; ?>
 </div>
-<?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']);
-      $providers = $conf['oauth']['enabled'];
-?>
+<?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']);?>
 <div id="login_oauth">
-    <?php foreach($providers as $provider): ?>
-    <?php if (!empty($provider)): ?>
-        <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
-            <i class="fa fa-<?php echo $provider; ?>"></i> Sign in with <?php echo ucfirst($provider); ?>
-        </a>
-    <?php endif; ?>
+    <?php $providers = explode(' ', $fs->prefs['active_oauths']);
+          foreach($providers as $provider): ?>
+              <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+              <i class="fa fa-<?php echo $provider; ?>"></i> <?php echo Filters::noXSS(sprintf(L('signinwith'), ucfirst($provider))); ?>
+              </a>
     <?php endforeach; ?>
+</div>
 </form>

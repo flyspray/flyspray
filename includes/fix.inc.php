@@ -161,7 +161,10 @@ if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
 // http://ilia.ws/archives/107-Another-unserialize-abuse.html
 
 function flyspray_exception_handler($exception) {
-
+    // Sometimes it helps removing temporary comments from the following three lines.
+    // echo "<pre>";
+    // var_dump(debug_backtrace());
+    // echo "</pre>";
     die("Completely unexpected exception: " .
         htmlspecialchars($exception->getMessage(),ENT_QUOTES, 'utf-8')  . "<br/>" .
       "This should <strong> never </strong> happend, please inform Flyspray Developers");

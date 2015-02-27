@@ -59,6 +59,58 @@ $providers = array(
             'redirectUri'  =>  $conf['oauth']['microsoft_redirect'],
         ));
     },
+    'instagram' => function() use ($conf) {
+        if (empty($conf['oauth']['instagram_secret']) ||
+            empty($conf['oauth']['instagram_id'])     ||
+            empty($conf['oauth']['instagram_redirect'])) {
+
+            throw new Exception('Config error make sure the instagram_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Instagram(array(
+            'clientId'     =>  $conf['oauth']['instagram_id'],
+            'clientSecret' =>  $conf['oauth']['instagram_secret'],
+            'redirectUri'  =>  $conf['oauth']['instagram_redirect'],
+        ));
+    },
+    'eventbrite' => function() use ($conf) {
+        if (empty($conf['oauth']['eventbrite_secret']) ||
+            empty($conf['oauth']['eventbrite_id'])     ||
+            empty($conf['oauth']['eventbrite_redirect'])) {
+
+            throw new Exception('Config error make sure the eventbrite_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Eventbrite(array(
+            'clientId'     =>  $conf['oauth']['eventbrite_id'],
+            'clientSecret' =>  $conf['oauth']['eventbrite_secret'],
+            'redirectUri'  =>  $conf['oauth']['eventbrite_redirect'],
+        ));
+    },
+    'linkedin' => function() use ($conf) {
+        if (empty($conf['oauth']['linkedin_secret']) ||
+            empty($conf['oauth']['linkedin_id'])     ||
+            empty($conf['oauth']['linkedin_redirect'])) {
+
+            throw new Exception('Config error make sure the linkedin_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\LinkedIn(array(
+            'clientId'     =>  $conf['oauth']['linkedin_id'],
+            'clientSecret' =>  $conf['oauth']['linkedin_secret'],
+            'redirectUri'  =>  $conf['oauth']['linkedin_redirect'],
+        ));
+    },
+    'vkontakte' => function() use ($conf) {
+        if (empty($conf['oauth']['vkontakte_secret']) ||
+            empty($conf['oauth']['vkontakte_id'])     ||
+            empty($conf['oauth']['vkontakte_redirect'])) {
+
+            throw new Exception('Config error make sure the vkontakte_* variables are set.');
+        }
+        return new League\OAuth2\Client\Provider\Vkontakte(array(
+            'clientId'     =>  $conf['oauth']['vkontakte_id'],
+            'clientSecret' =>  $conf['oauth']['vkontakte_secret'],
+            'redirectUri'  =>  $conf['oauth']['vkontakte_redirect'],
+        ));
+    },
 );
 
 if (! isset($_SESSION['return_to'])) {
@@ -70,7 +122,8 @@ $provider = isset($_SESSION['oauth_provider']) ? $_SESSION['oauth_provider'] : '
 $provider = strtolower(Get::val('provider', $provider));
 unset($_SESSION['oauth_provider']);
 
-if (!in_array($provider, $conf['oauth']['enabled'])) {
+$active_oauths = explode(' ', $fs->prefs['active_oauths']);
+if (!in_array($provider, $active_oauths)) {
     Flyspray::show_error(26);
 }
 

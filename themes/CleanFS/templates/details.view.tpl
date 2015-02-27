@@ -201,7 +201,7 @@ function quick_edit(elem, id)
 	if(e.selectedIndex != null)
 		text = e.options[e.selectedIndex].text;
 	else
-		text = document.getElementById("due_date").value;//for due date
+		text = document.getElementById(id).value; // for due date and estimated effort
 	var xmlHttp = new XMLHttpRequest();
 
 	xmlHttp.onreadystatechange = function(){
@@ -523,15 +523,29 @@ function quick_edit(elem, id)
         ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
-            <span class="value"><?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
+                class="value"><?php
+                $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                /* Quick-editing can be launched by clicking the value, but it's almost
+                   impossible to hit a zero-width field... so put something in there.
+                   Could be something else too, like 'None', 'Not defined' etc.
+                */
+                if ($displayedeffort === '') {
+                    $displayedeffort = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                }
+                echo $displayedeffort;
+                ?></span>
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
-        	<input type="text" name="estimated_effort" value="<?php echo ConvertSeconds($task_details['estimated_effort']*60*60); ?>">
-        	<a class="button" onclick="quick_edit(this.parentNode.parentNode, 'estimated_effort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a class="button" href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        	<input type="text" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>">
+        	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)"><?php echo Filters::noXSS(L('confirmedit')); ?></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
         	</span>
         	<?php endif; ?>
         </li>
+        <?php }
+                if ($user->perms('view_actual_effort')) {
+        ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
             <?php
@@ -540,7 +554,7 @@ function quick_edit(elem, id)
             $total_effort += $details['effort'];
             }
             ?>
-            <span class="value"><?php echo ConvertSeconds($total_effort); ?> </span>
+            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?> </span>
         </li>
         <?php } 
         } ?>
@@ -661,7 +675,7 @@ function quick_edit(elem, id)
         </h4>
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
 
-        <div id="taskdetailstext"><?php echo $task_text; ?></div>
+        <div id="taskdetailstext"><?php echo Filters::noXSS($task_text); ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
@@ -674,7 +688,8 @@ function quick_edit(elem, id)
         <?php if(!count($deps)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
         <table id="dependency_table" class="table" width="100%">
-            <caption>This task depends on the following tasks.</caption>
+            <!-- <caption>This task depends on the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskdependson')); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
@@ -683,7 +698,7 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <th><?php echo Filters::noXSS(L('assignedto')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -704,10 +719,10 @@ function quick_edit(elem, id)
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <td>Assignees TODO</td>
+                <!-- <td>Assignees TODO</td> -->
                 <td>
                     <a class="removedeplink"
-                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
+                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
                         <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
                     </a>
                 </td>
@@ -716,6 +731,55 @@ function quick_edit(elem, id)
             </tbody>
         </table>
         <?php endif; ?>
+        
+        <!-- This task blocks the following tasks: -->
+        <?php if(!count($blocks)==0): ?>
+        <?php $projects = $fs->listProjects(); ?>
+        <table id="blocking_table" class="table" width="100%">
+            <!-- <caption>This task prevents closing the following tasks.</caption> -->
+            <caption><?php echo Filters::noXSS(L('taskblocks')); ?></caption>
+            <thead>
+            <tr>
+                <th><?php echo Filters::noXSS(L('id')); ?></th>
+                <th><?php echo Filters::noXSS(L('project')); ?></th>
+                <th><?php echo Filters::noXSS(L('summary')); ?></th>
+                <th><?php echo Filters::noXSS(L('priority')); ?></th>
+                <th><?php echo Filters::noXSS(L('severity')); ?></th>
+                <th><?php echo Filters::noXSS(L('progress')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($blocks as $dependency): ?>
+            <tr>
+                <td><?php echo $dependency['task_id'] ?></td>
+                <td><?php echo $dependency['project_title'] ?></td>
+                <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
+                <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
+                <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
+                    severities[$dependency['task_severity']] ?>
+                </td>
+                <td class="task_progress">
+                    <div class="progress_bar_container">
+                        <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
+
+                        <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
+                    </div>
+                </td>
+                <!-- <td>Assignees TODO</td> -->
+                <td>
+                    <a class="removedeplink"
+                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($dependency['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
+                        <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+        
         <?php
             if (!$task_details['supertask_id']==0)
             {
@@ -736,7 +800,7 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <th><?php echo Filters::noXSS(L('assignedto')); ?></th>
+                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -758,7 +822,7 @@ function quick_edit(elem, id)
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($subtask['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <td>Assignees TODO</td>
+                <!-- <td>Assignees TODO</td> -->
                 <td>
                     <a class="removedeplink"
                        href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removesubtask&amp;subtaskid=<?php echo Filters::noXSS($subtask['task_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">

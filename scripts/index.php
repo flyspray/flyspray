@@ -11,6 +11,9 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
+// Need to get function ConvertSeconds
+require_once(BASEDIR . '/includes/class.effort.php');
+
 if (!$user->can_view_project($proj->id)) {
     $proj = new Project(0);
 }
@@ -30,6 +33,14 @@ $offset = $perpage * ($pagenum - 1);
 $visible = explode(' ', trim($proj->id ? $proj->prefs['visible_columns'] : $fs->prefs['visible_columns']));
 if (!is_array($visible) || !count($visible) || !$visible[0]) {
     $visible = array('id');
+}
+
+// Remove columns the user is not allowed to see
+if (in_array('estimated_effort', $visible) && !$user->perms('view_effort')) {
+    unset($visible[array_search('estimated_effort', $visible)]);
+}
+if (in_array('effort', $visible) && !$user->perms('view_actual_effort')) {
+    unset($visible[array_search('effort', $visible)]);
 }
 
 list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
@@ -69,7 +80,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
-    $html    = eL(str_replace('_', '', $colname));
+    $html    = eL($colname);
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
@@ -104,7 +115,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 // tpl function that  draws a cell {{{
 
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
-	global $fs, $proj, $page;
+	global $fs, $proj, $page, $user;
 
 	$indexes = array (
             'id'         => 'task_id',
@@ -130,6 +141,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'os'         => 'os_name',
             'private'    => 'mark_private',
             'parent'     => 'supertask_id',
+            'estimatedeffort' => 'estimated_effort',
         );
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
@@ -195,18 +207,24 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             }
             break;
 
-	case 'estimated_effort':
-		if ($task['estimated_effort']>0){
-			$value=$task['estimated_effort'].' h';
-		}else{
-			$value='';
+	case 'estimatedeffort':
+            $value = '';
+            if ($user->perms('view_effort')) {
+		if ($task['estimated_effort'] > 0){
+                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
 		}
-		break;
-
+            }
+            break;
+	
 	case 'effort':
-		$value=$task['effort']>0 ? (ceil($task['effort']/360)/10).' h':'';
-		break;
-
+            $value = '';
+            if ($user->perms('view_actual_effort')) {
+		if ($task['effort'] > 0){
+                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
+                }
+            }
+            break;
+		
         default:
         	$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
         	break;
