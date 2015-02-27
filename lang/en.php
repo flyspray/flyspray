@@ -965,5 +965,6 @@ Regards,',
 'hourabbrev'              => 'h',
 'estimatedeffortopen'     => 'Estimated effort for open tasks',
 'actualeffortopen'        => 'Actual effort spent in open tasks',
+'signinwith'              => 'Sign in with %s'
 );
 ?>
