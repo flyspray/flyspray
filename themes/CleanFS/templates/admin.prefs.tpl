@@ -135,9 +135,12 @@
         <li>
           <label><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
           <?php
-            $pages = array('index', 'toplevel', 'reports');
+            $pages = array(
+                'index' => L('tasklist'),
+                'toplevel' => L('toplevel'),
+                'reports' => L('reports'));
             $selectedPages = explode(' ', $fs->prefs['pages_welcome_msg']);
-            echo tpl_double_select('pages_welcome_msg', $pages, $selectedPages, true, false);
+            echo tpl_double_select('pages_welcome_msg', $pages, $selectedPages, false, false);
           ?>
         </li>
 
