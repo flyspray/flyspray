@@ -22,10 +22,12 @@
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" class="required text" type="text" size="20" maxlength="100" />
 		</li>
 
+		<?php if (!empty($fs->prefs['jabber_server'])): ?>
 		<li>
 			<label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
 			<input id="jabberid" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" name="jabber_id" type="text" class="text" size="20" maxlength="100" />
 		</li>
+		<?php endif ?>
 
 		<li>
 			<label for="notify_type"><?php echo Filters::noXSS(L('notifications')); ?></label>

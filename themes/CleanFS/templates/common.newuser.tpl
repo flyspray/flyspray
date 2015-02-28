@@ -45,10 +45,12 @@ endif; ?>
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" class="required text" type="text" size="20" maxlength="100" />
 		</li>
 
+		<?php if (!empty($fs->prefs['jabber_server'])): ?>
 		<li>
 			<label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
 			<input id="jabberid" name="jabber_id" class="text" type="text" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" size="20" maxlength="100" />
 		</li>
+		<?php endif ?>
 
 		<li>
 			<label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>

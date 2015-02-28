@@ -224,10 +224,12 @@
           <input id="emailaddress" name="notify_email" class="text" type="text" value="<?php echo Filters::noXSS(Post::val('notify_email', $proj->prefs['notify_email'])); ?>" />
         </li>
 
+        <?php if (!empty($fs->prefs['jabber_server'])): ?>
         <li>
           <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
           <input id="jabberid" class="text" name="notify_jabber" type="text" value="<?php echo Filters::noXSS(Post::val('notify_jabber', $proj->prefs['notify_jabber'])); ?>" />
         </li>
+        <?php endif ?>
 
         <li>
           <label for="notify_reply"><?php echo Filters::noXSS(L('replyto')); ?></label>
