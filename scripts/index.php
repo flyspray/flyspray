@@ -226,8 +226,22 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 		
         default:
+            $value = '';
+            // $colname here is NOT column name in database but a name that can appear
+            // both in a projects visible fields and as a key in language translation
+            // file, which is also used to draw a localized heading. Column names in
+            // database customarily use _ t to separate words, translation file entries
+            // instead do not and can be also be quite different. If you do see an empty
+            // value when you expected something, check your usage, what visible fields
+            // in database actually constains, and maybe add a mapping from $colname to
+            // to the database column name to array $indexes at the beginning of this
+            // function. Note that inconsistencies between $colname, database column
+            // name, translation entry key and name in visible fields do occur sometimes
+            // during development phase.
+            if (array_key_exists($colname, $indexes)) {
         	$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
-        	break;
+            }
+            break;
 	}
 	return sprintf($format, 'task_'.$colname, $value);
 }

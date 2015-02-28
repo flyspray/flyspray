@@ -294,10 +294,16 @@
           <li>
             <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php // Set the selectable column names
+            // Do NOT use real database column name here and in the next list,
+            // but a term from translation table entries instead, because it's
+            // also used elsewhere to draw a localized version of the name,
+            // and with some extra work, this list too might show localized
+            // names in a future version. Look also at the end of function
+            // tpl_draw_cell in scripts/index.php for further explanation.
             $columnnames = array('id', 'parent', 'project', 'tasktype', 'category', 'severity',
             'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
             'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes','estimated_effort','effort');
+            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes','estimatedeffort','effort');
             $selectedcolumns = explode(" ", $fs->prefs['visible_columns']);
             ?>
             <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
