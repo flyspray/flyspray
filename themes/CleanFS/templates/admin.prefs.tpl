@@ -328,7 +328,7 @@
                 'votes' => L('votes'),
                 'estimatedeffort' => L('estimatedeffort'),
                 'effort' => L('effort'));
-            $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
+            $selectedcolumns = explode(' ', Post::val('visible_columns', $fs->prefs['visible_columns']));
             echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false);
           ?>
           </li>
@@ -351,7 +351,7 @@
                 'progress' => L('progress'),
                 'os' => L('os'),
                 'votes' => L('votes'));
-            $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
+            $selectedfields = explode(' ', Post::val('visible_fields', $fs->prefs['visible_fields']));
             echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, false);
             ?>
           </li>
