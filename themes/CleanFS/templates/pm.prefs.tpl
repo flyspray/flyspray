@@ -36,15 +36,15 @@
           <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
           <?php
             $pages = array(
-                'index' => L('index'),
+                'index' => L('tasklist'),
                 'toplevel' => L('toplevel'),
-                'newmultitasks' => L('newmultitasks'),
+                'newmultitasks' => L('addmultipletasks'),
                 'details' => L('details'),
                 'roadmap' => L('roadmap'),
                 'newtask' => L('newtask'),
                 'reports' => L('reports'),
-                'depends' => L('depends'),
-                'pm' => L('pm'));
+                'depends' => L('dependencygraph'),
+                'pm' => L('manageproject'));
             $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
             echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
           ?>
