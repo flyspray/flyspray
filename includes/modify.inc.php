@@ -843,7 +843,7 @@ switch ($action = Req::val('action'))
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
                         'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
-                        'view_effort', 'track_effort', 'view_actual_effort');
+                        'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -1031,11 +1031,11 @@ switch ($action = Req::val('action'))
         // Convert to seconds.
         if (Post::val('hours_per_manday')) {
             $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
-            $cols[] = 'hours_per_manday'; 
+            $cols[] = 'hours_per_manday';
         }
 
         $args[] = $proj->id;
-        
+
         $update = $db->Query("UPDATE  {projects}
                                  SET  ".join('=?, ', $cols)."=?
                                WHERE  project_id = ?", $args);
@@ -1270,7 +1270,7 @@ switch ($action = Req::val('action'))
               'create_attachments', 'delete_attachments', 'show_as_assignees',
               'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
               'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open','view_effort','track_effort','view_actual_effort'));
+              'add_votes', 'group_open', 'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap'));
         }
 
         $args = array_map('Post_to0', $cols);

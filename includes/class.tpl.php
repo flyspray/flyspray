@@ -161,7 +161,7 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
 
         if(substr($action,0,4)!='http'){$action=$baseurl.$action;}
         return '<form action="'.$action.'"'.($method=='get'?' method="get"':' method="post"').
-                ( $name!='' ? ' name="'.$name.'"':'').    
+                ( $name!='' ? ' name="'.$name.'"':'').
                 ( ' enctype="'.$enctype.'"').
                 ( ' '.$attr).'>'.
                 ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'">':'');
@@ -680,7 +680,7 @@ function tpl_draw_perms($perms)
             'create_attachments', 'delete_attachments',
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
-            'add_votes', 'edit_own_comments','view_effort','track_effort','view_actual_effort');
+            'add_votes', 'edit_own_comments', 'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap');
 
     $yesno = array(
             '<td class="bad">' . eL('no') . '</td>',

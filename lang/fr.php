@@ -811,6 +811,7 @@ $translation = array(
 'error25'                 => 'La feuille de route est uniquement disponible pour un projet donné.',
 'error26'                 => 'Fournisseur OAuth non supporté.',
 'error27'                 => 'Impossible de se connecter. Autorisez nous a voir votre e-mail.',
+'error28'                 => 'Vous n\'avez pas les droits suffisants pour accéder à cette page',
 'done'                    => 'fait',
 'rss'                     => 'RSS',
 'atom'                    => 'Atom',
@@ -916,7 +917,8 @@ $translation = array(
 'efforttrackingadded'     => 'Effort manuel enregistré pour cette tâche.',
 'trackinginprogress'      => 'Suivi en cours',
 'vieweffort'              => 'Peux voir le suivi d\'effort',
-'trackeffort'             => 'Peux suivire l\'effort',
+'viewcurrenteffortdone'   => 'Peux voir l\'effort dépensé actuel',
+'trackeffort'             => 'Peux suivre l\'effort',
 'invalideffort'           => 'L\'effort entré est invalide. Ce doit être un nombre',
 'showpass'                => 'Montrer le mot de passe',
 'chooseafile'             => 'Merci de sélectionner un fichier !',
@@ -957,6 +959,7 @@ $translation = array(
 'estimatedeffortopen'     => 'Effort estimé pour les tâches ouvertes',
 'actualeffortopen'        => 'Effort actuel fourni dans les tâches ouvertes',
 'signinwith'              => 'Se connecter avec %s',
+'canviewroadmap'          => 'Peux voir la feuille de route'
 );
 
 ?>

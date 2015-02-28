@@ -39,6 +39,10 @@
         <td><?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks', !Req::val('action') && $group_details['open_new_tasks']), 'canopenjobs'); ?></td>
       </tr>
       <tr>
+        <td><label for="canopenmultipletasks"><?php echo Filters::noXSS(L('addmultipletasks')); ?></label></td>
+        <td><?php echo tpl_checkbox('add_multiple_tasks', Req::val('add_multiple_tasks', !Req::val('action') && $group_details['add_multiple_tasks']), 'canopenmultipletasks'); ?></td>
+      </tr>
+      <tr>
         <td><label for="modifyowntasks"><?php echo Filters::noXSS(L('modifyowntasks')); ?></label></td>
         <td><?php echo tpl_checkbox('modify_own_tasks', Req::val('modify_own_tasks', !Req::val('action') && $group_details['modify_own_tasks']), 'modifyowntasks'); ?></td>
       </tr>
@@ -79,6 +83,10 @@
         <td><?php echo tpl_checkbox('view_history', Req::val('view_history', !Req::val('action') && $group_details['view_history']), 'viewhistory'); ?></td>
       </tr>
       <tr>
+        <td><label for="canviewroadmap"><?php echo Filters::noXSS(L('canviewroadmap')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_roadmap', Req::val('view_roadmap', !Req::val('action') && $group_details['view_roadmap']), 'canviewroadmap'); ?></td>
+      </tr>
+      <tr>
         <td><label for="closeowntasks"><?php echo Filters::noXSS(L('closeowntasks')); ?></label></td>
         <td><?php echo tpl_checkbox('close_own_tasks', Req::val('close_own_tasks', !Req::val('action') && $group_details['close_own_tasks']), 'closeowntasks'); ?></td>
       </tr>
@@ -114,18 +122,18 @@
         <td><label for="show_as_assignees"><?php echo Filters::noXSS(L('showasassignees')); ?></label></td>
         <td><?php echo tpl_checkbox('show_as_assignees', Req::val('show_as_assignees', !Req::val('action') && $group_details['show_as_assignees']), 'show_as_assignees'); ?></td>
       </tr>
-        <tr>
-            <td><label for="vieweffort"><?php echo Filters::noXSS(L('vieweffort')); ?></label></td>
-            <td><?php echo tpl_checkbox('view_effort', Req::val('view_effort', !Req::val('action') && $group_details['view_effort']), 'vieweffort'); ?></td>
-        </tr>
-        <tr>
-            <td><label for="viewactualeffort"><?php echo Filters::noXSS(L('viewactualeffort')); ?></label></td>
-            <td><?php echo tpl_checkbox('view_actual_effort', Req::val('view_actual_effort', !Req::val('action') && $group_details['view_actual_effort']), 'viewactualeffort'); ?></td>
-        </tr>
-        <tr>
-            <td><label for="trackeffort"><?php echo Filters::noXSS(L('trackeffort')); ?></label></td>
-            <td><?php echo tpl_checkbox('track_effort', Req::val('track_effort', !Req::val('action') && $group_details['track_effort']), 'trackeffort'); ?></td>
-        </tr>
+      <tr>
+        <td><label for="vieweffort"><?php echo Filters::noXSS(L('vieweffort')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_effort', Req::val('view_effort', !Req::val('action') && $group_details['view_effort']), 'vieweffort'); ?></td>
+      </tr>
+      <tr>
+        <td><label for="viewactualeffort"><?php echo Filters::noXSS(L('viewcurrenteffortdone')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_actual_effort', Req::val('view_actual_effort', !Req::val('action') && $group_details['view_actual_effort']), 'viewactualeffort'); ?></td>
+      </tr>
+      <tr>
+        <td><label for="trackeffort"><?php echo Filters::noXSS(L('trackeffort')); ?></label></td>
+        <td><?php echo tpl_checkbox('track_effort', Req::val('track_effort', !Req::val('action') && $group_details['track_effort']), 'trackeffort'); ?></td>
+      </tr>
 
       <?php if (!$proj->id): ?>
       <tr>
