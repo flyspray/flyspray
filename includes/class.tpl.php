@@ -161,7 +161,7 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
 
         if(substr($action,0,4)!='http'){$action=$baseurl.$action;}
         return '<form action="'.$action.'"'.($method=='get'?' method="get"':' method="post"').
-                ( $name!='' ? ' name="'.$name.'"':'').    
+                ( $name!='' ? ' name="'.$name.'"':'').
                 ( ' enctype="'.$enctype.'"').
                 ( ' '.$attr).'>'.
                 ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'">':'');
@@ -291,7 +291,7 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
+function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
 {
 	global $db, $user;
 	if (is_array($uid)) {
@@ -319,8 +319,10 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 		}
 		else
 		{
-			$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-			$image = '<img src='.$url.'/>';
+			if ($fs->prefs['gravatars'] == 1) {
+				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+				$image = '<img src='.$url.'/>';
+			}
 		}
 	}
 	else {
@@ -680,7 +682,7 @@ function tpl_draw_perms($perms)
             'create_attachments', 'delete_attachments',
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
-            'add_votes', 'edit_own_comments','view_effort','track_effort','view_actual_effort');
+            'add_votes', 'edit_own_comments', 'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap');
 
     $yesno = array(
             '<td class="bad">' . eL('no') . '</td>',

@@ -16,27 +16,38 @@
 
 <script>
     /*
-    First argument is always the parent calling to deactivate not needed childs
-    Next args are all childsto be deactivated
+    * Second argument is always the parent calling to deactivate not needed childs
+    * Next args are all childsto be deactivated
     */
-    function check_change()
+    function check_change(inverted)
     {
-    	var i;
-    	var parent = arguments[0];
+        var i;
+        var parent = arguments[1];
 
         if(document.getElementById(parent).checked)
         {
-            for (i = 1; i < arguments.length; i++)
+            for (i = 2; i < arguments.length; i++)
             {
-                document.getElementById(arguments[i]).checked = false;
-                document.getElementById(arguments[i]).disabled = true;
+                if (inverted) {
+                    document.getElementById(arguments[i]).checked = false;
+                    document.getElementById(arguments[i]).disabled = true;
+                }
+                else {
+                    document.getElementById(arguments[i]).checked = true;
+                    document.getElementById(arguments[i]).disabled = false;
+                }
             }
         }
         else
         {
-            for (i = 1; i < arguments.length; i++)
+            for (i = 2; i < arguments.length; i++)
             {
-                document.getElementById(arguments[i]).disabled = false;
+                if (inverted) {
+                    document.getElementById(arguments[i]).disabled = false;
+                }
+                else {
+                    document.getElementById(arguments[i]).disabled = true;
+                }
             }
         }
     }
@@ -90,8 +101,18 @@
         </li>
 
         <li>
+          <label for="enable_avatars"><?php echo Filters::noXSS(L('enableavatars')); ?></label>
+          <?php echo tpl_checkbox('enable_avatars', $fs->prefs['enable_avatars'], 'enable_avatars', 1, array('onclick'=>'check_change(false, "enable_avatars", "gravatars", "max_avatar_size")')); ?>
+        </li>
+
+        <li>
           <label for="gravatars"><?php echo Filters::noXSS(L('showgravatars')); ?></label>
-        	<?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
+          <?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
+        </li>
+
+        <li>
+          <label for="max_avatar_size"><?php echo Filters::noXSS(L('maxavatarsize')); ?></label>
+          <input id="max_avatar_size" name="max_avatar_size" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_avatar_size']); ?>" />
         </li>
 
         <li>
@@ -135,9 +156,12 @@
         <li>
           <label><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
           <?php
-            $pages = array('index', 'toplevel', 'reports');
+            $pages = array(
+                'index' => L('tasklist'),
+                'toplevel' => L('toplevel'),
+                'reports' => L('reports'));
             $selectedPages = explode(' ', $fs->prefs['pages_welcome_msg']);
-            echo tpl_double_select('pages_welcome_msg', $pages, $selectedPages, true, false);
+            echo tpl_double_select('pages_welcome_msg', $pages, $selectedPages, false, false);
           ?>
         </li>
 
@@ -164,12 +188,12 @@
 
         <li>
           <label for="onlyoauthreg"><?php echo Filters::noXSS(L('onlyoauthreg')); ?></label>
-          <?php echo tpl_checkbox('only_oauth_reg', $fs->prefs['only_oauth_reg'], 'onlyoauthreg', 1, array('onclick'=>'check_change("onlyoauthreg", "needapproval", "spamproof")')); ?>
+          <?php echo tpl_checkbox('only_oauth_reg', $fs->prefs['only_oauth_reg'], 'onlyoauthreg', 1, array('onclick'=>'check_change(true, "onlyoauthreg", "needapproval", "spamproof")')); ?>
         </li>
 
         <li>
           <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin')); ?></label>
-          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change("needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
+          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change(true, "needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
         </li>
 
         <li>
@@ -294,24 +318,63 @@
           <li>
             <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php // Set the selectable column names
-            $columnnames = array('id', 'parent', 'project', 'tasktype', 'category', 'severity',
-            'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
-            'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-            'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes','estimated_effort','effort');
-            $selectedcolumns = explode(" ", $fs->prefs['visible_columns']);
-            ?>
-            <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
-
+            // Do NOT use real database column name here and in the next list,
+            // but a term from translation table entries instead, because it's
+            // also used elsewhere to draw a localized version of the name,
+            // and with some extra work, this list too might show localized
+            // names in a future version. Look also at the end of function
+            // tpl_draw_cell in scripts/index.php for further explanation.
+            $columnnames = array(
+                'id' => L('id'),
+                'parent' => L('parent'),
+                'tasktype' => L('tasktype'),
+                'category' => L('category'),
+                'severity' => L('severity'),
+                'priority' => L('priority'),
+                'summary' => L('summary'),
+                'dateopened' => L('dateopened'),
+                'status' => L('status'),
+                'openedby' => L('openedby'),
+                'private' => L('private'),
+                'assignedto' => L('assignedto'),
+                'lastedit' => L('lastedit'),
+                'reportedin' => L('reportedin'),
+                'dueversion' => L('dueversion'),
+                'duedate' => L('duedate'),
+                'comments' => L('comments'),
+                'attachments' => L('attachments'),
+                'progress' => L('progress'),
+                'dateclosed' => L('dateclosed'),
+                'os' => L('os'),
+                'votes' => L('votes'),
+                'estimatedeffort' => L('estimatedeffort'),
+                'effort' => L('effort'));
+            $selectedcolumns = explode(' ', Post::val('visible_columns', $fs->prefs['visible_columns']));
+            echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false);
+          ?>
           </li>
 
           <li>
             <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
             <?php // Set the selectable field names
-            $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
-            'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
-            $selectedfields = explode(" ", $fs->prefs['visible_fields']);
+            $fieldnames = array(
+                'parent' => L('parent'),
+                'tasktype' => L('tasktype'),
+                'category' => L('category'),
+                'severity' => L('severity'),
+                'priority' => L('priority'),
+                'status' => L('status'),
+                'private' => L('private'),
+                'assignedto' => L('assignedto'),
+                'reportedin' => L('reportedin'),
+                'dueversion' => L('dueversion'),
+                'duedate' => L('duedate'),
+                'progress' => L('progress'),
+                'os' => L('os'),
+                'votes' => L('votes'));
+            $selectedfields = explode(' ', Post::val('visible_fields', $fs->prefs['visible_fields']));
+            echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, false);
             ?>
-            <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, true); ?>
           </li>
 
         </ul>

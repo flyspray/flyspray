@@ -11,7 +11,7 @@
             <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
             <textarea id="reason" name="reason_given"></textarea><br/>
             <button type="submit"><?php echo Filters::noXSS(L('submitreq')); ?></button>
-        </form> 
+        </form>
     </div>
   <?php endif; ?>
 <?php else:  //if task is open  ?>
@@ -29,13 +29,13 @@
         <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
         </select>
         <button type="submit"><?php echo Filters::noXSS(L('closetask')); ?></button>
-        <br/>   
+        <br/>
         <label class="default text" for="closure_comment"><?php echo Filters::noXSS(L('closurecomment')); ?></label>
         <textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
         <?php if($task_details['percent_complete'] != '100'): ?>
         <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
         <?php endif; ?>
-        </form> 
+        </form>
     </div>
 
   <?php elseif (!$d_open && !$user->isAnon() && !Flyspray::AdminRequestCheck(1, $task_details['task_id'])): ?>
@@ -75,7 +75,7 @@
 
   <?php if ($user->can_take_ownership($task_details)): ?>
     <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-      <input type="hidden" name="action" value="takeownership" /> 
+      <input type="hidden" name="action" value="takeownership" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <button type="submit" id="own"><?php echo Filters::noXSS(L('assigntome')); ?></button>
@@ -98,14 +98,14 @@
 
             <?php if ($user->can_edit_task($task_details)): ?>
             <li><input type="checkbox" id="s_parent"><label for="s_parent"><?php echo Filters::noXSS(L('setparent')); ?></label>
-                <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?> 
+                <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
                 <?php echo Filters::noXSS(L('parenttaskid')); ?>
                 <input type="hidden" name="action" value="details.setparent" />
-                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" /> 
+                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
                 <button type="submit" name="submit"><?php echo Filters::noXSS(L('set')); ?></button>
                 </form>
-            </li> 
+            </li>
             <?php endif; ?>
             <?php if ($user->can_edit_task($task_details)): ?>
             <li><input type="checkbox" id="s_associate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
@@ -239,7 +239,7 @@ function quick_edit(elem, id)
         <?php if ($prev_id): ?> | <?php endif; ?>
         <?php
 		if(isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'project'):
-			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']); 
+			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']);
 			?>
         <a href="<?php echo Filters::noXSS(CreateUrl('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
         <?php endif; ?>
@@ -364,8 +364,8 @@ function quick_edit(elem, id)
                         <?php
 					foreach ($assigned_users as $userid):
 					?>
-                        <?php if($fs->prefs['gravatars'] == 1) { ?>
-                        <tr><td><?php echo tpl_userlinkgravatar($userid, 26); ?></td><td><?php echo tpl_userlink($userid); ?></td></tr>
+                        <?php if($fs->prefs['enable_avatars'] == 1) { ?>
+                        <tr><td><?php echo tpl_userlinkavatar($userid, $fs->prefs['max_avatar_size'] / 2); ?></td><td><?php echo tpl_userlink($userid); ?></td></tr>
                         <?php } else { ?>
                         <tr>
                             <td class="assignedto_name"><?php echo tpl_userlink($userid); ?></td>
@@ -556,7 +556,7 @@ function quick_edit(elem, id)
             ?>
             <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?> </span>
         </li>
-        <?php } 
+        <?php }
         } ?>
     </ul>
     <ul class="fieldslist">
@@ -675,7 +675,7 @@ function quick_edit(elem, id)
         </h4>
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
 
-        <div id="taskdetailstext"><?php echo Filters::noXSS($task_text); ?></div>
+        <div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
@@ -731,7 +731,7 @@ function quick_edit(elem, id)
             </tbody>
         </table>
         <?php endif; ?>
-        
+
         <!-- This task blocks the following tasks: -->
         <?php if(!count($blocks)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
@@ -779,7 +779,7 @@ function quick_edit(elem, id)
             </tbody>
         </table>
         <?php endif; ?>
-        
+
         <?php
             if (!$task_details['supertask_id']==0)
             {

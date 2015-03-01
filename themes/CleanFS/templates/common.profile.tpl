@@ -12,14 +12,16 @@
       </li>
       <li>
         <label for="hide_my_email"><?php echo Filters::noXSS(L('hidemyemail')); ?></label>
-        <?php echo tpl_checkbox('hide_my_email', Req::val('hide_my_email', !Post::val('action') && $theuser->infos['hide_my_email']), 'hide_my_email'); ?>
+        <?php echo tpl_checkbox('hide_my_email', Req::val('hide_my_email', !Post::val('action') && $theuser->infos['hide_my_email']), 'hide_my_email', 1, ($fs->prefs['hide_emails'] ) ? array('checked' => 'true', 'disabled' => 'true') : ''); ?>
       </li>
+      <?php if (!empty($fs->prefs['jabber_server'])):?>
       <li>
         <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
         <input id="jabberid" class="text" type="text" name="jabber_id" size="50" maxlength="100"
           value="<?php echo Filters::noXSS(Req::val('jabber_id', $theuser->infos['jabber_id'])); ?>" />
         <input type="hidden" name="old_jabber_id" value="<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>" />
       </li>
+      <?php endif ?>
       <li>
         <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
         <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>

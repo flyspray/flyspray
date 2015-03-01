@@ -16,6 +16,8 @@
     <th><?php echo Filters::noXSS(L('jabberid')); ?></th>
     <td><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></td>
   </tr>
+  <?php endif ?>
+  <?php if (!empty($fs->prefs['jabber_server'])): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('globalgroup')); ?></th>
     <td><?php echo Filters::noXSS($groups[Flyspray::array_find('group_id', $theuser->infos['global_group'], $groups)]['group_name']); ?></td>

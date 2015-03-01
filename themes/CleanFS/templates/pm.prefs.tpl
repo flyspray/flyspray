@@ -35,9 +35,18 @@
         <li>
           <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
           <?php
-            $pages = array('index', 'toplevel', 'newmultitasks', 'details', 'roadmap', 'newtask', 'reports', 'depends', 'pm');
+            $pages = array(
+                'index' => L('tasklist'),
+                'toplevel' => L('toplevel'),
+                'newmultitasks' => L('addmultipletasks'),
+                'details' => L('details'),
+                'roadmap' => L('roadmap'),
+                'newtask' => L('newtask'),
+                'reports' => L('reports'),
+                'depends' => L('dependencygraph'),
+                'pm' => L('manageproject'));
             $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
-            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, true, false);
+            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
           ?>
         </li>
 
@@ -140,23 +149,63 @@
         <li>
           <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
           <?php // Set the selectable column names
-          $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
-          'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
-          'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
-          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes', 'estimatedeffort','effort');
+          // Do NOT use real database column name here and in the next list,
+          // but a term from translation table entries instead, because it's
+          // also used elsewhere to draw a localized version of the name,
+          // and with some extra work, this list too might show localized
+          // names in a future version. Look also at the end of function
+          // tpl_draw_cell in scripts/index.php for further explanation.
+          $columnnames = array(
+            'id' => L('id'),
+            'parent' => L('parent'),
+            'tasktype' => L('tasktype'),
+            'category' => L('category'),
+            'severity' => L('severity'),
+            'priority' => L('priority'),
+            'summary' => L('summary'),
+            'dateopened' => L('dateopened'),
+            'status' => L('status'),
+            'openedby' => L('openedby'),
+            'private' => L('private'),
+            'assignedto' => L('assignedto'),
+            'lastedit' => L('lastedit'),
+            'reportedin' => L('reportedin'),
+            'dueversion' => L('dueversion'),
+            'duedate' => L('duedate'),
+            'comments' => L('comments'),
+            'attachments' => L('attachments'),
+            'progress' => L('progress'),
+            'dateclosed' => L('dateclosed'),
+            'os' => L('os'),
+            'votes' => L('votes'),
+            'estimatedeffort' => L('estimatedeffort'),
+            'effort' => L('effort'));
           $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
           ?>
-          <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
+          <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
 
         </li>
         <li>
           <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
           <?php // Set the selectable field names
-          $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
-          'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
+          $fieldnames = array(
+            'parent' => L('parent'),
+            'tasktype' => L('tasktype'),
+            'category' => L('category'),
+            'severity' => L('severity'),
+            'priority' => L('priority'),
+            'status' => L('status'),
+            'private' => L('private'),
+            'assignedto' => L('assignedto'),
+            'reportedin' => L('reportedin'),
+            'dueversion' => L('dueversion'),
+            'duedate' => L('duedate'),
+            'progress' => L('progress'),
+            'os' => L('os'),
+            'votes' => L('votes'));
           $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
           ?>
-          <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, true); ?>
+          <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, false); ?>
 
         </li>
       </ul>
@@ -175,10 +224,12 @@
           <input id="emailaddress" name="notify_email" class="text" type="text" value="<?php echo Filters::noXSS(Post::val('notify_email', $proj->prefs['notify_email'])); ?>" />
         </li>
 
+        <?php if (!empty($fs->prefs['jabber_server'])): ?>
         <li>
           <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
           <input id="jabberid" class="text" name="notify_jabber" type="text" value="<?php echo Filters::noXSS(Post::val('notify_jabber', $proj->prefs['notify_jabber'])); ?>" />
         </li>
+        <?php endif ?>
 
         <li>
           <label for="notify_reply"><?php echo Filters::noXSS(L('replyto')); ?></label>

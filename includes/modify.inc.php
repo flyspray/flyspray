@@ -26,6 +26,11 @@ function Post_to0($key) { return Post::val($key, 0); }
 
 function resizeImage($file, $max_x, $max_y, $forcePng = false)
 {
+	if ($max_x <= 0 || $max_y <= 0) {
+		$max_x = 5;
+		$max_y = 5;
+	}
+
 	$src = BASEDIR.'/avatars/'.$file;
 
 	list($width, $height, $type) = getImageSize($src);
@@ -582,7 +587,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
-                	resizeImage($avatar_name, 50, 50);
+                	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -675,7 +680,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
-                	resizeImage($avatar_name, 50, 50);
+                	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -843,7 +848,7 @@ switch ($action = Req::val('action'))
                         'delete_attachments', 'view_history', 'close_own_tasks',
                         'close_other_tasks', 'assign_to_self', 'show_as_assignees',
                         'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
-                        'view_effort', 'track_effort', 'view_actual_effort');
+                        'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap');
 
                 $params = array_map('Post_to0',$cols);
                 array_unshift($params, $proj->id);
@@ -871,7 +876,8 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths', 'only_oauth_reg');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1031,11 +1037,11 @@ switch ($action = Req::val('action'))
         // Convert to seconds.
         if (Post::val('hours_per_manday')) {
             $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
-            $cols[] = 'hours_per_manday'; 
+            $cols[] = 'hours_per_manday';
         }
 
         $args[] = $proj->id;
-        
+
         $update = $db->Query("UPDATE  {projects}
                                  SET  ".join('=?, ', $cols)."=?
                                WHERE  project_id = ?", $args);
@@ -1161,7 +1167,7 @@ switch ($action = Req::val('action'))
                             $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                             $image_path = BASEDIR.'/avatars/'.$avatar_name;
                             move_uploaded_file($image_temp, $image_path);
-                        	resizeImage($avatar_name, 50, 50);
+                        	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                             $db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
                             	array($avatar_name, Post::num('user_id')));
                         } else {
@@ -1270,7 +1276,7 @@ switch ($action = Req::val('action'))
               'create_attachments', 'delete_attachments', 'show_as_assignees',
               'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
               'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open','view_effort','track_effort','view_actual_effort'));
+              'add_votes', 'group_open', 'view_effort', 'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap'));
         }
 
         $args = array_map('Post_to0', $cols);

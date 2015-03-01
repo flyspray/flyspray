@@ -342,7 +342,7 @@
         endforeach; ?>
 <div id="desc_<?php echo $task_details['task_id']; ?>" class="descbox box">
 <b>Task Description:</b>
-<?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : "<p>No Description</p>"; ?>
+<?php echo $task_details['detailed_desc'] ? Filters::noXSS($task_details['detailed_desc']) : "<p>No Description</p>"; ?>
 </div>
     </tr>
     <?php endforeach; ?>

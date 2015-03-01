@@ -99,7 +99,7 @@ class User
                 'delete_attachments', 'view_history', 'close_own_tasks',
                 'close_other_tasks', 'assign_to_self', 'assign_others_to_self',
                 'add_to_assignees', 'view_reports', 'add_votes', 'group_open','view_effort',
-                'track_effort', 'view_actual_effort');
+                'track_effort', 'view_actual_effort', 'add_multiple_tasks', 'view_roadmap');
 
         $this->perms = array(0 => array());
         // Get project settings which are important for permissions
