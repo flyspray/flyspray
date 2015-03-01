@@ -959,7 +959,9 @@ $translation = array(
 'estimatedeffortopen'     => 'Effort estimé pour les tâches ouvertes',
 'actualeffortopen'        => 'Effort actuel fourni dans les tâches ouvertes',
 'signinwith'              => 'Se connecter avec %s',
-'canviewroadmap'          => 'Peux voir la feuille de route'
+'canviewroadmap'          => 'Peux voir la feuille de route',
+'enableavatars'           => 'Activer les avatars',
+'maxavatarsize'           => 'Taille maximum des avatars'
 );
 
 ?>

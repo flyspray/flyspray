@@ -26,6 +26,11 @@ function Post_to0($key) { return Post::val($key, 0); }
 
 function resizeImage($file, $max_x, $max_y, $forcePng = false)
 {
+	if ($max_x <= 0 || $max_y <= 0) {
+		$max_x = 5;
+		$max_y = 5;
+	}
+
 	$src = BASEDIR.'/avatars/'.$file;
 
 	list($width, $height, $type) = getImageSize($src);
@@ -582,7 +587,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
-                	resizeImage($avatar_name, 50, 50);
+                	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -675,7 +680,7 @@ switch ($action = Req::val('action'))
                     $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                     $image_path = BASEDIR.'/avatars/'.$avatar_name;
                     move_uploaded_file($image_temp, $image_path);
-                	resizeImage($avatar_name, 50, 50);
+                	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                 } else {
                     Flyspray::show_error(L('incorrectfiletype'));
                     break;
@@ -871,7 +876,8 @@ switch ($action = Req::val('action'))
                 'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg', 'active_oauths', 'only_oauth_reg');
+                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1161,7 +1167,7 @@ switch ($action = Req::val('action'))
                             $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
                             $image_path = BASEDIR.'/avatars/'.$avatar_name;
                             move_uploaded_file($image_temp, $image_path);
-                        	resizeImage($avatar_name, 50, 50);
+                        	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
                             $db->Query('UPDATE {users} SET profile_image = ? WHERE user_id = ?',
                             	array($avatar_name, Post::num('user_id')));
                         } else {

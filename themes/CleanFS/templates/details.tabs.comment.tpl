@@ -8,11 +8,11 @@
         <!--  title="<?php echo Filters::noXSS(L('commentlink')); ?>" alt="" />-->
       </a>
       <!--<?php echo Filters::noXSS(L('commentby')); ?>--> <?php echo tpl_userlink($comment['user_id']); ?> <br />
-      
-      
+
+
       <br />
-      <?php if($fs->prefs['gravatars'] == 1) { ?>
-         <?php echo tpl_userlinkgravatar($comment['user_id'], 50, 'left', '5px'); ?>
+      <?php if($fs->prefs['enable_avatars'] == 1) { ?>
+         <?php echo tpl_userlinkavatar($comment['user_id'], $fs->prefs['max_avatar_size'], 'left', '5px'); ?>
 
         <?php } ?>
           <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?>
@@ -24,7 +24,7 @@
         <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=editcomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;id=<?php echo Filters::noXSS($comment['comment_id']); ?>">
           <?php echo Filters::noXSS(L('edit')); ?></a>
         <?php endif; ?>
-    
+
         <?php if ($user->perms('delete_comments')): ?>
         <?php echo tpl_form(CreateUrl('details', $task_details['task_id'])); ?>
         <input type="hidden" name="action" value="details.deletecomment">
@@ -35,7 +35,7 @@
       </span>
 
     </em>
-    
+
     <div class="comment">
     <?php if(isset($comment_changes[$comment['date_added']])): ?>
     <ul class="comment_changes">
@@ -55,8 +55,8 @@
             }
       ?>
     </div>
-    
-    
+
+
     <div class="clear"></div>
   </div>
 

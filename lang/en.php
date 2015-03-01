@@ -87,7 +87,7 @@ $language = array(
 'defaultproject'          => 'Default Project',
 'projectlists'            => 'Project lists',
 'showlogo'                => 'Show title logo image',
-'showgravatars'	          => 'Show Gravatars',
+'showgravatars'           => 'Show Gravatars',
 'emailNoHTML'             => 'No HTML in E-Mails',
 'intromessage'            => 'Introductory message',
 'isactive'                => 'Project is active',
@@ -968,6 +968,8 @@ Regards,',
 'estimatedeffortopen'     => 'Estimated effort for open tasks',
 'actualeffortopen'        => 'Actual effort spent in open tasks',
 'signinwith'              => 'Sign in with %s',
-'canviewroadmap'          => 'Can view roadmap'
+'canviewroadmap'          => 'Can view roadmap',
+'enableavatars'           => 'Enable avatars',
+'maxavatarsize'           => 'Max avatar size in pixels'
 );
 ?>

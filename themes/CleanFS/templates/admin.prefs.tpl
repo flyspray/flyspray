@@ -16,27 +16,38 @@
 
 <script>
     /*
-    First argument is always the parent calling to deactivate not needed childs
-    Next args are all childsto be deactivated
+    * Second argument is always the parent calling to deactivate not needed childs
+    * Next args are all childsto be deactivated
     */
-    function check_change()
+    function check_change(inverted)
     {
-    	var i;
-    	var parent = arguments[0];
+        var i;
+        var parent = arguments[1];
 
         if(document.getElementById(parent).checked)
         {
-            for (i = 1; i < arguments.length; i++)
+            for (i = 2; i < arguments.length; i++)
             {
-                document.getElementById(arguments[i]).checked = false;
-                document.getElementById(arguments[i]).disabled = true;
+                if (inverted) {
+                    document.getElementById(arguments[i]).checked = false;
+                    document.getElementById(arguments[i]).disabled = true;
+                }
+                else {
+                    document.getElementById(arguments[i]).checked = true;
+                    document.getElementById(arguments[i]).disabled = false;
+                }
             }
         }
         else
         {
-            for (i = 1; i < arguments.length; i++)
+            for (i = 2; i < arguments.length; i++)
             {
-                document.getElementById(arguments[i]).disabled = false;
+                if (inverted) {
+                    document.getElementById(arguments[i]).disabled = false;
+                }
+                else {
+                    document.getElementById(arguments[i]).disabled = true;
+                }
             }
         }
     }
@@ -90,8 +101,18 @@
         </li>
 
         <li>
+          <label for="enable_avatars"><?php echo Filters::noXSS(L('enableavatars')); ?></label>
+          <?php echo tpl_checkbox('enable_avatars', $fs->prefs['enable_avatars'], 'enable_avatars', 1, array('onclick'=>'check_change(false, "enable_avatars", "gravatars", "max_avatar_size")')); ?>
+        </li>
+
+        <li>
           <label for="gravatars"><?php echo Filters::noXSS(L('showgravatars')); ?></label>
-        	<?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
+          <?php echo tpl_checkbox('gravatars', $fs->prefs['gravatars'], 'gravatars'); ?>
+        </li>
+
+        <li>
+          <label for="max_avatar_size"><?php echo Filters::noXSS(L('maxavatarsize')); ?></label>
+          <input id="max_avatar_size" name="max_avatar_size" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_avatar_size']); ?>" />
         </li>
 
         <li>
@@ -167,12 +188,12 @@
 
         <li>
           <label for="onlyoauthreg"><?php echo Filters::noXSS(L('onlyoauthreg')); ?></label>
-          <?php echo tpl_checkbox('only_oauth_reg', $fs->prefs['only_oauth_reg'], 'onlyoauthreg', 1, array('onclick'=>'check_change("onlyoauthreg", "needapproval", "spamproof")')); ?>
+          <?php echo tpl_checkbox('only_oauth_reg', $fs->prefs['only_oauth_reg'], 'onlyoauthreg', 1, array('onclick'=>'check_change(true, "onlyoauthreg", "needapproval", "spamproof")')); ?>
         </li>
 
         <li>
           <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin')); ?></label>
-          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change("needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
+          <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change(true, "needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
         </li>
 
         <li>

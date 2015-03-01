@@ -291,7 +291,7 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
+function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
 {
 	global $db, $user;
 	if (is_array($uid)) {
@@ -319,8 +319,10 @@ function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 		}
 		else
 		{
-			$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-			$image = '<img src='.$url.'/>';
+			if ($fs->prefs['gravatars'] == 1) {
+				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+				$image = '<img src='.$url.'/>';
+			}
 		}
 	}
 	else {
