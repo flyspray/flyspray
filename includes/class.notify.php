@@ -698,7 +698,7 @@ class Notifications {
 		$body .= L('messagefrom'). $arg1[0];
       } // }}}
 
-      $body .= L('disclaimer');
+      $body .= '. '.L('disclaimer');
       return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body));
 
    } // }}}
