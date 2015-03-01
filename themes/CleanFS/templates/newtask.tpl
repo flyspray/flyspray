@@ -1,3 +1,15 @@
+<script type="text/javascript">
+
+function stopRKey(evt) {
+	var evt = (evt) ? evt : ((event) ? event : null);
+	var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
+}
+
+document.onkeypress = stopRKey;
+
+</script>
+
 <!--<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> :: <?php echo Filters::noXSS(L('newtask')); ?></h3>-->
 <?php
     if (!isset($supertask_id)) {
@@ -190,7 +202,7 @@
                 <?php echo Filters::noXSS(L('hours')); ?>
 
             </li>
-            <?php } 
+            <?php }
             } ?>
 
           <?php if ($user->perms('manage_project')): ?>
