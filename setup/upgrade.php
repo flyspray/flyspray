@@ -513,3 +513,51 @@ function fix_version_table($dups) {
         }
     }
 }
+
+// Just a sketch on how database columns could be updated to the new format.
+// Not tested for errors or used anywhere yet.
+
+function convert_old_entries($table, $column, $key) {
+    global $db;
+    
+    // Assuming that anything not beginning with <p> was made with older
+    // versions of flyspray. This will not catch neither those old entries
+    // where the user for some reason really added paragraph tags nor those
+    // made with development version before fixing ckeditors configuration
+    // settings. You can't have everything in a limited time frame, this
+    // should be just good enough.
+    $sql = $db->Query("SELECT $key, $column"
+            . "FROM {$table}"
+            . "WHERE $column NOT LIKE '<p>%'");
+    $entries = $db->fetchAllArray($sql);
+
+    foreach ($entries as $entry) {
+        $id = $entry[$key];
+        $data = $entry[$column];
+        
+        $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        // Convert two or more line breaks to paragrahs, Windows/Unix/Linux formats
+        $data = preg_replace('/(\h*\r?\n)+\h*\r?\n/', "</p><p>", $data);
+        // Data coming from Macs has only carriage returns, and couldn't say
+        // \r?\n? in the previous regex, it would also have matched nothing.
+        // Even a short word like "it" has three nothings in it, one before
+        // i, one between i and t and one after t...
+        $data = preg_replace('/(\h*\r)+\h*\r/', "</p><p>", $data);
+        // Remaining single line breaks
+        $data = preg_replace('/\h*\r?\n/', "<br/>", $data);
+        $data = preg_replace('/\h*\r/', "<br/>", $data);
+        // Remove final extra break, if the data to converted ended with a line break
+        $data = preg_replace('#<br/>$#', '', $data);
+        // Remove final extra paragraph tags, if the data to converted ended with
+        // more than one line breaks
+        $data = preg_replace('#</p><p>$#', '', $data);
+        // Enclose the whole in paragraph tags, so it looks
+        // the same as what ckeditor produces.
+        $data = '<p>' . $data . '</p>';
+        
+        $db->Query("UPDATE {$table}"
+        . "SET $column = ?"
+        . "WHERE $key = ?",
+        array($data, $id));
+    }
+}
