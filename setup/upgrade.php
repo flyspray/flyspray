@@ -88,6 +88,9 @@ if (Post::val('upgrade')) {
     // Update existing projects to default field visibility.
     $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
     
+    // For testing, do not use yet, have to discuss this one with others.
+    // convert_old_entries('tasks', 'detailed_desc', 'task_id');
+    
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
@@ -526,8 +529,8 @@ function convert_old_entries($table, $column, $key) {
     // made with development version before fixing ckeditors configuration
     // settings. You can't have everything in a limited time frame, this
     // should be just good enough.
-    $sql = $db->Query("SELECT $key, $column"
-            . "FROM {$table}"
+    $sql = $db->Query("SELECT $key, $column "
+            . "FROM {". $table . "} "
             . "WHERE $column NOT LIKE '<p>%'");
     $entries = $db->fetchAllArray($sql);
 
@@ -555,7 +558,7 @@ function convert_old_entries($table, $column, $key) {
         // the same as what ckeditor produces.
         $data = '<p>' . $data . '</p>';
         
-        $db->Query("UPDATE {$table}"
+        $db->Query("UPDATE {". $table . "} "
         . "SET $column = ?"
         . "WHERE $key = ?",
         array($data, $id));
