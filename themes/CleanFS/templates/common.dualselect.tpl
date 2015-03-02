@@ -3,7 +3,7 @@
         ondblclick="dualSelect(this, 'r', '<?php echo Filters::noJsXSS($id); ?>')">%s</select>
   <div class="dualselect_buttons">
     <button type="button" onmouseup="dualSelect('l', 'r', '<?php echo Filters::noJsXSS($id); ?>')"><?php echo eL('add'); ?> &#8594;</button>
-    <button type="button" onmouseup="dualSelect('r', 'l', '<?php echo Filters::noJsXSS($id); ?>')">&#8592; <?php echo eL('del'); ?></button>
+    <button type="button" onmouseup="dualSelect('r', 'l', '<?php echo Filters::noJsXSS($id); ?>')">&#8592; <?php echo eL('remove'); ?></button>
   </div>
   <div class="dualselect_selected">
         <?php if($updown): ?><button type="button" onmouseup="selectMove('<?php echo Filters::noJsXSS($id); ?>', -1)">&#8593;</button><br /><?php endif; ?>
