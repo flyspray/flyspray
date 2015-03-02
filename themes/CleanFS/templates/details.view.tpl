@@ -689,7 +689,7 @@ function quick_edit(elem, id)
         <?php $projects = $fs->listProjects(); ?>
         <table id="dependency_table" class="table" width="100%">
             <!-- <caption>This task depends on the following tasks.</caption> -->
-            <caption><?php echo Filters::noXSS(L('taskdependson')); ?></caption>
+            <caption><? echo (count($deps)==1) ? eL('taskdependsontask') : eL('taskdependsontasks'); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
@@ -737,7 +737,7 @@ function quick_edit(elem, id)
         <?php $projects = $fs->listProjects(); ?>
         <table id="blocking_table" class="table" width="100%">
             <!-- <caption>This task prevents closing the following tasks.</caption> -->
-            <caption><?php echo Filters::noXSS(L('taskblocks')); ?></caption>
+            <caption><?php echo (count($blocks)==1) ? eL('taskblock') : eL('taskblocks'); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
@@ -791,7 +791,7 @@ function quick_edit(elem, id)
         <?php if(!count($subtasks)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
         <table id="subtask_table" class="table" width="100%">
-            <caption>This task has the following sub-tasks.</caption>
+            <caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
             <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('id')); ?></th>
