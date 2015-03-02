@@ -21,6 +21,11 @@
 					<td>&nbsp;</td>
 				</tr>
                 <tr>
+					<td>GD Library</td>
+					<td align="left"><b><?php echo Setup::ReturnStatus(extension_loaded('gd'), 'yes'); ?></b></td>
+					<td>&nbsp;</td>
+				</tr>
+                <tr>
 					<td>SAPI (<?php echo Filters::noXSS(php_sapi_name()); ?>)</td>
 					<td align="left"><b><?php echo Setup::ReturnStatus($sapiStatus, 'support'); ?></b></td>
 					<td>&nbsp;</td>

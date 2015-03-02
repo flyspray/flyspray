@@ -88,6 +88,9 @@ if (Post::val('upgrade')) {
     // Update existing projects to default field visibility.
     $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
     
+    // For testing, do not use yet, have to discuss this one with others.
+    // convert_old_entries('tasks', 'detailed_desc', 'task_id');
+    
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
@@ -511,5 +514,53 @@ function fix_version_table($dups) {
                        array($update_id, $entry['id']));
             $db->Query('DELETE FROM {list_version} WHERE version_id = ?', array($entry['id']));
         }
+    }
+}
+
+// Just a sketch on how database columns could be updated to the new format.
+// Not tested for errors or used anywhere yet.
+
+function convert_old_entries($table, $column, $key) {
+    global $db;
+    
+    // Assuming that anything not beginning with <p> was made with older
+    // versions of flyspray. This will not catch neither those old entries
+    // where the user for some reason really added paragraph tags nor those
+    // made with development version before fixing ckeditors configuration
+    // settings. You can't have everything in a limited time frame, this
+    // should be just good enough.
+    $sql = $db->Query("SELECT $key, $column "
+            . "FROM {". $table . "} "
+            . "WHERE $column NOT LIKE '<p>%'");
+    $entries = $db->fetchAllArray($sql);
+
+    foreach ($entries as $entry) {
+        $id = $entry[$key];
+        $data = $entry[$column];
+        
+        $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        // Convert two or more line breaks to paragrahs, Windows/Unix/Linux formats
+        $data = preg_replace('/(\h*\r?\n)+\h*\r?\n/', "</p><p>", $data);
+        // Data coming from Macs has only carriage returns, and couldn't say
+        // \r?\n? in the previous regex, it would also have matched nothing.
+        // Even a short word like "it" has three nothings in it, one before
+        // i, one between i and t and one after t...
+        $data = preg_replace('/(\h*\r)+\h*\r/', "</p><p>", $data);
+        // Remaining single line breaks
+        $data = preg_replace('/\h*\r?\n/', "<br/>", $data);
+        $data = preg_replace('/\h*\r/', "<br/>", $data);
+        // Remove final extra break, if the data to converted ended with a line break
+        $data = preg_replace('#<br/>$#', '', $data);
+        // Remove final extra paragraph tags, if the data to converted ended with
+        // more than one line breaks
+        $data = preg_replace('#</p><p>$#', '', $data);
+        // Enclose the whole in paragraph tags, so it looks
+        // the same as what ckeditor produces.
+        $data = '<p>' . $data . '</p>';
+        
+        $db->Query("UPDATE {". $table . "} "
+        . "SET $column = ?"
+        . "WHERE $key = ?",
+        array($data, $id));
     }
 }
