@@ -970,6 +970,8 @@ Regards,',
 'signinwith'              => 'Sign in with %s',
 'canviewroadmap'          => 'Can view roadmap',
 'enableavatars'           => 'Enable avatars',
-'maxavatarsize'           => 'Max avatar size in pixels'
+'maxavatarsize'           => 'Max avatar size in pixels',
+'taskhassubtask'          => 'This task has the following sub-task',
+'taskhassubtasks'         => 'This task has the following sub-tasks'
 );
 ?>
