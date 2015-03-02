@@ -18,7 +18,7 @@ if (!$user->perms('is_admin')) {
 }
 
 $proj = new Project(0);
-$proj->setCookie();
+#I $proj->setCookie();
 
 $page->pushTpl('admin.menu.tpl');
 
