@@ -7,11 +7,12 @@
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 
-<div id="intromessage">Tips for bulk importing:<br>
+<div id="intromessage"><?php echo L('hintforbulkimport'); ?>
+Tips for bulk importing:<br>
 
-    1. Copy and paste from an excel spreadsheet or CSV by pasting one entire column.<br>
-    2. Currently you can only paste Summary and Details.<br>
-    3. There are suggestions when you assign to someone, and to no-one if there is no matched name.
+ 1. Copy and paste from an excel spreadsheet or CSV by pasting one entire column.<br>
+ 2. Currently you can only paste Summary and Details.<br>
+ 3. There are suggestions when you assign to someone, and to no-one if there is no matched name.
 
 </div>
 <?php echo tpl_form(Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id))); ?>
@@ -36,7 +37,7 @@
        </tr>
      </thead>
      <tbody id="table">
-      <button class="button positive main" accesskey="s" type="button" onClick="Apply()">Apply first line</button>
+      <button class="button positive main" accesskey="s" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
       <tr id="row">
 	<td><input type="image" src="themes/CleanFS/img/red/x_alt_24x24.png" onClick="removeRow(this);return false;"/></td>
         <?php if (in_array('tasktype', $fields)) { ?>
@@ -151,11 +152,11 @@
       <tr>
         <td colspan="<?php echo $field_num-2;?>"></td>
         <td class="buttons">
-          <button class="button positive main" accesskey="s" type="button" onClick="createRow('','')">Add more rows</button>
+          <button class="button positive main" accesskey="s" type="button" onClick="createRow('','')"><?php echo L('addmorerows'); ?></button>
         </td>
         <td class="buttons">
           <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
-          <button class="button positive main" accesskey="s" type="submit">Add tasks</button>
+          <button class="button positive main" accesskey="s" type="submit"><?php echo L('addtasks'); ?></button>
         </td>
       </tr>
 
