@@ -258,7 +258,7 @@
 <?php endif; ?>
 
 <div id="tasklist">
-<form action="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)); ?>" name="massops" id="massops" method="post">
+<?php echo tpl_form(Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)),'massops',null,null,'id="massops"'); ?>
 <div>
 <table id="tasklist_table">
     <thead>
