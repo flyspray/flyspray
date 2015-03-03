@@ -981,5 +981,6 @@ Regards,',
 'maxavatarsize'           => 'Max avatar size in pixels',
 'taskhassubtask'          => 'This task has the following sub-task',
 'taskhassubtasks'         => 'This task has the following sub-tasks',
+'translations'            => 'Translations'
 );
 ?>
