@@ -571,7 +571,7 @@ class Setup extends Flyspray
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','On');
+          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','ON');
       }
 
       $output = '';
