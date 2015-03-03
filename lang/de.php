@@ -973,6 +973,8 @@ $translation = array(
 'taskhassubtask'          => 'Diese Aufgabe hat folgende Unteraufgabe',
 'taskhassubtasks'         => 'Diese Aufgabe hat folgende Unteraufgaben',
 'translations'            => 'Übersetzungen',
+'taskdescription'         => 'Aufgabenbeschreibung',
+'notaskdescription'       => 'nicht vorhanden',
 );
 
 ?>
