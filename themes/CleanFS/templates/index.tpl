@@ -340,10 +340,10 @@
         	<?php echo tpl_draw_cell($task_details, $col); ?>
         	<?php endif;
         endforeach; ?>
-<div id="desc_<?php echo $task_details['task_id']; ?>" class="descbox box">
-<b>Task Description:</b>
-<?php echo $task_details['detailed_desc'] ? Filters::noXSS($task_details['detailed_desc']) : "<p>No Description</p>"; ?>
-</div>
+<td id="desc_<?php echo $task_details['task_id']; ?>" class="descbox box">
+<b><?php echo L('taskdescription'); ?></b>
+<?php echo $task_details['detailed_desc'] ? $task_details['detailed_desc'] : '<p>'.L('notaskdescription').'</p>'; ?>
+</td>
     </tr>
     <?php endforeach; ?>
     </tbody>
