@@ -256,7 +256,7 @@ function quick_edit(elem, id)
 	</span>
 
     <div id="taskfields">
-    <div id="intromessage" align="center"><?php echo Filters::noXSS(L('clicktoedit')); ?></div>
+<?php if($user->can_edit_task($task_details)) : ?><div id="intromessage" align="center"><?php echo Filters::noXSS(L('clicktoedit')); ?></div><?php endif; ?>
     <ul class="fieldslist">
         <!-- Status -->
         <?php if (in_array('status', $fields)): ?>
