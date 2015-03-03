@@ -80,7 +80,8 @@ foreach ($projects as $project): ?>
         </div>        
     </td>
   </tr>
-  <?php if ($proj->prefs['use_effort_tracking']) {
+  <?php
+        if ($projprefs[$project['project_id']]['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
 
@@ -96,7 +97,7 @@ foreach ($projects as $project): ?>
         }
 
   ?>
-  <?php if ($user->perms('view_effort')) { ?>
+  <?php if ($user->perms('view_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
@@ -106,7 +107,7 @@ foreach ($projects as $project): ?>
       </td>
   </tr>
   <?php } ?>
-  <?php if ($user->perms('view_actual_effort')) { ?>
+  <?php if ($user->perms('view_actual_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('actualeffortopen')); ?>
