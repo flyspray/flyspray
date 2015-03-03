@@ -97,7 +97,7 @@ foreach ($projects as $project): ?>
         }
 
   ?>
-  <?php if ($user->perms('view_effort')) { ?>
+  <?php if ($user->perms('view_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
@@ -107,7 +107,7 @@ foreach ($projects as $project): ?>
       </td>
   </tr>
   <?php } ?>
-  <?php if ($user->perms('view_actual_effort')) { ?>
+  <?php if ($user->perms('view_actual_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('actualeffortopen')); ?>
