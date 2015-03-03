@@ -1,14 +1,14 @@
 <?php
 //
-// This file is auto generated with .langedit.php
+// This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-//
+// 
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-//
+// 
 // Furthermore, nothing else than the language array is saved
-// when using the .langedit.php editor!
+// when using the langedit.php editor!
 //
 $translation = array(
 'edituser'                => 'Benutzer bearbeiten',
@@ -219,7 +219,7 @@ $translation = array(
 'percentcomplete'         => 'Prozent erledigt',
 'details'                 => 'Beschreibung',
 'savedetails'             => 'speichern',
-'canceledit'              => 'Bearbeiten abbrechen',
+'canceledit'              => 'abbrechen',
 'anonymous'               => 'Anonymer Reporter',
 'complete'                => 'Erledigt',
 'closedby'                => 'geschlossen',
@@ -811,6 +811,7 @@ $translation = array(
 'error25'                 => 'Die Planung gibt es nur jeweils für ein einzelnes Projekt!',
 'error26'                 => 'derzeit nicht unterstützter OAuth -Anbieter.',
 'error27'                 => 'Konnte den Nutzer nicht anmelden. Bitte erlauben Sie uns ihre Emailadresse zu sehen.',
+'error28'                 => 'Sie haben keine Erlaubnis für diesen Bereich.',
 'done'                    => 'erledigt',
 'rss'                     => 'RSS',
 'atom'                    => 'Atom',
@@ -916,6 +917,7 @@ $translation = array(
 'efforttrackingadded'     => 'Aufwandseintrag für diese Aufgabe wurde gespeichert.',
 'trackinginprogress'      => 'Aufwandsmessung läuft',
 'vieweffort'              => 'Kann Aufwandsmessung anschauen',
+'viewcurrenteffortdone'   => 'darf erfolgten Arbeitsaufwand anschauen',
 'trackeffort'             => 'Kann Aufwandsmessung nutzen',
 'invalideffort'           => 'Der eingegebene Aufwand ist ungültig. Es muss eine Zahl sein.',
 'showpass'                => 'Zeige Passwort',
@@ -925,13 +927,51 @@ $translation = array(
 'addmultipletasks'        => 'mehrere Aufgaben anlegen',
 'pendingnewuserrequest'   => 'wartende neue Nutzeranfrage',
 'adminrequestswaiting'    => 'wartende Administratoranfragen',
-'regapprovedbyadmin'      => 'Die Registrierung wurde durch Administrator bestätigt und der Bestätigungscode wurde entwertet.',
 'clicktoedit'             => 'Werte anklicken zur Schnellbearbeitung',
 'confirmedit'             => 'speichern',
-'canceledit'              => 'abbrechen',
+'regapprovedbyadmin'      => 'Die Registrierung wurde durch Administrator bestätigt und der Bestätigungscode wurde entwertet.',
+'activity'                => 'Aktivität',
+'myactivity'              => 'meine Aktivitäten',
+'emailverificationwrong'  => 'Die beiden eingegebenen Emailadressen stimmen nicht überein',
+'verifyemailaddress'      => 'Emailadresse wiederholen',
+'hideemails'              => 'Emailadressen verbergen',
+'hidemyemail'             => 'Emailadresse verbergen',
 'exporttasklist'          => 'Aufgabenliste exportieren',
-'manday'                  => 'Manntag', # Personentag
-'mandays'                 => 'Manntage', # Personentage
+'onedecimal'              => 'eine Dezinmalstelle',
+'manday'                  => 'Manntag',
+'mandays'                 => 'Manntage',
+'mandayabbrev'            => 'Manntag',
+'hourspermanday'          => 'Arbeitsstunden pro Manntag',
+'itemexists'              => 'Eintrag %s existiert bereits in der Datenbank.',
+'categoryitemexists'      => 'Eintrag %s existiert bereits in der Kategorie %s in der Datenbank.',
+'pageswelcomemsg'         => 'Seiten, auf denen der Flysprayeinführungstext zu sehen ist',
+'pagesintromsg'           => 'Seiten, auf denen der Projekteinführungstext zu sehen ist',
+'activeoauths'            => 'zugelassene Oauth-Anbieter',
+'onlyoauthreg'            => 'nur Anmeldung per Oauth erlauben',
+'effortformat'            => 'Anzeigeformat für geschätzten Arbeitsaufwand',
+'estimatedeffortformat'   => 'Anzeigeformat für geschätzten Arbeitsaufwand',
+'actualeffortformat'      => 'Anzeigeformat für erfolgten Arbeitsaufwand',
+'currenteffortdoneformat' => 'Anzeigeformat für erfolgten Arbeitsaufwand',
+'minuteplural'            => 'Minuten',
+'minutesingular'          => 'Minute',
+'minute'                  => 'Minute',
+'minutes'                 => 'Minuten',
+'minuteabbrev'            => 'min',
+'hourplural'              => 'Stunden',
+'hoursingular'            => 'Stunde',
+'hour'                    => 'Stunde',
+'hours'                   => 'Stunden',
+'hourabbrev'              => 'h',
+'estimatedeffortopen'     => 'geschätzter Arbeitsaufwand offener Aufgaben',
+'actualeffortopen'        => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
+'currenteffortdoneopen'   => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
+'signinwith'              => 'Anmelden mit %s',
+'canviewroadmap'          => 'darf Planung anschauen',
+'enableavatars'           => 'Profilfotos aktivieren',
+'maxavatarsize'           => 'maximale Profilfotobreite in Pixeln',
+'taskhassubtask'          => 'Diese Aufgabe hat folgende Unteraufgabe',
+'taskhassubtasks'         => 'Diese Aufgabe hat folgende Unteraufgaben',
+'translations'            => 'Übersetzungen',
 );
 
 ?>
