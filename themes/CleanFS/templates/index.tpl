@@ -457,7 +457,7 @@
                 ?>
                 <select size="8" style="height: 200px;" name="bulk_assignment[]" id="bulk_assignment" multiple>
                     <?php foreach ($userlist as $group => $users): ?>
-                    <optgroup <?php if($group == '0'){ ?> label='Please Select... ' <?php } else { ?> label='<?php echo Filters::noXSS($group); ?>' <?php } ?> >
+                    <optgroup <?php if($group == '0'){ ?> label='<?php echo eL('pleaseselect'); ?>... ' <?php } else { ?> label='<?php echo Filters::noXSS($group); ?>' <?php } ?> >
                         <?php foreach ($users as $info): ?>
                         <option value="<?php echo Filters::noXSS($info[0]); ?>"><?php echo Filters::noXSS($info[1]); ?></option>
                         <?php endforeach; ?>
@@ -569,13 +569,13 @@
         <button type="submit" name="updateselectedtasks" value="true"><?php echo Filters::noXSS(L('updateselectedtasks')); ?></button>
     </fieldset>
     <fieldset>
-	<legend><b>Close selected tasks</b></legend>
+	<legend><b><?php echo L('closeselectedtasks'); ?></b></legend>
             <div>
                 <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
                     <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
                     <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
                 </select>
-                <button type="submit" name="updateselectedtasks" value="false">close tasks</button>
+                <button type="submit" name="updateselectedtasks" value="false"><?php echo L('closetasks'); ?></button>
                 <br/>
                 <label class="default text" for="closure_comment"><?php echo Filters::noXSS(L('closurecomment')); ?></label>
                 <textarea class="text" id="closure_comment" name="closure_comment" rows="3"
