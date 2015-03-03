@@ -960,7 +960,6 @@ $translation = array(
 'hourplural'              => 'Stunden',
 'hoursingular'            => 'Stunde',
 'hour'                    => 'Stunde',
-'hours'                   => 'Stunden',
 'hourabbrev'              => 'h',
 'estimatedeffortopen'     => 'geschätzter Arbeitsaufwand offener Aufgaben',
 'actualeffortopen'        => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
