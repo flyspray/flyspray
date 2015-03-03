@@ -80,7 +80,8 @@ foreach ($projects as $project): ?>
         </div>        
     </td>
   </tr>
-  <?php if ($proj->prefs['use_effort_tracking']) {
+  <?php
+        if ($projprefs[$project['project_id']]['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
 
