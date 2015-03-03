@@ -1,7 +1,6 @@
 <h3><?php echo Filters::noXSS(L('changepass')); ?></h3>
 <div class="box">
-
-    <form action="<?php echo Filters::noXSS(CreateUrl('lostpw')); ?>" method="post">
+    <?php echo tpl_form(Filters::noXSS(CreateUrl('lostpw'))); ?>
     <ul class="form_elements wide">
       <li>
         <label for="pass1"><?php echo Filters::noXSS(L('changepass')); ?></label>

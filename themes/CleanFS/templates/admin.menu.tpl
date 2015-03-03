@@ -31,4 +31,7 @@
   <a id="userrequestlink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'userreqeust') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS(L('pendingnewuserrequest')); ?></a>
+  <a id="translationslink"
+     <?php if(isset($_GET['area']) and $_GET['area'] == 'translations') echo $activeclass; ?>
+     href="?do=langdiff"><?php echo Filters::noXSS(L('translations')); ?></a>
 </div>

@@ -319,9 +319,11 @@ function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
 		}
 		else
 		{
-			if ($fs->prefs['gravatars'] == 1) {
+			if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
 				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
 				$image = '<img src='.$url.'/>';
+			}else{
+				$image = '';
 			}
 		}
 	}
