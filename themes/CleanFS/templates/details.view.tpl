@@ -781,7 +781,7 @@ function quick_edit(elem, id)
 
         <?php
             if (!$task_details['supertask_id']==0){
-                echo eL('taskissubtaskof).' '.tpl_tasklink($task_details['supertask_id']);
+                echo eL('taskissubtaskof').' '.tpl_tasklink($task_details['supertask_id']);
             }
         ?>
         <?php if(!count($subtasks)==0): ?>
