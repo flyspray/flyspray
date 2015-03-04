@@ -211,7 +211,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_effort')) {
 		if ($task['estimated_effort'] > 0){
-                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
 		}
             }
             break;
@@ -220,7 +220,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_actual_effort')) {
 		if ($task['effort'] > 0){
-                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
+                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
                 }
             }
             break;

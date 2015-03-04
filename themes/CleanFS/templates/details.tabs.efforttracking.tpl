@@ -26,13 +26,13 @@
              { ?>
                     <?php echo Filters::noXSS(L('trackinginprogress')); ?> (<?php
 
-                    echo effort::SecondsToString(time()-$details['start_timestamp'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
+                    echo effort::SecondsToString(time()-$details['start_timestamp'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
 
                     ?>)
                     <?php }
              else
              {
-                echo effort::SecondsToString($details['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']);
+                echo effort::SecondsToString($details['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
              } ?>
                 </td>
                 <td>

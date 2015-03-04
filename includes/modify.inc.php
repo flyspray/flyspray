@@ -181,7 +181,7 @@ switch ($action = Req::val('action'))
         }
 
         $estimated_effort = 0;
-        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format'])) === FALSE) {
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             break;
         }
@@ -1021,7 +1021,7 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'effort_format', 'actual_effort_format');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1036,7 +1036,7 @@ switch ($action = Req::val('action'))
 
         // Convert to seconds.
         if (Post::val('hours_per_manday')) {
-            $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+            $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
             $cols[] = 'hours_per_manday';
         }
 

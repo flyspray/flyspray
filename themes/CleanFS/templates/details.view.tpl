@@ -525,7 +525,7 @@ function quick_edit(elem, id)
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
                 class="value"><?php
-                $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+                $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
                 /* Quick-editing can be launched by clicking the value, but it's almost
                    impossible to hit a zero-width field... so put something in there.
                    Could be something else too, like 'None', 'Not defined' etc.
@@ -538,7 +538,7 @@ function quick_edit(elem, id)
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
         	<div style="float:right">
-        	<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>">
+        	<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>">
         	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" class="button" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
         	</span>
         	<?php endif; ?>
@@ -554,7 +554,7 @@ function quick_edit(elem, id)
             $total_effort += $details['effort'];
             }
             ?>
-            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?> </span>
+            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?> </span>
         </li>
         <?php }
         } ?>

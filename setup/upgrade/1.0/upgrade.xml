@@ -233,11 +233,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="view_effort" type="I" size="1">
+    <field name="view_estimated_effort" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="view_actual_effort" type="I" size="1">
+    <field name="view_current_effort_done" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
@@ -373,11 +373,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="effort_format" type="I" size="3">
+    <field name="estimated_effort_format" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="actual_effort_format" type="I" size="3">
+    <field name="current_effort_done_format" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>

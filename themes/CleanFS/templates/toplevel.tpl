@@ -103,7 +103,7 @@ foreach ($projects as $project): ?>
           <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
       </th>
       <td>
-          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>
       </td>
   </tr>
   <?php } ?>
@@ -113,7 +113,7 @@ foreach ($projects as $project): ?>
           <?php echo Filters::noXSS(L('actualeffortopen')); ?>
       </th>
       <td>
-          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?>
+          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>
       </td>
   </tr>
   <?php } ?>
