@@ -978,6 +978,7 @@ $translation = array(
 'pleaseselect'            => 'Bitte auswählen',
 'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
 'closetasks'              => 'Aufgaben schließen',
+'taskissubtaskof'         => 'Die Aufgabe ist eine Unteraufgabe von',
 );
 
 ?>
