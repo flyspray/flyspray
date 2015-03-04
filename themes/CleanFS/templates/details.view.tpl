@@ -150,17 +150,24 @@
 
             <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
             <li>
-                <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=addtoassignees&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('addmetoassignees')); ?></a>
+                <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+                <input type="hidden name="action" value="addtoassignees" />
+                <input type="hidden name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <input type="hidden name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <?php echo Filters::noXSS(L('addmetoassignees')); ?>
+                </form>
             </li>
             <?php endif; ?>
-
 
             <?php if ($user->can_vote($task_details) > 0): ?>
             <li>
-                <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=details.addvote&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>"><?php echo Filters::noXSS(L('voteforthistask')); ?></a>
+                <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+                <input type="hidden name="action" value="details.addvote" />
+                <input type="hidden name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <button type="submit"><?php echo Filters::noXSS(L('voteforthistask')); ?></button>
+                </form>
             </li>
             <?php endif; ?>
-
 
             <?php if (!$user->isAnon()): ?>
             <?php if (!$watched): ?>
