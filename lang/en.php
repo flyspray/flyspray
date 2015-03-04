@@ -393,6 +393,7 @@ $language = array(
 'nosearches'              => 'No saved searches',
 'saving'                   => 'Saving...',
 'votes'                   => 'Votes',
+'tovote'                  => 'Vote',
 'allclosedtasks'          => 'All Closed Tasks',
 'password'                => 'Password',
 'login'                   => 'Login!',
