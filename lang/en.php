@@ -987,5 +987,11 @@ Regards,',
 'pleaseselect'            => 'Please select',
 'closeselectedtasks'      => 'Close selected tasks',
 'closetasks'              => 'close tasks',
+'hintforbulkimport'       => '<b>Tips for bulk importing:</b>
+  <ol>
+  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
+  <li>Currently you can only paste Summary and Details.</li>
+  <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>
+  </ol>',
 );
 ?>
