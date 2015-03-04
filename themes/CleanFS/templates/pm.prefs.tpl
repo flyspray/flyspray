@@ -289,7 +289,7 @@
               <input id="hours_per_manday" class="text" name="hours_per_manday" type="text" value="<?php echo Filters::noXSS(effort::SecondsToEditString(Post::val('hours_per_manday', $proj->prefs['hours_per_manday']), $proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_PLAIN_MINUTES)); ?>" />
           </li>
         <li>
-          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
+          <label for="effort_format"><?php echo Filters::noXSS(L('estimatedeffortformat')); ?></label>
           <select id="effort_format" name="effort_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
@@ -306,7 +306,7 @@
           </select>
         </li>
         <li>
-          <label for="actual_effort_format"><?php echo Filters::noXSS(L('actualeffortformat')); ?></label>
+          <label for="actual_effort_format"><?php echo Filters::noXSS(L('currenteffortdoneformat')); ?></label>
           <select id="actual_effort_format" name="actual_effort_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_PLAIN_MINUTES => L('hourplural') . ':' . L('minuteplural'),
