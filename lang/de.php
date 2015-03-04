@@ -980,6 +980,9 @@ $translation = array(
 'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
 'closetasks'              => 'Aufgaben schließen',
 'taskissubtaskof'         => 'Die Aufgabe ist eine Unteraufgabe von',
+'applyfirstline'          => 'Erste Zeile in alle darunter kopieren',
+'addmorerows'             => 'weitere Zeilen einfügen',
+'addtasks'                => 'Aufgaben eintragen',
 );
 
 ?>
