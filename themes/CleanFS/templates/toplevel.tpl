@@ -97,7 +97,7 @@ foreach ($projects as $project): ?>
         }
 
   ?>
-  <?php if ($user->perms('view_effort', $project['project_id'])) { ?>
+  <?php if ($user->perms('view_estimated_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
@@ -107,10 +107,10 @@ foreach ($projects as $project): ?>
       </td>
   </tr>
   <?php } ?>
-  <?php if ($user->perms('view_actual_effort', $project['project_id'])) { ?>
+  <?php if ($user->perms('view_current_effort_done', $project['project_id'])) { ?>
   <tr>
       <th>
-          <?php echo Filters::noXSS(L('actualeffortopen')); ?>
+          <?php echo Filters::noXSS(L('currenteffortdoneopen')); ?>
       </th>
       <td>
           <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>

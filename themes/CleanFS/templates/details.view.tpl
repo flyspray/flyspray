@@ -519,7 +519,7 @@ function quick_edit(elem, id)
         </li>
         <?php endif; ?>
         <?php if($proj->prefs['use_effort_tracking']) {
-                if ($user->perms('view_effort')) {
+                if ($user->perms('view_estimated_effort')) {
         ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
@@ -544,10 +544,10 @@ function quick_edit(elem, id)
         	<?php endif; ?>
         </li>
         <?php }
-                if ($user->perms('view_actual_effort')) {
+                if ($user->perms('view_current_effort_done')) {
         ?>
         <li>
-            <span class="label"><?php echo Filters::noXSS(L('actualeffort')); ?></span>
+            <span class="label"><?php echo Filters::noXSS(L('currenteffortdone')); ?></span>
             <?php
             $total_effort = 0;
             foreach($effort->details as $details){

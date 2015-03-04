@@ -36,10 +36,10 @@ if (!is_array($visible) || !count($visible) || !$visible[0]) {
 }
 
 // Remove columns the user is not allowed to see
-if (in_array('estimated_effort', $visible) && !$user->perms('view_effort')) {
+if (in_array('estimated_effort', $visible) && !$user->perms('view_estimated_effort')) {
     unset($visible[array_search('estimated_effort', $visible)]);
 }
-if (in_array('effort', $visible) && !$user->perms('view_actual_effort')) {
+if (in_array('effort', $visible) && !$user->perms('view_current_effort_done')) {
     unset($visible[array_search('effort', $visible)]);
 }
 
@@ -209,7 +209,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 
 	case 'estimatedeffort':
             $value = '';
-            if ($user->perms('view_effort')) {
+            if ($user->perms('view_estimated_effort')) {
 		if ($task['estimated_effort'] > 0){
                     $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
 		}
@@ -218,7 +218,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 	
 	case 'effort':
             $value = '';
-            if ($user->perms('view_actual_effort')) {
+            if ($user->perms('view_current_effort_done')) {
 		if ($task['effort'] > 0){
                     $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
                 }
@@ -356,8 +356,8 @@ function export_task_list()
         	'Summary',
         	'Status',
         	'Progress',
-        	$user->perms('view_effort') ?'Estimated Effort':'',
-        	$user->perms('view_actual_effort') ?'Done Effort':'',
+        	$user->perms('view_estimated_effort') ?'Estimated Effort':'',
+        	$user->perms('view_current_effort_done') ?'Done Effort':'',
         	'Description',
         );
         # TODO maybe if user just want localized headings for nonenglish speaking audience..
@@ -376,8 +376,8 @@ function export_task_list()
                         #$user->perms('view_estimated_effort')? $task['estimated_effort']:'',
                         #$user->perms('view_done_effort')? $task['effort']:'',
                         # current permission naming
-                        $user->perms('view_effort') ? $task['estimated_effort']:'',
-                        $user->perms('view_actual_effort') ? $task['effort']:'',
+                        $user->perms('view_estimated_effort') ? $task['estimated_effort']:'',
+                        $user->perms('view_current_effort_done') ? $task['effort']:'',
                         $task['detailed_desc']
                 );
                 fputcsv($output, $row);

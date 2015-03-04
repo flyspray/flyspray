@@ -153,13 +153,13 @@
       </li>
 
       <li>
-        <label for="vieweffort"><?php echo Filters::noXSS(L('vieweffort')); ?></label>
-        <?php echo tpl_checkbox('view_effort', Req::val('view_effort'), 'vieweffort'); ?>
+        <label for="viewestimatedeffort"><?php echo Filters::noXSS(L('viewestimatedeffort')); ?></label>
+        <?php echo tpl_checkbox('view_estimated_effort', Req::val('view_estimated_effort'), 'viewestimatedeffort'); ?>
       </li>
 
       <li>
-        <label for="viewactualeffort"><?php echo Filters::noXSS(L('viewcurrenteffortdone')); ?></label>
-        <?php echo tpl_checkbox('view_actual_effort', Req::val('view_actual_effort'), 'viewactualeffort'); ?>
+        <label for="viewcurrenteffortdone"><?php echo Filters::noXSS(L('viewcurrenteffortdone')); ?></label>
+        <?php echo tpl_checkbox('view_current_effort_done', Req::val('view_current_effort_done'), 'viewcurrenteffortdone'); ?>
       </li>
 
       <li>
