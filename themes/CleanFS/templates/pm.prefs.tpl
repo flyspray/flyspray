@@ -298,7 +298,7 @@
                     ?>" />
           </li>
         <li>
-          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
+          <label for="effort_format"><?php echo Filters::noXSS(L('estimatedeffortformat')); ?></label>
           <select id="effort_format" name="effort_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
@@ -317,7 +317,7 @@
           </select>
         </li>
         <li>
-          <label for="actual_effort_format"><?php echo Filters::noXSS(L('actualeffortformat')); ?></label>
+          <label for="actual_effort_format"><?php echo Filters::noXSS(L('currenteffortdoneformat')); ?></label>
           <select id="actual_effort_format" name="actual_effort_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
