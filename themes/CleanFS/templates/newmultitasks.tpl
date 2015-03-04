@@ -7,14 +7,7 @@
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 
-<div id="intromessage"><?php echo L('hintforbulkimport'); ?>
-Tips for bulk importing:<br>
-
- 1. Copy and paste from an excel spreadsheet or CSV by pasting one entire column.<br>
- 2. Currently you can only paste Summary and Details.<br>
- 3. There are suggestions when you assign to someone, and to no-one if there is no matched name.
-
-</div>
+<div id="intromessage"><?php echo L('hintforbulkimport'); ?></div>
 <?php echo tpl_form(Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id))); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
