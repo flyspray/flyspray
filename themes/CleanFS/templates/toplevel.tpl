@@ -29,7 +29,7 @@ foreach ($projects as $project): ?>
       <strong><?php echo Filters::noXSS(L('mostwanted')); ?></strong>
         <ul>
             <?php foreach($most_wanted[$project['project_id']] as $task): ?>
-            <li><?php echo tpl_tasklink($task['task_id']); ?>, <?php echo Filters::noXSS($task['num_votes']); ?> <?php echo Filters::noXSS(L('vote(s)')); ?></li>
+            <li><?php echo tpl_tasklink($task['task_id']); ?>, <?php echo Filters::noXSS($task['num_votes']); ?>  <?php echo ($task['num_votes']==1) ? Filters::noXSS(L('vote') : Filters::noXSS(L('votes')); ?></li>
             <?php endforeach; ?>
         </ul>
     </td>
