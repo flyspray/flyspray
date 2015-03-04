@@ -162,8 +162,8 @@
             <?php if ($user->can_vote($task_details) > 0): ?>
             <li>
                 <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-                <input type="hidden name="action" value="details.addvote" />
-                <input type="hidden name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <input type="hidden" name="action" value="details.addvote" />
+                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <button type="submit"><?php echo Filters::noXSS(L('voteforthistask')); ?></button>
                 </form>
             </li>
