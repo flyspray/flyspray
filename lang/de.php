@@ -975,6 +975,9 @@ $translation = array(
 'translations'            => 'Übersetzungen',
 'taskdescription'         => 'Aufgabenbeschreibung',
 'notaskdescription'       => 'nicht vorhanden',
+'pleaseselect'            => 'Bitte auswählen',
+'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
+'closetasks'              => 'Aufgaben schließen',
 );
 
 ?>
