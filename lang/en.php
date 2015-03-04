@@ -984,5 +984,8 @@ Regards,',
 'translations'            => 'Translations',
 'taskdescription'         => 'Task Description',
 'notaskdescription'       => 'no task description',
+'pleaseselect'            => 'Please select',
+'closeselectedtasks'      => 'Close selected tasks',
+'closetasks'              => 'close tasks',
 );
 ?>
