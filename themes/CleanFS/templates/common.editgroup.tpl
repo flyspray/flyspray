@@ -123,12 +123,12 @@
         <td><?php echo tpl_checkbox('show_as_assignees', Req::val('show_as_assignees', !Req::val('action') && $group_details['show_as_assignees']), 'show_as_assignees'); ?></td>
       </tr>
       <tr>
-        <td><label for="vieweffort"><?php echo Filters::noXSS(L('vieweffort')); ?></label></td>
-        <td><?php echo tpl_checkbox('view_effort', Req::val('view_effort', !Req::val('action') && $group_details['view_effort']), 'vieweffort'); ?></td>
+        <td><label for="viewestimatedeffort"><?php echo Filters::noXSS(L('viewestimatedeffort')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_estimated_effort', Req::val('view_estimated_effort', !Req::val('action') && $group_details['view_estimated_effort']), 'viewestimatedeffort'); ?></td>
       </tr>
       <tr>
-        <td><label for="viewactualeffort"><?php echo Filters::noXSS(L('viewcurrenteffortdone')); ?></label></td>
-        <td><?php echo tpl_checkbox('view_actual_effort', Req::val('view_actual_effort', !Req::val('action') && $group_details['view_actual_effort']), 'viewactualeffort'); ?></td>
+        <td><label for="viewcurrenteffortdone"><?php echo Filters::noXSS(L('viewcurrenteffortdone')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_current_effort_done', Req::val('view_current_effort_done', !Req::val('action') && $group_details['view_current_effort_done']), 'viewactualeffort'); ?></td>
       </tr>
       <tr>
         <td><label for="trackeffort"><?php echo Filters::noXSS(L('trackeffort')); ?></label></td>

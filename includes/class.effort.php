@@ -44,7 +44,7 @@ class effort
     {
         global $db;
 
-        $effort = self::EditStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']);
+        $effort = self::EditStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
         if ($effort === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             return;

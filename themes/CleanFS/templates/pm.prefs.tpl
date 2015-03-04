@@ -298,8 +298,8 @@
                     ?>" />
           </li>
         <li>
-          <label for="effort_format"><?php echo Filters::noXSS(L('effortformat')); ?></label>
-          <select id="effort_format" name="effort_format">
+          <label for="estimated_effort_format"><?php echo Filters::noXSS(L('estimatedeffortformat')); ?></label>
+          <select id="estimated_effort_format" name="estimated_effort_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
             effort::FORMAT_HOURS_SPACE_MINUTES => L('hourplural') . ' ' . L('minuteplural'),
@@ -313,12 +313,12 @@
             effort::FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
             effort::FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES => L('mandays') . ' ' . L('hourplural') . " " . L('minuteplural'),
             ),
-            Post::val('effort_format', $proj->prefs['effort_format'])); ?>
+            Post::val('estimated_effort_format', $proj->prefs['estimated_effort_format'])); ?>
           </select>
         </li>
         <li>
-          <label for="actual_effort_format"><?php echo Filters::noXSS(L('actualeffortformat')); ?></label>
-          <select id="actual_effort_format" name="actual_effort_format">
+          <label for="current_effort_done_format"><?php echo Filters::noXSS(L('currenteffortdoneformat')); ?></label>
+          <select id="current_effort_done_format" name="current_effort_done_format">
             <?php echo tpl_options(array(
             effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
             effort::FORMAT_HOURS_SPACE_MINUTES => L('hourplural') . ' ' . L('minuteplural'),
@@ -332,7 +332,7 @@
             effort::FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
             effort::FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES => L('mandays') . ' ' . L('hourplural') . " " . L('minuteplural'),
             ),
-            Post::val('actual_effort_format', $proj->prefs['actual_effort_format'])); ?>
+            Post::val('current_effort_done_format', $proj->prefs['current_effort_done_format'])); ?>
           </select>
         </li>
       </ul>
