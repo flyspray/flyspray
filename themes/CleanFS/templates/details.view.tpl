@@ -151,9 +151,9 @@
             <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
             <li>
                 <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-                <input type="hidden name="action" value="addtoassignees" />
-                <input type="hidden name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-                <input type="hidden name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <input type="hidden" name="action" value="addtoassignees" />
+                <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+                <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <?php echo Filters::noXSS(L('addmetoassignees')); ?>
                 </form>
             </li>
