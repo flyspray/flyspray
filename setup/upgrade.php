@@ -216,6 +216,8 @@ class ConfUpdater
         array_walk($this->new_config, array($this, '_merge_configs'));
         // save custom attachment definitions
         $this->new_config['attachments'] = $this->old_config['attachments'];
+        # first try to keep oauth config on upgrades
+        #$this->new_config['oauth'] = $this->old_config['oauth'];
 
         $this->_write_config($location);
     }
