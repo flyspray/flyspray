@@ -54,17 +54,16 @@
     <a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?php echo Filters::noXSS(L('closetask')); ?>
 
     <span class="custom info">
-                    <em><?php echo Filters::noXSS(L('information')); ?></em>
-                    <br>
-        <?php echo Filters::noXSS(L('taskclosedisabled')); ?>
-
+        <em><?php echo Filters::noXSS(L('information')); ?></em>
         <br>
-        <?php foreach ($deps as $dependency)
-                    {
-                        echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
-                    }
-                    ?>
-                </span>
+        <?php echo Filters::noXSS(L('taskclosedisabled')); ?>
+        <br>
+        <?php
+        foreach ($deps as $dependency){
+            echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
+        }
+        ?>
+    </span>
     </a>
   <?php endif; ?>
 
@@ -781,12 +780,9 @@ function quick_edit(elem, id)
         <?php endif; ?>
 
         <?php
-            if (!$task_details['supertask_id']==0)
-            {
-                $task_description = "&nbsp;&nbsp;This task is a sub task of ". ': ' . tpl_tasklink($task_details['supertask_id']);
-                print $task_description;
+            if (!$task_details['supertask_id']==0){
+                echo eL('taskissubtaskof).' '.tpl_tasklink($task_details['supertask_id']);
             }
-
         ?>
         <?php if(!count($subtasks)==0): ?>
         <?php $projects = $fs->listProjects(); ?>
