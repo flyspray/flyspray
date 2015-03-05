@@ -1,22 +1,17 @@
 <div id="comments" class="tab">
   <?php foreach($comments as $comment): ?>
   <div class="comment_container">
-    <em>
-      <a class="commentlink" name="comment<?php echo Filters::noXSS($comment['comment_id']); ?>" id="comment<?php echo Filters::noXSS($comment['comment_id']); ?>"
+     <a class="commentlink" name="comment<?php echo Filters::noXSS($comment['comment_id']); ?>" id="comment<?php echo Filters::noXSS($comment['comment_id']); ?>"
         href="<?php echo Filters::noXSS(CreateURL('details', $task_details['task_id'])); ?>#comment<?php echo Filters::noXSS($comment['comment_id']); ?>">
         <!--<img src="<?php echo Filters::noXSS($this->get_image('comment')); ?>"-->
         <!--  title="<?php echo Filters::noXSS(L('commentlink')); ?>" alt="" />-->
       </a>
       <!--<?php echo Filters::noXSS(L('commentby')); ?>--> <?php echo tpl_userlink($comment['user_id']); ?> <br />
-
-
       <br />
       <?php if($fs->prefs['enable_avatars'] == 1) { ?>
-         <?php echo tpl_userlinkavatar($comment['user_id'], $fs->prefs['max_avatar_size'], 'left', '5px'); ?>
-
+         <?php echo tpl_userlinkavatar($comment['user_id'], $fs->prefs['max_avatar_size'], 'av_comment'); ?>
         <?php } ?>
           <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?>
-
       <span class="DoNotPrint">
         <?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
         <!--&mdash;-->
@@ -34,9 +29,6 @@
         </form>
         <?php endif ?>
       </span>
-
-    </em>
-
     <div class="comment">
     <?php if(isset($comment_changes[$comment['date_added']])): ?>
     <ul class="comment_changes">
