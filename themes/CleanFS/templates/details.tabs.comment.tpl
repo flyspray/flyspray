@@ -29,7 +29,6 @@
         <?php echo tpl_form(CreateUrl('details', $task_details['task_id'])); ?>
         <input type="hidden" name="action" value="details.deletecomment">
         <input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>">
-        <?php //$confirm = (isset($comment_attachments[$comment['comment_id']]) ? sprintf(L('confirmdeletecomment'), L('attachementswilldeleted')) : sprintf(L('confirmdeletecomment'), ''); ?>
         <?php $confirm = (isset($comment_attachments[$comment['comment_id']])) ? sprintf(L('confirmdeletecomment'), L('attachementswilldeleted')) : sprintf(L('confirmdeletecomment'), '')  ?>
         <button type="submit" onclick="return confirm('<?php echo Filters::noJsXSS($confirm); ?>');"><?php echo Filters::noXSS(L('delete')); ?></button>
         </form>
