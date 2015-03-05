@@ -994,5 +994,6 @@ Regards,',
 'applyfirstline'          => 'Apply first line',
 'addmorerows'             => 'Add more rows',
 'addtasks'                => 'Add tasks',
+'massopsdisabled'         => 'Sorry, bulk editing is currently disabled for Flyspray 1.0. We plan to finish implementation for a later release of Flyspray. You can enable them in source code again at your own risk, but read the comments there before doing it.',
 );
 ?>
