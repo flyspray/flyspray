@@ -80,7 +80,8 @@ foreach ($projects as $project): ?>
         </div>        
     </td>
   </tr>
-  <?php if ($proj->prefs['use_effort_tracking']) {
+  <?php
+        if ($projprefs[$project['project_id']]['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
 
@@ -96,23 +97,23 @@ foreach ($projects as $project): ?>
         }
 
   ?>
-  <?php if ($user->perms('view_effort')) { ?>
+  <?php if ($user->perms('view_estimated_effort', $project['project_id'])) { ?>
   <tr>
       <th>
           <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
       </th>
       <td>
-          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['effort_format']); ?>
+          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>
       </td>
   </tr>
   <?php } ?>
-  <?php if ($user->perms('view_actual_effort')) { ?>
+  <?php if ($user->perms('view_current_effort_done', $project['project_id'])) { ?>
   <tr>
       <th>
-          <?php echo Filters::noXSS(L('actualeffortopen')); ?>
+          <?php echo Filters::noXSS(L('currenteffortdoneopen')); ?>
       </th>
       <td>
-          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['actual_effort_format']); ?>
+          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>
       </td>
   </tr>
   <?php } ?>

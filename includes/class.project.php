@@ -37,8 +37,8 @@ class Project
         $this->prefs['disable_lostpw'] = 0;
         $this->prefs['disable_changepw'] = 0;
         $this->prefs['hours_per_manday'] = 0;
-        $this->prefs['effort_format'] = 0;
-        $this->prefs['actual_effort_format'] = 0;
+        $this->prefs['estimated_effort_format'] = 0;
+        $this->prefs['current_effort_done_format'] = 0;
     }
 
     # 20150219 peterdd: deprecated
