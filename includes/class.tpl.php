@@ -600,6 +600,12 @@ class TextFormatter
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $type, $id, $instructions);
         } else {
+            $text=strip_tags($text, '<br><br/><p><blockquote><a><ul><ol><li>');
+            $text.='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
+              .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
+              .'<br/>Temporarly handled like it is HTML until fixed<br/>'
+              .$text;
+
             //TODO: Remove Redundant Code once tested completely
             //Author: Steve Tredinnick
             //Have removed this as creating additional </br> lines even though <p> is already dealing with it
