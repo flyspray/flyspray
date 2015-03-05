@@ -95,7 +95,7 @@
             </li>
             <?php endif; ?>
 
-            <?php if ($user->can_edit_task($task_details)): ?>
+            <?php if ($user->can_set_task_parent($task_details)): ?>
             <li><input type="checkbox" id="s_parent"><label for="s_parent"><?php echo Filters::noXSS(L('setparent')); ?></label>
                 <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
                 <?php echo Filters::noXSS(L('parenttaskid')); ?>
@@ -106,7 +106,7 @@
                 </form>
             </li>
             <?php endif; ?>
-            <?php if ($user->can_edit_task($task_details)): ?>
+            <?php if ($user->can_associate_task($task_details)): ?>
             <li><input type="checkbox" id="s_associate"><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
               <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
               <?php echo Filters::noXSS(L('associatetaskid')); ?>
@@ -120,7 +120,7 @@
             <li>
                 <a href="<?php echo Filters::noXSS(CreateURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
             </li>
-            <?php if ($user->can_edit_task($task_details)): ?>
+            <?php if ($user->can_add_task_dependency($task_details)): ?>
             <li><input type="checkbox" id="s_adddependent"><label for="s_adddependent"><?php echo Filters::noXSS(L('adddependenttask')); ?></label>
               <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
               <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
@@ -631,7 +631,7 @@ function quick_edit(elem, id)
                 <?php else: ?>
                 <?php echo eL('no'); ?>
                 <?php endif; ?>
-                
+
                 <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
                   <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>">
                   <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>">
