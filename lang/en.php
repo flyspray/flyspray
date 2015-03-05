@@ -393,6 +393,7 @@ $language = array(
 'nosearches'              => 'No saved searches',
 'saving'                   => 'Saving...',
 'votes'                   => 'Votes',
+'tovote'                  => 'Vote',
 'allclosedtasks'          => 'All Closed Tasks',
 'password'                => 'Password',
 'login'                   => 'Login!',
@@ -776,7 +777,6 @@ Regards,',
 'defaulttask'             => 'Default task description',
 'all'                     => 'all',
 'events.useraddedtoassignees' => 'User added to assignees',
-'vote(s)'                 => 'vote(s)',
 'eventlog'                => 'Event log',
 'assignmentchanged'       => 'Assignment changed',
 'detailedinfo'            => 'Detailed information',
@@ -978,6 +978,20 @@ Regards,',
 'maxavatarsize'           => 'Max avatar size in pixels',
 'taskhassubtask'          => 'This task has the following sub-task',
 'taskhassubtasks'         => 'This task has the following sub-tasks',
-'translations'            => 'Translations'
+'translations'            => 'Translations',
+'taskdescription'         => 'Task Description',
+'notaskdescription'       => 'no task description',
+'pleaseselect'            => 'Please select',
+'closeselectedtasks'      => 'Close selected tasks',
+'closetasks'              => 'close tasks',
+'hintforbulkimport'       => '<b>Tips for bulk importing:</b>
+  <ol>
+  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
+  <li>Currently you can only paste Summary and Details.</li>
+  <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>
+  </ol>',
+'applyfirstline'          => 'Apply first line',
+'addmorerows'             => 'Add more rows',
+'addtasks'                => 'Add tasks',
 );
 ?>
