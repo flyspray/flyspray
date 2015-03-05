@@ -5,6 +5,7 @@ require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
+require_once BASEDIR . '/includes/class.tpl.php';
 
 // Use composer autoloader
 require 'vendor/autoload.php';
