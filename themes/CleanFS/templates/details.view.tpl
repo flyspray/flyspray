@@ -613,7 +613,7 @@ function quick_edit(elem, id)
                         </form>
                 <?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
                         <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-                        <input type="hidden" name="action" value="makepublic">
+                        <input type="hidden" name="action" value="makeprivate">
                         <button><?php echo eL('makeprivate'); ?></button>
                         </form>
                 <?php endif; ?>
@@ -637,7 +637,7 @@ function quick_edit(elem, id)
                   <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>">
                   <?php if (!$watched): ?>
                     <input type="hidden" name="action" value="details.add_notification">
-                    <button type="submit" accesskey="w"><?php eL('watchtask'); ?></button>
+                    <button type="submit" accesskey="w"><?php echo eL('watchtask'); ?></button>
                   <?php else: ?>
                     <input type="hidden" name="action" value="remove_notification">
                     <button type="submit" accesskey="w"><?php echo eL('stopwatching'); ?></button>
