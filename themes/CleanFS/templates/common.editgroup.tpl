@@ -192,9 +192,9 @@
       <td><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>
       <td><?php echo Filters::noXSS($usr['real_name']); ?></td>
       <?php if ($usr['account_enabled']) : ?>
-      <td class="imgcol"><img src="<?php echo Filters::noXSS($this->get_image('button_ok')); ?>" alt="<?php echo Filters::noXSS(L('yes')); ?>" /></td>
+      <td class="imgcol"><i class="fa fa-check" style="color:#090" title="<?php echo L('yes'); ?>"></i></td>
       <?php else: ?>
-      <td class="imgcol"><img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('no')); ?>" /></td>
+      <td class="imgcol"><i class="fa fa-ban" style="color:#900" title="<?php echo L('no'); ?>"></i></td>
       <?php endif; ?>
     </tr>
     <?php
