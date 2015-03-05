@@ -639,7 +639,7 @@ class TextFormatter
 
         //Activate CkEditor on TextAreas.
         $return .= "<script>
-                        CKEDITOR.replace( '".$name."' );
+                        CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
                     </script>";
         return $return;
     }
