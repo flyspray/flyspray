@@ -601,10 +601,12 @@ class TextFormatter
                                   $text, $type, $id, $instructions);
         } else {
             $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li>');
-            $text.='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
-              .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
-              .'<br/>Temporarly handled like it is HTML until fixed<br/>'
-              .$text;
+            if ($conf['general']['syntax_plugin'] && $conf['general']['syntax_plugin'] != 'none') {
+                $text.='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
+                .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
+                .'<br/>Temporarily handled like it is HTML until fixed<br/>'
+                .$text;
+            }
 
             //TODO: Remove Redundant Code once tested completely
             //Author: Steve Tredinnick
