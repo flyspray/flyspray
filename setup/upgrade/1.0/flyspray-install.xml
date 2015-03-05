@@ -1154,7 +1154,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="date_time" type="I" size="11">
+    <field name="date_added" type="I" size="11">
       <NONULL/>
       <DEFAULT value="0"/>
     </field>
