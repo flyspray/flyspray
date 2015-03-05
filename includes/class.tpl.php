@@ -600,7 +600,7 @@ class TextFormatter
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $type, $id, $instructions);
         } else {
-            $text=strip_tags($text, '<br><br/><p><blockquote><a><ul><ol><li>');
+            $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li>');
             $text.='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
               .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
               .'<br/>Temporarly handled like it is HTML until fixed<br/>'
