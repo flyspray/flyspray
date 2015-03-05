@@ -212,10 +212,11 @@ class User
 
     public function can_edit_task($task)
     {
-        return !$task['is_closed']
-            && ($this->perms('modify_all_tasks', $task['project_id']) ||
-                    ($this->perms('modify_own_tasks', $task['project_id'])
-                     && in_array($this->id, Flyspray::GetAssignees($task['task_id']))));
+        return !$task['is_closed'] && (
+               $this->perms('modify_all_tasks', $task['project_id']) ||
+               ($this->id == $task['opened_by'] && $this->perms('modify_own_tasks', $task['project_id'])) ||
+               in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+               );
     }
 
     public function can_take_ownership($task)
@@ -235,6 +236,30 @@ class User
     {
         return ($this->perms('close_own_tasks', $task['project_id']) && in_array($this->id, $task['assigned_to']))
                 || $this->perms('close_other_tasks', $task['project_id']);
+    }
+
+    public function can_set_task_parent($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
+    }
+
+    public function can_associate_task($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
+    }
+
+    public function can_add_task_dependency($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
     }
 
 //admin approve user registration

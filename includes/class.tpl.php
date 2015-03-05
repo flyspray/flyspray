@@ -291,7 +291,7 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
+function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
 	global $db, $user;
 	if (is_array($uid)) {
@@ -321,7 +321,7 @@ function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
 		{
 			if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
 				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-				$image = '<img src='.$url.'/>';
+				$image = '<img src="'.$url.'"/>';
 			}else{
 				$image = '';
 			}
@@ -334,7 +334,7 @@ function tpl_userlinkavatar($uid, $size, $float = 'left', $padding = '0px')
 	if (isset($uname)) {
 		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
 		//$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
-		$link = "<a style='float: ".$float."; padding: ".$padding."' href=".$url." title='".$rname."'>".$image."</a>";
+		$link = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 	}
 	return $link;
 }
@@ -639,7 +639,7 @@ class TextFormatter
 
         //Activate CkEditor on TextAreas.
         $return .= "<script>
-                        CKEDITOR.replace( '".$name."' );
+                        CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
                     </script>";
         return $return;
     }
