@@ -73,7 +73,7 @@
   <?php endif; ?>
 
   <?php if ($user->can_take_ownership($task_details)): ?>
-    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
       <input type="hidden" name="action" value="takeownership" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
