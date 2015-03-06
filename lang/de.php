@@ -989,6 +989,7 @@ $translation = array(
 'addmorerows'             => 'weitere Zeilen einfügen',
 'addtasks'                => 'Aufgaben eintragen',
 'massopsdisabled'         => 'Die Massenbearbeitung von Aufgaben ist derzeit abgeschaltet für Flyspray 1.0. Diese Fähigkeit wird wieder freigeschaltet, sobald die Überarbeitung abgeschlossen ist.',
+'viewroadmap'             => 'Planung anschauen'
 );
 
 ?>
