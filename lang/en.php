@@ -991,6 +991,7 @@ Regards,',
   <li>Currently you can only paste Summary and Details.</li>
   <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>
   </ol>',
+'taskissubtaskof'         => 'This task is a sub task of',
 'applyfirstline'          => 'Apply first line',
 'addmorerows'             => 'Add more rows',
 'addtasks'                => 'Add tasks',
