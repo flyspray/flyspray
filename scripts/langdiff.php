@@ -8,6 +8,10 @@ if(!defined('IN_FS')) {
 if(!$user->perms('manage_project')) {
 	Flyspray::show_error(28);
 }
+
+$page->pushTpl('admin.menu.tpl');
+ob_start();
+
 ?>
 <style type="text/css">
 body{font-size:100%;}
@@ -140,9 +144,9 @@ if ($lang != 'en' && file_exists($translationfile)) {
 <td><a href="?do=langdiff&lang='.substr($lang,0,-4).'">'.$lang.'</a></td>
 <td><a href="?do=langdiff&lang='.substr($lang,0,-4).'" class="progress_bar_container">
 <span class="progress">'.$progress.' %</span>
-<span style="width:'.$progress.'%" class="progress_bar"></span>
-</span></td>
-<td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">Translate '.substr($lang,0,-4).'</a></td>
+<span style="width:'.$progress.'%" class="progress_bar"></span></a>
+</td>
+<td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">'.L('translate').' '.substr($lang,0,-4).'</a></td>
 </tr>';
 			}else{
 				echo '<tr><td>en.php</td><td>is reference and fallback</td><td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">Translate '.substr($lang,0,-4).'</a></td></tr>';
@@ -152,5 +156,12 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		echo '</table>';
 	}
 }
+
+$content = ob_get_contents();
+ob_end_clean();
+
+$page->uses('content');
+$page->pushTpl('admin.translation.tpl');
+
 ?>
 
