@@ -47,11 +47,6 @@ if(!$user->perms('manage_project')) {
     Flyspray::show_error(28);
 }
 
-# Currently only for development
-#die("Comment me out to use this tool, I'm in line " . __LINE__ .'.');
-
-require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
-
 /**
  * Replace fprintf()
  *
@@ -88,9 +83,10 @@ if (!function_exists('fprintf')) {
 // Make it possible to reload page after updating language
 // Don't want to send form data again if user reloads the page
 ob_start();
-header("Pragma: no-cache");
-header('Content-type: text/html; charset=utf-8');
+#header("Pragma: no-cache");
+#header('Content-type: text/html; charset=utf-8');
 ?>
+<!--
 <title>Lang edit</title>
 <link type="text/css" rel="stylesheet" href="/themes/CleanFS/theme.css" media="screen">
 <style type="text/css">
@@ -110,6 +106,7 @@ textarea, input.edit{
   border-color: '#ccb';
 }
 </style>
+-->
 <script language="javascript">
 // Indicate which texts are changed, called from input and textarea onchange
 function set(id){
@@ -274,11 +271,23 @@ foreach ($language as $key => $val){
   }
   $i++;
 }
-echo "</table><hr>\n";
-echo "<table width=\"100%\"><tr><td>The language files are UTF-8 encoded, avoid manual editing if You are not sure that your editor supports UTF-8<br>";
-echo "Syntax for <b>\\</b> are <b>\\\\</b> and for line feed type <b>\\n</b> in single line edit fields</td>\n";
-echo "<td style=\"text-align: right;\"><i>langedit by <a href=\"mailto:larserik@softpoint.nu\">larserik@softpoint.nu</a></i></td></tr></table>";
+?>
+</table>
+<hr>
+<table width="100%">
+<tr>
+<td>The language files are UTF-8 encoded, avoid manual editing if You are not sure that your editor supports UTF-8<br>
+Syntax for <b>\</b> is <b>\\</b> and for line feed type <b>\\n</b> in single line edit fields</td>
+<td style="text-align: right;"><i>langedit by <a href="mailto:larserik@softpoint.nu">larserik@softpoint.nu</a></i></td>
+</tr>
+</table>
+<?php
 
+$content = ob_get_contents();
+ob_end_clean();
+
+$page->uses('content');
+$page->pushTpl('admin.translation.tpl');
 
 // Parse string for \n and \\ to be replaced by <lf> and \
 function parseNL($str)

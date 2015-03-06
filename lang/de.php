@@ -907,7 +907,7 @@ $translation = array(
 'useeffort'               => 'Projekt nutzt Aufwandmessung',
 'estimatedeffort'         => 'geschätzter Aufwand',
 'totalestimatedeffort'    => 'geschätzter Gesamtaufwand',
-'actualeffort'            => 'bisher erfolgter Aufwand',
+'currenteffortdone'       => 'bisher erfolgter Aufwand',
 'starteffort'             => 'Starte Aufwandmessung',
 'endeffort'               => 'Stoppe Aufwandmessung',
 'cleareffort'             => 'Entferne Aufwandmessung',
@@ -972,15 +972,24 @@ $translation = array(
 'taskhassubtask'          => 'Diese Aufgabe hat folgende Unteraufgabe',
 'taskhassubtasks'         => 'Diese Aufgabe hat folgende Unteraufgaben',
 'translations'            => 'Übersetzungen',
+'translate'               => 'Übersetze',
 'taskdescription'         => 'Aufgabenbeschreibung',
 'notaskdescription'       => 'nicht vorhanden',
 'pleaseselect'            => 'Bitte auswählen',
 'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
 'closetasks'              => 'Aufgaben schließen',
+'hintforbulkimport'       => '<b>Hinweise zum Mehrfachimport</b>
+  <ol>
+  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
+  <li>Currently you can only paste Summary and Details.</li>
+  <li>Die Aufgabenzuweisung hat eine Autovervollständigenfunktion, einfach anfangen Namen einzutippen und Vorschläge werden angezeigt.</li>
+  </ol>',
 'taskissubtaskof'         => 'Die Aufgabe ist eine Unteraufgabe von',
 'applyfirstline'          => 'Erste Zeile in alle darunter kopieren',
 'addmorerows'             => 'weitere Zeilen einfügen',
 'addtasks'                => 'Aufgaben eintragen',
+'massopsdisabled'         => 'Die Massenbearbeitung von Aufgaben ist derzeit abgeschaltet für Flyspray 1.0. Diese Fähigkeit wird wieder freigeschaltet, sobald die Überarbeitung abgeschlossen ist.',
+'viewroadmap'             => 'Planung anschauen'
 );
 
 ?>

@@ -916,7 +916,7 @@ Regards,',
 'useeffort'               => 'Project Uses Effort Tracking',
 'estimatedeffort'         => 'Estimated Effort',
 'totalestimatedeffort'    => 'Total estimated effort',
-'currenteffortdone'       => 'Actual effort spent',
+'currenteffortdone'       => 'Current effort done',
 'starteffort'             => 'Start Tracking',
 'endeffort'               => 'Stop Tracking',
 'cleareffort'             => 'Clear Tracking',
@@ -980,6 +980,7 @@ Regards,',
 'taskhassubtask'          => 'This task has the following sub-task',
 'taskhassubtasks'         => 'This task has the following sub-tasks',
 'translations'            => 'Translations',
+'translate'               => 'Translate',
 'taskdescription'         => 'Task Description',
 'notaskdescription'       => 'no task description',
 'pleaseselect'            => 'Please select',
@@ -991,8 +992,11 @@ Regards,',
   <li>Currently you can only paste Summary and Details.</li>
   <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>
   </ol>',
+'taskissubtaskof'         => 'This task is a sub task of',
 'applyfirstline'          => 'Apply first line',
 'addmorerows'             => 'Add more rows',
 'addtasks'                => 'Add tasks',
+'massopsdisabled'         => 'Sorry, bulk editing is currently disabled for Flyspray 1.0. We plan to finish implementation for a later release of Flyspray. You can enable them in source code again at your own risk, but read the comments there before doing it.',
+'viewroadmap'             => 'Can view roadmap'
 );
 ?>
