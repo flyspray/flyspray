@@ -474,7 +474,7 @@ switch ($action = Req::val('action'))
         // Remove doubled up spaces and control chars
         $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
 
-        if (!$user_name || !$real_name) {
+        if (!$user_name || empty($user_name) || !$real_name) {
             Flyspray::show_error(L('entervalidusername'));
             break;
         }

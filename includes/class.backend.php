@@ -535,6 +535,11 @@ abstract class Backend
 
         $user_name = Backend::clean_username($user_name);
 
+    	// TODO Handle this whole create_user better concerning return false. Why did it fail?
+    	if (empty($user_name)) {
+    		return false;
+    	}
+
         // Limit length
         $real_name = substr(trim($real_name), 0, 100);
         // Remove doubled up spaces and control chars
