@@ -1,20 +1,27 @@
 <?php
-//
-// Translated by Mikael Silfver, mikael dot silfver gmail com.
-//
+
 $translation = array(
 'edituser'                => 'Redigera användare',
+'accountenabled'	  => 'Konto Aktiverat',
+'editallusers'		  => 'Visa alla användare',
 'username'                => 'Användarnamn',
+'usersupdated'		  => 'Användare updaterade',
 'realname'                => 'Fullständigt namn',
 'emailaddress'            => 'Epostadress',
 'jabberid'                => 'Jabber ID',
+'profileimage' 		  => 'Profilbild',
 'notifytype'              => 'Aviseringssätt',
 'group'                   => 'Grupp',
-'accountenabled'          => 'Konto aktiverat',
+'enableaccounts'	  => 'Aktivera konton',
+'disableaccounts'	  => 'Avaktivera konton',
+'deleteaccounts'	  => 'Ta bort konton',
 'updatedetails'           => 'Uppdatera detaljer',
 'setglobally'             => 'Denna inställning är global.',
 'usergroupmanage'         => 'Användar- och grupphantering',
 'newuser'                 => 'Skapa ny användare',
+'newuserbulk'		  => 'Skapa flera nya användare',
+'bulkuserstoadd'	  => 'Lista över nya användare',
+'optionsforallusers'	  => 'Inställningar för alla nya användare',
 'newgroup'                => 'Skapa ny grupp',
 'yes'                     => 'Ja',
 'no'                      => 'Nej',
@@ -80,6 +87,8 @@ $translation = array(
 'defaultproject'          => 'Förvalt projekt',
 'projectlists'            => 'Projektlistor',
 'showlogo'                => 'Visa titelbild',
+'showgravatars'		  => 'Visa gravatars',
+'emailNoHTML'		  => 'Ingen HTML i E-Postmeddelanden',
 'intromessage'            => 'Introduktionstext',
 'isactive'                => 'Projektet är aktivt',
 'createproject'           => 'Skapa ett nytt projekt',
@@ -98,6 +107,7 @@ $translation = array(
 'cache_db'                => 'Mellanlagra i databasen',
 'subcategoryof'           => 'Underkategori',
 'visiblecolumns'          => 'Kolumner som visas i ärendelistan',
+'visiblefields'		  => 'Kolumner som visas vid lägg till/ändra/visa ärende',
 'tense'                   => 'Tid',
 'listtensetip'            => 'Dåtid, nutid eller framtid',
 'past'                    => 'Dåtid',
@@ -161,6 +171,8 @@ $translation = array(
 'admintoolboxlong'        => 'Administratörsverktyg',
 'newproject'              => 'Nytt projekt',
 'delete'                  => 'Ta bort',
+'link'			  => 'Länk',
+'referencelinks'	  => 'Referens länkar',
 'listdeletetip'           => 'Ta bort objektet från listan',
 'lookandfeel'             => 'Utseende och känsla',
 'globaltheme'             => 'Globalt tema',
@@ -191,7 +203,8 @@ $translation = array(
 'operatingsystem'         => 'Operativsystem',
 'severity'                => 'Allvarlighet',
 'reportedversion'         => 'Rapporterad version',
-'dueinversion'            => 'Åtgärdad til version',
+'dueinversion'            => 'Åtgärdad till version',
+'defaultdueinversion'	  => 'Standard åtgärd till version för nya ärenden',
 'undecided'               => 'Inte bestämt',
 'percentcomplete'         => 'Procent färdig',
 'details'                 => 'Beskrivning',
@@ -209,6 +222,8 @@ $translation = array(
 'addcomment'              => 'Kommentera',
 'fileuploadedby'          => 'Filen uppladdad av',
 'uploadafile'             => 'Bifoga en fil',
+'addalink'		  => 'Lägg till en länk',
+'addanotherlink'	  => 'Lägg till en länk till',
 'uploadnow'               => 'Ladda upp nu!',
 'thesearerelated'         => 'Dessa ärenden är besläktade med detta',
 'remove'                  => 'Ta bort',
@@ -227,8 +242,11 @@ $translation = array(
 'remindthisuser'          => 'Påminn denna användare',
 'thisoften'               => 'Så här ofta',
 'startafter'              => 'Starta påminnelser efter',
+'hour'			  => 'Timma',
 'hours'                   => 'Timmar',
+'day'			  => 'Dag',
 'days'                    => 'Dagar',
+'week'			  => 'Vecka',
 'weeks'                   => 'Veckor',
 'addreminder'             => 'Lägg till påminnelse',
 'defaultreminder'         => 'Det här är en påminnelse för att titta på detta ärende i Flyspray:',
@@ -811,4 +829,7 @@ $translation = array(
 'searchindetails'         => 'Sök i beskrivning',
 );
 
+//
+// Translated by Mikael Silfver, mikael dot silfver gmail com.
+//
 ?>
