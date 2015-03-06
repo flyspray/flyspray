@@ -102,13 +102,15 @@
         <hr />
       </li>
 
-      <?php if (! $theuser->infos['oauth_uid']): ?>
-      <?php if (!$user->perms('is_admin') || $user->id == $theuser->id): ?>
+      <?php if (!$theuser->infos['oauth_uid']): ?>
+      <?php if ($user->perms('is_admin') || $user->id == $theuser->id): ?>
       <?php if (!$fs->prefs['disable_changepw']): ?>
+      <?php if (!$user->perms('is_admin')): ?>
       <li>
         <label for="oldpass"><?php echo Filters::noXSS(L('oldpass')); ?></label>
         <input id="oldpass" class="password" type="password" name="oldpass" value="<?php echo Filters::noXSS(Req::val('oldpass')); ?>" size="40" maxlength="100" />
       </li>
+      <?php endif; ?>
       <li>
         <label for="changepass"><?php echo Filters::noXSS(L('changepass')); ?></label>
         <input id="changepass" class="password" type="password" name="changepass" value="<?php echo Filters::noXSS(Req::val('changepass')); ?>" size="40" maxlength="100" />
