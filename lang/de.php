@@ -977,6 +977,12 @@ $translation = array(
 'pleaseselect'            => 'Bitte auswählen',
 'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
 'closetasks'              => 'Aufgaben schließen',
+'hintforbulkimport'       => '<b>Hinweise zum Mehrfachimport</b>
+  <ol>
+  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
+  <li>Currently you can only paste Summary and Details.</li>
+  <li>Die Aufgabenzuweisung hat eine Autovervollständigenfunktion, einfach anfangen Namen einzutippen und Vorschläge werden angezeigt.</li>
+  </ol>',
 'taskissubtaskof'         => 'Die Aufgabe ist eine Unteraufgabe von',
 'applyfirstline'          => 'Erste Zeile in alle darunter kopieren',
 'addmorerows'             => 'weitere Zeilen einfügen',
