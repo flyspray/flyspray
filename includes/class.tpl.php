@@ -682,25 +682,27 @@ function tpl_draw_perms($perms)
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
             'add_votes', 'edit_own_comments', 'view_estimated_effort',
-            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap');
+            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap'
+    );
 
     $yesno = array(
             '<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
             '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
     );
 
-    // FIXME: html belongs in a template, not in the template class
-    $html = '<table class="perms"><thead><tr><th colspan="2">'.eL('permissionsforproject').' '.$proj->prefs['project_title'].'</th></tr></thead><tbody>';
-
-    foreach ($perms[$proj->id] as $key => $val) {
-        if (!is_numeric($key) && in_array($key, $perm_fields)) {
-            $html .= '<tr>';
-            $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
-            $html .= '<th>' . eL(str_replace('_', '', $key)) . '</th>';
-            $html .= '</tr>';
+    foreach ($perms as $projperm){
+        $html = '<table class="perms"><tbody>';
+        foreach ($perms[$proj->id] as $key => $val) {
+            if (!is_numeric($key) && in_array($key, $perm_fields)) {
+               $html .= '<tr>';
+               $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
+               $html .= '<th>' . eL(str_replace('_', '', $key)) . '</th>';
+               $html .= '</tr>';
+            }
         }
+        $html.= '</tbody></table>';
     }
-    return $html . '</tbody></table>';
+    return $html;
 } // }}}
 
 /**
