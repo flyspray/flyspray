@@ -692,19 +692,24 @@ function tpl_draw_perms($perms)
 
     $i=0;
     $html='';
+    $projpermnames='';
     foreach ($perms as $projperm){
         $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th></tr></thead><tbody>';
-        foreach ($perms[$proj->id] as $key => $val) {
+        foreach ($projperm as $key => $val) {
             if (!is_numeric($key) && in_array($key, $perm_fields)) {
                $html .= '<tr>';
                $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
-               $html .= $i<2 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
+               $html .= $i== ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
                $html .= '</tr>';
+
+               # all projects have same permnames
+               $projpermnames .= $i==1 ? '<tr><th>'.eL(str_replace('_','',$key)).'</th></tr>' : '';
             }
         }
         $html.= '</tbody></table>';
         $i++;
     }
+    $html.='<table><thead><th></th></thead><tbody>'.$projpermnames.'</tbody></table>';
     return $html;
 } // }}}
 
