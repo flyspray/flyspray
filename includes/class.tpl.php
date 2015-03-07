@@ -709,7 +709,7 @@ function tpl_draw_perms($perms)
         $html.= '</tbody></table>';
         $i++;
     }
-    $html.='<table><thead><th></th></thead><tbody>'.$projpermnames.'</tbody></table>';
+    $html.='<table class="perms"><thead><th></th></thead><tbody>'.$projpermnames.'</tbody></table>';
     return $html;
 } // }}}
 
