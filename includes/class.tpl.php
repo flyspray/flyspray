@@ -690,17 +690,19 @@ function tpl_draw_perms($perms)
             '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
     );
 
+    $i=0;
     foreach ($perms as $projperm){
-        $html = '<table class="perms"><tbody>';
+        $html = '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th></tr></thead><tbody>';
         foreach ($perms[$proj->id] as $key => $val) {
             if (!is_numeric($key) && in_array($key, $perm_fields)) {
                $html .= '<tr>';
                $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
-               $html .= '<th>' . eL(str_replace('_', '', $key)) . '</th>';
+               $html .= $i==0 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
                $html .= '</tr>';
             }
         }
         $html.= '</tbody></table>';
+        $i++;
     }
     return $html;
 } // }}}
