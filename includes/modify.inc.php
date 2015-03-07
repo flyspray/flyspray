@@ -1180,12 +1180,15 @@ switch ($action = Req::val('action'))
                 endif; // end only admin or user himself can change
 
             if ($user->perms('is_admin')) {
-                $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
+                if($user->id == (int)Post::val('user_id')) {
+                    Flyspray::show_error(L('nosuicide'));
+                } else{
+                    $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
                         array(Post::val('account_enabled', 0), Post::val('user_id')));
-
-                $db->Query('UPDATE {users_in_groups} SET group_id = ?
+                    $db->Query('UPDATE {users_in_groups} SET group_id = ?
                          WHERE group_id = ? AND user_id = ?',
-                array(Post::val('group_in'), Post::val('old_global_id'), Post::val('user_id')));
+                        array(Post::val('group_in'), Post::val('old_global_id'), Post::val('user_id')));
+                }
             }
 
             endif; // end non project group changes
