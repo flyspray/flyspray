@@ -1134,7 +1134,7 @@ switch ($action = Req::val('action'))
                     Notifications::JabberRequestAuth(Post::val('jabber_id'));
                 }
 
-                $db->Query('UPDATE  {users}
+                $db->Query('UPDATE {users}
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
@@ -1145,6 +1145,11 @@ switch ($action = Req::val('action'))
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
                     Post::num('hide_my_email', 0), Post::num('user_id')));
+
+                # 20150307 peterdd: Now we must reload translations, because the user maybe changed his language preferences!
+                # first reload user info
+                $user=new User($user->id);
+                load_translations();
 
                 $profile_image = 'profile_image';
 
