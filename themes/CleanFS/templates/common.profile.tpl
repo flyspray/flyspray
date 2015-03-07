@@ -31,8 +31,10 @@
         <select id="notifytype" name="notify_type">
           <?php echo tpl_options($fs->GetNotificationOptions(), Req::val('notify_type', $theuser->infos['notify_type'])); ?>
         </select>
+      </li>
+      <li>
+        <label for="notify_own"><?php echo Filters::noXSS(L('notifyown')); ?></label>
         <?php echo tpl_checkbox('notify_own', Req::val('notify_own', !Post::val('action') && $theuser->infos['notify_own']), 'notify_own'); ?>
-        <label class="left notable" for="notify_own"><?php echo Filters::noXSS(L('notifyown')); ?></label>
       </li>
       <li>
         <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
