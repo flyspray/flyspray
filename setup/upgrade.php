@@ -45,6 +45,9 @@ require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-xmlschema03.inc.p
 $db = new Database;
 $db->dbOpenFast($conf['database']);
 
+$webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
+$baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
+
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
@@ -87,10 +90,10 @@ if (Post::val('upgrade')) {
     }
     // Update existing projects to default field visibility.
     $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
-    
+
     // For testing, do not use yet, have to discuss this one with others.
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
-    
+
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
@@ -348,32 +351,32 @@ function find_duplicate_list_entries() {
     // BackOfficer.NET (main category)
     // -> Reports (subcategory - should be allowed)
     // -> Reports (I added a fake duplicate - should not be allowed)
-    
+
     $sql = $db->Query('SELECT MIN(os_id) id, project_id, os_name
                           FROM {list_os}
                       GROUP BY project_id, os_name
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_os_table($dups);   
+        fix_os_table($dups);
     }
-    
+
     $sql = $db->Query('SELECT MIN(resolution_id) id, project_id, resolution_name
                           FROM {list_resolution}
                       GROUP BY project_id, resolution_name
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_resolution_table($dups);   
+        fix_resolution_table($dups);
     }
-    
+
     $sql = $db->Query('SELECT MIN(status_id) id, project_id, status_name
                           FROM {list_status}
                       GROUP BY project_id, status_name
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_status_table($dups);   
+        fix_status_table($dups);
     }
     $sql = $db->Query('SELECT MIN(tasktype_id) id, project_id, tasktype_name
                           FROM {list_tasktype}
@@ -381,16 +384,16 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_tasktype_table($dups);   
+        fix_tasktype_table($dups);
     }
-    
+
     $sql = $db->Query('SELECT MIN(version_id) id, project_id, version_name
                           FROM {list_version}
                       GROUP BY project_id, version_name
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_version_table($dups);   
+        fix_version_table($dups);
     }
 }
 
@@ -399,7 +402,7 @@ function fix_os_table($dups) {
 
     foreach ($dups as $dup) {
         $update_id = $dup['id'];
-        
+
         $sql = $db->Query('SELECT os_id id
                              FROM {list_os}
                             WHERE project_id = ? AND os_name = ?',
@@ -409,7 +412,7 @@ function fix_os_table($dups) {
             if ($entry['id'] == $update_id) {
                 continue;
             }
-            
+
             $db->Query('UPDATE {tasks}
                            SET operating_system = ?
                          WHERE operating_system = ?',
@@ -421,10 +424,10 @@ function fix_os_table($dups) {
 
 function fix_resolution_table($dups) {
     global $db;
-    
+
     foreach ($dups as $dup) {
         $update_id = $dup['id'];
-        
+
         $sql = $db->Query('SELECT resolution_id id
                              FROM {list_resolution}
                             WHERE project_id = ? AND resolution_name = ?',
@@ -434,7 +437,7 @@ function fix_resolution_table($dups) {
             if ($entry['id'] == $update_id) {
                 continue;
             }
-            
+
             $db->Query('UPDATE {tasks}
                            SET resolution_reason = ?
                          WHERE resolution_reason = ?',
@@ -449,7 +452,7 @@ function fix_status_table($dups) {
 
     foreach ($dups as $dup) {
         $update_id = $dup['id'];
-        
+
         $sql = $db->Query('SELECT status_id id
                              FROM {list_status}
                             WHERE project_id = ? AND status_name = ?',
@@ -459,7 +462,7 @@ function fix_status_table($dups) {
             if ($entry['id'] == $update_id) {
                 continue;
             }
-            
+
             $db->Query('UPDATE {tasks}
                            SET item_status = ?
                          WHERE item_status = ?',
@@ -474,7 +477,7 @@ function fix_tasktype_table($dups) {
 
     foreach ($dups as $dup) {
         $update_id = $dup['id'];
-        
+
         $sql = $db->Query('SELECT tasktype_id id
                              FROM {list_tasktype}
                             WHERE project_id = ? AND tasktype_name = ?',
@@ -484,7 +487,7 @@ function fix_tasktype_table($dups) {
             if ($entry['id'] == $update_id) {
                 continue;
             }
-            
+
             $db->Query('UPDATE {tasks}
                            SET task_type = ?
                          WHERE task_type = ?',
@@ -499,7 +502,7 @@ function fix_version_table($dups) {
 
     foreach ($dups as $dup) {
         $update_id = $dup['id'];
-        
+
         $sql = $db->Query('SELECT version_id id
                              FROM {list_version}
                             WHERE project_id = ? AND version_name = ?',
@@ -509,7 +512,7 @@ function fix_version_table($dups) {
             if ($entry['id'] == $update_id) {
                 continue;
             }
-            
+
             $db->Query('UPDATE {tasks}
                            SET product_version = ?
                          WHERE product_version = ?',
@@ -524,7 +527,7 @@ function fix_version_table($dups) {
 
 function convert_old_entries($table, $column, $key) {
     global $db;
-    
+
     // Assuming that anything not beginning with <p> was made with older
     // versions of flyspray. This will not catch neither those old entries
     // where the user for some reason really added paragraph tags nor those
@@ -539,7 +542,7 @@ function convert_old_entries($table, $column, $key) {
     foreach ($entries as $entry) {
         $id = $entry[$key];
         $data = $entry[$column];
-        
+
         $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         // Convert two or more line breaks to paragrahs, Windows/Unix/Linux formats
         $data = preg_replace('/(\h*\r?\n)+\h*\r?\n/', "</p><p>", $data);
@@ -559,7 +562,7 @@ function convert_old_entries($table, $column, $key) {
         // Enclose the whole in paragraph tags, so it looks
         // the same as what ckeditor produces.
         $data = '<p>' . $data . '</p>';
-        
+
         $db->Query("UPDATE {". $table . "} "
         . "SET $column = ?"
         . "WHERE $key = ?",

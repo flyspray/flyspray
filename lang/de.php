@@ -2,11 +2,11 @@
 //
 // This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-// 
+//
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-// 
+//
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
@@ -314,7 +314,7 @@ $translation = array(
 'makepublic'              => 'veröffentlichen',
 'taskmadeprivate'         => 'Diese Aufgabe wurde versteckt',
 'taskmadepublic'          => 'Diese Aufgabe wurde wieder veröffentlicht',
-'confirmdeletecomment'    => 'Diesen Kommentar wirklich löschen?  Es werden auch alle Anhänge gelöscht!',
+'confirmdeletecomment'    => 'Diesen Kommentar wirklich löschen? %s',
 'confirmdeleteattach'     => 'Diesen Anhang wirklich löschen?',
 'selectedhistory'         => 'Verlauf für markierten Eintrag anzeigen',
 'showallhistory'          => 'Kompletten "Verlauf"-Tab wieder anzeigen',

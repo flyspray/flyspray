@@ -774,182 +774,145 @@ form #taskdetails #taskdetailsfull {
           color: #888;
 }
 #taskdetails #taskfields ul.fieldslist li .value {
-          display: block;
-          float: right;
-          width: 50%;
+  display: block;
+  float: right;
+  width: 50%;
 }
 #taskdetails #taskfields ul.fieldslist > li:nth-child(2n-1) {
-        background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 #taskdetails #showvotes {
-    position: absolute;
-    margin: 10px 0px 10px 0px;
-    padding: 10px;
-    background: white;
-    border: solid 1px #e1e1e1;
-    border-radius: 3px;
+  position: absolute;
+  margin: 10px 0px 10px 0px;
+  padding: 10px;
+  background: white;
+  border: solid 1px #e1e1e1;
+  border-radius: 3px;
 }
 #taskdetailsfull {
-    margin-left: 300px;
-    padding: 2em 3em; }
-
-   #taskinfo {
-    margin-left: 300px;
-    margin-top: 15px;
-    border-top: 1px solid #e1e1e1;
-    padding: 8px 5px; }
-
-
+  margin-left: 300px;
+  padding: 2em 3em;
+}
+#taskinfo {
+  margin-left: 300px;
+  margin-top: 15px;
+  border-top: 1px solid #e1e1e1;
+  padding: 8px 5px;
+}
 #comments, #related, #notify, #remind, #history {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
   border: solid 1px #e1e1e1;
-  border-radius: 3px; }
-
+  border-radius: 3px;
+}
 #comments h4 {
   margin:1em 0 0.5em 0;
 }
-
 .userlist th {
-  background-color: #e0e0e0; }
-
+  background-color: #e0e0e0;
+}
 .userlist tr:nth-child(2n-1) td {
-  background-color: #f1f1f1; }
-
-
+  background-color: #f1f1f1;
+}
 #related .related {
   float: left;
-  margin-right: 0; }
-
-#duplicate_tasks th
-{
+  margin-right: 0;
+}
+#duplicate_tasks th{
   height: 30px;
 }
-
-
 #content > #submenu {
-  /*margin-left: $twocol_content_margin;*/ }
-
-
+  /*margin-left: $twocol_content_margin;*/
+}
 #submenu {
   margin-bottom: 0;
-  height: 25px; }
-
-  #submenu a {
-    border: 1px solid #d4d4d4;
-    background: #e5e5e5;
-    color: #3c4041;
-    display: block;
-    float: left;
-    height: 21px;
-    margin: 4px 0 0 2px;
-    padding: 7px 10px 1px 10px;
-    border-top-left-radius: 5px;
-    -moz-border-top-left-radius: 5px;
-    -webkit-border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    -moz-border-top-right-radius: 5px;
-    -webkit-border-top-right-radius: 5px; }
-
-  #submenu a:hover {
-    background-color: #d6d8d9; }
-
-  #submenu a.active {
-    height: 26px;
-    margin-top: 0;
-    font-weight: bold;
-    border-bottom: 1px solid white;
-    border-right: bottom;
-    /*border-top: 1px solid lighten($top1, 30%);*/
-    border-top: 2px solid #78bf34;
-    background-color: white;
-    z-index: 5; }
-
-  #submenu li {
-    display: inline; }
-
-
+  height: 25px;
+}
+#submenu a {
+  border: 1px solid #d4d4d4;
+  background: #e5e5e5;
+  color: #3c4041;
+  display: block;
+  float: left;
+  height: 21px;
+  margin: 4px 0 0 2px;
+  padding: 7px 10px 1px 10px;
+  border-top-left-radius: 5px;
+  -moz-border-top-left-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  -moz-border-top-right-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+}
+#submenu a:hover {
+  background-color: #d6d8d9;
+}
+#submenu a.active {
+  height: 26px;
+  margin-top: 0;
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  border-right: bottom;
+  /*border-top: 1px solid lighten($top1, 30%);*/
+  border-top: 2px solid #78bf34;
+  background-color: white;
+  z-index: 5;
+}
+#submenu li {
+  display: inline;
+}
 div.tab {
   margin: 10px 1ex 10px 0;
-  padding: 1ex 1ex 0; }
-
-
+  padding: 1ex 1ex 0;
+}
 * html .tab div.clear {
   clear: none;
-  height: 14em; }
-
-
+  height: 14em;
+}
 div.comment_container {
   padding-bottom: 5px;
   margin-bottom: 5px;
-  border-bottom: 1px solid #e1e1e1; }
-
-  div.comment_container em {
-    display: block;
-    float: left;
-    width: 200px;
-    margin: 10px 0px 10px 0px;
-    padding: 10px;
-    background: white;
-    border: solid 1px #e1e1e1;
-    border-radius: 3px;
-    background-color: #fefefe; }
-
-  div.comment_container .commenttext em {
-      display: block;
-      float: none;
-      width: 100%;
-      margin: 0px 0px 0px 0px;
-      padding: 0px;
-      background: white;
-      border: none 0px #e1e1e1;
-      border-radius: 0px;
-      background-color: #fefefe; }
-
-  div.comment_container .commenttext p{
-      margin: .5em 0 .5em 0;
-      padding: 0 0 0 0;
-  }
-
-
-
-  div.comment_container .comment {
-    margin-left: 235px; }
-
-  div.comment_container .attachments {
-    margin: 10px 0px 10px 0px;
-    padding: 10px;
-    background: white;
-    border: solid 1px #e1e1e1;
-    border-radius: 3px;
-    width: 350px;
-    background-color: #fefefe;
-    background-image: url(img/gray/pin_24x24.png);
-    background-repeat: no-repeat;
-    background-position: 340px 5px; }
-
-    div.comment_container .attachments img {
-      position: relative;
-      top: 4px; }
-
-  div.comment_container .commentlink {
-    background-image: url(img/gray/comment_stroke_16x14.png);
-    background-repeat: no-repeat;
-    display: block;
-    float: left;
-    height: 14px;
-    width: 16px;
-    margin: 2px 4px 0 2px; }
-
-  div.comment_container .commentlink:hover {
-    background-image: url(img/black/comment_stroke_16x14.png); }
-
-
+  border-bottom: 1px solid #e1e1e1;
+}
+div.comment_container .commenttext p{
+  margin: .5em 0 .5em 0;
+  padding: 0 0 0 0;
+}
+div.comment_container .comment {
+  margin-left: 235px;
+}
+div.comment_container .attachments {
+  margin: 10px 0px 10px 0px;
+  padding: 10px;
+  background: white;
+  border: solid 1px #e1e1e1;
+  border-radius: 3px;
+  width: 350px;
+  background-color: #fefefe;
+  background-image: url(img/gray/pin_24x24.png);
+  background-repeat: no-repeat;
+  background-position: 340px 5px;
+}
+div.comment_container .attachments img {
+  position: relative;
+  top: 4px;
+}
+div.comment_container .commentlink {
+  background-image: url(img/gray/comment_stroke_16x14.png);
+  background-repeat: no-repeat;
+  display: block;
+  float: left;
+  height: 14px;
+  width: 16px;
+  margin: 2px 4px 0 2px;
+}
+div.comment_container .commentlink:hover {
+  background-image: url(img/black/comment_stroke_16x14.png);
+}
 textarea {
-  width: 99%; }
-
-
+  width: 99%;
+}
 #events {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -959,30 +922,26 @@ textarea {
 .eventlist {
   height: 150px;
 }
-
 table th {
-  vertical-align: middle; }
-
+  vertical-align: middle;
+}
 table td {
-  vertical-align: top; }
-
-
+  vertical-align: top;
+}
 div.box, p.box {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
   border: solid 1px #e1e1e1;
-  border-radius: 3px; }
-
-
+  border-radius: 3px;
+}
 div.roadmap {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
   border: solid 1px #e1e1e1;
-  border-radius: 3px; }
-
-
+  border-radius: 3px;
+}
 div.error, div.success, div.mixed {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -995,35 +954,29 @@ div.error, div.success, div.mixed {
   position: absolute;
   top: -10px;
   width: 30%;
-  left: 35%; }
-
-
+  left: 35%;
+}
 div.error {
   background: #ffe6e2 url(img/red/x_alt_24x24.png) no-repeat 9px 7px;
   border: solid 1px #962E21;
   padding-left: 50px;
-  color: #4b1710; }
-
-
+  color: #4b1710;
+}
 div.mixed {
-  background: #ffcc00 url(frown.png) no-repeat 5px 1px; }
-
-
+  background: #ffcc00 url(frown.png) no-repeat 5px 1px;
+}
 div.success {
   background: #e8f9d4 url(img/green/check_24x20.png) no-repeat 10px 9px;
   border: solid 1px #53821F;
   padding-left: 50px;
-  color: #24380d; }
-
-
+  color: #24380d;
+}
 a#show_loginbox {
-  margin-right: 5px; }
-
-
+  margin-right: 5px;
+}
 #menu a#show_loginbox.active {
-  border-radius: 10px 10px 0 0; }
-
-
+  border-radius: 10px 10px 0 0;
+}
 #loginbox {
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -1035,96 +988,81 @@ a#show_loginbox {
   min-width: 240px;
   padding-top: 15px;
   margin-top: 1px;
-  box-shadow: none; }
-
-#login_input
-{
-	text-align: center;
+  box-shadow: none;
 }
-
-#login_links
-{
-	text-align: center;
+#login_input {
+  text-align: center;
 }
-
-#login_oauth
-{
-	margin-top: 10px;
+#login_links {
+  text-align: center;
 }
-
-.oauth
-{
-	display: inline-block;
+#login_oauth {
+  margin-top: 10px;
 }
-
+.oauth {
+  display: inline-block;
+}
 #loginbox #login label {
-    color: #222; }
-
-#loginbox #login a {
-    color: #222;
-    text-decoration: underline; }
-#loginbox #login a:hover {color: #fff;}
-
-
-form#login {
-  position: relative; }
-
-form#login #lbl_user_name, form#login #lbl_password {
-	display:block;
-	margin: 10px auto;
-	padding: 5px 2px;
+  color: #222;
 }
-#login_input label{
-	/* use html5 placeholder attribute instead
-	display:none;*/
+#loginbox #login a {
+  color: #222;
+  text-decoration: underline;
+}
+#loginbox #login a:hover {
+  color: #fff;
+}
+form#login {
+  position: relative;
+}
+form#login #lbl_user_name, form#login #lbl_password {
+  display:block;
+  margin: 10px auto;
+  padding: 5px 2px;
 }
 form#login label {
-    width: 50px;
-    color: #ddd;
-    width: 100px;
-    margin: 0 2px 0 20px; }
-
+  width: 50px;
+  color: #ddd;
+  width: 100px;
+  margin: 0 2px 0 20px;
+}
 form#login #links {
-    position: absolute;
-    top: 30px;
-    left: 20px; }
-
+  position: absolute;
+  top: 30px;
+  left: 20px;
+}
 form#login #links a {
-      padding: 3px 7px; }
-
+  padding: 3px 7px;
+}
 form#login #links a:hover {
-      background: #494d4e;
-      text-decoration: none;
-      color: #dddddd;
-      border-radius: 10px;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
+  background: #494d4e;
+  text-decoration: none;
+  color: #dddddd;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
 form#login #links a.active {
-      background: #dddddd;
-      color: #3c4041;
-      border-radius: 10px;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px; }
-
+  background: #dddddd;
+  color: #3c4041;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
 form#login .remember_me {
-    float: right;}
-
-
-
+  float: right;
+}
 span#advancedsearchstate img {
-  vertical-align: middle; }
-
-
+  vertical-align: middle;
+}
 fieldset {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
   border: solid 1px #e1e1e1;
-  border-radius: 3px; }
-
-
-#content > fieldset legend {
+  border-radius: 3px;
+}
+content > fieldset legend {
   color: #3c4041;
   background: #f9f9f9;
   padding: 2px 9px;
@@ -1132,56 +1070,48 @@ fieldset {
   /*border-bottom: solid 1px $box_border;*/
   border-radius: 10px;
   -moz-border-radius: 10px;
-  -webkit-border-radius: 10px; }
-
-
+  -webkit-border-radius: 10px;
+}
 #content > h3 {
-  margin-top: 1em; }
-
-
+  margin-top: 1em;
+}
 thead th {
   border-bottom: solid 1px #a1a6a8;
   border-top: solid 1px #a1a6a8;
-  background: none; }
-
-
+  background: none;
+}
 div#taskinfo {
-  /*width:98%;*/ }
-
-
+  /*width:98%;*/
+}
 div#taskstatus {
   border-bottom: 1px solid #ccc;
   padding: 4px;
-  margin-bottom: 5px; }
-
-
+  margin-bottom: 5px;
+}
 div#taskclosed {
   padding: 5px;
   margin: 5px 5px 10px;
   clear: both;
   width: 20em;
   background: white;
-  border: solid 1px red; }
-
-
+  border: solid 1px red;
+}
 div#taskdeps {
   float: left;
   width: 50%;
-  margin-bottom: 8px; }
-
+  margin-bottom: 8px;
+}
 div#subtasks {
   display: inline;
   align: right;
   float: left;
   width: 50%;
-  margin-bottom: 8px; }
-
-
+  margin-bottom: 8px;
+}
 div#taskblocks {
   float: left;
-  width: 45%; }
-
-
+  width: 45%;
+}
 a.datelink {
   background-image: url(img/black/calendar_alt_fill_16x16.png);
   background-repeat: no-repeat;
@@ -1194,14 +1124,13 @@ a.datelink {
   /* target IE7 only */
   height: 16px;
   width: 16px;
-  vertical-align: middle; }
-
+  vertical-align: middle;
+}
 hr {
   /*color: $box_border;*/
   border: none;
-  border-top: 1px solid #e1e1e1; }
-
-
+  border-top: 1px solid #e1e1e1;
+}
 div#permissions {
   width: 22em;
   visibility: hidden;
@@ -1211,71 +1140,65 @@ div#permissions {
   left: 0;
   margin: 0;
   z-index: 101;
-  padding: 5px; }
-
-  div#permissions td, div#permissions th {
-    padding: 2px 5px;
-    border: 0;
-    text-align: left;
-    font-weight: 400; }
-
-  div#permissions table {
-    color: #000;
-    background: #fff;
-    border: 1px dotted #000; }
-
-  div#permissions table thead th {
-    font-weight: 700; }
-
-  div#permissions td.good, div#permissions table td.bad {
-    text-align: right; }
-
-
+  padding: 5px;
+}
+div#permissions td, div#permissions th {
+  padding: 2px 5px;
+  border: 0;
+  text-align: left;
+  font-weight: 400;
+}
+div#permissions table {
+  color: #000;
+  background: #fff;
+  border: 1px dotted #000;
+}
+div#permissions table thead th {
+  font-weight: 700;
+}
+div#permissions td.good, div#permissions table td.bad {
+  text-align: right;
+}
 fieldset.advsearch_misc input {
-  vertical-align: middle; }
-
+  vertical-align: middle;
+}
 fieldset.advsearch_misc label {
   margin-right: 10px;
-  white-space: nowrap; }
-
-
+  white-space: nowrap;
+}
 fieldset.advsearch_dates label {
-  margin: 0 5px; }
-
-
+  margin: 0 5px;
+}
 .search_select {
   float: left;
   position: relative;
-  margin-right: 10px; }
-
+  margin-right: 10px;
+}
 .search_select .multisel {
-    position: absolute;
-    white-space: nowrap;
-
+  position: absolute;
+  white-space: nowrap;
 }
 .search_select select {
-    margin-top: 1.3em;
+  margin-top: 1.3em;
 }
 fieldset.advsearch_users .multisel {
   position: absolute;
-  white-space: nowrap; }
-
+  white-space: nowrap;
+}
 fieldset.advsearch_users input {
-  margin-top: 1.3em; }
-
+  margin-top: 1.3em;
+}
 /* --------------------------- FORMS -----------------------*/
-
 .bulkuser {
   padding-left: 120px;
 }
-
 .account_header{
-	background: #999;
-	border: 1px solid #111;
+  background: #999;
+  border: 1px solid #111;
 }
 .account_enabled{
-	background: #EAF7D9;
-	border: 1px solid #BBDF8D;
+  background: #EAF7D9;
+  border: 1px solid #BBDF8D;
 }
 .account_enabled:hover {
 	background: #00FF00;
@@ -1287,17 +1210,16 @@ fieldset.advsearch_users input {
 .account_disabled:hover {
 	background: #FF0000;
 }
-
 ul.form_elements {
   list-style: none;
   padding: 0;
-  margin: 0 0 0 1em; }
-
-  ul.form_elements li {
-    padding: 2px;
-    margin-bottom: 9px; }
-
-    ul.form_elements li label {
+  margin: 0 0 0 1em;
+}
+ul.form_elements li {
+  padding: 2px;
+  margin-bottom: 9px;
+}
+ul.form_elements li label {
       width: 200px;
       display: -moz-inline-stack;
       /* optional */
@@ -1310,97 +1232,34 @@ ul.form_elements {
       text-align: right;
       padding-right: 1ex;
       padding-top: 2px;
-      color: #555555; }
-
-    ul.form_elements li label.inline {
-      display: inline; }
-
-    ul.form_elements li input {
-      vertical-align: middle; }
-
-    ul.form_elements li textarea {
-      width: 30em; }
-
-  ul.form_elements li.required label {
-    font-weight: bold; }
-
-  ul.form_elements li:hover label {
-    /*text-decoration: underline;*/ }
-
-  ul.form_elements span.note {
-    margin-left: 205px; }
-
-
+      color: #555555;
+}
+ul.form_elements li label.inline {
+  display: inline;
+}
+ul.form_elements li input {
+  vertical-align: middle;
+}
+ul.form_elements li textarea {
+  width: 30em;
+}
+ul.form_elements li.required label {
+  font-weight: bold;
+}
+ul.form_elements span.note {
+  margin-left: 205px;
+}
 ul.wide li label {
-  width: 250px; }
-
-
+  width: 250px;
+}
 ul.slim {
   width: 390px;
-  margin: 0; }
-
-  ul.slim li label {
-    width: 110px; }
-
-  ul.slim li div.userSelectWidget {
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-    ul.slim li div.userSelectWidget input {
-      width: 120px; }
-
-
-.dateselect {
-  clear: both; }
-
-  .dateselect label:first-child {
-    width: 120px;
-    text-align: right;
-    padding-right: 5px;
-    float: left; }
-
-/* fancy dual selects */
-
-.double_select {
-	padding-left: 100px;
-	position: relative;}
-
-  .double_select .dualselect_selectable {
-    height: 220px;
-    width: 40%;
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-  .double_select .dualselect_buttons {
-    width: 16%;
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1;
-    /* triggers hasLayout for IE */
-    *display: inline;
-    /* target IE7 only */
-    vertical-align: middle; }
-
-    .double_select .dualselect_buttons button {
-      width: 100%;
-      padding: 3px; }
-
-  .double_select .dualselect_selected {
-    height: 220px;
-    /*min-width: 12em;*/
+  margin: 0;
+}
+ul.slim li label {
+  width: 110px;
+}
+ul.slim li div.userSelectWidget {
     display: -moz-inline-stack;
     /* optional */
     display: inline-block;
@@ -1409,35 +1268,92 @@ ul.slim {
     *display: inline;
     /* target IE7 only */
     vertical-align: middle;
-    width: 40%; }
+}
+ul.slim li div.userSelectWidget input {
+  width: 120px;
+}
+.dateselect {
+  clear: both;
+}
+.dateselect label:first-child {
+  width: 120px;
+  text-align: right;
+  padding-right: 5px;
+  float: left;
+}
 
-    .double_select .dualselect_selected select {
-      width: 100%;
-      height: 80%; }
-
-    .double_select .dualselect_selected button {
-      height: 10%;
-      width: 100%; }
-
-	.double_select .c1 select {
-      height: 24em;
-      min-width: 12em;
-      width: auto;}
-
-	.double_select td {
-	  text-align: center;
-	  vertical-align: middle;}
-
-	  .double_select .c3 button {
-		 height: 2em;
-		 width: 12em;}
-
-	  .double_select .c3 select {
-		height: 20em;
-		min-width: 12em;
-		width: auto;}
+/* fancy dual selects */
+.double_select {
+  padding-left: 100px;
+  position: relative;
+}
+.double_select .dualselect_selectable {
+  height: 220px;
+  width: 40%;
+  display: -moz-inline-stack;
+  /* optional */
+  display: inline-block;
+  zoom: 1;
+  /* triggers hasLayout for IE */
+  *display: inline;
+  /* target IE7 only */
+  vertical-align: middle;
+}
+.double_select .dualselect_buttons {
+  width: 16%;
+  display: -moz-inline-stack;
+  /* optional */
+  display: inline-block;
+  zoom: 1;
+  /* triggers hasLayout for IE */
+  *display: inline;
+  /* target IE7 only */
+  vertical-align: middle;
+}
+.double_select .dualselect_buttons button {
+  width: 100%;
+  padding: 3px;
+}
+.double_select .dualselect_selected {
+  height: 220px;
+  /*min-width: 12em;*/
+  display: -moz-inline-stack;
+  /* optional */
+  display: inline-block;
+  zoom: 1;
+  /* triggers hasLayout for IE */
+  *display: inline;
+  /* target IE7 only */
+   vertical-align: middle;
+   width: 40%;
+}
+.double_select .dualselect_selected select {
+  width: 100%;
+  height: 80%;
+}
+.double_select .dualselect_selected button {
+  height: 10%;
+  width: 100%;
+}
+.double_select .c1 select {
+  height: 24em;
+  min-width: 12em;
+  width: auto;
+}
+.double_select td {
+  text-align: center;
+  vertical-align: middle;
+}
+.double_select .c3 button {
+  height: 2em;
+  width: 12em;
+}
+.double_select .c3 select {
+  height: 20em;
+  min-width: 12em;
+  width: auto;
+}
 /* closing task form */
-
 div#closeform {
   border-radius: 3px;
   -moz-border-radius: 3px;

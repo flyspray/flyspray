@@ -626,10 +626,7 @@
     <field name="pref_name" type="C" size="20">
       <NOTNULL/>
     </field>
-    <field name="pref_value" type="C" size="250">
-      <DEFAULT value="0"/>
-      <NOTNULL/>
-    </field>
+    <field name="pref_value" type="X" />
   </table>
   <table name="projects">
     <field name="project_id" type="I" size="3">

@@ -2,11 +2,11 @@
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded
-// 
+//
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-// 
+//
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
@@ -294,7 +294,7 @@ $translation = array(
 'makepublic'              => 'Направи задачата публична',
 'taskmadeprivate'         => 'Задачата е направена лична',
 'taskmadepublic'          => 'Задачата е направена публична',
-'confirmdeletecomment'    => 'Наистина ли желаете да премахнете този коментар? Ще бъдат премахнати и всички прикачени файлове!',
+'confirmdeletecomment'    => 'Наистина ли желаете да премахнете този коментар? %s',
 'confirmdeleteattach'     => 'Наистина ли да бъде премахнат този прикачен файл?',
 'selectedhistory'         => 'Показване на избрани събития от историята',
 'showallhistory'          => 'Показване на пълната история',

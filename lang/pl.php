@@ -287,7 +287,7 @@ $translation = array(
 'makepublic'              => 'Zmień na publiczne',
 'taskmadeprivate'         => 'Zgłoszenie ustawione jako prywatne',
 'taskmadepublic'          => 'Zgłoszenie ponownie ustawione jako publiczne',
-'confirmdeletecomment'    => 'Czy na pewno chcesz usunąć komentarz? Wszystkie załączniki również zostaną usunięte!',
+'confirmdeletecomment'    => 'Czy na pewno chcesz usunąć komentarz? %s',
 'confirmdeleteattach'     => 'Czy na pewno chcesz usunąć załącznik?',
 'selectedhistory'         => 'Pokazane zostały wybrane szczegóły historii.',
 'showallhistory'          => 'Ponownie pokaż pełną historię',
@@ -416,7 +416,7 @@ Pozdrowienia,",
 'hide'                    => 'Ukryj',
 'pendingreq'              => 'Oczekujące prośby',
 'errorpage'               => "Flyspray nie znalazł żądanej strony.
-				Być może wybrałeś(-aś) nieistniejące zgłoszenie lub 
+				Być może wybrałeś(-aś) nieistniejące zgłoszenie lub
 				nie masz uprawnień, by zobaczyć żądaną stronę.<br /><br />
 				A może próbujesz w dziwny sposób zmusić bazę danych
 				do wykonania twojego kodu SQL? Jeśli tak, to
