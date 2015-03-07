@@ -698,7 +698,7 @@ function tpl_draw_perms($perms)
             if (!is_numeric($key) && in_array($key, $perm_fields)) {
                $html .= '<tr>';
                $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
-               $html .= $i==0 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
+               $html .= $i<2 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
                $html .= '</tr>';
             }
         }
