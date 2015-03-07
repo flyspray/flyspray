@@ -1131,34 +1131,10 @@ hr {
   border: none;
   border-top: 1px solid #e1e1e1;
 }
-div#permissions {
-  width: 22em;
-  visibility: hidden;
-  position: absolute;
-  top: 25px !important;
-  top: 60px;
-  left: 0;
-  margin: 0;
-  z-index: 101;
-  padding: 5px;
-}
-div#permissions td, div#permissions th {
-  padding: 2px 5px;
-  border: 0;
-  text-align: left;
-  font-weight: 400;
-}
-div#permissions table {
-  color: #000;
-  background: #fff;
-  border: 1px dotted #000;
-}
-div#permissions table thead th {
-  font-weight: 700;
-}
-div#permissions td.good, div#permissions table td.bad {
-  text-align: right;
-}
+.perms{display:inline-block;vertical-align:top;}
+.bad{color:#900;}
+.good{color:#090;}
+
 fieldset.advsearch_misc input {
   vertical-align: middle;
 }

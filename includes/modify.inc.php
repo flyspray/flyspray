@@ -1134,7 +1134,7 @@ switch ($action = Req::val('action'))
                     Notifications::JabberRequestAuth(Post::val('jabber_id'));
                 }
 
-                $db->Query('UPDATE  {users}
+                $db->Query('UPDATE {users}
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
@@ -1145,6 +1145,11 @@ switch ($action = Req::val('action'))
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
                     Post::num('hide_my_email', 0), Post::num('user_id')));
+
+                # 20150307 peterdd: Now we must reload translations, because the user maybe changed his language preferences!
+                # first reload user info
+                $user=new User($user->id);
+                load_translations();
 
                 $profile_image = 'profile_image';
 
@@ -1180,12 +1185,15 @@ switch ($action = Req::val('action'))
                 endif; // end only admin or user himself can change
 
             if ($user->perms('is_admin')) {
-                $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
+                if($user->id == (int)Post::val('user_id')) {
+                    Flyspray::show_error(L('nosuicide'));
+                } else{
+                    $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
                         array(Post::val('account_enabled', 0), Post::val('user_id')));
-
-                $db->Query('UPDATE {users_in_groups} SET group_id = ?
+                    $db->Query('UPDATE {users_in_groups} SET group_id = ?
                          WHERE group_id = ? AND user_id = ?',
-                array(Post::val('group_in'), Post::val('old_global_id'), Post::val('user_id')));
+                        array(Post::val('group_in'), Post::val('old_global_id'), Post::val('user_id')));
+                }
             }
 
             endif; // end non project group changes

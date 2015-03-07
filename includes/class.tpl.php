@@ -298,37 +298,26 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		list($uid, $uname, $rname) = $uid;
 	}
 
-	$sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
-					array(intval($uid)));
+	$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?',
+		array(intval($uid)));
 	if ($sql && $db->countRows($sql)) {
-		list($uname, $rname, $email) = $db->fetchRow($sql);
-	}
-	else {
+		list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
+	}else {
 		return;
 	}
 
 	$email = md5(strtolower(trim($email)));
 	$default = 'mm';
 
-	$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
-	if ($sql && $db->countRows($sql))
-	{
-		$avatar_name = $db->fetchRow($sql);
-		if (is_file(BASEDIR.'/avatars/'.$avatar_name['profile_image'])) {
-			$image = "<img src='./avatars/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+	if(is_file(BASEDIR.'/avatars/'.$profile_image)) {
+		$image = "<img src='./avatars/".$profile_image."' width='".$size."' height='".$size."'/>";
+	} else {
+		if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
+			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
+		}else{
+			$image = '';
 		}
-		else
-		{
-			if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-				$image = '<img src="'.$url.'"/>';
-			}else{
-				$image = '';
-			}
-		}
-	}
-	else {
-		$image = '';
 	}
 
 	if (isset($uname)) {
@@ -693,25 +682,39 @@ function tpl_draw_perms($perms)
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
             'add_votes', 'edit_own_comments', 'view_estimated_effort',
-            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap');
+            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap'
+    );
 
     $yesno = array(
-            '<td class="bad">' . eL('no') . '</td>',
-            '<td class="good">' . eL('yes') . '</td>');
+            '<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
+            '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
+    );
 
-    // FIXME: html belongs in a template, not in the template class
-    $html = '<table border="1" onmouseover="perms.hide()" onmouseout="perms.hide()">';
-    $html .= '<thead><tr><th colspan="2">';
-    $html .= htmlspecialchars(L('permissionsforproject').$proj->prefs['project_title'], ENT_QUOTES, 'utf-8');
-    $html .= '</th></tr></thead><tbody>';
+    # 20150307 peterdd: This a temporary hack
+    $i=0;
+    $html='';
+    $projpermnames='';
 
-    foreach ($perms[$proj->id] as $key => $val) {
-        if (!is_numeric($key) && in_array($key, $perm_fields)) {
-            $html .= '<tr><th>' . eL(str_replace('_', '', $key)) . '</th>';
-            $html .= $yesno[ ($val || $perms[0]['is_admin']) ].'</tr>';
+    foreach ($perms as $projperm){
+        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th>'.($i==0? '<th>'.L('permissions').'</th>' : '').'</tr></thead><tbody>';
+        foreach ($projperm as $key => $val) {
+            if (!is_numeric($key) && in_array($key, $perm_fields)) {
+               $html .= '<tr>';
+               $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
+               $html .= $i==0 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
+               $html .= '</tr>';
+
+               # all projects have same permnames
+               $projpermnames .= $i==1 ? '<tr><td>'.eL(str_replace('_','',$key)).'</td></tr>' : '';
+            }
         }
+        $html.= '</tbody></table>';
+        $i++;
     }
-    return $html . '</tbody></table>';
+    $html.='<table class="perms"><thead><th>'.L('permissions').'</th></thead><tbody>'.$projpermnames.'</tbody></table>';
+    $html.='<style>.perms tr{height:30px;}</style>';
+    # end 20150307
+    return $html;
 } // }}}
 
 /**
