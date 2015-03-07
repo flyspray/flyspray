@@ -1186,8 +1186,10 @@ switch ($action = Req::val('action'))
 
             if ($user->perms('is_admin')) {
                 if($user->id == (int)Post::val('user_id')) {
-                    Flyspray::show_error(L('nosuicide'));
-                } else{
+                    if (Post::val('account_enabled', 0) <= 0 || Post::val('old_global_id') != 1) {
+                        Flyspray::show_error(L('nosuicide'));
+                    }
+                } else {
                     $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
                         array(Post::val('account_enabled', 0), Post::val('user_id')));
                     $db->Query('UPDATE {users_in_groups} SET group_id = ?
