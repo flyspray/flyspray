@@ -52,10 +52,12 @@ endif; ?>
 		</li>
 		<?php endif ?>
 
+		<?php if ($fs->prefs['enable_avatars']): ?>
 		<li>
 			<label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
 			<input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
 		</li>
+		<?php endif ?>
 
 		<li>
 			<label for="notify_type"><?php echo Filters::noXSS(L('notifications')); ?></label>

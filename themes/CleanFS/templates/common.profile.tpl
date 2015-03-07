@@ -22,10 +22,13 @@
         <input type="hidden" name="old_jabber_id" value="<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>" />
       </li>
       <?php endif ?>
+      <?php if ($fs->prefs['enable_avatars']): ?>
       <li>
         <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
+        <?php echo tpl_userlinkavatar($theuser->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?>
         <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
       </li>
+      <?php endif ?>
       <li>
         <label for="notifytype"><?php echo Filters::noXSS(L('notifytype')); ?></label>
         <select id="notifytype" name="notify_type">
