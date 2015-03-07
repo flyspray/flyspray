@@ -122,12 +122,16 @@
 
         <li>
           <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
-          <input id="dateformat" name="dateformat" type="text" class="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat']); ?>" />
+          <select id="dateformat" name="dateformat">
+            <?php echo tpl_date_formats($fs->prefs['dateformat']); ?>
+          </select>
         </li>
 
         <li>
           <label for="dateformat_extended"><?php echo Filters::noXSS(L('dateformat_extended')); ?></label>
-          <input id="dateformat_extended" name="dateformat_extended" class="text" type="text" size="40" maxlength="30" value="<?php echo Filters::noXSS($fs->prefs['dateformat_extended']); ?>" />
+          <select id="dateformat_extended" name="dateformat_extended">
+            <?php echo tpl_date_formats($fs->prefs['dateformat_extended'], true); ?>
+          </select>
         </li>
 
         <li>
