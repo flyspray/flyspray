@@ -7,13 +7,7 @@ if ($user->isAnon()):
         <div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
 	</li><?php
 else:
-	?><li class="first" onmouseover="perms.do_later('show')" onmouseout="perms.hide()">
-		<a id="profilelink"
-			<?php if(isset($_GET['do']) and $_GET['do'] == 'myprofile'): ?> class="active" <?php endif; ?>
-			 href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?>">
-			<em><?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)</em>
-		</a>
-		<div id="permissions"><?php echo tpl_draw_perms($user->perms); ?></div>
+	?><li class="first"><a id="profilelink" <?php if(isset($_GET['do']) and $_GET['do'] == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?>"><?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)</a>
 	</li><li>
 		<a id="lastsearchlink" href="#" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive"><?php echo Filters::noXSS(L('mysearch')); ?></a>
 		<div id="mysearches"><?php $this->display('links.searches.tpl'); ?></div>
