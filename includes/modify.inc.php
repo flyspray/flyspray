@@ -1063,15 +1063,21 @@ switch ($action = Req::val('action'))
     case 'admin.edituser':
     case 'myprofile.edituser':
         if (Post::val('delete_user')) {
-            // check that he is not the last user
-            $sql = $db->Query('SELECT count(*) FROM {users}');
-            if ($db->FetchOne($sql) > 1) {
-                Backend::delete_user(Post::val('user_id'));
-                $_SESSION['SUCCESS'] = L('userdeleted');
-                Flyspray::Redirect(CreateURL('admin', 'groups'));
-            } else {
-                Flyspray::show_error(L('lastuser'));
+            if ($user->id == (int)Post::val('user_id') && $user->perms('is_admin')) {
+                Flyspray::show_error(L('nosuicide'));
                 break;
+            }
+            else {
+                // check that he is not the last user
+                $sql = $db->Query('SELECT count(*) FROM {users}');
+                if ($db->FetchOne($sql) > 1) {
+                    Backend::delete_user(Post::val('user_id'));
+                    $_SESSION['SUCCESS'] = L('userdeleted');
+                    Flyspray::Redirect(CreateURL('admin', 'groups'));
+                } else {
+                    Flyspray::show_error(L('lastuser'));
+                    break;
+                }
             }
         }
 
@@ -1188,6 +1194,7 @@ switch ($action = Req::val('action'))
                 if($user->id == (int)Post::val('user_id')) {
                     if (Post::val('account_enabled', 0) <= 0 || Post::val('old_global_id') != 1) {
                         Flyspray::show_error(L('nosuicide'));
+                        break;
                     }
                 } else {
                     $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
