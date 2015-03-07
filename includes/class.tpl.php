@@ -298,37 +298,26 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		list($uid, $uname, $rname) = $uid;
 	}
 
-	$sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
-					array(intval($uid)));
+	$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?',
+		array(intval($uid)));
 	if ($sql && $db->countRows($sql)) {
-		list($uname, $rname, $email) = $db->fetchRow($sql);
-	}
-	else {
+		list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
+	}else {
 		return;
 	}
 
 	$email = md5(strtolower(trim($email)));
 	$default = 'mm';
 
-	$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
-	if ($sql && $db->countRows($sql))
-	{
-		$avatar_name = $db->fetchRow($sql);
-		if (is_file(BASEDIR.'/avatars/'.$avatar_name['profile_image'])) {
-			$image = "<img src='./avatars/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
+	if(is_file(BASEDIR.'/avatars/'.$profile_image)) {
+		$image = "<img src='./avatars/".$profile_image."' width='".$size."' height='".$size."'/>";
+	} else {
+		if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
+			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
+		}else{
+			$image = '';
 		}
-		else
-		{
-			if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-				$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-				$image = '<img src="'.$url.'"/>';
-			}else{
-				$image = '';
-			}
-		}
-	}
-	else {
-		$image = '';
 	}
 
 	if (isset($uname)) {
