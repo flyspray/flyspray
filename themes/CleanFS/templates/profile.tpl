@@ -4,20 +4,18 @@
     <th><?php echo Filters::noXSS(L('realname')); ?></th>
     <td><?php echo Filters::noXSS($theuser->infos['real_name']); ?></td>
   </tr>
-  <tr>
   <?php if ((!$user->isAnon() && !$fs->prefs['hide_emails'] && !$theuser->infos['hide_my_email']) || $user->perms('is_admin')): ?>
+  <tr>
     <th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
-    <td>
-      <a href="mailto:<?php echo Filters::noXSS($theuser->infos['email_address']); ?>"><?php echo Filters::noXSS($theuser->infos['email_address']); ?></a>
-    </td>
+    <td><a href="mailto:<?php echo Filters::noXSS($theuser->infos['email_address']); ?>"><?php echo Filters::noXSS($theuser->infos['email_address']); ?></a></td>
   </tr>
   <?php endif; ?>
+  <?php if (!empty($fs->prefs['jabber_server'])): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('jabberid')); ?></th>
     <td><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></td>
   </tr>
-  <?php endif ?>
-  <?php if (!empty($fs->prefs['jabber_server'])): ?>
+  <?php endif; ?>
   <tr>
     <th><?php echo Filters::noXSS(L('globalgroup')); ?></th>
     <td><?php echo Filters::noXSS($groups[Flyspray::array_find('group_id', $theuser->infos['global_group'], $groups)]['group_name']); ?></td>
