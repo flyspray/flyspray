@@ -50,8 +50,6 @@
         <select id="dateformat_extended" name="dateformat_extended">
           <?php echo tpl_date_formats($theuser->infos['dateformat_extended'], true); ?>
         </select>
-        <!--<input id="dateformat_extended" class="text" name="dateformat_extended" type="text"
-          size="40" maxlength="30" value="<?php echo Filters::noXSS(Req::val('dateformat_extended', $theuser->infos['dateformat_extended'])); ?>" />-->
       </li>
       <li>
         <label for="tasks_perpage"><?php echo Filters::noXSS(L('tasksperpage')); ?></label>
