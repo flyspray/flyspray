@@ -125,6 +125,22 @@ if (Flyspray::requestDuplicated()) {
     Flyspray::show_error(3);
 }
 
+# handle all forms request that modify data
+
+if (Req::has('action')) {
+    # enforcing if the form sent the correct anti csrf token
+    # only allow token by post
+    if( !Post::has('csrftoken') ){
+        die('missingtoken');
+    }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
+        require_once(BASEDIR . '/includes/modify.inc.php');
+    }else{
+        die('wrongtoken');
+    }
+}
+
+# start collecting infos for the answer page
+
 if ($proj->id && $user->perms('manage_project')) {
     // Find out if there are any PM requests wanting attention
     $sql = $db->Query(
@@ -165,19 +181,6 @@ $page->assign('do', $do);
 $page->assign('supertask_id', $supertask_id);
 
 $page->pushTpl('header.tpl');
-
-// DB modifications?
-if (Req::has('action')) {
-    # enforcing if the form sent the correct anti csrf token
-    # only allow token by post
-    if( !Post::has('csrftoken') ){
-        die('missingtoken');
-    }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
-        require_once(BASEDIR . '/includes/modify.inc.php');
-    }else{   
-        die('wrongtoken');
-    }
-}
 
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
