@@ -685,8 +685,8 @@ function tpl_draw_perms($perms)
             'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap');
 
     $yesno = array(
-            '<td class="bad fa fa-ban">'.eL('no').'</td>',
-            '<td class="good fa fa-check">'.eL('yes').'</td>'
+            '<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
+            '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
     );
 
     // FIXME: html belongs in a template, not in the template class
@@ -694,8 +694,10 @@ function tpl_draw_perms($perms)
 
     foreach ($perms[$proj->id] as $key => $val) {
         if (!is_numeric($key) && in_array($key, $perm_fields)) {
-            $html .= '<tr><th>' . eL(str_replace('_', '', $key)) . '</th>';
-            $html .= $yesno[ ($val || $perms[0]['is_admin']) ].'</tr>';
+            $html .= '<tr>';
+            $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
+            $html .= '<th>' . eL(str_replace('_', '', $key)) . '</th>';
+            $html .= '</tr>';
         }
     }
     return $html . '</tbody></table>';
