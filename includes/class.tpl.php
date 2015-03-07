@@ -690,11 +690,13 @@ function tpl_draw_perms($perms)
             '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
     );
 
+    # 20150307 peterdd: This a temporary hack
     $i=0;
     $html='';
     $projpermnames='';
+
     foreach ($perms as $projperm){
-        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th></tr></thead><tbody>';
+        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th>'.($i==0? '<th>'.L('permissions').'</th>' : '').'</tr></thead><tbody>';
         foreach ($projperm as $key => $val) {
             if (!is_numeric($key) && in_array($key, $perm_fields)) {
                $html .= '<tr>';
@@ -703,13 +705,15 @@ function tpl_draw_perms($perms)
                $html .= '</tr>';
 
                # all projects have same permnames
-               $projpermnames .= $i==1 ? '<tr><th>'.eL(str_replace('_','',$key)).'</th></tr>' : '';
+               $projpermnames .= $i==1 ? '<tr><td>'.eL(str_replace('_','',$key)).'</td></tr>' : '';
             }
         }
         $html.= '</tbody></table>';
         $i++;
     }
-    $html.='<table class="perms"><thead><th></th></thead><tbody>'.$projpermnames.'</tbody></table>';
+    $html.='<table class="perms"><thead><th>'.L('permissions').'</th></thead><tbody>'.$projpermnames.'</tbody></table>';
+    $html.='<style>.perms tr{height:30px;}</style>';
+    # end 20150307
     return $html;
 } // }}}
 
