@@ -685,14 +685,12 @@ function tpl_draw_perms($perms)
             'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap');
 
     $yesno = array(
-            '<td class="bad">' . eL('no') . '</td>',
-            '<td class="good">' . eL('yes') . '</td>');
+            '<td class="bad fa fa-ban">'.eL('no').'</td>',
+            '<td class="good fa fa-check">'.eL('yes').'</td>'
+    );
 
     // FIXME: html belongs in a template, not in the template class
-    $html = '<table border="1" onmouseover="perms.hide()" onmouseout="perms.hide()">';
-    $html .= '<thead><tr><th colspan="2">';
-    $html .= htmlspecialchars(L('permissionsforproject').$proj->prefs['project_title'], ENT_QUOTES, 'utf-8');
-    $html .= '</th></tr></thead><tbody>';
+    $html = '<table class="perms"><thead><tr><th colspan="2">'.eL('permissionsforproject').' '.$proj->prefs['project_title'].'</th></tr></thead><tbody>';
 
     foreach ($perms[$proj->id] as $key => $val) {
         if (!is_numeric($key) && in_array($key, $perm_fields)) {
