@@ -186,6 +186,23 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // Check that a task is not moved to a different project than its
+        // possible parent or subtasks. Note that even closed tasks are
+        // included in the result, a task can be always reopened later.
+        $result = $db->Query('SELECT p.task_id parent_id, p.project_id project, s.task_id sub_id
+                             FROM flyspray_tasks p
+                        LEFT JOIN flyspray_tasks s ON p.task_id = s.supertask_id
+                            WHERE p.task_id = ? OR s.task_id = ?',
+                array($task['task_id'], $task['task_id']));
+        $check = $db->fetchRow($result);
+        
+        if ($check && $check['sub_id']) {
+            if ($check['project'] != Post::val('project_id')) {
+                Flyspray::show_error(L('differentproject'));
+                break;
+            }
+        }
+        
         $time = time();
 
         $db->Query('UPDATE  {tasks}

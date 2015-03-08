@@ -998,6 +998,7 @@ Regards,',
 'addtasks'                => 'Add tasks',
 'massopsdisabled'         => 'Sorry, bulk editing is currently disabled for Flyspray 1.0. We plan to finish implementation for a later release of Flyspray. You can enable them in source code again at your own risk, but read the comments there before doing it.',
 'viewroadmap'             => 'Can view roadmap',
-'nosuicide'               => 'Dear user, my program doesn\'t allow you to destroy your access to Flyspray by disabling your own account or switching your own group. The empathic brother of HAL9000'
+'nosuicide'               => 'Dear user, my program doesn\'t allow you to destroy your access to Flyspray by disabling your own account or switching your own group. The empathic brother of HAL9000',
+'differentproject'        => 'Moving a task that has either a parent or subtasks is not allowed. You must break the connection between them first.'
 );
 ?>
