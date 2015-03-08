@@ -338,13 +338,12 @@ switch ($action = Req::val('action'))
             break;
         }
         
-        // check to see that both tasks beloont to the same project
+        // check to see that both tasks belong to the same project
         if ($task['project_id'] != $suptask['project_id']) {
             Flyspray::show_error(L('musthavesameproject'));
             break;
         }
 
-        
         //associate the subtask
         $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
 
@@ -2244,14 +2243,21 @@ switch ($action = Req::val('action'))
         }
 
         // check that supertask_id is a valid task id
-        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
+        $sql = $db->Query('SELECT project_id FROM {tasks}
                            WHERE  task_id = '.Post::val("supertask_id").';');
 
-        if (!$db->fetchOne($sql)) {
+        $parent = $db->fetchRow($sql);
+        if (!$parent) {
             Flyspray::show_error(L('invalidsupertaskid'));
             break;
         }
 
+        // check to see that both tasks belong to the same project
+        if ($task['project_id'] != $parent['project_id']) {
+            Flyspray::show_error(L('musthavesameproject'));
+            break;
+        }
+        
         // Log the event in the task history
         Flyspray::logEvent(Get::val('task_id'), 34, Get::val('subtaskid'));
 
