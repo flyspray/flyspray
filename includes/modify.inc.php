@@ -196,9 +196,10 @@ switch ($action = Req::val('action'))
                 array($task['task_id'], $task['task_id']));
         $check = $db->fetchRow($result);
         
+        // if there are any subtasks or a parent, check that the project is not changed.
         if ($check && $check['sub_id']) {
             if ($check['project'] != Post::val('project_id')) {
-                Flyspray::show_error(L('differentproject'));
+                Flyspray::show_error(L('movingtodifferentproject'));
                 break;
             }
         }
@@ -314,30 +315,36 @@ switch ($action = Req::val('action'))
         break;
 
     case 'details.associatesubtask':
-
-        //check to see if associated subtask already has a parent task
-
-
-        //check to see if associated subtask is already the parent of this task
-        $sql = $db->Query("SELECT supertask_id FROM {tasks} WHERE task_id = ?",
+        $sql = $db->Query("SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?",
             array(Post::val('associate_subtask_id')));
 
         $suptask = $db->FetchRow($sql);
 
+        // check to see if the subtask exists.
+        if (!$suptask) {
+            Flyspray::show_error(L('subtasknotexist'));
+            break;
+        }
+        
+        // check to see if associated subtask is already the parent of this task
         if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
-
-        //check to see if the subtask exists.
-        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
-                           WHERE  task_id = '.Post::val("associate_subtask_id").';');
-
-        if (!$db->fetchOne($sql)) {
-            Flyspray::show_error(L('subtasknotexist'));
+        
+        // check to see if associated subtask already has a parent task
+        if ($suptask['supertask_id']) {
+            Flyspray::show_error(L('subtaskalreadyhasparent'));
+            break;
+        }
+        
+        // check to see that both tasks beloont to the same project
+        if ($task['project_id'] != $suptask['project_id']) {
+            Flyspray::show_error(L('musthavesameproject'));
             break;
         }
 
+        
         //associate the subtask
         $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
 
