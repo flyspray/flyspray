@@ -300,7 +300,7 @@
 			rY = document.body.scrollTop;
 		}
 		if(document.all) {
-			cX += rX; 
+			cX += rX;
 			cY += rY;
 		}
 		d.style.left = (cX+10) + "px";

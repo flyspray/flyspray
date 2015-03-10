@@ -742,6 +742,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="default_order_by" type="C" size="30">
+      <NOTNULL/>
+      <DEFAULT value="id"/>
+    </field>
   </table>
   <table name="registrations">
     <field name="reg_id" type="I" size="10">

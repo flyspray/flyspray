@@ -2,11 +2,11 @@
 //
 // This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-//
+// 
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-//
+// 
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
@@ -903,6 +903,7 @@ $translation = array(
 'parenttaskid'            => 'Identifiant de tâche parente',
 'invalidsupertaskid'      => 'Identifiant de tâche parente invalide.',
 'supertaskadded'          => 'Tâche parente ajoutée',
+'supertaskremoved'        => 'Tâche parente supprimée',
 'effort'                  => 'Effort',
 'efforttracking'          => 'Suivi d\'effort',
 'useeffort'               => 'Le project utilise le suivi d\'effort',
@@ -984,6 +985,10 @@ $translation = array(
 'addtasks'                => 'Ajouter les tâches',
 'massopsdisabled'         => 'Désolé, l\'édition de masse est désactivée pour Flyspray 1.0. Nous avons décidé de terminer son implémentation pour une future version de Flyspray. Vous pouvez activer cette fonction par le code source à vos risques, mais lisez attentivement les commentaires avant de le faire.',
 'viewroadmap'             => 'Peux voir la feuille de route',
+'nosuicide'               => 'Cher utilisateur, mon programme ne vous autorise pas à détruire votre accès à Flyspray en désactivant votre propre compte ou en changeant votre groupe d\'utilisateur. Signé le sympathique frère de HAL9000',
+'movingtodifferentproject'=> 'Déplacer une tâches qui a soit une tâche parente ou une sous-tâche dans un autre projet n\'est pas permis. Vous devez d\'abord supprimer les connexions entre elles.',
+'musthavesameproject'     => 'La tâche parente et la sous-tâche doivent appartenir au même projet.',
+'defaultorderby'          => 'Ordonner la liste des tâches par défaut par',
 );
 
 ?>
