@@ -186,6 +186,24 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // Check that a task is not moved to a different project than its
+        // possible parent or subtasks. Note that even closed tasks are
+        // included in the result, a task can be always reopened later.
+        $result = $db->Query('SELECT p.task_id parent_id, p.project_id project, s.task_id sub_id
+                             FROM {tasks} p
+                        LEFT JOIN {tasks} s ON p.task_id = s.supertask_id
+                            WHERE p.task_id = ? OR s.task_id = ?',
+                array($task['task_id'], $task['task_id']));
+        $check = $db->fetchRow($result);
+        
+        // if there are any subtasks or a parent, check that the project is not changed.
+        if ($check && $check['sub_id']) {
+            if ($check['project'] != Post::val('project_id')) {
+                Flyspray::show_error(L('movingtodifferentproject'));
+                break;
+            }
+        }
+        
         $time = time();
 
         $db->Query('UPDATE  {tasks}
@@ -297,27 +315,32 @@ switch ($action = Req::val('action'))
         break;
 
     case 'details.associatesubtask':
-
-        //check to see if associated subtask already has a parent task
-
-
-        //check to see if associated subtask is already the parent of this task
-        $sql = $db->Query("SELECT supertask_id FROM {tasks} WHERE task_id = ?",
+        $sql = $db->Query("SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?",
             array(Post::val('associate_subtask_id')));
 
         $suptask = $db->FetchRow($sql);
 
+        // check to see if the subtask exists.
+        if (!$suptask) {
+            Flyspray::show_error(L('subtasknotexist'));
+            break;
+        }
+        
+        // check to see if associated subtask is already the parent of this task
         if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
-
-        //check to see if the subtask exists.
-        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
-                           WHERE  task_id = '.Post::val("associate_subtask_id").';');
-
-        if (!$db->fetchOne($sql)) {
-            Flyspray::show_error(L('subtasknotexist'));
+        
+        // check to see if associated subtask already has a parent task
+        if ($suptask['supertask_id']) {
+            Flyspray::show_error(L('subtaskalreadyhasparent'));
+            break;
+        }
+        
+        // check to see that both tasks belong to the same project
+        if ($task['project_id'] != $suptask['project_id']) {
+            Flyspray::show_error(L('musthavesameproject'));
             break;
         }
 
@@ -1063,15 +1086,21 @@ switch ($action = Req::val('action'))
     case 'admin.edituser':
     case 'myprofile.edituser':
         if (Post::val('delete_user')) {
-            // check that he is not the last user
-            $sql = $db->Query('SELECT count(*) FROM {users}');
-            if ($db->FetchOne($sql) > 1) {
-                Backend::delete_user(Post::val('user_id'));
-                $_SESSION['SUCCESS'] = L('userdeleted');
-                Flyspray::Redirect(CreateURL('admin', 'groups'));
-            } else {
-                Flyspray::show_error(L('lastuser'));
+            if ($user->id == (int)Post::val('user_id') && $user->perms('is_admin')) {
+                Flyspray::show_error(L('nosuicide'));
                 break;
+            }
+            else {
+                // check that he is not the last user
+                $sql = $db->Query('SELECT count(*) FROM {users}');
+                if ($db->FetchOne($sql) > 1) {
+                    Backend::delete_user(Post::val('user_id'));
+                    $_SESSION['SUCCESS'] = L('userdeleted');
+                    Flyspray::Redirect(CreateURL('admin', 'groups'));
+                } else {
+                    Flyspray::show_error(L('lastuser'));
+                    break;
+                }
             }
         }
 
@@ -1186,8 +1215,11 @@ switch ($action = Req::val('action'))
 
             if ($user->perms('is_admin')) {
                 if($user->id == (int)Post::val('user_id')) {
-                    Flyspray::show_error(L('nosuicide'));
-                } else{
+                    if (Post::val('account_enabled', 0) <= 0 || Post::val('old_global_id') != 1) {
+                        Flyspray::show_error(L('nosuicide'));
+                        break;
+                    }
+                } else {
                     $db->Query('UPDATE {users} SET account_enabled = ?  WHERE user_id = ?',
                         array(Post::val('account_enabled', 0), Post::val('user_id')));
                     $db->Query('UPDATE {users_in_groups} SET group_id = ?
@@ -2211,14 +2243,21 @@ switch ($action = Req::val('action'))
         }
 
         // check that supertask_id is a valid task id
-        $sql = $db->Query('SELECT COUNT(*) FROM {tasks}
+        $sql = $db->Query('SELECT project_id FROM {tasks}
                            WHERE  task_id = '.Post::val("supertask_id").';');
 
-        if (!$db->fetchOne($sql)) {
+        $parent = $db->fetchRow($sql);
+        if (!$parent) {
             Flyspray::show_error(L('invalidsupertaskid'));
             break;
         }
 
+        // check to see that both tasks belong to the same project
+        if ($task['project_id'] != $parent['project_id']) {
+            Flyspray::show_error(L('musthavesameproject'));
+            break;
+        }
+        
         // Log the event in the task history
         Flyspray::logEvent(Get::val('task_id'), 34, Get::val('subtaskid'));
 

@@ -8,3 +8,5 @@ composer.lock
 composer.phar
 /_site/
 .htaccess
+*.PHPEditProject
+/avatars/*

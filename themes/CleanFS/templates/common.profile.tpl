@@ -22,27 +22,34 @@
         <input type="hidden" name="old_jabber_id" value="<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>" />
       </li>
       <?php endif ?>
+      <?php if ($fs->prefs['enable_avatars']): ?>
       <li>
         <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
+        <?php echo tpl_userlinkavatar($theuser->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?>
         <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
       </li>
+      <?php endif ?>
       <li>
         <label for="notifytype"><?php echo Filters::noXSS(L('notifytype')); ?></label>
         <select id="notifytype" name="notify_type">
           <?php echo tpl_options($fs->GetNotificationOptions(), Req::val('notify_type', $theuser->infos['notify_type'])); ?>
         </select>
+      </li>
+      <li>
+        <label for="notify_own"><?php echo Filters::noXSS(L('notifyown')); ?></label>
         <?php echo tpl_checkbox('notify_own', Req::val('notify_own', !Post::val('action') && $theuser->infos['notify_own']), 'notify_own'); ?>
-        <label class="left notable" for="notify_own"><?php echo Filters::noXSS(L('notifyown')); ?></label>
       </li>
       <li>
         <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
-        <input id="dateformat" class="text" name="dateformat" type="text" size="40" maxlength="30"
-          value="<?php echo Filters::noXSS(Req::val('dateformat', $theuser->infos['dateformat'])); ?>" />
+        <select id="dateformat" name="dateformat">
+          <?php echo tpl_date_formats($theuser->infos['dateformat']); ?>
+        </select>
       </li>
       <li>
         <label for="dateformat_extended"><?php echo Filters::noXSS(L('dateformat_extended')); ?></label>
-        <input id="dateformat_extended" class="text" name="dateformat_extended" type="text"
-          size="40" maxlength="30" value="<?php echo Filters::noXSS(Req::val('dateformat_extended', $theuser->infos['dateformat_extended'])); ?>" />
+        <select id="dateformat_extended" name="dateformat_extended">
+          <?php echo tpl_date_formats($theuser->infos['dateformat_extended'], true); ?>
+        </select>
       </li>
       <li>
         <label for="tasks_perpage"><?php echo Filters::noXSS(L('tasksperpage')); ?></label>

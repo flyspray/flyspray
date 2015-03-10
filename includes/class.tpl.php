@@ -427,6 +427,79 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
 }
 // }}}
 
+/**
+ * Creates the options for a date format select
+ * @selected The format that should by selected by default
+ * @return html formatted options for a select tag
+**/
+function tpl_date_formats($selected, $detailed = false)
+{
+	$time = time();
+
+	if (!$detailed) {
+		$dateFormats = array(
+			'%d.%m.%Y' => strftime('%d.%m.%Y', $time),
+			'%d.%m.%y' => strftime('%d.%m.%y', $time),
+
+			'%Y.%m.%d' => strftime('%Y.%m.%d', $time),
+			'%y.%m.%d' => strftime('%y.%m.%d', $time),
+
+			'%d-%m-%Y' => strftime('%d-%m-%Y', $time),
+			'%d-%m-%y' => strftime('%d-%m-%y', $time),
+
+			'%Y-%m-%d' => strftime('%Y-%m-%d', $time),
+			'%y-%m-%d' => strftime('%y-%m-%d', $time),
+
+			'%d %b %Y' => strftime('%d %b %Y', $time),
+			'%d %B %Y' => strftime('%d %B %Y', $time),
+
+			'%b %d %Y' => strftime('%b %d %Y', $time),
+			'%B %d %Y' => strftime('%B %d %Y', $time),
+		);
+	}
+	else {
+		$dateFormats = array(
+			'%d.%m.%Y %H:%M' 	=> strftime('%d.%m.%Y %H:%M', $time),
+			'%d.%m.%y %H:%M' 	=> strftime('%d.%m.%y %H:%M', $time),
+
+			'%d.%m.%Y %I:%M %p' => strftime('%d.%m.%Y %I:%M %p', $time),
+			'%d.%m.%y %I:%M %p' => strftime('%d.%m.%y %I:%M %p', $time),
+
+			'%Y.%m.%d %H:%M' 	=> strftime('%Y.%m.%d %H:%M', $time),
+			'%y.%m.%d %H:%M' 	=> strftime('%y.%m.%d %H:%M', $time),
+
+			'%Y.%m.%d %I:%M %p' => strftime('%Y.%m.%d %I:%M %p', $time),
+			'%y.%m.%d %I:%M %p' => strftime('%y.%m.%d %I:%M %p', $time),
+
+			'%d-%m-%Y %H:%M' 	=> strftime('%d-%m-%Y %H:%M', $time),
+			'%d-%m-%y %H:%M' 	=> strftime('%d-%m-%y %H:%M', $time),
+
+			'%d-%m-%Y %I:%M %p' => strftime('%d-%m-%Y %I:%M %p', $time),
+			'%d-%m-%y %I:%M %p' => strftime('%d-%m-%y %I:%M %p', $time),
+
+			'%Y-%m-%d %H:%M' 	=> strftime('%Y-%m-%d %H:%M', $time),
+			'%y-%m-%d %H:%M' 	=> strftime('%y-%m-%d %H:%M', $time),
+
+			'%Y-%m-%d %I:%M %p' => strftime('%Y-%m-%d %I:%M %p', $time),
+			'%y-%m-%d %I:%M %p' => strftime('%y-%m-%d %I:%M %p', $time),
+
+			'%d %b %Y %H:%M' 	=> strftime('%d %b %Y %H:%M', $time),
+			'%d %B %Y %H:%M' 	=> strftime('%d %B %Y %H:%M', $time),
+
+			'%d %b %Y %I:%M %p' => strftime('%d %b %Y %I:%M %p', $time),
+			'%d %B %Y %I:%M %p' => strftime('%d %B %Y %I:%M %p', $time),
+
+			'%b %d %Y %H:%M' 	=> strftime('%b %d %Y %H:%M', $time),
+			'%B %d %Y %H:%M' 	=> strftime('%B %d %Y %H:%M', $time),
+
+			'%b %d %Y %I:%M %p' => strftime('%b %d %Y %I:%M %p', $time),
+			'%B %d %Y %I:%M %p' => strftime('%B %d %Y %I:%M %p', $time),
+		);
+	}
+
+	return tpl_options($dateFormats, $selected);
+}
+
 // {{{ Options for a <select>
 function tpl_options($options, $selected = null, $labelIsValue = false, $attr = null, $remove = null)
 {
