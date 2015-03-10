@@ -121,10 +121,12 @@ a:hover {
     padding: 25px 50px;
 }
 
- #title img {
+#title img {
     float: left;
     margin-right: 20px;
-    height: 36px;}
+    height: 70px;
+ 	margin-top: -20px;
+}
 
 
 #menu {
