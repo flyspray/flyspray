@@ -91,13 +91,21 @@
 
         <li>
           <?php
-            if (! array_key_exists( 'logo', $fs->prefs) ) {
+            // TODO WTF?? Isn't that an old temp fix?
+            if (!array_key_exists('logo', $fs->prefs)) {
               $fs->prefs['logo'] = '';
             }
-
           ?>
+
           <label for="logo"><?php echo Filters::noXSS(L('showlogo')); ?></label>
-          <input id="logo" name="logo" type="file" accept="image/*" value="<?php echo Filters::noXSS($fs->prefs['logo']); ?>" />
+          <?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != ''):?>
+		    <img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>">
+	      <?php endif ?>
+        </li>
+
+        <li>
+          <label for="logo_input">&nbsp;</label>
+          <input id="logo_input" name="logo" type="file" accept="image/*" value="<?php echo Filters::noXSS($fs->prefs['logo']); ?>" />
         </li>
 
         <li>
