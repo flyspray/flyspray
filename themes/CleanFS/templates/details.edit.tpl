@@ -184,7 +184,7 @@
 				<?php endif; ?>
 
           <?php if($proj->prefs['use_effort_tracking']) {
-                    if ($user->perms('view_effort')) {
+                    if ($user->perms('view_estimated_effort')) {
           ?>
           <li style="...">
               <label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
