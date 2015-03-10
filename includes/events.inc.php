@@ -54,7 +54,7 @@ function get_events($task_id, $where = '')
                       AND (h.field_changed='product_version' OR h.field_changed='closedby_version')
 
                 WHERE h.task_id = ? $where
-             ORDER BY event_date ASC, event_type ASC", array($task_id));
+             ORDER BY event_date ASC, history_id ASC, event_type ASC", array($task_id));
 }
 
 /**
@@ -279,6 +279,9 @@ function event_description($history) {
         break;
     case '34': // supertask added
         $return .= eL('supertaskadded') . ' ' . tpl_tasklink($new_value);
+        break;
+    case '35': // supertask removed
+        $return .= eL('supertaskremoved') . ' ' . tpl_tasklink($new_value);
         break;
     }
 
