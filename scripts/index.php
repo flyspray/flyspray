@@ -215,7 +215,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		}
             }
             break;
-	
+
 	case 'effort':
             $value = '';
             if ($user->perms('view_current_effort_done')) {
@@ -224,7 +224,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 }
             }
             break;
-		
+
         default:
             $value = '';
             // $colname here is NOT column name in database but a name that can appear

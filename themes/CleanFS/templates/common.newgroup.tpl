@@ -95,7 +95,7 @@
 
       <li>
         <label for="canviewroadmap"><?php echo Filters::noXSS(L('canviewroadmap')); ?></label>
-        <?php echo tpl_checkbox('view_roadmap', Req::val('view_roadmap', !Req::val('action') && $group_details['view_roadmap']), 'canviewroadmap'); ?>
+        <?php echo tpl_checkbox('view_roadmap', Req::val('view_roadmap', !Req::val('action')), 'canviewroadmap'); ?>
       </li>
 
       <li>
