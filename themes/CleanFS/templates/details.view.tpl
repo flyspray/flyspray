@@ -593,7 +593,6 @@ function quick_edit(elem, id)
 		<?php else: ?>0
 		<?php endif; ?>
 		<?php if ($user->can_vote($task_details) > 0): ?>
-		<?php if ($user->can_vote($task_details) > 0): ?>
 		<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
 		<input type="hidden" name="action" value="details.addvote" />
 		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
