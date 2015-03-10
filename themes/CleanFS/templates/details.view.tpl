@@ -570,56 +570,53 @@ function quick_edit(elem, id)
     <ul class="fieldslist">
         <!-- Votes-->
         <?php if (in_array('votes', $fields)): ?>
-        <li class="votes">
-            <span class="label"><?php echo Filters::noXSS(L('votes')); ?></span>
-				<span class="value">
-					<?php if (count($votes)): ?>
-                    <a href="javascript:showhidestuff('showvotes')"><?php echo Filters::noXSS(count($votes)); ?> </a>
-					<div id="showvotes" class="hide">
-                        <ul class="reports">
-                            <?php foreach ($votes as $vote): ?>
-                            <li><?php echo tpl_userlink($vote); ?> (<?php echo Filters::noXSS(formatDate($vote['date_time'])); ?>)</li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    <?php else: ?>
-                    0
-                    <?php endif; ?>
-                    <?php if ($user->can_vote($task_details) > 0): ?>
-					<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=details.addvote&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
-                        (<?php echo Filters::noXSS(L('addvote')); ?>)</a>
-                    <?php elseif ($user->can_vote($task_details) == -2): ?>
-					(<?php echo Filters::noXSS(L('alreadyvotedthistask')); ?>)
-                    <?php elseif ($user->can_vote($task_details) == -3): ?>
-					(<?php echo Filters::noXSS(L('alreadyvotedthisday')); ?>)
-                    <?php endif; ?>
-				</span>
-        </li>
-        <?php endif; ?>
+        <li class="votes"><span class="label"><?php echo Filters::noXSS(L('votes')); ?></span>
+	<span class="value">
+		<?php if (count($votes)): ?>
+		<a href="javascript:showhidestuff('showvotes')"><?php echo Filters::noXSS(count($votes)); ?> </a>
+		<div id="showvotes" class="hide">
+		<ul class="reports">
+		<?php foreach ($votes as $vote): ?>
+		<li><?php echo tpl_userlink($vote); ?> (<?php echo Filters::noXSS(formatDate($vote['date_time'])); ?>)</li>
+		<?php endforeach; ?>
+		</ul>
+		</div>
+		<?php else: ?>0
+		<?php endif; ?>
+		<?php if ($user->can_vote($task_details) > 0): ?>
+		<?php if ($user->can_vote($task_details) > 0): ?>
+		<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+		<input type="hidden" name="action" value="details.addvote" />
+		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+		<button type="submit"><?php echo Filters::noXSS(L('addvote')); ?></button>
+		</form>
+		<?php elseif ($user->can_vote($task_details) == -2): ?>	(<?php echo Filters::noXSS(L('alreadyvotedthistask')); ?>)
+		<?php elseif ($user->can_vote($task_details) == -3): ?> (<?php echo Filters::noXSS(L('alreadyvotedthisday')); ?>)
+		<?php endif; ?>
+	</span>
+	</li>
+	<?php endif; ?>
 
         <!-- Private -->
-        <?php if (in_array('private', $fields)): ?>
-        <li>
-        	<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
-		<span class="value">
-		<?php if ($task_details['mark_private']): ?>
-                <?php echo eL('yes'); ?>
-                <?php else: ?>
-                <?php echo eL('no'); ?>
-                <?php endif; ?>
-
-                <?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
-                        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-                        <input type="hidden" name="action" value="makepublic">
-                        <button><?php echo eL('makepublic'); ?></button>
-                        </form>
-                <?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
-                        <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-                        <input type="hidden" name="action" value="makeprivate">
-                        <button><?php echo eL('makeprivate'); ?></button>
-                        </form>
-                <?php endif; ?>
-		</span>
+	<?php if (in_array('private', $fields)): ?>
+	<li>
+	<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
+	<span class="value">
+		<?php if ($task_details['mark_private']): echo eL('yes'); ?>
+		<?php else: echo eL('no'); ?>
+		<?php endif; ?>
+		<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
+		<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+		<input type="hidden" name="action" value="makepublic">
+		<button><?php echo eL('makepublic'); ?></button>
+		</form>
+		<?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
+		<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+		<input type="hidden" name="action" value="makeprivate">
+		<button><?php echo eL('makeprivate'); ?></button>
+		</form>
+		<?php endif; ?>
+	</span>
         </li>
         <?php endif; ?>
 
