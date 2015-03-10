@@ -1509,9 +1509,9 @@ switch ($action = Req::val('action'))
                 // Check for duplicates on the same sub-level under same parent category.
                 // First, we'll have to find the right parent for the current category.
                 $sql = $db->Query('SELECT *
-                                     FROM flyspray_list_category
+                                     FROM {list_category}
                                     WHERE project_id = ? AND lft < ? and rgt > ?
-                                      AND lft = (SELECT MAX(lft) FROM flyspray_list_category WHERE lft < ? and rgt > ?)',
+                                      AND lft = (SELECT MAX(lft) FROM {list_category} WHERE lft < ? and rgt > ?)',
                                   array($proj->id, intval($listlft[$id]), intval($listrgt[$id]), intval($listlft[$id]), intval($listrgt[$id])));
 
                 $parent = $db->FetchRow($sql);
