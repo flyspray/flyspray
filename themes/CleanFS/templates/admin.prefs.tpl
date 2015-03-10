@@ -98,7 +98,7 @@
           ?>
 
           <label for="logo"><?php echo Filters::noXSS(L('showlogo')); ?></label>
-          <?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != ''):?>
+          <?php if ($fs->prefs['logo']):?>
 		    <img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>">
 	      <?php endif ?>
         </li>
