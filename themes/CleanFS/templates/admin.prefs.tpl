@@ -319,14 +319,11 @@
           </select>
         </li>
 
-          <li>
-            <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
-            <?php // Set the selectable column names
+        <?php // Set the selectable column names
             // Do NOT use real database column name here and in the next list,
             // but a term from translation table entries instead, because it's
-            // also used elsewhere to draw a localized version of the name,
-            // and with some extra work, this list too might show localized
-            // names in a future version. Look also at the end of function
+            // also used elsewhere to draw a localized version of the name.
+            // Look also at the end of function
             // tpl_draw_cell in scripts/index.php for further explanation.
             $columnnames = array(
                 'id' => L('id'),
@@ -354,8 +351,18 @@
                 'estimatedeffort' => L('estimatedeffort'),
                 'effort' => L('effort'));
             $selectedcolumns = explode(' ', Post::val('visible_columns', $fs->prefs['visible_columns']));
-            echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false);
-          ?>
+        ?>
+
+        <li>
+          <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
+          <select id="default_order_by" name="default_order_by">
+            <?php echo tpl_options($columnnames, $fs->prefs['default_order_by'], false); ?>
+          </select>
+        </li>
+
+          <li>
+            <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
+            <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
           </li>
 
           <li>

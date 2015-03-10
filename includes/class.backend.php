@@ -1143,7 +1143,7 @@ abstract class Backend
      */
     public static function get_task_list($args, $visible, $offset = 0, $perpage = 20)
     {
-        global $proj, $db, $user, $conf;
+        global $fs, $proj, $db, $user, $conf;
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
@@ -1265,10 +1265,25 @@ abstract class Backend
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
         $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
 
-        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', 'priority'), array_keys($order_keys))];
+    	// Implementing setting "Default order by"
+    	if (!array_key_exists('order', $args)) {
+    		$sort = 'desc';
+			if ($proj->id) {
+				$orderBy = $proj->prefs['default_order_by'];
+			}
+    		else {
+    			$orderBy = $fs->prefs['default_order_by'];
+    		}
+    	}
+    	else {
+    		$orderBy = $args['order'];
+    		$sort = $args['sort'];
+    	}
+
+        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
         $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
         $sortorder  = sprintf('%s %s, %s %s, t.task_id ASC',
-                $order_column[0], Filters::enum(array_get($args, 'sort', 'desc'), array('asc', 'desc')),
+                $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')),
                 $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
 
         /// process search-conditions {{{

@@ -195,7 +195,7 @@ switch ($action = Req::val('action'))
                             WHERE p.task_id = ? OR s.task_id = ?',
                 array($task['task_id'], $task['task_id']));
         $check = $db->fetchRow($result);
-        
+
         // if there are any subtasks or a parent, check that the project is not changed.
         if ($check && $check['sub_id']) {
             if ($check['project'] != Post::val('project_id')) {
@@ -203,7 +203,7 @@ switch ($action = Req::val('action'))
                 break;
             }
         }
-        
+
         $time = time();
 
         $db->Query('UPDATE  {tasks}
@@ -325,19 +325,19 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('subtasknotexist'));
             break;
         }
-        
+
         // check to see if associated subtask is already the parent of this task
         if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
-        
+
         // check to see if associated subtask already has a parent task
         if ($suptask['supertask_id']) {
             Flyspray::show_error(L('subtaskalreadyhasparent'));
             break;
         }
-        
+
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $suptask['project_id']) {
             Flyspray::show_error(L('musthavesameproject'));
@@ -901,7 +901,7 @@ switch ($action = Req::val('action'))
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size');
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1045,7 +1045,7 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1737,7 +1737,7 @@ switch ($action = Req::val('action'))
         }
 
         // TODO: Log event in a later version.
-        
+
         $_SESSION['SUCCESS'] = L('notifyadded');
         break;
 
@@ -2278,7 +2278,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('musthavesameproject'));
             break;
         }
-        
+
         //finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
@@ -2307,7 +2307,7 @@ switch ($action = Req::val('action'))
         if($massopsenabled==1){
 
         // TODO: Log events in a later version.
-            
+
         if(Post::val('updateselectedtasks') == "true") {
             //process quick actions
             switch(Post::val('bulk_quick_action'))
