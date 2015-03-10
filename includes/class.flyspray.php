@@ -521,6 +521,8 @@ class Flyspray
         // 31: User deletion
         // 32: Add new subtask
         // 33: Remove Subtask
+        // 34: Add new parent
+        // 35: Remove parent
 
         $query_params = array(intval($task_id), intval($user->id),
                              ((!is_numeric($time)) ? time() : $time),

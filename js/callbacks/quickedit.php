@@ -5,7 +5,7 @@ define('IN_FS', true);
 header('Content-type: text/html; charset=utf-8');
 
 require_once('../../header.php');
-global $fs;
+global $proj, $fs;
 
 $baseurl = dirname(dirname($baseurl)) .'/' ;
 
@@ -38,5 +38,12 @@ elseif(Post::val('name') == "estimated_effort"){
 else {
     $value = Post::val('value');
 }
+
+$oldvalue = $task[Post::val('name')];
+
 $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_time = ? WHERE task_id = ?", array($value, time(), Post::val('task_id')));
+
+// Log the changed field in task history
+Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
+
 ?>
