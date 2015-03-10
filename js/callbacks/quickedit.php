@@ -43,7 +43,7 @@ $oldvalue = $task[Post::val('name')];
 
 $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_time = ? WHERE task_id = ?", array($value, time(), Post::val('task_id')));
 
-// Log the changed field in the task history
-Flyspray::logEvent($task['task_id'], 3, Post::val('value'), $oldvalue, Post::val('name'), $time);
+// Log the changed field in task history
+Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
 ?>

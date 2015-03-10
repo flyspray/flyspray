@@ -58,17 +58,18 @@ function get_events($task_id, $where = '')
 }
 
 /**
- * XXX: A mess,remove my in 1.0
+ * XXX: A mess,remove my in 1.0. No time for that, sorry.
  */
 function event_description($history) {
     $return = '';
-    global $fs, $baseurl, $details;
+    global $fs, $baseurl, $details, $proj;
 
     $translate = array('item_summary' => 'summary', 'project_id' => 'attachedtoproject',
                        'task_type' => 'tasktype', 'product_category' => 'category', 'item_status' => 'status',
                        'task_priority' => 'priority', 'operating_system' => 'operatingsystem', 'task_severity' => 'severity',
-                       'product_version' => 'reportedversion', 'mark_private' => 'visibility');
-    // if soemthing gets double escaped, add it here.
+                       'product_version' => 'reportedversion', 'mark_private' => 'visibility',
+                       'estimated_effort' => 'estimatedeffort');
+    // if somehing gets double escaped, add it here.
     $noescape = array('new_value', 'old_value');
 
     foreach($history as $key=> $value) {
@@ -149,6 +150,10 @@ function event_description($history) {
                     }
                     $old_value = '';
                     $new_value = '';
+                    break;
+                case 'estimated_effort':
+                    $old_value = effort::SecondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                    $new_value = effort::SecondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
                     break;
             }
             $return .= eL('fieldchanged').": {$field}";
