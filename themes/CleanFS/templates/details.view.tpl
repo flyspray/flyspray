@@ -171,22 +171,31 @@
             </li>
             <?php endif; ?>
 
-            <?php if (!$user->isAnon()): ?>
-            <?php if (!$watched): ?>
-            <li>
-                <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=details.add_notification&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;user_id=<?php echo Filters::noXSS($user->id); ?>"><?php echo Filters::noXSS(L('watchthistask')); ?></a>
-            </li>
-            <?php endif; ?>
-            <?php endif; ?>
+	<?php if (!$user->isAnon() && !$watched): ?>
+	<li>
+	<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+		<input type="hidden" name="action" value="details.add_notification" />
+		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+		<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>" />
+		<button type="submit"><?php echo Filters::noXSS(L('watchthistask')); ?></button>
+	</form>
+	</li>
+	<?php endif; ?>
 
-
-            <?php if ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
-            <li>
-                <a href="#"><?php echo Filters::noXSS(L('privatethistask')); ?></a>
-            </li>
-            <?php endif; ?>
-
-        </ul>
+	<?php if ($user->can_change_private($task_details)): ?>
+	<li>
+	<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+		<?php if ($task_details['mark_private']): ?>
+		<input type="hidden" name="action" value="makepublic">
+		<button><?php echo eL('makepublic'); ?></button>
+		<?php elseif (!$task_details['mark_private']): ?>
+		<input type="hidden" name="action" value="makeprivate">
+		<button><?php echo eL('privatethistask'); ?></button>
+		<?php endif; ?>
+	</form>
+	</li>
+	<?php endif; ?>
+	</ul>
 	</div>
 <?php endif; ?>
 </div>
