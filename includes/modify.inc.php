@@ -1686,7 +1686,7 @@ switch ($action = Req::val('action'))
                 array($task['task_id'], Post::val('related_task')));
 
         Flyspray::logEvent($task['task_id'], 11, Post::val('related_task'));
-        Flyspray::logEvent(Post::val('related_task'), 11, $task['task_id']);
+        Flyspray::logEvent(Post::val('related_task'), 15, $task['task_id']);
 
         $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'));
 
@@ -1715,7 +1715,7 @@ switch ($action = Req::val('action'))
                 $related_task = $db->FetchRow($sql);
                 $related_task = ($related_task['this_task'] == $task['task_id']) ? $related_task['related_task'] : $task['task_id'];
                 Flyspray::logEvent($task['task_id'], 12, $related_task);
-                Flyspray::logEvent($related_task, 12, $task['task_id']);
+                Flyspray::logEvent($related_task, 16, $task['task_id']);
                 $_SESSION['SUCCESS'] = L('relatedremoved');
             }
         }

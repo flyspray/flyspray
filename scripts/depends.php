@@ -101,8 +101,19 @@ function ConnectsTo($id, $down, $up) {
     if (!isset($connected[$id])) { $connected[$id]=1; }
     if ($down > $levelsdown) { $levelsdown = $down; }
     if ($up   > $levelsup  ) { $levelsup   = $up  ; }
-#echo "$id ($down d, $up u) => $levelsdown d $levelsup u<br>\n";
-    if (empty($node_list)) return;
+
+/*
+echo '<pre><code>';
+echo "$id ($down d, $up u) => $levelsdown d $levelsup u<br>\n";
+echo 'nodes:';print_r($node_list);
+echo 'edges:';print_r($edge_list);
+echo 'rvrs:';print_r($rvrs_list);
+echo 'levelsdown:';print_r($levelsdown);
+echo "\n".'levelsup';print_r($levelsup);
+echo '<code></pre>';
+*/
+    if (empty($node_list)){ return; }
+    if (!isset($node_list[$id])){ return; }
     $selfclosed = $node_list[$id]['clsd'];
     if (isset($edge_list[$id])) {
         foreach ($edge_list[$id] as $neighbor) {

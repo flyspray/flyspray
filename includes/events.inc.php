@@ -236,6 +236,14 @@ function event_description($history) {
                  $return .= implode(', ', $users);
             }
             break;
+    // Mentioned in docs, not used anywhere. Will implement if suitable
+    // translations already exist, otherwise leave to 1.1. (Found translations)
+    case '15': // This task was added to another task's related list
+            $return .= eL('addedasrelated') . ': ' . tpl_tasklink($new_value);
+            break;
+    case '16': // This task was removed from another task's related list
+            $return .= eL('deletedasrelated') . ': ' . tpl_tasklink($new_value);
+            break;
     case '17': //Reminder added
             $return .= eL('reminderadded') . ': ' . tpl_userlink($new_value);
             break;

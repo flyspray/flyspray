@@ -80,17 +80,22 @@ $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
 usort($folders, 'version_compare'); // start with lowest version
 
 if (Post::val('upgrade')) {
+    $uplog=array();
+    $uplog[]="Start database transaction";
     $db->dblink->StartTrans();
-    find_duplicate_list_entries();
+    fix_duplicate_list_entries(true);
     foreach ($folders as $folder) {
         if (version_compare($installed_version, $folder, '<=')) {
-            execute_upgrade_file($folder, $installed_version);
+            $uplog[]="Start $installed_version to $folder";
+            $uplog[]= execute_upgrade_file($folder, $installed_version);
             $installed_version = $folder;
+            $uplog[]="End $installed_version to $folder";
         }
     }
-    // Update existing projects to default field visibility.
+    // Update existing projects to default field visibility if 'visible_fields' is empty.
     $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
 
+    # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
     // For testing, do not use yet, have to discuss this one with others.
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
 
@@ -98,6 +103,8 @@ if (Post::val('upgrade')) {
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
     $installed_version = $fs->version;
+    $page->assign('done', true);
+    $page->assign('upgradelog', $uplog);
 }
 
 function execute_upgrade_file($folder, $installed_version)
@@ -154,7 +161,8 @@ function execute_upgrade_file($folder, $installed_version)
     }
 
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(basename($upgrade_path), 'fs_ver'));
-    $page->assign('done', true);
+    #$page->assign('done', true);
+    return "Write ".basename($upgrade_path)." into table {prefs} fs_ver in database";
 }
 
  /**
@@ -340,8 +348,8 @@ $page->display('upgrade.tpl');
 // Functions for checking and fixing possible duplicate entries
 // in database for those tables that now have a unique index.
 
-function find_duplicate_list_entries() {
-    global $db;
+function fix_duplicate_list_entries($doit=true) {
+    global $db,$uplog;
 
     // Categories need a bit more thinking. A real life example from
     // my own database: A big project originally written (horrible!)
@@ -358,7 +366,11 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_os_table($dups);
+        if($doit){
+            fix_os_table($dups);
+        } else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_os}</span>';
+        }
     }
 
     $sql = $db->Query('SELECT MIN(resolution_id) id, project_id, resolution_name
@@ -367,7 +379,11 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_resolution_table($dups);
+        if($doit){
+            fix_resolution_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_resolution}</span>';
+        }
     }
 
     $sql = $db->Query('SELECT MIN(status_id) id, project_id, status_name
@@ -376,7 +392,11 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_status_table($dups);
+        if($doit){
+            fix_status_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_status}</span>';
+        }
     }
     $sql = $db->Query('SELECT MIN(tasktype_id) id, project_id, tasktype_name
                           FROM {list_tasktype}
@@ -384,7 +404,11 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_tasktype_table($dups);
+        if($doit){
+            fix_tasktype_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_tasktype}</span>';
+        }
     }
 
     $sql = $db->Query('SELECT MIN(version_id) id, project_id, version_name
@@ -393,7 +417,11 @@ function find_duplicate_list_entries() {
                         HAVING COUNT(*) > 1');
     $dups = $db->fetchAllArray($sql);
     if (count($dups) > 0) {
-        fix_version_table($dups);
+        if($doit){
+            fix_version_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_version}</span>';
+        }
     }
 }
 
@@ -538,6 +566,10 @@ function convert_old_entries($table, $column, $key) {
             . "FROM {". $table . "} "
             . "WHERE $column NOT LIKE '<p>%'");
     $entries = $db->fetchAllArray($sql);
+
+    # We should probably better use existing and proven filters for the conversions
+    # maybe this or existing dokuwiki functionality?
+    # $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle')
 
     foreach ($entries as $entry) {
         $id = $entry[$key];
