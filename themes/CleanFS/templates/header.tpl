@@ -61,7 +61,7 @@
 
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
-	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>
+	<?php if ($fs->prefs['logo']) { ?>
 		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>">
 	<?php } ?>
 	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>

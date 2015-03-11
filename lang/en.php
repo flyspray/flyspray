@@ -911,6 +911,7 @@ Regards,',
 'parenttaskid'            => 'Parent task id',
 'invalidsupertaskid'      => 'Parent task id is not valid.',
 'supertaskadded'          => 'Supertask added',
+'supertaskremoved'        => 'Supertask removed',
 'effort'                  => 'Effort',
 'efforttracking'          => 'Effort Tracking',
 'useeffort'               => 'Project Uses Effort Tracking',
@@ -1000,6 +1001,7 @@ Regards,',
 'viewroadmap'             => 'Can view roadmap',
 'nosuicide'               => 'Dear user, my program doesn\'t allow you to destroy your access to Flyspray by disabling your own account or switching your own group. The empathic brother of HAL9000',
 'movingtodifferentproject' => 'Moving a task that has either a parent or subtasks to a different project is not allowed. You must break the connection between them first.',
-'musthavesameproject'     => 'Parent and subtask must belong to the same project.'
+'musthavesameproject'     => 'Parent and subtask must belong to the same project.',
+'defaultorderby'          => 'Order tasklist by default by'
 );
 ?>

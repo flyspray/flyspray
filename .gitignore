@@ -10,3 +10,5 @@ composer.phar
 .htaccess
 *.PHPEditProject
 /avatars/*
+/lang/*.php.bak
+/lang/*.php.safe

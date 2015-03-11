@@ -195,7 +195,7 @@ switch ($action = Req::val('action'))
                             WHERE p.task_id = ? OR s.task_id = ?',
                 array($task['task_id'], $task['task_id']));
         $check = $db->fetchRow($result);
-        
+
         // if there are any subtasks or a parent, check that the project is not changed.
         if ($check && $check['sub_id']) {
             if ($check['project'] != Post::val('project_id')) {
@@ -203,7 +203,7 @@ switch ($action = Req::val('action'))
                 break;
             }
         }
-        
+
         $time = time();
 
         $db->Query('UPDATE  {tasks}
@@ -325,19 +325,19 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('subtasknotexist'));
             break;
         }
-        
+
         // check to see if associated subtask is already the parent of this task
         if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
-        
+
         // check to see if associated subtask already has a parent task
         if ($suptask['supertask_id']) {
             Flyspray::show_error(L('subtaskalreadyhasparent'));
             break;
         }
-        
+
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $suptask['project_id']) {
             Flyspray::show_error(L('musthavesameproject'));
@@ -346,7 +346,8 @@ switch ($action = Req::val('action'))
 
         //associate the subtask
         $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
-
+        Flyspray::logEvent($task['task_id'], 32, Post::val("associate_subtask_id"));
+        Flyspray::logEvent(Post::val("associate_subtask_id"), 34, $task['task_id']);
 
         $_SESSION['SUCCESS'] = L('associatedsubtask').Post::val('associate_subtask_id');
         break;
@@ -900,7 +901,7 @@ switch ($action = Req::val('action'))
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size');
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1044,7 +1045,7 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1735,6 +1736,8 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // TODO: Log event in a later version.
+
         $_SESSION['SUCCESS'] = L('notifyadded');
         break;
 
@@ -1743,6 +1746,8 @@ switch ($action = Req::val('action'))
         // ##################
     case 'remove_notification':
         Backend::remove_notification(Req::val('user_id'), Req::val('ids'));
+
+        // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyremoved');
         break;
@@ -1840,6 +1845,8 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // TODO: Log event in a later version.
+
         $_SESSION['SUCCESS'] = L('reminderaddedmsg');
         break;
 
@@ -1895,6 +1902,8 @@ switch ($action = Req::val('action'))
             }
         }
 
+        // TODO: Log event in a later version.
+
         $_SESSION['SUCCESS'] = L('groupswitchupdated');
         break;
 
@@ -1904,6 +1913,8 @@ switch ($action = Req::val('action'))
     case 'takeownership':
         Backend::assign_to_me($user->id, Req::val('ids'));
 
+        // TODO: Log event in a later version.
+
         $_SESSION['SUCCESS'] = L('takenownershipmsg');
         break;
 
@@ -1912,6 +1923,8 @@ switch ($action = Req::val('action'))
         // ##################
     case 'addtoassignees':
         Backend::add_to_assignees($user->id, Req::val('ids'));
+
+        // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('addedtoassignees');
         break;
@@ -2131,6 +2144,8 @@ switch ($action = Req::val('action'))
             $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
         }
 
+        // TODO: Log event in a later version.
+
         $_SESSION['SUCCESS'] = L('magicurlsent');
         break;
 
@@ -2153,6 +2168,8 @@ switch ($action = Req::val('action'))
         $db->Query("UPDATE  {users} SET user_pass = ?, magic_url = ''
                      WHERE  magic_url = ?",
         array($new_pass_hash, Post::val('magic_url')));
+
+        // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('passchanged');
         Flyspray::Redirect($baseurl);
@@ -2204,6 +2221,8 @@ switch ($action = Req::val('action'))
         }
         break;
 
+        // TODO: Log event in a later version.
+
         // ##################
         // Removing a vote for a task
         // ##################
@@ -2214,6 +2233,8 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('voteremovefailed'));
             break;
         }
+
+        // TODO: Log event in a later version.
 
         // ##################
         // set supertask id
@@ -2242,10 +2263,10 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        // check that supertask_id is a valid task id
         $sql = $db->Query('SELECT project_id FROM {tasks}
                            WHERE  task_id = '.Post::val("supertask_id").';');
 
+        // check that supertask_id is a valid task id
         $parent = $db->fetchRow($sql);
         if (!$parent) {
             Flyspray::show_error(L('invalidsupertaskid'));
@@ -2257,15 +2278,22 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('musthavesameproject'));
             break;
         }
-        
-        // Log the event in the task history
-        Flyspray::logEvent(Get::val('task_id'), 34, Get::val('subtaskid'));
 
         //finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
                      WHERE  task_id = ?',
         array(Post::val('supertask_id'),Post::val('task_id')));
+
+        // If task already had a different parent, the log removal too
+        if ($task['supertask_id']) {
+            Flyspray::logEvent($task['supertask_id'], 33, Post::val('task_id'));
+            Flyspray::logEvent(Post::val('task_id'), 35, $task['supertask_id']);
+        }
+
+        // Log the events in the task history
+        Flyspray::logEvent(Post::val('supertask_id'), 32, Post::val('task_id'));
+        Flyspray::logEvent(Post::val('task_id'), 34, Post::val('supertask_id'));
 
         // set success message
         $_SESSION['SUCCESS'] = L('supertaskmodified');
@@ -2277,6 +2305,8 @@ switch ($action = Req::val('action'))
         # TODO SQL Transactions with rollback function if something went wrong in the middle of bulk action
         $massopsenabled=0; # 20150305 disabled for 1.0 release until proper checks are done
         if($massopsenabled==1){
+
+        // TODO: Log events in a later version.
 
         if(Post::val('updateselectedtasks') == "true") {
             //process quick actions

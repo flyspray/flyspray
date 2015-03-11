@@ -26,7 +26,10 @@
       <li>
         <label for="profileimage"><?php echo Filters::noXSS(L('profileimage')); ?></label>
         <?php echo tpl_userlinkavatar($theuser->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?>
-        <input id="profileimage" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
+      </li>
+      <li>
+        <label for="profileimage_input">&nbsp;</label>
+        <input id="profileimage_input" name="profile_image" type="file" value="<?php echo Filters::noXSS(Req::val('profile_image')); ?>"/>
       </li>
       <?php endif ?>
       <li>
