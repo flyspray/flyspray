@@ -249,6 +249,7 @@ abstract class Backend
 
             if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
                            VALUES (?,?,?)", array($user->id, $task_id, time()))) {
+                // TODO: Log event in a later version.
                 return true;
             }
         }
@@ -282,6 +283,7 @@ abstract class Backend
 
             if($db->Query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
                             array($user->id, $task_id))) {
+                // TODO: Log event in a later version.
                return true;
             }
         }
@@ -437,6 +439,7 @@ abstract class Backend
 		    // Insert into database
 		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
 			    array($task_id, $comment_id, $text, $user->id, time()));
+                    // TODO: Log event in a later version.
 	    }
 
 	    return $res;
@@ -495,6 +498,7 @@ abstract class Backend
 		    }
 
 		    $db->Query('DELETE FROM {links} WHERE link_id = ?', array($task['link_id']));
+                    // TODO: Log event in a later version.
 	    }
     }
 
