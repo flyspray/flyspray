@@ -79,7 +79,8 @@
         <?php endif; ?>
         <td><?php echo tpl_userlink($history['user_id']); ?></td>
         <td><?php echo Filters::noXSS(formatDate($history['event_date'], true)); ?></td>
-        <?php if ($history['event_type'] > 29):
+        <?php if ($history['event_type'] == 30 ||
+                  $history['event_type'] == 31):
               $user_data = unserialize($history['new_value']); ?>
         <td>
           <a href="javascript:showhidestuff('h<?php echo Filters::noXSS($history['history_id']); ?>')"><?php echo Filters::noXSS(L('detailedinfo')); ?></a>
