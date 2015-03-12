@@ -54,15 +54,19 @@
             <?php endif; ?>
 
             <h2>Perform Upgrade</h2>
-            <p>
-              <input name="upgrade" id="upgradebutton" class="button" value="Perform Upgrade > >" type="submit" />
-              <?php if (isset($done)): ?>
-              <span class="green"><strong>Done!</strong></span>
-              <?php else: ?>
-              (this may take a while)
-              <?php endif; ?>
-            </p>
-            <?php endif; ?>
+<p><input name="upgrade" id="upgradebutton" class="button" value="Perform Upgrade > >" type="submit" /></p>
+<?php if (isset($done)): ?>
+<div class="green"><?php echo join('<br />',$upgradelog); ?></div>
+<p>If all went fine:
+<ol>
+<li>Delete setup directory or restrict access to this directory by a htaccess rule.</li>
+<li><a href="../" class="button" style="padding:4px;background-color:#fff;border-radius:3px;border:1px solid #000;display:inline-block">Back to Overview</a></li>
+</ol>
+</p>
+<?php else: ?>
+(this may take a while)
+<?php endif; ?>
+<?php endif; ?>
         </div><!-- End of install -->
         </form>
         <div class="clr"></div>
