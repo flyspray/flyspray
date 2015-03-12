@@ -42,7 +42,7 @@
             </p>
 
             <h2><?php echo L('precautions'); ?></h2>
-            <p><?php echo L('makebackup'); ?></p>
+            <p><?php echo L('precautionbackup'); ?></p>
 
             <?php if (isset($upgrade_options)): ?>
             <h2>Upgrade options</h2>
