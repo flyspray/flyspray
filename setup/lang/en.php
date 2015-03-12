@@ -1,5 +1,5 @@
 <?php
-$language=array{
+$language=array(
 'performupgrade' =>'Perform Upgrade'
-};
+);
 ?>
