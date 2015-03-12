@@ -1,8 +1,46 @@
 /* ------------------ IMPORTS -------------------- */
 @import url("../../js/jscalendar/calendar-system.css");
 /*@import url("calendar.css");*/
-@import url("reset.css");
+/* reset.css - Resets default browser CSS.
+putting it here saves one extra http request.
+*/
+html { margin:0;padding:0;border:0;}
+body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, code,
+del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, dialog, figure, footer, header,
+hgroup, nav, section {
+margin: 0;padding: 0;border: 0;font-size: 100%;vertical-align: baseline;
+}
+/* This helps to make newer HTML5 elements behave like DIVs in older browsers */
+article, aside, details, figcaption, figure, dialog,
+footer, header, hgroup, menu, nav, section {
+display:block;
+}
+body {
+line-height: 1.5; /* Line-height should always be unitless! */
+background: #fff;
+/* direction:rtl; */
+}
+table {border-collapse: separate;border-spacing: 0;}
+caption, th, td {
+text-align: left;
+font-weight: normal;
+float:none !important; /* float:none prevents the span-x classes from breaking table-cell display */
+}
+table, th, td {vertical-align: middle;}
+/* Remove possible quote marks (") from <q>, <blockquote>. */
+blockquote:before, blockquote:after, q:before, q:after { content: ''; }
+blockquote, q { quotes: "" ""; }
+/* Remember to define your own focus styles! */
+:focus { outline: 0; }
+/* end import reset.css */
+
 @import url("typography.css");
+
 /* ----------------- VARIABLES --------------------- */
 /*$far_background: #dcdcdc;*/
 /*$far_background: #ededed;*/
