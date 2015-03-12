@@ -104,6 +104,9 @@ if (Post::val('upgrade')) {
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
     // For testing, do not use yet, have to discuss this one with others.
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
+    // convert_old_entries('projects', 'intro_message', 'project_id');
+    // convert_old_entries('projects', 'default_task', 'project_id');
+    // convert_old_entries('comments', 'comment_text', 'comment_id');
 
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
