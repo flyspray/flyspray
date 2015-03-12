@@ -34,6 +34,7 @@ if(!isset($borked[-1])) {
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
+require_once OBJECTS_PATH . '/i18n.inc.php';
 
 // Use composer autoloader
 require dirname(__DIR__) . '/vendor/autoload.php';
