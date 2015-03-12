@@ -36,6 +36,11 @@ require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/i18n.inc.php';
 
+# fake objects for load_translation()
+class user{var $infos=array();}; class project{var $id=0;};
+$user=new user; $proj=new project;
+load_translations();
+
 // Use composer autoloader
 require dirname(__DIR__) . '/vendor/autoload.php';
 
