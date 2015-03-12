@@ -101,9 +101,18 @@ if (Post::val('upgrade')) {
     // Update existing projects to default field visibility if 'visible_fields' is empty.
     $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
 
+    $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
+
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
     // For testing, do not use yet, have to discuss this one with others.
+    //if (!$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
+    // convert_old_entries('projects', 'intro_message', 'project_id');
+    // convert_old_entries('projects', 'default_task', 'project_id');
+    // convert_old_entries('comments', 'comment_text', 'comment_id');
+    //}
+
+    $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array('CleanFS', 'global_theme'));
 
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
