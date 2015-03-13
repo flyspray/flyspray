@@ -35,6 +35,14 @@
         <td><?php echo tpl_checkbox('view_tasks', Req::val('view_tasks', !Req::val('action') && $group_details['view_tasks']), 'viewtasks'); ?></td>
       </tr>
       <tr>
+        <td><label for="viewowntasks"><?php echo Filters::noXSS(L('viewowntasks')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_own_tasks', Req::val('view_own_tasks', !Req::val('action') && $group_details['view_own_tasks']), 'viewowntasks'); ?></td>
+      </tr>
+      <tr>
+        <td><label for="viewgroupstasks"><?php echo Filters::noXSS(L('viewgroupstasks')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_groups_tasks', Req::val('view_groups_tasks', !Req::val('action') && $group_details['view_groups_tasks']), 'viewgroupstasks'); ?></td>
+      </tr>
+      <tr>
         <td><label for="canopenjobs"><?php echo Filters::noXSS(L('opennewtasks')); ?></label></td>
         <td><?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks', !Req::val('action') && $group_details['open_new_tasks']), 'canopenjobs'); ?></td>
       </tr>

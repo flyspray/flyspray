@@ -1002,6 +1002,9 @@ Regards,',
 'nosuicide'               => 'Dear user, my program doesn\'t allow you to destroy your access to Flyspray by disabling your own account or switching your own group. The empathic brother of HAL9000',
 'movingtodifferentproject' => 'Moving a task that has either a parent or subtasks to a different project is not allowed. You must break the connection between them first.',
 'musthavesameproject'     => 'Parent and subtask must belong to the same project.',
-'defaultorderby'          => 'Order tasklist by default by'
+'defaultorderby'          => 'Order tasklist by default by',
+'viewowntasks'            => 'View own tasks',
+'viewgroupstasks'         => 'View groups tasks',
+
 );
 ?>
