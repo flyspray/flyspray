@@ -796,8 +796,11 @@ function quick_edit(elem, id)
         <?php endif; ?>
 
         <?php
-            if (!$task_details['supertask_id']==0){
-                echo eL('taskissubtaskof').' '.tpl_tasklink($task_details['supertask_id']);
+            if (!$task_details['supertask_id'] == 0) {
+                $supertask = Flyspray::GetTaskDetails($task_details['supertask_id'], true);
+                if ($user->can_view_task($supertask)) {
+                    echo eL('taskissubtaskof').' '.tpl_tasklink($supertask);
+                }
             }
         ?>
         <?php if(!count($subtasks)==0): ?>

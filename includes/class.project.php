@@ -262,7 +262,9 @@ class Project
 
     // }}}
 
-    function listUsersIn($group_id = null)
+    // This should really be moved to class Flyspray like some other ones too.
+    // Something todo for 1.1.
+    static function listUsersIn($group_id = null)
     {
         global $db;
         return $db->cached_query(
