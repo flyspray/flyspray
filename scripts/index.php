@@ -121,6 +121,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'id'         => 'task_id',
             'project'    => 'project_title',
             'tasktype'   => 'task_type',
+            'tasktypename'=> 'tasktype_name',
             'category'   => 'category_name',
             'severity'   => '',
             'priority'   => '',
@@ -161,10 +162,12 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value .= '...';
             }
             break;
+
         case 'tasktype':
-            $value = $fs->tasktypes[$task['task_type']];
+            $value = $task['tasktype_name'];
             $class.=' typ'.$task['task_type'];
             break;
+
         case 'severity':
             $value = $fs->severities[$task['task_severity']];
             $class.=' sev'.$task['task_severity'];
