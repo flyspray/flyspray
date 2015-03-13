@@ -194,7 +194,7 @@
       <th><?php echo Filters::noXSS(L('accountenabled')); ?></th>
     </tr>
     <?php
-    foreach($proj->listUsersIn($group_details['group_id']) as $usr): ?>
+    foreach(Project::listUsersIn($group_details['group_id']) as $usr): ?>
     <tr>
       <td class="ttcolumn"><?php echo tpl_checkbox('users['.$usr['user_id'].']'); ?></td>
       <td><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>

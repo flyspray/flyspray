@@ -242,7 +242,7 @@ class User
             // Ok, user *must* have view_groups_tasks permission,
             // but do the check anyway just in case... there might
             // appear more in the future.
-            if ($this->perms('view_own_tasks', $task['project_id'])) {
+            if ($this->perms('view_groups_tasks', $task['project_id'])) {
                 // Two first checks the same as with view_own_tasks permission.
                 if ($task['opened_by'] == $this->id) {
                     return true;
@@ -255,8 +255,20 @@ class User
                 
                 // Must fetch other persons in the group now. Find out
                 // how to detect the right group for project and the
-                // other persons in it.
+                // other persons in it. Funny, found it in $perms.
+                $group = $this->perms('project_group', $task['project_id']);
+                $others = Project::listUsersIn($group);
                 
+                foreach ($others as $other) {
+                    if ($other['user_id'] == $task['opened_by']) {
+                        return true;
+                    }
+                    if (in_array($other['user_id'], $assignees)) {
+                        return true;
+                    }
+                }
+                // No use to continue further.
+                return false;
             }
         }
         
