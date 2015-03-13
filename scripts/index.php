@@ -249,7 +249,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             }
             break;
 	}
-	return sprintf($format, $param1, $value);
+	return sprintf($format, $class, $value);
 }
 
 // } }}
