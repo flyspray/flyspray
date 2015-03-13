@@ -149,7 +149,8 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         //run away..
         return '';
     }
-
+    $class= 'task_'.$colname;
+    
 	switch ($colname) {
         case 'id':
             $value = tpl_tasklink($task, $task['task_id']);
@@ -160,13 +161,18 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value .= '...';
             }
             break;
-
+        case 'tasktype':
+            $value = $fs->tasktypes[$task['task_type']];
+            $class.=' typ'.$task['task_type'];
+            break;
         case 'severity':
             $value = $fs->severities[$task['task_severity']];
+            $class.=' sev'.$task['task_severity'];
             break;
 
         case 'priority':
             $value = $fs->priorities[$task['task_priority']];
+            $class.=' pri'.$task['task_priority'];
             break;
 
         case 'lastedit':
@@ -243,7 +249,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             }
             break;
 	}
-	return sprintf($format, 'task_'.$colname, $value);
+	return sprintf($format, $param1, $value);
 }
 
 // } }}
