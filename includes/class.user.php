@@ -202,13 +202,79 @@ class User
             return true;
         }
 
-        if ($task['opened_by'] == $this->id && !$this->isAnon()
-            || (!$task['mark_private'] && ($this->perms('view_tasks', $task['project_id']) || $this->perms('others_view', $task['project_id'])))
-            || $this->perms('manage_project', $task['project_id'])) {
+        // Split into several separate tests so I can keep track on whats happening.
+        
+        // Project managers and admins allowed always.
+        if ($this->perms('manage_project', $task['project_id'])
+            || $this->perms('is_admin', $task['project_id'])) {
             return true;
         }
-
-        return !$this->isAnon() && in_array($this->id, Flyspray::GetAssignees($task['task_id']));
+        
+        // Allow if "allow anyone to view this project" is checked
+        // and task is not private.
+        if ($this->perms('others_view', $task['project_id']) && !$task['mark_private']) {
+            return true;
+        }
+        
+        if ($this->isAnon()) {
+            // Following checks need identified user.
+            return false;
+        }
+        
+        // Non-private task
+        if (!$task['mark_private']) {
+            // Can view tasks, always allow
+            if ($this->perms('view_tasks', $task['project_id'])) {
+                return true;
+            }
+            // User can view only own tasks
+            if ($this->perms('view_own_tasks', $task['project_id'])
+                && !$this->perms('view_groups_tasks', $task['project_id'])) {
+                if ($task['opened_by'] == $this->id) {
+                    return true;
+                }
+                if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+                    return true;
+                }
+                // No use to continue further.
+                return false;
+            }
+            // Ok, user *must* have view_groups_tasks permission,
+            // but do the check anyway just in case... there might
+            // appear more in the future.
+            if ($this->perms('view_own_tasks', $task['project_id'])) {
+                // Two first checks the same as with view_own_tasks permission.
+                if ($task['opened_by'] == $this->id) {
+                    return true;
+                }
+                // Fetch only once, could be needed twice
+                $assignees = Flyspray::GetAssignees($task['task_id']);
+                if (in_array($this->id, $assignees)) {
+                    return true;
+                }
+                
+                // Must fetch other persons in the group now. Find out
+                // how to detect the right group for project and the
+                // other persons in it.
+                
+            }
+        }
+        
+        // Private task, user must be either assigned to the task
+        // or have opened it.
+        if ($task['mark_private']) {
+            if ($task['opened_by'] == $this->id) {
+                return true;
+            }
+            if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+                return true;
+            }
+            // No use to continue further.
+            return false;
+        }
+        
+        // Could not find any permission for viewing the task.
+        return false;
     }
 
     public function can_edit_task($task)
