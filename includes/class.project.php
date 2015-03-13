@@ -36,6 +36,7 @@ class Project
         $this->prefs['default_due_version'] = 'Undecided';
         $this->prefs['disable_lostpw']=0;
         $this->prefs['disable_changepw'] = 0;
+		$this->prefs['default_order_by'] = 'id';
     }
 
     function setCookie()
