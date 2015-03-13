@@ -1151,7 +1151,15 @@ abstract class Backend
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
-
+        
+        // PostgreSQL LIKE searches are by default case sensitive,
+        // so we use ILIKE instead. For other databases, in our case
+        // only MySQL/MariaDB, LIKE is good for our purposes.
+        $LIKEOP = 'LIKE';
+        if ($db->dblink->dataProvider == 'postgres') {
+            $LIKEOP = 'ILIKE';
+        }
+        
         $select = '';
         $groupby = 't.task_id, ';
         $from   = '             {tasks}         t
@@ -1330,7 +1338,7 @@ abstract class Backend
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . ' LIKE ? OR ';
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR ";
                                 $sql_params[] = '%' . $val . '%';
                             } elseif (is_numeric($val)) {
                                 $temp .= ' ' . $singleDBKey . ' = ? OR';
@@ -1381,15 +1389,15 @@ abstract class Backend
             $where_temp = array();
 
             if (array_get($args, 'search_in_comments')) {
-                $comments .= 'OR c.comment_text LIKE ?';
+                $comments .= "OR c.comment_text $LIKEOP ?";
             }
             if (array_get($args, 'search_in_details')) {
-                $comments .= 'OR t.detailed_desc LIKE ?';
+                $comments .= "OR t.detailed_desc $LIKEOP ?";
             }
 
             foreach ($words as $word) {
                 $likeWord = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary LIKE ? OR t.task_id = ? $comments)";
+                $where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
                 array_push($sql_params, $likeWord, intval($word));
                 if (array_get($args, 'search_in_comments')) {
                     array_push($sql_params, $likeWord);

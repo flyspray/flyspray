@@ -39,6 +39,7 @@ class Project
         $this->prefs['hours_per_manday'] = 0;
         $this->prefs['estimated_effort_format'] = 0;
         $this->prefs['current_effort_done_format'] = 0;
+    	$this->prefs['default_order_by'] = 'id';
     }
 
     # 20150219 peterdd: deprecated
@@ -261,7 +262,9 @@ class Project
 
     // }}}
 
-    function listUsersIn($group_id = null)
+    // This should really be moved to class Flyspray like some other ones too.
+    // Something todo for 1.1.
+    static function listUsersIn($group_id = null)
     {
         global $db;
         return $db->cached_query(
@@ -335,12 +338,12 @@ class Project
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
-        
+
 		$result = $db->Query("SELECT count(date({$func}(event_date))) as val
-		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+		FROM {history} h left join {tasks} t on t.task_id = h.task_id
 		WHERE t.project_id = ?
 		AND date({$func}(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
-        
+
         $result = $db->fetchCol($result);
 		return $result[0];
 	}
@@ -356,30 +359,30 @@ class Project
 		global $db;
 		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
-        
+
 		$result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
-							  WHERE t.project_id = ? 
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
+							  WHERE t.project_id = ?
 							  AND date({$func}(event_date)) BETWEEN date(?) and date(?)
-                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC", 
+                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
                               array($project_id, $date_start, $date_end));
-        
+
         $date1   = new \DateTime($date_start);
         $date2   = new \DateTime($date_end);
         $days    = $date1->diff($date2);
         $days    = $days->format('%a');
         $results = array();
-         
+
         for ($i = 0; $i < $days; $i++) {
             $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
             $results[date('Y-m-d', $event_date)] = 0;
         }
-        
+
         while ($row = $result->fetchRow()) {
             $event_date           = date('Y-m-d', $row['event_date']);
             $results[$event_date] = (integer) $row['val'];
         }
-        
+
 		return array_values($results);
 	}
     /* }}} */

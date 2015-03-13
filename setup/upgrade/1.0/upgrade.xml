@@ -257,6 +257,14 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="view_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="view_groups_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
     <index name="group_name">
       <UNIQUE/>
       <col>group_name</col>
