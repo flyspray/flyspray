@@ -16,7 +16,7 @@
     <?php endforeach; ?>
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
           href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
@@ -62,7 +62,7 @@
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
 	<?php if ($fs->prefs['logo']) { ?>
-		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>">
+		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" />
 	<?php } ?>
 	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
 
