@@ -74,13 +74,13 @@
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
   <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
   <input type="hidden" name="do" value="index"/>
-  <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
+  <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'/>
 <style>
 #sc2,#s_searchstate{display:none;}
 #searchstateactions{color:#999;display:block;}
 #s_searchstate:checked ~ #sc2 {display:block;}
 </style>
-<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>>
+<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
 <label id="searchstateactions" for="s_searchstate"><span class="fa fa-caret-down"></span><?php echo Filters::noXSS(L('advanced')); ?></label>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
