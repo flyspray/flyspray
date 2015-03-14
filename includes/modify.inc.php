@@ -905,6 +905,20 @@ switch ($action = Req::val('action'))
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
+
+    	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
+    		// First check if htaccess is turned on
+    		if (!array_key_exists('HTACCESS_ENABLED', $_SERVER)) {
+    			Flyspray::show_error(L('enablehtaccess'));
+    			break;
+    		}
+    		// Make sure mod_rewrite is enabled
+    		else if (!array_key_exists('MOD_REWRITE', $_SERVER)) {
+    			Flyspray::show_error(L('nomodrewrite'));
+    			break;
+    		}
+    	}
+
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
