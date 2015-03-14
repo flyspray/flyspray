@@ -611,9 +611,6 @@ function quick_edit(elem, id)
 	<li>
 	<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
 	<span class="value">
-		<?php if ($task_details['mark_private']): echo eL('yes'); ?>
-		<?php else: echo eL('no'); ?>
-		<?php endif; ?>
 		<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
 		<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
 		<input type="hidden" name="action" value="makepublic">
@@ -634,23 +631,17 @@ function quick_edit(elem, id)
         <li>
         	<span class="label"><?php echo Filters::noXSS(L('watching')); ?></span>
 		<span class="value">
-		<?php if ($watched): ?>
-                <?php echo eL('yes'); ?>
-                <?php else: ?>
-                <?php echo eL('no'); ?>
-                <?php endif; ?>
-
-                <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
-                  <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>">
-                  <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>">
-                  <?php if (!$watched): ?>
-                    <input type="hidden" name="action" value="details.add_notification">
-                    <button type="submit" accesskey="w"><?php echo eL('watchtask'); ?></button>
-                  <?php else: ?>
-                    <input type="hidden" name="action" value="remove_notification">
-                    <button type="submit" accesskey="w"><?php echo eL('stopwatching'); ?></button>
-                  <?php endif; ?>
-                </form>
+            <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+              <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>">
+              <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>">
+              <?php if (!$watched): ?>
+                <input type="hidden" name="action" value="details.add_notification">
+                <button type="submit" accesskey="w"><?php echo eL('watchtask'); ?></button>
+              <?php else: ?>
+                <input type="hidden" name="action" value="remove_notification">
+                <button type="submit" accesskey="w"><?php echo eL('stopwatching'); ?></button>
+              <?php endif; ?>
+            </form>
 		</span>
         </li>
         <?php endif; ?>
