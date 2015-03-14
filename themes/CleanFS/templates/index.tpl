@@ -73,12 +73,15 @@
   <input class="text" id="searchtext" name="string" type="text" size="20"
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
   <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
+  <input type="hidden" name="do" value="index"/>
+  <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
 <style>
 #sc2,#s_searchstate{display:none;}
+#searchstateactions{color:#999;display:block;}
 #s_searchstate:checked ~ #sc2 {display:block;}
 </style>
 <input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>>
-<label id="searchstateactions" class="button main" for="s_searchstate"><?php echo Filters::noXSS(L('advanced')); ?></label>
+<label id="searchstateactions" for="s_searchstate"><span class="fa fa-caret-down"></span><?php echo Filters::noXSS(L('advanced')); ?></label>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
 <fieldset>
@@ -120,7 +123,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="type"><?php echo Filters::noXSS(L('tasktype')); ?></label>
-                        <select name="type[]" id="type" multiple="multiple" size="5">
+                        <select name="type[]" id="type" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', '')); ?>
                         </select>
                     </div>
@@ -132,7 +135,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="sev"><?php echo Filters::noXSS(L('severity')); ?></label>
-                        <select name="sev[]" id="sev" multiple="multiple" size="5">
+                        <select name="sev[]" id="sev" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', '')); ?>
                         </select>
                     </div>
@@ -144,7 +147,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="pri"><?php echo Filters::noXSS(L('priority')); ?></label>
-                        <select name="pri[]" id="pri" multiple="multiple" size="5">
+                        <select name="pri[]" id="pri" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', '')); ?>
                         </select>
                     </div>
@@ -156,7 +159,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="due"><?php echo Filters::noXSS(L('dueversion')); ?></label>
-                        <select name="due[]" id="due" multiple="multiple" size="5">
+                        <select name="due[]" id="due" multiple="multiple" size="8">
                             <?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', '')); ?>
                         </select>
                     </div>
@@ -168,7 +171,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="reported"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
-                        <select name="reported[]" id="reported" multiple="multiple" size="5">
+                        <select name="reported[]" id="reported" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', '')); ?>
                         </select>
                     </div>
@@ -180,7 +183,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="cat"><?php echo Filters::noXSS(L('category')); ?></label>
-                        <select name="cat[]" id="cat" multiple="multiple" size="5">
+                        <select name="cat[]" id="cat" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', '')); ?>
                         </select>
                     </div>
@@ -192,7 +195,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="status"><?php echo Filters::noXSS(L('status')); ?></label>
-                        <select name="status[]" id="status" multiple="multiple" size="5">
+                        <select name="status[]" id="status" multiple="multiple" size="8">
                             <?php echo tpl_options(array('' => L('allstatuses')) +
                             array('open' => L('allopentasks')) +
                             array('closed' => L('allclosedtasks')) +
@@ -207,7 +210,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
-                        <select name="percent[]" id="percent" multiple="multiple" size="5">
+                        <select name="percent[]" id="percent" multiple="multiple" size="12">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
                             <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', '')); ?>
                         </select>
@@ -252,8 +255,6 @@
                     </div>
                 </fieldset>
             </div>
-        <input type="hidden" name="do" value="index"/>
-	<input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'>
 </form>
 <?php endif; ?>
 
