@@ -7,12 +7,35 @@ require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
 require_once BASEDIR . '/includes/class.tpl.php';
 
-// Use composer autoloader
-require 'vendor/autoload.php';
-
-
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
+
+if(is_readable(BASEDIR . '/vendor/autoload.php')){
+        // Use composer autoloader
+        require 'vendor/autoload.php';
+}else{
+        # use the translations from the setup/lang/, but too late for setting BASEDIR to setup dir
+        #load_translations();
+        #die (eL('needcomposer'));
+        echo '<!DOCTYPE html>
+<html>
+<head>
+<title>Flyspray Install - Third Party Packages needed</title>
+<link media="screen" href="themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="padding:2em"><img src="flyspray.png" style="display:block;margin:auto;">
+<h1>It seems you try to install a development version of Flyspray.</h1>
+<h2>You need some required libraries installed by composer. Use ssh to login to your server, move to the root directory of your unpacked flyspray sources and execute this:</h2>
+<h3><pre>
+    curl -sS https://getcomposer.org/installer | php
+    php composer.phar install
+</pre></h3>
+<h2>Or take an official release, which contains all needed external packages bundled.</h2>';
+
+echo '<div id="content"><pre>'.file_get_contents('README.md').'</pre></div>';
+echo '</body></html>';
+        exit;
+}
 
 // If it is empty, take the user to the setup page
 if (!$conf) {
