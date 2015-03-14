@@ -1216,8 +1216,8 @@ span.warning {
     font-weight: bold;
 }
 /* typical colorings for task type and permissions */
-fa-bug{color:#c30;}
-fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
-fa-check{color:#090;}
+.fa-bug{color:#c30;}
+.fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
+.fa-check{color:#090;}
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
-fa-ban{color:#900;}
+.fa-ban{color:#900;}
