@@ -2077,10 +2077,10 @@ switch ($action = Req::val('action'))
 
         //set the subtask supertask_id to 0 removing parent child relationship
         $db->Query("UPDATE {tasks} SET supertask_id=0 WHERE task_id = ?",
-                   array(Get::val('subtaskid')));
+                   array(Post::val('subtaskid')));
 
         //write event log
-        Flyspray::logEvent(Get::val('task_id'), 33, Get::val('subtaskid'));
+        Flyspray::logEvent(Get::val('task_id'), 33, Post::val('subtaskid'));
         //post success message to the user
         $_SESSION['SUCCESS'] = L('subtaskremovedmsg');
         //redirect the user back to the right task
@@ -2098,11 +2098,11 @@ switch ($action = Req::val('action'))
 
         $result = $db->Query('SELECT  * FROM {dependencies}
                                WHERE  depend_id = ?',
-        array(Get::val('depend_id')));
+        array(Post::val('depend_id')));
         $dep_info = $db->FetchRow($result);
 
         $db->Query('DELETE FROM {dependencies} WHERE depend_id = ? AND task_id = ?',
-                    array(Get::val('depend_id'), $task['task_id']));
+                    array(Post::val('depend_id'), $task['task_id']));
 
         if ($db->AffectedRows()) {
             $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id']);
@@ -2117,7 +2117,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('return_task_id')));
+        Flyspray::Redirect(CreateURL('details', Post::val('return_task_id')));
         break;
 
         // ##################
