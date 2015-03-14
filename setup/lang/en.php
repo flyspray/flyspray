@@ -1,5 +1,7 @@
 <?php
 $language=array(
+'needcomposer'       => 'You need some required libraries installed by Composer.',
+'installcomposer'    => 'Run Composer',
 'performupgrade'     => 'Perform Upgrade',
 'precautions'        => 'Precautions',
 'precautionbackup'   => 'Create a backup of your database and all Flyspray related files before performing the upgrade.',
