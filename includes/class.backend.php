@@ -1428,12 +1428,13 @@ abstract class Backend
         }
 
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
-
+        
+        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
         $sql = $db->Query("
                           SELECT   t.*, $select
                                    p.project_title, p.project_is_active,
-                                   lst.status_name AS status_name,
-                                   lt.tasktype_name AS task_type,
+                                   lst.status_name,
+                                   lt.tasktype_name,
                                    lr.resolution_name
                           FROM     $from
                           $where

@@ -23,6 +23,18 @@
       </li>
 
       <li>
+        <label for="viewowntasks"><?php echo Filters::noXSS(L('viewowntasks')); ?></label>
+        <?php echo tpl_checkbox('view_own_tasks', Req::val('view_own_tasks', Req::val('action') != 'newgroup.newgroup'), 'viewowntasks'); ?>
+
+      </li>
+
+      <li>
+        <label for="viewgroupstasks"><?php echo Filters::noXSS(L('viewgroupstasks')); ?></label>
+        <?php echo tpl_checkbox('view_groups_tasks', Req::val('view_groups_tasks', Req::val('action') != 'newgroup.newgroup'), 'viewgroupstasks'); ?>
+
+      </li>
+
+      <li>
         <label for="opennewtasks"><?php echo Filters::noXSS(L('opennewtasks')); ?></label>
         <?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks', Req::val('action') != 'newgroup.newgroup'), 'opennewtasks'); ?>
 

@@ -35,6 +35,14 @@
         <td><?php echo tpl_checkbox('view_tasks', Req::val('view_tasks', !Req::val('action') && $group_details['view_tasks']), 'viewtasks'); ?></td>
       </tr>
       <tr>
+        <td><label for="viewowntasks"><?php echo Filters::noXSS(L('viewowntasks')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_own_tasks', Req::val('view_own_tasks', !Req::val('action') && $group_details['view_own_tasks']), 'viewowntasks'); ?></td>
+      </tr>
+      <tr>
+        <td><label for="viewgroupstasks"><?php echo Filters::noXSS(L('viewgroupstasks')); ?></label></td>
+        <td><?php echo tpl_checkbox('view_groups_tasks', Req::val('view_groups_tasks', !Req::val('action') && $group_details['view_groups_tasks']), 'viewgroupstasks'); ?></td>
+      </tr>
+      <tr>
         <td><label for="canopenjobs"><?php echo Filters::noXSS(L('opennewtasks')); ?></label></td>
         <td><?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks', !Req::val('action') && $group_details['open_new_tasks']), 'canopenjobs'); ?></td>
       </tr>
@@ -186,7 +194,7 @@
       <th><?php echo Filters::noXSS(L('accountenabled')); ?></th>
     </tr>
     <?php
-    foreach($proj->listUsersIn($group_details['group_id']) as $usr): ?>
+    foreach(Project::listUsersIn($group_details['group_id']) as $usr): ?>
     <tr>
       <td class="ttcolumn"><?php echo tpl_checkbox('users['.$usr['user_id'].']'); ?></td>
       <td><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>

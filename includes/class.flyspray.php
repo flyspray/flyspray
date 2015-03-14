@@ -1229,4 +1229,13 @@ class Flyspray
         return '';
     }
 
+    public static function weedOutTasks($user, $tasks) {
+        $allowedtasks = array();
+        foreach ($tasks as $task) {
+            if ($user->can_view_task($task)) {
+                $allowedtasks[] = $task;
+            }
+        }
+        return $allowedtasks; 
+    }
 }

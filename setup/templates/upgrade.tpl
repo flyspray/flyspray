@@ -10,7 +10,7 @@
   <div id="container">
     <div id="header">
       <div id="logo">
-        <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - The bug Killer!">Upgrade</a></h1>
+        <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - The bug Killer!"><?php echo L('upgrade'); ?></a></h1>
       </div><!-- End of logo -->
     </div><!-- End of header -->
     <div id="content">
@@ -18,9 +18,8 @@
       <form action="upgrade.php" method="post" onsubmit="document.getElementById('upgradebutton').disabled = true;return true;" >
       <input type="hidden" name="upgrade" value="1" />
         <div class="install">
-            <h2>Precondition checks</h2>
-            <p>
-            Your current version is <strong><?php echo Filters::noXSS($installed_version); ?></strong> and the version we can upgrade to is <strong><?php echo Filters::noXSS($short_version); ?></strong>.
+            <h2><?php echo L('preconditionchecks'); ?></h2>
+            <p><?php echo sprintf(L('versioncompare'), $installed_version, $short_version); ?>
             <div class="installBlock">
 				<table class="formBlock">
 				<tr>
@@ -33,36 +32,37 @@
 					<td>&nbsp;</td>
 				</tr>
 				</table>
-				<p>
-				In order to upgrade Flyspray
-				correctly it needs to be able to access and write flyspray.conf.php.
-				</p>
+				<p><?php echo L('writeaccessconf'); ?></p>
 			</div>
             <?php if (!$upgrade_possible): ?>
             Apparently, an upgrade is not possible. <?php echo Filters::noXSS($todo); ?>
 
             <?php else: ?>
-            Apparently, an upgrade is possible.
+            <?php echo L('upgradepossible'); ?>
             </p>
 
-            <h2>Precautions</h2>
-            <p>Create a backup of your <strong>database</strong> <em>and</em> all Flyspray related <strong>files</strong> before performing the upgrade.</p>
+            <h2><?php echo L('precautions'); ?></h2>
+            <p><?php echo L('precautionbackup'); ?></p>
 
             <?php if (isset($upgrade_options)): ?>
             <h2>Upgrade options</h2>
             <p><?php echo $upgrade_options; ?></p>
             <?php endif; ?>
 
-            <h2>Perform Upgrade</h2>
-            <p>
-              <input name="upgrade" id="upgradebutton" class="button" value="Perform Upgrade > >" type="submit" />
-              <?php if (isset($done)): ?>
-              <span class="green"><strong>Done!</strong></span>
-              <?php else: ?>
-              (this may take a while)
-              <?php endif; ?>
-            </p>
-            <?php endif; ?>
+            <h2><?php echo L('performupgrade'); ?></h2>
+<p><input name="upgrade" id="upgradebutton" class="button" value="<?php echo eL('performupgrade'); ?>" type="submit" /></p>
+<?php if (isset($done)): ?>
+<div class="green"><?php echo join('<br />',$upgradelog); ?></div>
+<p>If all went fine:
+<ol>
+<li>Delete setup directory or restrict access to this directory by a htaccess rule.</li>
+<li><a href="../" class="button" style="padding:4px;background-color:#fff;border-radius:3px;border:1px solid #000;display:inline-block">Back to Overview</a></li>
+</ol>
+</p>
+<?php else: ?>
+(this may take a while)
+<?php endif; ?>
+<?php endif; ?>
         </div><!-- End of install -->
         </form>
         <div class="clr"></div>

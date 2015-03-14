@@ -334,13 +334,14 @@ function quick_edit(elem, id)
     <ul class="fieldslist">
         <!-- Task Type-->
         <?php if (in_array('tasktype', $fields)): ?>
-        <li><span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span><span class="value<?php if ($user->can_edit_task($task_details)): ?> canedit<?php endif;?><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
-	<?php if ($user->can_edit_task($task_details)):
+        <li><span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span>
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
+ 	<?php if ($user->can_edit_task($task_details)):
 	?><span class="editquick" style="display:none;">
 		<span class="editvalue"><select id="tasktype" name="task_type">
 		<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 		</select>
-		<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a></span>
+		<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></span>
 	</span><?php endif; ?></li>
         <?php endif; ?>
 
@@ -795,8 +796,11 @@ function quick_edit(elem, id)
         <?php endif; ?>
 
         <?php
-            if (!$task_details['supertask_id']==0){
-                echo eL('taskissubtaskof').' '.tpl_tasklink($task_details['supertask_id']);
+            if (!$task_details['supertask_id'] == 0) {
+                $supertask = Flyspray::GetTaskDetails($task_details['supertask_id'], true);
+                if ($user->can_view_task($supertask)) {
+                    echo eL('taskissubtaskof').' '.tpl_tasklink($supertask);
+                }
             }
         ?>
         <?php if(!count($subtasks)==0): ?>
