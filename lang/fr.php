@@ -989,6 +989,11 @@ $translation = array(
 'movingtodifferentproject'=> 'Déplacer une tâches qui a soit une tâche parente ou une sous-tâche dans un autre projet n\'est pas permis. Vous devez d\'abord supprimer les connexions entre elles.',
 'musthavesameproject'     => 'La tâche parente et la sous-tâche doivent appartenir au même projet.',
 'defaultorderby'          => 'Ordonner la liste des tâches par défaut par',
+'viewowntasks'            => 'Voir ses propres tâches',
+'viewgroupstasks'         => 'Voir les tâches de groupes',
+'urlrewriting'            => 'Réécriture d\'url',
+'on'                      => 'Activé',
+'off'                     => 'Désactivé',
 );
 
 ?>
