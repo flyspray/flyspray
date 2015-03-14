@@ -1008,6 +1008,9 @@ Regards,',
 'urlrewriting'            => 'Url rewriting',
 'on'                      => 'On',
 'off'                     => 'Off',
+'defaultorderbydirection' => 'Default order by direction',
+'ascending'               => 'Ascending',
+'descending'              => 'Descending',
 
 );
 ?>

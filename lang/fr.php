@@ -2,11 +2,11 @@
 //
 // This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-// 
+//
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-// 
+//
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
@@ -994,6 +994,9 @@ $translation = array(
 'urlrewriting'            => 'Réécriture d\'url',
 'on'                      => 'Activé',
 'off'                     => 'Désactivé',
+'defaultorderbydirection' => 'Direction ordre par défaut',
+'ascending'               => 'Ascendant',
+'descending'              => 'Descendant',
 );
 
 ?>

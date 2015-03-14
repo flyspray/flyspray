@@ -134,7 +134,6 @@
           <label for="themestyle"><?php echo Filters::noXSS(L('themestyle')); ?></label>
           <select id="themestyle" name="theme_style">
             <?php echo tpl_options(Flyspray::listThemes(), Post::val('theme_style', $proj->prefs['theme_style']), true); ?>
-
           </select>
         </li>
 
@@ -142,7 +141,6 @@
           <label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
           <select id="default_entry" name="default_entry">
             <?php echo tpl_options(array('index' => L('tasklist'), 'toplevel' => L('toplevel'), 'roadmap' => L('roadmap')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
-
           </select>
         </li>
 
@@ -184,6 +182,13 @@
           <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $proj->prefs['default_order_by'], false); ?>
+          </select>
+        </li>
+
+        <li>
+          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <select id="default_order_by_dir" name="default_order_by_dir">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir'], false); ?>
           </select>
         </li>
 

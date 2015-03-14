@@ -375,6 +375,13 @@
           </select>
         </li>
 
+        <li>
+          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <select id="default_order_by_dir" name="default_order_by_dir">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $fs->prefs['default_order_by_dir'], false); ?>
+          </select>
+        </li>
+
           <li>
             <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
