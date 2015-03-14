@@ -41,7 +41,7 @@ blockquote, q { quotes: "" ""; }
 
 /* start typography.css */
 /* no colors here. Lets do colors,font-style and text-decoration in extra css files for easy customization */
-body {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
+body {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size:12px;}
 h1,h2,h3,h4,h5,h6 { font-weight: normal; }
 h1 { font-size: 3em; line-height: 1; margin-bottom: 0.5em; }
 h2 { font-size: 2em; margin-bottom: 0.75em; }
