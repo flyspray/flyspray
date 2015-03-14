@@ -830,12 +830,12 @@ function tpl_disableif ($if)
 // Create an URL bas ed upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf;
+    global $baseurl, $conf, $fs;
 
     $url = $baseurl;
 
     // If we do want address rewriting
-    if ($conf['general']['address_rewriting'] == '1') {
+    if ($fs->prefs['url_rewriting']) {
         switch ($type) {
             case 'depends':   $return = $url . 'task/' .  $arg1 . '/' . $type; break;
             case 'details':   $return = $url . 'task/' . $arg1; break;

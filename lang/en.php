@@ -1005,6 +1005,9 @@ Regards,',
 'defaultorderby'          => 'Order tasklist by default by',
 'viewowntasks'            => 'View own tasks',
 'viewgroupstasks'         => 'View groups tasks',
+'urlrewriting'            => 'Url rewriting',
+'on'                      => 'On',
+'off'                     => 'Off',
 
 );
 ?>
