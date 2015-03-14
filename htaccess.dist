@@ -65,7 +65,7 @@ php_flag always_populate_raw_post_data Off
 </LimitExcept>
 
 <IfModule mod_rewrite.c>
-SetEnv MOD_REWRITE on
+SetEnv HTTP_MOD_REWRITE on
 
 RewriteEngine on
 #RewriteBase /flyspray
@@ -108,4 +108,4 @@ RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
 
 </IfModule>
 
-SetEnv HTACCESS_ENABLED on
+SetEnv HTTP_HTACCESS_ENABLED on

@@ -908,12 +908,12 @@ switch ($action = Req::val('action'))
 
     	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
     		// First check if htaccess is turned on
-    		if (!array_key_exists('HTACCESS_ENABLED', $_SERVER)) {
+    		if (!array_key_exists('HTTP_HTACCESS_ENABLED', $_SERVER)) {
     			Flyspray::show_error(L('enablehtaccess'));
     			break;
     		}
     		// Make sure mod_rewrite is enabled
-    		else if (!array_key_exists('MOD_REWRITE', $_SERVER)) {
+    		else if (!array_key_exists('HTTP_MOD_REWRITE', $_SERVER)) {
     			Flyspray::show_error(L('nomodrewrite'));
     			break;
     		}
