@@ -164,7 +164,7 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
                 ( $name!='' ? ' name="'.$name.'"':'').
                 ( ' enctype="'.$enctype.'"').
                 ( ' '.$attr).'>'.
-                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'">':'');
+                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'" />':'');
 }
 
 // {{{ costful templating functions, TODO: optimize them

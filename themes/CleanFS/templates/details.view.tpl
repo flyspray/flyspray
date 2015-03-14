@@ -330,8 +330,6 @@ function quick_edit(elem, id)
 
         </li>
         <?php endif; ?>
-    </ul>
-    <ul class="fieldslist">
         <!-- Task Type-->
         <?php if (in_array('tasktype', $fields)): ?>
         <li><span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span>
@@ -576,8 +574,6 @@ function quick_edit(elem, id)
         </li>
         <?php }
         } ?>
-    </ul>
-    <ul class="fieldslist">
         <!-- Votes-->
         <?php if (in_array('votes', $fields)): ?>
         <li class="votes"><span class="label"><?php echo Filters::noXSS(L('votes')); ?></span>
