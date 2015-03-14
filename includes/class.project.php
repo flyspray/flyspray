@@ -40,6 +40,7 @@ class Project
         $this->prefs['estimated_effort_format'] = 0;
         $this->prefs['current_effort_done_format'] = 0;
     	$this->prefs['default_order_by'] = 'id';
+    	$this->prefs['default_order_by_direction'] = 'desc';
     }
 
     # 20150219 peterdd: deprecated

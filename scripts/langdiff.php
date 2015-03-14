@@ -9,7 +9,6 @@ if(!$user->perms('manage_project')) {
 	Flyspray::show_error(28);
 }
 
-$page->pushTpl('admin.menu.tpl');
 ob_start();
 
 ?>
@@ -44,7 +43,7 @@ if (!ctype_alnum($lang)) {
 
 # reload en.php if flyspray did it before!
 require('lang/en.php');
-// while the en.php and $lang.php both defines $language, the english one should be keept 
+// while the en.php and $lang.php both defines $language, the english one should be keept
 $orig_language = $language;
 
 $translationfile = 'lang/'."$lang.php";
@@ -70,7 +69,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
                 echo '<tr><th>',$key,'</th><td>'.htmlspecialchars($val).'</td></tr>',"\n";
 		$i++;
             }
-	    
+
         }
 	echo '</table>';
 	if ( $i > 0 )

@@ -784,7 +784,6 @@ class Setup extends Flyspray
       $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\" (Deprecated, do not change the default)";
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
-      $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
       $config[] = "syntax_plugin = \"none\"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)";

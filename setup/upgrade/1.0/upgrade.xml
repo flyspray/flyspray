@@ -393,6 +393,10 @@
       <NOTNULL/>
       <DEFAULT value="id"/>
     </field>
+    <field name="default_order_by_dir" type="C" size="5">
+      <NOTNULL/>
+      <DEFAULT value="desc"/>
+    </field>
   </table>
   <table name="tasks">
     <field name="task_id" type="I" size="10">

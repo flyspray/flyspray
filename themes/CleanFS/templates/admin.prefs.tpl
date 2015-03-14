@@ -85,6 +85,13 @@
         </li>
 
         <li>
+          <label for="urlrewriting"><?php echo Filters::noXSS(L('urlrewriting')); ?></label>
+          <select id="urlrewriting" name="url_rewriting">
+            <?php echo tpl_options(array('1' => L('on'), '0' => L('off')), $fs->prefs['url_rewriting'], false); ?>
+          </select>
+        </li>
+
+        <li>
           <label for="emailNoHTML"><?php echo Filters::noXSS(L('emailNoHTML')); ?></label>
         	<?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
         </li>
@@ -365,6 +372,13 @@
           <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $fs->prefs['default_order_by'], false); ?>
+          </select>
+        </li>
+
+        <li>
+          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <select id="default_order_by_dir" name="default_order_by_dir">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $fs->prefs['default_order_by_dir'], false); ?>
           </select>
         </li>
 
