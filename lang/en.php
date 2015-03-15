@@ -411,7 +411,7 @@ Username: ',
 
 Regards,',
 'yourusername'            => ' your username ',
-'locale'                  => 'en-AU',
+'locale'                  => 'en-US',
 'filenotexist'            => 'File does not exist, or you do not have permission to access it.',
 'showtask'                => 'Show Task',
 'now'                     => 'Now',
