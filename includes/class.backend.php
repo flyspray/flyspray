@@ -981,14 +981,16 @@ abstract class Backend
                          VALUES  ($sql_placeholder)", $sql_values);
 
 	/////////////////////////////////////Add tags///////////////////////////////////////
-	$tagList = explode(';',$args['tags']);
-	foreach ($tagList as $tag)
-	{
-	   if ($tag == '')
-		   continue;
-	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
+    if (isset($args['tags'])) {
+    	$tagList = explode(';', $args['tags']);
+    	foreach ($tagList as $tag)
+    	{
+    		if ($tag == '')
+    			continue;
+    		$result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
 		                           VALUES (?,?)",array($task_id,$tag));
-        }
+    	}
+    }
 
         ////////////////////////////////////////////////////////////////////////////////////
         // Log the assignments and send notifications to the assignees
