@@ -2313,6 +2313,8 @@ switch ($action = Req::val('action'))
         $_SESSION['SUCCESS'] = L('supertaskmodified');
 
         break;
+    case 'notifications.remove':
+        break;
     case 'task.bulkupdate':
         # TODO check if the user has the right to do each action on each task id he send with the form!
         # TODO check if tasks have open subtasks before closing
