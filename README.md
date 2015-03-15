@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray)
 
-*Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at http://bugs.flyspray.org *
+Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at http://bugs.flyspray.org
 
 www.flyspray.org
 
