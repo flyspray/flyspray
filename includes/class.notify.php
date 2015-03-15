@@ -126,11 +126,16 @@ class Notifications {
       return $db->FetchAllArray($notifications);
    }
    
-   static function NotificationsHaveBeenRead() {
-      global $db, $fs;
+   static function NotificationsHaveBeenRead($ids) {
+      global $db, $fs, $user;
 
-      $desired = join(",", array_map('intval', $ids));
+      $readones = join(",", array_map('intval', $ids));
        
+      $db->Query("DELETE FROM {notification_recipients}
+                        WHERE message_id IN ($readones)
+                          AND notify_method = ? AND notify_address = ?",
+                 array('o', $user['user_id']));
+
    }
    
    // {{{ Store Jabber messages for sending later

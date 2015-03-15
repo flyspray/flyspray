@@ -2315,6 +2315,36 @@ switch ($action = Req::val('action'))
 
         break;
     case 'notifications.remove':
+        if(!isset($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!is_array($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!$count($_POST['message_id'])) {
+            // Nothing to do.
+            break;
+        }
+        
+        $validids = array();
+        foreach ($_POST['message_id'] as $id) {
+            if (is_numeric($id)) {
+                if (settype($id, 'int') && id > 0) {
+                    $validids[] = $id;
+                }
+            }
+        }
+
+        if (!$count($validids)) {
+            // Nothing to do.
+            break;
+        }
+        
+        Notifications::NotificationsHaveBeenRead($validids);
         break;
     case 'task.bulkupdate':
         # TODO check if the user has the right to do each action on each task id he send with the form!
