@@ -62,7 +62,6 @@ define('NOTIFY_NEW_USER',        20);
 define('NOTIFY_EMAIL',            1);
 define('NOTIFY_JABBER',           2);
 define('NOTIFY_BOTH',             3);
-define('NOTIFY_ONLINE',           4);
 
 define('STATUS_UNCONFIRMED',      1);
 define('STATUS_NEW',              2);

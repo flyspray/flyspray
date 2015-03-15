@@ -48,11 +48,11 @@ class Notifications {
           }
       }
       
-      if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
+      // if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
           if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
               $result = false;
           }
-      }
+      // }
 
       return $result;
 
@@ -62,6 +62,10 @@ class Notifications {
    function StoreOnline($to, $subject, $body, $online, $task_id = null) {
       global $db, $fs;
       
+      if (!count($to)) {
+        return false;
+      }
+
       $date = time();
 
       // store notification in table
@@ -93,25 +97,28 @@ class Notifications {
       settype($to, 'array');
       $to = array_unique($to);
 
-      foreach ($to as $jid)
-      {
+      foreach ($to as $jid) {
+      
+      // echo "<pre>";
+      // echo var_dump($jid);
+      // echo "</pre>";
+      //    if (isset($jid['notify_online']) && $jid['notify_online']) {
          // store each recipient in table
          $db->Query("INSERT INTO {notification_recipients}
                      (notify_method, message_id, notify_address)
                      VALUES (?, ?, ?)",
                      array('o', $message_id, $jid)
                     );
-
+          // }
       }
 
       return true;
-       
    }
    
    static function GetUnreadNotifications() {
       global $db, $fs, $user;
       
-      $notifications = $db->Query('SELECT r.message_id, m.message_body
+      $notifications = $db->Query('SELECT r.recipient_id, m.message_body
                                      FROM {notification_recipients} r
                                      JOIN {notification_messages} m ON r.message_id = m.message_id
                                     WHERE r.notify_method = ? AND notify_address = ?',
