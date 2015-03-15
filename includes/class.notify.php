@@ -72,7 +72,7 @@ class Notifications {
       $db->Query("INSERT INTO {notification_messages}
                   (message_subject, message_body, time_created)
                   VALUES (?, ?, ?)",
-                  array($subject, $online, $date)
+                  array($online, '', $date)
                 );
 
       // grab notification id
@@ -118,7 +118,7 @@ class Notifications {
    static function GetUnreadNotifications() {
       global $db, $fs, $user;
       
-      $notifications = $db->Query('SELECT r.recipient_id, m.message_body
+      $notifications = $db->Query('SELECT r.recipient_id, m.message_subject
                                      FROM {notification_recipients} r
                                      JOIN {notification_messages} m ON r.message_id = m.message_id
                                     WHERE r.notify_method = ? AND notify_address = ?',
