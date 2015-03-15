@@ -112,6 +112,7 @@ class Notifications {
                                      JOIN {notification_messages} m ON r.message_id = m.message_id
                                     WHERE r.notify_method = ? AND notify_address = ?',
               array('o', $user['user_id']));
+      return $db->FetchAllArray($notifications);
    }
    
    static function NotificationsHaveBeenRead() {
