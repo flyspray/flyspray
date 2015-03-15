@@ -46,4 +46,7 @@ $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_
 // Log the changed field in task history
 Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
+$notify = new Notifications;
+$notify->Create(NOTIFY_TASK_CHANGED, $task['task_id']);
+
 ?>
