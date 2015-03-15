@@ -411,7 +411,7 @@ Username: ',
 
 Regards,',
 'yourusername'            => ' your username ',
-'locale'                  => 'en-AU',
+'locale'                  => 'en-US',
 'filenotexist'            => 'File does not exist, or you do not have permission to access it.',
 'showtask'                => 'Show Task',
 'now'                     => 'Now',
@@ -1013,6 +1013,6 @@ Regards,',
 'defaultorderbydirection' => 'Default order by direction',
 'ascending'               => 'Ascending',
 'descending'              => 'Descending',
-
+'myassignedtasks'         => 'My assigned tasks'
 );
 ?>

@@ -259,14 +259,8 @@ function quick_edit(elem, id)
 			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']);
 			?>
         <a href="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
-        <?php endif; ?>
-        <?php if (isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'assignedtome'): ?>
-        <a href="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index', 'dev' => $user->id))); ?>">My Assigned
-            Tasks</a>
-        <?php endif; ?>
-
-        <?php if ($next_id): ?> | <?php endif; ?>
-        <?php if ($next_id): ?>
+        <?php endif;
+        if ($next_id): ?>
         <?php echo tpl_tasklink($next_id, L('nexttask'), false, array('id'=>'next', 'accesskey' => 'n')); ?>
 
         <?php endif; ?>

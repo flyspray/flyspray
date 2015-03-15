@@ -1,6 +1,6 @@
 <h3><?php echo Filters::noXSS(L('eventlog')); ?></h3>
 <div class="box">
-    <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+    <form action="<?php echo Filters::noXSS(CreateURL('reports', $proj->id)); ?>" method="get">
       <table id="event1">
         <tr>
           <td><label for="events[]"><?php echo Filters::noXSS(L('events')); ?></label></td>
@@ -14,7 +14,7 @@
               <?php echo tpl_options($user_events, Req::val('events')); ?>
 
               </optgroup>
-              </select>    
+              </select>
           </td>
           <td>
               <div>
@@ -24,7 +24,7 @@
                   <?php echo tpl_datepicker('todate', L('to')); ?>
 
               </div>
-              
+
               <div>
                   <label for="event_number"><?php echo Filters::noXSS(L('show')); ?></label>
                   <select name="event_number" id="event_number">
@@ -37,31 +37,31 @@
           </td>
         </tr>
       </table>
-      
+
       <input type="hidden" name="project" value="<?php echo Filters::noXSS($proj->id); ?>" />
       <input type="hidden" name="do" value="reports" />
       <button type="submit" name="submit"><?php echo Filters::noXSS(L('show')); ?></button>
     </form>
-    
+
     <?php if ($histories): ?>
     <div id="tasklist">
     <table id="tasklist_table">
      <thead>
       <tr>
         <th>
-          <a href="<?php echo Filters::noXSS(CreateURL('reports', null, null, array('sort' => (Req::val('order') == 'type' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'type') + $_GET)); ?>">
+          <a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'type' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'type') + $_GET)); ?>">
             <?php echo Filters::noXSS(L('event')); ?>
 
           </a>
         </th>
         <th>
-          <a href="<?php echo Filters::noXSS(CreateURL('reports', null, null, array('sort' => (Req::val('order') == 'user' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'user') + $_GET)); ?>">
+          <a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'user' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'user') + $_GET)); ?>">
             <?php echo Filters::noXSS(L('user')); ?>
 
           </a>
         </th>
         <th>
-          <a href="<?php echo Filters::noXSS(CreateURL('reports', null, null, array('sort' => (Req::val('order') == 'date' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'date') + $_GET)); ?>">
+          <a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'date' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'date') + $_GET)); ?>">
             <?php echo Filters::noXSS(L('eventdate')); ?>
 
           </a>
