@@ -73,7 +73,7 @@ endif; ?>
 	if ($user->perms('view_reports')): ?><li>
 		<a id="reportslink"
 		<?php if(isset($_GET['do']) and $_GET['do'] == 'reports'): ?> class="active" <?php endif; ?>
-		href="<?php echo Filters::noXSS(CreateURL('reports', null, null, array('project' => $proj->id))); ?>"><?php echo Filters::noXSS(L('reports')); ?></a>
+		href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id)); ?>"><?php echo Filters::noXSS(L('reports')); ?></a>
 	</li><?php
 	endif;
 	if ($proj->id && $user->perms('view_roadmap')): ?><li>

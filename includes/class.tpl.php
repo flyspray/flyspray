@@ -859,8 +859,8 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'logout':
             case 'lostpw':
             case 'myprofile':
-            case 'register':
-            case 'reports':  $return = $url . $type; break;
+            case 'register': $return = $url . $type; break;
+        	case 'reports':  $return = $url.'reports/proj'.$arg1; break;
         }
     } else {
         if ($type == 'edittask') {
