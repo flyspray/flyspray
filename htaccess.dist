@@ -81,6 +81,7 @@ RewriteRule ^task/([0-9]+)/edit$ index.php?do=details&task_id=$1&edit=yep [L,QSA
 
 RewriteRule ^newtask$ index.php?do=newtask [L,QSA]
 RewriteRule ^newtask/proj([0-9]+)$ index.php?do=newtask&project=$1 [L,QSA]
+RewriteRule ^newtask/proj([0-9]+)/supertask([0-9]+)$ index.php?do=newtask&project=$1&supertask=$2 [L,QSA]
 
 RewriteRule ^reports$ index.php?do=reports [L,QSA]
 RewriteRule ^myprofile$ index.php?do=myprofile [L,QSA]
