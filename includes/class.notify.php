@@ -43,11 +43,84 @@ class Notifications {
               $result = false;
           }
       }
+      
+      if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
+          if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $task_id)) {
+              $result = false;
+          }
+      }
 
       return $result;
 
    // End of Create() function
    } // }}}
+
+   function StoreOnline($to, $subject, $body, $task_id = null) {
+      global $db, $fs;
+      
+      $date = time();
+
+      // store notification in table
+      $db->Query("INSERT INTO {notification_messages}
+                  (message_subject, message_body, time_created)
+                  VALUES (?, ?, ?)",
+                  array($subject, $body, $date)
+                );
+
+      // grab notification id
+      $result = $db->Query("SELECT message_id FROM {notification_messages}
+                            WHERE time_created = ? ORDER BY message_id DESC",
+                            array($date), 1);
+
+      $row = $db->FetchRow($result);
+      $message_id = $row['message_id'];
+
+      // If message could not be inserted for
+      // whatever reason...
+      if (!$message_id) {
+          return false;
+      }
+
+      echo "<pre>";
+      echo var_dump($to);
+      echo "</pre>";
+      
+      // make sure every user is only added once
+      settype($to, 'array');
+      $to = array_unique($to);
+
+      foreach ($to as $jid)
+      {
+         // store each recipient in table
+         $db->Query("INSERT INTO {notification_recipients}
+                     (notify_method, message_id, notify_address)
+                     VALUES (?, ?, ?)",
+                     array('o', $message_id, $jid)
+                    );
+
+      }
+
+      return true;
+       
+   }
+   
+   static function GetUnreadNotifications() {
+      global $db, $fs, $user;
+      
+      $notifications = $db->Query('SELECT r.message_id, m.message_body
+                                     FROM {notification_recipients} r
+                                     JOIN {notification_messages} m ON r.message_id = m.message_id
+                                    WHERE r.notify_method = ? AND notify_address = ?',
+              array('o', $user['user_id']));
+   }
+   
+   static function NotificationsHaveBeenRead() {
+      global $db, $fs;
+
+      $desired = join(",", array_map('intval', $ids));
+       
+   }
+   
    // {{{ Store Jabber messages for sending later
    function StoreJabber( $to, $subject, $body )
    {
@@ -755,6 +828,7 @@ class Notifications {
 
       $jabber_users = array();
       $email_users = array();
+      $online_users = array();
 
       $task_details = Flyspray::GetTaskDetails($task_id);
 
@@ -783,6 +857,12 @@ class Notifications {
          {
                array_push($jabber_users, $row['jabber_id']);
          }
+
+         if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+             || $fs->prefs['user_notify'] == '4')
+         {
+               array_push($online_users, $row['user_id']);
+         }
       }
 
       // Get list of assignees
@@ -810,6 +890,12 @@ class Notifications {
          {
                array_push($jabber_users, $row['jabber_id']);
          }
+
+         if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+             || $fs->prefs['user_notify'] == '4')
+         {
+               array_push($online_users, $row['user_id']);
+         }
       }
 
       // Now, we add the project contact addresses...
@@ -831,10 +917,16 @@ class Notifications {
                array_push($jabber_users, $val);
          }
 
+         foreach ($proj_jids as $key => $val)
+         {
+            if (!empty($val) && !in_array($val, $online_users))
+               array_push($online_users, $val);
+         }
+
       // End of checking if a task is private
       }
-      // Send back two arrays containing the notification addresses
-      return array($email_users, array_unique($jabber_users));
+      // Send back three arrays containing the notification addresses
+      return array($email_users, array_unique($jabber_users), array_unique($online_users));
 
    } // }}}
     // {{{ Fix the message data

@@ -1205,6 +1205,7 @@ class Flyspray
         $return = array(0             => L('none'),
                         NOTIFY_EMAIL  => L('email'),
                         NOTIFY_JABBER => L('jabber'),
+                        NOTIFY_ONLINE => L('online'),
                         NOTIFY_BOTH   => L('both'));
         if (!$noneAllowed) {
             unset($return[0]);
