@@ -1013,6 +1013,6 @@ Regards,',
 'defaultorderbydirection' => 'Default order by direction',
 'ascending'               => 'Ascending',
 'descending'              => 'Descending',
-
+'myassignedtasks'         => 'My assigned tasks'
 );
 ?>
