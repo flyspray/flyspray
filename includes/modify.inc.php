@@ -1192,13 +1192,14 @@ switch ($action = Req::val('action'))
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
-                            tasks_perpage = ?, time_zone = ?, lang_code = ?, hide_my_email = ?
+                            tasks_perpage = ?, time_zone = ?, lang_code = ?,
+                            hide_my_email = ?, notify_online = ?
                      WHERE  user_id = ?',
                 array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
                     Post::val('jabber_id', 0), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
-                    Post::num('hide_my_email', 0), Post::num('user_id')));
+                    Post::num('hide_my_email', 0), Post::num('notify_online', 0), Post::num('user_id')));
 
                 # 20150307 peterdd: Now we must reload translations, because the user maybe changed his language preferences!
                 # first reload user info
@@ -2361,6 +2362,38 @@ switch ($action = Req::val('action'))
         // set success message
         $_SESSION['SUCCESS'] = L('supertaskmodified');
 
+        break;
+    case 'notifications.remove':
+        if(!isset($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!is_array($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!$count($_POST['message_id'])) {
+            // Nothing to do.
+            break;
+        }
+        
+        $validids = array();
+        foreach ($_POST['message_id'] as $id) {
+            if (is_numeric($id)) {
+                if (settype($id, 'int') && id > 0) {
+                    $validids[] = $id;
+                }
+            }
+        }
+
+        if (!$count($validids)) {
+            // Nothing to do.
+            break;
+        }
+        
+        Notifications::NotificationsHaveBeenRead($validids);
         break;
     case 'task.bulkupdate':
         # TODO check if the user has the right to do each action on each task id he send with the form!
