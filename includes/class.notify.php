@@ -28,6 +28,10 @@ class Notifications {
           settype($to, 'array');
       }
 
+      // echo "<pre>";
+      // echo var_dump($to);
+      // echo "</pre>";
+
       if (!count($to)) {
         return false;
       }
@@ -81,9 +85,9 @@ class Notifications {
           return false;
       }
 
-      echo "<pre>";
-      echo var_dump($to);
-      echo "</pre>";
+      // echo "<pre>";
+      // echo var_dump($to);
+      // echo "</pre>";
       
       // make sure every user is only added once
       settype($to, 'array');
@@ -494,6 +498,8 @@ class Notifications {
       */
 
       $body = L('donotreply') . "\n\n";
+      $online = '';
+      
       // {{{ New task opened
       if ($type == NOTIFY_TASK_OPENED)
       {
@@ -853,6 +859,7 @@ class Notifications {
 
         $jabber_users = array();
         $email_users = array();
+        $online_users = array();
 
         if(!is_array($users)) {
             settype($users, 'array');
@@ -862,7 +869,7 @@ class Notifications {
             return array();
         }
 
-        $sql = $db->Query('SELECT user_id, notify_type, email_address, jabber_id
+        $sql = $db->Query('SELECT user_id, notify_type, email_address, jabber_id, notify_online
                              FROM {users}
                             WHERE' . substr(str_repeat(' user_id = ? OR ', count($users)), 0, -3),
                            array_values($users));
@@ -884,6 +891,11 @@ class Notifications {
                 || $fs->prefs['user_notify'] == '3' || $ignoretype)
             {
                 array_push($jabber_users, $user_details['jabber_id']);
+            }
+
+            if ($fs->prefs['user_notify'] == '1' && $user_details['notify_online'])
+            {
+                array_push($online_users, $user_details['user_id']);
             }
         }
 
@@ -929,8 +941,9 @@ class Notifications {
                array_push($jabber_users, $row['jabber_id']);
          }
 
-         if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
-             || $fs->prefs['user_notify'] == '4')
+         // if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+         //    || $fs->prefs['user_notify'] == '4')
+         if ($fs->prefs['user_notify'] == '1' && $row['notify_online'])
          {
                array_push($online_users, $row['user_id']);
          }
@@ -962,8 +975,9 @@ class Notifications {
                array_push($jabber_users, $row['jabber_id']);
          }
 
-         if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
-             || $fs->prefs['user_notify'] == '4')
+         // if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+         //    || $fs->prefs['user_notify'] == '4')
+         if ($fs->prefs['user_notify'] == '1' && $row['notify_online'])
          {
                array_push($online_users, $row['user_id']);
          }
