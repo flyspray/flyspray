@@ -1182,13 +1182,14 @@ switch ($action = Req::val('action'))
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
-                            tasks_perpage = ?, time_zone = ?, lang_code = ?, hide_my_email = ?
+                            tasks_perpage = ?, time_zone = ?, lang_code = ?,
+                            hide_my_email = ?, notify_online = ?
                      WHERE  user_id = ?',
                 array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
                     Post::val('jabber_id', 0), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
-                    Post::num('hide_my_email', 0), Post::num('user_id')));
+                    Post::num('hide_my_email', 0), Post::num('notify_online', 0), Post::num('user_id')));
 
                 # 20150307 peterdd: Now we must reload translations, because the user maybe changed his language preferences!
                 # first reload user info
