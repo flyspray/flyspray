@@ -47,7 +47,7 @@ class Notifications {
               $result = false;
           }
       }
-      
+
       // if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
           if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
               $result = false;
@@ -61,7 +61,7 @@ class Notifications {
 
    function StoreOnline($to, $subject, $body, $online, $task_id = null) {
       global $db, $fs;
-      
+
       if (!count($to)) {
         return false;
       }
@@ -92,13 +92,13 @@ class Notifications {
       // echo "<pre>";
       // echo var_dump($to);
       // echo "</pre>";
-      
+
       // make sure every user is only added once
       settype($to, 'array');
       $to = array_unique($to);
 
       foreach ($to as $jid) {
-      
+
       // echo "<pre>";
       // echo var_dump($jid);
       // echo "</pre>";
@@ -114,10 +114,10 @@ class Notifications {
 
       return true;
    }
-   
+
    static function GetUnreadNotifications() {
       global $db, $fs, $user;
-      
+
       $notifications = $db->Query('SELECT r.recipient_id, m.message_subject
                                      FROM {notification_recipients} r
                                      JOIN {notification_messages} m ON r.message_id = m.message_id
@@ -125,19 +125,19 @@ class Notifications {
               array('o', $user['user_id']));
       return $db->FetchAllArray($notifications);
    }
-   
+
    static function NotificationsHaveBeenRead($ids) {
       global $db, $fs, $user;
 
       $readones = join(",", array_map('intval', $ids));
-       
+
       $db->Query("DELETE FROM {notification_recipients}
                         WHERE message_id IN ($readones)
                           AND notify_method = ? AND notify_address = ?",
                  array('o', $user['user_id']));
 
    }
-   
+
    // {{{ Store Jabber messages for sending later
    function StoreJabber( $to, $subject, $body )
    {
@@ -511,7 +511,7 @@ class Notifications {
 
       $body = L('donotreply') . "\n\n";
       $online = '';
-      
+
       // {{{ New task opened
       if ($type == NOTIFY_TASK_OPENED)
       {
@@ -539,7 +539,7 @@ class Notifications {
          $body .= L('moreinfo') . "\n";
 
          $body .= CreateURL('details', $task_id) . "\n\n";
-         
+
          $online .= L('newtaskopened') . ". ";
          $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
          $online .= L('attachedtoproject') . ' - ' .  $task_details['project_title'] . ". ";
@@ -633,7 +633,7 @@ class Notifications {
          $body .= L('newdepis') . ':' . "\n\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\n";
          $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
-         
+
          $online .=  L('newdep') . ". ";
          $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
          $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
@@ -694,7 +694,7 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
-         
+
          $online .= L('newattachment') . ". ";
          $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
          $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
@@ -736,7 +736,7 @@ class Notifications {
                 // In case that spaces in the username have been removed
                . L('username') . ': '. $arg1[2] . "\n"
                . L('confirmcodeis') . " $arg1[3] \n\n";
-               
+
           $online = $body;
       } // }}}
       // {{{ Pending PM request
@@ -775,7 +775,7 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
-         
+
          $online .= L('assignedtoyou') . ". ";
          $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
          $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
