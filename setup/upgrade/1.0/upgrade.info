@@ -7,7 +7,7 @@
 2="varchartotext.php"
 
 [fsprefs]
-fs_ver="0.9.7" ; doesn't matter which version
+fs_ver="1.0"
 logo="flyspray_small.png"
 jabber_server=""
 jabber_port="5222"
