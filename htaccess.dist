@@ -68,7 +68,7 @@ php_flag always_populate_raw_post_data Off
 SetEnv HTTP_MOD_REWRITE on
 
 RewriteEngine on
-RewriteBase /flyspraydev
+#RewriteBase /flyspray
 
 RewriteRule ^.*\?do=admin&area=prefs$ index.php?do=admin&area=prefs [L,QSA]
 
