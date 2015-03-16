@@ -1,6 +1,9 @@
 <h3><?php echo Filters::noXSS(L('registernewuser')); ?></h3>
 <div class="box">
-<?php echo tpl_form(Filters::noXSS($baseurl).'index.php','registernewuser',null,null,'id="registernewuser"'); ?>  
+    <!--
+<?php echo tpl_form(Filters::noXSS($baseurl).'index.php','registernewuser',null,null,'id="registernewuser"'); ?>
+    -->
+<?php echo tpl_form(Filters::noXSS(CreateUrl('registernewuser')),null,null,null,'id="registernewuser"'); ?>
   <p><?php echo Filters::noXSS(L('entercode')); ?></p>
   <ul class="form_elements wide">
     <li>

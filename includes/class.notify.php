@@ -48,12 +48,13 @@ class Notifications {
           }
       }
 
-      // echo "<pre>";
-      // echo var_dump($to);
-      // echo var_dump($msg);
-      // echo "</pre>";
-      if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
-         $result = false;
+      // Get rid of undefined offset 2 when notify type is explicitly set,
+      // in these cases caller really has not set offset 2. Track down the
+      // callers later.
+      if ($ntype != NOTIFY_EMAIL && $ntype != NOTIFY_JABBER) {
+          if (!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
+              $result = false;
+          }
       }
 
       return $result;

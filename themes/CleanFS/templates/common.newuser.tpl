@@ -1,5 +1,5 @@
 <?php if ($do == 'admin'): echo tpl_form(Filters::noXSS(CreateURL($do, 'newuser')),null,null,null,'id="registernewuser"');
-                     else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']),null,null,null,'id="registernewuser"');
+                     else: echo tpl_form(Filters::noXSS(CreateURL($do, 'newuser')),null,null,null,'id="registernewuser"');
 endif; ?>
 	<ul class="form_elements">
 		<li class="required">
