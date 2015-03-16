@@ -887,6 +887,9 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'tasklist':
             	$return = $url.'proj'.$arg1;
             	break;
+            default:
+            	$return = $baseurl . 'index.php';
+            	break;
 
         }
     } else {
@@ -949,6 +952,9 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'tasklist':
             	$return = $baseurl.'index.php?project='.$arg1;
             	break;
+        	default:
+        		$return = $baseurl . 'index.php';
+        		break;
         }
     }
 
