@@ -48,11 +48,14 @@ class Notifications {
           }
       }
 
-      // if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
-          if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
+      // Get rid of undefined offset 2 when notify type is explicitly set,
+      // in these cases caller really has not set offset 2. Track down the
+      // callers later.
+      if ($ntype != NOTIFY_EMAIL && $ntype != NOTIFY_JABBER) {
+          if (!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
               $result = false;
           }
-      // }
+      }
 
       return $result;
 
@@ -911,7 +914,7 @@ class Notifications {
             }
         }
 
-        return array($email_users, array_unique($jabber_users));
+        return array($email_users, array_unique($jabber_users), array_unique($online_users));
 
    } // }}}
    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
