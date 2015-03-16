@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    public $version = '1.0 dev';
+    public $version = '1.0 Alpha';
 
     /**
      * Flyspray preferences
@@ -1236,6 +1236,6 @@ class Flyspray
                 $allowedtasks[] = $task;
             }
         }
-        return $allowedtasks; 
+        return $allowedtasks;
     }
 }
