@@ -386,7 +386,7 @@ function export_task_list()
                         #$user->perms('view_done_effort')? $task['effort']:'',
                         # current permission naming
                         $user->perms('view_estimated_effort') ? $task['estimated_effort']:'',
-                        $user->perms('view_current_effort_done') ? $task['effort']:'',
+                        // $user->perms('view_current_effort_done') ? $task['effort']:'',
                         $task['detailed_desc']
                 );
                 fputcsv($output, $row);
