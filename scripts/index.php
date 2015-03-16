@@ -366,7 +366,7 @@ function export_task_list()
         	'Status',
         	'Progress',
         	$user->perms('view_estimated_effort') ?'Estimated Effort':'',
-        	$user->perms('view_current_effort_done') ?'Done Effort':'',
+        	// $user->perms('view_current_effort_done') ?'Done Effort':'',
         	'Description',
         );
         # TODO maybe if user just want localized headings for nonenglish speaking audience..
@@ -382,7 +382,7 @@ function export_task_list()
                         $task['status_name'],
                         $task['percent_complete'],
                         ($user->perms('view_estimated_effort') && $proj->prefs['use_effort_tracking']) ? $task['estimated_effort'] : '',
-                        ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
+                        // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
                         $task['detailed_desc']
                 );
                 fputcsv($output, $row);
