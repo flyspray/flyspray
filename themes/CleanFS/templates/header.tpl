@@ -85,7 +85,7 @@
         $actions = explode('.', Req::val('action'));
         if ($fs->prefs['intro_message'] &&
            ($proj->id == 0 || $proj->prefs['disp_intro']) &&
-           (in_array($do, $show_message) || in_array(reset($actions), $show_message)) ):?>
+           (in_array($do, $show_message)) ):?>
           <div id="intromessage">
             <?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?>
           </div>
@@ -94,7 +94,7 @@
 	  <?php if ($proj->id > 0): ?>
 	    <?php $show_message = explode(' ', $proj->prefs['pages_intro_msg']);
             $actions = explode('.', Req::val('action'));
-            if ($proj->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
+            if ($proj->prefs['intro_message'] && (in_array($do, $show_message))): ?>
 	          <div id="intromessage">
 	            <?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id, ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?>
 	          </div>
