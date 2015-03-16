@@ -48,11 +48,13 @@ class Notifications {
           }
       }
 
-      // if ($ntype == NOTIFY_ONLINE || $ntype == NOTIFY_BOTH) {
-          if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
-              $result = false;
-          }
-      // }
+      // echo "<pre>";
+      // echo var_dump($to);
+      // echo var_dump($msg);
+      // echo "</pre>";
+      if(!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
+         $result = false;
+      }
 
       return $result;
 
@@ -911,7 +913,7 @@ class Notifications {
             }
         }
 
-        return array($email_users, array_unique($jabber_users));
+        return array($email_users, array_unique($jabber_users), array_unique($online_users));
 
    } // }}}
    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
