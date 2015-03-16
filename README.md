@@ -51,6 +51,6 @@ http://flyspray.org/manual:installation
 
 #### Download vendors
     Using command lines:
-    - CD to themain Flyspray directory
-    - Use 'php composer.phar install' to automatically download the vendors
-    Users that have it integrated can right click their Flyspray directory and choose "Composer->install" to automatically download the vendors
+    - CD to the main Flyspray directory
+    - Type 'php composer.phar install' to automatically download the vendors
+    Users that have it integrated to shell can right click their Flyspray directory and choose "Composer->install" to automatically download the vendors
