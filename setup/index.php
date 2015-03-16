@@ -23,8 +23,11 @@ require_once OBJECTS_PATH.'/i18n.inc.php';
 require_once OBJECTS_PATH.'/class.tpl.php';
 
 if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
-        // Use composer autoloader
-        require APPLICATION_PATH . '/vendor/autoload.php';
+    // Use composer autoloader
+    require APPLICATION_PATH . '/vendor/autoload.php';
+	if (is_file('../composerit.php')) {
+		unlink('../composerit.php');
+	}
 } else{
         Flyspray::Redirect('composertest.php');
         exit;

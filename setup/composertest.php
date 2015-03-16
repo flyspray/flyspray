@@ -17,7 +17,11 @@ load_translations();
 if(ini_get('safe_mode') == 1){
   $composerit='composerit.pl'; # try it with perl scripts
 }else{
-  $composerit='composerit.php'; # try it with php
+  // We need to move composerit.txtto root directory, so the composer first finds the json file and downloads the vendors in the right place
+  if (!is_file('../composerit.php')) {
+  	copy('composerit.txt', '../composerit.php');
+  }
+  $composerit='../composerit.php'; # try it with php
 }
 ?><!DOCTYPE html>
 <html>
