@@ -33,11 +33,13 @@
 </div>
 <?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']);?>
 <div id="login_oauth">
-    <?php $providers = explode(' ', $fs->prefs['active_oauths']);
+    <?php
+    	  if ($fs->prefs['active_oauths']):
+          $providers = explode(' ', $fs->prefs['active_oauths']);
           foreach($providers as $provider): ?>
               <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
               <i class="fa fa-<?php echo $provider; ?>"></i> <?php echo Filters::noXSS(sprintf(L('signinwith'), ucfirst($provider))); ?>
               </a>
-    <?php endforeach; ?>
+    <?php endforeach; endif;?>
 </div>
 </form>

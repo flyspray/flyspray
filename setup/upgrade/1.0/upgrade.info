@@ -8,7 +8,7 @@
 
 [fsprefs]
 fs_ver="0.9.7" ; doesn't matter which version
-logo="flyspray.png"
+logo="flyspray_small.png"
 jabber_server=""
 jabber_port="5222"
 jabber_username=""
