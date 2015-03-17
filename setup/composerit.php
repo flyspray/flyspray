@@ -7,6 +7,7 @@ if(ini_get('safe_mode') == 1){
 } else{
 	// Test working, Psycho
 	echo '<h3>Step 1: Trying to download Composer:</h3>';
+	chdir('../');
 	$cmd = 'php -r "readfile(\'https://getcomposer.org/installer\');" | php';
 	echo $cmd.'<br/><br/>';
 	shell_exec($cmd);
