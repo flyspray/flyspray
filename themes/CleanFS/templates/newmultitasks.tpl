@@ -32,7 +32,8 @@
      <tbody id="table">
       <button class="button positive main" accesskey="s" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
       <tr id="row">
-	<td><input type="image" src="themes/CleanFS/img/red/x_alt_24x24.png" onClick="removeRow(this);return false;"/></td>
+	<td>
+	    <button class="button img delete" accesskey="s" type="button" onClick="removeRow(this);return false;"></button>
         <?php if (in_array('tasktype', $fields)) { ?>
 	<td>
 	<?php } else { ?>

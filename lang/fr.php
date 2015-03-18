@@ -2,11 +2,11 @@
 //
 // This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-// 
+//
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-// 
+//
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
@@ -427,7 +427,7 @@ $translation = array(
 'editmydetails'           => 'Editer mes données',
 'logout'                  => 'Se déconnecter',
 'disabledaccount'         => 'Votre compte a été désactivé !<br />Déconnexion immédiate...',
-'poweredby'               => 'Flyspray',
+'poweredby'               => 'Propulsé par Flyspray',
 'sponsoredby'             => 'Flyspray est fièrement présenté par',
 'projects'                => 'Projets',
 'allprojects'             => 'Tous les projets',
@@ -989,6 +989,17 @@ $translation = array(
 'movingtodifferentproject'=> 'Déplacer une tâches qui a soit une tâche parente ou une sous-tâche dans un autre projet n\'est pas permis. Vous devez d\'abord supprimer les connexions entre elles.',
 'musthavesameproject'     => 'La tâche parente et la sous-tâche doivent appartenir au même projet.',
 'defaultorderby'          => 'Ordonner la liste des tâches par défaut par',
+'viewowntasks'            => 'Voir ses propres tâches',
+'viewgroupstasks'         => 'Voir les tâches de groupes',
+'urlrewriting'            => 'Réécriture d\'url',
+'enablehtaccess'          => 'Veuillez enclancher votre fichier .htaccess à la racine de Flyspray avant d\'enclancher la réécriture d\'url',
+'nomodrewrite'            => 'Mod rewrite ne semble pas disponible sur ce serveur, désolé mais je ne peux pas enclancher la rééecriture d\'url',
+'on'                      => 'Activé',
+'off'                     => 'Désactivé',
+'defaultorderbydirection' => 'Direction ordre par défaut',
+'ascending'               => 'Ascendant',
+'descending'              => 'Descendant',
+'myassignedtasks'         => 'Mes tâches',
 );
 
 ?>

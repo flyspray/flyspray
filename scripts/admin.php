@@ -64,10 +64,14 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'status':
     case 'version':
     case 'newgroup':
-
         $page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
         $page->pushTpl('admin.'.$area.'.tpl');
         break;
+
+    case 'translations':
+        require_once(BASEDIR.'/scripts/langdiff.php');
+        break;
+
 
     default:
         Flyspray::show_error(6);

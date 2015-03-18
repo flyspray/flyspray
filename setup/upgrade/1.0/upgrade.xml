@@ -82,6 +82,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="notify_online" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>
@@ -392,6 +396,10 @@
     <field name="default_order_by" type="C" size="30">
       <NOTNULL/>
       <DEFAULT value="id"/>
+    </field>
+    <field name="default_order_by_dir" type="C" size="5">
+      <NOTNULL/>
+      <DEFAULT value="desc"/>
     </field>
   </table>
   <table name="tasks">

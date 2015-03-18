@@ -981,14 +981,16 @@ abstract class Backend
                          VALUES  ($sql_placeholder)", $sql_values);
 
 	/////////////////////////////////////Add tags///////////////////////////////////////
-	$tagList = explode(';',$args['tags']);
-	foreach ($tagList as $tag)
-	{
-	   if ($tag == '')
-		   continue;
-	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
+    if (isset($args['tags'])) {
+    	$tagList = explode(';', $args['tags']);
+    	foreach ($tagList as $tag)
+    	{
+    		if ($tag == '')
+    			continue;
+    		$result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
 		                           VALUES (?,?)",array($task_id,$tag));
-        }
+    	}
+    }
 
         ////////////////////////////////////////////////////////////////////////////////////
         // Log the assignments and send notifications to the assignees
@@ -1151,7 +1153,7 @@ abstract class Backend
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
-        
+
         // PostgreSQL LIKE searches are by default case sensitive,
         // so we use ILIKE instead. For other databases, in our case
         // only MySQL/MariaDB, LIKE is good for our purposes.
@@ -1159,7 +1161,7 @@ abstract class Backend
         if ($db->dblink->dataProvider == 'postgres') {
             $LIKEOP = 'ILIKE';
         }
-        
+
         $select = '';
         $groupby = 't.task_id, ';
         $from   = '             {tasks}         t
@@ -1279,12 +1281,13 @@ abstract class Backend
 
     	// Implementing setting "Default order by"
     	if (!array_key_exists('order', $args)) {
-    		$sort = 'desc';
 			if ($proj->id) {
 				$orderBy = $proj->prefs['default_order_by'];
+				$sort = $proj->prefs['default_order_by_dir'];
 			}
     		else {
     			$orderBy = $fs->prefs['default_order_by'];
+    			$sort = $fs->prefs['default_order_by_dir'];
     		}
     	}
     	else {
@@ -1428,7 +1431,7 @@ abstract class Backend
         }
 
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
-        
+
         # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
         $sql = $db->Query("
                           SELECT   t.*, $select

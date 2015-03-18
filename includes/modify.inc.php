@@ -326,6 +326,16 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // if the user has not the permission to view all tasks, check if the task
+        // is in tasks allowed to see, otherwise tell that the task does not exist.
+        if (!$user->perms('view_tasks')) {
+            $taskcheck = Flyspray::GetTaskDetails(Post::val('associate_subtask_id'));
+            if (!$user->can_view_task($taskcheck)) {
+                Flyspray::show_error(L('subtasknotexist'));
+                break;
+            }
+        }
+
         // check to see if associated subtask is already the parent of this task
         if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
@@ -901,10 +911,24 @@ switch ($action = Req::val('action'))
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by');
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by', 'default_order_by_dir', 'url_rewriting');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
+
+    	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
+    		// First check if htaccess is turned on
+    		if (!array_key_exists('HTTP_HTACCESS_ENABLED', $_SERVER)) {
+    			Flyspray::show_error(L('enablehtaccess'));
+    			break;
+    		}
+    		// Make sure mod_rewrite is enabled
+    		else if (!array_key_exists('HTTP_MOD_REWRITE', $_SERVER)) {
+    			Flyspray::show_error(L('nomodrewrite'));
+    			break;
+    		}
+    	}
+
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -1045,7 +1069,7 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by', 'default_order_by_dir');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1168,13 +1192,14 @@ switch ($action = Req::val('action'))
                        SET  real_name = ?, email_address = ?, notify_own = ?,
                             jabber_id = ?, notify_type = ?,
                             dateformat = ?, dateformat_extended = ?,
-                            tasks_perpage = ?, time_zone = ?, lang_code = ?, hide_my_email = ?
+                            tasks_perpage = ?, time_zone = ?, lang_code = ?,
+                            hide_my_email = ?, notify_online = ?
                      WHERE  user_id = ?',
                 array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
                     Post::val('jabber_id', 0), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
-                    Post::num('hide_my_email', 0), Post::num('user_id')));
+                    Post::num('hide_my_email', 0), Post::num('notify_online', 0), Post::num('user_id')));
 
                 # 20150307 peterdd: Now we must reload translations, because the user maybe changed his language preferences!
                 # first reload user info
@@ -1660,6 +1685,16 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // if the user has not the permission to view all tasks, check if the task
+        // is in tasks allowed to see, otherwise tell that the task does not exist.
+        if (!$user->perms('view_tasks')) {
+            $taskcheck = Flyspray::GetTaskDetails(Post::val('related_task'));
+            if (!$user->can_view_task($taskcheck)) {
+                Flyspray::show_error(L('relatedinvalid'));
+                break;
+            }
+        }
+
         $sql = $db->Query('SELECT  project_id
                              FROM  {tasks}
                             WHERE  task_id = ?',
@@ -2014,6 +2049,22 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // TODO: do the checks in some other order. Think about possibility
+        // to combine many of the checks used to to see if a task exists,
+        // if it's something user is allowed to know about etc to just one
+        // function taking the necessary arguments and could be used in
+        // several other places too.
+        
+        // if the user has not the permission to view all tasks, check if the task
+        // is in tasks allowed to see, otherwise tell that the task does not exist.
+        if (!$user->perms('view_tasks')) {
+            $taskcheck = Flyspray::GetTaskDetails(Post::val('dep_task_id'));
+            if (!$user->can_view_task($taskcheck)) {
+                Flyspray::show_error(L('dependaddfailed'));
+                break;
+            }
+        }
+
         // First check that the user hasn't tried to add this twice
         $sql1 = $db->Query('SELECT  COUNT(*) FROM {dependencies}
                              WHERE  task_id = ? AND dep_task_id = ?',
@@ -2063,10 +2114,10 @@ switch ($action = Req::val('action'))
 
         //set the subtask supertask_id to 0 removing parent child relationship
         $db->Query("UPDATE {tasks} SET supertask_id=0 WHERE task_id = ?",
-                   array(Get::val('subtaskid')));
+                   array(Post::val('subtaskid')));
 
         //write event log
-        Flyspray::logEvent(Get::val('task_id'), 33, Get::val('subtaskid'));
+        Flyspray::logEvent(Get::val('task_id'), 33, Post::val('subtaskid'));
         //post success message to the user
         $_SESSION['SUCCESS'] = L('subtaskremovedmsg');
         //redirect the user back to the right task
@@ -2084,11 +2135,11 @@ switch ($action = Req::val('action'))
 
         $result = $db->Query('SELECT  * FROM {dependencies}
                                WHERE  depend_id = ?',
-        array(Get::val('depend_id')));
+        array(Post::val('depend_id')));
         $dep_info = $db->FetchRow($result);
 
         $db->Query('DELETE FROM {dependencies} WHERE depend_id = ? AND task_id = ?',
-                    array(Get::val('depend_id'), $task['task_id']));
+                    array(Post::val('depend_id'), $task['task_id']));
 
         if ($db->AffectedRows()) {
             $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id']);
@@ -2103,7 +2154,7 @@ switch ($action = Req::val('action'))
         }
 
         //redirect the user back to the right task
-        Flyspray::Redirect(CreateURL('details', Get::val('return_task_id')));
+        Flyspray::Redirect(CreateURL('details', Post::val('return_task_id')));
         break;
 
         // ##################
@@ -2179,6 +2230,9 @@ switch ($action = Req::val('action'))
         // making a task private
         // ##################
     case 'makeprivate':
+        // TODO: Have to think about this one a bit more. Are project manager
+        // rights really needed for making a task a private? Are there some
+        // other conditions that would permit it? Also making it back to public.
         if (!$user->perms('manage_project')) {
             break;
         }
@@ -2273,6 +2327,16 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // if the user has not the permission to view all tasks, check if the task
+        // is in tasks allowed to see, otherwise tell that the task does not exist.
+        if (!$user->perms('view_tasks')) {
+            $taskcheck = Flyspray::GetTaskDetails(Post::val('supertask_id'));
+            if (!$user->can_view_task($taskcheck)) {
+                Flyspray::show_error(L('invalidsupertaskid'));
+                break;
+            }
+        }
+        
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $parent['project_id']) {
             Flyspray::show_error(L('musthavesameproject'));
@@ -2298,6 +2362,38 @@ switch ($action = Req::val('action'))
         // set success message
         $_SESSION['SUCCESS'] = L('supertaskmodified');
 
+        break;
+    case 'notifications.remove':
+        if(!isset($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!is_array($_POST['message_id'])) {
+            // Flyspray::show_error(L('summaryanddetails'));
+            break;
+        }
+        
+        if (!$count($_POST['message_id'])) {
+            // Nothing to do.
+            break;
+        }
+        
+        $validids = array();
+        foreach ($_POST['message_id'] as $id) {
+            if (is_numeric($id)) {
+                if (settype($id, 'int') && id > 0) {
+                    $validids[] = $id;
+                }
+            }
+        }
+
+        if (!$count($validids)) {
+            // Nothing to do.
+            break;
+        }
+        
+        Notifications::NotificationsHaveBeenRead($validids);
         break;
     case 'task.bulkupdate':
         # TODO check if the user has the right to do each action on each task id he send with the form!

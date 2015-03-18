@@ -411,7 +411,7 @@ Username: ',
 
 Regards,',
 'yourusername'            => ' your username ',
-'locale'                  => 'en-AU',
+'locale'                  => 'en-US',
 'filenotexist'            => 'File does not exist, or you do not have permission to access it.',
 'showtask'                => 'Show Task',
 'now'                     => 'Now',
@@ -1005,6 +1005,14 @@ Regards,',
 'defaultorderby'          => 'Order tasklist by default by',
 'viewowntasks'            => 'View own tasks',
 'viewgroupstasks'         => 'View groups tasks',
-
+'urlrewriting'            => 'Url rewriting',
+'enablehtaccess'          => 'Please enable your .htaccess file at Flyspray root before turning url rewriting on',
+'nomodrewrite'            => 'Mod rewrite doesn\'t seem to be available on this server, sorry but I can\'t turn url rewriting on',
+'on'                      => 'On',
+'off'                     => 'Off',
+'defaultorderbydirection' => 'Default order by direction',
+'ascending'               => 'Ascending',
+'descending'              => 'Descending',
+'myassignedtasks'         => 'My assigned tasks'
 );
 ?>

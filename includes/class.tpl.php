@@ -164,7 +164,7 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
                 ( $name!='' ? ' name="'.$name.'"':'').
                 ( ' enctype="'.$enctype.'"').
                 ( ' '.$attr).'>'.
-                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'">':'');
+                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'" />':'');
 }
 
 // {{{ costful templating functions, TODO: optimize them
@@ -827,40 +827,70 @@ function tpl_disableif ($if)
 }
 
 // {{{ Url handling
-// Create an URL bas ed upon address-rewriting preferences {{{
+// Create an URL based upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf;
+    global $baseurl, $conf, $fs;
 
     $url = $baseurl;
 
     // If we do want address rewriting
-    if ($conf['general']['address_rewriting'] == '1') {
+    if ($fs->prefs['url_rewriting']) {
         switch ($type) {
-            case 'depends':   $return = $url . 'task/' .  $arg1 . '/' . $type; break;
-            case 'details':   $return = $url . 'task/' . $arg1; break;
-            case 'edittask':  $return = $url . 'task/' .  $arg1 . '/edit'; break;
-            case 'pm':        $return = $url . 'pm/proj' . $arg2 . '/' . $arg1; break;
+            case 'depends':
+                $return = $url . 'task/' . $arg1 . '/' . $type;
+                break;
+            case 'details':
+                $return = $url . 'task/' . $arg1;
+                break;
+            case 'edittask':
+                $return = $url . 'task/' . $arg1 . '/edit';
+                break;
+            case 'pm':
+                $return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
+                break;
 
             case 'admin':
             case 'edituser':
-            case 'user':      $return = $url . $type . '/' . $arg1; break;
+            case 'user':
+                $return = $url . $type . '/' . $arg1;
+                break;
 
-            case 'project':   $return = $url . 'proj' . $arg1; break;
+            case 'project':
+                $return = $url . 'proj' . $arg1;
+                break;
 
             case 'toplevel':
             case 'roadmap':
             case 'index':
-	    case 'newtask':
-	    case 'newmultitasks':   $return = $url . $type .  '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : ''); break;
+            case 'newtask':
+            case 'newmultitasks':
+                $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+                break;
 
-            case 'editgroup': $return = $url . $arg2 . '/' . $type . '/' . $arg1; break;
+            case 'editgroup':
+                $return = $url . $arg2 . '/' . $type . '/' . $arg1;
+                break;
 
             case 'logout':
             case 'lostpw':
             case 'myprofile':
             case 'register':
-            case 'reports':  $return = $url . $type; break;
+                $return = $url . $type;
+                break;
+            case 'reports':
+                $return = $url.'reports/proj'.$arg1;
+                break;
+            case 'mytasks':
+                $return = $url.'proj'.$arg1.'/dev'.$arg2;
+                break;
+            case 'tasklist':
+            	$return = $url.'proj'.$arg1;
+            	break;
+            default:
+            	$return = $baseurl . 'index.php';
+            	break;
+
         }
     } else {
         if ($type == 'edittask') {
@@ -870,30 +900,61 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         }
 
         switch ($type) {
-            case 'admin':     $return = $url . '&area=' . $arg1; break;
-            case 'edittask':  $return = $url . '&task_id=' . $arg1 . '&edit=yep'; break;
-            case 'pm':        $return = $url . '&area=' . $arg1 . '&project=' . $arg2; break;
-            case 'user':      $return = $baseurl . 'index.php?do=user&area=users&id=' . $arg1; break;
-            case 'edituser':  $return = $baseurl . 'index.php?do=admin&area=users&user_id=' . $arg1; break;
-            case 'logout':    $return = $baseurl . 'index.php?do=authenticate&logout=1'; break;
+            case 'admin':
+                $return = $url . '&area=' . $arg1;
+                break;
+            case 'edittask':
+                $return = $url . '&task_id=' . $arg1 . '&edit=yep';
+                break;
+            case 'pm':
+                $return = $url . '&area=' . $arg1 . '&project=' . $arg2;
+                break;
+            case 'user':
+                $return = $baseurl . 'index.php?do=user&area=users&id=' . $arg1;
+                break;
+            case 'edituser':
+                $return = $baseurl . 'index.php?do=admin&area=users&user_id=' . $arg1;
+                break;
+            case 'logout':
+                $return = $baseurl . 'index.php?do=authenticate&logout=1';
+                break;
 
             case 'details':
-            case 'depends':   $return = $url . '&task_id=' . $arg1; break;
+            case 'depends':
+                $return = $url . '&task_id=' . $arg1;
+                break;
 
-            case 'project':   $return = $baseurl . 'index.php?project=' . $arg1; break;
+            case 'project':
+                $return = $baseurl . 'index.php?project=' . $arg1;
+                break;
 
             case 'roadmap':
             case 'toplevel':
             case 'index':
-	    case 'newtask':
-	    case 'newmultitasks': $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : ''); break;
+            case 'newtask':
+            case 'newmultitasks':
+                $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : '');
+                break;
 
-            case 'editgroup': $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
+            case 'editgroup':
+                $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1;
+                break;
 
             case 'lostpw':
             case 'myprofile':
             case 'register':
-            case 'reports':   $return = $url; break;
+            case 'reports':
+            	$return = $url;
+            	break;
+            case 'mytasks':
+            	$return = $baseurl.'index.php?do=index&project='.$arg1.'&dev='.$arg2;
+            	break;
+            case 'tasklist':
+            	$return = $baseurl.'index.php?project='.$arg1;
+            	break;
+        	default:
+        		$return = $baseurl . 'index.php';
+        		break;
         }
     }
 
