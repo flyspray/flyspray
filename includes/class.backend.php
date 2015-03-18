@@ -533,7 +533,7 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = null, $oauth_provider = null, $profile_image = '')
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = '', $oauth_provider = '', $profile_image = '')
     {
         global $fs, $db, $notify, $baseurl;
 
@@ -651,17 +651,20 @@ abstract class Backend
 
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
-        if (! $oauth_provider && $fs->prefs['notify_registration']) {
-            // Gather list of admin users
-            $sql = $db->Query('SELECT DISTINCT email_address
+        if ( ! $oauth_provider ) {
+            $users_to_notify = array();
+            // Notify admins on new user registration
+            if( $fs->prefs['notify_registration'] ) {
+                // Gather list of admin users
+                $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                  WHERE g.group_id = 1');
 
-            // If the new user is not an admin, add him to the notification list
-            $users_to_notify = $db->FetchCol($sql);
-            if (! in_array($email, $users_to_notify))
-            {
+                // If the new user is not an admin, add him to the notification list
+                $users_to_notify = $db->FetchCol($sql);
+            }
+            if (!in_array($email, $users_to_notify)) {
                 array_push($users_to_notify, $email);
             }
 
