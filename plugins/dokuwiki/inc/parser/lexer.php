@@ -63,9 +63,22 @@ class Doku_LexerParallelRegex {
      *    @access public
      */
     function addPattern($pattern, $label = true) {
-        $count = count($this->_patterns);
-        $this->_patterns[$count] = $pattern;
-        $this->_labels[$count] = $label;
+		$duplicate = false;
+		// Nux: check if not duplicate
+		// Note! This prevents regexp overflow when viewing Flyspray issues with  many comments
+		if (in_array($pattern, $this->_patterns)) {
+			$index = array_search($pattern, $this->_patterns, true);
+			// label also have to be the same
+			if (isset($this->_labels[$index]) && $this->_labels[$index] === $label) {
+				$duplicate = true;
+			}
+		}
+		// only add new pattern if not duplicate...
+		if (!$duplicate) {
+			$count = count($this->_patterns);
+			$this->_patterns[$count] = $pattern;
+			$this->_labels[$count] = $label;
+		}
         $this->_regex = null;
     }
 

@@ -1,36 +1,36 @@
 <ul id="submenu">
   <?php if ($user->perms('view_comments') || $proj->prefs['others_view'] || ($user->isAnon() && $task_details['task_token'] && Get::val('task_token') == $task_details['task_token'])): ?>
   <li id="commentstab">
-  <a href="#comments">{L('comments')} ({!count($comments)})</a>
+  <a href="#comments"><?php echo Filters::noXSS(L('comments')); ?> (<?php echo count($comments); ?>)</a>
   </li>
   <?php endif; ?>
 
   <li id="relatedtab">
-  <a href="#related">{L('relatedtasks')} ({!count($related)}/{!count($duplicates)})</a>
+  <a href="#related"><?php echo Filters::noXSS(L('relatedtasks')); ?> (<?php echo count($related); ?>/<?php echo count($duplicates); ?>)</a>
   </li>
 
   <?php if ($user->perms('manage_project')): ?>
   <li id="notifytab">
-  <a href="#notify">{L('notifications')} ({!count($notifications)})</a>
+  <a href="#notify"><?php echo Filters::noXSS(L('notifications')); ?> (<?php echo count($notifications); ?>)</a>
   </li>
   <?php if (!$task_details['is_closed']): ?>
   <li id="remindtab">
-  <a href="#remind">{L('reminders')} ({!count($reminders)})</a>
+  <a href="#remind"><?php echo Filters::noXSS(L('reminders')); ?> (<?php echo count($reminders); ?>)</a>
   </li>
   <?php endif; ?>
   <?php endif; ?>
 
   <?php if ($user->perms('view_history')): ?>
   <li id="historytab">
-    <a id="historytaba" onmousedown="getHistory('{$task_details['task_id']}', '{#$baseurl}', 'history', '{Get::num('details')}');"
-       href="{CreateURL('details', $task_details['task_id'], null)}#history">{L('history')}</a>
+    <a id="historytaba" onmousedown="getHistory('<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', 'history', '<?php echo Filters::noXSS(Get::num('details')); ?>');"
+       href="<?php echo Filters::noXSS(CreateURL('details', $task_details['task_id'], null)); ?>#history"><?php echo Filters::noXSS(L('history')); ?></a>
   </li>
   <?php endif; ?>
 
     <?php if ($proj->prefs['use_effort_tracking']){ ?>
-    <?php if ($user->perms('view_effort')){ ?>
+    <?php if ($user->perms('view_current_effort_done')){ ?>
     <li id="efforttab">
-        <a href="#effort">{L('efforttracking')}</a>
+        <a href="#effort"><?php echo Filters::noXSS(L('efforttracking')); ?></a>
     </li>
 
     <?php

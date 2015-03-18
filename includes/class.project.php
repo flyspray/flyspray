@@ -34,14 +34,21 @@ class Project
         $this->prefs['default_entry'] = 'index';
         $this->prefs['notify_reply'] = '';
         $this->prefs['default_due_version'] = 'Undecided';
-        $this->prefs['disable_lostpw']=0;
+        $this->prefs['disable_lostpw'] = 0;
         $this->prefs['disable_changepw'] = 0;
-        $this->prefs['default_order_by'] = 'id';
+        $this->prefs['hours_per_manday'] = 0;
+        $this->prefs['estimated_effort_format'] = 0;
+        $this->prefs['current_effort_done_format'] = 0;
+    	$this->prefs['default_order_by'] = 'id';
+    	$this->prefs['default_order_by_direction'] = 'desc';
     }
 
+    # 20150219 peterdd: deprecated
     function setCookie()
     {
-        Flyspray::setCookie('flyspray_project', $this->id);
+        # 20150219 peterdd: unnecessary, setting and using a projectid-cookie makes parallel handling of 2 or more projects in different browser tabs impossible.
+        # instead, use form variables or variables from the url!
+        #Flyspray::setCookie('flyspray_project', $this->id);
     }
 
     /* cached list functions {{{ */
@@ -256,7 +263,9 @@ class Project
 
     // }}}
 
-    function listUsersIn($group_id = null)
+    // This should really be moved to class Flyspray like some other ones too.
+    // Something todo for 1.1.
+    static function listUsersIn($group_id = null)
     {
         global $db;
         return $db->cached_query(
@@ -282,6 +291,18 @@ class Project
                array($cid));
     }
 
+    function listLinks($cid)
+    {
+        global $db;
+	return $db->cached_query(
+		'link_'.intval($cid),
+		"SELECT *
+		   FROM {links}
+		   WHERE comment_id = ?
+		ORDER BY link_id ASC",
+		array($cid));
+    }
+
     function listTaskAttachments($tid)
     {
         global $db;
@@ -293,6 +314,18 @@ class Project
                ORDER BY  attachment_id ASC",
                array($tid));
     }
+
+    function listTaskLinks($tid)
+    {
+        global $db;
+	return $db->cached_query(
+		'link_'.intval($tid),
+		"SELECT *
+		FROM {links}
+		WHERE task_id = ? AND comment_id = 0
+		ORDER BY link_id ASC",
+		array($tid));
+    }
 	/**
 	 * Returns the activity by between dates for a project.
 	 * @param date $startdate
@@ -301,14 +334,19 @@ class Project
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getActivityProjectCount($startdate, $enddate, $project_id)
+	static function getActivityProjectCount($startdate, $enddate, $project_id)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
-		FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+
+		$result = $db->Query("SELECT count(date({$func}(event_date))) as val
+		FROM {history} h left join {tasks} t on t.task_id = h.task_id
 		WHERE t.project_id = ?
-		AND date(from_unixtime(event_date)) BETWEEN str_to_date(?, '%m/%d/%Y') and str_to_date(?, '%m/%d/%Y')", array($project_id, $startdate, $enddate));
-		return $db->fetchCol($result);
+		AND date({$func}(event_date)) BETWEEN date(?) and date(?)", array($project_id, $startdate, $enddate));
+
+        $result = $db->fetchCol($result);
+		return $result[0];
 	}
 	/**
 	 * Returns the day activity by the date for a project.
@@ -317,14 +355,36 @@ class Project
 	 * @return array used to get the count
 	 * @access public
 	 */
-	function getDayActivityByProject($date, $project_id)
+	static function getDayActivityByProject($date_start, $date_end, $project_id)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
-							  WHERE t.project_id = ? 
-							  AND date(from_unixtime(event_date)) = str_to_date(?, '%m/%d/%Y')", array($project_id, $date));
-		return $db->fetchCol($result);
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+
+		$result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
+							  WHERE t.project_id = ?
+							  AND date({$func}(event_date)) BETWEEN date(?) and date(?)
+                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
+                              array($project_id, $date_start, $date_end));
+
+        $date1   = new \DateTime($date_start);
+        $date2   = new \DateTime($date_end);
+        $days    = $date1->diff($date2);
+        $days    = $days->format('%a');
+        $results = array();
+
+        for ($i = 0; $i < $days; $i++) {
+            $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
+            $results[date('Y-m-d', $event_date)] = 0;
+        }
+
+        while ($row = $result->fetchRow()) {
+            $event_date           = date('Y-m-d', $row['event_date']);
+            $results[$event_date] = (integer) $row['val'];
+        }
+
+		return array_values($results);
 	}
     /* }}} */
 }

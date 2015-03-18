@@ -2,11 +2,11 @@
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded
-// 
+//
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-// 
+//
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
@@ -177,7 +177,7 @@ $translation = array(
 'smtpserver'              => 'Сервер SMTP',
 'smtpuser'                => 'Имя пользователя SMTP',
 'smtppass'                => 'Пароль SMTP',
-'addrewrite'              => '(use address rewriting)',
+'addrewrite'              => '(использовать переопределение адресов)',
 'usereminderdaemon'       => '-Включить фоновую службу напоминаний',
 'tasksperpage'            => 'Задач на страницу',
 'addtoassignees'          => 'Добавление себя к исполнителям',
@@ -294,7 +294,7 @@ $translation = array(
 'makepublic'              => 'сделать общедоступной',
 'taskmadeprivate'         => 'Задача помечена как частная',
 'taskmadepublic'          => 'Задача помечена как общедоступная',
-'confirmdeletecomment'    => 'Удалить этот комментарий? Все вложения будут также удалены!',
+'confirmdeletecomment'    => 'Удалить этот комментарий? %s',
 'confirmdeleteattach'     => 'Удалить это вложение?',
 'selectedhistory'         => '-Отображаются свойства выбранных событий (?)',
 'showallhistory'          => 'Показать вкладку с полной историей',
@@ -372,7 +372,7 @@ $translation = array(
 'taskproperties'          => 'Свойства задачи',
 'selectsincedate'         => 'Укажите дату "изменено с"',
 'changedsince'            => 'Изменено с',
-'updatefs'                => 'Обновите FlySpray, пожалуйста',
+'updatefs'                => 'Пожалуйста, обновите FlySpray',
 'currentversion'          => 'Текущая версия',
 'latestversion'           => 'последняя доступная версия',
 'hidemessage'             => '(напомнить позже)',
@@ -388,7 +388,7 @@ $translation = array(
 'lostpwforfs'             => 'Забыт пароль Flyspray',
 'lostpwmsg1'              => "Привет.\n\nЯ тут свой пароль забыл ",
 'lostpwmsg2'              => ", пожалуйста, пришлите мне новый\n\nИмя пользователя: ",
-'regards'                 => 'С приветом,',
+'regards'                 => 'Приветствую,',
 'yourusername'            => ' Ваше имя пользователя ',
 'filenotexist'            => 'Файл не найден или у Вас недостаточно прав для доступа',
 'showtask'                => 'Показать задачу',
@@ -401,6 +401,7 @@ $translation = array(
 'editmydetails'           => 'Редактировать мои данные',
 'logout'                  => 'Выход',
 'disabledaccount'         => 'Ваш аккаунт был заблокирован!<br>Автоматический выход из системы...',
+'poweredby'               => 'Поддерживается Flyspray',
 'projects'                => 'Проекты',
 'allprojects'             => 'Все проекты',
 'selectproject'           => 'для проекта:',
@@ -601,7 +602,7 @@ $translation = array(
 'feedimgurl'              => 'Ссылка на картинку для ленты новостей (оставите пустой - будет без картинки)',
 'notifysubject'           => 'Тема для уведомлений',
 'notifysubjectinfo'       => '(%p = заголовок проекта, %s = краткое описание задачи, %t = идентификатор задачи, %a = действие)',
-'priority6'               => 'Мухой!',
+'priority6'               => 'В мгновение!',
 'priority5'               => 'Немедленно',
 'priority4'               => 'Срочно',
 'priority3'               => 'Высокий',
@@ -760,9 +761,12 @@ $translation = array(
 'error5'                  => 'Пользователь не существует',
 'error6'                  => 'Неверная область администрирования (неверный адрес?)',
 'error7'                  => 'Попытка входа неудачна (неверные имя пользователя или пароль)!',
+'error71'                 => 'Аккаунт заблокирован на %d минут из-за слишком большого числа неудачных попыток входа!',
 'error8'                  => 'Вы не указали имя пользователя и пароль.',
 'error9'                  => 'Задача не существует или у Вас нет прав для ее просмотра.',
 'error10'                 => 'Задача не существует или у Вас нет прав для ее просмотра.',
+'error101'                => 'У вас нет прав для просмотра этой задачи',
+'error102'                => 'У вас нет прав для просмотра этой задачи, регистрация может помочь.',
 'error11'                 => 'Нет прав для редактирования этого комментария',
 'error12'                 => 'Неверный секретный код! Вы уверены, что именно это было указано в вашем уведомлении?',
 'error13'                 => 'У анонимных пользователей нет собственных настроек.',
@@ -806,6 +810,26 @@ $translation = array(
 'collapse'                => 'Свернуть',
 'expandall'               => 'Развернуть все',
 'collapseall'             => 'Свернуть все',
+'minpwsize'               => 'Минимальный размер пароля 5 символов',
+'passwordtoosmall'        => 'Короткий пароль',
+'accountwaslocked'        => 'Ваша учетная запись была заблокирована из-за слишком большого числа неудачных попыток входа.',
+'failedattempts'          => 'Там были %d неудачныу попытки входа.',
+'groupnotexist'           => 'Выбранная группа не существует в этом проекте.',
+'searchindetails'         => 'Поиск подробностей',
+'showasassignees'         => 'Показать как представителя',
+'find'                    => 'Искать',
+'isadmin'                 => 'Это админ',
+'addvotes'                => 'Добавить голос',
+'removevote'              => 'Удалить голос',
+'voteremoved'             => 'Ваш голос был удален',
+'voteremovefailed'        => 'Ваш голос не может быть удален сейчас.',
+'connectedtasks'          => 'Связанные задачи:',
+'taskdependencies'        => 'Зависимости задачи',
+'viewgraph'               => 'Посмотреть график',
+'notaskdependencies'      => 'Эта задача не зависит ни от каких других задач.',
+'dependson'               => 'Зависит от',
+'blocks'                  => 'Блоки',
+'newdependency'           => 'Новая зависимость',
 );
 
 ?>

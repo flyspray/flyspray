@@ -1,5 +1,5 @@
 <div id="toolbox">
-  <h3>{L('taskstatuses')}</h3>
+  <h3><?php echo Filters::noXSS(L('taskstatuses')); ?></h3>
 
   <?php
   $this->assign('list_type', 'status');

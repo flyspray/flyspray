@@ -15,8 +15,6 @@
  * @notes: This is a mess and should be replaced for 1.0
  */
 
-require_once dirname(__FILE__) . '/external/swift-mailer/swift_required.php';
-
 class Notifications {
 
    // {{{ Wrapper function for all others
@@ -29,6 +27,10 @@ class Notifications {
       if(!is_array($to)) {
           settype($to, 'array');
       }
+
+      // echo "<pre>";
+      // echo var_dump($to);
+      // echo "</pre>";
 
       if (!count($to)) {
         return false;
@@ -46,10 +48,99 @@ class Notifications {
           }
       }
 
+      // Get rid of undefined offset 2 when notify type is explicitly set,
+      // in these cases caller really has not set offset 2. Track down the
+      // callers later.
+      if ($ntype != NOTIFY_EMAIL && $ntype != NOTIFY_JABBER) {
+          if (!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
+              $result = false;
+          }
+      }
+
       return $result;
 
    // End of Create() function
    } // }}}
+
+   function StoreOnline($to, $subject, $body, $online, $task_id = null) {
+      global $db, $fs;
+
+      if (!count($to)) {
+        return false;
+      }
+
+      $date = time();
+
+      // store notification in table
+      $db->Query("INSERT INTO {notification_messages}
+                  (message_subject, message_body, time_created)
+                  VALUES (?, ?, ?)",
+                  array($online, '', $date)
+                );
+
+      // grab notification id
+      $result = $db->Query("SELECT message_id FROM {notification_messages}
+                            WHERE time_created = ? ORDER BY message_id DESC",
+                            array($date), 1);
+
+      $row = $db->FetchRow($result);
+      $message_id = $row['message_id'];
+
+      // If message could not be inserted for
+      // whatever reason...
+      if (!$message_id) {
+          return false;
+      }
+
+      // echo "<pre>";
+      // echo var_dump($to);
+      // echo "</pre>";
+
+      // make sure every user is only added once
+      settype($to, 'array');
+      $to = array_unique($to);
+
+      foreach ($to as $jid) {
+
+      // echo "<pre>";
+      // echo var_dump($jid);
+      // echo "</pre>";
+      //    if (isset($jid['notify_online']) && $jid['notify_online']) {
+         // store each recipient in table
+         $db->Query("INSERT INTO {notification_recipients}
+                     (notify_method, message_id, notify_address)
+                     VALUES (?, ?, ?)",
+                     array('o', $message_id, $jid)
+                    );
+          // }
+      }
+
+      return true;
+   }
+
+   static function GetUnreadNotifications() {
+      global $db, $fs, $user;
+
+      $notifications = $db->Query('SELECT r.recipient_id, m.message_subject
+                                     FROM {notification_recipients} r
+                                     JOIN {notification_messages} m ON r.message_id = m.message_id
+                                    WHERE r.notify_method = ? AND notify_address = ?',
+              array('o', $user['user_id']));
+      return $db->FetchAllArray($notifications);
+   }
+
+   static function NotificationsHaveBeenRead($ids) {
+      global $db, $fs, $user;
+
+      $readones = join(",", array_map('intval', $ids));
+
+      $db->Query("DELETE FROM {notification_recipients}
+                        WHERE message_id IN ($readones)
+                          AND notify_method = ? AND notify_address = ?",
+                 array('o', $user['user_id']));
+
+   }
+
    // {{{ Store Jabber messages for sending later
    function StoreJabber( $to, $subject, $body )
    {
@@ -106,7 +197,7 @@ class Notifications {
 
       return true;
    } // }}}
-   function JabberRequestAuth($email)
+   static function JabberRequestAuth($email)
    {
         global $fs;
 
@@ -118,7 +209,7 @@ class Notifications {
             || empty($fs->prefs['jabber_password'])) {
             return false;
         }
-        
+
         $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                    $fs->prefs['jabber_password'],
                    $fs->prefs['jabber_ssl'],
@@ -127,7 +218,7 @@ class Notifications {
         $JABBER->send("<presence to='" . Jabber::jspecialchars($email) . "' type='subscribe'/>");
         $JABBER->disconnect();
    }
-   
+
    // {{{ Send Jabber messages that were stored earlier
    function SendJabber()
    {
@@ -152,7 +243,7 @@ class Notifications {
       {
          return false;
       }
-      
+
       $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                    $fs->prefs['jabber_password'],
                    $fs->prefs['jabber_ssl'],
@@ -254,7 +345,7 @@ class Notifications {
 
         // Do we want to use a remote mail server?
         if (!empty($fs->prefs['smtp_server'])) {
-          
+
           // connection... SSL, TLS or none
           if ($fs->prefs['email_tls']) {
               $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server'], 587, 'tls');
@@ -263,7 +354,7 @@ class Notifications {
           } else {
               $swiftconn = Swift_SmtpTransport::newInstance($fs->prefs['smtp_server']);
           }
-          
+
           if ($fs->prefs['smtp_user']) {
               $swiftconn->setUsername($fs->prefs['smtp_user']);
           }
@@ -282,15 +373,24 @@ class Notifications {
 
         if(defined( 'FS_MAIL_LOGFILE')) {
             $log = Swift_LogContainer::getLog();
-            $log->setLogLevel(SWIFT_LOG_EVERYTHING); 
+            $log->setLogLevel(SWIFT_LOG_EVERYTHING);
         }
+
+        // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
+        $body = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+
+        // Make newlines into HTML line breaks
+        $body = str_replace("\n","<br>",$body);
 
         $swift = Swift_Mailer::newInstance($swiftconn);
 
         $message = new Swift_Message($subject);
+        if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
+            $body=html_entity_decode(strip_tags($body));
+        }
         $message->setBody($body);
         $type = $message->getHeaders()->get('Content-Type');
-        $type->setValue('text/plain');
+        $type->setValue('text/html');
         $type->setParameter('charset', 'utf-8');
 
         $message->getHeaders()->addTextHeader('Precedence', 'list');
@@ -320,9 +420,9 @@ class Notifications {
                     fwrite($fh, php_uname());
                     fclose($fh);
                 }
-            }          
+            }
         }
-        
+
         return true;
     } //}}}
     // {{{ Create a message for any occasion
@@ -413,10 +513,12 @@ class Notifications {
       */
 
       $body = L('donotreply') . "\n\n";
+      $online = '';
+
       // {{{ New task opened
       if ($type == NOTIFY_TASK_OPENED)
       {
-         $body .=  L('newtaskopened') . " \n\n";
+         $body .= L('newtaskopened') . " \n\n";
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ") \n\n";
          $body .= L('attachedtoproject') . ' - ' .  $task_details['project_title'] . "\n";
          $body .= L('summary') . ' - ' . $task_details['item_summary'] . "\n";
@@ -440,6 +542,12 @@ class Notifications {
          $body .= L('moreinfo') . "\n";
 
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= L('newtaskopened') . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
+         $online .= L('attachedtoproject') . ' - ' .  $task_details['project_title'] . ". ";
+         $online .= L('summary') . ' - ' . $task_details['item_summary'];
+
       } // }}}
       // {{{ Task details changed
       if ($type == NOTIFY_TASK_CHANGED)
@@ -463,6 +571,9 @@ class Notifications {
          $body .= L('taskchanged') . "\n\n";
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
          $body .= L('userwho') . ': ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
+
+         $online .= L('taskchanged') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'];
 
          foreach($arg1 as $change)
          {
@@ -495,6 +606,10 @@ class Notifications {
 
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .=  L('notify.taskclosed') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Task re-opened
       if ($type == NOTIFY_TASK_REOPENED)
@@ -504,6 +619,10 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] .  ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .=  L('notify.taskreopened') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] .  "). ";
       } // }}}
       // {{{ Dependency added
       if ($type == NOTIFY_DEP_ADDED)
@@ -517,6 +636,10 @@ class Notifications {
          $body .= L('newdepis') . ':' . "\n\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\n";
          $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+
+         $online .=  L('newdep') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Dependency removed
       if ($type == NOTIFY_DEP_REMOVED)
@@ -530,6 +653,10 @@ class Notifications {
          $body .= L('removeddepis') . ':' . "\n\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\n";
          $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+
+         $online .= L('notify.depremoved') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Comment added
       if ($type == NOTIFY_COMMENT_ADDED)
@@ -557,6 +684,10 @@ class Notifications {
 
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . '#comment' . $comment['comment_id'] . "\n\n";
+
+         $online .= L('notify.commentadded') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Attachment added
       if ($type == NOTIFY_ATT_ADDED)
@@ -566,6 +697,10 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= L('newattachment') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Related task added
       if ($type == NOTIFY_REL_ADDED)
@@ -579,6 +714,10 @@ class Notifications {
          $body .= L('relatedis') . ':' . "\n\n";
          $body .= 'FS#' . $related_task['task_id'] . ' - ' . $related_task['item_summary'] . "\n";
          $body .= CreateURL('details', $related_task['task_id']) . "\n\n";
+
+         $online .= L('notify.relatedadded') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Ownership taken
       if ($type == NOTIFY_OWNERSHIP)
@@ -587,6 +726,9 @@ class Notifications {
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= implode(', ', $task_details['assigned_to_name']) . ' ' . L('takenownership') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ".";
       } // }}}
       // {{{ Confirmation code
       if ($type == NOTIFY_CONFIRMATION)
@@ -597,6 +739,8 @@ class Notifications {
                 // In case that spaces in the username have been removed
                . L('username') . ': '. $arg1[2] . "\n"
                . L('confirmcodeis') . " $arg1[3] \n\n";
+
+          $online = $body;
       } // }}}
       // {{{ Pending PM request
       if ($type == NOTIFY_PM_REQUEST)
@@ -606,6 +750,10 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= L('requiresaction') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ PM request denied
       if ($type == NOTIFY_PM_DENY_REQUEST)
@@ -617,6 +765,10 @@ class Notifications {
          $body .= $arg1 . "\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= L('pmdeny') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ New assignee
       if ($type == NOTIFY_NEW_ASSIGNEE)
@@ -626,6 +778,10 @@ class Notifications {
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
          $body .= L('moreinfo') . "\n";
          $body .= CreateURL('details', $task_id) . "\n\n";
+
+         $online .= L('assignedtoyou') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Reversed dep
       if ($type == NOTIFY_REV_DEP)
@@ -639,6 +795,10 @@ class Notifications {
          $body .= L('isdepfor') . ':' . "\n\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\n";
          $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+
+         $online .= L('taskwatching') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Reversed dep - removed
       if ($type == NOTIFY_REV_DEP_REMOVED)
@@ -652,6 +812,10 @@ class Notifications {
          $body .= L('isnodepfor') . ':' . "\n\n";
          $body .= 'FS#' . $depend_task['task_id'] . ' - ' .  $depend_task['item_summary'] . "\n";
          $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+
+         $online .= L('taskwatching') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ User added to assignees list
       if ($type == NOTIFY_ADDED_ASSIGNEES)
@@ -660,36 +824,47 @@ class Notifications {
          $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
          $body .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
          $body .= CreateURL('details', $task_id) . "\n\n\n";
+
+         $online .= L('useraddedtoassignees') . ". ";
+         $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
+         $online .= L('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
       } // }}}
       // {{{ Anon-task has been opened
       if ($type == NOTIFY_ANON_TASK)
       {
          $body .= L('thankyouforbug') . "\n\n";
          $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1)) . "\n\n";
+
+         $online .= L('thankyouforbug') . "";
       } // }}}
-      // {{{ Password change 
+      // {{{ Password change
       if ($type == NOTIFY_PW_CHANGE)
       {
-          $body = L('messagefrom'). $arg1[0] . "\n\n"
-                  . L('magicurlmessage')." \n"
-                  . "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n";
+          $body =       L('magicurlmessage')." \n"
+			. "{$arg1[0]}index.php?do=lostpw&magic_url=$arg1[1]\n\n"
+			. L('messagefrom'). $arg1[0];
+          $online = $body;
+
       } // } }}
       // {{{ New user
       if ($type == NOTIFY_NEW_USER)
       {
-          $body = L('messagefrom'). $arg1[0] . "\n\n"
-                  . L('newuserregistered')." \n\n"
-                  . L('username') . ': ' . $arg1[1] . "\n" .
-                    L('realname') . ': ' . $arg1[2] . "\n";
-          if ($arg1[6]) {
-              $body .= L('password') . ': ' . $arg1[5] . "\n";
-          }
-              $body .= L('emailaddress') . ': ' . $arg1[3] . "\n" .
-                    L('jabberid') . ':' . $arg1[4] . "\n\n";
+		$body =	L('newuserregistered')." \n\n"
+                	. L('username') . ': ' . $arg1[1] . "\n" .
+			L('realname') . ': ' . $arg1[2] . "\n";
+                $online = $body;
+
+		if ($arg1[6]) {
+			$body .= L('password') . ': ' . $arg1[5] . "\n";
+		}
+
+		$body .= L('emailaddress') . ': ' . $arg1[3] . "\n";
+		$body .= L('jabberid') . ':' . $arg1[4] . "\n\n";
+		$body .= L('messagefrom'). $arg1[0];
       } // }}}
 
-      $body .= L('disclaimer');
-      return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body));
+      $body .= '. '.L('disclaimer');
+      return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
 
    } // }}}
    // {{{ Create an address list for specific users
@@ -699,6 +874,7 @@ class Notifications {
 
         $jabber_users = array();
         $email_users = array();
+        $online_users = array();
 
         if(!is_array($users)) {
             settype($users, 'array');
@@ -708,7 +884,7 @@ class Notifications {
             return array();
         }
 
-        $sql = $db->Query('SELECT user_id, notify_type, email_address, jabber_id
+        $sql = $db->Query('SELECT user_id, notify_type, email_address, jabber_id, notify_online
                              FROM {users}
                             WHERE' . substr(str_repeat(' user_id = ? OR ', count($users)), 0, -3),
                            array_values($users));
@@ -731,9 +907,14 @@ class Notifications {
             {
                 array_push($jabber_users, $user_details['jabber_id']);
             }
+
+            if ($fs->prefs['user_notify'] == '1' && $user_details['notify_online'])
+            {
+                array_push($online_users, $user_details['user_id']);
+            }
         }
 
-        return array($email_users, array_unique($jabber_users));
+        return array($email_users, array_unique($jabber_users), array_unique($online_users));
 
    } // }}}
    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
@@ -745,6 +926,7 @@ class Notifications {
 
       $jabber_users = array();
       $email_users = array();
+      $online_users = array();
 
       $task_details = Flyspray::GetTaskDetails($task_id);
 
@@ -773,6 +955,13 @@ class Notifications {
          {
                array_push($jabber_users, $row['jabber_id']);
          }
+
+         // if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+         //    || $fs->prefs['user_notify'] == '4')
+         if ($fs->prefs['user_notify'] == '1' && $row['notify_online'])
+         {
+               array_push($online_users, $row['user_id']);
+         }
       }
 
       // Get list of assignees
@@ -800,6 +989,13 @@ class Notifications {
          {
                array_push($jabber_users, $row['jabber_id']);
          }
+
+         // if ( ($fs->prefs['user_notify'] == '1' && ($row['notify_type'] == NOTIFY_ONLINE || $row['notify_type'] == NOTIFY_BOTH) )
+         //    || $fs->prefs['user_notify'] == '4')
+         if ($fs->prefs['user_notify'] == '1' && $row['notify_online'])
+         {
+               array_push($online_users, $row['user_id']);
+         }
       }
 
       // Now, we add the project contact addresses...
@@ -821,17 +1017,23 @@ class Notifications {
                array_push($jabber_users, $val);
          }
 
+         foreach ($proj_jids as $key => $val)
+         {
+            if (!empty($val) && !in_array($val, $online_users))
+               array_push($online_users, $val);
+         }
+
       // End of checking if a task is private
       }
-      // Send back two arrays containing the notification addresses
-      return array($email_users, array_unique($jabber_users));
+      // Send back three arrays containing the notification addresses
+      return array($email_users, array_unique($jabber_users), array_unique($online_users));
 
    } // }}}
-    // {{{ Fix the message data 
+    // {{{ Fix the message data
         /**
-         * fixMsgData 
+         * fixMsgData
          * a 0.9.9.x ONLY workaround for the "truncated email problem"
-         * based on code Henri Sivonen (http://hsivonen.iki.fi) 
+         * based on code Henri Sivonen (http://hsivonen.iki.fi)
          * @param mixed $data
          * @access public
          * @return void

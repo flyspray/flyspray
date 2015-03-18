@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'ערוך משתמש',
 'username'                => 'שם משתמש',
 'realname'                => 'שם מלא',
@@ -286,7 +286,7 @@ $language = array(
 'makepublic'              => 'הפיכה לציבורי',
 'taskmadeprivate'         => 'Task made private',
 'taskmadepublic'          => 'Privacy removed - task made public',
-'confirmdeletecomment'    => 'Really delete this comment?  All attachments will also be deleted!',
+'confirmdeletecomment'    => 'Really delete this comment? %s',
 'confirmdeleteattach'     => 'Really delete this attachment?',
 'selectedhistory'         => 'Showing selected history details',
 'showallhistory'          => 'Show full history tab again',
@@ -840,7 +840,9 @@ $language = array(
 'notaskdependencies'      => 'משימה זו אינה תלויה במשימות אחרות.',
 'dependson'               => 'תלויה ב',
 'blocks'                  => 'חוסמת',
-'newdependency'           => 'תלות חדשה:'
+'newdependency'           => 'תלות חדשה:',
+'activity'                => 'פעילות',
+'myactivity'              => 'פעילות שלי',
 );
 
 ?>

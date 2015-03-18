@@ -1,5 +1,4 @@
 <?php
-
 /*
    This is the main script that everything else is included
    in.  Mostly what it does is check the user permissions
@@ -21,6 +20,9 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 } elseif (Req::has('show') || (Req::has('switch') && $do == 'details')
       || ($do == 'newtask' && Req::val('project') == '0'))  {
 	$do = 'index';
+} elseif (Req::has('code')) {
+	$_SESSION['oauth_provider'] = 'microsoft';
+	$do = 'oauth';
 }
 
 // supertask_id for add new sub-task
@@ -80,13 +82,6 @@ if (Get::val('getfile')) {
 // Load translations
 load_translations();
 
-for ($i = 6; $i >= 1; $i--) {
-    $fs->priorities[$i] = L('priority' . $i);
-}
-for ($i = 5; $i >= 1; $i--) {
-    $fs->severities[$i] = L('severity' . $i);
-}
-
 /*******************************************************************************/
 /* Here begins the deep flyspray : html rendering                              */
 /*******************************************************************************/
@@ -110,6 +105,12 @@ if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 
 $page = new FSTpl();
 
+// make sure people are not attempting to manually fiddle with projects they are not allowed to play with
+if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
+    Flyspray::show_error( L('nopermission') );
+    exit;
+}
+
 if ($show_task = Get::val('show_task')) {
     // If someone used the 'show task' form, redirect them
     if (is_numeric($show_task)) {
@@ -124,6 +125,22 @@ if (Flyspray::requestDuplicated()) {
     Flyspray::show_error(3);
 }
 
+# handle all forms request that modify data
+
+if (Req::has('action')) {
+    # enforcing if the form sent the correct anti csrf token
+    # only allow token by post
+    if( !Post::has('csrftoken') ){
+        die('missingtoken');
+    }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
+        require_once(BASEDIR . '/includes/modify.inc.php');
+    }else{
+        die('wrongtoken');
+    }
+}
+
+# start collecting infos for the answer page
+
 if ($proj->id && $user->perms('manage_project')) {
     // Find out if there are any PM requests wanting attention
     $sql = $db->Query(
@@ -132,6 +149,12 @@ if ($proj->id && $user->perms('manage_project')) {
     list($count) = $db->fetchRow($sql);
 
     $page->assign('pm_pendingreq_num', $count);
+}
+if ($user->perms('is_admin')) {
+    $sql = $db->Query(
+    	    "SELECT COUNT(*) FROM {admin_requests} WHERE request_type = '3' AND resolved_by = '0'");
+    list($count) = $db->fetchRow($sql);
+    $page->assign('admin_pendingreq_num', $count);
 }
 
 $sql = $db->Query(
@@ -158,11 +181,6 @@ $page->assign('do', $do);
 $page->assign('supertask_id', $supertask_id);
 
 $page->pushTpl('header.tpl');
-
-// DB modifications?
-if (Req::has('action')) {
-    require_once(BASEDIR . '/includes/modify.inc.php');
-}
 
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");

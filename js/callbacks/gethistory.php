@@ -16,12 +16,17 @@ $baseurl = dirname(dirname($baseurl)) .'/' ;
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));
     $user->check_account_ok();
+} else {
+    $user = new User(0, $proj);
 }
 
 // Check permissions
 if (!$user->perms('view_history')) {
     die();
 }
+
+// Load translations
+load_translations();
 
 if ($details = Get::num('details')) {
     $details = " AND h.history_id = $details";
@@ -33,6 +38,7 @@ $sql = get_events(Get::num('task_id'), $details);
 $histories = $db->fetchAllArray($sql);
 
 $page = new FSTpl;
+$page->setTheme($proj->prefs['theme_style']);
 $page->uses('histories', 'details');
 if ($details) {
     event_description($histories[0]); // modifies global variables

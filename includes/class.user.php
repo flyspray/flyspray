@@ -22,7 +22,7 @@ class User
                                 array($uid, $uid));
         }
 
-        if ($uid > 0 && $db->countRows($sql)) {
+        if ($uid > 0 && $db->countRows($sql) == 1) {
             $this->infos = $db->FetchRow($sql);
             $this->id = intval($uid);
         } else {
@@ -98,7 +98,9 @@ class User
                 'delete_comments', 'create_attachments',
                 'delete_attachments', 'view_history', 'close_own_tasks',
                 'close_other_tasks', 'assign_to_self', 'assign_others_to_self',
-                'add_to_assignees', 'view_reports', 'add_votes', 'group_open','view_effort','track_effort');
+                'add_to_assignees', 'view_reports', 'add_votes', 'group_open','view_estimated_effort',
+                'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap',
+                'view_own_tasks', 'view_groups_tasks');
 
         $this->perms = array(0 => array());
         // Get project settings which are important for permissions
@@ -159,7 +161,7 @@ class User
         if ($this->isAnon()) {
             return;
         }
-        $saltedpass = md5($this->infos['user_pass'] . $conf['general']['cookiesalt']);
+        $saltedpass = crypt($this->infos['user_pass'], $conf['general']['cookiesalt']);
 
         if (Cookie::val('flyspray_passhash') !== $saltedpass || !$this->infos['account_enabled']
                 || !$this->perms('group_open', 0))
@@ -200,21 +202,100 @@ class User
             return true;
         }
 
-        if ($task['opened_by'] == $this->id && !$this->isAnon()
-            || (!$task['mark_private'] && ($this->perms('view_tasks', $task['project_id']) || $this->perms('others_view', $task['project_id'])))
-            || $this->perms('manage_project', $task['project_id'])) {
+        // Split into several separate tests so I can keep track on whats happening.
+        
+        // Project managers and admins allowed always.
+        if ($this->perms('manage_project', $task['project_id'])
+            || $this->perms('is_admin', $task['project_id'])) {
             return true;
         }
-
-        return !$this->isAnon() && in_array($this->id, Flyspray::GetAssignees($task['task_id']));
+        
+        // Allow if "allow anyone to view this project" is checked
+        // and task is not private.
+        if ($this->perms('others_view', $task['project_id']) && !$task['mark_private']) {
+            return true;
+        }
+        
+        if ($this->isAnon()) {
+            // Following checks need identified user.
+            return false;
+        }
+        
+        // Non-private task
+        if (!$task['mark_private']) {
+            // Can view tasks, always allow
+            if ($this->perms('view_tasks', $task['project_id'])) {
+                return true;
+            }
+            // User can view only own tasks
+            if ($this->perms('view_own_tasks', $task['project_id'])
+                && !$this->perms('view_groups_tasks', $task['project_id'])) {
+                if ($task['opened_by'] == $this->id) {
+                    return true;
+                }
+                if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+                    return true;
+                }
+                // No use to continue further.
+                return false;
+            }
+            // Ok, user *must* have view_groups_tasks permission,
+            // but do the check anyway just in case... there might
+            // appear more in the future.
+            if ($this->perms('view_groups_tasks', $task['project_id'])) {
+                // Two first checks the same as with view_own_tasks permission.
+                if ($task['opened_by'] == $this->id) {
+                    return true;
+                }
+                // Fetch only once, could be needed twice
+                $assignees = Flyspray::GetAssignees($task['task_id']);
+                if (in_array($this->id, $assignees)) {
+                    return true;
+                }
+                
+                // Must fetch other persons in the group now. Find out
+                // how to detect the right group for project and the
+                // other persons in it. Funny, found it in $perms.
+                $group = $this->perms('project_group', $task['project_id']);
+                $others = Project::listUsersIn($group);
+                
+                foreach ($others as $other) {
+                    if ($other['user_id'] == $task['opened_by']) {
+                        return true;
+                    }
+                    if (in_array($other['user_id'], $assignees)) {
+                        return true;
+                    }
+                }
+                // No use to continue further.
+                return false;
+            }
+        }
+        
+        // Private task, user must be either assigned to the task
+        // or have opened it.
+        if ($task['mark_private']) {
+            if ($task['opened_by'] == $this->id) {
+                return true;
+            }
+            if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+                return true;
+            }
+            // No use to continue further.
+            return false;
+        }
+        
+        // Could not find any permission for viewing the task.
+        return false;
     }
 
     public function can_edit_task($task)
     {
-        return !$task['is_closed']
-            && ($this->perms('modify_all_tasks', $task['project_id']) ||
-                    ($this->perms('modify_own_tasks', $task['project_id'])
-                     && in_array($this->id, Flyspray::GetAssignees($task['task_id']))));
+        return !$task['is_closed'] && (
+               $this->perms('modify_all_tasks', $task['project_id']) ||
+               ($this->id == $task['opened_by'] && $this->perms('modify_own_tasks', $task['project_id'])) ||
+               in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+               );
     }
 
     public function can_take_ownership($task)
@@ -236,16 +317,51 @@ class User
                 || $this->perms('close_other_tasks', $task['project_id']);
     }
 
+    public function can_set_task_parent($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
+    }
+
+    public function can_associate_task($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
+    }
+
+    public function can_add_task_dependency($task)
+    {
+        return !$task['is_closed'] && (
+                $this->perms('modify_all_tasks', $task['project_id']) ||
+                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+            );
+    }
+
+//admin approve user registration
+    public function need_admin_approval()
+    {
+	global $fs;
+	return $this->isAnon() && $fs->prefs['need_approval'] && $fs->prefs['anon_reg'];
+    }
+
+    public function get_group_id()
+    {
+    }
+
     public function can_self_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
+        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
     }
 
     public function can_register()
     {
         global $fs;
-        return $this->isAnon() && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'];
+        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
     }
 
     public function can_open_task($proj)
@@ -316,13 +432,17 @@ class User
 	static function getActivityUserCount($startdate, $enddate, $project_id, $userid)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+
+        $result = $db->Query("SELECT count(date({$func}(event_date))) as val
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
 							  WHERE t.project_id = ? AND h.user_id = ?
-							  AND date(from_unixtime(event_date)) 
-							  BETWEEN str_to_date(?, '%m/%d/%Y') 
-							  AND str_to_date(?, '%m/%d/%Y')", array($project_id, $userid, $startdate, $enddate));
-		return $db->fetchCol($result);
+							  AND date({$func}(event_date))
+							  BETWEEN date(?)
+							  AND date(?)", array($project_id, $userid, $startdate, $enddate));
+        $result = $db->fetchCol($result);
+		return $result[0];
 	}
 	/**
 	 * Returns the day activity by the date for a project and user.
@@ -332,14 +452,36 @@ class User
 	 * @return array used to get the count
 	 * @access public
 	 */
-	static function getDayActivityByUser($date, $project_id, $userid)
+	static function getDayActivityByUser($date_start, $date_end, $project_id, $userid)
 	{
 		global $db;
-		$result = $db->Query("SELECT count(date(from_unixtime(event_date))) as val
-							  FROM {history} h left join {tasks} t on t.task_id = h.task_id 
+		//NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
+        $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
+
+        $result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
+							  FROM {history} h left join {tasks} t on t.task_id = h.task_id
 							  WHERE t.project_id = ? AND h.user_id = ?
-							  AND date(from_unixtime(event_date)) = str_to_date(?, '%m/%d/%Y')", array($project_id, $userid, $date));
-		return $db->fetchCol($result);
+                              AND date({$func}(event_date)) BETWEEN date(?) and date(?)
+                              GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
+                              array($project_id, $userid, $date_start, $date_end));
+
+		$date1   = new \DateTime($date_start);
+        $date2   = new \DateTime($date_end);
+        $days    = $date1->diff($date2);
+        $days    = $days->format('%a');
+        $results = array();
+
+        for ($i = 0; $i < $days; $i++) {
+            $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
+            $results[date('Y-m-d', $event_date)] = 0;
+        }
+
+        while ($row = $result->fetchRow()) {
+            $event_date           = date('Y-m-d', $row['event_date']);
+            $results[$event_date] = (integer) $row['val'];
+        }
+
+		return array_values($results);
 	}
 
     /* }}} */

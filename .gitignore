@@ -2,3 +2,13 @@ flyspray.conf.php
 img/veloz.png
 attachments/*
 /.idea/
+/nbproject/*
+vendor/*
+composer.lock
+composer.phar
+/_site/
+.htaccess
+*.PHPEditProject
+/avatars/*
+/lang/*.php.bak
+/lang/*.php.safe

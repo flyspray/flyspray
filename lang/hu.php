@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+$translation = array(
 'edituser'                => 'Felhasználó szerkesztése',
 'username'                => 'Felhasználói név',
 'realname'                => 'Teljes név',
@@ -284,7 +284,7 @@ $language = array(
 'makepublic'              => 'publikusnak beállít',
 'taskmadeprivate'         => 'A hibajegy privátnak beállítva',
 'taskmadepublic'          => 'A hibajegy publikusnak beállítva',
-'confirmdeletecomment'    => 'Biztosan törli a megjegyzést? Az összes csatolás is törlődni fog!Really delete this comment?',
+'confirmdeletecomment'    => 'Biztosan törli a megjegyzést? %s',
 'confirmdeleteattach'     => 'Biztosan törli a csatolást?',
 'selectedhistory'         => 'A kiválasztott történet részleteinek megjelenítése',
 'showallhistory'          => 'Teljes történet fülének ismételt megjelenítése',

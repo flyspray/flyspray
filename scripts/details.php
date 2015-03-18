@@ -46,7 +46,7 @@ if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
                            WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
                                  AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
-                        ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id || -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
+                        ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id ? $proj->id : -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
     $userlist = array();
     while ($row = $db->FetchRow($result)) {
         $userlist[$row['group_name']][] = array(0 => $row['user_id'], 
@@ -72,11 +72,13 @@ else {
     }
 
     // Sub-Tasks
-    $subtasks = $db->Query('SELECT  task_id 
-                                 FROM  {tasks} 
-                                WHERE  supertask_id = ?
-                                ORDER BY list_order', 
+    $subtasks = $db->Query('SELECT  t.*, p.project_title 
+                                 FROM  {tasks} t
+			    LEFT JOIN  {projects} p ON t.project_id = p.project_id
+                                WHERE  t.supertask_id = ?
+                                ORDER BY t.list_order', 
                                 array($task_id));
+    $subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
     
     // Parent categories
     $parent = $db->Query('SELECT  *
@@ -86,20 +88,24 @@ else {
                         array($task_details['lft'], $task_details['rgt'], $task_details['cproj']));
 
     // Check for task dependencies that block closing this task
-    $check_deps   = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id
+    $check_deps   = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.dep_task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
+			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.task_id = ?', array($task_id));
+    $check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
     // Check for tasks that this task blocks
-    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name
+    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
+			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.dep_task_id = ?', array($task_id));
+    $check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
 
     // Check for pending PM requests
     $get_pending  = $db->Query("SELECT  *
@@ -157,11 +163,11 @@ else {
     $page->assign('prev_id',   $prev_id);
     $page->assign('next_id',   $next_id);
     $page->assign('task_text', $task_text);
-    $page->assign('subtasks', $db->fetchAllArray($subtasks));
-    $page->assign('deps',      $db->fetchAllArray($check_deps));
+    $page->assign('subtasks',  $subtasks_cleaned);
+    $page->assign('deps',      $check_deps_cleaned);
     $page->assign('parent',    $db->fetchAllArray($parent));
-    $page->assign('blocks',    $db->fetchAllArray($check_blocks));
-    $page->assign('votes',    $db->fetchAllArray($get_votes));
+    $page->assign('blocks',    $check_blocks_cleaned);
+    $page->assign('votes',     $db->fetchAllArray($get_votes));
     $page->assign('penreqs',   $db->fetchAllArray($get_pending));
     $page->assign('d_open',    $db->fetchOne($open_deps));
     $page->assign('watched',   $db->fetchOne($watching));
@@ -199,6 +205,17 @@ else {
     }
     $page->assign('comment_attachments', $attachments);
 
+    // Comment links
+    $links = array();
+    $sql = $db->Query('SELECT *
+	                 FROM {links} l, {comments} c
+			WHERE c.task_id = ? AND l.comment_id = c.comment_id',
+	               array($task_id));
+    while ($row = $db->FetchRow($sql)) {
+	$links[$row['comment_id']][] = $row;
+    }
+    $page->assign('comment_links', $links);
+
     // Relations, notifications and reminders
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r
@@ -208,7 +225,9 @@ else {
                         WHERE  t.task_id is NOT NULL AND is_duplicate = 0 AND ( t.mark_private = 0 OR ? = 1 )
                      ORDER BY  t.task_id ASC',
             array($task_id, $task_id, $user->perms('manage_project')));
-    $page->assign('related', $db->fetchAllArray($sql));
+    $related_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
+
+    $page->assign('related', $related_cleaned);
 
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r
@@ -218,7 +237,8 @@ else {
                         WHERE  is_duplicate = 1 AND r.related_task = ?
                      ORDER BY  t.task_id ASC',
                       array($task_id));
-    $page->assign('duplicates', $db->fetchAllArray($sql));
+    $duplicates_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
+    $page->assign('duplicates', $duplicates_cleaned);
 
     $sql = $db->Query('SELECT  *
                          FROM  {notifications} n

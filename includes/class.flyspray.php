@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    public $version = '1.0 dev';
+    public $version = '1.0 Alpha';
 
     /**
      * Flyspray preferences
@@ -82,7 +82,7 @@ class Flyspray
 
         $sizes = array();
         foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
-            if (!$val) {
+            if (!$val || $val < 0) {
                 continue;
             }
 
@@ -104,7 +104,7 @@ class Flyspray
         $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
-    
+
     protected function setDefaultTimezone()
     {
         $default_timezone = isset($this->prefs['default_timezone']) && !empty($this->prefs['default_timezone']) ? $this->prefs['default_timezone'] : 'UTC';
@@ -157,7 +157,6 @@ class Flyspray
         }
 
         $url = FlySpray::absoluteURI($url);
-
 
         header('Location: '. $url);
 
@@ -218,6 +217,10 @@ class Flyspray
         $host = 'localhost';
         if (!empty($_SERVER['HTTP_HOST'])) {
             list($host) = explode(':', $_SERVER['HTTP_HOST']);
+
+            if (strpos($_SERVER['HTTP_HOST'], ':') !== false && !isset($port)) {
+                $port = explode(':', $_SERVER['HTTP_HOST']);
+            }
         } elseif (!empty($_SERVER['SERVER_NAME'])) {
             list($host) = explode(':', $_SERVER['SERVER_NAME']);
         }
@@ -381,15 +384,17 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    public static function listProjects($active_only = true)
+    public static function listProjects(/*$active_only = true*/) // FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
     {
         global $db;
 
         $query = 'SELECT  project_id, project_title FROM {projects}';
 
-        if ($active_only)  {
-            $query .= ' WHERE  project_is_active = 1';
-        }
+//         if ($active_only)  {
+//             $query .= ' WHERE  project_is_active = 1';
+//         }
+
+        $query .= ' ORDER BY  project_id ASC';
 
         $sql = $db->Query($query);
         return $db->fetchAllArray($sql);
@@ -403,10 +408,10 @@ class Flyspray
      */
     public static function listThemes()
     {
+        $theme_array = array();
         if ($handle = opendir(dirname(dirname(__FILE__)) . '/themes/')) {
-            $theme_array = array();
             while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..' && is_file("themes/$file/theme.css")) {
+                if ($file != '.' && $file != '..' && is_file(dirname(dirname(__FILE__)) . "/themes/$file/theme.css")) {
                     $theme_array[] = $file;
                 }
             }
@@ -516,6 +521,8 @@ class Flyspray
         // 31: User deletion
         // 32: Add new subtask
         // 33: Remove Subtask
+        // 34: Add new parent
+        // 35: Remove parent
 
         $query_params = array(intval($task_id), intval($user->id),
                              ((!is_numeric($time)) ? time() : $time),
@@ -627,15 +634,15 @@ class Flyspray
      * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
      * @version 1.0
      */
-    public static function checkLogin($username, $password)
+    public static function checkLogin($username, $password, $method = 'native')
     {
         global $db;
 
 	$email_address = $username;  //handle multiple email addresses
         $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
 	$user_id = $db->FetchRow($temp);
-	$user_id = $user_id[id];
-      	
+	$user_id = $user_id["id"];
+
 	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
@@ -674,7 +681,8 @@ class Flyspray
         }
 
         // Compare the crypted password to the one in the database
-        $pwOk = ($password == $auth_details['user_pass']);
+        // skip password check if the user is using oauth
+        $pwOk = ($method == 'oauth') ? true : ($password == $auth_details['user_pass']);
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
             return $auth_details['user_id'];
@@ -686,30 +694,64 @@ class Flyspray
 
         return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
     } // }}}
+
+    static public function checkForOauthUser($uid, $provider)
+    {
+        global $db;
+
+        if(empty($uid) || empty($provider)) {
+            return false;
+        }
+
+        $sql = $db->Query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
+
+        if ($db->fetchOne($sql)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     // Set cookie {{{
     /**
      * Sets a cookie, automatically setting the URL
+     * Now same params as PHP's builtin setcookie()
      * @param string $name
      * @param string $val
      * @param integer $time
+     * @param string $path
+     * @param string $domain
+     * @param bool $secure
+     * @param bool $httponly
      * @access public static
      * @return bool
-     * @version 1.0
+     * @version 1.1
      */
-    public static function setCookie($name, $val, $time = null)
+    public static function setCookie($name, $val, $time = null, $path=null, $domain=null, $secure=false, $httponly=false)
     {
-        $url = parse_url($GLOBALS['baseurl']);
+        if (null===$path){
+            $url = parse_url($GLOBALS['baseurl']);
+        }else{
+            $url['path']=$path;
+        }
+
         if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
-
+        if(null===$domain){
+            $domain='';
+        }
+        if(null===$secure){
+            $secure=false;
+        }
         if((strlen($name) + strlen($val)) > 4096) {
             //violation of the protocol
             trigger_error("Flyspray sent a too big cookie, browsers will not handle it");
             return false;
         }
 
-        return setcookie($name, $val, $time, $url['path']);
+        return setcookie($name, $val, $time, $url['path'],$domain,$secure,$httponly);
     } // }}}
             // Start the session {{{
     /**
@@ -724,7 +766,8 @@ class Flyspray
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
-
+        /*
+        # commented out IMHO weired obfuscating session names
         $names = array( 'GetFirefox',
                         'UseLinux',
                         'NoMicrosoft',
@@ -759,6 +802,15 @@ class Flyspray
             session_name($sessname);
             session_start();
             $_SESSION['SESSNAME'] = $sessname;
+        }
+        */
+
+        $url = parse_url($GLOBALS['baseurl']);
+        session_name('flyspray');
+        session_set_cookie_params(0,$url['path'],'','', TRUE);
+        session_start();
+        if(!isset($_SESSION['csrftoken'])){
+                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
         }
     }  // }}}
 
@@ -903,6 +955,7 @@ class Flyspray
      * @return void
      * @version 1.0
      * @notes if a success and error happens on the same page, a mixed error message will be shown
+     * @todo is the if ($die) meant to be inside the else clause?
      */
     public static function show_error($error_message, $die = true, $advanced_info = null, $url = null)
     {
@@ -937,7 +990,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-    
+
     /**
      * Returns the ID of a user with $name
      * @param string $name
@@ -953,7 +1006,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-    
+
     /**
      * check_email
      *  checks if an email is valid
@@ -963,9 +1016,7 @@ class Flyspray
      */
     public static function check_email($email)
     {
-        include_once dirname(__FILE__) . '/external/Validate.php';
-
-        return is_string($email) && Validate::email($email);
+        return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -1076,14 +1127,14 @@ class Flyspray
     public static function write_lock($filename, $content)
     {
         if ($f = fopen($filename, 'wb')) {
-            if(flock($f, LOCK_EX)) {                
+            if(flock($f, LOCK_EX)) {
                 fwrite($f, $content);
                 flock($f, LOCK_UN);
             }
             fclose($f);
         }
     }
-    
+
     /**
      * file_get_contents replacement for remote files
      * @access public
@@ -1110,7 +1161,7 @@ class Flyspray
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
             $out .= "Host: {$url['host']}\r\n\r\n";
             $out .= "Connection: Close\r\n\r\n";
-            
+
             stream_set_timeout($conn, 5);
             fwrite($conn, $out);
 
@@ -1140,7 +1191,7 @@ class Flyspray
      */
     public function GetNotificationOptions($noneAllowed = true)
     {
-        switch ($this->prefs['user_notify']) 
+        switch ($this->prefs['user_notify'])
         {
             case 0:
                 return array(0             => L('none'));
@@ -1148,9 +1199,9 @@ class Flyspray
                 return array(NOTIFY_EMAIL  => L('email'));
             case 3:
                 return array(NOTIFY_JABBER => L('jabber'));
-                
+
         }
-        
+
         $return = array(0             => L('none'),
                         NOTIFY_EMAIL  => L('email'),
                         NOTIFY_JABBER => L('jabber'),
@@ -1158,10 +1209,10 @@ class Flyspray
         if (!$noneAllowed) {
             unset($return[0]);
         }
-        
+
         return $return;
     }
-    
+
     /**
      * getSvnRev
      *  For internal use
@@ -1178,4 +1229,13 @@ class Flyspray
         return '';
     }
 
+    public static function weedOutTasks($user, $tasks) {
+        $allowedtasks = array();
+        foreach ($tasks as $task) {
+            if ($user->can_view_task($task)) {
+                $allowedtasks[] = $task;
+            }
+        }
+        return $allowedtasks;
+    }
 }

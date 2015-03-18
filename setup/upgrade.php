@@ -34,16 +34,25 @@ if(!isset($borked[-1])) {
 
 require_once OBJECTS_PATH . '/fix.inc.php';
 require_once OBJECTS_PATH . '/class.gpc.php';
-require_once OBJECTS_PATH . '/class.database.php';
+require_once OBJECTS_PATH . '/i18n.inc.php';
 
-@require_once OBJECTS_PATH . '/class.tpl.php';
+# fake objects for load_translation()
+class user{var $infos=array();}; class project{var $id=0;};
+$user=new user; $proj=new project;
+load_translations();
+
+// Use composer autoloader
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 // Initialise DB
-require_once APPLICATION_PATH . '/adodb/adodb.inc.php';
-require_once APPLICATION_PATH . '/adodb/adodb-xmlschema03.inc.php';
+require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
+require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-xmlschema03.inc.php';
 
 $db = new Database;
 $db->dbOpenFast($conf['database']);
+
+$webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
+$baseurl = rtrim(Flyspray::absoluteURI($webdir),'/\\') . '/' ;
 
 // ---------------------------------------------------------------------
 // Application Web locations
@@ -77,17 +86,40 @@ $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
 usort($folders, 'version_compare'); // start with lowest version
 
 if (Post::val('upgrade')) {
+    $uplog=array();
+    $uplog[]="Start database transaction";
     $db->dblink->StartTrans();
+    fix_duplicate_list_entries(true);
     foreach ($folders as $folder) {
         if (version_compare($installed_version, $folder, '<=')) {
-            execute_upgrade_file($folder, $installed_version);
+            $uplog[]="Start $installed_version to $folder";
+            $uplog[]= execute_upgrade_file($folder, $installed_version);
             $installed_version = $folder;
+            $uplog[]="End $installed_version to $folder";
         }
     }
+    // Update existing projects to default field visibility if 'visible_fields' is empty.
+    $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
+
+    $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
+
+    # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
+    // For testing, do not use yet, have to discuss this one with others.
+    //if (!$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
+    // convert_old_entries('tasks', 'detailed_desc', 'task_id');
+    // convert_old_entries('projects', 'intro_message', 'project_id');
+    // convert_old_entries('projects', 'default_task', 'project_id');
+    // convert_old_entries('comments', 'comment_text', 'comment_id');
+    //}
+
+    $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array('CleanFS', 'global_theme'));
+
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
     $db->dblink->CompleteTrans();
     $installed_version = $fs->version;
+    $page->assign('done', true);
+    $page->assign('upgradelog', $uplog);
 }
 
 function execute_upgrade_file($folder, $installed_version)
@@ -144,7 +176,8 @@ function execute_upgrade_file($folder, $installed_version)
     }
 
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(basename($upgrade_path), 'fs_ver'));
-    $page->assign('done', true);
+    #$page->assign('done', true);
+    return "Write ".basename($upgrade_path)." into table {prefs} fs_ver in database";
 }
 
  /**
@@ -209,6 +242,8 @@ class ConfUpdater
         array_walk($this->new_config, array($this, '_merge_configs'));
         // save custom attachment definitions
         $this->new_config['attachments'] = $this->old_config['attachments'];
+        # first try to keep an existing oauth config on upgrades
+        $this->new_config['oauth'] = $this->old_config['oauth'];
 
         $this->_write_config($location);
     }
@@ -253,7 +288,13 @@ class ConfUpdater
         foreach ($this->new_config as $group => $settings) {
             $new_config .= "[{$group}]\n";
             foreach ($settings as $key => $value) {
-                $new_config .= sprintf('%s="%s"', $key, addslashes($value)). "\n";
+                if (is_array($value)) {
+                    foreach ($value as $_key => $_value) {
+                        $new_config .= sprintf('%s="%s"', "{$key}[{$_key}]", addslashes($_value)). "\n";
+                    }
+                } else {
+                    $new_config .= sprintf('%s="%s"', $key, addslashes($value)). "\n";
+                }
             }
             $new_config .= "\n";
         }
@@ -261,6 +302,23 @@ class ConfUpdater
         $fp = fopen($location, 'wb');
         fwrite($fp, $new_config);
         fclose($fp);
+    }
+}
+
+function postgresql_adodb() {
+    if (class_exists('ReflectionClass')) {
+        require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-datadict.inc.php';
+        require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/datadict/datadict-postgres.inc.php';
+	$refclass = new ReflectionClass('ADODB2_postgres');
+	$refmethod = $refclass->getMethod('ChangeTableSQL');
+	$implclass = $refmethod->getDeclaringClass();
+	if ($implclass->name === 'ADODB2_postgres') {
+	    return true;
+	}
+	return false;
+    } else {
+	// Can't even do the test, hope the user is able to handle the situation him/serself.
+	return true;
     }
 }
 
@@ -274,6 +332,13 @@ $todo['db_connect'] = 'Connection to the database could not be established. Chec
 $todo['version_compare'] = 'No newer version than yours can be installed with this upgrader.';
 $todo['installed_version'] = 'An upgrade from Flyspray versions lower than 0.9.6 is not possible.
                               You will have to upgrade manually to at least 0.9.6, the scripts which do that are included in all Flyspray releases <= 0.9.8.';
+
+if ($conf['database']['dbtype'] == 'pgsql') {
+    $checks['postgresql_adodb'] = (bool) postgresql_adodb();
+    $todo['postgresql_adodb'] = 'You have a version of ADOdb that does not contain overridden version of method ChangeTableSQL for PostgreSQL. '
+	    . 'Please copy setup/upgrade/1.0/datadict-postgres.inc.php to '
+	    . 'vendor/adodb/adodb-php/datadict/ before proceeding with the upgrade process.';
+}
 
 $upgrade_possible = true;
 foreach ($checks as $check => $result) {
@@ -295,3 +360,259 @@ $page->assign('installed_version', $installed_version);
 
 $page->display('upgrade.tpl');
 
+// Functions for checking and fixing possible duplicate entries
+// in database for those tables that now have a unique index.
+
+function fix_duplicate_list_entries($doit=true) {
+    global $db,$uplog;
+
+    // Categories need a bit more thinking. A real life example from
+    // my own database: A big project originally written (horrible!)
+    // in VB6, that I ported to .NET -environment. Categories:
+    // BackOfficer (main category)
+    // -> Reports (subcategory - should be allowed)
+    // BackOfficer.NET (main category)
+    // -> Reports (subcategory - should be allowed)
+    // -> Reports (I added a fake duplicate - should not be allowed)
+
+    $sql = $db->Query('SELECT MIN(os_id) id, project_id, os_name
+                          FROM {list_os}
+                      GROUP BY project_id, os_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        if($doit){
+            fix_os_table($dups);
+        } else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_os}</span>';
+        }
+    }
+
+    $sql = $db->Query('SELECT MIN(resolution_id) id, project_id, resolution_name
+                          FROM {list_resolution}
+                      GROUP BY project_id, resolution_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        if($doit){
+            fix_resolution_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_resolution}</span>';
+        }
+    }
+
+    $sql = $db->Query('SELECT MIN(status_id) id, project_id, status_name
+                          FROM {list_status}
+                      GROUP BY project_id, status_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        if($doit){
+            fix_status_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_status}</span>';
+        }
+    }
+    $sql = $db->Query('SELECT MIN(tasktype_id) id, project_id, tasktype_name
+                          FROM {list_tasktype}
+                      GROUP BY project_id, tasktype_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        if($doit){
+            fix_tasktype_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_tasktype}</span>';
+        }
+    }
+
+    $sql = $db->Query('SELECT MIN(version_id) id, project_id, version_name
+                          FROM {list_version}
+                      GROUP BY project_id, version_name
+                        HAVING COUNT(*) > 1');
+    $dups = $db->fetchAllArray($sql);
+    if (count($dups) > 0) {
+        if($doit){
+            fix_version_table($dups);
+        }else{
+            $uplog[]='<span class="warning">'.count($dups).' duplicate entries in {list_version}</span>';
+        }
+    }
+}
+
+function fix_os_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+
+        $sql = $db->Query('SELECT os_id id
+                             FROM {list_os}
+                            WHERE project_id = ? AND os_name = ?',
+                          array($dup['project_id'], $dup['os_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+
+            $db->Query('UPDATE {tasks}
+                           SET operating_system = ?
+                         WHERE operating_system = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_os} WHERE os_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_resolution_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+
+        $sql = $db->Query('SELECT resolution_id id
+                             FROM {list_resolution}
+                            WHERE project_id = ? AND resolution_name = ?',
+                          array($dup['project_id'], $dup['resolution_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+
+            $db->Query('UPDATE {tasks}
+                           SET resolution_reason = ?
+                         WHERE resolution_reason = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_resolution} WHERE resolution_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_status_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+
+        $sql = $db->Query('SELECT status_id id
+                             FROM {list_status}
+                            WHERE project_id = ? AND status_name = ?',
+                          array($dup['project_id'], $dup['status_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+
+            $db->Query('UPDATE {tasks}
+                           SET item_status = ?
+                         WHERE item_status = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_status} WHERE status_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_tasktype_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+
+        $sql = $db->Query('SELECT tasktype_id id
+                             FROM {list_tasktype}
+                            WHERE project_id = ? AND tasktype_name = ?',
+                          array($dup['project_id'], $dup['tasktype_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+
+            $db->Query('UPDATE {tasks}
+                           SET task_type = ?
+                         WHERE task_type = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_tasktype} WHERE tasktype_id = ?', array($entry['id']));
+        }
+    }
+}
+
+function fix_version_table($dups) {
+    global $db;
+
+    foreach ($dups as $dup) {
+        $update_id = $dup['id'];
+
+        $sql = $db->Query('SELECT version_id id
+                             FROM {list_version}
+                            WHERE project_id = ? AND version_name = ?',
+                          array($dup['project_id'], $dup['version_name']));
+        $entries = $db->fetchAllArray($sql);
+        foreach ($entries as $entry) {
+            if ($entry['id'] == $update_id) {
+                continue;
+            }
+
+            $db->Query('UPDATE {tasks}
+                           SET product_version = ?
+                         WHERE product_version = ?',
+                       array($update_id, $entry['id']));
+            $db->Query('DELETE FROM {list_version} WHERE version_id = ?', array($entry['id']));
+        }
+    }
+}
+
+// Just a sketch on how database columns could be updated to the new format.
+// Not tested for errors or used anywhere yet.
+
+function convert_old_entries($table, $column, $key) {
+    global $db;
+
+    // Assuming that anything not beginning with <p> was made with older
+    // versions of flyspray. This will not catch neither those old entries
+    // where the user for some reason really added paragraph tags nor those
+    // made with development version before fixing ckeditors configuration
+    // settings. You can't have everything in a limited time frame, this
+    // should be just good enough.
+    $sql = $db->Query("SELECT $key, $column "
+            . "FROM {". $table . "} "
+            . "WHERE $column NOT LIKE '<p>%'");
+    $entries = $db->fetchAllArray($sql);
+
+    # We should probably better use existing and proven filters for the conversions
+    # maybe this or existing dokuwiki functionality?
+    # $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle')
+
+    foreach ($entries as $entry) {
+        $id = $entry[$key];
+        $data = $entry[$column];
+
+        $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        // Convert two or more line breaks to paragrahs, Windows/Unix/Linux formats
+        $data = preg_replace('/(\h*\r?\n)+\h*\r?\n/', "</p><p>", $data);
+        // Data coming from Macs has only carriage returns, and couldn't say
+        // \r?\n? in the previous regex, it would also have matched nothing.
+        // Even a short word like "it" has three nothings in it, one before
+        // i, one between i and t and one after t...
+        $data = preg_replace('/(\h*\r)+\h*\r/', "</p><p>", $data);
+        // Remaining single line breaks
+        $data = preg_replace('/\h*\r?\n/', "<br/>", $data);
+        $data = preg_replace('/\h*\r/', "<br/>", $data);
+        // Remove final extra break, if the data to converted ended with a line break
+        $data = preg_replace('#<br/>$#', '', $data);
+        // Remove final extra paragraph tags, if the data to converted ended with
+        // more than one line breaks
+        $data = preg_replace('#</p><p>$#', '', $data);
+        // Enclose the whole in paragraph tags, so it looks
+        // the same as what ckeditor produces.
+        $data = '<p>' . $data . '</p>';
+
+        $db->Query("UPDATE {". $table . "} "
+        . "SET $column = ?"
+        . "WHERE $key = ?",
+        array($data, $id));
+    }
+}

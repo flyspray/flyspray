@@ -12,6 +12,10 @@ if (!$proj->id) {
     Flyspray::show_error(25);
 }
 
+if (!$user->perms('view_roadmap')) {
+	Flyspray::show_error(28);
+}
+
 if($proj->prefs['use_effort_tracking'])
 {
     require_once(BASEDIR . '/includes/class.effort.php');

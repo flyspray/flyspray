@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
 <schema version="0.3">
   <table name="user_emails">
-	  <field name="id" type="I" size="5"></field>
-	  <field name="email_address" type="C" size="100"></field>
+    <field name="id" type="I" size="5"></field>
+    <field name="email_address" type="C" size="100"></field>
+    <field name="oauth_uid" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="oauth_provider" type="C" size="10">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
   </table>
   <table name="tags">
           <field name="task_id" type="I" size="5"></field>
@@ -62,10 +70,6 @@
     </field>
     <index name="task_user">
       <UNIQUE/>
-      <col>task_id</col>
-      <col>user_id</col>
-    </index>
-    <index name="task_id_assigned">
       <col>task_id</col>
       <col>user_id</col>
     </index>
@@ -328,7 +332,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="view_effort" type="I" size="1">
+    <field name="view_estimated_effort" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_current_effort_done" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
@@ -339,6 +347,22 @@
     <field name="group_open" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
+    </field>
+    <field name="add_multiple_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_roadmap" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="view_own_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="view_groups_tasks" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
     </field>
     <index name="group_name">
       <UNIQUE/>
@@ -434,7 +458,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_os">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>os_name</col>
     </index>
   </table>
   <table name="list_resolution">
@@ -458,7 +484,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_res">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>resolution_name</col>
     </index>
   </table>
   <table name="list_status">
@@ -482,7 +510,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_status">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>status_name</col>
     </index>
   </table>
   <table name="list_tasktype">
@@ -506,7 +536,9 @@
       <DEFAULT value="0"/>
     </field>
     <index name="project_id_tt">
+      <UNIQUE/>
       <col>project_id</col>
+      <col>tasktype_name</col>
     </index>
   </table>
   <table name="list_version">
@@ -533,6 +565,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <index name="project_id_version_name">
+      <UNIQUE/>
+      <col>project_id</col>
+      <col>version_name</col>
+    </index>
     <index name="project_id_version">
       <col>project_id</col>
       <col>version_tense</col>
@@ -597,10 +634,7 @@
     <field name="pref_name" type="C" size="20">
       <NOTNULL/>
     </field>
-    <field name="pref_value" type="C" size="250">
-      <DEFAULT value="0"/>
-      <NOTNULL/>
-    </field>
+    <field name="pref_value" type="X" />
   </table>
   <table name="projects">
     <field name="project_id" type="I" size="3">
@@ -699,7 +733,31 @@
     <field name="default_due_version" type="C" size="40">
       <NOTNULL/>
       <DEFAULT value="Undecided"/>
+    </field>
+    <field name="pages_intro_msg" type="C" size="80">
+      <NOTNULL/>
+      <DEFAULT value="index"/>
      </field>
+    <field name="hours_per_manday" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="estimated_effort_format" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="current_effort_done_format" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="default_order_by" type="C" size="30">
+      <NOTNULL/>
+      <DEFAULT value="id"/>
+    </field>
+    <field name="default_order_by_dir" type="C" size="5">
+      <NOTNULL/>
+      <DEFAULT value="desc"/>
+    </field>
   </table>
   <table name="registrations">
     <field name="reg_id" type="I" size="10">
@@ -1025,6 +1083,26 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="oauth_uid" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="oauth_provider" type="C" size="10">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="profile_image" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="hide_my_email" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notify_online" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>
@@ -1073,13 +1151,41 @@
   	<col>task_id</col>
   </index>
   </table>
+  <table name="links">
+    <field name="link_id" type="I" size="11">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="comment_id" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="url" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="added_by" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NONULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_links">
+	<col>task_id</col>
+    </index>
+  </table>
   <sql>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality.', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project.', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
     <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 1, 'Backend / Core', 1, 0, 2, 3);</query>
     <query>INSERT INTO list_category VALUES (DEFAULT, 0, 'root', 0, 0, 1, 2);</query>
@@ -1106,8 +1212,9 @@
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Waiting on Customer', 5, 1, 0)</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Requires testing', 6, 1, 0)</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'fs_ver', '1.0');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'logo', 'flyspray_small.png');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'gravatars', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'emailNoHTML', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_server', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_port', '5222');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'jabber_username', '');</query>
@@ -1116,6 +1223,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'user_notify', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'admin_email', 'flyspray@example.com');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'lang_code', 'en');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'need_approval', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
@@ -1136,9 +1244,18 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'disable_lostpw', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'disable_changepw', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'days_before_alert', '0');</query>
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index',0,'Undecided');</query>
-    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0);</query>
-    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', 25, 0, 0, 0, 0, 0,'0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'hide_emails', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'pages_welcome_msg', 'index');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'active_oauths', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'only_oauth_reg', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'enable_avatars', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'max_avatar_size', '50');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'default_order_by', 'id');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'default_order_by_dir', 'desc');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'url_rewriting', '0');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org/support.                   You can customise this message by clicking the **Manage Project** link in the menu above...', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id', 'DESC');</query>
+    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
+    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>
 </schema>

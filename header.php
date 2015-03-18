@@ -1,25 +1,36 @@
 <?php
 
+// cant easly for the time being because of globals
 require_once dirname(__FILE__) . '/includes/fix.inc.php';
 require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
+require_once BASEDIR . '/includes/class.tpl.php';
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
+
+if(is_readable(BASEDIR . '/vendor/autoload.php')){
+        // Use composer autoloader
+        require 'vendor/autoload.php';
+}else{
+        Flyspray::Redirect('setup/composertest.php');
+        exit;
+}
 
 // If it is empty, take the user to the setup page
 if (!$conf) {
     Flyspray::Redirect('setup/index.php');
 }
 
-require_once BASEDIR . '/includes/class.gpc.php';
-require_once BASEDIR . '/includes/utf8.inc.php';
-require_once BASEDIR . '/includes/class.database.php';
-require_once BASEDIR . '/includes/class.backend.php';
-require_once BASEDIR . '/includes/class.project.php';
-require_once BASEDIR . '/includes/class.user.php';
-require_once BASEDIR . '/includes/class.tpl.php';
+//FIXME: This is currently a workaround for the fact that parts of the code/templates use i.e. "taskid" and "task_id" for the same thing. This should be fixed cleanly, means a bit of work though.
+if      (isset($_GET["task_id"])) $_GET["taskid"]  = $_GET["task_id"];
+else if (isset($_GET["taskid"]))  $_GET["task_id"] = $_GET["taskid"];
+if      (isset($_POST["task_id"])) $_POST["taskid"]  = $_POST["task_id"];
+else if (isset($_POST["taskid"]))  $_POST["task_id"] = $_POST["taskid"];
+if      (isset($_REQUEST["task_id"])) $_REQUEST["taskid"]  = $_REQUEST["task_id"];
+else if (isset($_REQUEST["taskid"]))  $_REQUEST["task_id"] = $_REQUEST["taskid"];
+
 
 $db = new Database();
 $db->dbOpenFast($conf['database']);

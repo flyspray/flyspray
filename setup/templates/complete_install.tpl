@@ -1,7 +1,7 @@
 			<div id="right">
-			<form action="{$site_index}{$complete_action}" method="post" name="database_form">
+			<form action="<?php echo Filters::noXSS($site_index); ?><?php echo Filters::noXSS($complete_action); ?>" method="post" name="database_form">
 				<h1>Install status</h1>
-				<h2>Congratulations! {$product_name} is now installed and ready to run.</h2>
+				<h2>Congratulations! <?php echo Filters::noXSS($product_name); ?> is now installed and ready to run.</h2>
 				<div class="installBlock">
 				<p class="error">
 					Please remove the setup directory now.
@@ -21,7 +21,7 @@
 							The configuration file is not writeable. You will have to upload the following
 							code manually. Click in the textarea to highlight all of the code. Copy and
 							paste the contents into the flyspray.conf.php file available in the base of
-							{$product_name} installation.
+							<?php echo Filters::noXSS($product_name); ?> installation.
 						</td>
 					</tr>
 					<tr>
@@ -40,7 +40,7 @@
 				<h3>flyspray.conf.php NOT writeable</h3>
 				<p>
 					To complete setup, copy and paste the contents of the textarea box into flyspray.conf.php
-					This file resides in the base of your {$product_name} installation.
+					This file resides in the base of your <?php echo Filters::noXSS($product_name); ?> installation.
 				</p>
 				<?php
 				}
@@ -48,8 +48,8 @@
 				if ($admin_username && $admin_password): ?>
 				<h3>Administration Login Details</h3>
 				<p>
-					<strong>Username : {$admin_username}</strong><br />
-					<strong>Password : {$admin_password}</strong>
+					<strong>Username : <?php echo Filters::noXSS($admin_username); ?></strong><br />
+					<strong>Password : <?php echo Filters::noXSS($admin_password); ?></strong>
 				</p>
 				<?php endif; ?>
 				</div>
@@ -60,14 +60,14 @@
 				<?php if ($admin_username && $admin_password): ?>
 					<input type="hidden" name="return_to" value="./" />
                     <input type="hidden" name="do" value="authenticate" />
-					<input type="hidden" name="user_name" value="{$admin_username}" />
-					<input type="hidden" name="password" value="{$admin_password}" />
+					<input type="hidden" name="user_name" value="<?php echo Filters::noXSS($admin_username); ?>" />
+					<input type="hidden" name="password" value="<?php echo Filters::noXSS($admin_password); ?>" />
 				<?php endif; ?>
 					<input type="hidden" name="remember_login" value="1" />
 					<input class="button" type="submit" name="next" value="Next >>" />
 				</div>
 				<p>
-				Proceed to {$product_name} index
+				Proceed to <?php echo Filters::noXSS($product_name); ?> index
 				</p>
 				</div>
 			</form>

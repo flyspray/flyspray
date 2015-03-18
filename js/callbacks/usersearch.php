@@ -10,7 +10,22 @@ header('Content-type: text/html; charset=utf-8');
 
 require_once('../../header.php');
 
-$searchterm = '%' . reset($_POST) . '%';
+if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
+    $user = new User(Cookie::val('flyspray_userid'));
+    $user->check_account_ok();
+    $user->save_search();
+} else {
+    $user = new User(0, $proj);
+}
+
+// don't allow anonymous users to access this page at all
+if ($user->isAnon()) {
+    die();
+}
+$first = reset($_POST);
+if(is_array($first))
+	$first = reset($first);
+$searchterm = '%' . $first . '%';
 
 // Get the list of users from the global groups above
 $get_users = $db->Query('SELECT u.real_name, u.user_name

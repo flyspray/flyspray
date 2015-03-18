@@ -1,5 +1,6 @@
 			<div id="right">
-			{$message}
+			<?php echo Filters::noXSS($message); ?>
+
 			<h1>Pre-installation check</h1>
 			<h2>PHP and supported libraries</h2>
 			<div class="installBlock">
@@ -10,27 +11,33 @@
 					<td class="heading">&nbsp;</td>
 				</tr>
 				<tr>
-					<td>PHP >= {$required_php}</td>
-					<td align="left"><b>{!$php_output}</b></td>
+					<td>PHP >= <?php echo Filters::noXSS($required_php); ?></td>
+					<td align="left"><b><?php echo $php_output; ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
                 <tr>
 					<td>XML Extension</td>
-					<td align="left"><b>{!Setup::ReturnStatus($xmlStatus)}</b></td>
+					<td align="left"><b><?php echo Setup::ReturnStatus($xmlStatus); ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
                 <tr>
-					<td>SAPI ({php_sapi_name()})</td>
-					<td align="left"><b>{!Setup::ReturnStatus($sapiStatus, 'support')}</b></td>
+					<td>GD Library</td>
+					<td align="left"><b><?php echo Setup::ReturnStatus(extension_loaded('gd'), 'yes'); ?></b></td>
+					<td>&nbsp;</td>
+				</tr>
+                <tr>
+					<td>SAPI (<?php echo Filters::noXSS(php_sapi_name()); ?>)</td>
+					<td align="left"><b><?php echo Setup::ReturnStatus($sapiStatus, 'support'); ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr>
 					<td class="heading">Database</td>
 					<td class="heading">in PHP</td>
-					<td class="heading" style="text-align:center">{$product_name}</td>
+					<td class="heading" style="text-align:center"><?php echo Filters::noXSS($product_name); ?></td>
 				</tr>
-				{!$database_output}
+				<?php echo $database_output; ?>
+
 				</table>
 				<p>
 				To make setup possible, you must have a correct PHP version installed and
@@ -52,14 +59,15 @@
 					<td class="heading">Recommended</td>
 					<td class="heading">Actual</td>
 				</tr>
-				{!$php_settings}
+				<?php echo $php_settings; ?>
+
 				</table>
 				<p>
 				These settings are recommended for PHP in order to ensure full
-				compatibility with {$product_name}.
+				compatibility with <?php echo Filters::noXSS($product_name); ?>.
 				</p>
 				<p>
-				However, {$product_name} will still operate if your
+				However, <?php echo Filters::noXSS($product_name); ?> will still operate if your
 				settings do not quite match the recommended shown here.
 				</p>
 			</div>
@@ -70,25 +78,26 @@
 				<table class="formBlock">
 				<tr>
 					<td valign="top">../flyspray.conf.php</td>
-					<td align="left"><b>{!$config_output}</b></td>
+					<td align="left"><b><?php echo $config_output; ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top">../cache</td>
-					<td align="left"><b>{!$cache_output}</b></td>
+					<td align="left"><b><?php echo $cache_output; ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td valign="top">../attachments</td>
-					<td align="left"><b>{!$att_output}</b></td>
+					<td align="left"><b><?php echo $att_output; ?></b></td>
 					<td>&nbsp;</td>
 				</tr>
 				</table>
 				<p>
-				In order for {$product_name} to function
+				In order for <?php echo Filters::noXSS($product_name); ?> to function
 				correctly it needs to be able to access or write to certain files
 				or directories. If you see "Unwriteable" you need to change the
-				permissions on the file or directory to allow {$product_name}
+				permissions on the file or directory to allow <?php echo Filters::noXSS($product_name); ?>
+
 				to write to it.
 				</p>
 				<?php if (!$config_status): ?>
@@ -108,13 +117,13 @@
 			<div class="installBlock">
 				<form class="formBlock farRight" action="index.php" method="post" name="adminForm" style="display:inline;">
 				<input type="hidden" name="action" value="database" />
-				<input name="next" type="submit" class="button" value="Next >>" {tpl_disableif(!$status)} />
+				<input name="next" type="submit" class="button" value="Next >>" <?php echo Filters::noXSS(tpl_disableif(!$status)); ?> />
 				</form>
 				<?php if (!$status) { ?>
 				<p>
 				You seem to have problems with the Pre-install configuration. Once you have fixed the
 				problem, please refresh the page to be able to proceed to the next stage of
-				{$product_name} setup.
+				<?php echo Filters::noXSS($product_name); ?> setup.
 				</p>
 				<?php }else { ?>
 				<p>

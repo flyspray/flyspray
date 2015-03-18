@@ -7,25 +7,7 @@
 // +----------------------------------------------------------------------
 
 @set_time_limit(0);
-session_start();
-//do it fastest as possible.
 ini_set('memory_limit', '64M');
-
-
-if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0)
-{
-   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
-        You can *not* use the setup on an existing database.');
-}
-
-$borked = str_replace('a', 'b', array( -1 => -1 ) );
-
-if(!isset($borked[-1])) {
-    die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
-        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
-}
-
-// define basic stuff first.
 
 define('IN_FS', 1 );
 define('APPLICATION_NAME', 'Flyspray');
@@ -33,13 +15,38 @@ define('BASEDIR', dirname(__FILE__));
 define('APPLICATION_PATH', dirname(BASEDIR));
 define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
+
+require_once OBJECTS_PATH.'/fix.inc.php';
+require_once OBJECTS_PATH.'/class.gpc.php';
+require_once OBJECTS_PATH.'/class.flyspray.php';
+require_once OBJECTS_PATH.'/i18n.inc.php';
+require_once OBJECTS_PATH.'/class.tpl.php';
+
+if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
+    // Use composer autoloader
+    require APPLICATION_PATH . '/vendor/autoload.php';
+} else{
+        Flyspray::Redirect('composertest.php');
+        exit;
+}
+
+// no transparent session id improperly configured servers
+ini_set('session.use_trans_sid', 0);
+session_start();
+
+if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0){
+   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
+        You can *not* use the setup on an existing database.');
+}
+
+$borked = str_replace('a', 'b', array( -1 => -1 ) );
+if(!isset($borked[-1])) {
+    die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
+        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
+}
+
 $conf['general']['syntax_plugin'] = '';
 
-require_once OBJECTS_PATH . '/fix.inc.php';
-require_once OBJECTS_PATH . '/class.gpc.php';
-require_once OBJECTS_PATH . '/class.flyspray.php';
-require_once OBJECTS_PATH . '/class.tpl.php';
-require_once BASEDIR . '/array_combine.php';
 // ---------------------------------------------------------------------
 // Application Web locations
 // ---------------------------------------------------------------------
@@ -88,7 +95,7 @@ class Setup extends Flyspray
    public function __construct()
    {
       // Look for ADOdb
-      $this->mAdodbPath         = APPLICATION_PATH . '/adodb/adodb.inc.php';
+      $this->mAdodbPath         = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
       $this->mProductName       = 'Flyspray';
       $this->mMinPasswordLength	= 8;
 
@@ -209,7 +216,7 @@ class Setup extends Flyspray
        if(!is_array($expectedFields)){
            $expectedFields = array();
        }
-       
+
       // Grab the posted data and trim it.
       $data = array_filter($_POST, array(&$this, "TrimArgs"));
 
@@ -567,7 +574,7 @@ class Setup extends Flyspray
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','On');
+          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','ON');
       }
 
       $output = '';
@@ -777,7 +784,6 @@ class Setup extends Flyspray
       $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\" (Deprecated, do not change the default)";
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
-      $config[] = "address_rewriting = \"0\"	; Boolean. 0 = off, 1 = on.";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
       $config[] = "syntax_plugin = \"none\"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)";
@@ -785,6 +791,22 @@ class Setup extends Flyspray
       $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
+      $config[] = "\n";
+      $config[] = "[oauth]";
+      $config[] = "; These are only needed if you plan to use them. You can turn them on in the admin panel.";
+      $config[] = "\n";
+      $config[] = 'github_secret = ""';
+      $config[] = 'github_id = ""';
+      $config[] = 'github_redirect = "YOURDOMAIN/index.php?do=oauth&provider=github"';
+      $config[] = 'google_secret = ""';
+      $config[] = 'google_id = ""';
+      $config[] = 'google_redirect = "YOURDOMAIN/index.php?do=oauth&provider=google"';
+      $config[] = 'facebook_secret = ""';
+      $config[] = 'facebook_id = ""';
+      $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
+      $config[] = 'microsoft_secret = ""';
+      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
 
@@ -961,10 +983,10 @@ class Setup extends Flyspray
       usort($folders, 'version_compare'); // start with lowest version
       $folders = array_reverse($folders); // start with highest version
       $sql_file	= APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/flyspray-install.xml';
-      
+
       $upgradeInfo = APPLICATION_PATH . '/setup/upgrade/' . reset($folders) . '/upgrade.info';
       $upgradeInfo = parse_ini_file($upgradeInfo, true);
-      
+
        // Check if the install/upgrade file exists
       if (!is_readable($sql_file)) {
 
@@ -977,7 +999,7 @@ class Setup extends Flyspray
        if (!isset($db_prefix)) {
             $db_prefix = '';
        }
-       
+
        if(is_numeric($db_prefix)) {
            $_SESSION['page_message'][] = 'database prefix cannot be numeric only';
            return false;
@@ -988,7 +1010,7 @@ class Setup extends Flyspray
       $this->mXmlSchema->ParseSchema($sql_file);
 
       $this->mXmlSchema->ExecuteSchema();
-      
+
       // Last but not least global prefs update
         if (isset($upgradeInfo['fsprefs'])) {
             $existing = $this->mDbConnection->GetCol("SELECT pref_name FROM {$db_prefix}prefs");
@@ -1005,7 +1027,7 @@ class Setup extends Flyspray
                 }
             }
         }
-    
+
       $this->mDbConnection->Execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
 
       if (($error_no = $this->mDbConnection->MetaError()))
@@ -1120,8 +1142,7 @@ class Setup extends Flyspray
             break;
 
             case 'email address':
-             include_once OBJECTS_PATH . '/external/Validate.php';
-             return Validate::email($value);
+             return filter_var($value, \FILTER_VALIDATE_EMAIL);
              break;
 
             case 'boolean':

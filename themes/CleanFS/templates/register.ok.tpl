@@ -1,4 +1,4 @@
 <div class="redirectmessage">
-  <p>{L('loginbelow')}</p>
-  <p>{L('newuserwarning')}</p>
+  <p><?php echo Filters::noXSS(L('loginbelow')); ?></p>
+  <p><?php echo Filters::noXSS(L('newuserwarning')); ?></p>
 </div>
