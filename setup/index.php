@@ -156,9 +156,14 @@ class Setup extends Flyspray
       if ($path == 'flyspray.conf.php') {
         $fp = @fopen($file, 'wb');
         @fclose($fp);
+        // Let's try at least...
+        #@chmod($file, 0666);
+        @chmod($file, 0644); # looks a bit better than worldwritable
       }
-      // Let's try at least...
-      @chmod($file, 0666);
+      if(is_dir($path)){
+        # for cache and attachement directories x-bit needed
+        @chmod($file, 0755);
+      }
       $this->mWriteStatus[$path] = $this->IsWriteable($file);
 
       // Return an html formated writeable/un-writeable string
