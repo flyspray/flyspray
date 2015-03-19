@@ -22,6 +22,12 @@ require_once OBJECTS_PATH.'/class.flyspray.php';
 require_once OBJECTS_PATH.'/i18n.inc.php';
 require_once OBJECTS_PATH.'/class.tpl.php';
 
+# must be sure no-cache before any possible redirect, we maybe come back later here after composer install stuff.
+header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
     // Use composer autoloader
     require APPLICATION_PATH . '/vendor/autoload.php';
