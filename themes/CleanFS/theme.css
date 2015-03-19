@@ -704,7 +704,7 @@ textarea {width: 99%;}
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-.eventlist {height: 150px;}
+.eventlist.hasresult {height: 150px;}
 table th {vertical-align: middle;}
 table td {vertical-align: top;}
 div.box, p.box {
@@ -728,10 +728,10 @@ div.error, div.success, div.mixed {
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   z-index: 50;
-  margin: 20px 20px 0 20px;
+  margin: 30px 20px 0 20px;
   color: white;
   position: absolute;
-  top: -10px;
+  top: 0;
   width: 30%;
   left: 35%;
 }
