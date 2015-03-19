@@ -23,7 +23,7 @@ if(ini_get('safe_mode') == 1){
 	$cmd2='php composer.phar --working-dir=.. install';
 
 	# with chdir('..');
-	$cmd2 = 'php composer.phar install';
+	#$cmd2 = 'php composer.phar install';
 
 	echo $cmd2.'<br/><br/>';
 	shell_exec($cmd2);
