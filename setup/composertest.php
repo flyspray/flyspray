@@ -14,11 +14,18 @@ class user{var $infos=array();}; class project{var $id=0;};
 $user=new user; $proj=new project;
 load_translations();
 
-if(ini_get('safe_mode') == 1){
-  $composerit = 'composerit.pl'; // try it with perl scripts
-}else{
-  $composerit = 'composerit.php'; // try it with php
-}
+# no caching to prevent old pages if user goes back and forth during install
+header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+# Step 1 and 2 of composer install now working also with SAFE_MODE enabled in php5.3.*
+#if(ini_get('safe_mode') == 1){
+#	$composerit = 'composerit.pl'; // try it with perl scripts
+#}else{
+	$composerit = 'composerit.php'; // try it with php
+#}
 ?>
 <!DOCTYPE html>
 <html>
