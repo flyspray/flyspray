@@ -85,6 +85,7 @@ if (!isset($project_id)) {
 }
 
 $proj = new Project($project_id);
-$proj->setCookie();
+# no more project cookie!
+#$proj->setCookie();
 
 
