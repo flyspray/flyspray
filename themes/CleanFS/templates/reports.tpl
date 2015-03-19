@@ -13,7 +13,7 @@ if(isset($theuser->infos['eventtypes'])){
         <tr>
           <td><label for="events[]"><?php echo Filters::noXSS(L('events')); ?></label></td>
           <td>
-              <select name="events[]" class='eventlist' multiple="multiple" id="events[]" size="<?php echo Filters::noXSS(count($events)+count($user_events)+2); ?>">
+              <select name="events[]" class='eventlist<?php echo $histories ? ' hasresult':''; ?>' multiple="multiple" id="events[]" size="<?php echo Filters::noXSS(count($events)+count($user_events)+2); ?>">
               <optgroup label="<?php echo Filters::noXSS(L('Tasks')); ?>">
               <?php echo tpl_options($events, Req::val('events', $eventpref)); ?>
               </optgroup>
