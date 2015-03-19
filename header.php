@@ -10,6 +10,11 @@ require_once BASEDIR . '/includes/class.tpl.php';
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
 
+// make browsers back button work
+header('Expires: -1');
+header('Pragma: no-cache');
+header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+
 if(is_readable(BASEDIR . '/vendor/autoload.php')){
         // Use composer autoloader
         require 'vendor/autoload.php';
