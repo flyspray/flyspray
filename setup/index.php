@@ -34,9 +34,26 @@ if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
 ini_set('session.use_trans_sid', 0);
 session_start();
 
-if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0){
-   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
-        You can *not* use the setup on an existing database.');
+if (is_readable('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0){
+   die('<div style="text-align:center;padding:20px;font-family:sans-serif;font-size:16px;">
+Flyspray already installed. Use the <a href="upgrade.php"
+style="
+margin:2em;
+background-color: white;
+border: 1px solid #bbb;
+border-radius: 4px;
+box-shadow: 0 1px 1px #ddd;
+color: #565656;
+cursor: pointer;
+display: inline-block;
+font-family: sans-serif;
+font-size: 100%;
+font-weight: bold;
+line-height: 130%;
+padding: 8px 13px 8px 10px;
+text-decoration: none;
+">Upgrader</a> to upgrade your Flyspray,
+or delete flyspray.conf.php to run setup. You can *not* use the setup on an existing database.</div>');
 }
 
 $borked = str_replace('a', 'b', array( -1 => -1 ) );
