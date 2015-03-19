@@ -59,6 +59,7 @@ $user_events = array(30 => L('created'),
 
 $page->assign('events', $events);
 $page->assign('user_events', $user_events);
+$page->assign('theuser', $user);
 
 $sort = strtoupper(Req::enum('sort', array('desc', 'asc')));
 
