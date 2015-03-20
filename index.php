@@ -180,8 +180,10 @@ $page->pushTpl('header.tpl');
 
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
+} else{
+    # not nicest solution, NO_DO currently only used on register actions 
+    $page->pushTpl('register.ok.tpl');
 }
-
 $page->pushTpl('footer.tpl');
 $page->setTheme($proj->prefs['theme_style']);
 $page->render();
