@@ -386,11 +386,15 @@ class Notifications {
 
         $message = new Swift_Message($subject);
         if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
-            $body=html_entity_decode(strip_tags($body));
+            $body=html_entity_decode(strip_tags($body), ENT_COMPAT | ENT_HTML401, 'utf-8');
         }
         $message->setBody($body);
         $type = $message->getHeaders()->get('Content-Type');
-        $type->setValue('text/html');
+        if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
+            $type->setValue('text/plain');
+        } else {
+            $type->setValue('text/html');
+        }
         $type->setParameter('charset', 'utf-8');
 
         $message->getHeaders()->addTextHeader('Precedence', 'list');
