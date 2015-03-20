@@ -377,20 +377,22 @@ class Notifications {
         }
 
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
-        $body = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
-
-        // Make newlines into HTML line breaks
-        $body = str_replace("\n","<br>",$body);
-
+        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+        $htmlbody = str_replace("\n","<br>", $htmlbody);
+        $plainbody= html_entity_decode(strip_tags($body));
+        
         $swift = Swift_Mailer::newInstance($swiftconn);
 
         $message = new Swift_Message($subject);
         if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
-            $body=html_entity_decode(strip_tags($body));
+           $message->setBody($plainbody, 'text/plain');
+        }else{
+           $message->setBody($htmlbody, 'text/html');
+           $message->addPart($plainbody, 'text/plain');
         }
-        $message->setBody($body);
+        
         $type = $message->getHeaders()->get('Content-Type');
-        $type->setValue('text/html');
+        #$type->setValue('text/html');
         $type->setParameter('charset', 'utf-8');
 
         $message->getHeaders()->addTextHeader('Precedence', 'list');
