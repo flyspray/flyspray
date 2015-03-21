@@ -49,7 +49,7 @@ if(isset($theuser->infos['eventtypes'])){
 
     <?php if ($histories): ?>
     <div id="tasklist">
-    <table id="tasklist_table">
+    <table id="eventlist_table">
      <thead>
       <tr>
         <th>
