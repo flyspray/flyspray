@@ -558,7 +558,7 @@ class Flyspray
     // Check for an existing admin request for a task and event type {{{;
     /**
      * Checks whether or not there is an admin request for a task
-     * @param integer $type 1: Task close, 2: Task re-open
+     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
      * @param integer $task_id
      * @access public static
      * @return bool
