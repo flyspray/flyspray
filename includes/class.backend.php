@@ -749,8 +749,12 @@ abstract class Backend
         if (!$move_to) {
             $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
             $task_ids = $db->FetchCol($task_ids);
-            $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
-                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
+            // What was supposed to be in tables field_values, notification_threads
+            // and redundant, they do not exist in database?
+            $tables = array('admin_requests', 'assigned', 'attachments', 'comments',
+                            'dependencies', 'related', 'history',
+                            'notifications',
+                            'reminders', 'votes');
             foreach ($tables as $table) {
                 if ($table == 'related') {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE this_task = ? OR related_task = ? ');
@@ -774,6 +778,59 @@ abstract class Backend
 
         foreach ($tables as $table) {
             if ($move_to && $table !== 'projects' && $table !== 'list_category') {
+                // Having a unique index in most list_* tables prevents
+                // doing just a simple update, if the list item already
+                // exists in target project, so we have to update existing
+                // tasks to use the one in target project. Something similar
+                // should be done when moving a single task to another project.
+                // Consider making this a separate function that can be used
+                // for that purpose too, if possible.
+                if (strpos($table, 'list_') === 0) {
+                    list($type, $name) = explode('_', $table);
+                    $sql = $db->Query('SELECT ' . $name . '_id, ' . $name . '_name
+                                         FROM {' . $table . '}
+                                        WHERE project_id = ?',
+                            array($pid));
+                    $rows = $db->FetchAllArray($sql);
+                    foreach ($rows as $row) {
+                        $sql = $db->Query('SELECT ' . $name . '_id
+                                             FROM {' . $table . '}
+                                            WHERE project_id = ? AND '. $name . '_name = ?', 
+                                array($move_to, $row[$name .'_name']));
+                        $new_id = $db->FetchOne($sql);
+                        if ($new_id) {
+                            switch ($name) {
+                                case 'os';
+                                    $column = 'operating_system';
+                                    break;
+                                case 'resolution';
+                                    $column = 'resolution_reason';
+                                    break;
+                                case 'tasktype';
+                                    $column = 'task_type';
+                                    break;
+                                case 'status';
+                                    $column = 'item_status';
+                                    break;
+                                case 'version';
+                                    // Questionable what to do with this one. 1.0 could
+                                    // have been still future in the old project and
+                                    // already past in the new one...
+                                    $column = 'product_version';
+                                    break;
+                            }
+                            if (isset($column)) {
+                                $db->Query('UPDATE {tasks}
+                                               SET ' . $column . ' = ?
+                                             WHERE ' . $column . ' = ?',
+                                        array($new_id, $row[$name . '_id']));
+                                $db->Query('DELETE FROM {' . $table . '}
+                                             WHERE '  . $name . '_id = ?',
+                                        array($row[$name . '_id']));
+                            }
+                        }
+                    }
+                }
                 $base_sql = 'UPDATE {' . $table . '} SET project_id = ?';
                 $sql_params = array($move_to, $pid);
             } else {
