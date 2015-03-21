@@ -724,11 +724,11 @@ switch ($action = Req::val('action'))
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
             Post::val('real_name'), Post::val('jabber_id'),
             Post::val('email_address'), Post::num('notify_type'),
-        Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
+            Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
-
+        
         $_SESSION['SUCCESS'] = L('newusercreated');
 
         if (!$user->perms('is_admin')) {

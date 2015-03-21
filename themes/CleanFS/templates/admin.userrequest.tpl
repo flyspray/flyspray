@@ -20,7 +20,7 @@
       </td>
       <td><?php echo tpl_userlink($req['submitted_by']); ?></td>
       <td><?php echo Filters::noXSS(formatDate($req['time_submitted'], true)); ?></td>
-      <td>get email adress later</td>
+      <td><?php echo Filters::noXSS($req['reason_given']); ?></td>
       <td>
         <form style="display:inline" action="<?php echo Filters::noXSS(CreateUrl('edituser', $req['submitted_by'])); ?>" method="post">
 	<a class="button" href="#" onclick="this.parentNode.submit();"><?php echo Filters::noXSS(L('accept')); ?></a>
