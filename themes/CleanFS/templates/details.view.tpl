@@ -84,8 +84,12 @@
   <?php endif; ?>
 
   <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
-    <a id="own_add" class="button"
-       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;action=addtoassignees&amp;ids=<?php echo Filters::noXSS($task_details['task_id']); ?>"> <?php echo Filters::noXSS(L('addmetoassignees')); ?></a>
+    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
+      <input type="hidden" name="action" value="addtoassignees" />
+      <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+      <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+      <button type="submit" id="own_add"><?php echo Filters::noXSS(L('addmetoassignees')); ?></button>
+    </form>
   <?php endif; ?>
 	<input type="checkbox" id="s_quickactions" />
 	<label class="button main" id="actions" for="s_quickactions"><?php echo Filters::noXSS(L('quickaction')); ?></label>
