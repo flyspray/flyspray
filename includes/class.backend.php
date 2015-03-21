@@ -710,9 +710,14 @@ abstract class Backend
 			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
 		}
 
-		$db->Query('DELETE FROM {registrations} WHERE email_address = "'.$userDetails['email_address'].'"');
-		$db->Query('DELETE FROM {user_emails} WHERE email_address = "'.$userDetails['email_address'].'"');
-		$db->Query('DELETE FROM {reminders} WHERE to_user_id = '.$uid.' OR from_user_id = '.$uid);
+		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
+                        array($userDetails['email_address']));
+                
+		$db->Query('DELETE FROM {user_emails} WHERE email_address = ?',
+                        array($userDetails['email_address']));
+		
+                $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
+                        array($uid, $uid));
 
 		// for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
 		// get permissions for a task automatically
