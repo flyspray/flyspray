@@ -20,7 +20,7 @@ $schema = new adoSchema($db);
 
 $withdata=false;
 $stripprefix=true;
-$data = $schema->ExtractSchema( $withdata, '  ', $conf['database']['dbprefix']);
+$data = $schema->ExtractSchema( $withdata, '  ', $conf['database']['dbprefix'], $stripprefix);
 
 file_put_contents('flyspray-schema.xml', $data);
 
