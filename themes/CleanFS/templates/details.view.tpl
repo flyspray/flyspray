@@ -6,7 +6,9 @@
     <button><?php echo L('reopenthistask'); ?></button>
   </form>
   <?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
-    <div id="closeform" class="popup hide">
+
+<button class="submit main" onclick="showhidestuff('requestreopen');"><?php echo Filters::noXSS(L('reopenrequest')); ?></button>
+<div id="requestreopen" class="popup hide">
         <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
             <input type="hidden" name="action" value="requestreopen" />
             <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
