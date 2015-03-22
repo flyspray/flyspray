@@ -645,21 +645,26 @@ abstract class Backend
             $users_to_notify = array();
             // Notify admins on new user registration
             if( $fs->prefs['notify_registration'] ) {
-                // Gather list of admin users
+                // Gather list of admin users. An empty address that comes
+                // first will break sending notification. So does probably
+                // an invalid one.
                 $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
-                                 WHERE g.group_id = 1');
+                                 WHERE g.group_id = 1 AND email_address <> \'\'');
 
                 // If the new user is not an admin, add him to the notification list.
                 // Should do this only if account is created as enabled, otherwise
                 // notification should be done when admin request is either accepted
                 // or denied, but we lack a really suitable notification, although
                 // NOTIFY_NEW_USER is quite close.
-                $users_to_notify = $db->FetchCol($sql);
+                $admins = $db->FetchCol($sql);
+                if (count($admins)) {
+                    $users_to_notify = $admins;
+                }
             }
             if (!in_array($email, $users_to_notify)) {
-                array_push($users_to_notify, $email);
+                $users_to_notify[] = $email;
             }
 
             // Notify the appropriate users
