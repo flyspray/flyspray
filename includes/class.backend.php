@@ -651,7 +651,11 @@ abstract class Backend
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                                  WHERE g.group_id = 1');
 
-                // If the new user is not an admin, add him to the notification list
+                // If the new user is not an admin, add him to the notification list.
+                // Should do this only if account is created as enabled, otherwise
+                // notification should be done when admin request is either accepted
+                // or denied, but we lack a really suitable notification, although
+                // NOTIFY_NEW_USER is quite close.
                 $users_to_notify = $db->FetchCol($sql);
             }
             if (!in_array($email, $users_to_notify)) {
