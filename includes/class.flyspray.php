@@ -539,7 +539,7 @@ class Flyspray
     // Log a request for an admin/project manager to do something {{{
     /**
      * Adds an admin request to the database
-     * @param integer $type 1: Task close, 2: Task re-open
+     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
      * @param integer $project_id
      * @param integer $task_id
      * @param integer $submitter
