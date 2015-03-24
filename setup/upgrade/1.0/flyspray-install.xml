@@ -1013,7 +1013,7 @@
     </index>
     <index name="task_super">
       <col>supertask_id</col>
-      <col>list_order</col>
+      <col>task_id</col>
     </index>
   </table>
   <table name="users">
