@@ -75,8 +75,7 @@ else {
     $subtasks = $db->Query('SELECT  t.*, p.project_title 
                                  FROM  {tasks} t
 			    LEFT JOIN  {projects} p ON t.project_id = p.project_id
-                                WHERE  t.supertask_id = ?
-                                ORDER BY t.list_order', 
+                                WHERE  t.supertask_id = ?', 
                                 array($task_id));
     $subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
     
