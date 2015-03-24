@@ -1014,6 +1014,7 @@
     <index name="task_super">
       <col>supertask_id</col>
       <col>task_id</col>
+      <col>project_id</col>
     </index>
   </table>
   <table name="users">
