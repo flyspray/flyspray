@@ -1010,7 +1010,6 @@
     <index name="task_project_super">
       <col>project_id</col>
       <col>supertask_id</col>
-      <col>list_order</col>
     </index>
     <index name="task_super">
       <col>supertask_id</col>
