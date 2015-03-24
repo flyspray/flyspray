@@ -1012,7 +1012,6 @@
       <col>supertask_id</col>
     </index>
     <index name="task_super">
-      <UNIQUE/>
       <col>supertask_id</col>
       <col>task_id</col>
     </index>
