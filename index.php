@@ -85,11 +85,7 @@ load_translations();
 /*******************************************************************************/
 /* Here begins the deep flyspray : html rendering                              */
 /*******************************************************************************/
-
-// make browsers back button work
-header('Expires: -1');
-header('Pragma: no-cache');
-header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0');
+# no cache headers are now in header.php!
 
 // see http://www.w3.org/TR/html401/present/styles.html#h-14.2.1
 header('Content-Style-Type: text/css');
@@ -184,8 +180,10 @@ $page->pushTpl('header.tpl');
 
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
+} else{
+    # not nicest solution, NO_DO currently only used on register actions 
+    $page->pushTpl('register.ok.tpl');
 }
-
 $page->pushTpl('footer.tpl');
 $page->setTheme($proj->prefs['theme_style']);
 $page->render();

@@ -22,7 +22,7 @@ ini_set('default_charset','utf-8');
 ini_set('arg_separator.output','&amp;');
 
 // no transparent session id improperly configured servers
-if (strpos($_SERVER['REQUEST_URI'], '/setup/') === false) // Skip installer, as it starts the session before calling fix.inc.php causing a warning as this can't be used when a session is already active
+if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/setup/') === false) // Skip installer, as it starts the session before calling fix.inc.php causing a warning as this can't be used when a session is already active
 	ini_set('session.use_trans_sid', 0);
 
 //see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies

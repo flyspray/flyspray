@@ -1,3 +1,11 @@
+<?php
+if(isset($theuser->infos['eventtypes'])){
+    $eventpref=$theuser->infos['eventtypes'];
+}else{
+    $eventpref=array_keys($events);
+    $usereventpref=array_keys($user_events);
+}
+?>
 <h3><?php echo Filters::noXSS(L('eventlog')); ?></h3>
 <div class="box">
     <form action="<?php echo Filters::noXSS(CreateURL('reports', $proj->id)); ?>" method="get">
@@ -5,14 +13,12 @@
         <tr>
           <td><label for="events[]"><?php echo Filters::noXSS(L('events')); ?></label></td>
           <td>
-              <select name="events[]" class='eventlist' multiple="multiple" id="events[]" size="<?php echo Filters::noXSS(count($events)+count($user_events)+2); ?>">
+              <select name="events[]" class='eventlist<?php echo $histories ? ' hasresult':''; ?>' multiple="multiple" id="events[]" size="<?php echo Filters::noXSS(count($events)+count($user_events)+2); ?>">
               <optgroup label="<?php echo Filters::noXSS(L('Tasks')); ?>">
-              <?php echo tpl_options($events, Req::val('events')); ?>
-
+              <?php echo tpl_options($events, Req::val('events', $eventpref)); ?>
               </optgroup>
               <optgroup label="<?php echo Filters::noXSS(L('users')); ?>">
-              <?php echo tpl_options($user_events, Req::val('events')); ?>
-
+              <?php echo tpl_options($user_events, Req::val('events', $usereventpref)); ?>
               </optgroup>
               </select>
           </td>
@@ -20,19 +26,17 @@
               <div>
                   <label class="inline" for="fromdate"><?php echo Filters::noXSS(L('from')); ?></label>
                   <?php echo tpl_datepicker('fromdate'); ?>
-
                   <?php echo tpl_datepicker('todate', L('to')); ?>
-
               </div>
-
               <div>
-                  <label for="event_number"><?php echo Filters::noXSS(L('show')); ?></label>
-                  <select name="event_number" id="event_number">
-                   <?php echo tpl_options(array(-1 => L('all'), 10 => 10, 20 => 20, 50 => 50, 100 => 100, 200 => 200), Req::val('event_number', 20)); ?>
-
-                  </select>
-                  <?php echo Filters::noXSS(L('events')); ?>
-
+                <label for="event_number"><?php echo Filters::noXSS(L('show')); ?></label>
+                <select name="event_number" id="event_number">
+                <?php
+                # set 20 to 25 like in tasks_per_page because we use same settings here too
+                echo tpl_options(array(-1 => L('all'), 10 => 10, 25 => 25, 50 => 50, 100 => 100, 200 => 200),
+                    Req::val('event_number',  isset($theuser->infos['tasks_perpage']) ? $theuser->infos['tasks_perpage'] : 50)); ?>
+                </select>
+                <?php echo Filters::noXSS(L('events')); ?>
               </div>
           </td>
         </tr>
@@ -45,7 +49,7 @@
 
     <?php if ($histories): ?>
     <div id="tasklist">
-    <table id="tasklist_table">
+    <table id="eventlist_table">
      <thead>
       <tr>
         <th>

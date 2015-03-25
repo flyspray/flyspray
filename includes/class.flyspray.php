@@ -539,7 +539,7 @@ class Flyspray
     // Log a request for an admin/project manager to do something {{{
     /**
      * Adds an admin request to the database
-     * @param integer $type 1: Task close, 2: Task re-open
+     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
      * @param integer $project_id
      * @param integer $task_id
      * @param integer $submitter
@@ -558,7 +558,7 @@ class Flyspray
     // Check for an existing admin request for a task and event type {{{;
     /**
      * Checks whether or not there is an admin request for a task
-     * @param integer $type 1: Task close, 2: Task re-open
+     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
      * @param integer $task_id
      * @access public static
      * @return bool
@@ -630,6 +630,7 @@ class Flyspray
      * Check if a user provided the right credentials
      * @param string $username
      * @param string $password
+     * @param string $method '', 'oauth', 'ldap', 'native'
      * @access public static
      * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
      * @version 1.0
@@ -660,6 +661,7 @@ class Flyspray
             return 0;
         }
 
+        if( method != 'ldap' ){
         //encrypt the password with the method used in the db
         switch (strlen($auth_details['user_pass'])) {
             case 40:
@@ -672,7 +674,7 @@ class Flyspray
                 $password = crypt($password, $auth_details['user_pass']); //using the salt from db
                 break;
         }
-
+        }
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
             $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
                            WHERE user_id = ?', array($auth_details['user_id']));
@@ -680,15 +682,21 @@ class Flyspray
             $_SESSION['was_locked'] = true;
         }
 
-        // Compare the crypted password to the one in the database
         // skip password check if the user is using oauth
-        $pwOk = ($method == 'oauth') ? true : ($password == $auth_details['user_pass']);
+        if($method == 'oauth'){
+            $pwOk = true;
+        } elseif( $method == 'ldap'){
+            $pwOk = Flyspray::checkForLDAPUser($username, $password);
+        }else{
+            // Compare the crypted password to the one in the database
+            $pwOk = ($password == $auth_details['user_pass']);
+        }
+
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
             return $auth_details['user_id'];
         }
-        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1')
-        {
+        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
             return $auth_details['user_id'];
         }
 
@@ -711,6 +719,58 @@ class Flyspray
             return false;
         }
     }
+
+	/**
+	* 20150320 just added from provided patch, untested!
+	*/
+	public static function checkForLDAPUser($username, $password)
+	{
+		# TODO: add to admin settings area, maybe let user set the config at final installation step
+		$ldap_host = 'ldaphost';
+		$ldap_port = '389';
+		$ldap_version = '3';
+		$base_dn = 'OU=SBSUsers,OU=Users,OU=MyBusiness,DC=MyDomain,DC=local';
+		$ldap_search_user = 'ldapuser@mydomain.local';
+		$ldap_search_pass = "ldapuserpass";
+		$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
+		$username = $username;
+
+		if (strlen($password) == 0){ // LDAP will succeed binding with no password on AD (defaults to anon bind)
+			return false;
+		}
+
+		$rs = ldap_connect($ldap_host, $ldap_port);
+		@ldap_set_option($rs, LDAP_OPT_PROTOCOL_VERSION, $ldap_version);
+		@ldap_set_option($rs, LDAP_OPT_REFERRALS, 0);
+		$ldap_bind_dn = empty($ldap_search_user) ? NULL : $ldap_search_user;
+		$ldap_bind_pw = empty($ldap_search_pass) ? NULL : $ldap_search_pass;
+		if (!$bindok = @ldap_bind($rs, $ldap_bind_dn, $ldap_search_pass)){
+			// Uncomment for LDAP debugging
+			$error_msg = ldap_error($rs);
+			die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+			return false;
+		} else{
+			$filter_r = str_replace("%USERNAME%", $username, $filter);
+			$result = @ldap_search($rs, $base_dn, $filter_r);
+			if (!$result){ // ldap search returned nothing or error
+				return false;
+			} 
+			$result_user = ldap_get_entries($rs, $result);
+			if ($result_user["count"] == 0){ // No users match the filter
+				return false;
+			} 
+			$first_user = $result_user[0];
+			$ldap_user_dn = $first_user["dn"];
+			// Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
+			if (!$bind_user = @ldap_bind($rs, $ldap_user_dn, $password)){
+				$error_msg = ldap_error($rs);
+				die("Couldn't bind using ".$ldap_user_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+				return false;
+			} else{
+				return true;
+			}
+		}
+	}
 
 
     // Set cookie {{{

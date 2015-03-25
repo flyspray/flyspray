@@ -20,17 +20,18 @@
       </td>
       <td><?php echo tpl_userlink($req['submitted_by']); ?></td>
       <td><?php echo Filters::noXSS(formatDate($req['time_submitted'], true)); ?></td>
-      <td>get email adress later</td>
+      <td><?php echo Filters::noXSS($req['reason_given']); ?></td>
       <td>
-        <form style="display:inline" action="<?php echo Filters::noXSS(CreateUrl('edituser', $req['submitted_by'])); ?>" method="post">
-	<a class="button" href="#" onclick="this.parentNode.submit();"><?php echo Filters::noXSS(L('accept')); ?></a>
-	<input type="hidden" name="action" value="approve.user"/>
+        <?php echo tpl_form(Filters::noXSS(CreateUrl('edituser', $req['submitted_by'])), null, null, null, 'style="display:inline"'); ?> 
+        <input type="submit" value="<?php echo Filters::noXSS(L('accept')); ?>">
+        <input type="hidden" name="action" value="approve.user"/>
 	<input type="hidden" name="user_id" value="<?php echo $req['submitted_by']; ?>"/>
 	<input type="hidden" name="account_enabled" value="1"/>
 	</form>
-        <a href="#" class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('deny')); ?></a>
+
+        <button class="submit" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('deny')); ?></button>
         <div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
-          <form action="" method="post">
+            <?php echo tpl_form(Filters::noXSS(CreateUrl('denyuserreq'))); ?> 
             <div>
               <input type="hidden" name="action" value="denyuserreq" />
               <input type="hidden" name="req_id" value="<?php echo Filters::noXSS($req['request_id']); ?>" />

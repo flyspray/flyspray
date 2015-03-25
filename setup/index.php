@@ -22,12 +22,15 @@ require_once OBJECTS_PATH.'/class.flyspray.php';
 require_once OBJECTS_PATH.'/i18n.inc.php';
 require_once OBJECTS_PATH.'/class.tpl.php';
 
+# must be sure no-cache before any possible redirect, we maybe come back later here after composer install stuff.
+header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
     // Use composer autoloader
     require APPLICATION_PATH . '/vendor/autoload.php';
-	if (is_file('../composerit.php')) {
-		unlink('../composerit.php');
-	}
 } else{
         Flyspray::Redirect('composertest.php');
         exit;
@@ -37,9 +40,26 @@ if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
 ini_set('session.use_trans_sid', 0);
 session_start();
 
-if (is_readable ('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0){
-   die('Flyspray already installed. Use the <a href="upgrade.php">upgrader</a> to upgrade your Flyspray, or delete flyspray.conf.php to run setup.
-        You can *not* use the setup on an existing database.');
+if (is_readable('../flyspray.conf.php') && count(parse_ini_file('../flyspray.conf.php')) > 0){
+   die('<div style="text-align:center;padding:20px;font-family:sans-serif;font-size:16px;">
+Flyspray already installed. Use the <a href="upgrade.php"
+style="
+margin:2em;
+background-color: white;
+border: 1px solid #bbb;
+border-radius: 4px;
+box-shadow: 0 1px 1px #ddd;
+color: #565656;
+cursor: pointer;
+display: inline-block;
+font-family: sans-serif;
+font-size: 100%;
+font-weight: bold;
+line-height: 130%;
+padding: 8px 13px 8px 10px;
+text-decoration: none;
+">Upgrader</a> to upgrade your Flyspray,
+or delete flyspray.conf.php to run setup. You can *not* use the setup on an existing database.</div>');
 }
 
 $borked = str_replace('a', 'b', array( -1 => -1 ) );
@@ -136,9 +156,14 @@ class Setup extends Flyspray
       if ($path == 'flyspray.conf.php') {
         $fp = @fopen($file, 'wb');
         @fclose($fp);
+        // Let's try at least...
+        #@chmod($file, 0666);
+        @chmod($file, 0644); # looks a bit better than worldwritable
       }
-      // Let's try at least...
-      @chmod($file, 0666);
+      if(is_dir($path)){
+        # for cache and attachement directories x-bit needed
+        @chmod($file, 0755);
+      }
       $this->mWriteStatus[$path] = $this->IsWriteable($file);
 
       // Return an html formated writeable/un-writeable string

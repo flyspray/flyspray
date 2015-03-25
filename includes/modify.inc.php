@@ -641,7 +641,6 @@ switch ($action = Req::val('action'))
 
         $_SESSION['SUCCESS'] = L('accountcreated');
         define('NO_DO', true);
-        $page->pushTpl('register.ok.tpl');
         break;
 
         // ##################
@@ -725,16 +724,15 @@ switch ($action = Req::val('action'))
         if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
             Post::val('real_name'), Post::val('jabber_id'),
             Post::val('email_address'), Post::num('notify_type'),
-        Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
+            Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
-
+        
         $_SESSION['SUCCESS'] = L('newusercreated');
 
         if (!$user->perms('is_admin')) {
             define('NO_DO', true);
-            $page->pushTpl('register.ok.tpl');
         }
         break;
 
@@ -797,7 +795,6 @@ switch ($action = Req::val('action'))
             $_SESSION['SUCCESS'] = L('created').$success;
             if (!$user->perms('is_admin')) {
                 define('NO_DO', true);
-                $page->pushTpl('register.ok.tpl');
             }
         }
         break;
@@ -1196,7 +1193,7 @@ switch ($action = Req::val('action'))
                             hide_my_email = ?, notify_online = ?
                      WHERE  user_id = ?',
                 array(Post::val('real_name'), Post::val('email_address'), Post::num('notify_own', 0),
-                    Post::val('jabber_id', 0), Post::num('notify_type'),
+                    Post::val('jabber_id', ''), Post::num('notify_type'),
                     Post::val('dateformat', 0), Post::val('dateformat_extended', 0),
                     Post::num('tasks_perpage'), Post::num('time_zone'), Post::val('lang_code', 'en'),
                     Post::num('hide_my_email', 0), Post::num('notify_online', 0), Post::num('user_id')));
@@ -1279,6 +1276,9 @@ switch ($action = Req::val('action'))
                        SET  resolved_by = ?, time_resolved = ?
                      WHERE  submitted_by = ? AND request_type = ?',
             array($user->id, time(), Post::val('user_id'), 3));
+            // Missing event constant, can't log yet...
+            // Missing notification constant, can't notify yet...
+
         }
         break;
         // ##################
@@ -2030,7 +2030,9 @@ switch ($action = Req::val('action'))
                        SET  resolved_by = ?, time_resolved = ?, deny_reason = ?
                      WHERE  request_id = ?",
             array($user->id, time(), Req::val('deny_reason'), Req::val('req_id')));
+            // Wrong event constant
             Flyspray::logEvent(0, 28, Req::val('deny_reason'));//nee a new event number. need notification. fix smtp first
+            // Missing notification constant, can't notify yet...
             $_SESSION['SUCCESS'] = "New user register request denied";
         }
         break;

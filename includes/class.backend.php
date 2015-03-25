@@ -533,7 +533,7 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = null, $oauth_provider = null, $profile_image = '')
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = '', $oauth_provider = '', $profile_image = '')
     {
         global $fs, $db, $notify, $baseurl;
 
@@ -572,23 +572,21 @@ abstract class Backend
             array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id),
                 $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']));
 
-        $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
-        $user_id = $db->fetchOne($temp);
-        $emailList = explode(';',$email);
-        foreach ($emailList as $mail)	//Still need to do: check email
-        {
-            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
-            $count = $db->fetchOne($count);
-            if ($count > 0)
-            {
-                Flyspray::show_error("Email address has alredy been taken");
-                return false;
-            } else if ($mail != '')
-                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",array($user_id,strtolower($mail),$oauth_uid, $oauth_provider));
-        }
-
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
+
+        $emailList = explode(';',$email);
+        foreach ($emailList as $mail) {	//Still need to do: check email
+            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->fetchOne($count);
+            if ($count > 0) {
+                Flyspray::show_error("Email address has alredy been taken");
+                return false;
+            } else if ($mail != '') {
+                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
+                        array($uid,strtolower($mail),$oauth_uid, $oauth_provider));
+            }
+        }
 
         // Now, create a new record in the users_in_groups table
         $db->Query('INSERT INTO  {users_in_groups} (user_id, group_id)
@@ -615,22 +613,14 @@ abstract class Backend
                         'only_primary' => NULL,
                         'only_watched' => NULL);
 
-
                 foreach($varnames as $tmpname) {
-
                     if($tmpname == 'iwatch') {
-
                         $tmparr = array('only_watched' => '1');
-
                     } elseif ($tmpname == 'atome') {
-
                         $tmparr = array('dev'=> $uid);
-
                     } elseif($tmpname == 'iopened') {
-
                         $tmparr = array('opened'=> $uid);
                     }
-
                     $$tmpname = $tmparr + $toserialize;
                 }
 
@@ -651,24 +641,45 @@ abstract class Backend
 
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
-        if (! $oauth_provider && $fs->prefs['notify_registration']) {
-            // Gather list of admin users
-            $sql = $db->Query('SELECT DISTINCT email_address
+        if ( ! $oauth_provider ) {
+            $users_to_notify = array();
+            // Notify admins on new user registration
+            if( $fs->prefs['notify_registration'] ) {
+                // Gather list of admin users. An empty address that comes
+                // first will break sending notification. So does probably
+                // an invalid one.
+                $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
-                                 WHERE g.group_id = 1');
+                                 WHERE g.group_id = 1 AND email_address <> \'\'');
 
-            // If the new user is not an admin, add him to the notification list
-            $users_to_notify = $db->FetchCol($sql);
-            if (! in_array($email, $users_to_notify))
-            {
-                array_push($users_to_notify, $email);
+                // If the new user is not an admin, add him to the notification list.
+                // Should do this only if account is created as enabled, otherwise
+                // notification should be done when admin request is either accepted
+                // or denied, but we lack a really suitable notification, although
+                // NOTIFY_NEW_USER is quite close.
+                $admins = $db->FetchCol($sql);
+                if (count($admins)) {
+                    $users_to_notify = $admins;
+                }
+            }
+            if (!in_array($email, $users_to_notify)) {
+                $users_to_notify[] = $email;
             }
 
             // Notify the appropriate users
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $users_to_notify, NOTIFY_EMAIL);
+        }
+
+        // If the account is created as not enabled, no matter what any
+        // preferences might say or how the registration was made in first
+        // place, it MUST be first approved by an admin. And a small
+        // work-around: there's no field for email, so we use reason_given
+        // for that purpose.
+        if ($enabled === 0) {
+            Flyspray::AdminRequest(3, 0, 0, $uid, $email);
         }
 
         return true;
@@ -707,9 +718,14 @@ abstract class Backend
 			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
 		}
 
-		$db->Query('DELETE FROM {registrations} WHERE email_address = "'.$userDetails['email_address'].'"');
-		$db->Query('DELETE FROM {user_emails} WHERE email_address = "'.$userDetails['email_address'].'"');
-		$db->Query('DELETE FROM {reminders} WHERE to_user_id = '.$uid.' OR from_user_id = '.$uid);
+		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
+                        array($userDetails['email_address']));
+                
+		$db->Query('DELETE FROM {user_emails} WHERE email_address = ?',
+                        array($userDetails['email_address']));
+		
+                $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
+                        array($uid, $uid));
 
 		// for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
 		// get permissions for a task automatically
@@ -741,8 +757,12 @@ abstract class Backend
         if (!$move_to) {
             $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
             $task_ids = $db->FetchCol($task_ids);
-            $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
-                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
+            // What was supposed to be in tables field_values, notification_threads
+            // and redundant, they do not exist in database?
+            $tables = array('admin_requests', 'assigned', 'attachments', 'comments',
+                            'dependencies', 'related', 'history',
+                            'notifications',
+                            'reminders', 'votes');
             foreach ($tables as $table) {
                 if ($table == 'related') {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE this_task = ? OR related_task = ? ');
@@ -766,6 +786,59 @@ abstract class Backend
 
         foreach ($tables as $table) {
             if ($move_to && $table !== 'projects' && $table !== 'list_category') {
+                // Having a unique index in most list_* tables prevents
+                // doing just a simple update, if the list item already
+                // exists in target project, so we have to update existing
+                // tasks to use the one in target project. Something similar
+                // should be done when moving a single task to another project.
+                // Consider making this a separate function that can be used
+                // for that purpose too, if possible.
+                if (strpos($table, 'list_') === 0) {
+                    list($type, $name) = explode('_', $table);
+                    $sql = $db->Query('SELECT ' . $name . '_id, ' . $name . '_name
+                                         FROM {' . $table . '}
+                                        WHERE project_id = ?',
+                            array($pid));
+                    $rows = $db->FetchAllArray($sql);
+                    foreach ($rows as $row) {
+                        $sql = $db->Query('SELECT ' . $name . '_id
+                                             FROM {' . $table . '}
+                                            WHERE project_id = ? AND '. $name . '_name = ?', 
+                                array($move_to, $row[$name .'_name']));
+                        $new_id = $db->FetchOne($sql);
+                        if ($new_id) {
+                            switch ($name) {
+                                case 'os';
+                                    $column = 'operating_system';
+                                    break;
+                                case 'resolution';
+                                    $column = 'resolution_reason';
+                                    break;
+                                case 'tasktype';
+                                    $column = 'task_type';
+                                    break;
+                                case 'status';
+                                    $column = 'item_status';
+                                    break;
+                                case 'version';
+                                    // Questionable what to do with this one. 1.0 could
+                                    // have been still future in the old project and
+                                    // already past in the new one...
+                                    $column = 'product_version';
+                                    break;
+                            }
+                            if (isset($column)) {
+                                $db->Query('UPDATE {tasks}
+                                               SET ' . $column . ' = ?
+                                             WHERE ' . $column . ' = ?',
+                                        array($new_id, $row[$name . '_id']));
+                                $db->Query('DELETE FROM {' . $table . '}
+                                             WHERE '  . $name . '_id = ?',
+                                        array($row[$name . '_id']));
+                            }
+                        }
+                    }
+                }
                 $base_sql = 'UPDATE {' . $table . '} SET project_id = ?';
                 $sql_params = array($move_to, $pid);
             } else {

@@ -372,25 +372,29 @@ class Notifications {
         }
 
         if(defined( 'FS_MAIL_LOGFILE')) {
-            $log = Swift_LogContainer::getLog();
-            $log->setLogLevel(SWIFT_LOG_EVERYTHING);
+            // FIXME: Swift_LogContainer exists no more???
+            // See http://swiftmailer.org/docs/plugins.html#logger-plugin
+            // for the new implementation.
+            // $log = Swift_LogContainer::getLog();
+            // $log->setLogLevel(SWIFT_LOG_EVERYTHING);
         }
 
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
-        $body = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
-
-        // Make newlines into HTML line breaks
-        $body = str_replace("\n","<br>",$body);
-
+        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+        $htmlbody = str_replace("\n","<br>", $htmlbody);
+        $plainbody= html_entity_decode(strip_tags($body), ENT_COMPAT | ENT_HTML401, 'utf-8');
+        
         $swift = Swift_Mailer::newInstance($swiftconn);
 
         $message = new Swift_Message($subject);
         if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
-            $body=html_entity_decode(strip_tags($body));
+           $message->setBody($plainbody, 'text/plain');
+        }else{
+           $message->setBody($htmlbody, 'text/html');
+           $message->addPart($plainbody, 'text/plain');
         }
-        $message->setBody($body);
+        
         $type = $message->getHeaders()->get('Content-Type');
-        $type->setValue('text/html');
         $type->setParameter('charset', 'utf-8');
 
         $message->getHeaders()->addTextHeader('Precedence', 'list');
@@ -413,6 +417,7 @@ class Notifications {
         $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
         $swift->send($message);
 
+        /* FIXME: Swift_LogContainer exists no more???
         if(defined('FS_MAIL_LOGFILE')) {
             if(is_writable(dirname(FS_MAIL_LOGFILE))) {
                 if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
@@ -422,6 +427,7 @@ class Notifications {
                 }
             }
         }
+        */
 
         return true;
     } //}}}
