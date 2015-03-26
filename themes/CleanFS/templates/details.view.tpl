@@ -610,7 +610,7 @@ function quick_edit(elem, id)
 				<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
 					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
 						<input type="hidden" name="action" value="makepublic"/>
-						<button><?php echo eL('makepublic'); ?></button>
+						<button type="submit" class="fakelinkbutton"><?php echo ucfirst(eL('makepublic')); ?></button>
 					</form>
 				<?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
 					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
