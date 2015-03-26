@@ -116,7 +116,7 @@ endif; ?>
 				<select name="project" onchange="document.getElementById('projectselectorform').submit()">
 				<?php echo tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id); ?>
 				</select>
-				<button type="submit"><?php echo Filters::noXSS(L('switch')); ?></button>
+				<!--<button type="submit"><?php echo Filters::noXSS(L('switch')); ?></button>-->
 				<input type="hidden" name="do" value="<?php echo Filters::noXSS($do); ?>" />
 				<input type="hidden" value="1" name="switch" />
 				<?php $check = array('area', 'id');
@@ -133,8 +133,8 @@ endif; ?>
 		</div>
 		<div id="showtask">
 			<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-				<button type="submit"><?php echo Filters::noXSS(L('showtask')); ?> #</button>
-				<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" />
+				<!--<button type="submit"><?php echo Filters::noXSS(L('showtask')); ?> #</button>-->
+				<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" placeholder="<?php echo Filters::noXSS(L('showtask')); ?> #" />
 			</form>
 		</div>
 	</div>
