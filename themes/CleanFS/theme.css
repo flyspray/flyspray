@@ -588,9 +588,8 @@ form #taskdetails #taskdetailsfull {
 }
 #taskdetails #taskfields ul.fieldslist li {
   clear: both;
-  margin-top: 2%;
-  padding-top: 1%;
-  padding-bottom: 1%;
+  padding-top: 2%;
+  padding-bottom: 2%;
   overflow: auto;
   width: 100%;
   border-radius: 4px;
@@ -1235,3 +1234,14 @@ span.warning {
 .fa-check{color:#090;}
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}
+
+button.fakelinkbutton
+{
+	display: inline;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	cursor: pointer;
+}
