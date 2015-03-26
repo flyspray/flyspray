@@ -1038,12 +1038,17 @@ div#closeform {
 	color:#fff;
 	padding: 0px;
 }
-#actionsform li a, #actionsform li label{
-    display: block;
-    text-decoration: none;
-    color: #fff;
-    white-space: nowrap;
-    padding:5px 15px;
+#actionsform li a, #actionsform li label, #actionsform li button{
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  white-space: nowrap;
+  padding:5px 15px;
+  background:none;
+  margin:0;
+  border:none;
+  font-weight:normal;
+  font-size:12px;
 }
 #actionsform ul li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
