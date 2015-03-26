@@ -576,69 +576,69 @@ function quick_edit(elem, id)
         } ?>
         <!-- Votes-->
         <?php if (in_array('votes', $fields)): ?>
-        <li class="votes"><span class="label"><?php echo Filters::noXSS(L('votes')); ?></span>
-	<span class="value">
-		<?php if (count($votes)): ?>
-		<a href="javascript:showhidestuff('showvotes')"><?php echo Filters::noXSS(count($votes)); ?> </a>
-		<div id="showvotes" class="hide">
-		<ul class="reports">
-		<?php foreach ($votes as $vote): ?>
-		<li><?php echo tpl_userlink($vote); ?> (<?php echo Filters::noXSS(formatDate($vote['date_time'])); ?>)</li>
-		<?php endforeach; ?>
-		</ul>
-		</div>
-		<?php else: ?>0
+        <li class="votes">
+        	<span class="label"><?php echo Filters::noXSS(L('votes')); ?></span>
+			<span class="value">
+				<?php if (count($votes)): ?>
+					<a href="javascript:showhidestuff('showvotes')"><?php echo Filters::noXSS(count($votes)); ?> </a>
+					<div id="showvotes" class="hide">
+						<ul class="reports">
+						<?php foreach ($votes as $vote): ?>
+							<li><?php echo tpl_userlink($vote); ?> (<?php echo Filters::noXSS(formatDate($vote['date_time'])); ?>)</li>
+						<?php endforeach; ?>
+						</ul>
+					</div>
+				<?php endif; ?>
+				<?php if ($user->can_vote($task_details) > 0): ?>
+					<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+						<input type="hidden" name="action" value="details.addvote" />
+						<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+						<button class="fakelinkbutton" type="submit" title="<?php echo Filters::noXSS(L('addvote')); ?>">+1</button>
+					</form>
+				<?php elseif ($user->can_vote($task_details) == -2): ?>	(<?php echo Filters::noXSS(L('alreadyvotedthistask')); ?>)
+				<?php elseif ($user->can_vote($task_details) == -3): ?> (<?php echo Filters::noXSS(L('alreadyvotedthisday')); ?>)
+				<?php endif; ?>
+			</span>
+		</li>
 		<?php endif; ?>
-		<?php if ($user->can_vote($task_details) > 0): ?>
-		<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="details.addvote" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<button type="submit"><?php echo Filters::noXSS(L('addvote')); ?></button>
-		</form>
-		<?php elseif ($user->can_vote($task_details) == -2): ?>	(<?php echo Filters::noXSS(L('alreadyvotedthistask')); ?>)
-		<?php elseif ($user->can_vote($task_details) == -3): ?> (<?php echo Filters::noXSS(L('alreadyvotedthisday')); ?>)
-		<?php endif; ?>
-	</span>
-	</li>
-	<?php endif; ?>
 
         <!-- Private -->
-	<?php if (in_array('private', $fields)): ?>
-	<li>
-	<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
-	<span class="value">
-		<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
-		<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="makepublic"/>
-		<button><?php echo eL('makepublic'); ?></button>
-		</form>
-		<?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
-		<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="makeprivate"/>
-		<button><?php echo eL('makeprivate'); ?></button>
-		</form>
+		<?php if (in_array('private', $fields)): ?>
+		<li>
+			<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
+			<span class="value">
+				<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
+					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+						<input type="hidden" name="action" value="makepublic"/>
+						<button><?php echo eL('makepublic'); ?></button>
+					</form>
+				<?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
+					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+						<input type="hidden" name="action" value="makeprivate"/>
+						<button type="submit" class="fakelinkbutton"><?php echo ucfirst(eL('makeprivate')); ?></button>
+					</form>
+				<?php endif; ?>
+			</span>
+		</li>
 		<?php endif; ?>
-	</span>
-        </li>
-        <?php endif; ?>
 
-        <!-- Watching -->
-        <?php if (!$user->isAnon()): ?>
-        <li>
-        	<span class="label"><?php echo Filters::noXSS(L('watching')); ?></span>
-		<span class="value">
-            <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
-              <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-              <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>"/>
-              <?php if (!$watched): ?>
-                <input type="hidden" name="action" value="details.add_notification"/>
-                <button type="submit" accesskey="w"><?php echo eL('watchtask'); ?></button>
-              <?php else: ?>
-                <input type="hidden" name="action" value="remove_notification"/>
-                <button type="submit" accesskey="w"><?php echo eL('stopwatching'); ?></button>
-              <?php endif; ?>
-            </form>
-		</span>
+		<!-- Watching -->
+		<?php if (!$user->isAnon()): ?>
+		<li>
+			<span class="label"><?php echo Filters::noXSS(L('watching')); ?></span>
+			<span class="value">
+				<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+					<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+					<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>"/>
+					<?php if (!$watched): ?>
+						<input type="hidden" name="action" value="details.add_notification"/>
+						<button type="submit" accesskey="w" class="fakelinkbutton"><?php echo ucfirst(eL('watchtask')); ?></button>
+					<?php else: ?>
+						<input type="hidden" name="action" value="remove_notification"/>
+						<button type="submit" accesskey="w" class="fakelinkbutton"><?php echo ucfirst(eL('stopwatching')); ?></button>
+					<?php endif; ?>
+				</form>
+			</span>
         </li>
         <?php endif; ?>
     </ul>
