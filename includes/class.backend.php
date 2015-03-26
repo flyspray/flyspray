@@ -1506,36 +1506,41 @@ abstract class Backend
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
         # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
-        $sql = $db->Query("
-                          SELECT   t.*, $select
-                                   p.project_title, p.project_is_active,
-                                   lst.status_name,
-                                   lt.tasktype_name,
-                                   lr.resolution_name
-                          FROM     $from
-                          $where
-                          GROUP BY $groupby
-                          $having
-                          ORDER BY $sortorder", $sql_params);
+        $sqltext = "
+SELECT t.*, $select
+p.project_title, p.project_is_active,
+lst.status_name,
+lt.tasktype_name,
+lr.resolution_name
+FROM $from
+$where
+GROUP BY $groupby
+$having
+ORDER BY $sortorder";
 
-        $tasks = $db->fetchAllArray($sql);
-        $id_list = array();
-        $limit = array_get($args, 'limit', -1);
-        $task_count = 0;
-        foreach ($tasks as $key => $task) {
-            $id_list[] = $task['task_id'];
-            if (!$user->can_view_task($task)) {
-                unset($tasks[$key]);
-                array_pop($id_list);
-                --$task_count;
-            } elseif (!is_null($perpage) && ($task_count < $offset || ($task_count > $offset - 1 + $perpage) || ($limit > 0 && $task_count >= $limit))) {
-                unset($tasks[$key]);
-            }
+	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext)", $sql_params);
+	$totalcount = $db->FetchOne($sql);
 
-            ++$task_count;
-        }
-
-        return array($tasks, $id_list);
-    }
-
-}
+	$sql = $db->Query($sql, $sql_params);
+	
+	# we cannot just fetchall on huge task lists into array/memory.
+	#$tasks = $db->fetchAllArray($sql);
+	$id_list = array();
+	$task_count = 0;
+	$totalcount=0;
+	$forbidden_tasks_count=0;
+	while ($task = $sql->FetchRow()) {
+		if ($user->can_view_task($task){
+			if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
+				$id_list[] = $task['task_id'];
+				$tasks[]=$task;
+				$task_count++;
+			}
+			$totalcount++;
+		} else{
+			$forbidden_tasks_count++;
+		}
+	}
+	return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+} # end get_task_list
+} # end class
