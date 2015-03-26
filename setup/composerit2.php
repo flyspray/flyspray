@@ -1,6 +1,7 @@
 <?php
 @set_time_limit(0);
 ini_set('memory_limit', '64M');
+
 define('IN_FS', 1);
 define('BASEDIR', dirname(__FILE__));
 define('APPLICATION_PATH', dirname(BASEDIR));
@@ -8,8 +9,10 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
 require_once OBJECTS_PATH.'/i18n.inc.php';
-class user{var $infos=array();}; class project{var $id=0;};
-$user=new user; $proj=new project;
+class user{var $infos=array();};
+class project{var $id=0;};
+$user = new user;
+$proj = new project;
 load_translations();
 
 # no caching to prevent old pages if user goes back and forth during install
@@ -21,45 +24,48 @@ header("Pragma: no-cache");
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset='utf-8'>
-<title>Flyspray Install - Third Party Packages needed - Step 3</title>
-<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
-</head>
-<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
-<?php
-if(ini_get('safe_mode') == 1){
-	echo '
-<h3>PHP safe_mode is enabled. We currently don\'t know how to run  the "php composer.phar install" from php web frontend under this circumstances.</h3>
-<h3>But lets test if we can workaround it with Perl:</h3>
-<a href="composerit2.pl" class="button">Test using Perl:  composerit2.pl</a>';
-} else{
-	echo '<h3>Step 3: Trying to install dependencies</h3>';
-	# $argv=('install');
-	# chdir('..');
-	# echo '<pre>';
-	# require 'composer.phar';
-	# echo '</pre>';
+	<head>
+		<meta charset='utf-8'>
+		<title>Flyspray Install - Third Party Packages needed - Step 3</title>
+		<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
+	<?php
+		if (ini_get('safe_mode') == 1) {
+			echo '
+				<h3>PHP safe_mode is enabled. We currently don\'t know how to run  the "php composer.phar install" from php web frontend under this circumstances.</h3>
+				<h3>But lets test if we can workaround it with Perl:</h3>
+				<a href="composerit2.pl" class="button">Test using Perl:  composerit2.pl</a>';
+		} else {
+			echo '<h3>Step 3: Trying to install dependencies</h3>';
+			# $argv=('install');
+			# chdir('..');
+			# echo '<pre>';
+			# require 'composer.phar';
+			# echo '</pre>';
 
-	# without chdir('..');
-	$cmd2='php composer.phar --working-dir=.. install';
+			# without chdir('..');
+			$cmd2 = 'php composer.phar --working-dir=.. install';
 
-	# with chdir('..');
-	#$cmd2 = 'php composer.phar install';
+			# with chdir('..');
+			#$cmd2 = 'php composer.phar install';
 
-	echo $cmd2.'<br/><br/>';
-	shell_exec($cmd2);
-	echo '<strong>Done</strong>';
+			echo $cmd2.'<br/><br/>';
+			shell_exec($cmd2);
+			echo '<strong>Done</strong>';
 
-	echo '<h3>Step 4: Checking and cleaning:</h3>';
-	if (is_readable('./vendor/autoload.php')){
-		echo 'Composer installation ok<br /><br />';
-	} else{
-		echo 'Composer installation failed<br /><br />';
-	}
-	echo '<a href="./index.php" class="button">Go back</a>';
-}
-
-?>
-</body>
+			echo '<h3>Step 4: Checking and cleaning:</h3>';
+			if (is_readable('../vendor/autoload.php')) {
+				echo 'Composer installation ok<br>';
+			} else {
+				echo 'Composer installation failed<br>';
+			}
+			if (is_file('composer.phar')) {
+				unlink('composer.phar');
+			}
+			echo 'Cleanup made<br /><br />';
+			echo '<a href="./index.php" class="button">Go back</a>';
+		}
+	?>
+	</body>
 </html>
