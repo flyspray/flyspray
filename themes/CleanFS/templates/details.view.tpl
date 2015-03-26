@@ -294,11 +294,12 @@ function quick_edit(elem, id)
 
 		<?php if ($user->can_edit_task($task_details)): ?>
 			<span style="display:none">
-				<div style="float:right"><select id="status" name="item_status">
-				 <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
-
-				</select>
-				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+				<div style="float:right">
+					<select id="status" name="item_status">
+				 		<?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
+					</select>
+					<br/><a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+				</div>
 			</span>
 		<?php endif; ?>
 
@@ -319,12 +320,13 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="percent" name="percent_complete">
-			<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
-			<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="percent" name="percent_complete">
+					<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
+					<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
 	<?php endif; ?>
 
@@ -332,15 +334,19 @@ function quick_edit(elem, id)
         <?php endif; ?>
         <!-- Task Type-->
         <?php if (in_array('tasktype', $fields)): ?>
-        <li><span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span>
+        <li>
+        	<span class="label"><?php echo Filters::noXSS(L('tasktype')); ?></span>
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
- 	<?php if ($user->can_edit_task($task_details)):
-	?><span class="editquick" style="display:none;">
-		<span class="editvalue"><select id="tasktype" name="task_type">
-		<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
-		</select>
-		<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></span>
-	</span><?php endif; ?></li>
+ 			<?php if ($user->can_edit_task($task_details)):?>
+ 				<span style="display:none;">
+					<div style="float:right">
+						<select id="tasktype" name="task_type">
+							<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
+						</select>
+						<br/><a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></span>
+					</div>
+				</span>
+			<?php endif; ?></li>
         <?php endif; ?>
 
         <!-- Category -->
@@ -357,11 +363,12 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="category" name="product_category">
-			 <?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="category" name="product_category">
+			 		<?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
         </li>
@@ -404,11 +411,12 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="os" name="operating_system">
-			 <?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="os" name="operating_system">
+					<?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
         </li>
@@ -422,11 +430,11 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="severity" name="task_severity">
-			 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="severity" name="task_severity">
+			 		<?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
 		</span>
         <?php endif; ?>
         </li>
@@ -440,11 +448,12 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="priority" name="task_priority">
-			 <?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="priority" name="task_priority">
+			 		<?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
         </li>
@@ -458,11 +467,12 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="reportedver" name="product_version">
-			<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="reportedver" name="product_version">
+					<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
         </li>
@@ -483,12 +493,13 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><select id="dueversion" name="closedby_version">
-			 <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
-			 <?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
-
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<select id="dueversion" name="closedby_version">
+					<option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
+					<?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
+				</select>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
 
@@ -527,8 +538,10 @@ function quick_edit(elem, id)
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
-			<div style="float:right"><?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></div>
+			<div style="float:right">
+				<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
+				<br/><a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+			</div>
 		</span>
         <?php endif; ?>
 
@@ -539,23 +552,21 @@ function quick_edit(elem, id)
         ?>
         <li>
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
-            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?>
-                class="value"><?php
+            <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
+            <?php
                 $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-                /* Quick-editing can be launched by clicking the value, but it's almost
-                   impossible to hit a zero-width field... so put something in there.
-                   Could be something else too, like 'None', 'Not defined' etc.
-                */
-                if ($displayedeffort === '') {
-                    $displayedeffort = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                if (empty($displayedeffort)) {
+                    $displayedeffort = Filters::noXSS(L('undecided'));
                 }
                 echo $displayedeffort;
-                ?></span>
+            ?>
+            </span>
         	<?php if ($user->can_edit_task($task_details)): ?>
         	<span style="display:none">
-        	<div style="float:right">
-        	<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>"/>
-        	<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" class="button" onclick="show_hide(this.parentNode.parentNode, false)"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+        		<div style="float:right">
+	        		<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>"/>
+    	    		<br/><a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a> <a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
+    	    	</div>
         	</span>
         	<?php endif; ?>
         </li>
