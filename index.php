@@ -148,7 +148,7 @@ if ($proj->id && $user->perms('manage_project')) {
 }
 if ($user->perms('is_admin')) {
     $sql = $db->Query(
-    	    'SELECT COUNT(*) FROM {admin_requests} WHERE request_type = 3 AND resolved_by = 0');
+    	    'SELECT COUNT(*) FROM {admin_requests} WHERE request_type = 3 AND project_id = 0 resolved_by = 0');
     list($count) = $db->fetchRow($sql);
     $page->assign('admin_pendingreq_num', $count);
 }
