@@ -54,6 +54,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="deny_reason" type="C" size="255" />
+    <index name="resolved_project">
+      <col>resolved_by</col>
+      <col>project_id</col>
+    </index>
   </table>
   <table name="assigned">
     <field name="assigned_id" type="I" size="10">
