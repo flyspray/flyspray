@@ -282,10 +282,9 @@ div#mysearches td {vertical-align: middle;}
 .active#projectslink {background-image: url("img/white/cog_alt_12x12.png");}
 /* --- buttons --- */
 #actionbar { /*height: 4em;*/ position: relative;}
-#actionbar a.button { margin-bottom: 0;}
-#actionbar button.button { margin-bottom: 0;}
+#actionbar a.button, #actionbar button.button { margin-bottom: 0;}
 #actionbar .main {float: right;}
-.button {
+.button, button, input[type=submit] {
   display: -moz-inline-stack; /* optional */
   display: inline-block;
   zoom: 1; /* triggers hasLayout for IE */
@@ -319,7 +318,7 @@ a.button img, button.button img {
   height: 16px;
   float: none;
 }
-a.button:hover, button.button:hover {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
+a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
 body .positive {
@@ -589,9 +588,8 @@ form #taskdetails #taskdetailsfull {
 }
 #taskdetails #taskfields ul.fieldslist li {
   clear: both;
-  margin-top: 2%;
-  padding-top: 1%;
-  padding-bottom: 1%;
+  padding-top: 2%;
+  padding-bottom: 2%;
   overflow: auto;
   width: 100%;
   border-radius: 4px;
@@ -1038,12 +1036,17 @@ div#closeform {
 	color:#fff;
 	padding: 0px;
 }
-#actionsform li a, #actionsform li label{
-    display: block;
-    text-decoration: none;
-    color: #fff;
-    white-space: nowrap;
-    padding:5px 15px;
+#actionsform li a, #actionsform li label, #actionsform li button{
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  white-space: nowrap;
+  padding:5px 15px;
+  background:none;
+  margin:0;
+  border:none;
+  font-weight:normal;
+  font-size:12px;
 }
 #actionsform ul li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
@@ -1083,7 +1086,7 @@ input[type=text], input[type=password]{
 #table input[type=text] {
     width: 120px;
 }
-
+/*
 input[type=submit], button {
     background: #69C;
     border:  1px solid #0a4193;
@@ -1094,17 +1097,20 @@ input[type=submit], button {
     line-height: 20px;
     vertical-align: middle;
 }
+*/
 input[type=text], input[type=submit], button {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;}
+/* button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;} */
+/*
 input[type=submit]:hover, button:hover {
     background: #5F9729;
     color: #fff;
     border-color: #5F9729;
 }
+*/
 #show_loginbox {
     background: #494D4E;
     -moz-border-radius: 10px;
@@ -1228,3 +1234,25 @@ span.warning {
 .fa-check{color:#090;}
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}
+
+button.fakelinkbutton
+{
+	display: inline;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	cursor: pointer;
+	color: #0000EE;
+}
+
+button.fakelinkbutton:hover
+{
+	color: #09f;
+}
+
+button.fakelinkbutton:visited
+{
+	color: #551A8B;
+}
