@@ -409,6 +409,12 @@
     <index name="idx_task_id">
       <col>task_id</col>
     </index>
+    <index name="idx_event_date">
+      <col>event_date</col>
+    </index>
+    <index name="idx_event_type">
+      <col>event_type</col>
+    </index>
   </table>
   <table name="list_category">
     <field name="category_id" type="I" size="3">
