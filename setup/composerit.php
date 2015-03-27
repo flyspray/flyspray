@@ -35,10 +35,9 @@ header("Pragma: no-cache");
 <?php
 #chdir('..');
 # This works also in php5.3.* with SAFE_MODE enabled
-if (ini_get('safe_mode') == 1) {
-	$composerfile = file_get_contents('https://getcomposer.org/installer');
-	file_put_contents('composerinstaller', $composerfile);
-}
+$composerfile = file_get_contents('https://getcomposer.org/installer');
+file_put_contents('composerinstaller', $composerfile);
+
 if (!is_readable('composerinstaller')) {
 	die('Composer installer download failed! Please consider downloading vendors directly from Flyspray support website');
 }
