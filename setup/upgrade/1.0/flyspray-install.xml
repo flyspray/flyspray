@@ -182,6 +182,9 @@
     <index name="task_id_comments">
       <col>task_id</col>
     </index>
+    <index name="user_id_comments">
+      <col>user_id</col>
+    </index>
   </table>
   <table name="dependencies">
     <field name="depend_id" type="I" size="10">
