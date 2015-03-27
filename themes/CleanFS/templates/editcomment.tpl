@@ -30,7 +30,7 @@
      <?php endif; ?>
 
      <?php
-     $links = $proj->listLinks($comment['comment_id']);
+     $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
      $this->display('common.editlinks.tpl', 'links', $links);
 
     if ($user->perms('create_attachments')): ?>

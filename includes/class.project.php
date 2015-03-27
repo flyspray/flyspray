@@ -291,16 +291,16 @@ class Project
                array($cid, $tid));
     }
 
-    function listLinks($cid)
+    function listLinks($cid, $tid)
     {
         global $db;
 	return $db->cached_query(
 		'link_'.intval($cid),
 		"SELECT *
 		   FROM {links}
-		   WHERE comment_id = ?
+		   WHERE comment_id = ? AND task_id = ?
 		ORDER BY link_id ASC",
-		array($cid));
+		array($cid, $tid));
     }
 
     function listTaskAttachments($tid)
