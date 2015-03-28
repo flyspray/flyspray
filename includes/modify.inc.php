@@ -1003,7 +1003,10 @@ switch ($action = Req::val('action'))
                 'add_comments', 'edit_comments', 'delete_comments', 'show_as_assignees',
                 'create_attachments', 'delete_attachments', 'view_history', 'add_votes',
                 'close_own_tasks', 'close_other_tasks', 'assign_to_self', 'edit_own_comments',
-                'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open');
+                'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
+                'view_estimated_effort', 'view_current_effort_done', 'track_effort',
+                'add_multiple_tasks', 'view_roadmap', 'view_own_tasks', 'view_groups_tasks',
+                'edit_assignments');
         $args = array_fill(0, count($cols), '1');
         array_unshift($args, 'Project Managers',
                 'Permission to do anything related to this project.',

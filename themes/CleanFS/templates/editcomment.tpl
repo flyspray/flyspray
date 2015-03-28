@@ -4,7 +4,7 @@
   <div>
     <p><?php echo Filters::noXSS(L('commentby')); ?> <?php echo Filters::noXSS($comment['real_name']); ?> - <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></p>
     <?php 
-    $attachments = $proj->listAttachments($comment['comment_id']);
+    $attachments = $proj->listAttachments($comment['comment_id'], $comment['task_id']);
     $this->display('common.editattachments.tpl', 'attachments', $attachments); 
     
     if ($user->perms('create_attachments')): ?>
@@ -30,7 +30,7 @@
      <?php endif; ?>
 
      <?php
-     $links = $proj->listLinks($comment['comment_id']);
+     $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
      $this->display('common.editlinks.tpl', 'links', $links);
 
     if ($user->perms('create_attachments')): ?>
