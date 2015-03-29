@@ -3,7 +3,7 @@
 // an existing one, and never will.
 
 // Borg Inc. is a big multinational company delivering
-$maxproducts = 5;
+$maxproducts = 50;
 // both to it's
 $maxcorporateusers = 15;
 // and
@@ -20,7 +20,7 @@ $maxattachments = 30;
 // To handle all the resulting work, we need
 $maxadmins = 3;
 $maxmanagers = 5;
-$maxdevelopers = 20;
+$maxdevelopers = 200;
 // people working together all over the globe to care for their needs.
 
 // We also have both a very innovative and standardized naming scheme for our products.
@@ -36,7 +36,7 @@ $subjects[] = "Who is responsible for project %s?";
 
 error_reporting(E_ALL);
 
-die('Enable me by commenting this out by editing and read the contents first!'.basename(__FILE__).' at line '.__LINE__);
+// die('Enable me by commenting this out by editing and read the contents first!'.basename(__FILE__).' at line '.__LINE__);
 define('IN_FS', 1);
 
 require_once dirname(__FILE__) . '/../includes/fix.inc.php';
@@ -50,6 +50,10 @@ $conf = @parse_ini_file('../flyspray.conf.php', true) or die('Cannot open config
 
 $db = new Database;
 $db->dbOpenFast($conf['database']);
+$RANDOP = 'RAND()';
+if ($db->dblink->dataProvider == 'postgres') {
+    $RANDOP = 'RANDOM()';
+}
 
 $fs = new Flyspray();
 $user = new User(1);
@@ -79,14 +83,15 @@ for ($i = 1; $i <= $maxmanagers; $i++) {
 
 // Add 3 different Global developer groups with different
 // view rights first, then assign developers to them at random.
+// Borg Inc. has a strict hierarchy on who can see AND do what.
 
-$db->Query("INSERT INTO flyspray_groups "
+$db->Query("INSERT INTO {groups} "
         . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
         . "VALUES('Developer Group 1', 'Developer Group 1', 0, 0, 1, 1, 1, 1, 1)");
-$db->Query("INSERT INTO flyspray_groups "
+$db->Query("INSERT INTO {groups} "
         . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
         . "VALUES('Developer Group 2', 'Developer Group 2', 0, 0, 0, 1, 1, 1, 1)");
-$db->Query("INSERT INTO flyspray_groups "
+$db->Query("INSERT INTO {groups} "
         . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
         . "VALUES('Developer Group 3', 'Developer Group 3', 0, 0, 0, 0, 1, 1, 1)");
 
@@ -101,7 +106,7 @@ for ($i = 1; $i <= $maxdevelopers; $i++) {
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 }
 
-// We have been really active in the past years, and have a lot of projects.
+// We have been really active in the past years, AND have a lot of projects.
 for ($i = 1; $i <= $maxproducts; $i++) {
     $projname = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12)));
     $projname = preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
@@ -121,8 +126,37 @@ for ($i = 1; $i <= $maxproducts; $i++) {
     
 }
 
-// Assign some of the poor developers project manager rights to some projects
-
+// Assign some of the poor developers project manager or project developer
+// rights to some projects they must work on.
+for ($i = 1; $i <= $maxproducts; $i++) {
+    $projid = $i + 1;
+    $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ? AND manage_project = 1', array($projid));
+    $pmgroup = $db->FetchOne($sql);
+    $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ? AND manage_project = 0', array($projid));
+    $pdgroup = $db->FetchOne($sql);
+    
+    $pmlimit = intval($maxdevelopers / 100) + rand(-2, 2);
+    $pdlimit = intval($maxdevelopers / 20) + rand(-10, 10);
+    $pmlimit = $pmlimit < 1 ? 1 : $pmlimit;
+    $pdlimit = $pdlimit < 1 ? 1 : $pdlimit;
+    
+    $sql = $db->Query("SELECT user_id FROM {users_in_groups} WHERE group_id in (7, 8, 9) ORDER BY $RANDOP limit $pmlimit");
+    $pms = $db->fetchCol($sql);
+    $sql = $db->Query("SELECT user_id FROM {users_in_groups} WHERE group_id in (8, 9) ORDER BY $RANDOP limit $pdlimit");
+    $pds = $db->fetchCol($sql);
+    
+    foreach ($pms as $pm) {
+        $db->Query('INSERT INTO {users_in_groups} (user_id, group_id) values (?, ?)', array($pm, $pmgroup));
+    }
+    
+    foreach ($pds as $pd) {
+        $check = $db->Query('SELECT * FROM {users_in_groups} WHERE user_id = ? AND group_id = ?', array($pd, $pmgroup));
+        if (!$db->CountRows($check)) {
+            $db->Query('INSERT INTO {users_in_groups} (user_id, group_id) values (?, ?)', array($pd, $pdgroup));
+        }
+    }
+    
+}
 // Approximately 200 hundred of our projects are already closed or deleted.
 // Cannot be sure when using random...
 
@@ -130,9 +164,11 @@ for ($i = 1; $i < 200; $i++) {
     
 }
 
-// Some of our developers and project managers couldn't take all that and have already left the premises
-// No wonder, because we've got those corporate and individual users always complaining
-// and whining, not to speak about our management.
+// Some of our developers AND project managers couldn't take all that AND have already left the premises
+// No wonder, because we've got those corporate AND individual users always complaining
+// AND whining, not to speak about our management.
+
+// Create corporate users.
 for ($i = 1; $i <= $maxcorporateusers; $i++) {
     $user_name = "rep$i";
     $real_name = "Reporter $i";
@@ -143,6 +179,7 @@ for ($i = 1; $i <= $maxcorporateusers; $i++) {
 
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 }
+
 // And also those individual users...
 for ($i = 1; $i <= $maxindividualusers; $i++) {
     $user_name = "rep$i";
@@ -167,17 +204,18 @@ for ($i = 1; $i <= $maxindividualusers; $i++) {
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 }
 // But that was not enough for all needed permission, so in practice, every
-// project also has between 1 and 20 project groups.
+// project also has between 1 AND 20 project groups.
 // 
 // Must recreate, so rights for new projects get loaded. Otherwise,
-// can't create tasks.
+// even first user in database can't create tasks.
 $user = new User(1);
+
 // And that's why we've got 1000000 tasks opened within the last 10 years
 for ($i = 1; $i <= $maxtasks; $i++) {
-    $sql = $db->Query('select user_id from {users_in_groups} where group_id in (7, 8, 9) order by random() limit 1');
+    $sql = $db->Query("SELECT user_id FROM {users_in_groups} WHERE group_id in (7, 8, 9) ORDER BY $RANDOP limit 1");
     $reporter = $db->FetchOne($sql);
     $project = rand(2, $maxproducts);
-    $sql = $db->Query("select category_id from {list_category} where project_id = ? and category_name <> 'root' order by random() limit 1",
+    $sql = $db->Query("SELECT category_id FROM {list_category} WHERE project_id = ? AND category_name <> 'root' ORDER BY $RANDOP limit 1",
         array($project));
     $category = $db->FetchOne($sql);
     $opened = time() -  rand(1, 315360000);
@@ -193,7 +231,7 @@ for ($i = 1; $i <= $maxtasks; $i++) {
     // 'task_type', , 'product_version',
     // 'operating_system', , 'estimated_effort',
     // 'supertask_id',
-    $sql = $db->Query("select project_title from {projects} where project_id = ?",
+    $sql = $db->Query("SELECT project_title FROM {projects} WHERE project_id = ?",
         array($project));
     $projectname = $db->FetchOne($sql);
     $subject = $subjects[rand(0, count($subjects) - 1)];
@@ -211,13 +249,11 @@ for ($i = 1; $i <= $maxtasks; $i++) {
         $db->Query('UPDATE {tasks} SET opened_by = ?, date_opened = ? WHERE task_id = ?',
                 array($reporter, $opened, $id));
     }
-    // INSERT INTO flyspray_tasks(project_id,task_type,item_status,supertask_id) VALUES(1,1,1,0);
     
 }
-// select user_id from flyspray_users_in_groups order by random() limit 1
-// 
-// One in ten of them are unconfirmed, probably just bullshit, not assigned to anyone,
-// and we add just a comment "Cannot reproduce".
+
+// One task in ten of is unconfirmed, probably just bullshit, not assigned to anyone,
+// AND we add just a comment "Cannot reproduce".
  
 for ($i = 1; $i <= $maxtasks; $i++) {
     $taskid = $i + 1;
@@ -238,7 +274,7 @@ for ($i = 1; $i <= $maxtasks; $i++) {
 // And 5000000 attachments total, either to task or comment
 
 for ($i = 1; $i <= $maxattachments; $i++) {
-    $sql = $db->Query('select comment_id, task_id from {comments} order by random() limit 1');
+    $sql = $db->Query("SELECT comment_id, task_id FROM {comments} ORDER BY $RANDOP limit 1");
     list($comment_id, $task_id) = $db->FetchRow($sql);
     $fname = "Attachment $i";
     $origname = "Original file $i";
@@ -260,7 +296,7 @@ $db->dbClose();
 
 function add_project_data() {
     global $db;
-    
+
     $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
     $pid = $db->fetchOne($sql);
 
@@ -273,15 +309,22 @@ function add_project_data() {
         'view_estimated_effort', 'view_current_effort_done', 'track_effort',
         'add_multiple_tasks', 'view_roadmap', 'view_own_tasks', 'view_groups_tasks',
         'edit_assignments');
+
     $args = array_fill(0, count($cols), '1');
     array_unshift($args, 'Project Managers', 'Permission to do anything related to this project.', intval($pid));
-
     $db->Query("INSERT INTO  {groups}
                                  ( group_name, group_desc, project_id,
                                    " . join(',', $cols) . ")
                          VALUES  ( " . $db->fill_placeholders($cols, 3) . ")", $args);
-    // TODO: Add at least 1 project specific developer group too!
-    
+
+    // Add 1 project specific developer group too.
+    $args = array_fill(1, count($cols) - 1, '1');
+    array_unshift($args, 'Project Developers', 'Permission to do almost anything but not manage project.', intval($pid), 0);
+    $db->Query("INSERT INTO  {groups}
+                                 ( group_name, group_desc, project_id,
+                                   " . join(',', $cols) . ")
+                         VALUES  ( " . $db->fill_placeholders($cols, 3) . ")", $args);
+
     $db->Query("INSERT INTO  {list_category}
                                  ( project_id, category_name,
                                    show_in_list, category_owner, lft, rgt)
@@ -292,14 +335,103 @@ function add_project_data() {
                                    show_in_list, category_owner, lft, rgt )
                          VALUES  ( ?, ?, 1, 0, 2, 3)", array($pid, 'Backend / Core'));
 
+    // We develop software for a lot of operating systems.
+    // Add your favorite ones to the end so we get more data.
+    $os = 1;
     $db->Query("INSERT INTO  {list_os}
                                  ( project_id, os_name, list_position, show_in_list )
-                         VALUES  (?, ?, 1, 1)", array($pid, 'All'));
+                         VALUES  (?, ?, ?, 1)", array($pid, 'All', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 3.0', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 3.1', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 3.11', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 95', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows ME', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 2000', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows XP', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Vista', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 7', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 8', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 8.1', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows 10', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.0', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.1', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.2', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.3', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.4', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.5', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.6', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'OS X 10.7', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2003', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2003 R2', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2008', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2008 R2', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2012', $os++));
+    $db->Query("INSERT INTO  {list_os}
+                                 ( project_id, os_name, list_position, show_in_list )
+                         VALUES  (?, ?, ?, 1)", array($pid, 'Windows Server 2012 R2', $os++));
 
-    $db->Query("INSERT INTO  {list_version}
+    // We've got also a lot of versions.
+    // Never go over 42! It's the universal answer to everything. So in that version,
+    // every possible bug is finally solved AND every feature request implemented.
+    $totalversions = rand(3, 42);
+    $present = rand(1, $totalversions);
+    for ($i = 1; $i <= $totalversions; $i++) {
+        $tense = ($i == $present ? 2 : ($i < $present ? 1 : 3));
+        $db->Query("INSERT INTO  {list_version}
                                  ( project_id, version_name, list_position,
                                    show_in_list, version_tense )
-                         VALUES  (?, ?, 1, 1, 2)", array($pid, '1.0'));
+                         VALUES  (?, ?, ?, 1, ?)", array($pid, sprintf('%d.0', $i), $i, $tense));
+    }
 }
 
 ?>
