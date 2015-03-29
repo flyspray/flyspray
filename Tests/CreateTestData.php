@@ -11,15 +11,15 @@ $maxcorporates = 50;
 // and
 $maxindividualusers = 10;
 // who are all happy to report to us about
-$maxtasks = 1500;
+$maxtasks = 150;
 // the many problems in our products. And then there are also
 $maxviewers = 50;
 // who just like to watch what's going on here at Borg Inc.
 // Our users are also keen to add attachments to their reports and comments, so there are
-$maxattachments = 5000;
+$maxattachments = 500;
 // in our database;
 // Our users are also very active with commenting.
-$maxcomments = 7500;
+$maxcomments = 750;
 // To handle all the resulting work, we need
 $maxadmins = 3;
 $maxmanagers = 5;
@@ -32,10 +32,13 @@ $maxdevelopers = 50;
 // is even opened or the original comment made.
 
 // Add more according to your taste...
-$subjects[] = "Product %s sucks!";
-$subjects[] = "Product %s is utterly crap!";
-$subjects[] = "Developers of product %s should be hanged!";
-$subjects[] = "Who is responsible for project %s?";
+$subjects[] = "%s sucks!";
+$subjects[] = "%s is utterly crap!";
+$subjects[] = "Developers of %s should be hanged!";
+$subjects[] = "Developers of %s should be strangled!";
+$subjects[] = "Developers of %s should be eaten alive by zombies!";
+$subjects[] = "Developers of %s should be thrown in a pit of snakes!";
+$subjects[] = "Who is the idiot responsible for %s?";
 
 error_reporting(E_ALL);
 
@@ -89,28 +92,31 @@ $db->Query("UPDATE {prefs} SET pref_value = 'id project category tasktype severi
 
 // Add 3 different Global developer groups with different
 // view rights first, then assign developers to them at random.
-// Borg Inc. has a strict hierarchy on who can see AND do what.
+// Borg Inc. has a strict hierarchy on who can see and do what.
+
+// Somewhat more relaxed with our own developers.
 
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 1', 'Developer Group 1', 0, 0, 1, 1, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 1', 'Developer Group 1', 0, 1, 1, 0, 1, 1, 1, 1, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 2', 'Developer Group 2', 0, 0, 0, 1, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 2', 'Developer Group 2', 0, 1, 1, 0, 0, 1, 1, 1, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 3', 'Developer Group 3', 0, 0, 0, 0, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 3', 'Developer Group 3', 0, 1, 1, 0, 0, 0, 1, 1, 1)");
 
-// Add also general groups for corporate users, individual users and viewers
+// Add also general groups for corporate users, individual users and viewers.
+// Allow only login. Not so relaxed with them bastards.
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Corporate Users', 'Corporate Users', 0, 0, 0, 0, 0, 0, 0)");
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Corporate Users', 'Corporate Users', 0, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Trusted Users', 'Trusted Users', 0, 0, 0, 0, 0, 0, 0)");
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Trusted Users', 'Trusted Users', 0, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Non-trusted Users', 'Non-trusted Users', 0, 0, 0, 0, 0, 0, 0)");
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Non-trusted Users', 'Non-trusted Users', 0, 1)");
 
 
 for ($i = 1; $i <= $maxdevelopers; $i++) {
@@ -127,7 +133,7 @@ for ($i = 1; $i <= $maxdevelopers; $i++) {
 // We have been really active in the past years, AND have a lot of projects.
 for ($i = 1; $i <= $maxproducts; $i++) {
     $projname = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12)));
-    $projname = preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
+    $projname = 'Borg Inc. Product ' . preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
     
       $db->Query('INSERT INTO  {projects}
       ( project_title, theme_style, intro_message,
@@ -195,8 +201,8 @@ for ($i = 1; $i <= $maxcorporates; $i++) {
         if (rand(1, 20) == 1) {
             $projid = $j + 1;
             $db->Query("INSERT INTO {groups} "
-                    . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,add_comments,create_attachments,group_open) "
-                    . "VALUES('Corporate $i', 'Corporate $i Users', $projid, 0, 0, 1, 1, 1, 1, 1,1)");
+                    . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,add_comments,create_attachments,group_open,view_comments) "
+                    . "VALUES('Corporate $i', 'Corporate $i Users', $projid, 0, 0, 1, 1, 1, 1, 1,1,1)");
             $sql = $db->Query('SELECT MAX(group_id) FROM {groups}');
             $group_id = $db->FetchOne($sql);
             // Then, add users
@@ -295,20 +301,31 @@ for ($i = 1; $i <= $maxcomments; $i++) {
     $task = Flyspray::GetTaskDetails($taskid, true);
     $project = $task['project_id'];
     $added = time() -  rand(1, 315360000);
-     // Find someone who is allowed to add comment, do not use global groups
-    $sql = $db->Query("SELECT uig.user_id
+    // Find someone who is allowed to add comment, do not use global groups
+    $sqltext = "SELECT uig.user_id
                          FROM {users_in_groups} uig
                          JOIN {groups} g ON g.group_id = uig.group_id AND g.add_comments = 1
                           AND (g.project_id = 0 OR g.project_id = ?)
                         WHERE g.group_id NOT IN (1, 2, 7, 8, 9)
-                     ORDER BY $RANDOP LIMIT 1", array($project));
-   $reporter = $db->FetchOne($sql);
-   $comment = 'Comment.';
-   Backend::add_comment($task, $comment);
-   $sql = $db->Query('SELECT MAX(comment_id) FROM {comments}');
-   $comment_id = $db->FetchOne($sql);
-   $db->Query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
-                array($reporter, $added, $comment_id));
+                     ORDER BY $RANDOP ";
+    $sql = $db->Query($sqltext, array($project));
+    $row = $db->FetchRow($sql);
+    $reporter = new User($row['user_id']);
+   
+    // User might still not be able to add a comment, if he can not see the task...
+    // Just try again until a suitable one comes out from the query. It will finally.
+    // Try to enhance the query also to return fewer unsuitable ones.
+    while (!$reporter->can_view_task($task)) {
+        $row = $db->FetchRow($sql);
+        $reporter = new User($row['user_id']);
+    }
+   
+    $comment = 'Comment.';
+    Backend::add_comment($task, $comment);
+    $sql = $db->Query('SELECT MAX(comment_id) FROM {comments}');
+    $comment_id = $db->FetchOne($sql);
+    $db->Query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
+                array($reporter->id, $added, $comment_id));
 }
 
 // And 5000000 attachments total, either to task or comment
@@ -332,23 +349,74 @@ for ($i = 1; $i <= $maxattachments; $i++) {
         $user_id, $date_added));
 }
 function GetAttachmentDescription() {
-    $type = rand(0, 20);
-    if ($type == 1) {
+    $type = rand(1, 100);
+    if ($type > 80 && $type <= 100) {
         return 'Information that might help solve the problem';
     }
-    elseif ($type == 2) {
+    elseif ($type == 79) {
         return 'Pic of my pet alligator';
     }
-    elseif ($type == 3) {
+    elseif ($type == 78) {
         return 'Pic of my pet rhinoceros';
     }
-    elseif ($type == 4) {
+    elseif ($type == 77) {
         return 'Pic of my pet elephant';
     }
-    elseif ($type == 5 || $type == 6) {
+    elseif ($type == 76 || $type == 75) {
         return 'Pic of my pet monkey';
     }
-    elseif ($type == 7 || $type == 8 || $type == 9 || $type == 10) {
+    elseif ($type == 74 || $type == 73) {
+        return 'Pic of my undulate';
+    }
+    elseif ($type == 72 || $type == 71) {
+        return 'Pic of my goldfish';
+    }
+    elseif ($type == 70 || $type == 69) {
+        return 'Pic of my pet pig';
+    }
+    elseif ($type == 68 || $type == 67) {
+        return 'Pic of my pet snake';
+    }
+    elseif ($type == 66 || $type == 65) {
+        return 'Pic of my pet rat';
+    }
+    elseif ($type == 64 || $type == 63) {
+        return 'Pic of my pet goat';
+    }
+    elseif ($type == 62 || $type == 61) {
+        return 'Pic of my pet rabbit';
+    }
+    elseif ($type == 60 || $type == 59) {
+        return 'Pic of my pet gerbil';
+    }
+    elseif ($type == 58 || $type == 57) {
+        return 'Pic of my pet hamster';
+    }
+    elseif ($type == 56 || $type == 55) {
+        return 'Pic of my pet chinchilla';
+    }
+    elseif ($type == 54 || $type == 53) {
+        return 'Pic of my pet guinea pig';
+    }
+    elseif ($type == 52 || $type == 51) {
+        return 'Pic of my pet turtle';
+    }
+    elseif ($type == 50 || $type == 49) {
+        return 'Pic of my pet lizard';
+    }
+    elseif ($type == 48 || $type == 47) {
+        return 'Pic of my pet frog';
+    }
+    elseif ($type == 46 || $type == 45) {
+        return 'Pic of my pet tarantula';
+    }
+    elseif ($type == 44 || $type == 43) {
+        return 'Pic of my pet hermit crab';
+    }
+    elseif ($type == 42 || $type == 41) {
+        return 'Pic of my pet parrot';
+    }
+    elseif ($type >= 40 && $type < 25) {
         return 'Pic of my dog';
     }
     else {
