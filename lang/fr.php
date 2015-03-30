@@ -1000,6 +1000,7 @@ $translation = array(
 'ascending'               => 'Ascendant',
 'descending'              => 'Descendant',
 'myassignedtasks'         => 'Mes tâches',
+'commentedon'             => 'a commenté le'
 );
 
 ?>
