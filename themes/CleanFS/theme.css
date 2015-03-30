@@ -1,5 +1,6 @@
 /* ------------------ IMPORTS -------------------- */
 @import url("../../js/jscalendar/calendar-system.css");
+@import url("./fonts/octicons/octicons.css");
 /*@import url("calendar.css");*/
 /* reset.css - Resets default browser CSS.
 putting it here saves one extra http request.
