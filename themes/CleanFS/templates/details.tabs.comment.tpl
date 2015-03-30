@@ -10,7 +10,6 @@
 							<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=editcomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;id=<?php echo Filters::noXSS($comment['comment_id']); ?>" title="<?php echo Filters::noXSS(L('edit')); ?>"><span class="octicon octicon-pencil"></span></a>
 						<?php endif; ?>
 						<?php if ($user->perms('delete_comments')): ?>
-
 							<input type="hidden" name="action" value="details.deletecomment"/>
 							<input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>"/>
 							<?php $confirm = (isset($comment_attachments[$comment['comment_id']])) ? sprintf(L('confirmdeletecomment'), L('attachementswilldeleted')) : sprintf(L('confirmdeletecomment'), '')  ?>
@@ -41,13 +40,13 @@
 				</div>
 				<div class="commenttext">
 					<?php echo tpl_form(CreateUrl('details', $task_details['task_id']), 'comment', 'post', 'multipart/form-data'); ?>
+					<input type="hidden" name="action" value="details.addcomment" />
+					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS(Req::val('task_id', $task_details['task_id'])); ?>" />
 					<?php if (!$watched): ?>
 						<?php echo tpl_checkbox('notifyme', Req::val('notifyme', !(Req::val('action') == 'details.addcomment')), 'notifyme'); ?> <label class="left" for="notifyme"><?php echo Filters::noXSS(L('notifyme')); ?></label>
 					<?php endif; ?>
 					<button accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('addcomment')); ?></button>
 					<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
-					<input type="hidden" name="action" value="details.addcomment" />
-					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS(Req::val('task_id', $task_details['task_id'])); ?>" />
 					<div id="addlinkbox">
 						<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
 							<?php echo Filters::noXSS(L('addalink')); ?>
@@ -86,6 +85,7 @@
 							</noscript>
 						</div>
 					<?php endif; ?>
+					</form>
 				</div>
 			</div>
 		</div>
