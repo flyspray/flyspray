@@ -664,26 +664,95 @@ form #taskdetails #taskdetailsfull {
 #submenu li {display: inline;}
 div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
 * html .tab div.clear {clear: none;height: 14em;}
-div.comment_container {
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #e1e1e1;
+
+div.comment_container
+{
+	margin: 5px;
 }
-div.comment_container .commenttext p{margin: .5em 0 .5em 0;padding: 0;}
-div.comment_container .comment {margin-left: 235px;}
-div.comment_container .attachments {
-  margin: 10px 0px 10px 0px;
-  padding: 10px;
-  background: white;
-  border: solid 1px #e1e1e1;
-  border-radius: 3px;
-  width: 350px;
-  background-color: #fefefe;
-  background-image: url(img/gray/pin_24x24.png);
-  background-repeat: no-repeat;
-  background-position: 340px 5px;
+
+div.comment_container .comment_avatar
+{
+	min-width: 50px;
+	display: inline-block;
 }
-div.comment_container .attachments img {position: relative;top: 4px;}
+
+div.comment_container .comment
+{
+	display: inline-block;
+	margin-left: 5px;
+	border: 1px solid #e1e1e1;
+	vertical-align: top;
+	width: 700px;
+	border-radius: 3px;
+}
+
+div.comment_container .comment_header
+{
+	min-height: 30px;
+	background-color: #f1f1f1;
+	line-height: 30px;
+	vertical-align: middle;
+	padding-left: 10px;
+}
+
+div.comment_container .comment_header_infos
+{
+	max-width: 70%;
+}
+
+div.comment_container .comment_header_actions
+{
+	float: right;
+	margin-right: 5px;
+}
+
+div.comment_container .commenttext
+{
+	clear: both;
+	padding: 10px;
+}
+
+div.comment_container .attachments
+{
+	float: right;
+	margin: 10px 0px 10px 0px;
+	padding: 10px;
+	background: white;
+	border: solid 1px #e1e1e1;
+	border-radius: 3px;
+	width: 350px;
+	background-color: #fefefe;
+	background-image: url(img/gray/pin_24x24.png);
+	background-repeat: no-repeat;
+	background-position: 340px 5px;
+}
+
+div.comment_container .attachments img
+{
+	position: relative;
+	top: 4px;
+}
+
+div.comment_container .attachments img
+{
+	position: relative;
+	top: 4px;
+}
+
+div.comment_container #addlinkbox
+{
+	display: inline-block;
+	width: 50%;
+	vertical-align: top;
+}
+
+div.comment_container #uploadfilebox
+{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+}
+
 div.comment_container .commentlink {
   background-image: url(img/gray/comment_stroke_16x14.png);
   background-repeat: no-repeat;
@@ -1237,7 +1306,7 @@ span.warning {
 
 button.fakelinkbutton
 {
-	display: inline;
+	display: inline-block;
 	background: none;
 	border: none;
 	padding: 0;
