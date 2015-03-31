@@ -11,6 +11,10 @@
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($comment['task_id']); ?>" />
 				<input type="hidden" name="comment_id" value="<?php echo Filters::noXSS($comment['comment_id']); ?>" />
 				<input type="hidden" name="previous_text" value="<?php echo Filters::noXSS($comment['comment_text']); ?>" />
+				<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+					<div class="hide preview" id="preview"></div>
+					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+				<?php endif; ?>
 				<button accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
 				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text'), $comment['comment_text']); ?>
 				<div id="addlinkbox">

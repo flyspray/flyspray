@@ -40,10 +40,16 @@
 				</div>
 				<div class="commenttext">
 					<?php echo tpl_form(CreateUrl('details', $task_details['task_id']), 'comment', 'post', 'multipart/form-data'); ?>
+					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+						<div class="hide preview" id="preview"></div>
+					<?php endif; ?>
 					<input type="hidden" name="action" value="details.addcomment" />
 					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS(Req::val('task_id', $task_details['task_id'])); ?>" />
 					<?php if (!$watched): ?>
 						<?php echo tpl_checkbox('notifyme', Req::val('notifyme', !(Req::val('action') == 'details.addcomment')), 'notifyme'); ?> <label class="left" for="notifyme"><?php echo Filters::noXSS(L('notifyme')); ?></label>
+					<?php endif; ?>
+					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+						<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 					<?php endif; ?>
 					<button accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('addcomment')); ?></button>
 					<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
