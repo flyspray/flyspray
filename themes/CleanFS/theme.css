@@ -1,5 +1,6 @@
 /* ------------------ IMPORTS -------------------- */
 @import url("../../js/jscalendar/calendar-system.css");
+@import url("./fonts/octicons/octicons.css");
 /*@import url("calendar.css");*/
 /* reset.css - Resets default browser CSS.
 putting it here saves one extra http request.
@@ -664,26 +665,122 @@ form #taskdetails #taskdetailsfull {
 #submenu li {display: inline;}
 div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
 * html .tab div.clear {clear: none;height: 14em;}
-div.comment_container {
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #e1e1e1;
+
+div.comment_container
+{
+	margin: 5px;
 }
-div.comment_container .commenttext p{margin: .5em 0 .5em 0;padding: 0;}
-div.comment_container .comment {margin-left: 235px;}
-div.comment_container .attachments {
-  margin: 10px 0px 10px 0px;
-  padding: 10px;
-  background: white;
-  border: solid 1px #e1e1e1;
-  border-radius: 3px;
-  width: 350px;
-  background-color: #fefefe;
-  background-image: url(img/gray/pin_24x24.png);
-  background-repeat: no-repeat;
-  background-position: 340px 5px;
+
+div.comment_container .comment_avatar
+{
+	min-width: 50px;
+	display: inline-block;
 }
-div.comment_container .attachments img {position: relative;top: 4px;}
+
+div.comment_container .comment
+{
+	position: relative;
+	display: inline-block;
+	margin-left: 10px;
+	border: 1px solid #e1e1e1;
+	vertical-align: top;
+	width: 700px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+div.comment_container .comment:before
+{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: -20px;
+	top: 3px;
+	border: 10px solid;
+	border-color: transparent #e1e1e1 transparent transparent;
+}
+
+div.comment_container .comment:after
+{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: -16px;
+	top: 5px;
+	border: 8px solid;
+	border-color: transparent #f1f1f1 transparent transparent;
+}
+
+div.comment_container .comment_header
+{
+	min-height: 30px;
+	background-color: #f1f1f1;
+	line-height: 30px;
+	vertical-align: middle;
+	padding-left: 10px;
+}
+
+div.comment_container .comment_header_infos
+{
+	max-width: 70%;
+}
+
+div.comment_container .comment_header_actions
+{
+	float: right;
+	margin-right: 5px;
+}
+
+div.comment_container .commenttext
+{
+	clear: both;
+	padding: 10px;
+}
+
+div.comment_container .attachments
+{
+	float: right;
+	margin: 10px 0px 10px 0px;
+	padding: 10px;
+	background: white;
+	border: solid 1px #e1e1e1;
+	border-radius: 3px;
+	width: 350px;
+	background-color: #fefefe;
+	background-image: url(img/gray/pin_24x24.png);
+	background-repeat: no-repeat;
+	background-position: 340px 5px;
+}
+
+div.comment_container .attachments img
+{
+	position: relative;
+	top: 4px;
+}
+
+div.comment_container .attachments img
+{
+	position: relative;
+	top: 4px;
+}
+
+div.comment_container #addlinkbox
+{
+	display: inline-block;
+	width: 50%;
+	vertical-align: top;
+}
+
+div.comment_container #uploadfilebox
+{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+}
+
 div.comment_container .commentlink {
   background-image: url(img/gray/comment_stroke_16x14.png);
   background-repeat: no-repeat;
@@ -1237,7 +1334,7 @@ span.warning {
 
 button.fakelinkbutton
 {
-	display: inline;
+	display: inline-block;
 	background: none;
 	border: none;
 	padding: 0;
