@@ -21,11 +21,11 @@
 				</div>
 				<div class="commenttext">
 					<?php echo TextFormatter::render($comment['comment_text'], 'comm', $comment['comment_id'], $comment['content']); ?>
-					<?php if (isset($comment_attachments[$comment['comment_id']])) {
-						$this->display('common.attachments.tpl', 'attachments', $comment_attachments[$comment['comment_id']]);
-					}?>
 					<?php if (isset($comment_links[$comment['comment_id']])) {
 						$this->display('common.links.tpl', 'links', $comment_links[$comment['comment_id']]);
+					}?>
+					<?php if (isset($comment_attachments[$comment['comment_id']])) {
+						$this->display('common.attachments.tpl', 'attachments', $comment_attachments[$comment['comment_id']]);
 					}?>
 				</div>
 			</div>
