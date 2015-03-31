@@ -696,9 +696,9 @@ div.comment_container .comment:before
 	position: absolute;
 	width: 0;
 	height: 0;
-	left: -20px;
+	left: -16px;
 	top: 3px;
-	border: 10px solid;
+	border: 8px solid;
 	border-color: transparent #e1e1e1 transparent transparent;
 }
 
@@ -708,9 +708,9 @@ div.comment_container .comment:after
 	position: absolute;
 	width: 0;
 	height: 0;
-	left: -16px;
+	left: -12px;
 	top: 5px;
-	border: 8px solid;
+	border: 6px solid;
 	border-color: transparent #f1f1f1 transparent transparent;
 }
 
@@ -742,17 +742,34 @@ div.comment_container .commenttext
 
 div.comment_container .attachments
 {
-	float: right;
-	margin: 10px 0px 10px 0px;
+	display: inline-block;
+	width: 45%;
+	margin-top: 10px;
 	padding: 10px;
 	background: white;
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
-	width: 350px;
+	width: 300px;
 	background-color: #fefefe;
 	background-image: url(img/gray/pin_24x24.png);
 	background-repeat: no-repeat;
-	background-position: 340px 5px;
+	background-position: 270px 5px;
+	vertical-align: top;
+}
+
+div.comment_container .links
+{
+	display: inline-block;
+	width: 45%;
+	margin-right: 3%;
+	margin-top: 10px;
+	padding: 10px;
+	background: white;
+	border: solid 1px #e1e1e1;
+	border-radius: 3px;
+	width: 300px;
+	background-color: #fefefe;
+	vertical-align: top;
 }
 
 div.comment_container .attachments img

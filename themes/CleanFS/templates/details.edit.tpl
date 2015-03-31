@@ -24,7 +24,7 @@
 		<?php } ?>
 	            <label for="status"><?php echo Filters::noXSS(L('status')); ?></label>
 	            <select id="status" name="item_status" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
-	              <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED))); ?>
+	              <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? $task_details['item_status'] : STATUS_UNCONFIRMED))); ?>
 
 	            </select>
 			</li>
