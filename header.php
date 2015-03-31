@@ -47,7 +47,7 @@ if (Flyspray::base_version($fs->version) != Flyspray::base_version($fs->prefs['f
 }
 
 if (is_readable(BASEDIR . '/setup/index.php') && strpos($fs->version, 'dev') === false) {
-        die('<div style="text-align:center;padding:20px;font-family:sans-serif;font-size:16px;"><p>Please empty the folder "'.BASEDIR.DIRECTORY_SEPARATOR.'setup"  before you start using Flyspray</p>
+        die('<div style="text-align:center;padding:20px;font-family:sans-serif;font-size:16px;">
 <p>If you are upgrading, please <a href="setup/upgrade.php"
 style="
 margin:2em;
@@ -64,7 +64,25 @@ font-weight: bold;
 line-height: 130%;
 padding: 8px 13px 8px 10px;
 text-decoration: none;
-">Go to the upgrade settings</a></p>');
+">Go to the upgrade settings</a></p>
+<p>If you have finished Flyspray installation or an upgrade, please <a href="setup/cleanupaftersetup.php"
+style="
+margin:2em;
+background-color: white;
+border: 1px solid #bbb;
+border-radius: 4px;
+box-shadow: 0 1px 1px #ddd;
+color: #565656;
+cursor: pointer;
+display: inline-block;
+font-family: sans-serif;
+font-size: 100%;
+font-weight: bold;
+line-height: 130%;
+padding: 8px 13px 8px 10px;
+text-decoration: none;
+">Remove the folder '.DIRECTORY_SEPARATOR.'setup</a> before you start using Flyspray</p>
+');
 }
 
 // Any "do" mode that accepts a task_id or id field should be added here.
