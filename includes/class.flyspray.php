@@ -363,8 +363,8 @@ class Flyspray
         }
 
         if ($get_details = $db->FetchRow($get_details)) {
-            $get_details += array('severity_name' => $fs->severities[$get_details['task_severity']]);
-            $get_details += array('priority_name' => $fs->priorities[$get_details['task_priority']]);
+            $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
+            $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
         }
 
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
