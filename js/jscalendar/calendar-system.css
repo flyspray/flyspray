@@ -51,6 +51,7 @@
   text-align: center;
   background: ButtonFace;
   color: ButtonText;
+  cursor:pointer;
 }
 
 .calendar thead .weekend { /* How a weekend day name shows in header */
@@ -58,14 +59,10 @@
 }
 
 .calendar thead .hilite { /* How do the buttons in header appear when hover */
-  border: 2px solid;
-  padding: 0px;
   border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
 }
 
 .calendar thead .active { /* Active (pressed) buttons in header */
-  border-width: 1px;
-  padding: 2px 0px 0px 2px;
   border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
 }
 
@@ -75,6 +72,7 @@
   width: 2em;
   text-align: right;
   padding: 2px 4px 2px 2px;
+  cursor:pointer;
 }
 .calendar tbody .day.othermonth {
   font-size: 80%;
@@ -102,13 +100,11 @@
 }
 
 .calendar tbody td.active { /* Active (pressed) cells <TD> */
-  border: 1px solid;
   border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
 }
 
 .calendar tbody td.selected { /* Cell showing selected date */
   font-weight: bold;
-  border: 1px solid;
   border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
   background: ButtonFace;
   color: ButtonText;
