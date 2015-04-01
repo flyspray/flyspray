@@ -1260,10 +1260,10 @@ div.denyform {
 
 /* Stuff for the autocomplete lists {{{ */
 span.autocomplete {
-	background-color:#F5F5F5;
+	background-color:#fff;
 	position: absolute;
 	width: auto !important;
-	border:1px solid gray;
+	box-shadow:0 5px 7px #ccc;
 	padding: 0px;
 	margin:-1px 0 0;
 	text-align:left;
@@ -1283,8 +1283,7 @@ span.autocomplete ul li {
 	white-space:nowrap;
 }
 span.autocomplete ul li span.informal {
-	color: darkgray;
-	font-size:0.9em;
+	color: #333;
 }
 span.autocomplete ul li.selected {
 	background-color: #5F9729;
