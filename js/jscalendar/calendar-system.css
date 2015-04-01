@@ -34,10 +34,9 @@
 
 .calendar thead .title { /* This holds the current "month, year" */
   font-weight: bold;
-  padding: 1px;
-  border: 1px solid #000;
-  background: ActiveCaption;
+/*  background: ActiveCaption;
   color: CaptionText;
+*/
   text-align: center;
 }
 
@@ -49,14 +48,13 @@
 
 .calendar thead .name { /* Cells <TD> containing the day names */
   border-bottom: 1px solid ButtonShadow;
-  padding: 2px;
   text-align: center;
   background: ButtonFace;
   color: ButtonText;
 }
 
 .calendar thead .weekend { /* How a weekend day name shows in header */
-  color: #f00;
+  color: #999;
 }
 
 .calendar thead .hilite { /* How do the buttons in header appear when hover */
@@ -94,15 +92,13 @@
 }
 
 .calendar tbody .rowhilite td {
+/*  think it is a bit annoying
   background: Highlight;
   color: HighlightText;
+*/
 }
 
 .calendar tbody td.hilite { /* Hovered cells <TD> */
-  border-top: 1px solid #fff;
-  border-right: 1px solid #000;
-  border-bottom: 1px solid #000;
-  border-left: 1px solid #fff;
 }
 
 .calendar tbody td.active { /* Active (pressed) cells <TD> */
@@ -119,12 +115,14 @@
 }
 
 .calendar tbody td.weekend { /* Cells showing weekend days */
-  color: #f00;
+  color: #666;
+  background-color:#ddd;
 }
 
 .calendar tbody td.today { /* Cell showing today date */
   font-weight: bold;
-  color: #00f;
+  background-color: #78bf34;
+  color:#000;
 }
 
 .calendar tbody td.disabled { color: GrayText; }
@@ -152,20 +150,7 @@
 }
 
 .calendar tfoot .hilite { /* Hover style for buttons in footer */
-  border-top: 1px solid #fff;
-  border-right: 1px solid #000;
-  border-bottom: 1px solid #000;
-  border-left: 1px solid #fff;
-  padding: 1px;
   background: #e4e0d8;
-}
-
-.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
-  padding: 2px 0px 0px 2px;
-  border-top: 1px solid #000;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-  border-left: 1px solid #000;
 }
 
 /* Combo boxes (menus that display months/years for direct selection) */
