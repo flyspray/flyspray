@@ -1518,7 +1518,7 @@ GROUP BY $groupby
 $having
 ORDER BY $sortorder";
 
-	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext)", $sql_params);
+	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext) c", $sql_params);
 	$totalcount = $db->FetchOne($sql);
 
 	$sql = $db->Query($sql, $sql_params);
