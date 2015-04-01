@@ -40,7 +40,7 @@ header("Pragma: no-cache");
 			echo 'Download done'.'<br>';
 			$argv = array('--disable-tls'); # just for avoiding warnings
 			?>
-			<h3>Step 2: Trying to load composerinstaller into the running php script</h3>';
+			<h3>Step 2: Trying to load composerinstaller into the running php script</h3>
 			<p>Wait a few seconds until composerinstaller put his output under the button. If looking good go to step 3.</p>
 			<a href="composerit2.php" class="button" style="padding:1em;font-size:1em">Install dependencies</a>
 			<pre>
