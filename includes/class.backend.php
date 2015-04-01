@@ -1525,6 +1525,7 @@ ORDER BY $sortorder";
 	
 	# we cannot just fetchall on huge task lists into array/memory.
 	#$tasks = $db->fetchAllArray($sql);
+	$tasks = array();
 	$id_list = array();
 	$task_count = 0;
 	$totalcount=0;
