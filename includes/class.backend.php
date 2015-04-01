@@ -1521,7 +1521,7 @@ ORDER BY $sortorder";
 	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext) c", $sql_params);
 	$totalcount = $db->FetchOne($sql);
 
-	$sql = $db->Query($sql, $sql_params);
+	$sql = $db->Query($sqltext, $sql_params);
 	
 	# we cannot just fetchall on huge task lists into array/memory.
 	#$tasks = $db->fetchAllArray($sql);
