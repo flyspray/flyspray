@@ -49,7 +49,12 @@ header("Pragma: no-cache");
 			# Ok, composerinstaller exits itself, so no more code needed here, but it looks more complete :-)
 			echo '</pre>';
 		} else {
-			shell_exec('php -r "readfile(\'https://getcomposer.org/installer\');" | php');
+			$phpexe='php';
+			# TODO: autodetect the matching commandline php on the host matching the php version of the webserver
+			# Any idea? Using $_SERVER['PHP_PEAR_SYSCONF_DIR'] or $_SERVER['PHPRC'] for detecting can help a bit, but weak hints..
+			# This is just a demo for installing flyspray within xampp on Windows, installed on drive d:
+			#$phpexe='d:/xampp/php/php.exe';
+			shell_exec($phpexe.' -r "readfile(\'https://getcomposer.org/installer\');" | '.$phpexe);
 			if (!is_readable('composer.phar')) {
 				die('Composer installer download failed! Please consider downloading vendors directly from Flyspray support website');
 			}
