@@ -1530,7 +1530,7 @@ ORDER BY $sortorder";
 	$totalcount=0;
 	$forbidden_tasks_count=0;
 	while ($task = $sql->FetchRow()) {
-		if ($user->can_view_task($task){
+		if ($user->can_view_task($task)){
 			if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
 				$id_list[] = $task['task_id'];
 				$tasks[]=$task;
