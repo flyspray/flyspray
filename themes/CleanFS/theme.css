@@ -1259,7 +1259,7 @@ div.denyform {
 #rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
-span.autocomplete {
+.autocomplete {
 	background-color:#fff;
 	position: absolute;
 	width: auto !important;
@@ -1269,27 +1269,34 @@ span.autocomplete {
 	text-align:left;
 	display:block;
 }
-span.autocomplete ul {
+.autocomplete ul {
 	list-style-type: none;
 	margin: 0px;
 	padding: 0px;
 }
-span.autocomplete ul li {
+.autocomplete ul li {
 	list-style-type: none;
 	display: block;
 	margin: 0;
-	padding:2px 4px;
-	height: 1.1em;
+	padding:0;
+	height: 25px;
 	white-space:nowrap;
+	vertical-align:middle;
 }
-span.autocomplete ul li span.informal {
+.autocomplete ul li span.informal {
 	color: #333;
 }
-span.autocomplete ul li.selected {
+.autocomplete ul li.selected {
 	background-color: #5F9729;
 	cursor:pointer;
 	color:HighlightText;
 }
+.autocomplete img, .autocomplete .noavatar{
+	width:25px;
+	height:25px;
+	display:inline-block;
+}
+
 #actionbuttons {
 	margin-left: 300px;
 	margin-top: 15px;
