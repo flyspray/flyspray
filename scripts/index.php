@@ -174,7 +174,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 
         case 'severity':
-            $value = $task['task_severity']==0 ? '' : $fs-severities[$task['task_severity']];
+            $value = $task['task_severity']==0 ? '' : $fs->severities[$task['task_severity']];
             $class.=' sev'.$task['task_severity'];
             break;
 
