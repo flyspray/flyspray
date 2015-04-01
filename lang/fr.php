@@ -97,7 +97,7 @@ $translation = array(
 'defaultproject'          => 'Projet par défaut',
 'projectlists'            => 'Listes du projet',
 'showlogo'                => 'Afficher le logo',
-'showgravatars'           => 'Afficher les avatars',
+'showgravatars'           => 'Afficher les gravatars',
 'emailNoHTML'             => 'Désactiver HTML dans les emails',
 'intromessage'            => 'Message d\'accueil',
 'isactive'                => 'Le projet est actif',
@@ -1000,6 +1000,7 @@ $translation = array(
 'ascending'               => 'Ascendant',
 'descending'              => 'Descendant',
 'myassignedtasks'         => 'Mes tâches',
+'commentedon'             => 'a commenté le'
 );
 
 ?>

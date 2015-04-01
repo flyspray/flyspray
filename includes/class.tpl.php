@@ -293,7 +293,7 @@ function tpl_userlink($uid)
 
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
-	global $db, $user;
+	global $db, $user, $baseurl;
 	if (is_array($uid)) {
 		list($uid, $uname, $rname) = $uid;
 	}
@@ -302,27 +302,26 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		array(intval($uid)));
 	if ($sql && $db->countRows($sql)) {
 		list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
-	}else {
+	} else {
 		return;
 	}
 
 	$email = md5(strtolower(trim($email)));
 	$default = 'mm';
 
-	if(is_file(BASEDIR.'/avatars/'.$profile_image)) {
-		$image = "<img src='./avatars/".$profile_image."' width='".$size."' height='".$size."'/>";
+	if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
+		$image = '<img src="'.$baseurl.'/avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
 	} else {
-		if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
+		if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
 			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
 			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
-		}else{
+		} else {
 			$image = '';
 		}
 	}
 
 	if (isset($uname)) {
 		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		//$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
 		$link = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 	}
 	return $link;
