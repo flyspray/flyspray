@@ -54,6 +54,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="deny_reason" type="C" size="255" />
+    <index name="resolved_project">
+      <col>resolved_by</col>
+      <col>project_id</col>
+    </index>
   </table>
   <table name="assigned">
     <field name="assigned_id" type="I" size="10">
@@ -177,6 +181,9 @@
     </field>
     <index name="task_id_comments">
       <col>task_id</col>
+    </index>
+    <index name="user_id_comments">
+      <col>user_id</col>
     </index>
   </table>
   <table name="dependencies">
@@ -401,6 +408,12 @@
     <field name="new_value" type="X" />
     <index name="idx_task_id">
       <col>task_id</col>
+    </index>
+    <index name="idx_event_date">
+      <col>event_date</col>
+    </index>
+    <index name="idx_event_type">
+      <col>event_type</col>
     </index>
   </table>
   <table name="list_category">

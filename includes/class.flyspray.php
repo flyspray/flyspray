@@ -363,8 +363,8 @@ class Flyspray
         }
 
         if ($get_details = $db->FetchRow($get_details)) {
-            $get_details += array('severity_name' => $fs->severities[$get_details['task_severity']]);
-            $get_details += array('priority_name' => $fs->priorities[$get_details['task_priority']]);
+            $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
+            $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
         }
 
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
@@ -754,11 +754,11 @@ class Flyspray
 			$result = @ldap_search($rs, $base_dn, $filter_r);
 			if (!$result){ // ldap search returned nothing or error
 				return false;
-			} 
+			}
 			$result_user = ldap_get_entries($rs, $result);
 			if ($result_user["count"] == 0){ // No users match the filter
 				return false;
-			} 
+			}
 			$first_user = $result_user[0];
 			$ldap_user_dn = $first_user["dn"];
 			// Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
@@ -1271,22 +1271,6 @@ class Flyspray
         }
 
         return $return;
-    }
-
-    /**
-     * getSvnRev
-     *  For internal use
-     * @access public
-     * @return string
-     */
-    public static function getSvnRev()
-    {
-        if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
-
-            return sprintf('r%d',file_get_contents(BASEDIR .'/REVISION'));
-        }
-
-        return '';
     }
 
     public static function weedOutTasks($user, $tasks) {

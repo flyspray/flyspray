@@ -963,7 +963,6 @@ $translation = array(
 'hour'                    => 'Stunde',
 'hourabbrev'              => 'h',
 'estimatedeffortopen'     => 'geschätzter Arbeitsaufwand offener Aufgaben',
-'actualeffortopen'        => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
 'currenteffortdoneopen'   => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
 'signinwith'              => 'Anmelden mit %s',
 'canviewroadmap'          => 'darf Planung anschauen',
@@ -989,7 +988,24 @@ $translation = array(
 'addmorerows'             => 'weitere Zeilen einfügen',
 'addtasks'                => 'Aufgaben eintragen',
 'massopsdisabled'         => 'Die Massenbearbeitung von Aufgaben ist derzeit abgeschaltet für Flyspray 1.0. Diese Fähigkeit wird wieder freigeschaltet, sobald die Überarbeitung abgeschlossen ist.',
-'viewroadmap'             => 'Planung anschauen'
+'viewroadmap'             => 'Planung anschauen',
+'attachementswilldeleted' => 'Alle Anhänge werden ebenfalls gelöscht!',
+'supertaskremoved'        => 'Übergeordnete Aufgabe gelöscht',
+'nosuicide'               => 'Sehr geehrter Nutzer, es ist nicht erlaubt Ihren Zugang zu Flyspray zu zerstören in dem Sie Ihr eigenes Konto deaktivieren oder Ihre Gruppe wechseln. The empathic brother of HAL9000',
+'musthavesameproject'     => 'Ober- und Unteraufgabe müssen das gleiche Projekt haben.',
+'defaultorderby'          => 'Tasksliste standardmäßig sortieren nach',
+'viewowntasks'            => 'Eigene Tasks anzeigen',
+'viewgroupstasks'         => 'Gruppen Tasks anzeigen',
+'urlrewriting'            => 'URL Rewriting',
+'enablehtaccess'          => 'Bitte aktivieren Sie Ihre .htaccess Datei im Flyspray Hauptverzeichnis bevor Sie "url rewriting" anwenden',
+'nomodrewrite'            => 'Der "Mod rewrite" ist nicht auf Ihrem Server verfügbar, daher kann "url rewriting" nicht angewendet werden',
+'on'                      => 'Aktiviert',
+'off'                     => 'Deaktiviert',
+'ascending'               => 'Aufsteigend',
+'descending'              => 'Absteigend',
+'myassignedtasks'         => 'Meine Aufgaben',
+'defaultorderbydirection' => 'Standardmäßig sotiert als',
+'movingtodifferentproject'=> 'Verschieben von einer Aufgabe zu einem anderen Projekt welche eine Ober- oder Unteraufgabe ist, ist nicht erlaubt. Sie müssen erst die Verbindung zwischen den Aufgaben trennen.'
 );
 
 ?>
