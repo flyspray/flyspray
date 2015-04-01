@@ -266,8 +266,12 @@ else {
         $page->pushTpl('details.tabs.remind.tpl');
     }
 
+	if ($proj->prefs['use_effort_tracking']) {
+		$page->pushTpl('details.tabs.efforttracking.tpl');
+	}
+	
     $page->pushTpl('details.tabs.history.tpl');
-
-    $page->pushTpl('details.tabs.efforttracking.tpl');
+    
+	
 }
 ?>
