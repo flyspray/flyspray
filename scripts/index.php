@@ -174,12 +174,12 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 
         case 'severity':
-            $value = $fs->severities[$task['task_severity']];
+            $value = $task['task_severity']==0 ? '' : $fs-severities[$task['task_severity']];
             $class.=' sev'.$task['task_severity'];
             break;
 
         case 'priority':
-            $value = $fs->priorities[$task['task_priority']];
+            $value = $task['task_priority']==0 ? '' : $fs->priorities[$task['task_priority']];
             $class.=' pri'.$task['task_priority'];
             break;
 
