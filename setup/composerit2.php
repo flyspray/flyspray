@@ -45,7 +45,11 @@ header("Pragma: no-cache");
 			# echo '</pre>';
 
 			# without chdir('..');
-			$cmd2 = 'php composer.phar --working-dir=.. install';
+			$phpexe='php';
+			# TODO: autodetect the matching commandline php on the host matching the php version of the webserver
+			# This is just a demo for installing flyspray within xampp on Windows, installed on drive d:
+			$phpexe='d:/xampp/php/php.exe';
+			$cmd2 = $phpexe.' composer.phar --working-dir=.. install';
 
 			# with chdir('..');
 			#$cmd2 = 'php composer.phar install';
