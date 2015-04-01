@@ -1237,19 +1237,21 @@ abstract class Backend
 
         $select = '';
         $groupby = 't.task_id, ';
-        $from   = '             {tasks}         t
-                     LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
-                     LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
-                     LEFT JOIN  {list_status}   lst ON t.item_status = lst.status_id
-                     LEFT JOIN  {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $from   = ' {tasks} t
+LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
+LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
+LEFT JOIN  {list_status}   lst ON t.item_status = lst.status_id
+LEFT JOIN  {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'cat') || in_array('category', $visible)) {
-            $from   .= ' LEFT JOIN  {list_category} lc  ON t.product_category = lc.category_id ';
+            $from   .= '
+LEFT JOIN  {list_category} lc  ON t.product_category = lc.category_id ';
             $select .= ' lc.category_name               AS category_name, ';
             $groupby .= 'lc.category_name, ';
         }
         if (in_array('votes', $visible)) {
-            $from   .= ' LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
+            $from   .= '
+LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
@@ -1258,56 +1260,67 @@ abstract class Backend
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
         if (array_get($args, 'search_in_comments')) {
-            $from   .= ' LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
+            $from   .= '
+LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
         }
         if (in_array('comments', $visible)) {
             $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
         }
         if (in_array('reportedin', $visible)) {
-            $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
-            $select .= ' lv.version_name                AS product_version, ';
+            $from   .= '
+LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
+            $select .= ' lv.version_name                AS product_version_name, ';
             $groupby .= 'lv.version_name, ';
         }
         if (array_get($args, 'opened') || in_array('openedby', $visible)) {
-            $from   .= ' LEFT JOIN  {users} uo          ON t.opened_by = uo.user_id ';
+            $from   .= '
+LEFT JOIN  {users} uo          ON t.opened_by = uo.user_id ';
             $select .= ' uo.real_name                   AS opened_by_name, ';
             $groupby .= 'uo.real_name, ';
         }
         if (array_get($args, 'closed')) {
-            $from   .= ' LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
+            $from   .= '
+LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
             $select .= ' uc.real_name                   AS closed_by_name, ';
             $groupby .= 'uc.real_name, ';
         }
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
-            $from   .= ' LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
-            $select .= ' lvc.version_name               AS closedby_version, ';
+            $from   .= '
+LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
+            $select .= ' lvc.version_name               AS closedby_version_name, ';
             $groupby .= 'lvc.version_name, ';
         }
         if (in_array('os', $visible)) {
-            $from   .= ' LEFT JOIN  {list_os} los       ON t.operating_system = los.os_id ';
+            $from   .= '
+LEFT JOIN  {list_os} los       ON t.operating_system = los.os_id ';
             $select .= ' los.os_name                    AS os_name, ';
             $groupby .= 'los.os_name, ';
         }
         if (in_array('attachments', $visible) || array_get($args, 'has_attachment')) {
-            $from   .= ' LEFT JOIN  {attachments} att   ON t.task_id = att.task_id ';
+            $from   .= '
+LEFT JOIN  {attachments} att   ON t.task_id = att.task_id ';
             $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
         }
 
 	# 20150213 currently without recursive subtasks!
 	if (in_array('effort', $visible)) {
-		$from   .= ' LEFT JOIN  {effort} ef   ON t.task_id = ef.task_id ';
+		$from   .= '
+LEFT JOIN  {effort} ef   ON t.task_id = ef.task_id ';
 		$select .= ' SUM( ef.effort) AS effort, ';
 	}
 
-        $from   .= ' LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
-        $from   .= ' LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
+        $from   .= '
+LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
+        $from   .= '
+LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
             $select .= ' MIN(u.real_name)               AS assigned_to_name, ';
             $select .= ' COUNT(DISTINCT ass.user_id)    AS num_assigned, ';
         }
 
         if (array_get($args, 'only_primary')) {
-            $from   .= ' LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
+            $from   .= '
+LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
         }
         if (array_get($args, 'has_attachment')) {
@@ -1353,20 +1366,18 @@ abstract class Backend
         $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
 
     	// Implementing setting "Default order by"
-    	if (!array_key_exists('order', $args)) {
+		if (!array_key_exists('order', $args)) {
 			if ($proj->id) {
 				$orderBy = $proj->prefs['default_order_by'];
 				$sort = $proj->prefs['default_order_by_dir'];
+			} else {
+				$orderBy = $fs->prefs['default_order_by'];
+				$sort = $fs->prefs['default_order_by_dir'];
 			}
-    		else {
-    			$orderBy = $fs->prefs['default_order_by'];
-    			$sort = $fs->prefs['default_order_by_dir'];
-    		}
-    	}
-    	else {
-    		$orderBy = $args['order'];
-    		$sort = $args['sort'];
-    	}
+		} else {
+			$orderBy = $args['order'];
+			$sort = $args['sort'];
+		}
 
         $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
         $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
