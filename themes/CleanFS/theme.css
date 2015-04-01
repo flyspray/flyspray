@@ -621,7 +621,7 @@ form #taskdetails #taskdetailsfull {
   border-top: 1px solid #e1e1e1;
   padding: 8px 5px;
 }
-#comments, #related, #notify, #remind, #history {
+#comments, #related, #notify, #remind, #effort, #history {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
