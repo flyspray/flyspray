@@ -45,7 +45,14 @@ header("Pragma: no-cache");
 			# echo '</pre>';
 
 			# without chdir('..');
-			$cmd2 = 'php composer.phar --working-dir=.. install';
+			$phpexe='php';
+			# TODO: autodetect the matching commandline php on the host matching the php version of the webserver
+			# Any idea? Using $_SERVER['PHP_PEAR_SYSCONF_DIR'] or $_SERVER['PHPRC'] for detecting can help a bit, but weak hints.. 
+			# This is just a temp hack for installing flyspray on xampp on Windows
+			if (getenv('OS') == 'Windows_NT' && isset($_SERVER['PHPRC']) && strstr($_SERVER['PHPRC'], 'xampp')) {
+				$phpexe=$_SERVER['PHPRC'].'\php.exe';
+			}
+			$cmd2 = $phpexe.' composer.phar --working-dir=.. install';
 
 			# with chdir('..');
 			#$cmd2 = 'php composer.phar install';

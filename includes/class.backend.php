@@ -1288,7 +1288,7 @@ LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
             $from   .= '
 LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
             $select .= ' lvc.version_name               AS closedby_version_name, ';
-            $groupby .= 'lvc.version_name, ';
+            $groupby .= 'lvc.version_name, lvc.list_position, ';
         }
         if (in_array('os', $visible)) {
             $from   .= '
@@ -1316,6 +1316,7 @@ LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
             $select .= ' MIN(u.real_name)               AS assigned_to_name, ';
             $select .= ' COUNT(DISTINCT ass.user_id)    AS num_assigned, ';
+            $groupby .= "u.real_name, ";
         }
 
         if (array_get($args, 'only_primary')) {
@@ -1508,7 +1509,7 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
-             $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name,{$order_column[0]},{$order_column[1]}, lr.resolution_name, ";
+             $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, ";
              $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
