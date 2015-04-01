@@ -43,7 +43,7 @@ if (in_array('effort', $visible) && !$user->perms('view_current_effort_done')) {
     unset($visible[array_search('effort', $visible)]);
 }
 
-list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
+list($tasks, $id_list, $totalcount, $forbiddencount) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
 //-- Added 2/1/2014 LAE. See if user wants to export the task list
 if (Get::has('export_list')) {
@@ -53,8 +53,13 @@ if (Get::has('export_list')) {
 $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');
 
 // List of task IDs for next/previous links
+# Mmh the result is persistent in $_SESSION a bit for the length of each user session and can lead to a DOS quite fast on bigger installs?
+# Do we really need prev-next on task details view or can we find an alternative solution?
+# And using the $_SESSION for that is currently not working correct if someone uses 2 browser tabs for 2 different projects.
 $_SESSION['tasklist'] = $id_list;
-$page->assign('total', count($id_list));
+
+$page->assign('total', $totalcount);
+$page->assign('forbiddencount', $forbiddencount);
 
 // Send user variables to the template
 
