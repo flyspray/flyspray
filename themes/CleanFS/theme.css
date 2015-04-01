@@ -1369,15 +1369,16 @@ button.fakelinkbutton
 	margin: 0;
 	font: inherit;
 	cursor: pointer;
-	color: #0000EE;
+	color: #369;
+	box-shadow:none;
 }
 
 button.fakelinkbutton:hover
 {
-	color: #09f;
+	color: #69c;
 }
 
 button.fakelinkbutton:visited
 {
-	color: #551A8B;
+	color: #69c;
 }
