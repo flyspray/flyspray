@@ -721,17 +721,28 @@ div.comment_container .comment_header
 	line-height: 30px;
 	vertical-align: middle;
 	padding-left: 10px;
+	border-bottom: 1px solid #e1e1e1;
 }
 
 div.comment_container .comment_header_infos
 {
-	max-width: 70%;
+	max-width: 60%;
 }
 
 div.comment_container .comment_header_actions
 {
 	float: right;
 	margin-right: 5px;
+}
+
+div.comment_container .comment_header_usertype
+{
+	border: 1px solid #e1e1e1;
+	padding: 3px;
+	margin-right: 10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 div.comment_container .commenttext

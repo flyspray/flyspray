@@ -3,6 +3,26 @@
 		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?></div>
 		<div class="comment">
 			<div class="comment_header">
+				<div class="comment_header_actions">
+					<?php
+						$theuser = new User($comment['user_id']);
+						if (!$theuser->isAnon()) {
+							if ($theuser->perms('is_admin')) {
+								$rank = 'Admin';
+							}
+							else if ($theuser->perms('manage_project')) {
+								$rank = 'Project Manager';
+							}
+							else {
+								$rank = '';
+							}
+
+							if (!empty($rank)) {
+								echo '<span class="comment_header_usertype">'.Filters::noXSS($rank).'</span>';
+							}
+						}
+					?>
+				</div>
 				<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?php echo Filters::noXSS(L('commentedon')); ?> <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></div>
 			</div>
 			<div class="commenttext">

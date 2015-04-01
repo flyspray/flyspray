@@ -6,6 +6,24 @@
 				<div class="comment_header">
 					<div class="comment_header_actions">
 						<?php echo tpl_form(CreateUrl('details', $task_details['task_id'])); ?>
+						<?php
+							$theuser = new User($comment['user_id']);
+							if (!$theuser->isAnon()) {
+								if ($theuser->perms('is_admin')) {
+									$rank = 'Admin';
+								}
+								else if ($theuser->perms('manage_project')) {
+									$rank = 'Project Manager';
+								}
+								else {
+									$rank = '';
+								}
+
+								if (!empty($rank)) {
+									echo '<span class="comment_header_usertype">'.Filters::noXSS($rank).'</span>';
+								}
+							}
+						?>
 						<?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
 							<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=editcomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;id=<?php echo Filters::noXSS($comment['comment_id']); ?>" title="<?php echo Filters::noXSS(L('edit')); ?>"><span class="octicon octicon-pencil"></span></a>
 						<?php endif; ?>
@@ -14,7 +32,7 @@
 							<input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>"/>
 							<?php $confirm = (isset($comment_attachments[$comment['comment_id']])) ? sprintf(L('confirmdeletecomment'), L('attachementswilldeleted')) : sprintf(L('confirmdeletecomment'), '')  ?>
 							<button type="submit" class="fakelinkbutton" onclick="return confirm('<?php echo Filters::noJsXSS($confirm); ?>');" title="<?php echo Filters::noXSS(L('delete')); ?>"><span class="octicon octicon-x"></span></button>
-						<?php endif ?>
+						<?php endif; ?>
 						</form>
 					</div>
 					<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?php echo Filters::noXSS(L('commentedon')); ?> <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></div>
