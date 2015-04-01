@@ -1,6 +1,8 @@
 language: php
 php:
-  - 5.2
+# composer needs at least php5.3.2, so php5.2 can't be tested here. Only with a full release with all additional packages yet installed..
+#  - 5.2
+  - 5.3
   - 5.4
   
 # no extensive travis testing before we have some real tests and project stable
@@ -12,6 +14,9 @@ php:
 env:
 - DB=mysql
 - DB=pgsql
+
+install:
+- composer require adodb/adodb-php:5.*
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
