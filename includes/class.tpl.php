@@ -293,7 +293,7 @@ function tpl_userlink($uid)
 
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
-	global $db, $user, $baseurl;
+	global $db, $user, $baseurl, $fs;
 	if (is_array($uid)) {
 		list($uid, $uname, $rname) = $uid;
 	}
@@ -313,7 +313,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		$image = '<img src="'.$baseurl.'/avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
 	} else {
 		if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+			$url = 'http://www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
 			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
 		} else {
 			$image = '';
