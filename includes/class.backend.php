@@ -318,10 +318,9 @@ abstract class Backend
                          VALUES  ( ?, ?, ?, ?, ? )',
                     array($task['task_id'], $time, $time, $user->id, $comment_text));
 
-        $result = $db->Query('SELECT  comment_id
+        $result = $db->Query('SELECT  MAX(comment_id)
                                 FROM  {comments}
-                               WHERE  task_id = ?
-                            ORDER BY  comment_id DESC',
+                               WHERE  task_id = ?',
                             array($task['task_id']), 1);
         $cid = $db->FetchOne($result);
 
@@ -403,10 +402,9 @@ abstract class Backend
                         $user->id, time()));
 
             // Fetch the attachment id for the history log
-            $result = $db->Query('SELECT  attachment_id
+            $result = $db->Query('SELECT  MAX(attachment_id)
                                     FROM  {attachments}
-                                   WHERE  task_id = ?
-                                ORDER BY  attachment_id DESC',
+                                   WHERE  task_id = ?',
                     array($task_id), 1);
             Flyspray::logEvent($task_id, 7, $db->fetchOne($result), $_FILES[$source]['name'][$key]);
         }

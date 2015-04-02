@@ -79,8 +79,8 @@ class Notifications {
                 );
 
       // grab notification id
-      $result = $db->Query("SELECT message_id FROM {notification_messages}
-                            WHERE time_created = ? ORDER BY message_id DESC",
+      $result = $db->Query("SELECT MAX(message_id) FROM {notification_messages}
+                            WHERE time_created = ?",
                             array($date), 1);
 
       $row = $db->FetchRow($result);
@@ -167,8 +167,8 @@ class Notifications {
                 );
 
       // grab notification id
-      $result = $db->Query("SELECT message_id FROM {notification_messages}
-                            WHERE time_created = ? ORDER BY message_id DESC",
+      $result = $db->Query("SELECT MAX(message_id) FROM {notification_messages}
+                            WHERE time_created = ?",
                             array($date), 1);
 
       $row = $db->FetchRow($result);
@@ -668,11 +668,10 @@ class Notifications {
       if ($type == NOTIFY_COMMENT_ADDED)
       {
          // Get the comment information
-         $result = $db->Query("SELECT comment_id, comment_text
+         $result = $db->Query("SELECT MAX(comment_id), MAX(comment_text)
                                FROM {comments}
                                WHERE user_id = ?
-                               AND task_id = ?
-                               ORDER BY comment_id DESC",
+                               AND task_id = ?",
                                array($user->id, $task_id), '1');
          $comment = $db->FetchRow($result);
 

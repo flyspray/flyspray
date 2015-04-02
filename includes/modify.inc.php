@@ -995,7 +995,7 @@ switch ($action = Req::val('action'))
         Post::num('disp_intro')
     ));
 
-        $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
+        $sql = $db->Query('SELECT MAX(project_id) FROM {projects} ORDER BY project_id DESC');
         $pid = $db->fetchOne($sql);
 
         $cols = array( 'manage_project', 'view_tasks', 'open_new_tasks',
