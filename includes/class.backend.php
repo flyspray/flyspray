@@ -1517,6 +1517,49 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
+// Alternative
+        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1
+                          FROM     $from
+                          $where
+                          GROUP BY $groupby
+                          $having) s";
+        $sqltext = "SELECT t.*, $select
+p.project_title, p.project_is_active,
+lst.status_name,
+lt.tasktype_name,
+lr.resolution_name
+FROM $from
+$where
+GROUP BY $groupby
+$having
+ORDER BY $sortorder";
+        echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+        echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+        $sql = $db->Query($sqlcount, $sql_params);
+        $totalcount = $db->FetchOne($sql);
+
+        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
+
+        $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
+        $tasks = $db->fetchAllArray($sql);
+        $id_list = array();
+        $limit = array_get($args, 'limit', -1);
+        $forbidden_tasks_count = 0;
+        foreach ($tasks as $key => $task) {
+            $id_list[] = $task['task_id'];
+            if (!$user->can_view_task($task)) {
+                unset($tasks[$key]);
+                $forbidden_tasks_count++;
+            }
+        }
+
+        // Work on this is not finished until $forbidden_tasks_count is always zero.
+        echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+        // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+        // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+        return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+        
+        /* Current
         # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
         $sqltext = "
 SELECT t.*, $select
@@ -1547,13 +1590,14 @@ ORDER BY $sortorder";
 			if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
 				$id_list[] = $task['task_id'];
 				$tasks[]=$task;
+				$task_count++;
 			}
-			$task_count++;
 			$totalcount++;
 		} else{
 			$forbidden_tasks_count++;
 		}
 	}
 	return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+    */
 } # end get_task_list
 } # end class
