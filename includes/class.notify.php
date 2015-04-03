@@ -79,8 +79,8 @@ class Notifications {
                 );
 
       // grab notification id
-      $result = $db->Query("SELECT MAX(message_id) FROM {notification_messages}
-                            WHERE time_created = ?",
+      $result = $db->Query("SELECT message_id FROM {notification_messages}
+                            WHERE time_created = ? ORDER BY message_id DESC",
                             array($date), 1);
 
       $row = $db->FetchRow($result);
@@ -167,8 +167,8 @@ class Notifications {
                 );
 
       // grab notification id
-      $result = $db->Query("SELECT MAX(message_id) FROM {notification_messages}
-                            WHERE time_created = ?",
+      $result = $db->Query("SELECT message_id FROM {notification_messages}
+                            WHERE time_created = ? ORDER BY message_id DESC",
                             array($date), 1);
 
       $row = $db->FetchRow($result);
