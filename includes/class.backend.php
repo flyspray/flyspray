@@ -1504,6 +1504,10 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[]      = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
+        
+        if ($user->isAnon()) {
+            $where[] = 'p.others_view = 1';
+        }
 
         $where = (count($where)) ? 'WHERE '. join(' AND ', $where) : '';
 
@@ -1517,6 +1521,7 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
+        // Current implementation
         # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
         $sqltext = "
 SELECT t.*, $select
@@ -1548,12 +1553,92 @@ ORDER BY $sortorder";
 				$id_list[] = $task['task_id'];
 				$tasks[]=$task;
 			}
-			$task_count++;
+            $task_count++;
 			$totalcount++;
 		} else{
 			$forbidden_tasks_count++;
 		}
 	}
 	return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+    // # end current
+/*        
+// Alternative implementation for testing and discussion
+// In my tests, the query used was:        
+// SELECT t.*,  lc.category_name               AS category_name,  COUNT(DISTINCT vot.vote_id)    AS num_votes,  (SELECT COUNT(cc.comment_id) FROM flyspray_comments cc WHERE cc.task_id = t.task_id)  AS num_comments,  uo.real_name                   AS opened_by_name,  COUNT(DISTINCT att.attachment_id) AS num_attachments, 
+// p.project_title, p.project_is_active,
+// lst.status_name,
+// lt.tasktype_name,
+// lr.resolution_name
+// FROM  flyspray_tasks t
+// LEFT JOIN  flyspray_projects      p   ON t.project_id = p.project_id
+// LEFT JOIN  flyspray_list_tasktype lt  ON t.task_type = lt.tasktype_id
+// LEFT JOIN  flyspray_list_status   lst ON t.item_status = lst.status_id
+// LEFT JOIN  flyspray_list_resolution lr ON t.resolution_reason = lr.resolution_id 
+// LEFT JOIN  flyspray_list_category lc  ON t.product_category = lc.category_id 
+// LEFT JOIN  flyspray_votes vot         ON t.task_id = vot.task_id 
+// LEFT JOIN  flyspray_users uo          ON t.opened_by = uo.user_id 
+// LEFT JOIN  flyspray_attachments att   ON t.task_id = att.task_id 
+// LEFT JOIN  flyspray_assigned ass      ON t.task_id = ass.task_id 
+// LEFT JOIN  flyspray_users u           ON ass.user_id = u.user_id 
+// WHERE ( is_closed = 0 )
+//
+// And for Postgresql, group by:
+// GROUP BY t.task_id, lc.category_name, uo.real_name, p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, t.task_id, t.project_id, t.task_type, t.date_opened, t.opened_by, t.is_closed, t.date_closed, t.closed_by, t.closure_comment, t.item_summary, t.detailed_desc, t.item_status, t.resolution_reason, t.product_category, t.product_version, t.closedby_version, t.operating_system, t.task_severity, t.task_priority, t.last_edited_by, t.last_edited_time, t.percent_complete, t.mark_private, t.due_date, t.anon_email, t.task_token, t.supertask_id, t.list_order, t.estimated_effort
+// For Mysql group by is always:
+// GROUP BY t.task_id
+// 
+// And order by is:
+// ORDER BY t.task_id desc, task_severity desc
+
+// In my testing, showing all projects and having total 152299 tasks, 213884 comments,
+// no votes or attachments yet, this version runs between 6500 and 7500 ms.
+// Current version between 13500 and 15500 ms.
+        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1
+                          FROM     $from
+                          $where
+                          GROUP BY $groupby
+                          $having) s";
+// Using limit 100. Running time depends heavily on offset.
+// With 0: between 5400 and 6000 ms.
+// With 152200: between 14000 and 17000 ms. Varies a lot, strange.
+// Current version not using limit and offset between 60000 and 61000 ms.        
+        $sqltext = "SELECT t.*, $select
+p.project_title, p.project_is_active,
+lst.status_name,
+lt.tasktype_name,
+lr.resolution_name
+FROM $from
+$where
+GROUP BY $groupby
+$having
+ORDER BY $sortorder";
+
+// Now, do we have a clear winner at least for Postgresql? What kind of running
+// times do you get using Mysql and different storage engines?
+
+        // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+        // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+        $sql = $db->Query($sqlcount, $sql_params);
+        $totalcount = $db->FetchOne($sql);
+
+        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
+
+        $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
+        $tasks = $db->fetchAllArray($sql);
+        $id_list = array();
+        $limit = array_get($args, 'limit', -1);
+        $forbidden_tasks_count = 0;
+        foreach ($tasks as $key => $task) {
+            $id_list[] = $task['task_id'];
+            if (!$user->can_view_task($task)) {
+                unset($tasks[$key]);
+                $forbidden_tasks_count++;
+            }
+        }
+
+        // Work on this is not finished until $forbidden_tasks_count is always zero.
+        // echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+        return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+*/ # end alternative
 } # end get_task_list
 } # end class
