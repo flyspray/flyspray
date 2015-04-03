@@ -1502,6 +1502,10 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[]      = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
+        
+        if ($user->isAnon()) {
+            $where[] = 'p.others_view = 1';
+        }
 
         $where = (count($where)) ? 'WHERE '. join(' AND ', $where) : '';
 
