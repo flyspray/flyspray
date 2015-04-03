@@ -15,7 +15,7 @@
   <link rel="alternate" type="text/html" hreflang="en" href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>"/>
   <?php foreach ($task_details as $row): ?>
   <entry>
-    <title>FS#<?php echo Filters::noXSS($row['task_id']); ?>: <?php echo Filters::noXSS($row['item_summary']); ?></title>
+    <title type="html">FS#<?php echo Filters::noXSS($row['task_id']); ?>: <?php echo Filters::noXSS($row['item_summary']); ?></title>
     <link href="<?php echo Filters::noXSS(CreateURL('details', $row['task_id'])); ?>" />    
     <updated><?php echo Filters::noXSS(date('Y-m-d\TH:i:s\Z',intval($row['last_edited_time']))); ?></updated>    
     <published><?php echo Filters::noXSS(date('Y-m-d\TH:i:s\Z',intval($row['date_opened']))); ?></published>
