@@ -1315,8 +1315,8 @@ LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
 LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
             $select .= ' MIN(u.real_name)               AS assigned_to_name, ';
-            $select .= ' COUNT(DISTINCT ass.user_id)    AS num_assigned, ';
-            $groupby .= "u.real_name, ";
+            $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+            $groupby .= 'ass.task_id, ';
         }
 
         if (array_get($args, 'only_primary')) {
