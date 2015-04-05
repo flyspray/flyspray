@@ -1220,12 +1220,11 @@ abstract class Backend
      * @return array
      * @version 1.0
      */
-    public static function get_task_list($args, $visible, $offset = 0, $perpage = 20)
-    {
+    public static function get_task_list($args, $visible, $offset = 0, $perpage = 20) {
         global $fs, $proj, $db, $user, $conf;
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
-        $where  = $sql_params = array();
+        $where = $sql_params = array();
 
         // PostgreSQL LIKE searches are by default case sensitive,
         // so we use ILIKE instead. For other databases, in our case
@@ -1237,21 +1236,21 @@ abstract class Backend
 
         $select = '';
         $groupby = 't.task_id, ';
-        $from   = ' {tasks} t
-LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
-LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
-LEFT JOIN  {list_status}   lst ON t.item_status = lst.status_id
-LEFT JOIN  {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $from = ' {tasks} t
+LEFT JOIN {projects} p ON t.project_id = p.project_id
+LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id
+LEFT JOIN {list_status} lst ON t.item_status = lst.status_id
+LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'cat') || in_array('category', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_category} lc  ON t.product_category = lc.category_id ';
-            $select .= ' lc.category_name               AS category_name, ';
+            $from .= '
+LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
+            $select .= ' lc.category_name AS category_name, ';
             $groupby .= 'lc.category_name, ';
         }
         if (in_array('votes', $visible)) {
-            $from   .= '
-LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
+            $from .= '
+LEFT JOIN {votes} vot ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
@@ -1260,68 +1259,68 @@ LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
         if (array_get($args, 'search_in_comments')) {
-            $from   .= '
-LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
+            $from .= '
+LEFT JOIN {comments} c ON t.task_id = c.task_id ';
         }
         if (in_array('comments', $visible)) {
             $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
         }
         if (in_array('reportedin', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
-            $select .= ' lv.version_name                AS product_version_name, ';
+            $from .= '
+LEFT JOIN {list_version} lv ON t.product_version = lv.version_id ';
+            $select .= ' lv.version_name AS product_version_name, ';
             $groupby .= 'lv.version_name, ';
         }
         if (array_get($args, 'opened') || in_array('openedby', $visible)) {
-            $from   .= '
-LEFT JOIN  {users} uo          ON t.opened_by = uo.user_id ';
-            $select .= ' uo.real_name                   AS opened_by_name, ';
+            $from .= '
+LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
+            $select .= ' uo.real_name AS opened_by_name, ';
             $groupby .= 'uo.real_name, ';
         }
         if (array_get($args, 'closed')) {
-            $from   .= '
-LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
-            $select .= ' uc.real_name                   AS closed_by_name, ';
+            $from .= '
+LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
+            $select .= ' uc.real_name AS closed_by_name, ';
             $groupby .= 'uc.real_name, ';
         }
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
-            $select .= ' lvc.version_name               AS closedby_version_name, ';
+            $from .= '
+LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
+            $select .= ' lvc.version_name AS closedby_version_name, ';
             $groupby .= 'lvc.version_name, lvc.list_position, ';
         }
         if (in_array('os', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_os} los       ON t.operating_system = los.os_id ';
-            $select .= ' los.os_name                    AS os_name, ';
+            $from .= '
+LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
+            $select .= ' los.os_name AS os_name, ';
             $groupby .= 'los.os_name, ';
         }
         if (in_array('attachments', $visible) || array_get($args, 'has_attachment')) {
-            $from   .= '
-LEFT JOIN  {attachments} att   ON t.task_id = att.task_id ';
+            $from .= '
+LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
         }
 
-	# 20150213 currently without recursive subtasks!
-	if (in_array('effort', $visible)) {
-		$from   .= '
-LEFT JOIN  {effort} ef   ON t.task_id = ef.task_id ';
-		$select .= ' SUM( ef.effort) AS effort, ';
-	}
+        # 20150213 currently without recursive subtasks!
+        if (in_array('effort', $visible)) {
+            $from .= '
+LEFT JOIN {effort} ef ON t.task_id = ef.task_id ';
+            $select .= ' SUM( ef.effort) AS effort, ';
+        }
 
-        $from   .= '
-LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
-        $from   .= '
-LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
+        $from .= '
+LEFT JOIN {assigned} ass ON t.task_id = ass.task_id ';
+        $from .= '
+LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
-            $select .= ' MIN(u.real_name)               AS assigned_to_name, ';
+            $select .= ' MIN(u.real_name) AS assigned_to_name, ';
             $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
             $groupby .= 'ass.task_id, ';
         }
 
         if (array_get($args, 'only_primary')) {
-            $from   .= '
-LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
+            $from .= '
+LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
         }
         if (array_get($args, 'has_attachment')) {
@@ -1333,87 +1332,82 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         }
 
         if ($proj->id) {
-            $where[]       = 't.project_id = ?';
-            $sql_params[]  = $proj->id;
+            $where[] = 't.project_id = ?';
+            $sql_params[] = $proj->id;
         }
 
-        $order_keys = array (
-                'id'           => 't.task_id',
-                'project'      => 'project_title',
-                'tasktype'     => 'tasktype_name',
-                'dateopened'   => 'date_opened',
-                'summary'      => 'item_summary',
-                'severity'     => 'task_severity',
-                'category'     => 'lc.category_name',
-                'status'       => 'is_closed, item_status',
-                'dueversion'   => 'lvc.list_position',
-                'duedate'      => 'due_date',
-                'progress'     => 'percent_complete',
-                'lastedit'     => 'max_date',
-                'priority'     => 'task_priority',
-                'openedby'     => 'uo.real_name',
-                'reportedin'   => 't.product_version',
-                'assignedto'   => 'u.real_name',
-                'dateclosed'   => 't.date_closed',
-                'os'           => 'los.os_name',
-                'votes'        => 'num_votes',
-                'attachments'  => 'num_attachments',
-                'comments'     => 'num_comments',
-                'private'      => 'mark_private',
-                'supertask'    => 't.supertask_id',
+        $order_keys = array(
+            'id' => 't.task_id',
+            'project' => 'project_title',
+            'tasktype' => 'tasktype_name',
+            'dateopened' => 'date_opened',
+            'summary' => 'item_summary',
+            'severity' => 'task_severity',
+            'category' => 'lc.category_name',
+            'status' => 'is_closed, item_status',
+            'dueversion' => 'lvc.list_position',
+            'duedate' => 'due_date',
+            'progress' => 'percent_complete',
+            'lastedit' => 'max_date',
+            'priority' => 'task_priority',
+            'openedby' => 'uo.real_name',
+            'reportedin' => 't.product_version',
+            'assignedto' => 'u.real_name',
+            'dateclosed' => 't.date_closed',
+            'os' => 'los.os_name',
+            'votes' => 'num_votes',
+            'attachments' => 'num_attachments',
+            'comments' => 'num_comments',
+            'private' => 'mark_private',
+            'supertask' => 't.supertask_id',
         );
 
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
         $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
 
-    	// Implementing setting "Default order by"
-		if (!array_key_exists('order', $args)) {
-			if ($proj->id) {
-				$orderBy = $proj->prefs['default_order_by'];
-				$sort = $proj->prefs['default_order_by_dir'];
-			} else {
-				$orderBy = $fs->prefs['default_order_by'];
-				$sort = $fs->prefs['default_order_by_dir'];
-			}
-		} else {
-			$orderBy = $args['order'];
-			$sort = $args['sort'];
-		}
+        // Implementing setting "Default order by"
+        if (!array_key_exists('order', $args)) {
+            if ($proj->id) {
+                $orderBy = $proj->prefs['default_order_by'];
+                $sort = $proj->prefs['default_order_by_dir'];
+            } else {
+                $orderBy = $fs->prefs['default_order_by'];
+                $sort = $fs->prefs['default_order_by_dir'];
+            }
+        } else {
+            $orderBy = $args['order'];
+            $sort = $args['sort'];
+        }
 
         $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
         $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
-        $sortorder  = sprintf('%s %s, %s %s, t.task_id ASC',
-                $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')),
-                $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
+        $sortorder = sprintf('%s %s, %s %s, t.task_id ASC', $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')), $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
 
         /// process search-conditions {{{
-        $submits = array('type' => 'task_type', 'sev' => 'task_severity', 'due' => 'closedby_version', 'reported' => 'product_version',
-                         'cat' => 'product_category', 'status' => 'item_status', 'percent' => 'percent_complete', 'pri' => 'task_priority',
-                         'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
-                         'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
-                         'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
+        $submits = array('type' => 'task_type', 'sev' => 'task_severity',
+            'due' => 'closedby_version', 'reported' => 'product_version',
+            'cat' => 'product_category', 'status' => 'item_status',
+            'percent' => 'percent_complete', 'pri' => 'task_priority',
+            'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
+            'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
+            'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
         foreach ($submits as $key => $db_key) {
             $type = array_get($args, $key, ($key == 'status') ? 'open' : '');
             settype($type, 'array');
 
-            if (in_array('', $type)) continue;
+            if (in_array('', $type))
+                continue;
 
             if ($key == 'dev') {
-            	#setcookie('tasklist_type', 'assignedtome');
                 $from .= 'LEFT JOIN {assigned} a  ON t.task_id = a.task_id ';
                 $from .= 'LEFT JOIN {users} us  ON a.user_id = us.user_id ';
-            }
-            else
-            {
-            	#setcookie('tasklist_type', 'project');
-            }
 
             $temp = '';
             $condition = '';
             foreach ($type as $val) {
                 // add conditions for the status selection
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
-                    $temp  .= ' is_closed = 1 AND';
+                    $temp .= ' is_closed = 1 AND';
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
                     $temp .= ' is_closed = 0 AND';
                 }
@@ -1422,7 +1416,7 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' a.user_id is NULL  OR';
+                        $temp .= ' a.user_id is NULL OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
@@ -1438,36 +1432,35 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
                 // Add the subcategories to the query
                 if ($key == 'cat') {
-                    $result = $db->Query('SELECT  *
-                                            FROM  {list_category}
-                                           WHERE  category_id = ?',
-                                          array($val));
+                    $result = $db->Query('SELECT *
+                                            FROM {list_category}
+                                           WHERE category_id = ?', array($val));
                     $cat_details = $db->FetchRow($result);
 
-                    $result = $db->Query('SELECT  *
-                                            FROM  {list_category}
-                                           WHERE  lft > ? AND rgt < ? AND project_id  = ?',
-                                           array($cat_details['lft'], $cat_details['rgt'], $cat_details['project_id']));
+                    $result = $db->Query('SELECT *
+                                            FROM {list_category}
+                                           WHERE lft > ? AND rgt < ? AND project_id  = ?', array($cat_details['lft'], $cat_details['rgt'], $cat_details['project_id']));
                     while ($row = $db->FetchRow($result)) {
-                        $temp  .= ' product_category = ?  OR';
+                        $temp .= ' product_category = ?  OR';
                         $sql_params[] = $row['category_id'];
                     }
                 }
             }
 
-            if ($temp) $where[] = '(' . substr($temp, 0, -3) . ')';
+            if ($temp)
+                $where[] = '(' . substr($temp, 0, -3) . ')';
         }
         /// }}}
         $having = array();
         $dates = array('duedate' => 'due_date', 'changed' => $maxdatesql,
-                       'opened' => 'date_opened', 'closed' => 'date_closed');
+            'opened' => 'date_opened', 'closed' => 'date_closed');
         foreach ($dates as $post => $db_key) {
             $var = ($post == 'changed') ? 'having' : 'where';
             if ($date = array_get($args, $post . 'from')) {
-                ${$var}[]      = '(' . $db_key . ' >= ' . Flyspray::strtotime($date) . ')';
+                ${$var}[] = '(' . $db_key . ' >= ' . Flyspray::strtotime($date) . ')';
             }
             if ($date = array_get($args, $post . 'to')) {
-                ${$var}[]      = '(' . $db_key . ' <= ' . Flyspray::strtotime($date) . ' AND ' . $db_key . ' > 0)';
+                ${$var}[] = '(' . $db_key . ' <= ' . Flyspray::strtotime($date) . ' AND ' . $db_key . ' > 0)';
             }
         }
 
@@ -1495,73 +1488,73 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                 }
             }
 
-            $where[] = '(' . implode( (array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
+            $where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
         }
 
         if (array_get($args, 'only_watched')) {
             //join the notification table to get watched tasks
-            $from        .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
-            $where[]      = 'fsn.user_id = ?';
+            $from .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
+            $where[] = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
-        
+
         if ($user->isAnon()) {
             $where[] = 'p.others_view = 1';
         }
 
-        $where = (count($where)) ? 'WHERE '. join(' AND ', $where) : '';
+        $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
-             $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, ";
-             $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
+            $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, ";
+            $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
         }
 
-        $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
+        $having = (count($having)) ? 'HAVING ' . join(' AND ', $having) : '';
 
-        // Current implementation
-        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
-        $sqltext = "
-SELECT t.*, $select
-p.project_title, p.project_is_active,
-lst.status_name,
-lt.tasktype_name,
-lr.resolution_name
-FROM $from
-$where
-GROUP BY $groupby
-$having
-ORDER BY $sortorder";
+        /* Current implementation
+          # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
+          $sqltext = "
+          SELECT t.*, $select
+          p.project_title, p.project_is_active,
+          lst.status_name,
+          lt.tasktype_name,
+          lr.resolution_name
+          FROM $from
+          $where
+          GROUP BY $groupby
+          $having
+          ORDER BY $sortorder";
 
-	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext) c", $sql_params);
-	$totalcount = $db->FetchOne($sql);
+          $sql = $db->Query("SELECT COUNT(*) FROM ($sqltext) c", $sql_params);
+          $totalcount = $db->FetchOne($sql);
 
-	$sql = $db->Query($sqltext, $sql_params);
-	
-	# we cannot just fetchall on huge task lists into array/memory.
-	#$tasks = $db->fetchAllArray($sql);
-	$tasks = array();
-	$id_list = array();
-	$task_count = 0;
-	$totalcount=0;
-	$forbidden_tasks_count=0;
-	while ($task = $sql->FetchRow()) {
-		if ($user->can_view_task($task)){
-			if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
-				$id_list[] = $task['task_id'];
-				$tasks[]=$task;
-			}
-            $task_count++;
-			$totalcount++;
-		} else{
-			$forbidden_tasks_count++;
-		}
-	}
-	return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
-    // # end current
-/*        
+          $sql = $db->Query($sqltext, $sql_params);
+
+          # we cannot just fetchall on huge task lists into array/memory.
+          #$tasks = $db->fetchAllArray($sql);
+          $tasks = array();
+          $id_list = array();
+          $task_count = 0;
+          $totalcount=0;
+          $forbidden_tasks_count=0;
+          while ($task = $sql->FetchRow()) {
+          if ($user->can_view_task($task)){
+          if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
+          $id_list[] = $task['task_id'];
+          $tasks[]=$task;
+          }
+          $task_count++;
+          $totalcount++;
+          } else{
+          $forbidden_tasks_count++;
+          }
+          }
+          return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
+         */ # end current
+//        
 // Alternative implementation for testing and discussion
 // In my tests, the query used was:        
 // SELECT t.*,  lc.category_name               AS category_name,  COUNT(DISTINCT vot.vote_id)    AS num_votes,  (SELECT COUNT(cc.comment_id) FROM flyspray_comments cc WHERE cc.task_id = t.task_id)  AS num_comments,  uo.real_name                   AS opened_by_name,  COUNT(DISTINCT att.attachment_id) AS num_attachments, 
@@ -1589,7 +1582,6 @@ ORDER BY $sortorder";
 // 
 // And order by is:
 // ORDER BY t.task_id desc, task_severity desc
-
 // In my testing, showing all projects and having total 152299 tasks, 213884 comments,
 // no votes or attachments yet, this version runs between 6500 and 7500 ms.
 // Current version between 13500 and 15500 ms.
@@ -1615,7 +1607,6 @@ ORDER BY $sortorder";
 
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
-
         // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
         // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
@@ -1639,6 +1630,6 @@ ORDER BY $sortorder";
         // Work on this is not finished until $forbidden_tasks_count is always zero.
         // echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
         return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
-*/ # end alternative
-} # end get_task_list
+// # end alternative
+    } # end get_task_list
 } # end class
