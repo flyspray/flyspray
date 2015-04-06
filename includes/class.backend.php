@@ -1238,12 +1238,26 @@ abstract class Backend
         $select = '';
         $groupby = 't.task_id, ';
         $from = ' {tasks} t
-LEFT JOIN {projects} p ON t.project_id = p.project_id
-LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id
-LEFT JOIN {list_status} lst ON t.item_status = lst.status_id
+LEFT JOIN {projects} p ON t.project_id = p.project_id 
 LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         
         // Only join tables which are really necessary to speed up the db-query
+        if (array_get($args, 'type') || in_array('tasktype', $visible)) {
+            $from .= '
+LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
+        }
+        
+        if (array_get($args, 'status') || in_array('status', $visible)) {
+            $from .= '
+LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
+        }
+        /* What's the problem with resolution? Why do we do a join to a table
+         * that's not in possible visible columns and can not be searched?
+        if (array_get($args, 'status') || in_array('status', $visible)) {
+            $from .= '
+LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        }
+        */
         if (array_get($args, 'cat') || in_array('category', $visible)) {
             $from .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
