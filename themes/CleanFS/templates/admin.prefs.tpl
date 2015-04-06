@@ -173,6 +173,11 @@
         </li>
 
         <li>
+          <label for="max_vote_per_day"><?php echo Filters::noXSS(L('maxvoteperday')); ?></label>
+          <input id="max_vote_per_day" name="max_vote_per_day" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_vote_per_day']); ?>" />
+        </li>
+
+        <li>
           <label><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
           <?php
             $pages = array(

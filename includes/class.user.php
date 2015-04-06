@@ -203,24 +203,24 @@ class User
         }
 
         // Split into several separate tests so I can keep track on whats happening.
-        
+
         // Project managers and admins allowed always.
         if ($this->perms('manage_project', $task['project_id'])
             || $this->perms('is_admin', $task['project_id'])) {
             return true;
         }
-        
+
         // Allow if "allow anyone to view this project" is checked
         // and task is not private.
         if ($this->perms('others_view', $task['project_id']) && !$task['mark_private']) {
             return true;
         }
-        
+
         if ($this->isAnon()) {
             // Following checks need identified user.
             return false;
         }
-        
+
         // Non-private task
         if (!$task['mark_private']) {
             // Can view tasks, always allow
@@ -252,13 +252,13 @@ class User
                 if (in_array($this->id, $assignees)) {
                     return true;
                 }
-                
+
                 // Must fetch other persons in the group now. Find out
                 // how to detect the right group for project and the
                 // other persons in it. Funny, found it in $perms.
                 $group = $this->perms('project_group', $task['project_id']);
                 $others = Project::listUsersIn($group);
-                
+
                 foreach ($others as $other) {
                     if ($other['user_id'] == $task['opened_by']) {
                         return true;
@@ -271,7 +271,7 @@ class User
                 return false;
             }
         }
-        
+
         // Private task, user must be either assigned to the task
         // or have opened it.
         if ($task['mark_private']) {
@@ -284,7 +284,7 @@ class User
             // No use to continue further.
             return false;
         }
-        
+
         // Could not find any permission for viewing the task.
         return false;
     }
@@ -377,7 +377,7 @@ class User
 
     public function can_vote($task)
     {
-        global $db;
+        global $db, $fs;
 
         if (!$this->perms('add_votes', $task['project_id'])) {
             return -1;
@@ -392,12 +392,12 @@ class User
             return -2;
         }
 
-        // Check that the user hasn't voted more than twice this day
+        // Check that the user hasn't voted more than allowed today
         $check = $db->Query('SELECT vote_id
                                FROM {votes}
                               WHERE user_id = ? AND date_time > ?',
                              array($this->id, time() - 86400));
-        if ($db->CountRows($check) > 2) {
+        if ($db->CountRows($check) >= $fs->prefs['max_vote_per_day']) {
             return -3;
         }
 
