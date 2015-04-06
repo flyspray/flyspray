@@ -1226,6 +1226,7 @@ abstract class Backend
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where = $sql_params = array();
 
+        // echo '<pre>' . print_r($visible, true) . '</pre>';
         // PostgreSQL LIKE searches are by default case sensitive,
         // so we use ILIKE instead. For other databases, in our case
         // only MySQL/MariaDB, LIKE is good for our purposes.
@@ -1251,9 +1252,10 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
         }
         
         if (in_array('votes', $visible)) {
-            $from .= '
-LEFT JOIN {votes} vot ON t.task_id = vot.task_id ';
-            $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
+//            $from .= '
+// LEFT JOIN {votes} vot ON t.task_id = vot.task_id ';
+//             $select .= ' COUNT(DISTINCT vot.vote_id) AS num_votes, ';
+            $select .= ' (SELECT COUNT(vot.vote_id) FROM {votes} vot WHERE vot.task_id = t.task_id) AS num_votes, ';
         }
         
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
@@ -1306,17 +1308,23 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
             $groupby .= 'los.os_name, ';
         }
         
-        if (in_array('attachments', $visible) || array_get($args, 'has_attachment')) {
-            $from .= '
-LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
-            $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
+        if (in_array('attachments', $visible)) {
+//            $from .= '
+// LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
+//            $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
+            $select .= ' (SELECT COUNT(attc.attachment_id) FROM {attachments} attc WHERE attc.task_id = t.task_id) AS num_attachments, ';
         }
 
+        if (array_get($args, 'has_attachment')) {
+            $from .= '
+LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
+        }
         # 20150213 currently without recursive subtasks!
         if (in_array('effort', $visible)) {
-            $from .= '
-LEFT JOIN {effort} ef ON t.task_id = ef.task_id ';
-            $select .= ' SUM( ef.effort) AS effort, ';
+//            $from .= '
+// LEFT JOIN {effort} ef ON t.task_id = ef.task_id ';
+//            $select .= ' SUM( ef.effort) AS effort, ';
+            $select .= ' (SELECT SUM(ef.effort) FROM {effort} ef WHERE t.task_id = ef.task_id) AS effort, ';
         }
 
         $from .= '
@@ -1621,7 +1629,7 @@ ORDER BY $sortorder";
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
         // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-        // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+        echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
         $totalcount = $db->FetchOne($sql);
 
@@ -1646,3 +1654,4 @@ ORDER BY $sortorder";
 // # end alternative
     } # end get_task_list
 } # end class
+}
