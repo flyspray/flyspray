@@ -1000,7 +1000,8 @@ $translation = array(
 'ascending'               => 'Ascendant',
 'descending'              => 'Descendant',
 'myassignedtasks'         => 'Mes tâches',
-'commentedon'             => 'a commenté le'
+'commentedon'             => 'a commenté le',
+'maxvoteperday'           => 'Maximum de vote par jour'
 );
 
 ?>
