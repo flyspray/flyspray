@@ -1238,16 +1238,19 @@ abstract class Backend
         $select = '';
         $groupby = 't.task_id, ';
         $from = ' {tasks} t
-LEFT JOIN {projects} p ON t.project_id = p.project_id 
-LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+LEFT JOIN {projects} p ON t.project_id = p.project_id ';
         
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
+            $select .= ' lt.tasktype_name, ';
+            $groupby .= ' lt.tasktype_name, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
         }
         
         if (array_get($args, 'status') || in_array('status', $visible)) {
+            $select .= ' lst.status_name, ';
+            $groupby .= ' lst.status_name, ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
         }
@@ -1341,12 +1344,10 @@ LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $select .= ' (SELECT SUM(ef.effort) FROM {effort} ef WHERE t.task_id = ef.task_id) AS effort, ';
         }
 
-        $from .= '
-LEFT JOIN {assigned} ass ON t.task_id = ass.task_id ';
-        
-        $from .= '
-LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
+            $from .= '
+LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $select .= ' MIN(u.real_name) AS assigned_to_name, ';
             $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
             $groupby .= 'ass.task_id, ';
@@ -1534,14 +1535,14 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         }
 
         if ($user->isAnon()) {
-            $where[] = 'p.others_view = 1';
+            $where[] = 'p.others_view = 1 AND t.is_closed = 0 ';
         }
 
         $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
-            $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, ";
+            $groupby .= "p.project_title, p.project_is_active, ";
             $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
@@ -1630,10 +1631,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 // With 152200: between 14000 and 17000 ms. Varies a lot, strange.
 // Current version not using limit and offset between 60000 and 61000 ms.        
         $sqltext = "SELECT t.*, $select
-p.project_title, p.project_is_active,
-lst.status_name,
-lt.tasktype_name,
-lr.resolution_name
+p.project_title, p.project_is_active
 FROM $from
 $where
 GROUP BY $groupby
