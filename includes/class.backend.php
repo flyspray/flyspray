@@ -1451,20 +1451,20 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             foreach ($type as $val) {
                 // add conditions for the status selection
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
-                    $temp .= ' is_closed = 1 AND ';
+                    $temp .= ' is_closed = 1 AND';
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
-                    $temp .= ' is_closed = 0 AND ';
+                    $temp .= ' is_closed = 0 AND';
                 }
                 if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == 'closed')) {
-                    $temp .= ' ' . $db_key . ' = ?  OR ';
+                    $temp .= ' ' . $db_key . ' = ?  OR';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' a.user_id is NULL OR ';
+                        $temp .= ' a.user_id is NULL OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR ";
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
                                 $sql_params[] = '%' . $val . '%';
                             } elseif (is_numeric($val)) {
                                 $temp .= ' ' . $singleDBKey . ' = ? OR';
