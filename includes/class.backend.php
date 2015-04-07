@@ -1227,6 +1227,7 @@ abstract class Backend
         $where = $sql_params = array();
 
         // echo '<pre>' . print_r($visible, true) . '</pre>';
+        // echo '<pre>' . print_r($args, true) . '</pre>';
         // PostgreSQL LIKE searches are by default case sensitive,
         // so we use ILIKE instead. For other databases, in our case
         // only MySQL/MariaDB, LIKE is good for our purposes.
@@ -1239,7 +1240,7 @@ abstract class Backend
         $groupby = 't.task_id, ';
         $from = ' {tasks} t
 LEFT JOIN {projects} p ON t.project_id = p.project_id ';
-        
+
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
@@ -1247,7 +1248,7 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
         }
-        
+
         if (array_get($args, 'status') || in_array('status', $visible)) {
             $select .= ' lst.status_name, ';
             $groupby .= ' lst.status_name, ';
@@ -1256,75 +1257,75 @@ LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
         }
         /* What's the problem with resolution? Why do we do a join to a table
          * that's not in possible visible columns and can not be searched?
-        if (array_get($args, 'status') || in_array('status', $visible)) {
-            $from .= '
-LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
-        }
-        */
+          if (array_get($args, 'status') || in_array('status', $visible)) {
+          $from .= '
+          LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+          }
+         */
         if (array_get($args, 'cat') || in_array('category', $visible)) {
             $from .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             $select .= ' lc.category_name AS category_name, ';
             $groupby .= 'lc.category_name, ';
         }
-        
+
         if (in_array('votes', $visible)) {
 //            $from .= '
 // LEFT JOIN {votes} vot ON t.task_id = vot.task_id ';
 //             $select .= ' COUNT(DISTINCT vot.vote_id) AS num_votes, ';
             $select .= ' (SELECT COUNT(vot.vote_id) FROM {votes} vot WHERE vot.task_id = t.task_id) AS num_votes, ';
         }
-        
+
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if ($search_for_changes) {
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
-        
+
         if (array_get($args, 'search_in_comments')) {
             $from .= '
 LEFT JOIN {comments} c ON t.task_id = c.task_id ';
         }
-        
+
         if (in_array('comments', $visible)) {
             $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
         }
-        
+
         if (in_array('reportedin', $visible)) {
             $from .= '
 LEFT JOIN {list_version} lv ON t.product_version = lv.version_id ';
             $select .= ' lv.version_name AS product_version_name, ';
             $groupby .= 'lv.version_name, ';
         }
-        
+
         if (array_get($args, 'opened') || in_array('openedby', $visible)) {
             $from .= '
 LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
             $select .= ' uo.real_name AS opened_by_name, ';
             $groupby .= 'uo.real_name, ';
         }
-        
+
         if (array_get($args, 'closed')) {
             $from .= '
 LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
             $select .= ' uc.real_name AS closed_by_name, ';
             $groupby .= 'uc.real_name, ';
         }
-        
+
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
             $from .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
             $select .= ' lvc.version_name AS closedby_version_name, ';
             $groupby .= 'lvc.version_name, lvc.list_position, ';
         }
-        
+
         if (in_array('os', $visible)) {
             $from .= '
 LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
             $select .= ' los.os_name AS os_name, ';
             $groupby .= 'los.os_name, ';
         }
-        
+
         if (in_array('attachments', $visible)) {
 //            $from .= '
 // LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
@@ -1358,7 +1359,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
         }
-        
+
         if (array_get($args, 'has_attachment')) {
             $where[] = 'att.attachment_id IS NOT NULL';
         }
@@ -1368,7 +1369,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         }
 
         if (array_get($args, 'only_watched')) {
-            //join the notification table to get watched tasks
+            // join the notification table to get watched tasks
             $from .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[] = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
@@ -1431,7 +1432,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             'due' => 'closedby_version', 'reported' => 'product_version',
             'cat' => 'product_category', 'status' => 'item_status',
             'percent' => 'percent_complete', 'pri' => 'task_priority',
-            'dev' => array('a.user_id', 'us.user_name', 'us.real_name'),
+            'dev' => array('a.user_id', 'u.user_name', 'u.real_name'),
             'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
             'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
         foreach ($submits as $key => $db_key) {
@@ -1440,26 +1441,26 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
             if (in_array('', $type))
                 continue;
-
-            if ($key == 'dev') {
-                $from .= 'LEFT JOIN {assigned} a ON t.task_id = a.task_id ';
-                $from .= 'LEFT JOIN {users} us ON a.user_id = us.user_id ';
-
+            /* Do not join twice!    
+              if ($key == 'dev') {
+              $from .= 'LEFT JOIN {assigned} a ON t.task_id = a.task_id ';
+              $from .= 'LEFT JOIN {users} us ON a.user_id = us.user_id ';
+             */
             $temp = '';
             $condition = '';
             foreach ($type as $val) {
                 // add conditions for the status selection
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
-                    $temp .= ' is_closed = 1 AND';
+                    $temp .= ' is_closed = 1 AND ';
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
-                    $temp .= ' is_closed = 0 AND';
+                    $temp .= ' is_closed = 0 AND ';
                 }
                 if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == 'closed')) {
-                    $temp .= ' ' . $db_key . ' = ?  OR';
+                    $temp .= ' ' . $db_key . ' = ?  OR ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' a.user_id is NULL OR';
+                        $temp .= ' a.user_id is NULL OR ';
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
@@ -1493,7 +1494,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             if ($temp)
                 $where[] = '(' . substr($temp, 0, -3) . ')';
         }
-        /// }}}
+/// }}}
         $having = array();
         $dates = array('duedate' => 'due_date', 'changed' => $maxdatesql,
             'opened' => 'date_opened', 'closed' => 'date_closed');
@@ -1640,12 +1641,12 @@ ORDER BY $sortorder";
 
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
-        // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-        echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
         $totalcount = $db->FetchOne($sql);
 
-        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
+# 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
 
         $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
         $tasks = $db->fetchAllArray($sql);
@@ -1660,10 +1661,11 @@ ORDER BY $sortorder";
             }
         }
 
-        // Work on this is not finished until $forbidden_tasks_count is always zero.
-        // echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+// Work on this is not finished until $forbidden_tasks_count is always zero.
+// echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
         return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
 // # end alternative
-    } # end get_task_list
+    }
+
+# end get_task_list
 } # end class
-}
