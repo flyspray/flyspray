@@ -1245,11 +1245,11 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
-            $groupby .= ' lt.tasktype_name, ';
+            $groupby .= ' lt.tasktype_id, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             if (array_get($args, 'type')) {
-                $cgroupbyarr[] = 'lt.tasktype_name';
+                $cgroupbyarr[] = 'lt.tasktype_id';
                 $cfrom .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             }            
@@ -1257,11 +1257,11 @@ LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
 
         if (array_get($args, 'status') || in_array('status', $visible)) {
             $select .= ' lst.status_name, ';
-            $groupby .= ' lst.status_name, ';
+            $groupby .= ' lst.status_id, ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             if (array_get($args, 'status')) {
-                $cgroupbyarr[] = 'lst.status_name';
+                $cgroupbyarr[] = 'lst.status_id';
                 $cfrom .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             }
@@ -1277,11 +1277,11 @@ LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             $select .= ' lc.category_name AS category_name, ';
             $from .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
-            $groupby .= 'lc.category_name, ';
+            $groupby .= 'lc.category_id, ';
             if (array_get($args, 'cat')) {
                 $cfrom .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
-                $cgroupbyarr[] = 'lc.category_name';
+                $cgroupbyarr[] = 'lc.category_id';
             }
         }
 
@@ -1303,7 +1303,7 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
 LEFT JOIN {comments} c ON t.task_id = c.task_id ';
             $cfrom .= '
 LEFT JOIN {comments} c ON t.task_id = c.task_id ';
-            $cgroupbyarr[] = 'c.task_id';
+            $cgroupbyarr[] = 't.task_id';
         }
 
         if (in_array('comments', $visible)) {
@@ -1314,18 +1314,18 @@ LEFT JOIN {comments} c ON t.task_id = c.task_id ';
             $from .= '
 LEFT JOIN {list_version} lv ON t.product_version = lv.version_id ';
             $select .= ' lv.version_name AS product_version_name, ';
-            $groupby .= 'lv.version_name, ';
+            $groupby .= 'lv.version_id, ';
         }
 
         if (array_get($args, 'opened') || in_array('openedby', $visible)) {
             $select .= ' uo.real_name AS opened_by_name, ';
             $from .= '
 LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
-            $groupby .= 'uo.real_name, ';
+            $groupby .= 'uo.user_id, ';
             if (array_get($args, 'opened')) {
                 $cfrom .= '
 LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
-                $cgroupbyarr[] = 'uo.real_name';
+                $cgroupbyarr[] = 'uo.user_id';
             }
         }
 
@@ -1333,21 +1333,21 @@ LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
             $select .= ' uc.real_name AS closed_by_name, ';
             $from .= '
 LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
-            $groupby .= 'uc.real_name, ';
+            $groupby .= 'uc.user_id, ';
             $cfrom .= '
 LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
-            $cgroupbyarr[] = 'uc.real_name';
+            $cgroupbyarr[] = 'uc.user_id';
         }
 
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
             $select .= ' lvc.version_name AS closedby_version_name, ';
             $from .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
-            $groupby .= 'lvc.version_name, lvc.list_position, ';
+            $groupby .= 'lvc.version_id, lvc.list_position, ';
             if (array_get($args, 'due')) {
                 $cfrom .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
-                $cgroupbyarr[] = 'lvc.version_name, lvc.list_position';
+                $cgroupbyarr[] = 'lvc.version_id, lvc.list_position';
             }
         }
 
@@ -1355,7 +1355,7 @@ LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
             $select .= ' los.os_name AS os_name, ';
             $from .= '
 LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
-            $groupby .= 'los.os_name, ';
+            $groupby .= 'los.os_id, ';
         }
 
         if (in_array('attachments', $visible)) {
