@@ -1396,6 +1396,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         }
 
         if (array_get($args, 'only_primary')) {
+            // Check what happens if using NOT EXISTS instead.
             $from .= '
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $cfrom .= '
@@ -1432,13 +1433,10 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $type = array_get($args, $key, ($key == 'status') ? 'open' : '');
             settype($type, 'array');
 
-            if (in_array('', $type))
+            if (in_array('', $type)) {
                 continue;
-            /* Do not join twice!    
-              if ($key == 'dev') {
-              $from .= 'LEFT JOIN {assigned} a ON t.task_id = a.task_id ';
-              $from .= 'LEFT JOIN {users} us ON a.user_id = us.user_id ';
-             */
+            }
+
             $temp = '';
             $condition = '';
             foreach ($type as $val) {
@@ -1585,6 +1583,10 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
             $groupby .= "p.project_title, p.project_is_active, ";
+            // Remove this after checking old PostgreSQL docs.
+            // 1 column from task table should be enough, after
+            // already grouping by task_id, there's no possibility
+            // to have anything more in that table to group by.
             $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
