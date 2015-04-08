@@ -1420,53 +1420,6 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $sql_params[] = $proj->id;
         }
 
-        $order_keys = array(
-            'id' => 't.task_id',
-            'project' => 'project_title',
-            'tasktype' => 'tasktype_name',
-            'dateopened' => 'date_opened',
-            'summary' => 'item_summary',
-            'severity' => 'task_severity',
-            'category' => 'lc.category_name',
-            'status' => 'is_closed, item_status',
-            'dueversion' => 'lvc.list_position',
-            'duedate' => 'due_date',
-            'progress' => 'percent_complete',
-            'lastedit' => 'max_date',
-            'priority' => 'task_priority',
-            'openedby' => 'uo.real_name',
-            'reportedin' => 't.product_version',
-            'assignedto' => 'u.real_name',
-            'dateclosed' => 't.date_closed',
-            'os' => 'los.os_name',
-            'votes' => 'num_votes',
-            'attachments' => 'num_attachments',
-            'comments' => 'num_comments',
-            'private' => 'mark_private',
-            'supertask' => 't.supertask_id',
-        );
-
-        // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
-        $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
-
-        // Implementing setting "Default order by"
-        if (!array_key_exists('order', $args)) {
-            if ($proj->id) {
-                $orderBy = $proj->prefs['default_order_by'];
-                $sort = $proj->prefs['default_order_by_dir'];
-            } else {
-                $orderBy = $fs->prefs['default_order_by'];
-                $sort = $fs->prefs['default_order_by_dir'];
-            }
-        } else {
-            $orderBy = $args['order'];
-            $sort = $args['sort'];
-        }
-
-        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
-        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
-        $sortorder = sprintf('%s %s, %s %s, t.task_id ASC', $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')), $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
-
         /// process search-conditions {{{
         $submits = array('type' => 'task_type', 'sev' => 'task_severity',
             'due' => 'closedby_version', 'reported' => 'product_version',
@@ -1535,6 +1488,54 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                 $where[] = '(' . substr($temp, 0, -3) . ')';
         }
 /// }}}
+
+        $order_keys = array(
+            'id' => 't.task_id',
+            'project' => 'project_title',
+            'tasktype' => 'tasktype_name',
+            'dateopened' => 'date_opened',
+            'summary' => 'item_summary',
+            'severity' => 'task_severity',
+            'category' => 'lc.category_name',
+            'status' => 'is_closed, item_status',
+            'dueversion' => 'lvc.list_position',
+            'duedate' => 'due_date',
+            'progress' => 'percent_complete',
+            'lastedit' => 'max_date',
+            'priority' => 'task_priority',
+            'openedby' => 'uo.real_name',
+            'reportedin' => 't.product_version',
+            'assignedto' => 'u.real_name',
+            'dateclosed' => 't.date_closed',
+            'os' => 'los.os_name',
+            'votes' => 'num_votes',
+            'attachments' => 'num_attachments',
+            'comments' => 'num_comments',
+            'private' => 'mark_private',
+            'supertask' => 't.supertask_id',
+        );
+
+        // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
+        $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
+
+        // Implementing setting "Default order by"
+        if (!array_key_exists('order', $args)) {
+            if ($proj->id) {
+                $orderBy = $proj->prefs['default_order_by'];
+                $sort = $proj->prefs['default_order_by_dir'];
+            } else {
+                $orderBy = $fs->prefs['default_order_by'];
+                $sort = $fs->prefs['default_order_by_dir'];
+            }
+        } else {
+            $orderBy = $args['order'];
+            $sort = $args['sort'];
+        }
+
+        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
+        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
+        $sortorder = sprintf('%s %s, %s %s, t.task_id ASC', $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')), $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
+
         $having = array();
         $dates = array('duedate' => 'due_date', 'changed' => $maxdatesql,
             'opened' => 'date_opened', 'closed' => 'date_closed');
