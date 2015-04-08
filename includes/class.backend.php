@@ -1410,8 +1410,8 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         if (array_get($args, 'only_watched')) {
             // join the notification table to get watched tasks
-            $from .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
-            $cfrom .= ' LEFT JOIN {notifications} fsn ON t.task_id = fsn.task_id';
+            $from .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
+            $cfrom .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[] = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
@@ -1530,6 +1530,8 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $sort = $args['sort'];
         }
 
+        // TODO: Fix this! If something is already ordered by task_id, there's
+        // absolutely no use to even try to order by something else also. 
         $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
         $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
         $sortorder = sprintf('%s %s, %s %s, t.task_id ASC', $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')), $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
