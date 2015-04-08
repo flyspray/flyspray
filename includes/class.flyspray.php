@@ -452,7 +452,7 @@ class Flyspray
         global $db;
         $res = $db->Query('SELECT  account_enabled, user_id, user_name, real_name, email_address
                              FROM  {users}
-                         ORDER BY  account_enabled DESC, user_name ASC');
+                         ORDER BY  account_enabled DESC, UPPER(user_name) ASC');
         return $db->FetchAllArray($res);
     }
 
