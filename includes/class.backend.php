@@ -1238,7 +1238,7 @@ abstract class Backend
 
         $select = '';
         $groupby = 't.task_id, ';
-        $cgroupby = 't.task_id, ';
+        $cgroupbyarr = array();
         $from = ' {tasks} t
 LEFT JOIN {projects} p ON t.project_id = p.project_id ';
         $cfrom = $from;
@@ -1249,7 +1249,7 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             if (array_get($args, 'type')) {
-                $cgroupby .= ' lt.tasktype_name, ';
+                $cgroupbyarr[] = 'lt.tasktype_name';
                 $cfrom .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             }            
@@ -1261,7 +1261,7 @@ LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             if (array_get($args, 'status')) {
-                $cgroupby .= ' lst.status_name, ';
+                $cgroupbyarr[] = 'lst.status_name';
                 $cfrom .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             }
@@ -1281,7 +1281,7 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             if (array_get($args, 'cat')) {
                 $cfrom .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
-                $cgroupby .= 'lc.category_name, ';
+                $cgroupbyarr[] = 'lc.category_name';
             }
         }
 
@@ -1303,6 +1303,7 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
 LEFT JOIN {comments} c ON t.task_id = c.task_id ';
             $cfrom .= '
 LEFT JOIN {comments} c ON t.task_id = c.task_id ';
+            $cgroupbyarr[] = 'c.task_id';
         }
 
         if (in_array('comments', $visible)) {
@@ -1324,7 +1325,7 @@ LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
             if (array_get($args, 'opened')) {
                 $cfrom .= '
 LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
-                $cgroupby .= 'uo.real_name, ';
+                $cgroupbyarr[] = 'uo.real_name';
             }
         }
 
@@ -1335,14 +1336,19 @@ LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
             $groupby .= 'uc.real_name, ';
             $cfrom .= '
 LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
-            $cgroupby .= 'uc.real_name, ';
+            $cgroupbyarr[] = 'uc.real_name';
         }
 
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
+            $select .= ' lvc.version_name AS closedby_version_name, ';
             $from .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
-            $select .= ' lvc.version_name AS closedby_version_name, ';
             $groupby .= 'lvc.version_name, lvc.list_position, ';
+            if (array_get($args, 'due')) {
+                $cfrom .= '
+LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
+                $cgroupbyarr[] = 'lvc.version_name, lvc.list_position';
+            }
         }
 
         if (in_array('os', $visible)) {
@@ -1350,11 +1356,6 @@ LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
             $from .= '
 LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
             $groupby .= 'los.os_name, ';
-            if (array_get($args, 'due')) {
-                $cfrom .= '
-LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
-                $cgroupby .= 'los.os_name, ';
-            }
         }
 
         if (in_array('attachments', $visible)) {
@@ -1390,7 +1391,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
                 $cfrom .= '
 LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
-                $cgroupby .= 'ass.task_id, ';
+                $cgroupbyarr[] = 'ass.task_id';
             }
         }
 
@@ -1589,6 +1590,9 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         }
 
         $having = (count($having)) ? 'HAVING ' . join(' AND ', $having) : '';
+        
+        echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
+        $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', $cgroupbyarr) : '';
 
         /* Current implementation
           # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
@@ -1664,7 +1668,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1
                           FROM     $cfrom
                           $where
-                          GROUP BY $cgroupby
+                          $cgroupby
                           $having) s";
 // Using limit 100. Running time depends heavily on offset.
 // With 0: between 5400 and 6000 ms.
