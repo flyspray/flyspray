@@ -206,6 +206,17 @@ switch ($action = Req::val('action'))
 
         $time = time();
 
+        $result = $db->Query('SELECT * from {tasks} WHERE task_id = ?', array($task['task_id']));
+        $defaults = $db->fetchRow($result);
+        
+        if (!Post::val('due_date')) {
+            $due_date = $defaults['due_date'];
+        }
+        
+        if (!Post::val('estimated_effort')) {
+            $estimated_effort = $defaults['estimated_effort'];
+        }
+        
         $db->Query('UPDATE  {tasks}
                        SET  project_id = ?, task_type = ?, item_summary = ?,
                             detailed_desc = ?, item_status = ?, mark_private = ?,
@@ -214,13 +225,14 @@ switch ($action = Req::val('action'))
                             last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?,
                             estimated_effort = ?
                      WHERE  task_id = ?',
-        array(Post::val('project_id'), Post::val('task_type'),
-            Post::val('item_summary'), Post::val('detailed_desc'),
-            Post::val('item_status'), intval($user->can_change_private($task) && Post::val('mark_private')),
-            Post::val('product_category'), Post::val('closedby_version', 0),
-            Post::val('operating_system'), Post::val('task_severity'),
-            Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-            Post::val('percent_complete'), Post::val('reportedver'),intval($estimated_effort),
+        array(Post::val('project_id', $defaults['project_id']), Post::val('task_type', $defaults['task_type']),
+            Post::val('item_summary', $defaults['item_summary']), Post::val('detailed_desc', $defaults['detailed_desc']),
+            Post::val('item_status', $defaults['item_status']), intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
+            Post::val('product_category', $defaults['product_category']), Post::val('closedby_version', $defaults['closedby_version']),
+            Post::val('operating_system', $defaults['operating_system']), Post::val('task_severity', $defaults['task_severity']),
+            Post::val('task_priority', $defaults['task_priority']), intval($user->id), $time, intval($due_date),
+            Post::val('percent_complete', $defaults['percent_complete']), Post::val('reportedver', $defaults['product_version']),
+            intval($estimated_effort),
             $task['task_id']));
 
         // Update the list of users assigned this task
