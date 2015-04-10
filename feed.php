@@ -49,7 +49,7 @@ $sql = $db->Query("SELECT  t.date_opened, t.date_closed, t.last_edited_time, t.i
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
                     WHERE  $closed AND $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
-                 ORDER BY  $orderby DESC", 0, $max_items);
+                 ORDER BY  $orderby DESC", false, $max_items);
 $most_recent = 0;
 while ($row = $db->fetchRow($sql)) {
     $most_recent = max($most_recent, $row['date_opened'], $row['date_closed'], $row['last_edited_time']);
@@ -83,7 +83,7 @@ $sql = $db->Query("SELECT  t.task_id, t.item_summary, t.detailed_desc, t.date_op
                INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
                     WHERE  $closed AND $sql_project AND t.mark_private <> '1'
                            AND p.others_view = '1'
-                 ORDER BY  $orderby DESC", 0, $max_items);
+                 ORDER BY  $orderby DESC", false, $max_items);
 
 $task_details     = $db->fetchAllArray($sql);
 $feed_description = $proj->prefs['feed_description'] ? $proj->prefs['feed_description'] : $fs->prefs['page_title'] . $proj->prefs['project_title'].': '.$title;

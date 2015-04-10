@@ -162,7 +162,7 @@
                 <input type="hidden" name="action" value="addtoassignees" />
                 <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-                <?php echo Filters::noXSS(L('addmetoassignees')); ?>
+                <button type="submit"><?php echo Filters::noXSS(L('addmetoassignees')); ?></button>
                 </form>
             </li>
             <?php endif; ?>

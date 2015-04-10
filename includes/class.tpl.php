@@ -293,7 +293,7 @@ function tpl_userlink($uid)
 
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
-	global $db, $user, $baseurl;
+	global $db, $user, $baseurl, $fs;
 	if (is_array($uid)) {
 		list($uid, $uname, $rname) = $uid;
 	}

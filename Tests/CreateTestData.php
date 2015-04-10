@@ -5,22 +5,25 @@
 // Borg Inc. is a big multinational company delivering
 $maxproducts = 50;
 // both to it's
-$maxcorporateusers = 15;
+$maxcorporateusers = 450;
+// working in
+$maxcorporates = 50;
 // and
 $maxindividualusers = 10;
 // who are all happy to report to us about
-$maxtasks = 10;
+$maxtasks = 150;
 // the many problems in our products. And then there are also
 $maxviewers = 50;
 // who just like to watch what's going on here at Borg Inc.
 // Our users are also keen to add attachments to their reports and comments, so there are
-$maxattachments = 30;
+$maxattachments = 500;
 // in our database;
 // Our users are also very active with commenting.
+$maxcomments = 750;
 // To handle all the resulting work, we need
 $maxadmins = 3;
 $maxmanagers = 5;
-$maxdevelopers = 200;
+$maxdevelopers = 50;
 // people working together all over the globe to care for their needs.
 
 // We also have both a very innovative and standardized naming scheme for our products.
@@ -29,10 +32,13 @@ $maxdevelopers = 200;
 // is even opened or the original comment made.
 
 // Add more according to your taste...
-$subjects[] = "Product %s sucks!";
-$subjects[] = "Product %s is utterly crap!";
-$subjects[] = "Developers of product %s should be hanged!";
-$subjects[] = "Who is responsible for project %s?";
+$subjects[] = "%s sucks!";
+$subjects[] = "%s is utterly crap!";
+$subjects[] = "Developers of %s should be hanged!";
+$subjects[] = "Developers of %s should be strangled!";
+$subjects[] = "Developers of %s should be eaten alive by zombies!";
+$subjects[] = "Developers of %s should be thrown in a pit of snakes!";
+$subjects[] = "Who is the idiot responsible for %s?";
 
 error_reporting(E_ALL);
 
@@ -80,20 +86,38 @@ for ($i = 1; $i <= $maxmanagers; $i++) {
 
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 2, 1);
 }
+$db->Query('UPDATE {projects} SET project_is_active = 0 WHERE project_id = 1');
+// Show more columns by default, trying to make database or flyspray crash under stress.
+$db->Query("UPDATE {prefs} SET pref_value = 'id project category tasktype severity summary status openedby dateopened progress comments attachments votes' WHERE pref_name = 'visible_columns'");
 
 // Add 3 different Global developer groups with different
 // view rights first, then assign developers to them at random.
-// Borg Inc. has a strict hierarchy on who can see AND do what.
+// Borg Inc. has a strict hierarchy on who can see and do what.
+
+// Somewhat more relaxed with our own developers.
 
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 1', 'Developer Group 1', 0, 0, 1, 1, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 1', 'Developer Group 1', 0, 1, 1, 0, 1, 1, 1, 1, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 2', 'Developer Group 2', 0, 0, 0, 1, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 2', 'Developer Group 2', 0, 1, 1, 0, 0, 1, 1, 1, 1)");
 $db->Query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 3', 'Developer Group 3', 0, 0, 0, 0, 1, 1, 1)");
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('Developer Group 3', 'Developer Group 3', 0, 1, 1, 0, 0, 0, 1, 1, 1)");
+
+// Add also general groups for corporate users, individual users and viewers.
+// Allow only login. Not so relaxed with them bastards.
+$db->Query("INSERT INTO {groups} "
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Corporate Users', 'Corporate Users', 0, 1)");
+$db->Query("INSERT INTO {groups} "
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Trusted Users', 'Trusted Users', 0, 1)");
+$db->Query("INSERT INTO {groups} "
+        . "(group_name,group_desc,project_id,group_open) "
+        . "VALUES('Non-trusted Users', 'Non-trusted Users', 0, 1)");
+
 
 for ($i = 1; $i <= $maxdevelopers; $i++) {
     $user_name = "dev$i";
@@ -109,7 +133,7 @@ for ($i = 1; $i <= $maxdevelopers; $i++) {
 // We have been really active in the past years, AND have a lot of projects.
 for ($i = 1; $i <= $maxproducts; $i++) {
     $projname = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12)));
-    $projname = preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
+    $projname = 'Borg Inc. Product ' . preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
     
       $db->Query('INSERT INTO  {projects}
       ( project_title, theme_style, intro_message,
@@ -118,7 +142,7 @@ for ($i = 1; $i <= $maxproducts; $i++) {
       notify_email, notify_jabber, disp_intro)
       VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
       array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
-      'id category tasktype severity summary status openedby dateopened progress',
+      'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
       'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
       'en', '', '', 1));
      
@@ -127,7 +151,7 @@ for ($i = 1; $i <= $maxproducts; $i++) {
 }
 
 // Assign some of the poor developers project manager or project developer
-// rights to some projects they must work on.
+// rights to some of the projects they must work on.
 for ($i = 1; $i <= $maxproducts; $i++) {
     $projid = $i + 1;
     $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ? AND manage_project = 1', array($projid));
@@ -157,37 +181,48 @@ for ($i = 1; $i <= $maxproducts; $i++) {
     }
     
 }
-// Approximately 200 hundred of our projects are already closed or deleted.
-// Cannot be sure when using random...
-
-for ($i = 1; $i < 200; $i++) {
-    
-}
-
-// Some of our developers AND project managers couldn't take all that AND have already left the premises
-// No wonder, because we've got those corporate AND individual users always complaining
-// AND whining, not to speak about our management.
 
 // Create corporate users.
 for ($i = 1; $i <= $maxcorporateusers; $i++) {
-    $user_name = "rep$i";
-    $real_name = "Reporter $i";
+    $user_name = "cu$i";
+    $real_name = "Corporate user $i";
     $password = $user_name;
     $time_zone = 0; // Assign different ones!
     $email = $email = null; $user_name . '@foo.bar.baz.org';
-    $group = 3;
+    $group = 10;
 
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 }
 
+// Now, create corporate user groups for some of our projects.
+// Just %5 change of getting added.
+for ($i = 1; $i <= $maxcorporates; $i++) {
+    for ($j = 1; $j <= $maxproducts; $j++) {
+        if (rand(1, 20) == 1) {
+            $projid = $j + 1;
+            $db->Query("INSERT INTO {groups} "
+                    . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,add_comments,create_attachments,group_open,view_comments) "
+                    . "VALUES('Corporate $i', 'Corporate $i Users', $projid, 0, 0, 1, 1, 1, 1, 1,1,1)");
+            $sql = $db->Query('SELECT MAX(group_id) FROM {groups}');
+            $group_id = $db->FetchOne($sql);
+            // Then, add users
+            for ($k = $i; $k <= $maxcorporateusers; $k += $maxcorporates) {
+                $username = "cu$k";
+                $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($username));
+                $user_id = $db->FetchOne($sql);
+                $db->Query('INSERT INTO {users_in_groups} (user_id, group_id) VALUES (?, ?)', array($user_id, $group_id));
+            }
+        }
+    }
+}
 // And also those individual users...
 for ($i = 1; $i <= $maxindividualusers; $i++) {
-    $user_name = "rep$i";
-    $real_name = "Reporter $i";
+    $user_name = "iu$i";
+    $real_name = "Individual user $i";
     $password = $user_name;
     $time_zone = 0; // Assign different ones!
     $email = $email = null; $user_name . '@foo.bar.baz.org';
-    $group = 3;
+    $group = rand(11, 12);
 
     Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 }
@@ -212,10 +247,16 @@ $user = new User(1);
 
 // And that's why we've got 1000000 tasks opened within the last 10 years
 for ($i = 1; $i <= $maxtasks; $i++) {
-    $sql = $db->Query("SELECT user_id FROM {users_in_groups} WHERE group_id in (7, 8, 9) ORDER BY $RANDOP limit 1");
-    $reporter = $db->FetchOne($sql);
     $project = rand(2, $maxproducts);
-    $sql = $db->Query("SELECT category_id FROM {list_category} WHERE project_id = ? AND category_name <> 'root' ORDER BY $RANDOP limit 1",
+    // Find someone who is allowed to open a task, do not use global groups
+    $sql = $db->Query("SELECT uig.user_id
+                         FROM {users_in_groups} uig
+                         JOIN {groups} g ON g.group_id = uig.group_id AND g.open_new_tasks = 1
+                          AND (g.project_id = 0 OR g.project_id = ?)
+                        WHERE g.group_id NOT IN (1, 2, 7, 8, 9)
+                     ORDER BY $RANDOP LIMIT 1", array($project));
+    $reporter = $db->FetchOne($sql);
+    $sql = $db->Query("SELECT category_id FROM {list_category} WHERE project_id = ? AND category_name <> 'root' ORDER BY $RANDOP LIMIT 1",
         array($project));
     $category = $db->FetchOne($sql);
     $opened = time() -  rand(1, 315360000);
@@ -253,31 +294,50 @@ for ($i = 1; $i <= $maxtasks; $i++) {
 }
 
 // One task in ten of is unconfirmed, probably just bullshit, not assigned to anyone,
-// AND we add just a comment "Cannot reproduce".
+// and we add just a comment "Cannot reproduce".
  
-for ($i = 1; $i <= $maxtasks; $i++) {
-    $taskid = $i + 1;
-    $assignees = rand(1, 7);
-    $comments = rand(1, 20);
-
+for ($i = 1; $i <= $maxcomments; $i++) {
+    $taskid = rand(2, $maxtasks + 1);
     $task = Flyspray::GetTaskDetails($taskid, true);
-    
-    // Assign to developers, somewhat random amount, more if severity is high. 
-    
-    // Add comments too.
-    for ($j = 0; $j < $comments; $j++) {
-        $comment = 'Comment.';
-        Backend::add_comment($task, $comment);
+    $project = $task['project_id'];
+    $added = time() -  rand(1, 315360000);
+    // Find someone who is allowed to add comment, do not use global groups
+    $sqltext = "SELECT uig.user_id
+                         FROM {users_in_groups} uig
+                         JOIN {groups} g ON g.group_id = uig.group_id AND g.add_comments = 1
+                          AND (g.project_id = 0 OR g.project_id = ?)
+                        WHERE g.group_id NOT IN (1, 2, 7, 8, 9)
+                     ORDER BY $RANDOP ";
+    $sql = $db->Query($sqltext, array($project));
+    $row = $db->FetchRow($sql);
+    $reporter = new User($row['user_id']);
+   
+    // User might still not be able to add a comment, if he can not see the task...
+    // Just try again until a suitable one comes out from the query. It will finally.
+    // Try to enhance the query also to return fewer unsuitable ones.
+    while (!$reporter->can_view_task($task)) {
+        $row = $db->FetchRow($sql);
+        $reporter = new User($row['user_id']);
     }
+   
+    $comment = 'Comment.';
+    Backend::add_comment($task, $comment);
+    $sql = $db->Query('SELECT MAX(comment_id) FROM {comments}');
+    $comment_id = $db->FetchOne($sql);
+    $db->Query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
+                array($reporter->id, $added, $comment_id));
 }
 
 // And 5000000 attachments total, either to task or comment
 
 for ($i = 1; $i <= $maxattachments; $i++) {
-    $sql = $db->Query("SELECT comment_id, task_id FROM {comments} ORDER BY $RANDOP limit 1");
-    list($comment_id, $task_id) = $db->FetchRow($sql);
+    $sql = $db->Query("SELECT comment_id, task_id, user_id, date_added FROM {comments} ORDER BY $RANDOP LIMIT 1");
+    list($comment_id, $task_id, $user_id, $date_added) = $db->FetchRow($sql);
     $fname = "Attachment $i";
-    $origname = "Original file $i";
+    if (rand(1, 100) == 1) {
+        $comment_id = 0;
+    }
+    $origname = GetAttachmentDescription() . " $i";
     $db->Query("INSERT INTO  {attachments}
                                      ( task_id, comment_id, file_name,
                                        file_type, file_size, orig_name,
@@ -286,11 +346,98 @@ for ($i = 1; $i <= $maxattachments; $i++) {
             array($task_id, $comment_id, $fname,
         'application/octet-stream', 1024,
         $origname,
-        $user->id, time()));
+        $user_id, $date_added));
+}
+function GetAttachmentDescription() {
+    $type = rand(1, 100);
+    if ($type > 80 && $type <= 100) {
+        return 'Information that might help solve the problem';
+    }
+    elseif ($type == 79) {
+        return 'Pic of my pet alligator';
+    }
+    elseif ($type == 78) {
+        return 'Pic of my pet rhinoceros';
+    }
+    elseif ($type == 77) {
+        return 'Pic of my pet elephant';
+    }
+    elseif ($type == 76 || $type == 75) {
+        return 'Pic of my pet monkey';
+    }
+    elseif ($type == 74 || $type == 73) {
+        return 'Pic of my undulate';
+    }
+    elseif ($type == 72 || $type == 71) {
+        return 'Pic of my goldfish';
+    }
+    elseif ($type == 70 || $type == 69) {
+        return 'Pic of my pet pig';
+    }
+    elseif ($type == 68 || $type == 67) {
+        return 'Pic of my pet snake';
+    }
+    elseif ($type == 66 || $type == 65) {
+        return 'Pic of my pet rat';
+    }
+    elseif ($type == 64 || $type == 63) {
+        return 'Pic of my pet goat';
+    }
+    elseif ($type == 62 || $type == 61) {
+        return 'Pic of my pet rabbit';
+    }
+    elseif ($type == 60 || $type == 59) {
+        return 'Pic of my pet gerbil';
+    }
+    elseif ($type == 58 || $type == 57) {
+        return 'Pic of my pet hamster';
+    }
+    elseif ($type == 56 || $type == 55) {
+        return 'Pic of my pet chinchilla';
+    }
+    elseif ($type == 54 || $type == 53) {
+        return 'Pic of my pet guinea pig';
+    }
+    elseif ($type == 52 || $type == 51) {
+        return 'Pic of my pet turtle';
+    }
+    elseif ($type == 50 || $type == 49) {
+        return 'Pic of my pet lizard';
+    }
+    elseif ($type == 48 || $type == 47) {
+        return 'Pic of my pet frog';
+    }
+    elseif ($type == 46 || $type == 45) {
+        return 'Pic of my pet tarantula';
+    }
+    elseif ($type == 44 || $type == 43) {
+        return 'Pic of my pet hermit crab';
+    }
+    elseif ($type == 42 || $type == 41) {
+        return 'Pic of my pet parrot';
+    }
+    elseif ($type >= 40 && $type < 25) {
+        return 'Pic of my dog';
+    }
+    else {
+        return 'Pic of my cat';
+    }
 }
 // // But at least we have been able to solve approximately half of the tasks
 // Of course, many of the tasks are somehow related to each other, so add
 // parents, relationships, dependencies, duplicates etc. last.
+
+// Do this ones last, after creating all the other data.
+// Approximately 200 hundred of our projects are already closed or deleted.
+// Cannot be sure when using random...
+
+for ($i = 1; $i < 200; $i++) {
+    
+}
+
+// Some of our developers AND project managers couldn't take all that AND have already left the premises
+// No wonder, because we've got those corporate AND individual users always complaining
+// AND whining, not to speak about our management.
 
 $db->dbClose();
 

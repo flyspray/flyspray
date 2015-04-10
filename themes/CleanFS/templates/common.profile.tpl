@@ -42,10 +42,10 @@
         <label for="notify_own"><?php echo Filters::noXSS(L('notifyown')); ?></label>
         <?php echo tpl_checkbox('notify_own', Req::val('notify_own', !Post::val('action') && $theuser->infos['notify_own']), 'notify_own'); ?>
       </li>
-      <li>
+      <!--<li>
         <label for="notify_online"><?php echo Filters::noXSS(L('notifyonline')); ?></label>
         <?php echo tpl_checkbox('notify_online', Req::val('notify_online', !Post::val('action')  && $theuser->infos['notify_online']), 'notify_online'); ?>
-      </li>
+      </li>-->
       <li>
         <label for="dateformat"><?php echo Filters::noXSS(L('dateformat')); ?></label>
         <select id="dateformat" name="dateformat">

@@ -80,7 +80,7 @@ del { color:#666; }
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
 li ul, li ol { margin: 0; }
-ul, ol { margin: 0 1.5em 1.5em 0; padding-left: 1.5em; }
+ul, ol { margin: 0 1.5em 1.5em 0; padding-left: 3em; }
 ul { list-style-type: disc; }
 ol { list-style-type: decimal; }
 dl { margin: 0 0 1.5em 0; }
@@ -621,7 +621,7 @@ form #taskdetails #taskdetailsfull {
   border-top: 1px solid #e1e1e1;
   padding: 8px 5px;
 }
-#comments, #related, #notify, #remind, #history {
+#comments, #related, #notify, #remind, #effort, #history {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
@@ -732,7 +732,7 @@ div.comment_container .comment_header_infos
 div.comment_container .comment_header_actions
 {
 	float: right;
-	margin-right: 5px;
+	margin-right: 10px;
 }
 
 div.comment_container .comment_header_usertype
@@ -1259,38 +1259,44 @@ div.denyform {
 #rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
-span.autocomplete {
-	background-color:#F5F5F5;
+.autocomplete {
+	background-color:#fff;
 	position: absolute;
 	width: auto !important;
-	border:1px solid gray;
+	box-shadow:0 5px 7px #ccc;
 	padding: 0px;
 	margin:-1px 0 0;
 	text-align:left;
 	display:block;
 }
-span.autocomplete ul {
+.autocomplete ul {
 	list-style-type: none;
 	margin: 0px;
 	padding: 0px;
 }
-span.autocomplete ul li {
+.autocomplete ul li {
 	list-style-type: none;
 	display: block;
 	margin: 0;
-	padding:2px 4px;
-	height: 1.1em;
+	padding:0;
+	height: 25px;
 	white-space:nowrap;
+	vertical-align:middle;
 }
-span.autocomplete ul li span.informal {
-	color: darkgray;
-	font-size:0.9em;
+.autocomplete ul li span.informal {
+	color: #333;
 }
-span.autocomplete ul li.selected {
+.autocomplete ul li.selected {
 	background-color: #5F9729;
 	cursor:pointer;
 	color:HighlightText;
 }
+.autocomplete img, .autocomplete .noavatar{
+	width:25px;
+	height:25px;
+	display:inline-block;
+}
+
 #actionbuttons {
 	margin-left: 300px;
 	margin-top: 15px;
@@ -1369,15 +1375,16 @@ button.fakelinkbutton
 	margin: 0;
 	font: inherit;
 	cursor: pointer;
-	color: #0000EE;
+	color: #369;
+	box-shadow:none;
 }
 
 button.fakelinkbutton:hover
 {
-	color: #09f;
+	color: #69c;
 }
 
 button.fakelinkbutton:visited
 {
-	color: #551A8B;
+	color: #69c;
 }
