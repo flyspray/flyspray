@@ -978,7 +978,12 @@ $translation = array(
 'pleaseselect'            => 'Veuillez sélectionner',
 'closeselectedtasks'      => 'Fermer les tâches sélectionnée',
 'closetasks'              => 'Fermer les tâches',
-'hintforbulkimport'       => "<b>Conseils pour l'import en paquet:</b>\n<ol>\n<li>Copiez /collez d'une feuille de calcul Excel ou CSV en collant une colonne entière.</li>\n<li>Pour le moment vous ne pouvez coller que Sommaire et Détails</li>\n<li>Il y a des suggestions lorsque vous assignez à quelqu'un, et à personne s'il n'y a pas de nom correspondant</li>\n</ol>",
+'hintforbulkimport'       => '<b>Conseils pour l\'import en paquet:</b>
+  <ol>
+  <li>Copiez/collez d\'une feuille de calcul Excel ou CSV en collant une colonne entière</li>
+  <li>Pour le moment vous ne pouvez coller que "Résumé" et "Détails"</li>
+  <li>La colonne "Assignée à" est intelligente et vous suggère les utilisateurs en fonction de ce que vous tapez</li>
+  </ol>',
 'taskissubtaskof'         => 'Cette tâche est une sous-tâche de',
 'applyfirstline'          => 'Appliquer la première ligne',
 'addmorerows'             => 'Ajouter plus de lignes',
