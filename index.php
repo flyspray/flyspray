@@ -104,8 +104,7 @@ $page = new FSTpl();
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
 if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
     Flyspray::show_error( L('nopermission') );
-// this exit prevents users from access to login box
-//    exit;
+    exit;
 }
 
 if ($show_task = Get::val('show_task')) {
