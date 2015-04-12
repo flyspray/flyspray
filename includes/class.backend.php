@@ -1371,6 +1371,9 @@ LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $cfrom .= '
 LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $where[] = 'att.attachment_id IS NOT NULL';
+            
+            // Check what happens if using EXISTS instead.
+            // $where[] = 'EXISTS (SELECT 1 FROM {attachments} att WHERE t.task_id = att.task_id)';
         }
         # 20150213 currently without recursive subtasks!
         if (in_array('effort', $visible)) {
@@ -1396,12 +1399,14 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         }
 
         if (array_get($args, 'only_primary')) {
-            // Check what happens if using NOT EXISTS instead.
             $from .= '
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $cfrom .= '
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
+            
+            // Check what happens if using NOT EXISTS instead.
+            // $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
         }
 
         if (array_get($args, 'hide_subtasks')) {
@@ -1413,6 +1418,9 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $from .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $cfrom .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[] = 'fsn.user_id = ?';
+
+            // Check what happens if using EXISTS instead.
+            // $where[] = 'EXISTS (SELECT 1 FROM {notifications} fsn WHERE t.task_id = fsn.task_id AND fsn.user_id = ?)';
             $sql_params[] = $user->id;
         }
 
@@ -1482,8 +1490,9 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                 }
             }
 
-            if ($temp)
+            if ($temp) {
                 $where[] = '(' . substr($temp, 0, -3) . ')';
+            }
         }
 /// }}}
 
