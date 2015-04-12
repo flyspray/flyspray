@@ -1564,10 +1564,10 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where_temp = array();
 
             if (array_get($args, 'search_in_comments')) {
-                $comments .= "OR c.comment_text $LIKEOP ?";
+                $comments .= " OR c.comment_text $LIKEOP ?";
             }
             if (array_get($args, 'search_in_details')) {
-                $comments .= "OR t.detailed_desc $LIKEOP ?";
+                $comments .= " OR t.detailed_desc $LIKEOP ?";
             }
 
             foreach ($words as $word) {
@@ -1696,16 +1696,34 @@ GROUP BY $groupby
 $having
 ORDER BY $sortorder";
 
+        // Very effective alternative with a little bit more work
+        // and if row_number() can be emulated in mysql. Idea:
+        // Move every join and other operation not needed in
+        // the inner clause to select rows to the outer query,
+        // and do the rest when we already know which rows
+        // are in the window to show. Got it to run constantly
+        // under 6000 ms.
+
+        $sqlexperiment = "SELECT * FROM (
+SELECT row_number() OVER(ORDER BY task_id) AS rownum,
+t.*, $select p.project_title, p.project_is_active FROM $from
+$where
+GROUP BY $groupby
+$having
+ORDER BY $sortorder
+)
+t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
-echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+// echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+// echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
         $totalcount = $db->FetchOne($sql);
 
 # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
 
         $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
+        // $sql = $db->Query($sqlexperiment, $sql_params);
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
         $limit = array_get($args, 'limit', -1);
