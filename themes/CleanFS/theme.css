@@ -615,6 +615,8 @@ form #taskdetails #taskdetailsfull {
   border-radius: 3px;
 }
 #taskdetailsfull {margin-left: 300px;padding: 2em 3em;}
+.descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
+.descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
   margin-left: 300px;
   margin-top: 15px;
