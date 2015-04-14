@@ -471,11 +471,11 @@ tr.severity2 .task_severity {background-color: white;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
 tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
-tr.severity1:hover td {background-color: #f2f2f2 !important;}
-tr.severity2:hover td {background-color: #f2f2f2 !important;}
-tr.severity3:hover td {background-color: #eed4d4 !important;}
-tr.severity4:hover td {background-color: #efc9c9 !important;}
-tr.severity5:hover td {background-color: #f0bcbc !important;}
+tr.severity1:hover > td {background-color: #f2f2f2;}
+tr.severity2:hover > td {background-color: #f2f2f2;}
+tr.severity3:hover > td {background-color: #eed4d4;}
+tr.severity4:hover > td {background-color: #efc9c9;}
+tr.severity5:hover > td {background-color: #f0bcbc;}
 div#toolbox {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -615,6 +615,8 @@ form #taskdetails #taskdetailsfull {
   border-radius: 3px;
 }
 #taskdetailsfull {margin-left: 300px;padding: 2em 3em;}
+.descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
+.descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
   margin-left: 300px;
   margin-top: 15px;
