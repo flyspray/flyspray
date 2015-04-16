@@ -206,6 +206,17 @@ switch ($action = Req::val('action'))
 
         $time = time();
 
+        $result = $db->Query('SELECT * from {tasks} WHERE task_id = ?', array($task['task_id']));
+        $defaults = $db->fetchRow($result);
+        
+        if (!Post::val('due_date')) {
+            $due_date = $defaults['due_date'];
+        }
+        
+        if (!Post::val('estimated_effort')) {
+            $estimated_effort = $defaults['estimated_effort'];
+        }
+        
         $db->Query('UPDATE  {tasks}
                        SET  project_id = ?, task_type = ?, item_summary = ?,
                             detailed_desc = ?, item_status = ?, mark_private = ?,
@@ -214,13 +225,14 @@ switch ($action = Req::val('action'))
                             last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?,
                             estimated_effort = ?
                      WHERE  task_id = ?',
-        array(Post::val('project_id'), Post::val('task_type'),
-            Post::val('item_summary'), Post::val('detailed_desc'),
-            Post::val('item_status'), intval($user->can_change_private($task) && Post::val('mark_private')),
-            Post::val('product_category'), Post::val('closedby_version', 0),
-            Post::val('operating_system'), Post::val('task_severity'),
-            Post::val('task_priority'), intval($user->id), $time, intval($due_date),
-            Post::val('percent_complete'), Post::val('reportedver'),intval($estimated_effort),
+        array(Post::val('project_id', $defaults['project_id']), Post::val('task_type', $defaults['task_type']),
+            Post::val('item_summary', $defaults['item_summary']), Post::val('detailed_desc', $defaults['detailed_desc']),
+            Post::val('item_status', $defaults['item_status']), intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
+            Post::val('product_category', $defaults['product_category']), Post::val('closedby_version', $defaults['closedby_version']),
+            Post::val('operating_system', $defaults['operating_system']), Post::val('task_severity', $defaults['task_severity']),
+            Post::val('task_priority', $defaults['task_priority']), intval($user->id), $time, intval($due_date),
+            Post::val('percent_complete', $defaults['percent_complete']), Post::val('reportedver', $defaults['product_version']),
+            intval($estimated_effort),
             $task['task_id']));
 
         // Update the list of users assigned this task
@@ -728,7 +740,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('usernametaken'));
             break;
         }
-        
+
         $_SESSION['SUCCESS'] = L('newusercreated');
 
         if (!$user->perms('is_admin')) {
@@ -909,7 +921,8 @@ switch ($action = Req::val('action'))
                 'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
                 'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by', 'default_order_by_dir', 'url_rewriting');
+                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by', 'default_order_by_dir',
+                'max_vote_per_day', 'url_rewriting');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
@@ -2061,7 +2074,7 @@ switch ($action = Req::val('action'))
         // if it's something user is allowed to know about etc to just one
         // function taking the necessary arguments and could be used in
         // several other places too.
-        
+
         // if the user has not the permission to view all tasks, check if the task
         // is in tasks allowed to see, otherwise tell that the task does not exist.
         if (!$user->perms('view_tasks')) {
@@ -2343,7 +2356,7 @@ switch ($action = Req::val('action'))
                 break;
             }
         }
-        
+
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $parent['project_id']) {
             Flyspray::show_error(L('musthavesameproject'));
@@ -2375,17 +2388,17 @@ switch ($action = Req::val('action'))
             // Flyspray::show_error(L('summaryanddetails'));
             break;
         }
-        
+
         if (!is_array($_POST['message_id'])) {
             // Flyspray::show_error(L('summaryanddetails'));
             break;
         }
-        
+
         if (!$count($_POST['message_id'])) {
             // Nothing to do.
             break;
         }
-        
+
         $validids = array();
         foreach ($_POST['message_id'] as $id) {
             if (is_numeric($id)) {
@@ -2399,7 +2412,7 @@ switch ($action = Req::val('action'))
             // Nothing to do.
             break;
         }
-        
+
         Notifications::NotificationsHaveBeenRead($validids);
         break;
     case 'task.bulkupdate':

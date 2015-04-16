@@ -1014,6 +1014,7 @@ Regards,',
 'ascending'               => 'Ascending',
 'descending'              => 'Descending',
 'myassignedtasks'         => 'My assigned tasks',
-'commentedon'             => 'commented on'
+'commentedon'             => 'commented on',
+'maxvoteperday'           => 'Maximum votes per day'
 );
 ?>
