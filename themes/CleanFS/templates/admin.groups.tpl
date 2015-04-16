@@ -70,7 +70,7 @@ foreach ($groups as $group){
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
 			$html .= '<tr>';
 			$html .= $i==0 ? '<th style="max-width:300px;white-space:nowrap">'.eL(str_replace('_','',$key)).'</th>' : '';
-			$html .= $yesno[$val];
+			$html .= ($group['is_admin'] && $val==0)? '<td title="'.eL('yes').' permission granted because of is_admin">- (<i class="fa fa-check"></i>)</td>':$yesno[$val];
 			$html .= '</tr>';
 			$projpermnames .= $i==1 ? '<tr><td>'.eL(str_replace('_','',$key)).'</td></tr>' : '';
 		}
