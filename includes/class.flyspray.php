@@ -423,7 +423,7 @@ class Flyspray
     } // }}}
     // List a project's group {{{
     /**
-     * Returns a list of a project's groups
+     * Returns a list of global groups or a project's groups
      * @param integer $proj_id
      * @access public static
      * @return array
@@ -431,18 +431,19 @@ class Flyspray
      */
     public static function listGroups($proj_id = 0)
     {
-        global $db;
-        $res = $db->Query('SELECT  *
-                             FROM  {groups}
-                            WHERE  project_id = ?
-                         ORDER BY  group_id ASC', array($proj_id));
+	global $db;
+	$res = $db->Query('SELECT g.*, COUNT(uig.user_id) AS users
+		FROM {groups} g
+		LEFT JOIN {users_in_groups} uig ON uig.group_id=g.group_id
+		WHERE project_id = ?
+		GROUP BY g.group_id
+		ORDER BY g.group_id ASC', array($proj_id));
         return $db->FetchAllArray($res);
     } // }}}
 
     // Get info on all users {{{
     /**
-     * Returns a list of a project's groups
-     * @param integer $proj_id
+     * Returns a list of a all users
      * @access public static
      * @return array
      * @version 1.0
@@ -450,9 +451,9 @@ class Flyspray
     public static function listUsers()
     {
         global $db;
-        $res = $db->Query('SELECT  account_enabled, user_id, user_name, real_name, email_address
-                             FROM  {users}
-                         ORDER BY  account_enabled DESC, UPPER(user_name) ASC');
+        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name, email_address
+			FROM {users}
+			ORDER BY account_enabled DESC, UPPER(user_name) ASC');
         return $db->FetchAllArray($res);
     }
 
