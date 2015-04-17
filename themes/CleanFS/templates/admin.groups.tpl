@@ -1,10 +1,13 @@
 <div id="toolbox">
-  <h2><?php echo Filters::noXSS(L('usersandgroups')); ?></h2>
-  <h3><?php echo Filters::noXSS(L('users')); ?></h3>
-  <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newuser', $proj->id)); ?>"><i class="good fa fa-user-plus fa-lg fa-fw"></i><?php echo L('newuser'); ?></a>
-  <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newuserbulk', $proj->id)); ?>"><i class="good fa fa-user-times fa-lg fa-fw"></i><?php echo L('newuserbulk'); ?></a>
-  <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'editallusers', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo L('editallusers'); ?></a>
-  <div class="groupedit">
+  <ul id="submenu">
+   <li><a href="#users_tab"><?php echo Filters::noXSS(L('users')); ?></a></li>
+   <li><a href="#groups_tab"><?php echo Filters::noXSS(L('globalgroups')); ?></a></li>
+  </ul>
+  <div id="users_tab" class="tab">
+    <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newuser', $proj->id)); ?>"><i class="good fa fa-user-plus fa-lg fa-fw"></i><?php echo L('newuser'); ?></a>
+    <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newuserbulk', $proj->id)); ?>"><i class="good fa fa-user-times fa-lg fa-fw"></i><?php echo L('newuserbulk'); ?></a>
+    <a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'editallusers', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo L('editallusers'); ?></a>
+    <div class="groupedit">
 <!--
     <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
             <label for="selectgroup"><?php echo Filters::noXSS(L('editgroup')); ?></label>
@@ -15,17 +18,17 @@
             <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
     </form>
 -->
-    <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-            <label for="edit_user"><?php echo Filters::noXSS(L('edituser')); ?></label>
-            <?php echo tpl_userselect('user_name', '', 'edit_user'); ?>       
-            <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
-    
-            <input type="hidden" name="do" value="admin" />
-            <input type="hidden" name="area" value="users" />
-            <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
-    </form> 
+      <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+              <label for="edit_user"><?php echo Filters::noXSS(L('edituser')); ?></label>
+              <?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
+              <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
+              <input type="hidden" name="do" value="admin" />
+              <input type="hidden" name="area" value="users" />
+              <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
+      </form>
+    </div>
   </div>
-<h3><?php echo L('globalgroups'); ?></h3>
+  <div id="groups_tab" class="tab">
 <div><a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a></div>
 
 <?php
@@ -90,4 +93,5 @@ $html.='</tr></table>
 
 echo $html;
 ?>
+</div>
 </div>
