@@ -50,38 +50,38 @@ $yesno = array(
 );
 
 # 20150307 peterdd: This a temporary hack
-$i=0;
-$html='<table class="permcols"><tr>';
-$projpermnames='';
+$i = 0;
+$html = '<table class="permcols"><tr>';
+$projpermnames = '';
 
 foreach ($groups as $group){
 	#print_r($group);
 	$html .= '<td><table class="perms"><thead>
 	<tr>'.
-	($i==0? '<th>'.L('groupmembers').'</th>':'').
+	($i == 0 ? '<th>'.L('groupmembers').'</th>' : '').
 	'<td>'.$group['users'].'</td>
 	</tr>
 	<tr>'.
-	($i==0? '<th>'.L('group').' </th>' : '').
+	($i == 0 ? '<th>'.L('group').' </th>' : '').
 	'<th><a class="button" style="white-space:nowrap" title="'.eL('editgroup').'" href="?id='.$group['group_id'].'&amp;do=admin&amp;area=editgroup">'.$group['group_name'].'<i class="fa fa-pencil fa-lg fa-fw"></i></a></th>
 	</tr>
 	<tr>'.
-	($i==0? '<th>'.L('description').'</th>' : '').
+	($i == 0 ? '<th>'.L('description').'</th>' : '').
 	'<td style="height:6em;overflow:hidden;width:10em">'.$group['group_desc'].'</td></tr>
 	</thead><tbody>';
 	foreach ($group as $key => $val) {
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
 			$html .= '<tr>';
-			$html .= $i==0 ? '<th style="max-width:300px;white-space:nowrap">'.eL(str_replace('_','',$key)).'</th>' : '';
-			$html .= ($group['is_admin'] && $val==0)? '<td title="'.eL('yes').' permission granted because of is_admin">- (<i class="fa fa-check"></i>)</td>':$yesno[$val];
+			$html .= $i == 0 ? '<th style="max-width:300px;white-space:nowrap">'.eL(str_replace('_', '', $key)).'</th>' : '';
+			$html .= ($group['is_admin'] && $val == 0)? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val];
 			$html .= '</tr>';
-			$projpermnames .= $i==1 ? '<tr><td>'.eL(str_replace('_','',$key)).'</td></tr>' : '';
+			$projpermnames .= $i == 1 ? '<tr><td>'.eL(str_replace('_', '', $key)).'</td></tr>' : '';
 		}
 	}
-	$html.= '</tbody></table></td>';
+	$html .= '</tbody></table></td>';
 	$i++;
 }
-$html.='</tr></table>
+$html .= '</tr></table>
 <style>
 .permcols th, .permcols td {padding:0;margin:0;}
 .perms, .permcols {border-collapse:collapse;}
