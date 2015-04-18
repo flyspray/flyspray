@@ -1366,14 +1366,15 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
         }
 
         if (array_get($args, 'has_attachment')) {
+            /*
             $from .= '
 LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $cfrom .= '
 LEFT JOIN {attachments} att ON t.task_id = att.task_id ';
             $where[] = 'att.attachment_id IS NOT NULL';
-            
-            // Check what happens if using EXISTS instead.
-            // $where[] = 'EXISTS (SELECT 1 FROM {attachments} att WHERE t.task_id = att.task_id)';
+            */
+            // Check what happens if using EXISTS instead. FASTER!
+            $where[] = 'EXISTS (SELECT 1 FROM {attachments} att WHERE t.task_id = att.task_id)';
         }
         # 20150213 currently without recursive subtasks!
         if (in_array('effort', $visible)) {
@@ -1399,13 +1400,14 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         }
 
         if (array_get($args, 'only_primary')) {
+            /*
             $from .= '
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $cfrom .= '
 LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
-            
-            // Check what happens if using NOT EXISTS instead.
+            */
+            // Check what happens if using NOT EXISTS instead. FASTER!
             // $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
         }
 
@@ -1415,12 +1417,13 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         if (array_get($args, 'only_watched')) {
             // join the notification table to get watched tasks
+            /*
             $from .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $cfrom .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[] = 'fsn.user_id = ?';
-
-            // Check what happens if using EXISTS instead.
-            // $where[] = 'EXISTS (SELECT 1 FROM {notifications} fsn WHERE t.task_id = fsn.task_id AND fsn.user_id = ?)';
+            */
+            // Check what happens if using EXISTS instead. FASTER?
+            $where[] = 'EXISTS (SELECT 1 FROM {notifications} fsn WHERE t.task_id = fsn.task_id AND fsn.user_id = ?)';
             $sql_params[] = $user->id;
         }
 
@@ -1434,7 +1437,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             'due' => 'closedby_version', 'reported' => 'product_version',
             'cat' => 'product_category', 'status' => 'item_status',
             'percent' => 'percent_complete', 'pri' => 'task_priority',
-            'dev' => array('a.user_id', 'u.user_name', 'u.real_name'),
+            'dev' => array('ass.user_id', 'u.user_name', 'u.real_name'),
             'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
             'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
         foreach ($submits as $key => $db_key) {
