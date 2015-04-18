@@ -28,13 +28,10 @@ class Notifications {
           settype($to, 'array');
       }
 
-      // echo "<pre>";
-      // echo var_dump($to);
-      // echo "</pre>";
-
       if (!count($to)) {
         return false;
       }
+
       $msg = $this->GenerateMsg($type, $task_id, $info);
       $result = true;
       if ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH) {
@@ -51,12 +48,13 @@ class Notifications {
       // Get rid of undefined offset 2 when notify type is explicitly set,
       // in these cases caller really has not set offset 2. Track down the
       // callers later.
+      /* Not really ready for 1.0...
       if ($ntype != NOTIFY_EMAIL && $ntype != NOTIFY_JABBER) {
           if (!$this->StoreOnline((is_array($to[2]) ? $to[2] : $to), $msg[0], $msg[1], $msg[2], $task_id)) {
               $result = false;
           }
       }
-
+      */
       return $result;
 
    // End of Create() function
