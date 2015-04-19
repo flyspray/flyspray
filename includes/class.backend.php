@@ -1248,19 +1248,19 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
             $groupby .= ' lt.tasktype_id, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
-            if (array_get($args, 'type')) {
+            if ($arr = array_get($args, 'type') && isset($arr[0])) {
                 $cgroupbyarr[] = 'lt.tasktype_id';
                 $cfrom .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             }            
-        }
+        }        
 
         if (array_get($args, 'status') || in_array('status', $visible)) {
             $select .= ' lst.status_name, ';
             $groupby .= ' lst.status_id, ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
-            if (array_get($args, 'status')) {
+            if ($arr = array_get($args, 'status' && isset($arr[0]))) {
                 $cgroupbyarr[] = 'lst.status_id';
                 $cfrom .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
@@ -1278,7 +1278,7 @@ LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             $from .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             $groupby .= 'lc.category_id, ';
-            if (array_get($args, 'cat')) {
+            if ($arr = array_get($args, 'cat') && isset($arr[0])) {
                 $cfrom .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
                 $cgroupbyarr[] = 'lc.category_id';
@@ -1344,7 +1344,7 @@ LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
             $from .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
             $groupby .= 'lvc.version_id, lvc.list_position, ';
-            if (array_get($args, 'due')) {
+            if ($arr = array_get($args, 'due') && isset($arr[0])) {
                 $cfrom .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
                 $cgroupbyarr[] = 'lvc.version_id, lvc.list_position';
@@ -1408,7 +1408,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
             */
             // Check what happens if using NOT EXISTS instead. FASTER!
-            // $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
+            $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
         }
 
         if (array_get($args, 'hide_subtasks')) {
@@ -1462,7 +1462,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' a.user_id is NULL OR';
+                        $temp .= ' ass.user_id is NULL OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
@@ -1608,6 +1608,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         $having = (count($having)) ? 'HAVING ' . join(' AND ', $having) : '';
         
+        echo '<pre>' . print_r($args, true) . '</pre>';
         echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
         $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', $cgroupbyarr) : '';
 
@@ -1706,7 +1707,7 @@ ORDER BY $sortorder";
         // and do the rest when we already know which rows
         // are in the window to show. Got it to run constantly
         // under 6000 ms.
-
+        /* Leave this for next version, don't have enough time for testing.
         $sqlexperiment = "SELECT * FROM (
 SELECT row_number() OVER(ORDER BY task_id) AS rownum,
 t.*, $select p.project_title, p.project_is_active FROM $from
@@ -1716,10 +1717,11 @@ $having
 ORDER BY $sortorder
 )
 t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
+*/
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
-// echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-// echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
         $totalcount = $db->FetchOne($sql);
 
