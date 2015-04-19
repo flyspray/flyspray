@@ -1248,11 +1248,6 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
             $groupby .= ' lt.tasktype_id, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
-            if ($arr = array_get($args, 'type') && isset($arr[0])) {
-                $cgroupbyarr[] = 'lt.tasktype_id';
-                $cfrom .= '
-LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
-            }            
         }        
 
         if (array_get($args, 'status') || in_array('status', $visible)) {
@@ -1260,11 +1255,6 @@ LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             $groupby .= ' lst.status_id, ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
-            if ($arr = array_get($args, 'status' && isset($arr[0]))) {
-                $cgroupbyarr[] = 'lst.status_id';
-                $cfrom .= '
-LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
-            }
         }
         /* What's the problem with resolution? Why do we do a join to a table
          * that's not in possible visible columns and can not be searched?
@@ -1278,11 +1268,6 @@ LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
             $from .= '
 LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             $groupby .= 'lc.category_id, ';
-            if ($arr = array_get($args, 'cat') && isset($arr[0])) {
-                $cfrom .= '
-LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
-                $cgroupbyarr[] = 'lc.category_id';
-            }
         }
 
         if (in_array('votes', $visible)) {
@@ -1325,7 +1310,6 @@ LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
             if (array_get($args, 'opened')) {
                 $cfrom .= '
 LEFT JOIN {users} uo ON t.opened_by = uo.user_id ';
-                $cgroupbyarr[] = 'uo.user_id';
             }
         }
 
@@ -1336,7 +1320,6 @@ LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
             $groupby .= 'uc.user_id, ';
             $cfrom .= '
 LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
-            $cgroupbyarr[] = 'uc.user_id';
         }
 
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
@@ -1344,11 +1327,6 @@ LEFT JOIN {users} uc ON t.closed_by = uc.user_id ';
             $from .= '
 LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
             $groupby .= 'lvc.version_id, lvc.list_position, ';
-            if ($arr = array_get($args, 'due') && isset($arr[0])) {
-                $cfrom .= '
-LEFT JOIN {list_version} lvc ON t.closedby_version = lvc.version_id ';
-                $cgroupbyarr[] = 'lvc.version_id, lvc.list_position';
-            }
         }
 
         if (in_array('os', $visible)) {
@@ -1742,7 +1720,7 @@ echo '<pre>'.$sqltext.'</pre>'; # for debugging
         }
 
 // Work on this is not finished until $forbidden_tasks_count is always zero.
-// echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
         return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
 // # end alternative
     }
