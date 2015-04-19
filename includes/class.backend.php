@@ -1245,16 +1245,16 @@ LEFT JOIN {projects} p ON t.project_id = p.project_id ';
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
-            $groupby .= ' lt.tasktype_id, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
+            $groupby .= ' lt.tasktype_id, ';
         }        
 
         if (array_get($args, 'status') || in_array('status', $visible)) {
             $select .= ' lst.status_name, ';
-            $groupby .= ' lst.status_id, ';
             $from .= '
 LEFT JOIN {list_status} lst ON t.item_status = lst.status_id ';
+            $groupby .= ' lst.status_id, ';
         }
         /* What's the problem with resolution? Why do we do a join to a table
          * that's not in possible visible columns and can not be searched?
@@ -1271,6 +1271,7 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
         }
 
         if (in_array('votes', $visible)) {
+// Not sure yet which one is the best alternative, but that can wait to the next version.
 //            $from .= '
 // LEFT JOIN {votes} vot ON t.task_id = vot.task_id ';
 //             $select .= ' COUNT(DISTINCT vot.vote_id) AS num_votes, ';
@@ -1281,6 +1282,7 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if ($search_for_changes) {
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
+            $cgroupbyarr[] = 't.task_id';
         }
 
         if (array_get($args, 'search_in_comments')) {
@@ -1292,13 +1294,13 @@ LEFT JOIN {comments} c ON t.task_id = c.task_id ';
         }
 
         if (in_array('comments', $visible)) {
-            $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
+            $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id) AS num_comments, ';
         }
 
         if (in_array('reportedin', $visible)) {
+            $select .= ' lv.version_name AS product_version_name, ';
             $from .= '
 LEFT JOIN {list_version} lv ON t.product_version = lv.version_id ';
-            $select .= ' lv.version_name AS product_version_name, ';
             $groupby .= 'lv.version_id, ';
         }
 
@@ -1400,7 +1402,7 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $cfrom .= ' JOIN {notifications} fsn ON t.task_id = fsn.task_id';
             $where[] = 'fsn.user_id = ?';
             */
-            // Check what happens if using EXISTS instead. FASTER?
+            // Check what happens if using EXISTS instead. FASTER!
             $where[] = 'EXISTS (SELECT 1 FROM {notifications} fsn WHERE t.task_id = fsn.task_id AND fsn.user_id = ?)';
             $sql_params[] = $user->id;
         }
@@ -1586,8 +1588,8 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         $having = (count($having)) ? 'HAVING ' . join(' AND ', $having) : '';
         
-        echo '<pre>' . print_r($args, true) . '</pre>';
-        echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
+        // echo '<pre>' . print_r($args, true) . '</pre>';
+        // echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
         $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', $cgroupbyarr) : '';
 
         /* Current implementation
@@ -1698,8 +1700,8 @@ t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 */
 // Now, do we have a clear winner at least for Postgresql? What kind of running
 // times do you get using Mysql and different storage engines?
-echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+// echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+// echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
         $totalcount = $db->FetchOne($sql);
 
@@ -1720,7 +1722,7 @@ echo '<pre>'.$sqltext.'</pre>'; # for debugging
         }
 
 // Work on this is not finished until $forbidden_tasks_count is always zero.
-echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+// echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
         return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
 // # end alternative
     }
