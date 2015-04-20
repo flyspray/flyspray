@@ -409,7 +409,8 @@ class User
 		FROM {votes} v
 		JOIN {tasks} t ON t.task_id=v.task_id
 		WHERE user_id = ?
-		AND t.project_id = ?',
+		AND t.project_id = ?
+		AND t.is_closed <>1',
 		array($this->id, $task['project_id'])
 	);
 	#if ($db->CountRows($check) >= $fs->prefs['max_votes_per_project']) {
