@@ -608,6 +608,7 @@ function quick_edit(elem, id)
 					</form>
 				<?php elseif ($user->can_vote($task_details) == -2): ?>	(<?php echo Filters::noXSS(L('alreadyvotedthistask')); ?>)
 				<?php elseif ($user->can_vote($task_details) == -3): ?> (<?php echo Filters::noXSS(L('alreadyvotedthisday')); ?>)
+				<?php elseif ($user->can_vote($task_details) == -4): ?> (<?php echo Filters::noXSS(L('votelimitreached')); ?>)
 				<?php endif; ?>
 			</span>
 		</li>
