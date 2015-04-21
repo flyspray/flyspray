@@ -25,7 +25,6 @@ http://flyspray.org/manual:installation
 2. Remove all files **except the attachments directory, avatars directory and flyspray.conf.php**
 3. Copy the new files to the Flyspray directory
 4. Make sure flyspray.conf.php is writeable by the webserver.
-5. TODO Composer stuff???
 5. Run the upgrader at http://yourflyspray/setup/upgrade.php
 
 ## Dependencies
