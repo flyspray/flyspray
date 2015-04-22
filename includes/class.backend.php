@@ -1411,11 +1411,13 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 't.project_id = ?';
             $sql_params[] = $proj->id;
         } else {
-            $allowed = array();
-            foreach($fs->projects as $p) {
-                $allowed[] = $p['project_id'];
+            if (!$user->isAnon()) { // Anon-case handled later.
+                $allowed = array();
+                foreach($fs->projects as $p) {
+                    $allowed[] = $p['project_id'];
+                }
+                $where[] = 't.project_id IN (' . implode(',', $allowed). ')';
             }
-            $where[] = 't.project_id IN (' . implode(',', $allowed). ')';
         }
 
         /// process search-conditions {{{
