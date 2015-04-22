@@ -191,7 +191,7 @@ class User
             $proj = $proj['project_id'];
         }
 
-        return $this->perms('view_tasks', $proj)
+        return ($this->perms('view_tasks', $proj) || $this->perms('view_groups_tasks', $proj) || $this->perms('view_own_tasks', $proj))
           || ($this->perms('project_is_active', $proj)
               && ($this->perms('others_view', $proj) || $this->perms('project_group', $proj)));
     }
