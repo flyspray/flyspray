@@ -124,7 +124,7 @@ class Setup extends Flyspray
 
       // Initialise flag for proceeding to next step.
       $this->mProceed = false;
-      $this->mPhpRequired = '5.3.0';
+      $this->mPhpRequired = '5.3.3'; # composer minimum php version
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
