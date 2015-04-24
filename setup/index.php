@@ -123,14 +123,13 @@ class Setup extends Flyspray
       $this->mMinPasswordLength	= 8;
 
       // Initialise flag for proceeding to next step.
-      $this->mProceed				= false;
-      $this->mPhpRequired			= '5.2.0';
+      $this->mProceed = false;
+      $this->mPhpRequired = '5.3.0';
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
       // If the database is supported in Flyspray, the function to check in PHP.
-      $this->mSupportedDatabases	=
-                           array(
+      $this->mSupportedDatabases = array(
                                  'MySQLi' => array(true,'mysqli_connect','mysqli'),
                                  'MySQL' => array(true, 'mysql_connect', 'mysql'),
                                  'Postgres' => array(true, 'pg_connect', 'pgsql'),
