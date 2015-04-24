@@ -1170,7 +1170,7 @@ class Setup extends Flyspray
             break;
 
             case 'email address':
-             return filter_var($value, \FILTER_VALIDATE_EMAIL);
+             return filter_var($value, FILTER_VALIDATE_EMAIL);
              break;
 
             case 'boolean':
