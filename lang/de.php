@@ -1007,6 +1007,8 @@ $translation = array(
 'defaultorderbydirection' => 'Standardmäßig sotiert als',
 'movingtodifferentproject'=> 'Verschieben von einer Aufgabe zu einem anderen Projekt welche eine Ober- oder Unteraufgabe ist, ist nicht erlaubt. Sie müssen erst die Verbindung zwischen den Aufgaben trennen.',
 'commentedon'             => 'schrieb am',
+'maxvoteperday'           => 'Stimmen pro Tag',
+'maxvotesperproject'      => 'Stimmen pro Projekt',
 );
 
 ?>
