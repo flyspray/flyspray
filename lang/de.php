@@ -362,7 +362,7 @@ $translation = array(
 'allopentasks'            => 'alle offenen Aufgaben',
 'sortthiscolumn'          => 'Nach dieser Spalte sortieren',
 'id'                      => 'ID',
-'project'                 => 'Projekt:',
+'project'                 => 'Projekt',
 'dateopened'              => 'Datum',
 'progress'                => 'Fortschritt',
 'searchthisproject'       => 'suchen',
@@ -1010,6 +1010,7 @@ $translation = array(
 'maxvoteperday'           => 'Stimmen pro Tag',
 'votesperproject'         => 'Stimmen pro Projekt',
 'votelimitreached'        => 'Sie haben die maximale Anzahl an Stimmen erreicht. Wird eine Aufgabe, für die Sie gestimmt haben geschlossen, wird ihre Stimme freigegeben. Oder Sie ziehen auf ihrer Profilseite Stimmen zurück, um wieder freie Stimmen zu bekommen.',
+'myvotes'                 => 'Meine Stimmen',
 );
 
 ?>
