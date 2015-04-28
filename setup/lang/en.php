@@ -10,5 +10,8 @@ $language=array(
 'upgradepossible'    => 'Apparently, an upgrade is possible.',
 'versioncompare'     => 'Your current version is %s and the version we can upgrade to is %s.',
 'writeaccessconf'    => 'In order to upgrade Flyspray correctly it needs to be able to access and write flyspray.conf.php.',
+'adminemail'=>'Admin Email',
+'adminusername'=>'Admin Username',
+'adminpassword'=>'Admin Password',
 );
 ?>
