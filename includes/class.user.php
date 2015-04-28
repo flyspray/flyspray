@@ -413,7 +413,7 @@ class User
 		AND t.is_closed <>1',
 		array($this->id, $task['project_id'])
 	);
-	if ($db->CountRows($check) >= $fs->prefs['max_votes_per_project']) {
+	if ($db->CountRows($check) >= $fs->prefs['votes_per_project']) {
 		return -4;
 	}
 	
