@@ -1410,6 +1410,14 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         if ($proj->id) {
             $where[] = 't.project_id = ?';
             $sql_params[] = $proj->id;
+        } else {
+            if (!$user->isAnon()) { // Anon-case handled later.
+                $allowed = array();
+                foreach($fs->projects as $p) {
+                    $allowed[] = $p['project_id'];
+                }
+                $where[] = 't.project_id IN (' . implode(',', $allowed). ')';
+            }
         }
 
         /// process search-conditions {{{
@@ -1663,11 +1671,11 @@ LEFT JOIN {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 // In my testing, showing all projects and having total 152299 tasks, 213884 comments,
 // no votes or attachments yet, this version runs between 6500 and 7500 ms.
 // Current version between 13500 and 15500 ms.
-        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1
+        $sqlcount = "SELECT COUNT(*)
                           FROM     $cfrom
                           $where
                           $cgroupby
-                          $having) s";
+                          $having";
 // Using limit 100. Running time depends heavily on offset.
 // With 0: between 5400 and 6000 ms.
 // With 152200: between 14000 and 17000 ms. Varies a lot, strange.
