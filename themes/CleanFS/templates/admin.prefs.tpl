@@ -178,8 +178,8 @@
         </li>
         
         <li>
-          <label for="max_votes_per_project"><?php echo Filters::noXSS(L('maxvotesperproject')); ?></label>
-          <input id="max_votes_per_project" name="max_votes_per_project" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_votes_per_project']); ?>" />
+          <label for="votes_per_project"><?php echo Filters::noXSS(L('votesperproject')); ?></label>
+          <input id="votes_per_project" name="votes_per_project" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['votes_per_project']); ?>" />
         </li>
         
         <li>
