@@ -1015,6 +1015,7 @@ Regards,',
 'descending'              => 'Descending',
 'myassignedtasks'         => 'My assigned tasks',
 'commentedon'             => 'commented on',
-'maxvoteperday'           => 'Maximum votes per day'
+'maxvoteperday'           => 'Maximum votes per day',
+'maxvotesperproject'      => 'User\'s limit of votes per project',
 );
 ?>
