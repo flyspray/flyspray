@@ -1239,10 +1239,26 @@ abstract class Backend
         $select = '';
         $groupby = 't.task_id, ';
         $cgroupbyarr = array();
+
+        // Joins absolutely needed for user viewing rights
         $from = ' {tasks} t
-LEFT JOIN {projects} p ON t.project_id = p.project_id ';
+-- All tasks have a project!
+JOIN {projects} p ON t.project_id = p.project_id
+-- Global group always exists
+JOIN ({groups} gpg
+    JOIN {users_in_groups} gpuig ON gpg.group_id = gpuig.group_id AND gpuig.user_id = ?		
+) ON gpg.project_id = 0
+-- Project group might exist or not.
+LEFT JOIN ({groups} pg
+    JOIN {users_in_groups} puig ON pg.group_id = puig.group_id AND puig.user_id = ?	
+) ON pg.project_id = t.project_id
+LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+';
         $cfrom = $from;
-        // Only join tables which are really necessary to speed up the db-query
+        $sql_params[] = $user->id;
+        $sql_params[] = $user->id;
+        
+        // Otherwise, only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
             $from .= '
@@ -1343,13 +1359,14 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
             $select .= ' MIN(u.real_name) AS assigned_to_name, ';
             $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+            // assigned table is now always included in join
             $from .= '
-LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+-- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $groupby .= 'ass.task_id, ';
             if (array_get($args, 'dev')) {
                 $cfrom .= '
-LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+-- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
                 $cgroupbyarr[] = 'ass.task_id';
             }
@@ -1380,6 +1397,51 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
                 $where[] = 't.project_id IN (' . implode(',', $allowed). ')';
             }
         }
+
+        // process user viewing rights
+ $where[] = '
+(   -- Begin block where users viewing rights are checked.
+    -- Case everyone can see all project tasks anyway and task not private
+    (t.mark_private = 0 AND p.others_view = 1)
+    OR
+    -- Case admin or project manager, can see any task, even private
+    (gpg.is_admin = 1 OR gpg.manage_project = 1 OR pg.is_admin = 1 OR pg.manage_project = 1)
+    OR
+    -- Case allowed to see all tasks, but not private
+    ((gpg.view_tasks = 1 OR pg.view_tasks = 1) AND t.mark_private = 0)
+    OR
+    -- Case allowed to see own tasks (automatically covers private tasks also for this user!)
+    ((gpg.view_own_tasks = 1 OR pg.view_own_tasks = 1) AND (t.opened_by = ? OR ass.user_id = ?))
+    OR
+    -- Case task is private, but user either opened it or is an assignee
+    (t.mark_private = 1 AND (t.opened_by = ? OR ass.user_id = ?))
+    OR
+    -- Leave groups tasks as the last one to check. They are the only ones that actually need doing a subquery
+    -- for checking viewing rights. There\'s a chance that a previous check already matched and the subquery is
+    -- not executed at all. All this of course depending on how the database query optimizer actually chooses
+    -- to fetch the results and execute this query... At least it has been given the hint.
+
+    -- Case allowed to see groups tasks, all projects (NOTE: both global and project specific groups accepted here)
+    -- Strange... do not use OR here with user_id in EXISTS clause, seems to prevent using index with both mysql and
+    -- postgresql, query times go up a lot. So it\'ll be 2 different EXISTS OR\'ed together.
+    (gpg.view_groups_tasks = 1 AND t.mark_private = 0 AND (
+	EXISTS (SELECT 1 FROM {users_in_groups} WHERE (group_id = pg.group_id OR group_id = gpg.group_id) AND user_id = t.opened_by)
+	OR
+	EXISTS (SELECT 1 FROM {users_in_groups} WHERE (group_id = pg.group_id OR group_id = gpg.group_id) AND user_id = ass.user_id)
+    ))
+    OR
+    -- Case allowed to see groups tasks, current project. Only project group allowed here.
+    (pg.view_groups_tasks = 1 AND t.mark_private = 0 AND (
+	EXISTS (SELECT 1 FROM {users_in_groups} WHERE group_id = pg.group_id AND user_id = t.opened_by)
+	OR
+	EXISTS (SELECT 1 FROM {users_in_groups} WHERE group_id = pg.group_id AND user_id = ass.user_id)
+    ))
+)   -- Rights have been checked 
+';
+        $sql_params[] = $user->id;
+        $sql_params[] = $user->id;
+        $sql_params[] = $user->id;
+        $sql_params[] = $user->id;
 
         /// process search-conditions {{{
         $submits = array('type' => 'task_type', 'sev' => 'task_severity',
@@ -1594,6 +1656,7 @@ ORDER BY $sortorder
 t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 */
 
+// echo '<pre>'.print_r($sql_params, true).'</pre>'; # for debugging 
 // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
 // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->Query($sqlcount, $sql_params);
