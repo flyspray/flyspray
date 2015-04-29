@@ -1,24 +1,39 @@
 			<div id="right">
 			<form action="index.php" method="post" name="database_form">
 				<?php echo $message; ?>
-
 				<h1>Administration setup</h1>
 				<h2>Setup all the Application values</h2>
 				<div class="installBlock">
+<script type="text/javascript">
+function ShowHidePassword(id) {
+	if(document.getElementById(id).type=="text") {
+		document.getElementById(id).type="password";
+	} else {
+		document.getElementById(id).type="text";
+	}
+}
+</script>
 				<table class="formBlock" style="width:68%;">
-					<?php echo $admin_email; ?>
-
-					<?php echo $admin_username; ?>
-
-					<?php echo $admin_password; ?>
-
+					<tr>
+						<td align="right"><?php echo L('adminemail'); ?></td>
+						<td align="center"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" size="30" /></td>
+					</tr>
+					<tr>
+						<td align="right"><?php echo L('adminusername'); ?></td>
+						<td align="center"><input class="inputbox" type="text" name="admin_username" value="<?php echo $admin_username; ?>" size="30" /></td>
+					</tr>
+					<tr>
+						<td align="right"><?php echo L('adminpassword'); ?></td>
+						<td align="center"><input class="inputbox" type="password" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" size="30" /></td>
+					</tr>
+					<tr>
+						<td align="right"><label for="showpassword"><?php echo L('showpassword'); ?></label></td>
+						<td align="center"><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
+					</tr>
 					<?php if ($daemonise): ?>
 					<tr>
 						<td align="right">Reminder daemon</td>
-						<td align="center">
-							<?php echo $daemonise; ?>
-
-						</td>
+						<td align="center"><?php echo $daemonise; ?></td>
 					</tr>
 					<?php endif; ?>
 				</table>

@@ -123,14 +123,13 @@ class Setup extends Flyspray
       $this->mMinPasswordLength	= 8;
 
       // Initialise flag for proceeding to next step.
-      $this->mProceed				= false;
-      $this->mPhpRequired			= '5.2.0';
+      $this->mProceed = false;
+      $this->mPhpRequired = '5.3.3'; # composer minimum php version
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
       // If the database is supported in Flyspray, the function to check in PHP.
-      $this->mSupportedDatabases	=
-                           array(
+      $this->mSupportedDatabases = array(
                                  'MySQLi' => array(true,'mysqli_connect','mysqli'),
                                  'MySQL' => array(true, 'mysql_connect', 'mysql'),
                                  'Postgres' => array(true, 'pg_connect', 'pgsql'),
@@ -292,21 +291,21 @@ class Setup extends Flyspray
                         'path' => TEMPLATE_FOLDER,
                         'template' => 'administration.tpl',
                         'vars' => array(
-                                    'product_name' => $this->mProductName,
-                                    'message' => $this->GetPageMessage(),
-                                    'admin_email' => $this->GetAdminInput('admin_email', $this->GetParamValue($data, 'admin_email', ''), 'Admin Email'),
-                                    'pass_phrase' => $this->GetParamValue($data, 'pass_phrase', ''),
-                                    'admin_username' => $this->GetAdminInput('admin_username', $this->GetParamValue($data, 'admin_username', ''), 'Admin Username'),
-                                    'admin_password' => $this->GetAdminInput('admin_password', $this->GetParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)), 'Admin Password'),
-                                    'db_type' => $this->GetParamValue($data, 'db_type', ''),
-                                    'db_hostname' => $this->GetParamValue($data, 'db_hostname', ''),
-                                    'db_username' => $this->GetParamValue($data, 'db_username', ''),
-                                    'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                    'db_name' => $this->GetParamValue($data, 'db_name', ''),
-                                    'db_prefix' => $this->GetParamValue($data, 'db_prefix', ''),
-									'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '0')),
-                                 ),
-                     ),
+                                'product_name' => $this->mProductName,
+                                'message' => $this->GetPageMessage(),
+                                'admin_email' => $this->GetParamValue($data, 'admin_email', ''),
+                                'pass_phrase' => $this->GetParamValue($data, 'pass_phrase', ''),
+                                'admin_username' => $this->GetParamValue($data, 'admin_username', ''),
+                                'admin_password' => $this->GetParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)),
+                                'db_type' => $this->GetParamValue($data, 'db_type', ''),
+                                'db_hostname' => $this->GetParamValue($data, 'db_hostname', ''),
+                                'db_username' => $this->GetParamValue($data, 'db_username', ''),
+                                'db_password' => $this->GetParamValue($data, 'db_password', ''),
+                                'db_name' => $this->GetParamValue($data, 'db_name', ''),
+                                'db_prefix' => $this->GetParamValue($data, 'db_prefix', ''),
+				'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '0')),
+                        ),
+            ),
 
             'structure' =>  array(
                            'path' => TEMPLATE_FOLDER,
@@ -489,19 +488,6 @@ class Setup extends Flyspray
       // Output the final template.
       $this->OutputPage($templates);
    }
-
-
-
-   public function GetAdminInput($field, $value, $label)
-   {
-         $input_field	= "
-         <tr>
-            <td align=\"right\">$label</td>
-            <td align=\"center\"><input class=\"inputbox\" type=\"text\" name=\"$field\" value=\"$value\" size=\"30\" /></td>
-         </tr>";
-      return $input_field;
-   }
-
 
    public function GetDatabaseOutput()
    {
@@ -1170,7 +1156,7 @@ class Setup extends Flyspray
             break;
 
             case 'email address':
-             return filter_var($value, \FILTER_VALIDATE_EMAIL);
+             return filter_var($value, FILTER_VALIDATE_EMAIL);
              break;
 
             case 'boolean':

@@ -392,6 +392,7 @@ class User
             return -2;
         }
 
+	/* FS 1.0alpha daily vote limit
         // Check that the user hasn't voted more than allowed today
         $check = $db->Query('SELECT vote_id
                                FROM {votes}
@@ -400,6 +401,22 @@ class User
         if ($db->CountRows($check) >= $fs->prefs['max_vote_per_day']) {
             return -3;
         }
+	*/
+	
+	/* FS 1.0beta2 max votes per user per project limit */
+	$check = $db->Query('
+		SELECT COUNT(v.vote_id)
+		FROM {votes} v
+		JOIN {tasks} t ON t.task_id=v.task_id
+		WHERE user_id = ?
+		AND t.project_id = ?
+		AND t.is_closed <>1',
+		array($this->id, $task['project_id'])
+	);
+	if ($db->CountRows($check) >= $fs->prefs['votes_per_project']) {
+		return -4;
+	}
+	
 
         return 1;
     }

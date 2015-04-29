@@ -362,7 +362,7 @@ $translation = array(
 'allopentasks'            => 'alle offenen Aufgaben',
 'sortthiscolumn'          => 'Nach dieser Spalte sortieren',
 'id'                      => 'ID',
-'project'                 => 'Projekt:',
+'project'                 => 'Projekt',
 'dateopened'              => 'Datum',
 'progress'                => 'Fortschritt',
 'searchthisproject'       => 'suchen',
@@ -1007,6 +1007,10 @@ $translation = array(
 'defaultorderbydirection' => 'Standardmäßig sotiert als',
 'movingtodifferentproject'=> 'Verschieben von einer Aufgabe zu einem anderen Projekt welche eine Ober- oder Unteraufgabe ist, ist nicht erlaubt. Sie müssen erst die Verbindung zwischen den Aufgaben trennen.',
 'commentedon'             => 'schrieb am',
+'maxvoteperday'           => 'Stimmen pro Tag',
+'votesperproject'         => 'Stimmen pro Projekt',
+'votelimitreached'        => 'Sie haben die maximale Anzahl an Stimmen erreicht. Wird eine Aufgabe, für die Sie gestimmt haben geschlossen, wird ihre Stimme freigegeben. Oder Sie ziehen auf ihrer Profilseite Stimmen zurück, um wieder freie Stimmen zu bekommen.',
+'myvotes'                 => 'Meine Stimmen',
 );
 
 ?>
