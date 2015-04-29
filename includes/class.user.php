@@ -247,7 +247,7 @@ class User
                 if ($task['opened_by'] == $this->id) {
                     return true;
                 }
-                // Fetch only once, could be needed twice
+                // Fetch only once, could be needed three times.
                 $assignees = Flyspray::GetAssignees($task['task_id']);
                 if (in_array($this->id, $assignees)) {
                     return true;
@@ -267,6 +267,26 @@ class User
                         return true;
                     }
                 }
+                
+                // Check the global group next. Note that for users in that group to be included,
+                // the has to be specified at global group level. So even if our permission system
+                // works by OR'ing the permissions together, who is actually considered to be in
+                // in the same group now depends on whether this permission has been given on global
+                // or project level. 
+                if ($this->perms('view_groups_tasks', 0)) {
+                    $group = $this->perms('project_group', 0);
+                    $others = Project::listUsersIn($group);
+
+                    foreach ($others as $other) {
+                        if ($other['user_id'] == $task['opened_by']) {
+                            return true;
+                        }
+                        if (in_array($other['user_id'], $assignees)) {
+                            return true;
+                        }
+                    }
+                }
+                
                 // No use to continue further.
                 return false;
             }
