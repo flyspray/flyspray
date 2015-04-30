@@ -1258,6 +1258,11 @@ LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
         $sql_params[] = $user->id;
         $sql_params[] = $user->id;
         
+        // Seems resution name really is needed...
+        $select .= 'lr.resolution_name, ';
+        $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $groupby .= 'lr.resolution_name, ';
+        
         // Otherwise, only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
