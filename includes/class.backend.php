@@ -1258,6 +1258,11 @@ LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
         $sql_params[] = $user->id;
         $sql_params[] = $user->id;
         
+        // Seems resution name really is needed...
+        $select .= 'lr.resolution_name, ';
+        $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $groupby .= 'lr.resolution_name, ';
+        
         // Otherwise, only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
             $select .= ' lt.tasktype_name, ';
@@ -1463,11 +1468,6 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $condition = '';
             foreach ($type as $val) {
                 // add conditions for the status selection
-                if ($key == 'status') {
-                    $select .= 'lr.resolution_name, ';
-                    $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
-                    $groupby .= 'lr.resolution_name, ';
-                }
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
                     $temp .= ' is_closed = 1 AND';
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
