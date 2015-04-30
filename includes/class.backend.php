@@ -1463,6 +1463,11 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $condition = '';
             foreach ($type as $val) {
                 // add conditions for the status selection
+                if ($key == 'status') {
+                    $select .= 'lr.resolution_name, ';
+                    $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+                    $groupby .= 'lr.resolution_name, ';
+                }
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
                     $temp .= ' is_closed = 1 AND';
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
