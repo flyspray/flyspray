@@ -717,4 +717,7 @@
       <col>version_tense</col>
     </index>
   </table>
+  <sql>
+  	<query>UPDATE projects SET visible_fields = 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes' WHERE visible_fields = '';</query>
+  </sql>
 </schema>
