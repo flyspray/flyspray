@@ -412,7 +412,7 @@ class Flyspray
         $dirname = dirname(dirname(__FILE__));
         if ($handle = opendir($dirname . '/themes/')) {
             while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
+                if (substr($file, 0, 1)  != '.' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
                     $themeArray[] = $file;
                 }
             }
