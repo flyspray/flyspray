@@ -408,18 +408,19 @@ class Flyspray
      */
     public static function listThemes()
     {
-        $theme_array = array();
-        if ($handle = opendir(dirname(dirname(__FILE__)) . '/themes/')) {
+        $themeArray = array();
+        $dirname = dirname(dirname(__FILE__));
+        if ($handle = opendir($dirname . '/themes/')) {
             while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..' && is_file(dirname(dirname(__FILE__)) . "/themes/$file/theme.css")) {
-                    $theme_array[] = $file;
+                if ($file{0}  != '.' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
+                    $themeArray[] = $file;
                 }
             }
             closedir($handle);
         }
 
-        sort($theme_array);
-        return $theme_array;
+        sort($themeArray);
+        return $themeArray;
     } // }}}
     // List a project's group {{{
     /**
