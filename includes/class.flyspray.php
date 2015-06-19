@@ -29,7 +29,7 @@ class Flyspray
      * @access public
      * @var array
      */
-    public $prefs   = array();
+    public $prefs = array();
 
     /**
      * Max. file size for file uploads. 0 = no uploads allowed
@@ -408,19 +408,19 @@ class Flyspray
      */
     public static function listThemes()
     {
-        $theme_array = array();
+        $themes = array();
         $dirname = dirname(dirname(__FILE__));
         if ($handle = opendir($dirname . '/themes/')) {
             while (false !== ($file = readdir($handle))) {
                 if (substr($file,0,1) != '.' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
-                    $theme_array[] = $file;
+                    $themes[] = $file;
                 }
             }
             closedir($handle);
         }
 
-        sort($theme_array);
-        return $theme_array;
+        sort($themes);
+        return $themes;
     } // }}}
     // List a project's group {{{
     /**
