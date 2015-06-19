@@ -65,10 +65,15 @@ php_flag always_populate_raw_post_data Off
 </LimitExcept>
 
 <IfModule mod_rewrite.c>
-SetEnv HTTP_MOD_REWRITE on
+#SetEnv HTTP_MOD_REWRITE on
 
 RewriteEngine on
 #RewriteBase /flyspray
+
+# You can force TLS/SSL if you have a valid certificate for your domain
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 
 RewriteRule ^.*\?do=admin&area=prefs$ index.php?do=admin&area=prefs [L,QSA]
 
@@ -111,4 +116,4 @@ RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
 
 </IfModule>
 
-SetEnv HTTP_HTACCESS_ENABLED on
+#SetEnv HTTP_HTACCESS_ENABLED on

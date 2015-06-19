@@ -1628,12 +1628,11 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         // echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
         $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', $cgroupbyarr) : '';
 
-        $sqlcount = "SELECT COUNT(*)
-                          FROM     $cfrom
-                          $where
-                          $cgroupby
-                          $having";
-
+        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1, t.task_id, t.date_opened, t.date_closed, t.last_edited_time
+                           FROM     $cfrom
+                           $where
+                           $cgroupby
+                           $having) s";
         $sqltext = "SELECT t.*, $select
 p.project_title, p.project_is_active
 FROM $from
