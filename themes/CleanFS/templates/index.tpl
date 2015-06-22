@@ -77,7 +77,7 @@
   <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'/>
 <style>
 #sc2,#s_searchstate{display:none;}
-#searchstateactions{color:#999;display:block;}
+#searchstateactions{color:#999;display:block;cursor:pointer;}
 #s_searchstate:checked ~ #sc2 {display:block;}
 </style>
 <input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
