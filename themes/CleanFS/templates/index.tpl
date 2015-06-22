@@ -366,7 +366,7 @@
     </tr>
 </table>
 
-<!--- Bulk editing Tasks --->
+<!-- Bulk editing Tasks -->
 <?php if (!$proj->id == 0): ?>
 <?php if (!$user->isAnon() && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
