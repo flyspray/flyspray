@@ -610,7 +610,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="resolution_name" type="C" size="30">
+    <field name="resolution_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="list_position" type="I" size="3">
