@@ -554,9 +554,9 @@
             <!-- If there is only one choice of project, then don't bother showing it -->
             <?php if (count($fs->projects) > 1) { ?>
             <li>
-                <?php } else { ?>
+            <?php } else { ?>
             <li style="display:none">
-                <?php } ?>
+            <?php } ?>
                 <?php $projectsList = $fs->listProjects(); ?>
                 <?php array_unshift($projectsList,L('notspecified')); ?>
                 <label for="bulk_projects"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
@@ -564,8 +564,6 @@
                     <?php echo tpl_options($projectsList); ?>
                 </select>
             </li>
-            </li>
-
         </ul>
         <button type="submit" name="updateselectedtasks" value="true"><?php echo Filters::noXSS(L('updateselectedtasks')); ?></button>
     </fieldset>
