@@ -1244,8 +1244,8 @@ abstract class Backend
         $from = ' {tasks} t
 -- All tasks have a project!
 JOIN {projects} p ON t.project_id = p.project_id
--- Global group always exists
-JOIN ({groups} gpg
+-- Global group always exists (actually not for anonymous users...)
+LEFT JOIN ({groups} gpg
     JOIN {users_in_groups} gpuig ON gpg.group_id = gpuig.group_id AND gpuig.user_id = ?		
 ) ON gpg.project_id = 0
 -- Project group might exist or not.
