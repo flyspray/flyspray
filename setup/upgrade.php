@@ -97,10 +97,7 @@ if (Post::val('upgrade')) {
             $installed_version = $folder;
             $uplog[]="End $installed_version to $folder";
         }
-    }
-    // Update existing projects to default field visibility if 'visible_fields' is empty.
-    $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
-
+  
     $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
 
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
