@@ -37,7 +37,7 @@
     	  if ($fs->prefs['active_oauths']):
           $providers = explode(' ', $fs->prefs['active_oauths']);
           foreach($providers as $provider): ?>
-              <a class="oauth btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
+              <a class="btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">
               <i class="fa fa-<?php echo $provider; ?>"></i> <?php echo Filters::noXSS(sprintf(L('signinwith'), ucfirst($provider))); ?>
               </a>
     <?php endforeach; endif;?>
