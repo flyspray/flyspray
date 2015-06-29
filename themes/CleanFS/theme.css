@@ -891,7 +891,6 @@ a#show_loginbox {margin-right: 5px;}
 #login_input {text-align: center;}
 #login_links {text-align: center;}
 #login_oauth {margin-top: 10px;}
-.oauth {display: inline-block;}
 #loginbox #login label {color: #222;}
 #loginbox #login a {color: #222;text-decoration: underline;}
 #loginbox #login a:hover {color: #fff;}
