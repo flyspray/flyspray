@@ -98,8 +98,6 @@ if (Post::val('upgrade')) {
             $uplog[]="End $installed_version to $folder";
         }
     }
-    // Update existing projects to default field visibility if 'visible_fields' is empty.
-    $db->Query('UPDATE {projects} SET visible_fields = \'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes\' WHERE visible_fields = \'\'');
 
     $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
 
