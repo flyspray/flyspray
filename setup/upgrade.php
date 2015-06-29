@@ -97,7 +97,8 @@ if (Post::val('upgrade')) {
             $installed_version = $folder;
             $uplog[]="End $installed_version to $folder";
         }
-  
+    }
+    
     $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
 
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
