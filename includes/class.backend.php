@@ -1373,6 +1373,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
                 $cfrom .= '
 -- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
+		$cgroupbyarr[] = 't.task_id';
                 $cgroupbyarr[] = 'ass.task_id';
             }
         }
@@ -1626,7 +1627,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         
         // echo '<pre>' . print_r($args, true) . '</pre>';
         // echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
-        $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', $cgroupbyarr) : '';
+        $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', array_unique($cgroupbyarr)) : '';
 
         $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1, t.task_id, t.date_opened, t.date_closed, t.last_edited_time
                            FROM     $cfrom
