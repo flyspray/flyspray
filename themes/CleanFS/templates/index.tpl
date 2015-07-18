@@ -79,9 +79,11 @@
 #sc2,#s_searchstate{display:none;}
 #searchstateactions{color:#999;display:block;cursor:pointer;}
 #s_searchstate:checked ~ #sc2 {display:block;}
+#s_searchstate ~ label::before { content: "\25bc";}
+#s_searchstate:checked ~ label::before { content: "\25b2";}
 </style>
 <input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
-<label id="searchstateactions" for="s_searchstate"><span class="fa fa-caret-down"></span><?php echo Filters::noXSS(L('advanced')); ?></label>
+<label id="searchstateactions" for="s_searchstate"><?php echo Filters::noXSS(L('advanced')); ?></label>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
 <fieldset>
