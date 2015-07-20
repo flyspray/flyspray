@@ -340,7 +340,7 @@ function deletesearch(id, url) {
     url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {
     		method: 'post',
-    		parameters: { 'id:' id, 'csrftoken': document.getElementById('deletesearchtoken') },
+    		parameters: { 'id': id, 'csrftoken': document.getElementById('deletesearchtoken') },
     		onSuccess:function()
                 {
                         var oNodeToRemove = $('rs' + id);
@@ -361,7 +361,7 @@ function savesearch(query, baseurl, savetext, csrftoken) {
         $('lblsaveas').firstChild.nodeValue = savetext;
         var myAjax = new Ajax.Request(url, {
         	method: 'post',
-        	parameters: query + '&search_name=' + encodeURIComponent($('save_search').value + '&csrftoken=' + csrftoken,
+        	parameters: query + '&search_name=' + encodeURIComponent($('save_search').value) + '&csrftoken=' + csrftoken,
                 onComplete:function()
                 {
                         $('lblsaveas').firstChild.nodeValue=old_text;
