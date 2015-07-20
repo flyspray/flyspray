@@ -1,6 +1,6 @@
 <?php
 /*
-    This script gets the history of a task and
+    This script gets the searches of current user and
     returns it for HTML display in a page.
 */
 
@@ -24,7 +24,7 @@ if ($user->isAnon()) {
     die();
 }
 
-$user->save_search();
+$user->save_search(); # currently used for loading user searches from db into user object ... 
 $page = new FSTpl;
 $page->setTheme($proj->prefs['theme_style']);
 $page->display('links.searches.tpl');

@@ -48,27 +48,29 @@ class User
         if($this->isAnon()) {
             return;
         }
-
         // Only logged in users get to use the 'last search' functionality
+
         if ($do == 'index') {
-            $arr = array();
-            foreach ($this->search_keys as $key) {
-                $arr[$key] = Get::val($key, ($key == 'status') ? 'open' : null);
-            }
-            foreach (array('order', 'sort', 'order2', 'sort2') as $key) {
-                if (Get::val($key)) {
-                    $arr[$key] = Get::val($key);
-                }
-            }
+        	if (Post::val('search_name')) {
+        		$arr = array();
+        		foreach ($this->search_keys as $key) {
+        			$arr[$key] = Post::val($key, ($key == 'status') ? 'open' : null);
+        		}
+        		foreach (array('order', 'sort', 'order2', 'sort2') as $key) {
+        			if (Post::val($key)) {
+        				$arr[$key] = Post::val($key);
+        			}
+        		}
 
-            if (Get::val('search_name')) {
-                $fields = array('search_string'=> serialize($arr), 'time'=> time(),
-                                'user_id'=> $this->id , 'name'=> Get::val('search_name'));
-
-                $keys = array('name','user_id');
-
-                $db->Replace('{searches}', $fields, $keys);
-            }
+        		$fields = array(
+        			'search_string'=> serialize($arr),
+        			'time'=> time(),
+        			'user_id'=> $this->id ,
+        			'name'=> Post::val('search_name')
+        		);
+        		$keys = array('name','user_id');
+        		$db->Replace('{searches}', $fields, $keys);
+        	}
         }
 
         $sql = $db->Query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY name ASC', array($this->id));

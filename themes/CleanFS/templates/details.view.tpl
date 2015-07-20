@@ -242,12 +242,13 @@ function quick_edit(elem, id)
 				show_hide(elem, false);
 			}else{
 				// TODO show error message returned from the server and let quickedit form open
+				elem.parentNode.style["background-color"]='#ff6600'; // at least show something went wrong
 			}
 		}
 	}
 	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/quickedit.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&token=<?php echo $_SESSION['csrftoken'] ?>");
+	xmlHttp.send("name=" + name + "&value=" + value + "&task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&csrftoken=<?php echo $_SESSION['csrftoken'] ?>");
 }
 </script>
 

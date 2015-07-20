@@ -1,5 +1,6 @@
     <strong id="nosearches" <?php if(count($user->searches)): ?>class="hide"<?php endif; ?>><?php echo Filters::noXSS(L('nosearches')); ?></strong>
     <?php if(count($user->searches)): ?>
+    <input type="hidden" name="csrftoken" id="deletesearchtoken" value="<?php echo $_SESSION['csrftoken']; ?>">
     <table id="mysearchestable">
     <?php foreach ($user->searches as $search): ?>
     <tr id="rs<?php echo Filters::noXSS($search['id']); ?>" <?php if($search == end($user->searches)): ?>class="last"<?php endif; ?>>
