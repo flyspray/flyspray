@@ -335,12 +335,14 @@ function toggleSearchBox(themeurl) {
       Cookie.setVar('advancedsearch','1');
   }
 }
-function deletesearch(id, url) {
+function deletesearch(id, url, csrftoken) {
     var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/CleanFS/ajax_load.gif';
     url = url + 'js/callbacks/deletesearches.php';
-    var myAjax = new Ajax.Request(url, {method: 'get', parameters: 'id=' + id,
-                     onSuccess:function()
-                     {
+    var myAjax = new Ajax.Request(url, {
+    		method: 'post',
+    		parameters: {'id:' id, 'csrftoken': csrftoken},
+                onSuccess:function()
+                {
                         var oNodeToRemove = $('rs' + id);
                         oNodeToRemove.parentNode.removeChild(oNodeToRemove);
                         var table = $('mysearchestable');
@@ -352,18 +354,20 @@ function deletesearch(id, url) {
                      }
                 });
 }
-function savesearch(query, baseurl, savetext) {
-    url = baseurl + 'js/callbacks/savesearches.php?' + query + '&search_name=' + encodeURIComponent($('save_search').value);
+function savesearch(query, baseurl, savetext, csrftoken) {
+    url = baseurl + 'js/callbacks/savesearches.php';
     if($('save_search').value != '') {
         var old_text = $('lblsaveas').firstChild.nodeValue;
         $('lblsaveas').firstChild.nodeValue = savetext;
-        var myAjax = new Ajax.Request(url, {method: 'get',
-                     onComplete:function()
-                     {
+        var myAjax = new Ajax.Request(url, {
+        	method: 'post',
+        	parameters: query + '&search_name=' + encodeURIComponent($('save_search').value + '&csrftoken=' + csrftoken,
+                onComplete:function()
+                {
                         $('lblsaveas').firstChild.nodeValue=old_text;
                         var myAjax2 = new Ajax.Updater('mysearches', baseurl + 'js/callbacks/getsearches.php', { method: 'get'});
                      }
-                     });
+                });
     }
 }
 function activelink(id) {
