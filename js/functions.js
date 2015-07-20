@@ -335,13 +335,13 @@ function toggleSearchBox(themeurl) {
       Cookie.setVar('advancedsearch','1');
   }
 }
-function deletesearch(id, url, csrftoken) {
+function deletesearch(id, url) {
     var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/CleanFS/ajax_load.gif';
     url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {
     		method: 'post',
-    		parameters: {'id:' id, 'csrftoken': csrftoken},
-                onSuccess:function()
+    		parameters: { 'id:' id, 'csrftoken': document.getElementById('deletesearchtoken') },
+    		onSuccess:function()
                 {
                         var oNodeToRemove = $('rs' + id);
                         oNodeToRemove.parentNode.removeChild(oNodeToRemove);
@@ -351,8 +351,8 @@ function deletesearch(id, url, csrftoken) {
                         } else {
                             showstuff('nosearches');
                         }
-                     }
-                });
+                }
+        });
 }
 function savesearch(query, baseurl, savetext, csrftoken) {
     url = baseurl + 'js/callbacks/savesearches.php';
