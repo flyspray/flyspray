@@ -55,6 +55,9 @@ $oldvalue = $task[Post::val('name')];
 $time=time();
 $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_time = ? WHERE task_id = ?", array($value, $time, Post::val('task_id')));
 
+# load $proj again of task with correct project_id for getting active notification types in notification class
+$proj= new Project($task['project_id']);
+
 // Log the changed field in task history
 Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
