@@ -21,11 +21,23 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 if ($user->isAnon()) {
     die();
 }
+load_translations();
+
+if( !Post::has('csrftoken') ){
+        header(':', true, 428); # 'Precondition Required'
+        die('missingtoken'); 
+}elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
+        # empty
+}else{
+        header(':', true, 412); # 'Precondition Failed'
+        die('wrongtoken');
+}
 
 $task = Flyspray::GetTaskDetails(Post::val('task_id'));
 if (!$user->can_edit_task($task)){
-    Flyspray::show_error(L('nopermission'));
-    die();
+    header(':', true, 403); # 'Forbidden'
+    #Flyspray::show_error(L('nopermission'));
+    die(L('nopermission'));
 }
 if(Post::val('name') == "due_date"){
     $value = Flyspray::strtotime(Post::val('value'));
