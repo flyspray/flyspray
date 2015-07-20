@@ -340,7 +340,7 @@ function deletesearch(id, url) {
     url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {
     		method: 'post',
-    		parameters: { 'id': id, 'csrftoken': document.getElementById('deletesearchtoken') },
+    		parameters: { 'id': id, 'csrftoken': document.getElementById('deletesearchtoken').value },
     		onSuccess:function()
                 {
                         var oNodeToRemove = $('rs' + id);
