@@ -5,11 +5,64 @@ if (!defined('IN_FS')) {
 }
 
 require_once BASEDIR . '/lang/en.php';
+FlySprayI18N::init('en', $language);
+FlySprayI18N::setDefault($language);
 
+class FlySprayI18N {
+    private static $translations = array();
+
+    public static function init($lang, $translation) {
+        self::$translations[$lang] = $translation;
+    }
+
+    public static function setDefault($translation) {
+        self::$translations['default'] = $translation;
+    }
+
+    public static function L($key, $lang = null) {
+        if (!isset($lang) || empty($lang) || !is_string($lang)) {
+            $lang = 'default';
+        }
+        if ($lang != 'default' && $lang != 'en' && !array_key_exists($lang, self::$translations)) {
+            // echo "<pre>Only once here for $lang!</pre>";
+            $language = BASEDIR . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $lang . '.php';
+            if (is_readable($language)) {
+                if ((@require $language) !== FALSE) {
+                    // echo "<pre>Loaded: $lang!</pre>";
+                    self::$translations[$lang] = $translation;
+                }
+                else {
+                    $lang = 'default';
+                }
+            }
+            else {
+                $lang = 'default';
+            }
+        }
+        if (empty($key)) {
+            return '';
+        }
+        if (isset(self::$translations[$lang][$key])) {
+            // echo "<pre>Case 1: $lang!</pre>";
+            return self::$translations[$lang][$key];
+        }
+        if (isset(self::$translations['default'][$key])) {
+            // echo "<pre>Case 2: $lang!</pre>";
+            return self::$translations['default'][$key];
+        }
+        if (isset(self::$translations['en'][$key])) {
+            // echo "<pre>Case 3: $lang!</pre>";
+            return self::$translations['en'][$key];
+        }
+        // echo "<pre>Case 4: $lang!". var_dump(self::$translations['en']) ."</pre>";
+        return "[[$key]]";
+    }
+}
 /**
  * get the language string $key
  * return string
  */
+
 function L($key){
     global $language;
     if (empty($key)) {
@@ -21,6 +74,16 @@ function L($key){
     return "[[$key]]";
 }
 
+/**
+ * get the language string $key in $lang
+ * or current default language if $lang
+ * is not given.
+ * return string
+ */
+
+function tL($key, $lang = null) {
+    return FlySprayI18N::L($key, $lang);
+}
 /**
  * html escaped variant of the previous
  * return $string
@@ -78,6 +141,7 @@ function load_translations(){
 	if ($lang_code != 'en' && is_readable($translation)) {
 		include_once($translation);
 		$language = is_array($translation) ? array_merge($language, $translation) : $language;
+                FlySprayI18N::init($lang_code, $language);
 	}elseif( 'en'!=substr($lang_code, 0, strpos($lang_code, '_')) && is_readable(BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php') ){
 		# fallback 'de_AT' to 'de', but not for 'en_US'
 		$translation=BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php';
@@ -85,6 +149,7 @@ function load_translations(){
 		$language = is_array($translation) ? array_merge($language, $translation) : $language;    
 	}
 
+        FlySprayI18N::setDefault($language);
     // correctly translate title since language not set when initialising the project
     if (!$proj->id) {
         $proj->prefs['project_title'] = L('allprojects');

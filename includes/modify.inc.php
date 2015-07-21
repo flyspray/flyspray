@@ -557,9 +557,14 @@ switch ($action = Req::val('action'))
 
         $confirm_code = substr($randval, 0, 20);
 
-        //send the email first.
+        // echo "<pre>Am I here?</pre>";
+        // send the email first
+        $userconfirmation = array();
+        $userconfirmation[$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
+        $recipients = array($userconfirmation);
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-        $email, NOTIFY_EMAIL)) {
+            $recipients,
+            NOTIFY_EMAIL)) {
 
             //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,
@@ -642,7 +647,12 @@ switch ($action = Req::val('action'))
         }
 
         $enabled = 1;
-        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'], $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'], $enabled ,'', '', $image_path)) {
+        if (!Backend::create_user($reg_details['user_name'],
+                Post::val('user_pass'),
+                $reg_details['real_name'],
+                $reg_details['jabber_id'],
+                $reg_details['email_address'],
+                $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'], $enabled ,'', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
@@ -788,7 +798,9 @@ switch ($action = Req::val('action'))
             }
 
             if (!Backend::create_user($user_name, Post::val('user_pass'),
-                $real_name, '', $email_address, Post::num('notify_type'),
+                $real_name, '',
+                $email_address,
+                Post::num('notify_type'),
                 Post::num('time_zone'), $group_in, $enabled, '', '', ''))
             {
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
@@ -2212,7 +2224,7 @@ switch ($action = Req::val('action'))
         array($magic_url, $user_details['user_id']));
 
         if(count($user_details)) {
-            $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
+            $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), NOTIFY_EMAIL));
         }
 
         // TODO: Log event in a later version.
@@ -2393,8 +2405,7 @@ switch ($action = Req::val('action'))
             // Flyspray::show_error(L('summaryanddetails'));
             break;
         }
-
-        if (!$count($_POST['message_id'])) {
+        if (!count($_POST['message_id'])) {
             // Nothing to do.
             break;
         }
@@ -2402,13 +2413,13 @@ switch ($action = Req::val('action'))
         $validids = array();
         foreach ($_POST['message_id'] as $id) {
             if (is_numeric($id)) {
-                if (settype($id, 'int') && id > 0) {
+                if (settype($id, 'int') && $id > 0) {
                     $validids[] = $id;
                 }
             }
         }
 
-        if (!$count($validids)) {
+        if (!count($validids)) {
             // Nothing to do.
             break;
         }
