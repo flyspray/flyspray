@@ -8,10 +8,20 @@
     </div>
 </div>
 <?php endif; ?>
+<?php if ($do =='pm' && list_type== 'tasktype'): ?>
+<!-- TODO: show the system wide list values as help for project managers to avoid creating duplicate list entry types -->
+<?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-  <table class="list" id="listTable">
-   <thead>
-     <tr>
+<table class="list" id="listTable">
+<colgroup>
+    <col class="cname"></col>
+    <col class="corder"></col>
+    <col class="cshow"></col>
+    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
+    <col class="cdelete"></col>
+</colgroup>
+<thead>
+    <tr>
        <th><?php echo Filters::noXSS(L('name')); ?></th>
        <th><?php echo Filters::noXSS(L('order')); ?></th>
        <th><?php echo Filters::noXSS(L('show')); ?></th>
@@ -86,8 +96,16 @@
 </form>
 <hr />
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-  <table class="list">
-    <tr>
+<table class="list">
+<colgroup>
+    <col class="cname"></col>
+    <col class="corder"></col>
+    <col class="cshow"></col>
+    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
+    <col class="cdelete"></col>
+</colgroup>
+<tbody>
+<tr>
       <td>
         <?php if ($list_type == 'version'): ?>
         <input type="hidden" name="action" value="<?php echo Filters::noXSS($do); ?>.add_to_version_list" />
@@ -100,10 +118,10 @@
         <?php endif; ?>
         <input type="hidden" name="area" value="<?php echo Filters::noXSS(Req::val('area')); ?>" />
         <input type="hidden" name="do" value="<?php echo Filters::noXSS(Req::val('do')); ?>" />
-        <input id="listnamenew" class="text" type="text" size="15" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
+        <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" size="15" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
       </td>
       <td>
-        <input id="listpositionnew" class="text" type="text" size="3" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
+        <input id="listpositionnew" placeholder="<?php echo Filters::noXSS(L('order')); ?>" class="text" type="text" size="3" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
       </td>
       <td>
         <input id="showinlistnew" type="checkbox" name="show_in_list" checked="checked" disabled="disabled" />
@@ -121,5 +139,6 @@
         <button type="submit"><?php echo Filters::noXSS(L('addnew')); ?></button>
       </td>
     </tr>
-  </table>
+</tbody>
+</table>
 </form>
