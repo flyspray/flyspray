@@ -62,6 +62,6 @@ $proj= new Project($task['project_id']);
 Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
 $notify = new Notifications;
-$notify->Create( NOTIFY_TASK_CHANGED, $task['task_id'], array(array(Post::val('name'),$oldvalue,$value)) );
+$notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], array(array(Post::val('name'),$oldvalue,$value)), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
 ?>

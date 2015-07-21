@@ -162,8 +162,9 @@ abstract class Backend
                         array($row['task_id'], $user->id));
 
             if ($db->affectedRows()) {
+                $current_proj = new Project($row['project_id']);
                 Flyspray::logEvent($row['task_id'], 19, $user->id, implode(' ', Flyspray::GetAssignees($row['task_id'])));
-                $notify->Create(NOTIFY_OWNERSHIP, $row['task_id']);
+                $notify->Create(NOTIFY_OWNERSHIP, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
             }
 
             if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
@@ -211,8 +212,9 @@ abstract class Backend
             $db->Replace('{assigned}', array('user_id'=> $user->id, 'task_id'=> $row['task_id']), array('user_id','task_id'));
 
             if ($db->affectedRows()) {
+                $current_proj = new Project($row['project_id']);
                 Flyspray::logEvent($row['task_id'], 29, $user->id, implode(' ', Flyspray::GetAssignees($row['task_id'])));
-                $notify->Create(NOTIFY_ADDED_ASSIGNEES, $row['task_id']);
+                $notify->Create(NOTIFY_ADDED_ASSIGNEES, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
             }
 
             if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
@@ -301,7 +303,7 @@ abstract class Backend
      */
     public static function add_comment($task, $comment_text, $time = null)
     {
-        global $db, $user, $notify;
+        global $db, $user, $notify, $proj;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
             return false;
@@ -328,9 +330,9 @@ abstract class Backend
         Flyspray::logEvent($task['task_id'], 4, $cid);
 
         if (Backend::upload_files($task['task_id'], $cid)) {
-            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], 'files');
+            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         } else {
-            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id']);
+            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         return true;
@@ -1104,7 +1106,7 @@ abstract class Backend
             Flyspray::logEvent($task_id, 14, implode(' ', $args['rassigned_to']));
 
             // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
-            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null, $notify->SpecificAddresses($args['rassigned_to']));
+            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null, $notify->SpecificAddresses($args['rassigned_to']), NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         // Log that the task was opened
@@ -1154,9 +1156,9 @@ abstract class Backend
 
         // Create the Notification
         if (Backend::upload_files($task_id)) {
-            $notify->Create(NOTIFY_TASK_OPENED, $task_id, 'files');
+            $notify->Create(NOTIFY_TASK_OPENED, $task_id, 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         } else {
-            $notify->Create(NOTIFY_TASK_OPENED, $task_id);
+            $notify->Create(NOTIFY_TASK_OPENED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         // If the reporter wanted to be added to the notification list
@@ -1169,7 +1171,7 @@ abstract class Backend
             $anonuser[$email] = array('recipient' => $args['anon_email'], 'lang' => $fs->prefs['lang_code']);
             $recipients = array($anonuser);
             $notify->Create(NOTIFY_ANON_TASK, $task_id, $token,
-                            $recipients, NOTIFY_EMAIL);
+                            $recipients, NOTIFY_EMAIL, $proj->prefs['lang_code']);
         }
 
         return array($task_id, $token);
@@ -1187,7 +1189,7 @@ abstract class Backend
      */
     public static function close_task($task_id, $reason, $comment, $mark100 = true)
     {
-        global $db, $notify, $user;
+        global $db, $notify, $user, $proj;
         $task = Flyspray::GetTaskDetails($task_id);
 
         if (!$user->can_close_task($task)) {
@@ -1212,7 +1214,7 @@ abstract class Backend
             Flyspray::logEvent($task_id, 3, 100, $task['percent_complete'], 'percent_complete');
         }
 
-        $notify->Create(NOTIFY_TASK_CLOSED, $task_id);
+        $notify->Create(NOTIFY_TASK_CLOSED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         Flyspray::logEvent($task_id, 2, $reason, $comment);
 
         // If there's an admin request related to this, close it
