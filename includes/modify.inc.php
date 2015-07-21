@@ -275,7 +275,7 @@ switch ($action = Req::val('action'))
 
         $changes = Flyspray::compare_tasks($task, $new_details_full);
         if (count($changes) > 0) {
-            $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes);
+            $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         if ($assignees_changed) {
@@ -290,7 +290,7 @@ switch ($action = Req::val('action'))
                     $new_assignees = array_filter($new_assignees, create_function('$u', 'global $user; return $user->id != $u;'));
                 }
                 if(count($new_assignees)) {
-                    $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees));
+                    $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees), NOTIFY_BOTH, $proj->prefs['lang_code']);
                 }
             }
         }
@@ -401,7 +401,7 @@ switch ($action = Req::val('action'))
 
         Flyspray::logEvent($task['task_id'], 3, $old_percent['old_value'], $old_percent['new_value'], 'percent_complete');
 
-        $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id']);
+        $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         // add comment of PM request to comment page if accepted
         $sql = $db->Query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ? AND resolved_by = 0',
@@ -1752,8 +1752,7 @@ switch ($action = Req::val('action'))
 
         Flyspray::logEvent($task['task_id'], 11, Post::val('related_task'));
         Flyspray::logEvent(Post::val('related_task'), 15, $task['task_id']);
-
-        $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'));
+        $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         $_SESSION['SUCCESS'] = L('relatedaddedmsg');
         break;
@@ -2019,7 +2018,7 @@ switch ($action = Req::val('action'))
         $pms = $db->fetchCol($sql);
         if (count($pms)) {
             // Call the functions to create the address arrays, and send notifications
-            $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms));
+        $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms), NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         $_SESSION['SUCCESS'] = L('adminrequestmade');
@@ -2046,7 +2045,7 @@ switch ($action = Req::val('action'))
         array($user->id, time(), Req::val('deny_reason'), Req::val('req_id')));
 
         Flyspray::logEvent($req_details['task_id'], 28, Req::val('deny_reason'));
-        $notify->Create(NOTIFY_PM_DENY_REQUEST, $req_details['task_id'], Req::val('deny_reason'));
+        $notify->Create(NOTIFY_PM_DENY_REQUEST, $req_details['task_id'], Req::val('deny_reason'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         $_SESSION['SUCCESS'] = L('pmreqdeniedmsg');
         break;
@@ -2118,9 +2117,8 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('dependaddfailed'));
             break;
         }
-
-        $notify->Create(NOTIFY_DEP_ADDED, $task['task_id'], Post::val('dep_task_id'));
-        $notify->Create(NOTIFY_REV_DEP, Post::val('dep_task_id'), $task['task_id']);
+        $notify->Create(NOTIFY_DEP_ADDED, $task['task_id'], Post::val('dep_task_id'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+        $notify->Create(NOTIFY_REV_DEP, Post::val('dep_task_id'), $task['task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         // Log this event to the task history, both ways
         Flyspray::logEvent($task['task_id'], 22, Post::val('dep_task_id'));
@@ -2174,8 +2172,8 @@ switch ($action = Req::val('action'))
                     array(Post::val('depend_id'), $task['task_id']));
 
         if ($db->AffectedRows()) {
-            $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id']);
-            $notify->Create(NOTIFY_REV_DEP_REMOVED, $dep_info['dep_task_id'], $dep_info['task_id']);
+            $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->Create(NOTIFY_REV_DEP_REMOVED, $dep_info['dep_task_id'], $dep_info['task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
             Flyspray::logEvent($dep_info['task_id'], 24, $dep_info['dep_task_id']);
             Flyspray::logEvent($dep_info['dep_task_id'], 25, $dep_info['task_id']);
