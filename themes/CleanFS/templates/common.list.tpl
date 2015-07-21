@@ -8,6 +8,9 @@
     </div>
 </div>
 <?php endif; ?>
+<?php if ($do =='pm' && list_type== 'tasktype'): ?>
+<!-- TODO: show the system wide list values as help for project managers to avoid creating duplicate list entry types -->
+<?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
 <table class="list" id="listTable">
 <colgroup>
