@@ -9,9 +9,16 @@
 </div>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-  <table class="list" id="listTable">
-   <thead>
-     <tr>
+<table class="list" id="listTable">
+<colgroup>
+    <col class="cname"></col>
+    <col class="corder"></col>
+    <col class="cshow"></col>
+    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
+    <col class="cdelete"></col>
+</colgroup>
+<thead>
+    <tr>
        <th><?php echo Filters::noXSS(L('name')); ?></th>
        <th><?php echo Filters::noXSS(L('order')); ?></th>
        <th><?php echo Filters::noXSS(L('show')); ?></th>
@@ -86,8 +93,16 @@
 </form>
 <hr />
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-  <table class="list">
-    <tr>
+<table class="list">
+<colgroup>
+    <col class="cname"></col>
+    <col class="corder"></col>
+    <col class="cshow"></col>
+    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
+    <col class="cdelete"></col>
+</colgroup>
+<tbody>
+<tr>
       <td>
         <?php if ($list_type == 'version'): ?>
         <input type="hidden" name="action" value="<?php echo Filters::noXSS($do); ?>.add_to_version_list" />
@@ -121,5 +136,6 @@
         <button type="submit"><?php echo Filters::noXSS(L('addnew')); ?></button>
       </td>
     </tr>
-  </table>
+</tbody>
+</table>
 </form>
