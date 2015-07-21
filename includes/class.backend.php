@@ -518,6 +518,44 @@ abstract class Backend
         return utf8_keepalphanum($user_name);
     }
 
+    public static function GetAdminAddresses() {
+        global $db;
+
+        $emails = array();
+        $jabbers = array();
+        $onlines = array();
+        
+        $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+                                  u.notify_online, u.notify_type, u.notify_own, u.lang_code
+                             FROM {users} u
+                             JOIN {users_in_groups} g ON u.user_id = g.user_id
+                             WHERE g.is_admin = 1 AND u.account_enabled = 1');
+ 
+	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
+        
+        return array($emails, $jabbers, $onlines);
+    }
+
+    public static function GetProjectManagerAddresses($project_id) {
+        global $db;
+
+ 
+        $emails = array();
+        $jabbers = array();
+        $onlines = array();
+        
+        $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+                                  u.notify_online, u.notify_type, u.notify_own, u.lang_code
+                             FROM {users} u
+                             JOIN {users_in_groups} ug ON u.user_id = ug.user_id
+                             JOIN {groups} g ON g.group_id = ug.group_id
+                             WHERE g.manage_project = 1 AND g.project_id = ? AND u.account_enabled = 1',
+                array($project_id));
+
+	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
+        
+        return array($emails, $jabbers, $onlines);
+    }
     /**
      * Creates a new user
      * @param string $user_name
@@ -642,35 +680,23 @@ abstract class Backend
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
         if ( ! $oauth_provider ) {
-            $users_to_notify = array();
-            // Notify admins on new user registration
-            if( $fs->prefs['notify_registration'] ) {
-                // Gather list of admin users. An empty address that comes
-                // first will break sending notification. So does probably
-                // an invalid one.
-                $sql = $db->Query('SELECT DISTINCT email_address
-                                 FROM {users} u
-                            LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
-                                 WHERE g.group_id = 1 AND email_address <> \'\'');
-
+            // If the new user is not an admin, add him to the notification list
+            $recipients = self::GetAdminAddresses();
+            if (isset($recipients[0]) && is_array($recipients[0])) {
                 // If the new user is not an admin, add him to the notification list.
                 // Should do this only if account is created as enabled, otherwise
                 // notification should be done when admin request is either accepted
                 // or denied, but we lack a really suitable notification, although
                 // NOTIFY_NEW_USER is quite close.
-                $admins = $db->FetchCol($sql);
-                if (count($admins)) {
-                    $users_to_notify = $admins;
+                if (!array_key_exists($email, $recipients[0])) {
+                    $recipients[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
                 }
-            }
-            if (!in_array($email, $users_to_notify)) {
-                $users_to_notify[] = $email;
             }
 
             // Notify the appropriate users
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
-                            $users_to_notify, NOTIFY_EMAIL);
+                            $recipients, NOTIFY_EMAIL);
         }
 
         // If the account is created as not enabled, no matter what any
@@ -1139,7 +1165,11 @@ abstract class Backend
         }
 
         if ($user->isAnon()) {
-            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token, $args['anon_email'], NOTIFY_EMAIL);
+            $anonuser = array();
+            $anonuser[$email] = array('recipient' => $args['anon_email'], 'lang' => $fs->prefs['lang_code']);
+            $recipients = array($anonuser);
+            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token,
+                            $recipients, NOTIFY_EMAIL);
         }
 
         return array($task_id, $token);
