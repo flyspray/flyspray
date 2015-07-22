@@ -65,7 +65,7 @@ $syscountlines++;
 </table>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-<h3><?php echo Filters::noXSS(L('projectvalues'));
+<h3><?php echo $do=='pm' ? Filters::noXSS(L('projectvalues')) : Filters::noXSS(L('systemvalues'));
 # TODO: do we have still a matching translation string name we can use instead inventing a new one?
 # TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
 ?></h3>
