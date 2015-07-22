@@ -604,7 +604,7 @@ form #taskdetails #taskdetailsfull {
   text-align: right;
   color: #888;
 }
-#taskdetails #taskfields ul.fieldslist li .value {display: block;float: right;width: 50%;}
+#taskdetails #taskfields ul.fieldslist li .value {display:block;float:right;width:50%;height:18px;}
 #taskdetails #taskfields ul.fieldslist > li:nth-child(2n-1) {background-color: #f1f1f1;}
 #taskdetails #showvotes {
   position: absolute;
