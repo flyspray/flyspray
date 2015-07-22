@@ -8,10 +8,67 @@
     </div>
 </div>
 <?php endif; ?>
-<?php if ($do =='pm' && list_type== 'tasktype'): ?>
-<!-- TODO: show the system wide list values as help for project managers to avoid creating duplicate list entry types -->
+<?php if ($do=='pm'):
+# show systemwide settings for this list on project setting page too ..
+# temporarly styling here - in future in theme.css for responsible layouts
+ ?>
+<style>
+.list .cname{width:200px;}
+.list .corder{width:50px;}
+.list .cshow{width:50px;}
+.list .ctense{width:80px;}
+.list .cdelete{width:80px;}
+#idtablesys {background-color: #eed;}
+</style>
+<h3><?php echo Filters::noXSS(L('systemvalues'));
+# TODO: do we have still a matching translation string name we can use instead inventing a new one?
+# TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
+?></h3>
+<table class="list" id="idtablesys">
+<colgroup>
+<col class="cname"></col>
+<col class="corder"></col>
+<col class="cshow"></col>
+<?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
+<col class="cdelete"></col>
+</colgroup>
+<thead>
+<tr>
+    <th><?php echo Filters::noXSS(L('name')); ?></th>
+    <th><?php echo Filters::noXSS(L('order')); ?></th>
+    <th><?php echo Filters::noXSS(L('show')); ?></th>
+    <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
+    <th>&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<?php if (isset($sysrows) && count($sysrows)): ?>
+<?php
+$syscountlines=-1;
+foreach ($sysrows as $row):
+$syscountlines++;
+?>
+<tr>
+    <td class="first"><?php echo Filters::noXSS($row[$list_type.'_name']); ?></td>
+    <td title="<?php echo Filters::noXSS(L('ordertip')); ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
+    <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
+    <?php if ($list_type == 'version'): ?><td title="<?php echo Filters::noXSS(L('listtensetip')); ?>"><?php echo $row[$list_type.'_tense']; ?></td><?php endif; ?>
+    <td>&nbsp;</td>
+</tr>
+<?php endforeach; ?>
+<?php else: ?>
+<tr><td colspan="<?php echo $list_type=='version' ? 5 : 4; ?>"><?php echo Filters::noXSS(L('novalues'));
+# TODO: do we have still a matching translation string name we can use instead inventing a new one?
+?></td></tr>
+<?php endif; ?>
+</tbody>
+</table>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
+<h3><?php echo Filters::noXSS(L('projectvalues'));
+# TODO: do we have still a matching translation string name we can use instead inventing a new one?
+# TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
+?></h3>
 <table class="list" id="listTable">
 <colgroup>
     <col class="cname"></col>
