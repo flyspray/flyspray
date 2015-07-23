@@ -2,8 +2,12 @@
 <?php
 $countlines = -1;
 $categories = $proj->listCategories($proj->id, false, false, false);
-$root = $categories[0];
-unset($categories[0]);
+if ( count($categories) ){
+  $root = $categories[0];
+  unset($categories[0]);
+} else{
+  $root=array();
+}
 
 if (count($categories)) : ?>
 <div id="controlBox">
@@ -97,7 +101,6 @@ if (count($categories)) : ?>
           <select id="parent_id" name="parent_id">
             <option value="<?php echo Filters::noXSS($root['category_id']); ?>"><?php echo Filters::noXSS(L('notsubcategory')); ?></option>
             <?php echo tpl_options($proj->listCategories($proj->id, false), Req::val('parent_id')); ?>
-
           </select>
         </td>
         <td class="buttons">
