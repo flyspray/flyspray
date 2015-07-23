@@ -18,6 +18,10 @@ doku_url = "http://en.wikipedia.org/wiki/"      ; URL to your external wiki for 
 syntax_plugin = "none"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)
 update_check = "1"                               ; Boolean. 0 = off, 1 = on.
 
+securecookies = false ; Boolean false or true. You can set it only to true if you have a HTTPS Flyspray setup fully working with valid SSL/TLS certificate.
+; If set to true the Flyspray session cookies should be sent only over HTTPS, never HTTP.
+; Check cookie properties within devtools (press F12) of modern (year 2015) webbrowsers.
+
 [database]
 dbtype = "mysql"        ; Type of database ("mysql" or "pgsql" are currently supported)
 dbhost = "localhost"        ; Name or IP of your database server
