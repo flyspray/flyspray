@@ -807,7 +807,7 @@ class Flyspray
             $domain='';
         }
         if(null===$secure){
-             $secure= isset($conf['general']['securecookies'])? $conf['general']['securecookies'] : false ;
+            $secure = isset($conf['general']['securecookies']) ? $conf['general']['securecookies'] : false;
         }
         if((strlen($name) + strlen($val)) > 4096) {
             //violation of the protocol
