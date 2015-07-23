@@ -110,7 +110,7 @@ class Project
         global $db;
         if ($pm) {
             return $db->cached_query(
-                    'pm_task_types',
+                    'pm_task_types'.$this->id,
                     $this->_pm_list_sql('tasktype', array('task_type')),
                     array($this->id));
         } else {
@@ -124,7 +124,7 @@ class Project
         global $db;
         if ($pm) {
             return $db->cached_query(
-                    'pm_os',
+                    'pm_os'.$this->id,
                     $this->_pm_list_sql('os', array('operating_system')),
                     array($this->id));
         } else {
@@ -148,7 +148,7 @@ class Project
 
         if ($pm) {
             return $db->cached_query(
-                    'pm_version',
+                    'pm_version'.$this->id,
                     $this->_pm_list_sql('version', array('product_version', 'closedby_version')),
                     array($params[0]));
         } elseif (is_null($reported_version)) {
@@ -238,7 +238,7 @@ class Project
         global $db;
         if ($pm) {
             return $db->cached_query(
-                    'pm_resolutions',
+                    'pm_resolutions'.$this->id,
                     $this->_pm_list_sql('resolution', array('resolution_reason')),
                     array($this->id));
         } else {
@@ -252,7 +252,7 @@ class Project
         global $db;
         if ($pm) {
             return $db->cached_query(
-                    'pm_statuses',
+                    'pm_statuses'.$this->id,
                     $this->_pm_list_sql('status', array('item_status')),
                     array($this->id));
         } else {
