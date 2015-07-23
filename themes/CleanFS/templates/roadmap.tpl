@@ -68,12 +68,12 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
         }
     // }
     ?>
-    </br>
+    <br />
     <?php
     if ($user->perms('view_estimated_effort')) {
         echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
     } ?>
-    </br>
+    <br />
     <?php
     if ($user->perms('view_current_effort_done')) {
         echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('currenteffortdone')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
