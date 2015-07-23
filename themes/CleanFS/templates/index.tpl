@@ -259,7 +259,7 @@
             </div>
 </form>
 <?php endif; ?>
-
+<?php if (isset($_GET['string']) || $total): ?>
 <div id="tasklist">
 <?php echo tpl_form(Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)),'massops',null,null,'id="massops"'); ?>
 <div>
@@ -268,7 +268,7 @@
     <tr>
         <th class="caret">
         </th>
-        <?php if (!$user->isAnon()): ?>
+        <?php if (!$user->isAnon() && $proj->id !=0): ?>
         <th class="ttcolumn">
             <?php if (!$user->isAnon() && $total): ?>
             <a title="<?php echo Filters::noXSS(L('toggleselected')); ?>" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();">
@@ -324,7 +324,7 @@
     <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?php echo $task_details['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task_details['task_id']; ?>)">
         <td class="caret">
         </td>
-        <?php if (!$user->isAnon()): ?>
+        <?php if (!$user->isAnon() && $proj->id !=0): ?>
         <td class="ttcolumn">
             <input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
         </td>
@@ -369,8 +369,7 @@
 </table>
 
 <!-- Bulk editing Tasks -->
-<?php if (!$proj->id == 0): ?>
-<?php if (!$user->isAnon() && $total): ?>
+<?php if (!$user->isAnon() && $proj-> !=0 && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
 <script>Effect.Fade('bulk_edit_selectedItems');</script>
 <div id="bulk_edit_selectedItems" style="display:none">
@@ -586,9 +585,8 @@
     </fieldset>
 
 </div>
-
-<?php endif ?>
-<?php endif ?>
+<?php endif; /* !$user->isAnon() && $proj-> !=0 && $total */ ?>
 </div>
 </form>
 </div>
+<?php endif; /* isset($_GET['string'] || $total */ ?>
