@@ -1412,6 +1412,7 @@ th, td, caption {padding: 5px 2px;}
 #content {padding:0;min-width:unset;}
 #tasklist {padding:0;}
 #tasklist_table thead th {border-top:none;}
+#toplevel th, #toplevel td {display:block;}
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
 #toolboxmenu a {width:31%;display:inline-block;margin-left:0;border-bottom-left-radius: 0;padding:6px 2px;}
