@@ -10,18 +10,7 @@
 <?php endif; ?>
 <?php if ($do=='pm'):
 # show systemwide settings for this list on project setting page too ..
-# temporarly styling here - in future in theme.css for responsible layouts
- ?>
-<style>
-.list .cname{width:200px;}
-.list .corder{width:50px;}
-.list .cshow{width:50px;}
-.list .ctense{width:80px;}
-.list .cdelete{width:80px;}
-#idtablesys {background-color: #eee;}
-#listnamenew{width:194px;}
-#listpositionnew{width:44px;}
-</style>
+?>
 <h3><?php echo Filters::noXSS(L('systemvalues'));
 # TODO: do we have still a matching translation string name we can use instead inventing a new one?
 # TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
