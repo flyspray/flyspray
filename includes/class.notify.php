@@ -915,7 +915,7 @@ class Notifications {
             $body .= tL('messagefrom', $lang) . $arg1[0];
         } // }}}
 
-        $body .= '\n\n' . tL('disclaimer', $lang);
+        $body .= "\n\n" . tL('disclaimer', $lang);
         return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
     }
 
