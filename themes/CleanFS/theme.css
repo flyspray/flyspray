@@ -1420,11 +1420,16 @@ body.reports .box button {display: block;margin-left:auto;margin-right:auto;widt
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
 #toolboxmenu a {width:31%;display:inline-block;margin-left:0;border-bottom-left-radius: 0;padding:6px 2px;}
-#toolboxmenu a.active {width:31%;padding:6px 2px;float:left;border-color:#78bf34 #78bf34 transparent #78bf34;}
+#toolboxmenu a.active {border-top-right-radius:5px;width:31%;padding:6px 2px;float:none;border-color:#78bf34 #78bf34 transparent #78bf34;}
 #toolbox {margin:0;padding:0;border-radius:0;padding-top:10px;position:relative;}
 #controlBox {position:relative;margin-left:140px;}
 h3 {padding-left:6px;}
 p { text-align:justify;padding:2px;}
 #listTable{width:100%;}
-
+ul.form_elements {margin:0;}
+ul.form_elements span.note {margin-left:0;}
+.double_select {padding-left:0;}
+#toolbox div.tab {padding:0px;}
+#submenu {padding-left:0;margin:0;}
+#submenu ~ div {clear:both;}
 }
