@@ -11,11 +11,11 @@
 <?php echo tpl_form(Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id))); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
-
-    <table class="list">
-       <thead>
+  <button class="button positive main" accesskey="s" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
+  <table class="list">
+    <thead>
        <tr>
-	 <th></th>
+	<th></th>
          <?php if (in_array('tasktype', $fields)) { ?><th><?php echo Filters::noXSS(L('tasktype')); ?></th><?php $field_num++;} ?>
          <?php if (in_array('category', $fields)) { ?><th><?php echo Filters::noXSS(L('category')); ?></th><?php $field_num++;} ?>
          <?php if (in_array('status', $fields)) { ?><th><?php echo Filters::noXSS(L('status')); ?></th><?php $field_num++;} ?>
@@ -28,12 +28,10 @@
          <th><?php echo Filters::noXSS(L('summary')); ?></th>
          <th><?php echo Filters::noXSS(L('details')); ?></th>
        </tr>
-     </thead>
-     <tbody id="table">
-      <button class="button positive main" accesskey="s" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
+    </thead>
+    <tbody id="table">
       <tr id="row">
-	<td>
-	    <button class="button img delete" accesskey="s" type="button" onClick="removeRow(this);return false;"></button>
+	<td><button class="button img delete" accesskey="s" type="button" onClick="removeRow(this);return false;"></button></td>
         <?php if (in_array('tasktype', $fields)) { ?>
 	<td>
 	<?php } else { ?>
