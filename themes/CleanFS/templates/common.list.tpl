@@ -18,7 +18,9 @@
 .list .cshow{width:50px;}
 .list .ctense{width:80px;}
 .list .cdelete{width:80px;}
-#idtablesys {background-color: #eed;}
+#idtablesys {background-color: #eee;}
+#listnamenew{width:194px;}
+#listpositionnew{width:44px;}
 </style>
 <h3><?php echo Filters::noXSS(L('systemvalues'));
 # TODO: do we have still a matching translation string name we can use instead inventing a new one?
@@ -175,10 +177,10 @@ $syscountlines++;
         <?php endif; ?>
         <input type="hidden" name="area" value="<?php echo Filters::noXSS(Req::val('area')); ?>" />
         <input type="hidden" name="do" value="<?php echo Filters::noXSS(Req::val('do')); ?>" />
-        <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" size="15" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
+        <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
       </td>
       <td>
-        <input id="listpositionnew" placeholder="<?php echo Filters::noXSS(L('order')); ?>" class="text" type="text" size="3" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
+        <input id="listpositionnew" placeholder="<?php echo Filters::noXSS(L('order')); ?>" class="text" type="text" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
       </td>
       <td>
         <input id="showinlistnew" type="checkbox" name="show_in_list" checked="checked" disabled="disabled" />
