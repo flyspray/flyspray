@@ -1413,7 +1413,7 @@ th, td, caption {padding: 5px 2px;}
 #footer{border-top:none;}
 div#toolboxmenu {float:none;text-align:center;}
 div#toolboxmenu a {width:31%;display:inline-block;margin-left:0;border-bottom-left-radius: 0;padding:6px 2px;}
-div#toolboxmenu a.active {width:31%;padding:6px 2px;float:left;border-color:;#78bf34 #78bf34 transparent #78bf34;}
+div#toolboxmenu a.active {width:31%;padding:6px 2px;float:left;border-color:#78bf34 #78bf34 transparent #78bf34;}
 #toolbox {margin:0;padding:0;border-radius:0;padding-top:10px;position:relative;}
 #controlBox {position:relative;margin-left:140px;}
 h3 {padding-left:6px;}
