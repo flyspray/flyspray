@@ -654,6 +654,11 @@ class Notifications {
                     $change[1] = implode(', ', $change[1]);
                     $change[2] = implode(', ', $change[2]);
                 }
+                
+                if ($change[0] == 'due_date') {
+                    $change[1] = formatDate($change[1]);
+                    $change[2] = formatDate($change[2]);
+                }
 
                 if ($change[0] == 'detailed_desc') {
                     $body .= $translation[$change[0]] . ":\n-------\n" . $change[2] . "\n-------\n";
