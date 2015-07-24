@@ -476,7 +476,7 @@ tr.severity2:hover > td {background-color: #f2f2f2;}
 tr.severity3:hover > td {background-color: #eed4d4;}
 tr.severity4:hover > td {background-color: #efc9c9;}
 tr.severity5:hover > td {background-color: #f0bcbc;}
-div#toolbox {
+#toolbox {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
@@ -487,20 +487,20 @@ div#toolbox {
   height: 1%; /* Fix for IE bug */
   padding: 20px;
 }
-div#toolbox div.tab {
+#toolbox div.tab {
   margin: 10px 0px 10px 0px;
   padding: 10px;
   background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-div#toolbox h3 {
+#toolbox h3 {
   margin-bottom: 1em;
   padding-bottom: 5px;
   border-bottom: 1px solid #ddd;
 }
-div#toolboxmenu {position: relative;float: left;padding-top: 10px;}
-div#toolboxmenu a {
+#toolboxmenu {position: relative;float: left;padding-top: 10px;}
+#toolboxmenu a {
   display: block;
   border: 1px solid #d4d4d4;
   /*border-right: none; */
@@ -517,8 +517,8 @@ div#toolboxmenu a {
   -moz-border-bottom-left-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
 }
-div#toolboxmenu a:hover {background-color: #d6d8d9; /*color: $inverse_link;*/ }
-div#toolboxmenu a.active {
+#toolboxmenu a:hover {background-color: #d6d8d9; /*color: $inverse_link;*/ }
+#toolboxmenu a.active {
   margin-left: 0;
   font-weight: bold;
   width: 100px;
@@ -1388,4 +1388,49 @@ button.fakelinkbutton:hover
 button.fakelinkbutton:visited
 {
 	color: #69c;
+}
+
+@media only screen and (max-width: 480px) and (orientation: portrait) {
+
+th, td, caption {padding: 5px 2px;}
+#menu { position:static;clear:both;background-color:#111;}
+#title {font-size:1.2em;line-height:1.2em;background-color:#111;}
+#title a {padding:0;color:transparent;}
+#title img {float:none;margin:4px;}
+#menu-list {display:block;background-color:#222;}
+#menu-list li {float:none;display:inline-block;width:50%;padding:0;height:auto;border-left:none;text-align:center;}
+#menu-list a {display:block;border:1px solid #333;height:24px;}
+#menu-list a:hover {border-radius:unset;}
+#pm-menu {padding:0;}
+#pm-menu-list {padding:0;display:block;}
+#pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
+#pm-menu-list a {border:none;border-radius:0;margin:0;}
+#pmcontrol {display:block;float:none;padding:10px;}
+#task_id {width:120px;}
+#projectselector {position:absolute;top:0;right:0;margin:0;text-align:center;}
+#projectselectorform select{height:40px;padding-right:4px;}
+#content {padding:0;min-width:unset;}
+#tasklist {padding:0;}
+#tasklist_table thead th {border-top:none;}
+table.toplevel th, table.toplevel td {display:block;}
+body.toplevel .box {margin:0 0 10px 0;}
+div.box, p.box {padding:0;}
+#event1 td {display:block;}
+body.reports .box button {display: block;margin-left:auto;margin-right:auto;width:70%;}
+#footer{border-top:none;}
+#toolboxmenu {float:none;text-align:center;}
+#toolboxmenu a {width:31%;display:inline-block;margin-left:0;border-bottom-left-radius: 0;padding:6px 2px;}
+#toolboxmenu a.active {border-top-right-radius:5px;width:31%;padding:6px 2px;float:none;border-color:#78bf34 #78bf34 transparent #78bf34;}
+#toolbox {margin:0;padding:0;border-radius:0;padding-top:10px;position:relative;}
+#controlBox {position:relative;margin-left:140px;}
+h3 {padding-left:6px;}
+p { text-align:justify;padding:2px;}
+#listTable{width:100%;}
+ul.form_elements {margin:0;}
+ul.form_elements span.note {margin-left:0;}
+.double_select {padding-left:0;}
+#toolbox div.tab {padding:0px;}
+#submenu {padding-left:0;margin:0;}
+#submenu ~ div {clear:both;}
+#catTable input[type="text"], #catTable input[type="password"] {width:120px;}
 }
