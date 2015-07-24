@@ -14,9 +14,7 @@ else:
 	</li><?php
 	if ($user->perms('is_admin')):
 	?><li>
-		<a id="optionslink"
-		<?php if(isset($_GET['do']) and $_GET['do'] == 'admin'): ?> class="active" <?php endif; ?>
-		href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>"><?php echo Filters::noXSS(L('admintoolbox')); ?></a>
+		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>"><?php echo Filters::noXSS(L('admintoolbox')); ?></a>
 	</li><?php
 	endif;
 	?><li>
@@ -91,9 +89,7 @@ endif; ?>
 	endif;
 	if ($proj->id && $user->perms('manage_project')):
 	?><li>
-		<a id="projectslink"
-		<?php if(isset($_GET['do']) && $_GET['do'] == 'pm'): ?> class="active" <?php endif; ?>
-		href="<?php echo Filters::noXSS(CreateURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
+		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
 	</li>
 	<?php
 	endif;
