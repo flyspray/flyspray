@@ -530,7 +530,8 @@ abstract class Backend
         $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
                                   u.notify_online, u.notify_type, u.notify_own, u.lang_code
                              FROM {users} u
-                             JOIN {users_in_groups} g ON u.user_id = g.user_id
+                             JOIN {users_in_groups} ug ON u.user_id = ug.user_id
+                             JOIN {groups} g ON g.group_id = ug.group_id
                              WHERE g.is_admin = 1 AND u.account_enabled = 1');
  
 	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
@@ -540,7 +541,6 @@ abstract class Backend
 
     public static function GetProjectManagerAddresses($project_id) {
         global $db;
-
  
         $emails = array();
         $jabbers = array();

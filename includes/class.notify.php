@@ -957,8 +957,6 @@ class Notifications {
    function SpecificAddresses($users, $ignoretype = false) {
         global $db, $fs, $user;
 
-        echo "<pre>SpecificAddresses</pre>";
-
         $emails = array();
         $jabbers = array();
         $onlines = array();
@@ -985,7 +983,6 @@ class Notifications {
     // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
    function Address($task_id, $type) {
         global $db, $fs, $proj, $user;
-        echo "<pre>Address</pre>";
 
         $users = array();
 
