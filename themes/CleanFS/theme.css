@@ -927,16 +927,17 @@ fieldset {
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-content > fieldset legend {
+/*
+#content > fieldset legend {
   color: #3c4041;
   background: #f9f9f9;
   padding: 2px 9px;
   border: solid 1px #e1e1e1;
-  /*border-bottom: solid 1px $box_border;*/
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
+*/
 #content > h3 {margin-top: 1em;}
 thead th {
   border-bottom: solid 1px #a1a6a8;
