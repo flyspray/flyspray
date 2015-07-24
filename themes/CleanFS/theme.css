@@ -1126,7 +1126,7 @@ ul.slim li div.userSelectWidget input {
 .list .cshow {width:50px;}
 .list .ctense {width:80px;}
 .list .cdelete {width:80px;}
-.list input[id^="listname"] {width: 100%;}
+.list input[id^='listname'] {width: 100%;}
 #idtablesys {background-color: #eee;}
 #listpositionnew {width:100%;}
 
