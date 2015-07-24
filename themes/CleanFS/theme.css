@@ -1395,18 +1395,20 @@ button.fakelinkbutton:visited
 th, td, caption {padding: 5px 2px;}
 #menu { position:static;clear:both;background-color:#111;}
 #title {font-size:1.2em;line-height:1.2em;background-color:#111;}
-#title a {padding:0;color:#111;}
+#title a {padding:0;color:transparent;}
+#title img {float:none;margin:4px;}
 #menu-list {display:block;background-color:#222;}
-#menu-list li {display:inline-block;width:49%;padding:0;height:auto;}
-#menu-list a {display:block;}
+#menu-list li {float:none;display:inline-block;width:50%;padding:0;height:auto;border-left:none;text-align:center;}
+#menu-list a {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
 #pm-menu {padding:0;}
 #pm-menu-list {padding:0;display:block;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {display:block;float:none;padding:10px;}
-#task_id {width:100px;}
-#projectselector {position:absolute;top:0;right:0;}
+#task_id {width:120px;}
+#projectselector {position:absolute;top:0;right:0;width:100%;text-align:center;}
+#projectselectorform select{height:40px;}
 #content {padding:0;min-width:unset;}
 #tasklist {padding:0;}
 #tasklist_table thead th {border-top:none;}
