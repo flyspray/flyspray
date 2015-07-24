@@ -1414,6 +1414,9 @@ th, td, caption {padding: 5px 2px;}
 #tasklist_table thead th {border-top:none;}
 table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
+div.box, p.box {padding:0;}
+#event1 td {display:block;}
+body.reports .box button {display: block;margin-left:auto;margin-right:auto;width:70%;}
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
 #toolboxmenu a {width:31%;display:inline-block;margin-left:0;border-bottom-left-radius: 0;padding:6px 2px;}
