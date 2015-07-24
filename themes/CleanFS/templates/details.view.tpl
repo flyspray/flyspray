@@ -513,7 +513,7 @@ function quick_edit(elem, id)
             <span class="label"><?php echo Filters::noXSS(L('duedate')); ?></span>
 	    <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
 			<?php echo Filters::noXSS(formatDate($task_details['due_date'], false, L('undecided'))); ?><br><?php
-				$days = (strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
+				$days = floor((strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24));
 				if($task_details['due_date'] > 0)
 				{
 					if($days <$fs->prefs['days_before_alert'] && $days > 0)
@@ -523,7 +523,7 @@ function quick_edit(elem, id)
 					elseif($days < 0)
 					{
 						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)."
-                        ".L('daysoverdue')."</font>";
+                        ".L('dayoverdue')."</font>";
 					}
 					elseif($days == 0)
 					{
