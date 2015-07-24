@@ -1126,9 +1126,9 @@ ul.slim li div.userSelectWidget input {
 .list .cshow {width:50px;}
 .list .ctense {width:80px;}
 .list .cdelete {width:80px;}
+.list input[id^="listname"] {width: 100%;}
 #idtablesys {background-color: #eee;}
-#listnamenew {width:194px;}
-#listpositionnew {width:44px;}
+#listpositionnew {width:100%;}
 
 /* closing task form */
 div#closeform {
