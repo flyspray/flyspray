@@ -192,12 +192,12 @@ a:hover {color: #6699cc;}
 #loginbox, #actionsform { display: none;}
 #s_loginbox:checked ~ #loginbox, #s_quickactions:checked ~ #actionsform { display: block; }
 tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
-  /*background: $inverse_link;      */
+  /*background: $inverse_link; */
   color: #fff;
   background: #5f9729;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #menu-list a#lastsearchlink.active {
       -moz-border-radius: 10px 10px 0px 0px;
