@@ -1118,6 +1118,17 @@ ul.slim li div.userSelectWidget input {
   min-width: 12em;
   width: auto;
 }
+
+/* list management */
+.list .cname {width:200px;}
+.list .corder {width:50px;}
+.list .cshow {width:50px;}
+.list .ctense {width:80px;}
+.list .cdelete {width:80px;}
+#idtablesys {background-color: #eee;}
+#listnamenew {width:194px;}
+#listpositionnew {width:44px;}
+
 /* closing task form */
 div#closeform {
   border-radius: 3px;
