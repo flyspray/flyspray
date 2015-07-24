@@ -1432,4 +1432,5 @@ ul.form_elements span.note {margin-left:0;}
 #toolbox div.tab {padding:0px;}
 #submenu {padding-left:0;margin:0;}
 #submenu ~ div {clear:both;}
+#catTable input[type="text"], #catTable input[type="password"] {width:120px;}
 }
