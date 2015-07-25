@@ -573,6 +573,13 @@ form #taskdetails #taskdetailsfull {
 }
 #taskdetails #navigation {float: right;}
 #taskdetails h2 {color: #555;}
+.tags span {
+    background: #eee none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 3px;
+    padding: 4px;
+}
 #taskdetails #taskfields {
   width: 290px;
   float: left;

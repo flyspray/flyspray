@@ -682,14 +682,8 @@ function quick_edit(elem, id)
     <div id="taskdetailsfull">
         <h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
             FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
-
         </h2>
-        <h4>
-            Tags: <?php echo Filters::noXSS($tag_list); ?>
-
-        </h4>
-        <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
-
+        <span class="tags"><?php foreach($tags as $tag): ?><span><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
         <div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
