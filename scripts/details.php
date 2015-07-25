@@ -150,15 +150,10 @@ else {
         $task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id'], $cached['content']);
     }
 
-    ///////////////////////////////////get tags///////////////////////////////////
     $result2 = $db->Query('SELECT tag FROM {tags} WHERE task_id = ?',array($task_id));
     $tags = $db->fetchAllArray($result2);
-    $tagList = '';
-    foreach ($tags as $tag)
-	    $tagList = $tagList.' '.$tag['tag'];
+    $page->assign('tags', $tags);
 
-    $page->assign('tag_list', $tagList);
-    /////////////////////////////////////////////////////////////////////////////
     $page->assign('prev_id',   $prev_id);
     $page->assign('next_id',   $next_id);
     $page->assign('task_text', $task_text);
