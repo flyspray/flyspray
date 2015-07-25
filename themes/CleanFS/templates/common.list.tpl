@@ -10,16 +10,7 @@
 <?php endif; ?>
 <?php if ($do=='pm'):
 # show systemwide settings for this list on project setting page too ..
-# temporarly styling here - in future in theme.css for responsible layouts
- ?>
-<style>
-.list .cname{width:200px;}
-.list .corder{width:50px;}
-.list .cshow{width:50px;}
-.list .ctense{width:80px;}
-.list .cdelete{width:80px;}
-#idtablesys {background-color: #eed;}
-</style>
+?>
 <h3><?php echo Filters::noXSS(L('systemvalues'));
 # TODO: do we have still a matching translation string name we can use instead inventing a new one?
 # TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
@@ -93,11 +84,11 @@ $syscountlines++;
     $countlines++; ?>
     <tr>
       <td class="first">
-        <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" size="15" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
+        <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
       </td>
       <td title="<?php echo Filters::noXSS(L('ordertip')); ?>">
-        <input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" size="3" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
+        <input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
       </td>
       <td title="<?php echo Filters::noXSS(L('showtip')); ?>">
         <?php echo tpl_checkbox('show_in_list[' . $row[$list_type.'_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines); ?>
@@ -175,10 +166,10 @@ $syscountlines++;
         <?php endif; ?>
         <input type="hidden" name="area" value="<?php echo Filters::noXSS(Req::val('area')); ?>" />
         <input type="hidden" name="do" value="<?php echo Filters::noXSS(Req::val('do')); ?>" />
-        <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" size="15" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
+        <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
       </td>
       <td>
-        <input id="listpositionnew" placeholder="<?php echo Filters::noXSS(L('order')); ?>" class="text" type="text" size="3" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
+        <input id="listpositionnew" placeholder="<?php echo Filters::noXSS(L('order')); ?>" class="text" type="text" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
       </td>
       <td>
         <input id="showinlistnew" type="checkbox" name="show_in_list" checked="checked" disabled="disabled" />
