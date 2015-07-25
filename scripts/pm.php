@@ -41,6 +41,7 @@ switch ($area = Req::val('area', 'prefs')) {
             $page->uses('group_details');
         }
     case 'tasktype':
+    case 'tags':
     case 'resolution':
     case 'os':
     case 'version':
