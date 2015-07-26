@@ -552,7 +552,12 @@ class Notifications {
         if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
             $proj->prefs['notify_subject'] = '[%p][#%t] %s';
         }
-        if (!isset($proj->prefs['notify_subject']) || $type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
+        if (!isset($proj->prefs['notify_subject']) ||
+                $type == NOTIFY_CONFIRMATION ||
+                $type == NOTIFY_ANON_TASK ||
+                $type == NOTIFY_PW_CHANGE ||
+                $type == NOTIFY_NEW_USER ||
+                $type == NOTIFY_OWN_REGISTRATION) {
             $subject = tL('notifyfromfs', $lang);
         } else {
             $subject = strtr($proj->prefs['notify_subject'], array('%p' => $proj->prefs['project_title'],
@@ -587,6 +592,7 @@ class Notifications {
           |18. Anon-task opened         |
           |19. Password change          |
           |20. New user                 |
+          |21. User registration        |
           -------------------------------
          */
 
@@ -917,6 +923,27 @@ class Notifications {
 
             $body .= tL('emailaddress', $lang) . ': ' . $arg1[3] . "\n";
             $body .= tL('jabberid', $lang) . ':' . $arg1[4] . "\n\n";
+            $body .= tL('messagefrom', $lang) . $arg1[0];
+        } // }}}
+        // {{{ New user him/herself
+        if ($type == NOTIFY_OWN_REGISTRATION) {
+            $body = tL('youhaveregistered', $lang) . " \n\n"
+                    . tL('username', $lang) . ': ' . $arg1[1] . "\n" .
+                    tL('realname', $lang) . ': ' . $arg1[2] . "\n";
+            $online = $body;
+
+            if ($arg1[6]) {
+                $body .= tL('password', $lang) . ': ' . $arg1[5] . "\n";
+            }
+
+            $body .= tL('emailaddress', $lang) . ': ' . $arg1[3] . "\n";
+            $body .= tL('jabberid', $lang) . ':' . $arg1[4] . "\n\n";
+            
+            // Add something here to tell the user whether the registration must
+            // first be accepted by Administrators or not. And if it had and was
+            // rejected, the reason. Check first what happening when requests are
+            // either denied or accepted.
+            
             $body .= tL('messagefrom', $lang) . $arg1[0];
         } // }}}
 

@@ -1024,5 +1024,7 @@ Regards,',
 'tag'                     => 'Tag',
 'tags'                    => 'Tags',
 'novalues'                => 'no entries',
+'youhaveregistered'       => 'You have registered at Flyspray. Your details are as follows:',
+'youhaveregisterednotify' => 'Your registration at Flyspray has been accepted by Administrators.',
 );
 ?>
