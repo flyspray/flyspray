@@ -97,6 +97,9 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	if ($colname == 'comments') {
 		$html='<i class="fa fa-comments fa-2x" title="'.$html.'"></i>';
 	}
+	if ($colname == 'votes') {
+		$html='<i class="fa fa-star-o fa-2x" title="'.$html.'"></i>';
+	}
 
     if (Get::val('order') == $colname) {
         $class  = ' class="orderby"';
