@@ -1013,6 +1013,9 @@ $translation = array(
 'votesperproject'         => 'Stimmen pro Projekt',
 'votelimitreached'        => 'Sie haben die maximale Anzahl an Stimmen erreicht. Wird eine Aufgabe, für die Sie gestimmt haben geschlossen, wird ihre Stimme freigegeben. Oder Sie ziehen auf ihrer Profilseite Stimmen zurück, um wieder freie Stimmen zu bekommen.',
 'myvotes'                 => 'Meine Stimmen',
+'tag'                     => 'Schildchen',
+'tags'                    => 'Schildchen',
+'novalues'                => 'keine Einträge',
 );
 
 ?>

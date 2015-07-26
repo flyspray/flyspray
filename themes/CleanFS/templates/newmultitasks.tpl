@@ -10,8 +10,9 @@
 <div id="intromessage"><?php echo L('hintforbulkimport'); ?></div>
 <?php echo tpl_form(Filters::noXSS(CreateUrl('newmultitasks', $proj->id, $supertask_id))); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
+  <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
-  <button class="button positive main" accesskey="s" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
+  <button class="button positive main" accesskey="f" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
   <table class="list">
     <thead>
        <tr>
@@ -142,17 +143,11 @@
       </tr>
 
       <tr>
-        <td colspan="<?php echo $field_num-2;?>"></td>
-        <td class="buttons">
-          <button class="button positive main" accesskey="s" type="button" onClick="createRow('','')"><?php echo L('addmorerows'); ?></button>
-        </td>
-        <td class="buttons">
-          <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
+        <td class="buttons" colspan="<?php echo $field_num; ?>">
+          <button class="button positive main" accesskey="a" type="button" onClick="createRow('','')"><?php echo L('addmorerows'); ?></button>
           <button class="button positive main" accesskey="s" type="submit"><?php echo L('addtasks'); ?></button>
         </td>
       </tr>
-
-
      </tbody>
   </table>
   <script type="text/javascript">

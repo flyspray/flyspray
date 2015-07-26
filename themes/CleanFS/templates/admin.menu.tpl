@@ -10,6 +10,9 @@
   <a id="globttlink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'tasktype') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'tasktype')); ?>"><?php echo Filters::noXSS(L('tasktypes') ); ?></a>
+  <a id="globtglink"
+     <?php if(isset($_GET['area']) and $_GET['area'] == 'tags') echo $activeclass; ?>
+     href="<?php echo Filters::noXSS(CreateURL('admin', 'tags')); ?>"><i class="fa fa-tag"></i> <?php echo Filters::noXSS(L('tags') ); ?></a>
   <a id="globstatuslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'status') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'status')); ?>"><?php echo Filters::noXSS(L('taskstatuses') ); ?></a>
