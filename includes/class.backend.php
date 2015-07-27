@@ -603,6 +603,17 @@ abstract class Backend
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
         }
 
+        // Check the emails before inserting anything to database.
+        $emailList = explode(';',$email);
+        foreach ($emailList as $mail) {	//Still need to do: check email
+            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->fetchOne($count);
+            if ($count > 0) {
+                Flyspray::show_error("Email address has alredy been taken");
+                return false;
+            }
+        }
+        
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
@@ -615,14 +626,8 @@ abstract class Backend
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
 
-        $emailList = explode(';',$email);
-        foreach ($emailList as $mail) {	//Still need to do: check email
-            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
-            $count = $db->fetchOne($count);
-            if ($count > 0) {
-                Flyspray::show_error("Email address has alredy been taken");
-                return false;
-            } else if ($mail != '') {
+        foreach ($emailList as $mail) {
+            if ($mail != '') {
                 $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
                         array($uid,strtolower($mail),$oauth_uid, $oauth_provider));
             }
