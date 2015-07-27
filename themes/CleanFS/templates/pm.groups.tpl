@@ -60,17 +60,19 @@ $html = 'TODO: Show also global group permissions as hint for understanding perm
 <table class="permcols"><tr>';
 $projpermnames = '';
 
-foreach ($groups as $group){
-  $html .= '<td><table class="perms"><thead>
+$merge=array_merge($groups,$globalgroups);
+
+foreach ($merge as $group){
+  $html .= '<td><table class="perms'.($group['project_id']==0 ? ' globalgroup':'').'"><thead>
   <tr>'.
   ($i == 0 ? '<th>'.L('groupmembers').'</th>' : '').
   '<td>'.$group['users'].'</td>
   </tr> 
   <tr>'.
   ($i == 0 ? '<th>'.L('group').' </th>' : '').
-  '<th><a class="button" style="white-space:nowrap" title="'.eL('editgroup')
+  '<th>'.($group['project_id']==0 ? $group['group_name'] : '<a class="button" style="white-space:nowrap" title="'.eL('editgroup')
 .'" href="?id='.$group['group_id'].'&amp;do=pm&amp;area=editgroup">'.$group['group_name']
-.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></th>
+.'<i class="fa fa-pencil fa-lg fa-fw"></i></a>').'</th>
   </tr>
   <tr>'.
   ($i == 0 ? '<th>'.L('description').'</th>' : '').
@@ -96,6 +98,7 @@ $html .= '</tr></table>
 .perms th, .perms td {max-width:120px;max-height:24px;height:24px;text-overflow:ellipsis;overflow:hidden;border:none;padding:2px;}
 .perms td{text-align:center;}
 .perms th{text-align:right;}
+.perms.globalgroup {background-color:#eee;}
 </style>';
 echo $html;
 ?>
