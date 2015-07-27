@@ -519,7 +519,12 @@ class Notifications {
         if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
             $proj->prefs['notify_subject'] = '[%p][#%t] %s';
         }
-        if (!isset($proj->prefs['notify_subject']) || $type == NOTIFY_CONFIRMATION || $type == NOTIFY_ANON_TASK || $type == NOTIFY_PW_CHANGE || $type == NOTIFY_NEW_USER) {
+        if (!isset($proj->prefs['notify_subject']) ||
+                $type == NOTIFY_CONFIRMATION ||
+                $type == NOTIFY_ANON_TASK ||
+                $type == NOTIFY_PW_CHANGE ||
+                $type == NOTIFY_NEW_USER ||
+                $type == NOTIFY_OWN_REGISTRATION) {
             $subject = tL('notifyfromfs', $lang);
         } else {
             $subject = strtr($proj->prefs['notify_subject'], array('%p' => $proj->prefs['project_title'],
@@ -554,6 +559,7 @@ class Notifications {
           |18. Anon-task opened         |
           |19. Password change          |
           |20. New user                 |
+          |21. User registration        |
           -------------------------------
          */
 
@@ -584,8 +590,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('newtaskopened', $lang) . ". ";
             $online .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
@@ -622,6 +627,11 @@ class Notifications {
                     $change[1] = implode(', ', $change[1]);
                     $change[2] = implode(', ', $change[2]);
                 }
+                
+                if ($change[0] == 'due_date') {
+                    $change[1] = formatDate($change[1]);
+                    $change[2] = formatDate($change[2]);
+                }
 
                 if ($change[0] == 'detailed_desc') {
                     $body .= $translation[$change[0]] . ":\n-------\n" . $change[2] . "\n-------\n";
@@ -630,7 +640,7 @@ class Notifications {
                 }
             }
             $body .= "\n" . tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
         } // }}}
         // {{{ Task closed
         if ($type == NOTIFY_TASK_CLOSED) {
@@ -644,7 +654,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('notify.taskclosed', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -656,7 +666,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('notify.taskreopened', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -672,7 +682,7 @@ class Notifications {
             $body .= CreateURL('details', $task_id) . "\n\n\n";
             $body .= tL('newdepis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+            $body .= CreateURL('details', $depend_task['task_id']);
 
             $online .= tL('newdep', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -688,7 +698,7 @@ class Notifications {
             $body .= CreateURL('details', $task_id) . "\n\n\n";
             $body .= tL('removeddepis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+            $body .= CreateURL('details', $depend_task['task_id']);
 
             $online .= tL('notify.depremoved', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -717,7 +727,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . '#comment' . $comment['comment_id'] . "\n\n";
+            $body .= CreateURL('details', $task_id) . '#comment' . $comment['comment_id'];
 
             $online .= tL('notify.commentadded', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -729,7 +739,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('newattachment', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -745,7 +755,7 @@ class Notifications {
             $body .= CreateURL('details', $task_id) . "\n\n\n";
             $body .= tL('relatedis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $related_task['task_id'] . ' - ' . $related_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $related_task['task_id']) . "\n\n";
+            $body .= CreateURL('details', $related_task['task_id']);
 
             $online .= tL('notify.relatedadded', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -756,7 +766,7 @@ class Notifications {
             $body .= implode(', ', $task_details['assigned_to_name']) . ' ' . tL('takenownership', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= implode(', ', $task_details['assigned_to_name']) . ' ' . tL('takenownership', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ".";
@@ -778,7 +788,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('requiresaction', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -792,7 +802,7 @@ class Notifications {
             $body .= tL('denialreason', $lang) . ':' . "\n";
             $body .= $arg1 . "\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('pmdeny', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -804,7 +814,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . "\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('assignedtoyou', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -820,7 +830,7 @@ class Notifications {
             $body .= CreateURL('details', $task_id) . "\n\n\n";
             $body .= tL('isdepfor', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+            $body .= CreateURL('details', $depend_task['task_id']);
 
             $online .= tL('taskwatching', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -836,7 +846,7 @@ class Notifications {
             $body .= CreateURL('details', $task_id) . "\n\n\n";
             $body .= tL('isnodepfor', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']) . "\n\n";
+            $body .= CreateURL('details', $depend_task['task_id']);
 
             $online .= tL('taskwatching', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -847,7 +857,7 @@ class Notifications {
             $body .= tL('useraddedtoassignees', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= CreateURL('details', $task_id);
 
             $online .= tL('useraddedtoassignees', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -882,8 +892,29 @@ class Notifications {
             $body .= tL('jabberid', $lang) . ':' . $arg1[4] . "\n\n";
             $body .= tL('messagefrom', $lang) . $arg1[0];
         } // }}}
+        // {{{ New user him/herself
+        if ($type == NOTIFY_OWN_REGISTRATION) {
+            $body = tL('youhaveregistered', $lang) . " \n\n"
+                    . tL('username', $lang) . ': ' . $arg1[1] . "\n" .
+                    tL('realname', $lang) . ': ' . $arg1[2] . "\n";
+            $online = $body;
 
-        $body .= '. ' . L('disclaimer');
+            if ($arg1[6]) {
+                $body .= tL('password', $lang) . ': ' . $arg1[5] . "\n";
+            }
+
+            $body .= tL('emailaddress', $lang) . ': ' . $arg1[3] . "\n";
+            $body .= tL('jabberid', $lang) . ':' . $arg1[4] . "\n\n";
+            
+            // Add something here to tell the user whether the registration must
+            // first be accepted by Administrators or not. And if it had and was
+            // rejected, the reason. Check first what happening when requests are
+            // either denied or accepted.
+            
+            $body .= tL('messagefrom', $lang) . $arg1[0];
+        } // }}}
+
+        $body .= "\n\n" . tL('disclaimer', $lang);
         return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
     }
 
@@ -924,8 +955,6 @@ class Notifications {
    function SpecificAddresses($users, $ignoretype = false) {
         global $db, $fs, $user;
 
-        echo "<pre>SpecificAddresses</pre>";
-
         $emails = array();
         $jabbers = array();
         $onlines = array();
@@ -952,7 +981,6 @@ class Notifications {
     // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
    function Address($task_id, $type) {
         global $db, $fs, $proj, $user;
-        echo "<pre>Address</pre>";
 
         $users = array();
 

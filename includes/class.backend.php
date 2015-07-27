@@ -530,7 +530,8 @@ abstract class Backend
         $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
                                   u.notify_online, u.notify_type, u.notify_own, u.lang_code
                              FROM {users} u
-                             JOIN {users_in_groups} g ON u.user_id = g.user_id
+                             JOIN {users_in_groups} ug ON u.user_id = ug.user_id
+                             JOIN {groups} g ON g.group_id = ug.group_id
                              WHERE g.is_admin = 1 AND u.account_enabled = 1');
  
 	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
@@ -540,7 +541,6 @@ abstract class Backend
 
     public static function GetProjectManagerAddresses($project_id) {
         global $db;
-
  
         $emails = array();
         $jabbers = array();
@@ -603,6 +603,17 @@ abstract class Backend
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
         }
 
+        // Check the emails before inserting anything to database.
+        $emailList = explode(';',$email);
+        foreach ($emailList as $mail) {	//Still need to do: check email
+            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->fetchOne($count);
+            if ($count > 0) {
+                Flyspray::show_error("Email address has alredy been taken");
+                return false;
+            }
+        }
+        
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
@@ -615,14 +626,8 @@ abstract class Backend
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
 
-        $emailList = explode(';',$email);
-        foreach ($emailList as $mail) {	//Still need to do: check email
-            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
-            $count = $db->fetchOne($count);
-            if ($count > 0) {
-                Flyspray::show_error("Email address has alredy been taken");
-                return false;
-            } else if ($mail != '') {
+        foreach ($emailList as $mail) {
+            if ($mail != '') {
                 $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
                         array($uid,strtolower($mail),$oauth_uid, $oauth_provider));
             }
@@ -681,24 +686,26 @@ abstract class Backend
 
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
-        if ( ! $oauth_provider ) {
-            // If the new user is not an admin, add him to the notification list
+        if (!$oauth_provider) {
             $recipients = self::GetAdminAddresses();
-            if (isset($recipients[0]) && is_array($recipients[0])) {
-                // If the new user is not an admin, add him to the notification list.
-                // Should do this only if account is created as enabled, otherwise
-                // notification should be done when admin request is either accepted
-                // or denied, but we lack a really suitable notification, although
-                // NOTIFY_NEW_USER is quite close.
-                if (!array_key_exists($email, $recipients[0])) {
-                    $recipients[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
-                }
+            $newuser = array();
+            
+            // Add the right message here depending on $enabled.
+            if ($enabled === 0) {
+                $newuser[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
+                
+            } else {
+                $newuser[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
             }
 
             // Notify the appropriate users
             $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $recipients, NOTIFY_EMAIL);
+            // And also the new user
+            $notify->Create(NOTIFY_OWN_REGISTRATION, null,
+                            array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
+                            $newuser, NOTIFY_EMAIL);
         }
 
         // If the account is created as not enabled, no matter what any

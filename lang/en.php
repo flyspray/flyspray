@@ -1021,5 +1021,10 @@ Regards,',
 'votesperproject'         => 'User\'s limit of votes per project',
 'votelimitreached'        => 'You reached your vote limit for this project. See your profile page for which tasks you currently vote. There you can also take back votes. So we can see what tasks are most important for you. Solved tasks get your vote back into your available voting limit.',
 'myvotes'                 => 'My Votes',
+'tag'                     => 'Tag',
+'tags'                    => 'Tags',
+'novalues'                => 'no entries',
+'youhaveregistered'       => 'You have registered at Flyspray. Your details are as follows:',
+'youhaveregisterednotify' => 'Your registration at Flyspray has been accepted by Administrators.',
 );
 ?>

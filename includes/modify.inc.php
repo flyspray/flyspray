@@ -662,6 +662,9 @@ switch ($action = Req::val('action'))
 
 
         $_SESSION['SUCCESS'] = L('accountcreated');
+        // If everything is ok, add here a notify to both administrators and the user.
+        // Otherwise, explain what wen wrong.
+        
         define('NO_DO', true);
         break;
 
@@ -1137,6 +1140,8 @@ switch ($action = Req::val('action'))
     case 'admin.edituser':
     case 'myprofile.edituser':
         if (Post::val('delete_user')) {
+            // There probably is a bug here somewhere but I just can't find it just now.
+            // Anyway, I get the message also when just editing my details.
             if ($user->id == (int)Post::val('user_id') && $user->perms('is_admin')) {
                 Flyspray::show_error(L('nosuicide'));
                 break;
@@ -1307,6 +1312,7 @@ switch ($action = Req::val('action'))
             array($user->id, time(), Post::val('user_id'), 3));
             // Missing event constant, can't log yet...
             // Missing notification constant, can't notify yet...
+            // Notification constant added, write the code for sending that message...
 
         }
         break;

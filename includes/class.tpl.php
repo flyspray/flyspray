@@ -709,6 +709,7 @@ class TextFormatter
 }
 // }}}
 // Format Date {{{
+// Questionable if this function belongs in this class. Usages also elsewhere and not UI-related.
 function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
