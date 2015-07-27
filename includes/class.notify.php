@@ -30,7 +30,6 @@ class Notifications {
         }
 
         if (!count($to)) {
-            // echo "<pre>Error 0!</pre>";
             return false;
         }
 
@@ -41,8 +40,6 @@ class Notifications {
 
         if (isset($to[0])) {
             foreach ($to[0] as $recipient) {
-                // echo "<pre>".var_dump($recipient)."</pre>";
-
 		if (!empty($recipient['lang'])) {
 		    $lang = $recipient['lang'];
 		} else if (!empty($proj_lang)) {
@@ -50,8 +47,6 @@ class Notifications {
 		} else {
 		    $lang = $fs->prefs['lang_code'];
 		}
-                // if ($lang == 'j')
-                //     echo "<pre>Error 1!</pre>";
                 $emails[$lang][] = $recipient['recipient'];
                 if (!in_array($lang, $languages)) {
                     $languages[] = $lang;
@@ -61,8 +56,6 @@ class Notifications {
 
         if (isset($to[1])) {
             foreach ($to[1] as $recipient) {
-                // echo "<pre>".var_dump($recipient)."</pre>";
-
 		if (!empty($recipient['lang'])) {
 		    $lang = $recipient['lang'];
 		} else if (!empty($proj_lang)) {
@@ -70,8 +63,6 @@ class Notifications {
 		} else {
 		    $lang = $fs->prefs['lang_code'];
 		}
-                // if ($lang == 'j')
-                //    echo "<pre>Error 2!</pre>";
                 $jabbers[$lang][] = $recipient['recipient'];
                 if (!in_array($lang, $languages)) {
                     $languages[] = $lang;
@@ -81,8 +72,6 @@ class Notifications {
 	/*
         if (isset($to[2])) {
             foreach ($to[2] as $recipient) {
-                // echo "<pre>".var_dump($recipient)."</pre>";
-
                 $lang = $recipient['lang'];
                 if ($lang == 'j')
                     echo "<pre>Error 3!</pre>";
@@ -93,15 +82,8 @@ class Notifications {
             }
         }
 	 */
-	/*
-        foreach ($languages as $lang) {
-            echo "<pre>$lang</pre>";
-        }
-        echo "<pre>" . var_dump($emails) . "</pre>";
-        echo "<pre>" . var_dump($jabbers) . "</pre>";
-        echo "<pre>" . var_dump($onlines) . "</pre>";
-	 */
-        $result = true;
+
+	$result = true;
         foreach ($languages as $lang) {
             $msg = $this->GenerateMsg($type, $task_id, $info, $lang);
             if (isset($emails[$lang]) && ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH)) {
@@ -133,62 +115,48 @@ class Notifications {
     }
 
    function StoreOnline($to, $subject, $body, $online, $task_id = null) {
-      global $db, $fs;
+	global $db, $fs;
 
-      if (!count($to)) {
-        return false;
-      }
+	if (!count($to)) {
+	    return false;
+	}
 
-      $date = time();
+	$date = time();
 
-      // store notification in table
-      $db->Query("INSERT INTO {notification_messages}
+	// store notification in table
+	$db->Query("INSERT INTO {notification_messages}
                   (message_subject, message_body, time_created)
-                  VALUES (?, ?, ?)",
-                  array($online, '', $date)
-                );
+                  VALUES (?, ?, ?)", array($online, '', $date)
+	);
 
-      // grab notification id
-      $result = $db->Query("SELECT message_id FROM {notification_messages}
-                            WHERE time_created = ? ORDER BY message_id DESC",
-                            array($date), 1);
+	// grab notification id
+	$result = $db->Query("SELECT message_id FROM {notification_messages}
+                            WHERE time_created = ? ORDER BY message_id DESC", array($date), 1);
 
-      $row = $db->FetchRow($result);
-      $message_id = $row['message_id'];
+	$row = $db->FetchRow($result);
+	$message_id = $row['message_id'];
 
-      // If message could not be inserted for
-      // whatever reason...
-      if (!$message_id) {
-          return false;
-      }
+	// If message could not be inserted for whatever reason...
+	if (!$message_id) {
+	    return false;
+	}
 
-      // echo "<pre>";
-      // echo var_dump($to);
-      // echo "</pre>";
+	// make sure every user is only added once
+	settype($to, 'array');
+	$to = array_unique($to);
 
-      // make sure every user is only added once
-      settype($to, 'array');
-      $to = array_unique($to);
-
-      foreach ($to as $jid) {
-
-      // echo "<pre>";
-      // echo var_dump($jid);
-      // echo "</pre>";
-      //    if (isset($jid['notify_online']) && $jid['notify_online']) {
-         // store each recipient in table
-         $db->Query("INSERT INTO {notification_recipients}
+	foreach ($to as $jid) {
+	    // store each recipient in table
+	    $db->Query("INSERT INTO {notification_recipients}
                      (notify_method, message_id, notify_address)
-                     VALUES (?, ?, ?)",
-                     array('o', $message_id, $jid)
-                    );
-          // }
-      }
+                     VALUES (?, ?, ?)", array('o', $message_id, $jid)
+	    );
+	}
 
-      return true;
-   }
+	return true;
+    }
 
-   static function GetUnreadNotifications() {
+    static function GetUnreadNotifications() {
       global $db, $fs, $user;
 
       $notifications = $db->Query('SELECT r.recipient_id, m.message_subject
@@ -252,8 +220,7 @@ class Notifications {
       settype($to, 'array');
 
       $duplicates = array();
-      foreach ($to as $jid)
-      {
+      foreach ($to as $jid) {
           // make sure every recipient is only added once
           if (in_array($jid, $duplicates)) {
               continue;
