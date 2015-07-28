@@ -1061,7 +1061,6 @@ ul.slim li div.userSelectWidget input {
 }
 /* fancy dual selects */
 .double_select {
-  padding-left: 100px;
   position: relative;
 }
 .double_select .dualselect_selectable {
@@ -1100,8 +1099,10 @@ ul.slim li div.userSelectWidget input {
   height: 80%;
 }
 .double_select .dualselect_selected button {
-  height: 10%;
+  height: 0;
+  line-height:0;
   width: 100%;
+  margin:0;
 }
 .double_select .c1 select {
   height: 24em;
