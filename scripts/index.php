@@ -86,9 +86,20 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = '';
     $html    = eL($colname);
+/*
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
+*/
+	if ($colname == 'attachments') {
+		$html='<i class="fa fa-paperclip fa-2x" title="'.$html.'"></i>';
+	}
+	if ($colname == 'comments') {
+		$html='<i class="fa fa-comments fa-2x" title="'.$html.'"></i>';
+	}
+	if ($colname == 'votes') {
+		$html='<i class="fa fa-star-o fa-2x" title="'.$html.'"></i>';
+	}
 
     if (Get::val('order') == $colname) {
         $class  = ' class="orderby"';
