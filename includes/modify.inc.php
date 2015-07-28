@@ -275,7 +275,7 @@ switch ($action = Req::val('action'))
 
         $changes = Flyspray::compare_tasks($task, $new_details_full);
         if (count($changes) > 0) {
-            $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes);
+            $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         if ($assignees_changed) {
@@ -290,7 +290,7 @@ switch ($action = Req::val('action'))
                     $new_assignees = array_filter($new_assignees, create_function('$u', 'global $user; return $user->id != $u;'));
                 }
                 if(count($new_assignees)) {
-                    $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees));
+                    $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees), NOTIFY_BOTH, $proj->prefs['lang_code']);
                 }
             }
         }
@@ -401,7 +401,7 @@ switch ($action = Req::val('action'))
 
         Flyspray::logEvent($task['task_id'], 3, $old_percent['old_value'], $old_percent['new_value'], 'percent_complete');
 
-        $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id']);
+        $notify->Create(NOTIFY_TASK_REOPENED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         // add comment of PM request to comment page if accepted
         $sql = $db->Query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ? AND resolved_by = 0',
@@ -557,9 +557,14 @@ switch ($action = Req::val('action'))
 
         $confirm_code = substr($randval, 0, 20);
 
-        //send the email first.
+        // echo "<pre>Am I here?</pre>";
+        // send the email first
+        $userconfirmation = array();
+        $userconfirmation[$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
+        $recipients = array($userconfirmation);
         if($notify->Create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-        $email, NOTIFY_EMAIL)) {
+            $recipients,
+            NOTIFY_EMAIL)) {
 
             //email sent succefully, now update the database.
             $reg_values = array(time(), $confirm_code, $user_name, $real_name,
@@ -642,7 +647,12 @@ switch ($action = Req::val('action'))
         }
 
         $enabled = 1;
-        if (!Backend::create_user($reg_details['user_name'], Post::val('user_pass'), $reg_details['real_name'], $reg_details['jabber_id'], $reg_details['email_address'], $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'], $enabled ,'', '', $image_path)) {
+        if (!Backend::create_user($reg_details['user_name'],
+                Post::val('user_pass'),
+                $reg_details['real_name'],
+                $reg_details['jabber_id'],
+                $reg_details['email_address'],
+                $reg_details['notify_type'], $reg_details['time_zone'], $fs->prefs['anon_group'], $enabled ,'', '', $image_path)) {
             Flyspray::show_error(L('usernametaken'));
             break;
         }
@@ -652,6 +662,9 @@ switch ($action = Req::val('action'))
 
 
         $_SESSION['SUCCESS'] = L('accountcreated');
+        // If everything is ok, add here a notify to both administrators and the user.
+        // Otherwise, explain what wen wrong.
+        
         define('NO_DO', true);
         break;
 
@@ -788,7 +801,9 @@ switch ($action = Req::val('action'))
             }
 
             if (!Backend::create_user($user_name, Post::val('user_pass'),
-                $real_name, '', $email_address, Post::num('notify_type'),
+                $real_name, '',
+                $email_address,
+                Post::num('notify_type'),
                 Post::num('time_zone'), $group_in, $enabled, '', '', ''))
             {
                 $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
@@ -1125,6 +1140,8 @@ switch ($action = Req::val('action'))
     case 'admin.edituser':
     case 'myprofile.edituser':
         if (Post::val('delete_user')) {
+            // There probably is a bug here somewhere but I just can't find it just now.
+            // Anyway, I get the message also when just editing my details.
             if ($user->id == (int)Post::val('user_id') && $user->perms('is_admin')) {
                 Flyspray::show_error(L('nosuicide'));
                 break;
@@ -1295,6 +1312,7 @@ switch ($action = Req::val('action'))
             array($user->id, time(), Post::val('user_id'), 3));
             // Missing event constant, can't log yet...
             // Missing notification constant, can't notify yet...
+            // Notification constant added, write the code for sending that message...
 
         }
         break;
@@ -1740,8 +1758,7 @@ switch ($action = Req::val('action'))
 
         Flyspray::logEvent($task['task_id'], 11, Post::val('related_task'));
         Flyspray::logEvent(Post::val('related_task'), 15, $task['task_id']);
-
-        $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'));
+        $notify->Create(NOTIFY_REL_ADDED, $task['task_id'], Post::val('related_task'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         $_SESSION['SUCCESS'] = L('relatedaddedmsg');
         break;
@@ -2007,7 +2024,7 @@ switch ($action = Req::val('action'))
         $pms = $db->fetchCol($sql);
         if (count($pms)) {
             // Call the functions to create the address arrays, and send notifications
-            $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms));
+        $notify->Create(NOTIFY_PM_REQUEST, $task['task_id'], null, $notify->SpecificAddresses($pms), NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         $_SESSION['SUCCESS'] = L('adminrequestmade');
@@ -2034,7 +2051,7 @@ switch ($action = Req::val('action'))
         array($user->id, time(), Req::val('deny_reason'), Req::val('req_id')));
 
         Flyspray::logEvent($req_details['task_id'], 28, Req::val('deny_reason'));
-        $notify->Create(NOTIFY_PM_DENY_REQUEST, $req_details['task_id'], Req::val('deny_reason'));
+        $notify->Create(NOTIFY_PM_DENY_REQUEST, $req_details['task_id'], Req::val('deny_reason'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         $_SESSION['SUCCESS'] = L('pmreqdeniedmsg');
         break;
@@ -2106,9 +2123,8 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('dependaddfailed'));
             break;
         }
-
-        $notify->Create(NOTIFY_DEP_ADDED, $task['task_id'], Post::val('dep_task_id'));
-        $notify->Create(NOTIFY_REV_DEP, Post::val('dep_task_id'), $task['task_id']);
+        $notify->Create(NOTIFY_DEP_ADDED, $task['task_id'], Post::val('dep_task_id'), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+        $notify->Create(NOTIFY_REV_DEP, Post::val('dep_task_id'), $task['task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
         // Log this event to the task history, both ways
         Flyspray::logEvent($task['task_id'], 22, Post::val('dep_task_id'));
@@ -2162,8 +2178,8 @@ switch ($action = Req::val('action'))
                     array(Post::val('depend_id'), $task['task_id']));
 
         if ($db->AffectedRows()) {
-            $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id']);
-            $notify->Create(NOTIFY_REV_DEP_REMOVED, $dep_info['dep_task_id'], $dep_info['task_id']);
+            $notify->Create(NOTIFY_DEP_REMOVED, $dep_info['task_id'], $dep_info['dep_task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->Create(NOTIFY_REV_DEP_REMOVED, $dep_info['dep_task_id'], $dep_info['task_id'], null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
             Flyspray::logEvent($dep_info['task_id'], 24, $dep_info['dep_task_id']);
             Flyspray::logEvent($dep_info['dep_task_id'], 25, $dep_info['task_id']);
@@ -2212,7 +2228,7 @@ switch ($action = Req::val('action'))
         array($magic_url, $user_details['user_id']));
 
         if(count($user_details)) {
-            $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), true));
+            $notify->Create(NOTIFY_PW_CHANGE, null, array($baseurl, $magic_url), $notify->SpecificAddresses(array($user_details['user_id']), NOTIFY_EMAIL));
         }
 
         // TODO: Log event in a later version.
@@ -2393,8 +2409,7 @@ switch ($action = Req::val('action'))
             // Flyspray::show_error(L('summaryanddetails'));
             break;
         }
-
-        if (!$count($_POST['message_id'])) {
+        if (!count($_POST['message_id'])) {
             // Nothing to do.
             break;
         }
@@ -2402,13 +2417,13 @@ switch ($action = Req::val('action'))
         $validids = array();
         foreach ($_POST['message_id'] as $id) {
             if (is_numeric($id)) {
-                if (settype($id, 'int') && id > 0) {
+                if (settype($id, 'int') && $id > 0) {
                     $validids[] = $id;
                 }
             }
         }
 
-        if (!$count($validids)) {
+        if (!count($validids)) {
             // Nothing to do.
             break;
         }
