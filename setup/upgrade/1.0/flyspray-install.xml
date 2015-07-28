@@ -683,6 +683,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="others_viewroadmap" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="anon_open" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
