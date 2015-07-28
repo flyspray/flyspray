@@ -99,7 +99,7 @@ $html .= '</tr></table>
 .perms td{text-align:center;}
 .perms th{text-align:right;}
 .perms.globalgroup {background-color:#eee;}
-.perms tr:n-th-child(3) td {height:3em;overflow:hidden;text-overflow:ellipsis;display:block;}
+.perms tr:nth-child(3) td {height:3em;overflow:hidden;text-overflow:ellipsis;display:block;}
 </style>';
 echo $html;
 ?>
