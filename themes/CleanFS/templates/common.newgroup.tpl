@@ -18,25 +18,25 @@
 
       <li>
         <label for="viewtasks"><?php echo Filters::noXSS(L('viewtasks')); ?></label>
-        <?php echo tpl_checkbox('view_tasks', Req::val('view_tasks', Req::val('action') != 'newgroup.newgroup'), 'viewtasks'); ?>
+        <?php echo tpl_checkbox('view_tasks', Req::val('view_tasks'), 'viewtasks'); ?>
 
       </li>
 
       <li>
         <label for="viewowntasks"><?php echo Filters::noXSS(L('viewowntasks')); ?></label>
-        <?php echo tpl_checkbox('view_own_tasks', Req::val('view_own_tasks', Req::val('action') != 'newgroup.newgroup'), 'viewowntasks'); ?>
+        <?php echo tpl_checkbox('view_own_tasks', Req::val('view_own_tasks'), 'viewowntasks'); ?>
 
       </li>
 
       <li>
         <label for="viewgroupstasks"><?php echo Filters::noXSS(L('viewgroupstasks')); ?></label>
-        <?php echo tpl_checkbox('view_groups_tasks', Req::val('view_groups_tasks', Req::val('action') != 'newgroup.newgroup'), 'viewgroupstasks'); ?>
+        <?php echo tpl_checkbox('view_groups_tasks', Req::val('view_groups_tasks'), 'viewgroupstasks'); ?>
 
       </li>
 
       <li>
         <label for="opennewtasks"><?php echo Filters::noXSS(L('opennewtasks')); ?></label>
-        <?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks', Req::val('action') != 'newgroup.newgroup'), 'opennewtasks'); ?>
+        <?php echo tpl_checkbox('open_new_tasks', Req::val('open_new_tasks'), 'opennewtasks'); ?>
 
       </li>
 
@@ -59,7 +59,7 @@
 
       <li>
         <label for="viewcomments"><?php echo Filters::noXSS(L('viewcomments')); ?></label>
-        <?php echo tpl_checkbox('view_comments', Req::val('view_comments', Req::val('action') != 'newgroup.newgroup'), 'viewcomments'); ?>
+        <?php echo tpl_checkbox('view_comments', Req::val('view_comments'), 'viewcomments'); ?>
 
       </li>
 
@@ -101,7 +101,7 @@
 
       <li>
         <label for="viewhistory"><?php echo Filters::noXSS(L('viewhistory')); ?></label>
-        <?php echo tpl_checkbox('view_history', Req::val('view_history', Req::val('action') != 'newgroup.newgroup'), 'viewhistory'); ?>
+        <?php echo tpl_checkbox('view_history', Req::val('view_history'), 'viewhistory'); ?>
 
       </li>
 
@@ -142,13 +142,13 @@
 
       <li>
         <label for="viewreports"><?php echo Filters::noXSS(L('viewreports')); ?></label>
-        <?php echo tpl_checkbox('view_reports', Req::val('view_reports', Req::val('action') != 'newgroup.newgroup'), 'viewreports'); ?>
+        <?php echo tpl_checkbox('view_reports', Req::val('view_reports'), 'viewreports'); ?>
 
       </li>
 
       <li>
         <label for="canvote"><?php echo Filters::noXSS(L('canvote')); ?></label>
-        <?php echo tpl_checkbox('add_votes', Req::val('add_votes', Req::val('action') != 'newgroup.newgroup'), 'canvote'); ?>
+        <?php echo tpl_checkbox('add_votes', Req::val('add_votes'), 'canvote'); ?>
 
       </li>
 
@@ -183,7 +183,7 @@
 
       <li>
         <label for="groupopen"><?php echo Filters::noXSS(L('groupenabled')); ?></label>
-        <?php echo tpl_checkbox('group_open', Req::val('group_open', Req::val('action') != 'newgroup.newgroup'), 'groupopen'); ?>
+        <?php echo tpl_checkbox('group_open', Req::val('group_open'), 'groupopen'); ?>
 
       </li>
 
