@@ -1439,7 +1439,11 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
                 foreach($fs->projects as $p) {
                     $allowed[] = $p['project_id'];
                 }
-                $where[] = 't.project_id IN (' . implode(',', $allowed). ')';
+		if(count($allowed)>0){
+			$where[] = 't.project_id IN (' . implode(',', $allowed). ')';
+		}else{
+			$where[] = '1<>1'; # always empty result. Are our supported DBs intelligent enough to preoptimize such dull queries?
+		}
             }
         }
 
