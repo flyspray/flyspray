@@ -352,6 +352,7 @@
             // tpl_draw_cell in scripts/index.php for further explanation.
             $columnnames = array(
                 'id' => L('id'),
+                'project' => L('project'),
                 'parent' => L('parent'),
                 'tasktype' => L('tasktype'),
                 'category' => L('category'),
