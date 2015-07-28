@@ -29,7 +29,8 @@ switch ($area = Req::val('area', 'prefs')) {
 
     case 'prefs':
     case 'groups':
-        $page->assign('groups', Flyspray::ListGroups($proj->id));
+      $page->assign('globalgroups', Flyspray::ListGroups(0)); # global user groups
+      $page->assign('groups', Flyspray::ListGroups($proj->id)); # project specific user groups
     case 'editgroup':
         // yeah, utterly stupid, is changed in 1.0 already
         if (Req::val('area') == 'editgroup') {
