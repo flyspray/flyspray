@@ -613,7 +613,8 @@ class Notifications {
                 'mark_private' => tL('visibility', $lang),
                 'item_summary' => tL('summary', $lang),
                 'detailed_desc' => tL('taskedited', $lang),
-                'project_title' => tL('attachedtoproject', $lang));
+                'project_title' => tL('attachedtoproject', $lang),
+		'estimated_effort' => tL('estimatedeffort', $lang));
 
             $body .= tL('taskchanged', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
@@ -628,11 +629,6 @@ class Notifications {
                     $change[2] = implode(', ', $change[2]);
                 }
                 
-                if ($change[0] == 'due_date') {
-                    $change[1] = formatDate($change[1]);
-                    $change[2] = formatDate($change[2]);
-                }
-
                 if ($change[0] == 'detailed_desc') {
                     $body .= $translation[$change[0]] . ":\n-------\n" . $change[2] . "\n-------\n";
                 } else {

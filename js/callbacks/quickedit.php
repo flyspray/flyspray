@@ -61,7 +61,12 @@ $proj= new Project($task['project_id']);
 // Log the changed field in task history
 Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
-$notify = new Notifications;
-$notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], array(array(Post::val('name'),$oldvalue,$value)), null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+// Get the details of the task we just updated to generate the changed-task message
+$new_details_full = Flyspray::GetTaskDetails($task['task_id']);
+$changes = Flyspray::compare_tasks($task, $new_details_full);
+if (count($changes) > 0) {
+    $notify = new Notifications;
+    $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+}
 
 ?>
