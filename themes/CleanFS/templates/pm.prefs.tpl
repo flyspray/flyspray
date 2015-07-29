@@ -195,8 +195,8 @@
           </select>
         </li>
 
-        <li style="color:#ccc">
-          <label><?php echo Filters::noXSS(L('defaultorderby2')); ?> (not implemented yet)</label>
+        <li>
+          <label style="color:#ccc"><?php echo Filters::noXSS(L('defaultorderby2')); ?> (not implemented yet)</label>
           <select id="default_order_by2" name="default_order_by2">
             <?php echo tpl_options($columnnames, $proj->prefs['default_order_by2'], false); ?>
           </select>
