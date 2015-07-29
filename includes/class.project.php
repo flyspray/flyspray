@@ -28,6 +28,7 @@ class Project
         $this->prefs['lang_code']   = $fs->prefs['lang_code'];
         $this->prefs['project_is_active'] = 1;
         $this->prefs['others_view'] = 1;
+        $this->prefs['others_viewroadmap'] = 0;
         $this->prefs['intro_message'] = '';
         $this->prefs['anon_open'] = 0;
         $this->prefs['feed_img_url'] = '';
