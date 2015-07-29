@@ -397,7 +397,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="default_order_by" type="C" size="30">
+    <field name="default_order_by" type="C" size="100">
       <NOTNULL/>
       <DEFAULT value="id"/>
     </field>
