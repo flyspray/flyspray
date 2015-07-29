@@ -939,7 +939,7 @@ class Notifications {
             }
 
             if (($fs->prefs['user_notify'] == '1' && ($recipient['notify_type'] == NOTIFY_JABBER || $recipient['notify_type'] == NOTIFY_BOTH) ) || $fs->prefs['user_notify'] == '3' || $ignoretype) {
-                if (isset($recipient['jabber_id']) && !empty($recipient['jabber_id'] && $recipient['jabber_id'])) {
+                if (isset($recipient['jabber_id']) && !empty($recipient['jabber_id']) && $recipient['jabber_id']) {
                     $jabbers[$recipient['jabber_id']] = array('recipient' => $recipient['jabber_id'], 'lang' => $recipient['lang_code']);
                 }
             }
