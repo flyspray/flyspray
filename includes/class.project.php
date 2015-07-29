@@ -17,6 +17,24 @@ class Project
             if ($db->countRows($sql)) {
                 $this->prefs = $db->FetchRow($sql);
                 $this->id    = (int) $this->prefs['project_id'];
+                $sortrules=explode(',', $this->prefs['default_order_by'];
+                foreach($sortrules as $rule){
+                        $last_space=strrpos($rule, ' ');
+                        if ($last_space === false){
+                                $sorting[]=array(
+                                	'field'=>$rule,
+                                	'dir'=>'asc'
+                                );
+                        }else{
+                                $sorting[]=array(
+                                        'field'=>substr($rule, $last_space),
+                                        'dir'=>  substr($rule, 0, $last_space)
+                                );
+                        }
+                }
+                # using an extra name until default_order_by_dir completely removed
+                $this->prefs['sorting']=$sorting; # we can use this also for highlighting in template which columns are sorted by default in task list!
+                
                 return;
             }
         }
@@ -41,7 +59,19 @@ class Project
         $this->prefs['estimated_effort_format'] = 0;
         $this->prefs['current_effort_done_format'] = 0;
     	$this->prefs['default_order_by'] = 'id';
-    	$this->prefs['default_order_by_direction'] = 'desc';
+    	$this->prefs['default_order_by_dir'] = 'desc';
+
+	# temporarly!    	
+    	$this->prefs['default_order_by2'] = 'severity';
+    	$this->prefs['default_order_by_dir2'] = 'desc';
+
+        # future field content of 'default_order_by'
+        #$this->prefs['default_order_by'] = 'id DESC';
+        $this->prefs['sorting'] = array(
+                0=>array('field'=>'id','dir'=>'desc'),
+                1=>array('field'=>'severity','dir'=>'desc')
+        );
+
     }
 
     # 20150219 peterdd: deprecated
