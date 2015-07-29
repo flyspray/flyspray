@@ -613,7 +613,8 @@ class Notifications {
                 'mark_private' => tL('visibility', $lang),
                 'item_summary' => tL('summary', $lang),
                 'detailed_desc' => tL('taskedited', $lang),
-                'project_title' => tL('attachedtoproject', $lang));
+                'project_title' => tL('attachedtoproject', $lang),
+		'estimated_effort' => tL('estimatedeffort', $lang));
 
             $body .= tL('taskchanged', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";

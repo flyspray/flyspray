@@ -152,6 +152,7 @@ function event_description($history) {
                     $new_value = '';
                     break;
                 case 'estimated_effort':
+                    $field = eL($translate[$field]);
                     $old_value = effort::SecondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
                     $new_value = effort::SecondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
                     break;
