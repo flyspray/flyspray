@@ -189,12 +189,19 @@
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $proj->prefs['default_order_by'], false); ?>
           </select>
-        </li>
-
-        <li>
-          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <!-- <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label> -->
           <select id="default_order_by_dir" name="default_order_by_dir">
             <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir'], false); ?>
+          </select>
+        </li>
+
+        <li style="color:#ccc">
+          <label><?php echo Filters::noXSS(L('defaultorderby2')); ?> (not implemented yet)</label>
+          <select id="default_order_by2" name="default_order_by2">
+            <?php echo tpl_options($columnnames, $proj->prefs['default_order_by2'], false); ?>
+          </select>
+          <select id="default_order_by_dir2" name="default_order_by_dir2">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir2'], false); ?>
           </select>
         </li>
 
