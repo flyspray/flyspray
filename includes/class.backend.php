@@ -1442,7 +1442,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		if(count($allowed)>0){
 			$where[] = 't.project_id IN (' . implode(',', $allowed). ')';
 		}else{
-			$where[] = '0 = 1'; # always empty result. Are our supported DBs intelligent enough to preoptimize such dull queries?
+			$where[] = '0 = 1'; # always empty result
 		}
             }
         }
