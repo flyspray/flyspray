@@ -17,7 +17,7 @@ class Project
             if ($db->countRows($sql)) {
                 $this->prefs = $db->FetchRow($sql);
                 $this->id    = (int) $this->prefs['project_id'];
-                $sortrules=explode(',', $this->prefs['default_order_by'];
+                $sortrules=explode(',', $this->prefs['default_order_by']);
                 foreach($sortrules as $rule){
                         $last_space=strrpos($rule, ' ');
                         if ($last_space === false){
