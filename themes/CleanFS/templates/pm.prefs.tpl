@@ -100,6 +100,11 @@
         </li>
 
         <li>
+          <label for="othersviewroadmap"><?php echo Filters::noXSS(L('othersviewroadmap')); ?></label>
+          <?php echo tpl_checkbox('others_viewroadmap', Post::val('others_viewroadmap', $proj->prefs['others_viewroadmap']), 'othersviewroadmap'); ?>
+        </li>
+
+        <li>
           <label for="anon_open"><?php echo Filters::noXSS(L('allowanonopentask')); ?></label>
           <?php echo tpl_checkbox('anon_open', Post::val('anon_open', $proj->prefs['anon_open']), 'anon_open'); ?>
 
@@ -184,12 +189,19 @@
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $proj->prefs['default_order_by'], false); ?>
           </select>
-        </li>
-
-        <li>
-          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <!-- <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label> -->
           <select id="default_order_by_dir" name="default_order_by_dir">
             <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir'], false); ?>
+          </select>
+        </li>
+
+        <li style="opacity:0.4">
+          <label style="color:#ccc"><?php echo Filters::noXSS(L('defaultorderby2')); ?> (not implemented yet)</label>
+          <select id="default_order_by2" name="default_order_by2" disabled="disabled">
+            <?php echo tpl_options($columnnames, $proj->prefs['default_order_by2'], false); ?>
+          </select>
+          <select id="default_order_by_dir2" name="default_order_by_dir2" disabled="disabled">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir2'], false); ?>
           </select>
         </li>
 

@@ -43,11 +43,13 @@ endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('toplevel', $proj->id)); ?>"><?php echo Filters::noXSS(L('overview')); ?></a>
 	</li><?php
 	}
+	if ( (!$user->isAnon() && $user->perms('view_tasks')) || ($user->isAnon() && $proj->id >0 && $proj->prefs['others_view'])):
 	?><li>
 		<a id="homelink"
 		<?php if($do == 'index' && !isset($_GET['dev'])): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('tasklist', $proj->id)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
 	</li><?php
+	endif;
 	if ($proj->id && $user->perms('open_new_tasks')):
 	?><li>
 		<a id="newtasklink" href="<?php echo Filters::noXSS(CreateURL('newtask', $proj->id)); ?>"
@@ -80,7 +82,7 @@ endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id)); ?>"><?php echo Filters::noXSS(L('reports')); ?></a>
 	</li><?php
 	endif;
-	if ($proj->id && $user->perms('view_roadmap')): ?><li>
+	if ($proj->id && ($user->perms('view_roadmap') || ($user->isAnon() && $proj->prefs['others_viewroadmap'])) ): ?><li>
 		<a id="roadmaplink"
 		<?php if($do == 'roadmap'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id)); ?>"><?php echo Filters::noXSS(L('roadmap')); ?></a>

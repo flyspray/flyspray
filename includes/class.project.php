@@ -17,6 +17,24 @@ class Project
             if ($db->countRows($sql)) {
                 $this->prefs = $db->FetchRow($sql);
                 $this->id    = (int) $this->prefs['project_id'];
+                $sortrules=explode(',', $this->prefs['default_order_by']);
+                foreach($sortrules as $rule){
+                        $last_space=strrpos($rule, ' ');
+                        if ($last_space === false){
+                        	# temporarly
+                                $sorting[]=array('field'=>$rule, 'dir'=> $this->prefs['default_order_by_dir']);
+                                # future - when column default_order_by_dir removed from project table:
+                                #$sorting[]=array('field'=>$rule, 'dir'=>'desc');
+                        }else{
+                                $sorting[]=array(
+                                        'field'=>substr($rule, $last_space),
+                                        'dir'=>  substr($rule, 0, $last_space)
+                                );
+                        }
+                }
+                # using an extra name until default_order_by_dir completely removed
+                $this->prefs['sorting']=$sorting; # we can use this also for highlighting in template which columns are sorted by default in task list!
+                
                 return;
             }
         }
@@ -28,6 +46,7 @@ class Project
         $this->prefs['lang_code']   = $fs->prefs['lang_code'];
         $this->prefs['project_is_active'] = 1;
         $this->prefs['others_view'] = 1;
+        $this->prefs['others_viewroadmap'] = 0;
         $this->prefs['intro_message'] = '';
         $this->prefs['anon_open'] = 0;
         $this->prefs['feed_img_url'] = '';
@@ -40,7 +59,16 @@ class Project
         $this->prefs['estimated_effort_format'] = 0;
         $this->prefs['current_effort_done_format'] = 0;
     	$this->prefs['default_order_by'] = 'id';
-    	$this->prefs['default_order_by_direction'] = 'desc';
+    	$this->prefs['default_order_by_dir'] = 'desc';
+
+        # future field content examples of 'default_order_by':
+        #$this->prefs['default_order_by'] = 'id DESC';
+        #$this->prefs['default_order_by'] = 'severity DESC, priority DESC'; 
+
+        $this->prefs['sorting'] = array(
+                0=>array('field'=>'id','dir'=>'desc'),
+                1=>array('field'=>'severity','dir'=>'desc')
+        );
     }
 
     # 20150219 peterdd: deprecated

@@ -1591,22 +1591,46 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         // Implementing setting "Default order by"
         if (!array_key_exists('order', $args)) {
             if ($proj->id) {
+                /*
                 $orderBy = $proj->prefs['default_order_by'];
                 $sort = $proj->prefs['default_order_by_dir'];
+                */
+
+                # future
+                $orderBy = $proj->prefs['sorting'][0]['field'];
+                $sort =    $proj->prefs['sorting'][0]['dir'];
+                if (count($proj->prefs['sorting']) >1){
+                        $orderBy2 =$proj->prefs['sorting'][1]['field'];
+                        $sort2=    $proj->prefs['sorting'][1]['dir'];
+                } else{
+                        $orderBy2='severity';
+                        $sort2='DESC';
+                }
+
             } else {
                 $orderBy = $fs->prefs['default_order_by'];
                 $sort = $fs->prefs['default_order_by_dir'];
+                # temp
+                $orderBy2='severity';
+                $sort2='DESC';
             }
         } else {
             $orderBy = $args['order'];
             $sort = $args['sort'];
+            $orderBy2='severity';
+            $sort2='desc';
         }
 
         // TODO: Fix this! If something is already ordered by task_id, there's
         // absolutely no use to even try to order by something else also. 
         $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
-        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
-        $sortorder = sprintf('%s %s, %s %s, t.task_id ASC', $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')), $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
+        $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', $orderBy2), array_keys($order_keys))];
+        $sortorder = sprintf('%s %s, %s %s, t.task_id ASC',
+        	$order_column[0],
+        	Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')),
+        	$order_column[1],
+        	Filters::enum(array_get($args, 'sort2', $sort2), array('asc', 'desc'))
+        );
 
         $having = array();
         $dates = array('duedate' => 'due_date', 'changed' => $maxdatesql,
