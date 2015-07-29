@@ -21,10 +21,10 @@ class Project
                 foreach($sortrules as $rule){
                         $last_space=strrpos($rule, ' ');
                         if ($last_space === false){
-                                $sorting[]=array(
-                                	'field'=>$rule,
-                                	'dir'=>'asc'
-                                );
+                        	# temporarly
+                                $sorting[]=array('field'=>$rule, 'dir'=> $this->prefs['default_order_by_dir']);
+                                # future: when column default_order_by_dir removed from project table
+                                #$sorting[]=array('field'=>$rule, 'dir'=>'desc');
                         }else{
                                 $sorting[]=array(
                                         'field'=>substr($rule, $last_space),
