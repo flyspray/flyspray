@@ -195,12 +195,12 @@
           </select>
         </li>
 
-        <li>
+        <li style="opacity:0.4">
           <label style="color:#ccc"><?php echo Filters::noXSS(L('defaultorderby2')); ?> (not implemented yet)</label>
-          <select id="default_order_by2" name="default_order_by2">
+          <select id="default_order_by2" name="default_order_by2" disabled="disabled">
             <?php echo tpl_options($columnnames, $proj->prefs['default_order_by2'], false); ?>
           </select>
-          <select id="default_order_by_dir2" name="default_order_by_dir2">
+          <select id="default_order_by_dir2" name="default_order_by_dir2" disabled="disabled">
             <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir2'], false); ?>
           </select>
         </li>
