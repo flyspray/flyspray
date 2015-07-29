@@ -23,7 +23,7 @@ class Project
                         if ($last_space === false){
                         	# temporarly
                                 $sorting[]=array('field'=>$rule, 'dir'=> $this->prefs['default_order_by_dir']);
-                                # future: when column default_order_by_dir removed from project table
+                                # future - when column default_order_by_dir removed from project table:
                                 #$sorting[]=array('field'=>$rule, 'dir'=>'desc');
                         }else{
                                 $sorting[]=array(
@@ -61,17 +61,14 @@ class Project
     	$this->prefs['default_order_by'] = 'id';
     	$this->prefs['default_order_by_dir'] = 'desc';
 
-	# temporarly!    	
-    	$this->prefs['default_order_by2'] = 'severity';
-    	$this->prefs['default_order_by_dir2'] = 'desc';
-
-        # future field content of 'default_order_by'
+        # future field content examples of 'default_order_by':
         #$this->prefs['default_order_by'] = 'id DESC';
+        #$this->prefs['default_order_by'] = 'severity DESC, priority DESC'; 
+
         $this->prefs['sorting'] = array(
                 0=>array('field'=>'id','dir'=>'desc'),
                 1=>array('field'=>'severity','dir'=>'desc')
         );
-
     }
 
     # 20150219 peterdd: deprecated
