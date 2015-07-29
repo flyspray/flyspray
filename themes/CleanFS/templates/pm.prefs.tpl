@@ -100,6 +100,11 @@
         </li>
 
         <li>
+          <label for="othersviewroadmap"><?php echo Filters::noXSS(L('othersviewroadmap')); ?></label>
+          <?php echo tpl_checkbox('others_viewroadmap', Post::val('others_viewroadmap', $proj->prefs['others_viewroadmap']), 'othersviewroadmap'); ?>
+        </li>
+
+        <li>
           <label for="anon_open"><?php echo Filters::noXSS(L('allowanonopentask')); ?></label>
           <?php echo tpl_checkbox('anon_open', Post::val('anon_open', $proj->prefs['anon_open']), 'anon_open'); ?>
 
