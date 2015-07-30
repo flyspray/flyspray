@@ -442,23 +442,17 @@ td.task_progress .progress_bar_container { width: 100%;}
 a { text-decoration: none;}
 #tasklist_table th { background: #fff;}
 #tasklist_table th img {position: relative;top: 2px;}
-#tasklist_table td {cursor: pointer;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
 #tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
+
 #tasklist_table .ttcolumn a {
-  background-image: url(img/black/loop_alt3_12x9.png);
-  background-repeat: no-repeat;
-  background-position: center;
   width: 30px;
   height: 30px;
   display: block;
 }
 a.toggle_selected {
-  background-image: url(img/black/loop_alt3_12x9.png);
-  background-repeat: no-repeat;
-  background-position: center;
   width: 30px;
   height: 30px;
   display: block;
@@ -468,11 +462,7 @@ tr.severity2 .task_severity {background-color: white;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
 tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
-tr.severity1:hover > td {background-color: #f2f2f2;}
-tr.severity2:hover > td {background-color: #f2f2f2;}
-tr.severity3:hover > td {background-color: #eed4d4;}
-tr.severity4:hover > td {background-color: #efc9c9;}
-tr.severity5:hover > td {background-color: #f0bcbc;}
+
 #toolbox {
   margin: 10px 0px 10px 0px;
   padding: 10px;
