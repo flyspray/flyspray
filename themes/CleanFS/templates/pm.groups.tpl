@@ -71,12 +71,12 @@ foreach ($merge as $group){
   <tr>'.
   ($i == 0 ? '<th>'.L('group').' </th>' : '').
   '<th>'.($group['project_id']==0 ? $group['group_name'] : '<a class="button" style="white-space:nowrap" title="'.eL('editgroup')
-.'" href="?id='.$group['group_id'].'&amp;do=pm&amp;area=editgroup">'.$group['group_name']
+.'" href="?id='.$group['group_id'].'&amp;do=pm&amp;area=editgroup&amp;project='.$group['project_id'].'">'.$group['group_name']
 .'<i class="fa fa-pencil fa-lg fa-fw"></i></a>').'</th>
   </tr>
   <tr>'.
   ($i == 0 ? '<th>'.L('description').'</th>' : '').
-  '<td style="height:6em;overflow:hidden;width:10em">'.$group['group_desc'].'</td></tr>
+  '<td>'.$group['group_desc'].'</td></tr>
   </thead><tbody>';
   foreach ($group as $key => $val) {
     if (!is_numeric($key) && in_array($key, $perm_fields)) {
@@ -99,6 +99,7 @@ $html .= '</tr></table>
 .perms td{text-align:center;}
 .perms th{text-align:right;}
 .perms.globalgroup {background-color:#eee;}
+.perms tr:nth-child(3) td {height:3em;overflow:hidden;text-overflow:ellipsis;display:block;}
 </style>';
 echo $html;
 ?>
