@@ -9,12 +9,15 @@
         <button type="submit" name="manual_effort" value="true"><?php echo Filters::noXSS(L('addeffort')); ?></button>
         <?php } ?>
         <table class="userlist history">
+            <thead>
             <tr>
                 <th><?php echo Filters::noXSS(L('date')); ?></th>
                 <th><?php echo Filters::noXSS(L('user')); ?></th>
                 <th><?php echo Filters::noXSS(L('effort')); ?> (H:M)</th>
                 <th></th>
             </tr>
+            </thead>
+            <tbody>
             <?php
             foreach($effort->details as $details){
             ?>
@@ -43,6 +46,7 @@
                 </td>
             </tr>
             <?php } ?>
+            </tbody>
         </table>
     </form>
 </div>

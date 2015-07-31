@@ -3,7 +3,8 @@
   <div class="related">
     <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#related');?>
       <table id="tasks_related" class="userlist">
-        <tr>
+        <thead>
+          <tr>
           <th>
             <a class="toggle_selected" href="javascript:ToggleSelected('tasks_related')">
               <!--<img title="<?php echo Filters::noXSS(L('toggleselected')); ?>" alt="<?php echo Filters::noXSS(L('toggleselected')); ?>" src="<?php echo Filters::noXSS($this->get_image('kaboodleloop')); ?>" width="16" height="16" />-->
@@ -11,6 +12,8 @@
           </th>
           <th><?php echo Filters::noXSS(L('tasksrelated')); ?> (<?php echo Filters::noXSS(count($related)); ?>)</th>
         </tr>
+        </thead>
+        <tbody>
         <?php
           foreach ($related as $row):
         ?>
@@ -20,25 +23,32 @@
           <td><?php echo tpl_tasklink($row); ?></td>
         </tr>
         <?php endforeach; ?>
+        </tbody>
+        <tfoot>
         <tr>
           <td colspan="2">
             <input type="hidden" name="action" value="remove_related" />
             <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
             <button type="submit"><?php echo Filters::noXSS(L('remove')); ?></button>
           </td>
-        </tr> 
+        </tr>
+        </tfoot>
       </table>
     </form>
   </div>
     
   <div class="related">
     <table id="duplicate_tasks" class="userlist">
+      <thead>
       <tr>
         <th><?php echo Filters::noXSS(L('duplicatetasks')); ?> (<?php echo Filters::noXSS(count($duplicates)); ?>)</th>
       </tr>
+      </thead>
+      <tbody>
       <?php foreach ($duplicates as $row): ?>
       <tr><td><?php echo tpl_tasklink($row); ?></td></tr>
       <?php endforeach; ?>
+      </tbody>
     </table>
   </div>
 
