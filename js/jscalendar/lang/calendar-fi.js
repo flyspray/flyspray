@@ -96,3 +96,5 @@ Calendar._TT["DEF_DATE_FORMAT"] = "%d.%m.%Y";
 Calendar._TT["TT_DATE_FORMAT"] = "%d.%m.%Y";
 
 Calendar._TT["WK"] = "Vko";
+Calendar._TT["WEEKEND"] = "0,6";
+Calendar._TT["DAY_FIRST"] = "Näytä %s ensimmäisenä";
