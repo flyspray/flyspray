@@ -7,7 +7,7 @@
     <tr>
       <th>
         <a class="toggle_selected" title="<?php echo Filters::noXSS(L('toggleselected')); ?>"
-        href="javascript:ToggleSelected('reminders')"><i class="fa fa-exchange fa-lg"></i></a>
+        href="javascript:ToggleSelected('reminders')"></a>
       </th>
       <th><?php echo Filters::noXSS(L('user')); ?></th>
       <th><?php echo Filters::noXSS(L('startat')); ?></th>
