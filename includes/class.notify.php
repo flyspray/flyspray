@@ -423,7 +423,13 @@ class Notifications {
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
         $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
         $htmlbody = str_replace("\n","<br>", $htmlbody);
-        $plainbody= html_entity_decode(strip_tags($body), ENT_COMPAT | ENT_HTML401, 'utf-8');
+        
+        // Those constants used were introduced in 5.4.
+        if (version_compare(phpversion(), '5.4.0', '<')) {
+            $plainbody= html_entity_decode(strip_tags($body));
+        } else {
+            $plainbody= html_entity_decode(strip_tags($body), ENT_COMPAT | ENT_HTML401, 'utf-8');
+        }
         
         $swift = Swift_Mailer::newInstance($swiftconn);
 
