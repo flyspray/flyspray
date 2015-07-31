@@ -263,64 +263,66 @@
 <div id="tasklist">
 <?php echo tpl_form(Filters::noXSS(CreateURL('project', $proj->id, null, $_GET)),'massops',null,null,'id="massops"'); ?>
 <div>
-<table id="tasklist_table">
-    <thead>
-    <tr>
-        <th class="caret">
-        </th>
-        <?php if (!$user->isAnon() && $proj->id !=0): ?>
-        <th class="ttcolumn">
-            <?php if (!$user->isAnon() && $total): ?>
-            <a title="<?php echo Filters::noXSS(L('toggleselected')); ?>" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();">
-            </a>
-            <?php endif; ?>
-        </th>
-        <?php endif; ?>
-        <?php foreach ($visible as $col): ?>
-        <?php echo tpl_list_heading($col, "<th%s>%s</th>"); ?>
-        <?php endforeach; ?>
-    </tr>
-    </thead>
-    <tbody>
-    <script type="text/javascript">
+<script type="text/javascript">
 	var cX = 0; var cY = 0; var rX = 0; var rY = 0;
 	function UpdateCursorPosition(e){ cX = e.pageX; cY = e.pageY;}
 	function UpdateCursorPositionDocAll(e){ cX = e.clientX; cY = e.clientY;}
 	if(document.all) { document.onmousemove = UpdateCursorPositionDocAll; }
 	else { document.onmousemove = UpdateCursorPosition; }
 	function AssignPosition(d) {
-		if(self.pageYOffset)
-		{
+		if (self.pageYOffset) {
 			rX = self.pageXOffset;
 			rY = self.pageYOffset;
-		}
-		else if(document.documentElement && document.documentElement.scrollTop) {
+		} else if(document.documentElement && document.documentElement.scrollTop) {
 			rX = document.documentElement.scrollLeft;
 			rY = document.documentElement.scrollTop;
-		}
-		else if(document.body) {
+		} else if(document.body) {
 			rX = document.body.scrollLeft;
 			rY = document.body.scrollTop;
 		}
-		if(document.all) {
+		if (document.all) {
 			cX += rX;
 			cY += rY;
 		}
 		d.style.left = (cX+10) + "px";
 		d.style.top = (cY+10) + "px";
 	}
-	function Show(elem, id)
-	{
+	function Show(elem, id) {
 		var div = document.getElementById("desc_"+id);
 		AssignPosition(div);
 		div.style.display = "block";
 	}
-	function Hide(elem, id)
-	{
+	function Hide(elem, id)	{
 		document.getElementById("desc_"+id).style.display = "none";
 	}
-    </script>
-    <?php foreach ($tasks as $task_details):?>
+</script>	
+<table id="tasklist_table">
+<colgroup>
+	<col class="caret" />
+	<?php if (!$user->isAnon() && $proj->id !=0): ?><col class="toggle" /><?php endif; ?>
+	<?php foreach ($visible as $col): ?>
+        <col class="<?php echo $col; ?>" />
+        <?php endforeach; ?>
+</colgroup>
+<thead>
+    <tr>
+        <th class="caret">
+        </th>
+        <?php if (!$user->isAnon() && $proj->id !=0): ?>
+        <th class="ttcolumn">
+        <?php if (!$user->isAnon() && $total): ?>
+            <a title="<?php echo Filters::noXSS(L('toggleselected')); ?>" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();">
+            </a>
+        <?php endif; ?>
+        </th>
+        <?php endif; ?>
+        <?php foreach ($visible as $col): ?>
+        <?php echo tpl_list_heading($col, "<th%s>%s</th>"); ?>
+        <?php endforeach; ?>
+    </tr>
+</thead>
+<tbody>
+<?php foreach ($tasks as $task_details):?>
     <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?php echo $task_details['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task_details['task_id']; ?>)">
         <td class="caret">
         </td>
@@ -348,8 +350,8 @@
 <?php echo $task_details['detailed_desc'] ? TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id']) : '<p>'.L('notaskdescription').'</p>'; ?>
 </td>
     </tr>
-    <?php endforeach; ?>
-    </tbody>
+<?php endforeach; ?>
+</tbody>
 </table>
 <table id="pagenumbers">
     <tr>
