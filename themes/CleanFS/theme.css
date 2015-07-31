@@ -618,6 +618,7 @@ form #taskdetails #taskdetailsfull {
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
+.fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {margin-left: 300px;padding: 2em 3em;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
