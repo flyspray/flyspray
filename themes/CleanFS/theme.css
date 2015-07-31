@@ -756,6 +756,7 @@ div.comment_container .commenttext
 	clear: both;
 	padding: 10px;
 }
+.commenttext pre{overflow:auto;}
 
 div.comment_container .attachments
 {
