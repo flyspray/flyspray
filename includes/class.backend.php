@@ -1305,7 +1305,7 @@ LEFT JOIN ({groups} pg
         
         // Seems resution name really is needed...
         $select .= 'lr.resolution_name, ';
-        $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $from .= ' LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         $groupby .= 'lr.resolution_name, ';
         
         // Otherwise, only join tables which are really necessary to speed up the db-query
