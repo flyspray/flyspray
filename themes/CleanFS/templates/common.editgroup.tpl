@@ -183,6 +183,7 @@
    <div>
     <h3><?php echo Filters::noXSS(L('groupmembers')); ?></h3>
     <table id="manage_users_in_groups" class="userlist">
+    <thead>
     <tr>
       <th>
         <a href="javascript:ToggleSelected('manage_users_in_groups')">
@@ -193,6 +194,8 @@
       <th><?php echo Filters::noXSS(L('realname')); ?></th>
       <th><?php echo Filters::noXSS(L('accountenabled')); ?></th>
     </tr>
+    </thead>
+    <tbody>
     <?php
     foreach(Project::listUsersIn($group_details['group_id']) as $usr): ?>
     <tr>
@@ -209,20 +212,21 @@
     $users_in[] = $usr['user_id'];
     endforeach;
     ?>
-
+    </tbody>
+    <tfoot>
     <tr>
-      <td colspan="4">
+    <td colspan="4">
         <button type="submit"><?php echo Filters::noXSS(L('moveuserstogroup')); ?></button>
         <select class="adminlist" name="switch_to_group">
           <?php if ($proj->id): ?>
           <option value="0"><?php echo Filters::noXSS(L('nogroup')); ?></option>
           <?php endif; ?>
           <?php echo tpl_options(Flyspray::listGroups($proj->id), null, false, null, $group_details['group_id']); ?>
-
         </select>
-      </td>
+    </td>
     </tr>
-  </table>
+    </tfoot>
+    </table>
   <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
   <input type="hidden" name="action" value="movetogroup" />
   <input type="hidden" name="old_group" value="<?php echo Filters::noXSS($group_details['group_id']); ?>" />

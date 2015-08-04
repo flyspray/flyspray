@@ -637,7 +637,7 @@ form #taskdetails #taskdetailsfull {
 }
 #comments h4 {margin:1em 0 0.5em 0;}
 .userlist th {background-color: #e0e0e0;}
-.userlist tr:nth-child(2n-1) td {background-color: #f1f1f1;}
+.userlist tbody tr:nth-child(2n) td {background-color: #f1f1f1;}
 #related .related {float: left;margin-right: 0;}
 #duplicate_tasks th{height: 30px;}
 #submenu {margin-bottom: 0;height: 25px;}

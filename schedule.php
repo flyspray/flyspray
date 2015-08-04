@@ -35,37 +35,37 @@ function send_reminders() {
     );
 
     while ($row = $db->FetchRow($get_reminders)) {
-	// So that the sender in emails will is the right project, not 'Default project'
-	// and also to get the projects default language, if needed.
-	$proj = new Project($row['project_id']);
-	$jabber_users = array();
-	$email_users = array();
+        // So that the sender in emails will is the right project, not 'Default project'
+        // and also to get the projects default language, if needed.
+        $proj = new Project($row['project_id']);
+        $jabber_users = array();
+        $email_users = array();
 
-	if (($fs->prefs['user_notify'] == '1' && $row['notify_type'] == '1')
-		OR ( $fs->prefs['user_notify'] == '2')) {
-	    $email_users[] = $row['email_address'];
-	} elseif (($fs->prefs['user_notify'] == '1' && $row['notify_type'] == '2')
-		OR ( $fs->prefs['user_notify'] == '3')) {
-	    $jabber_users[] = $row['jabber_id'];
-	}
+        if (( $fs->prefs['user_notify'] == 1 || $fs->prefs['user_notify'] == 2 ) && ($row['notify_type'] == 1 || $row['notify_type'] == 3 )) {
+            $email_users[] = $row['email_address'];
+        }
 
-	if (!empty($row['lang_code'])) {
-	    $lang = $row['lang_code'];
-	} else if (!empty($proj->prefs['lang_code'])) {
-	    $lang = $proj->prefs['lang_code'];
-	} else {
-	    $lang = $fs->prefs['lang_code'];
-	}
+        if (( $fs->prefs['user_notify'] == 1 || $fs->prefs['user_notify'] == 3 ) && ($row['notify_type'] == 2 || $row['notify_type'] == 3 )) {
+            $jabber_users[] = $row['jabber_id'];
+        }
 
-	$subject = tL('notifyfromfs', $lang);
-	$message = $row['reminder_message'];
+        if (!empty($row['lang_code'])) {
+            $lang = $row['lang_code'];
+        } else if (!empty($proj->prefs['lang_code'])) {
+            $lang = $proj->prefs['lang_code'];
+        } else {
+            $lang = $fs->prefs['lang_code'];
+        }
 
-	// Pass the recipients and message onto the notification function
-	$notify->SendEmail($email_users, $subject, $message);
-	$notify->StoreJabber($jabber_users, $subject, $message);
+        $subject = tL('notifyfromfs', $lang);
+        $message = $row['reminder_message'];
 
-	// Update the database with the time sent
-	$update_db = $db->Query("UPDATE  {reminders}
+        // Pass the recipients and message onto the notification function
+        $notify->SendEmail($email_users, $subject, $message);
+        $notify->StoreJabber($jabber_users, $subject, $message);
+
+        // Update the database with the time sent
+        $update_db = $db->Query("UPDATE  {reminders}
                                SET  last_sent = ?
                              WHERE  reminder_id = ?", array(time(), $row['reminder_id']));
     }
