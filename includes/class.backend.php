@@ -1282,24 +1282,30 @@ abstract class Backend
         // Joins absolutely needed for user viewing rights
         $from = ' {tasks} t
 -- All tasks have a project!
-JOIN {projects} p ON t.project_id = p.project_id
--- Global group always exists (actually not for anonymous users...)
-LEFT JOIN ({groups} gpg
+JOIN {projects} p ON t.project_id = p.project_id';
+	
+	// Not needed for anonymous users
+        if (!$user->isAnon()) {
+$from .= ' -- Global group always exists
+JOIN ({groups} gpg
     JOIN {users_in_groups} gpuig ON gpg.group_id = gpuig.group_id AND gpuig.user_id = ?		
 ) ON gpg.project_id = 0
 -- Project group might exist or not.
 LEFT JOIN ({groups} pg
     JOIN {users_in_groups} puig ON pg.group_id = puig.group_id AND puig.user_id = ?	
-) ON pg.project_id = t.project_id
-LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
-';
+) ON pg.project_id = t.project_id';
+	    $sql_params[] = $user->id;
+	    $sql_params[] = $user->id;
+	}
+	
+	// Keep this always, could also used for showing assigned users for a task.
+	// Keeps the overall logic somewhat simpler.
+	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
         $cfrom = $from;
-        $sql_params[] = $user->id;
-        $sql_params[] = $user->id;
         
         // Seems resution name really is needed...
         $select .= 'lr.resolution_name, ';
-        $from .= 'LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $from .= ' LEFT JOIN {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         $groupby .= 'lr.resolution_name, ';
         
         // Otherwise, only join tables which are really necessary to speed up the db-query
@@ -1447,7 +1453,8 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             }
         }
 
-        // process user viewing rights
+        // process users viewing rights, if not anonymous
+        if (!$user->isAnon()) {
  $where[] = '
 (   -- Begin block where users viewing rights are checked.
     -- Case everyone can see all project tasks anyway and task not private
@@ -1491,7 +1498,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         $sql_params[] = $user->id;
         $sql_params[] = $user->id;
         $sql_params[] = $user->id;
-
+	}
         /// process search-conditions {{{
         $submits = array('type' => 'task_type', 'sev' => 'task_severity',
             'due' => 'closedby_version', 'reported' => 'product_version',
@@ -1672,8 +1679,8 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
         }
 
-        if ($user->isAnon()) {
-            $where[] = 'p.others_view = 1 AND t.is_closed = 0 ';
+	if ($user->isAnon()) {
+            $where[] = 't.mark_private = 0 AND p.others_view = 1 AND t.is_closed = 0 ';
         }
 
         $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
