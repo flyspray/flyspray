@@ -1679,8 +1679,8 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
         }
 
-        if ($user->isAnon()) {
-            $where[] = 'p.others_view = 1 AND t.is_closed = 0 ';
+	if ($user->isAnon()) {
+            $where[] = 't.mark_private = 0 AND p.others_view = 1 AND t.is_closed = 0 ';
         }
 
         $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
