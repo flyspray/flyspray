@@ -1286,7 +1286,7 @@ JOIN {projects} p ON t.project_id = p.project_id';
 	
 	// Not needed for anonymous users
         if (!$user->isAnon()) {
-$from = ' -- Global group always exists
+$from .= ' -- Global group always exists
 JOIN ({groups} gpg
     JOIN {users_in_groups} gpuig ON gpg.group_id = gpuig.group_id AND gpuig.user_id = ?		
 ) ON gpg.project_id = 0
@@ -1300,7 +1300,7 @@ LEFT JOIN ({groups} pg
 	
 	// Keep this always, could also used for showing assigned users for a task.
 	// Keeps the overall logic somewhat simpler.
-	$from = ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
+	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
         $cfrom = $from;
         
         // Seems resution name really is needed...
