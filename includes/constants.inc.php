@@ -74,6 +74,7 @@ define('GET_CONTENTS', true);
 define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
 
+# 201508: webdot currently used not anymore in flyspray. Graphs can be done in future with svg or canvas elements.
 define('FLYSPRAY_WEBDOT', 'http://webdot.flyspray.org/');
 define('FS_DOMAIN_HASH', md5($_SERVER['SERVER_NAME'] . BASEDIR));
 define('FS_CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . FS_DOMAIN_HASH);
@@ -82,6 +83,9 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 
 // developers or advanced users only
 //define('DEBUG_SQL',true);
+
+# 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php. 
 //define('JABBER_DEBUG', true);
-//define('JABBER_DEBUG_FILE''/path/to/my/debug/file');
+//define('JABBER_DEBUG_FILE', BASEDIR . '/logs/jabberlog.txt');
+
 //define('FS_MAIL_LOGFILE', BASEDIR . '/logs/maillog.txt');
