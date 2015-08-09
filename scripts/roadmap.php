@@ -12,12 +12,11 @@ if (!$proj->id) {
     Flyspray::show_error(25);
 }
 
-if (!$user->perms('view_roadmap')) {
+if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $proj->prefs['others_viewroadmap'] !=1)) {
 	Flyspray::show_error(28);
 }
 
-if($proj->prefs['use_effort_tracking'])
-{
+if($proj->prefs['use_effort_tracking']){
     require_once(BASEDIR . '/includes/class.effort.php');
 }
 
