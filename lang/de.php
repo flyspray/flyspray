@@ -146,6 +146,7 @@ $translation = array(
 'assignotherstoself'      => 'Jemand anderem übertragene Aufgaben selbst übernehmen',
 'viewreports'             => 'Berichte anzeigen',
 'othersview'              => 'Jeder darf die Aufgaben dieses Projektes anzeigen',
+'othersviewroadmap'       => 'Jeder darf die Planung dieses Projektes anzeigen',
 'usersandgroups'          => 'Benutzer & Gruppen',
 'globalgroup'             => 'Globale Gruppe',
 'globalgroups'            => 'Globale Gruppen',
