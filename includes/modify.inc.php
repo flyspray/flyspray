@@ -1013,11 +1013,11 @@ switch ($action = Req::val('action'))
 
         $db->Query('INSERT INTO  {projects}
                                  ( project_title, theme_style, intro_message,
-                                   others_view, anon_open, project_is_active,
+                                   others_view, others_viewroadmap, anon_open, project_is_active,
                                    visible_columns, visible_fields, lang_code, notify_email, notify_jabber, disp_intro)
-                         VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
+                         VALUES  (?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
         array(Post::val('project_title'), Post::val('theme_style'),
-              Post::val('intro_message'), Post::num('others_view', 0),
+              Post::val('intro_message'), Post::num('others_view', 0), Post::num('others_viewroadmap', 0),
               Post::num('anon_open', 0),  $viscols, $visfields,
               Post::val('lang_code', 'en'), '', '',
         Post::num('disp_intro')
@@ -1100,7 +1100,7 @@ switch ($action = Req::val('action'))
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
                 'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by', 'default_order_by_dir');
         $args = array_map('Post_to0', $cols);
-        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'anon_open', 'comment_closed', 'auto_assign'));
+        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
         $cols[] = 'notify_types';
         $args[] = implode(' ', (array) Post::val('notify_types'));
