@@ -135,6 +135,7 @@ $language = array(
 'assignotherstoself'      => 'Assign others\' tasks to self',
 'viewreports'             => 'View event log',
 'othersview'              => 'Allow anyone to view this project',
+'othersviewroadmap'       => 'Allow anyone to view this project\'s roadmap',
 'usersandgroups'          => 'Users and Groups',
 'globalgroup'             => 'Global Group',
 'globalgroups'            => 'Global Groups',
