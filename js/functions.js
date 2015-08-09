@@ -72,7 +72,8 @@ function setUpTasklistTable() {
     return;
   }
   var table = $('tasklist_table');
-  addEvent(table,'click',tasklistTableClick);
+  // deactivated 201508: when users click on cells with property, IMHO it should go to property or filter list by property, not open task details view.
+  //addEvent(table,'click',tasklistTableClick);
 }
 function tasklistTableClick(e) {
   var src = eventGetSrc(e);
