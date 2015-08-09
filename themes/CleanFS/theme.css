@@ -765,11 +765,21 @@ div.comment_container .attachments
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
 	width: 300px;
-	background-color: #fefefe;
+	
+	background-color: #ffc;
+	/*
 	background-image: url(img/gray/pin_24x24.png);
 	background-repeat: no-repeat;
 	background-position: 270px 5px;
+	*/
 	vertical-align: top;
+}
+.attachments::after {
+    color: #999;
+    content: "\f0c6"; /*paperclip*/
+    float: right;
+    font-family: FontAwesome;
+    font-size: large;
 }
 
 div.comment_container .links
@@ -785,12 +795,6 @@ div.comment_container .links
 	width: 300px;
 	background-color: #fefefe;
 	vertical-align: top;
-}
-
-div.comment_container .attachments img
-{
-	position: relative;
-	top: 4px;
 }
 
 div.comment_container .attachments img
