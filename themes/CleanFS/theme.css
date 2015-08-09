@@ -448,11 +448,17 @@ a { text-decoration: none;}
 #tasklist_table .ttcolumn input {margin: 0;}
 
 #tasklist_table .ttcolumn a {
+  background-image: url(img/black/loop_alt3_12x9.png);
+  background-repeat: no-repeat;
+  background-position: center;
   width: 30px;
   height: 30px;
   display: block;
 }
 a.toggle_selected {
+  background-image: url(img/black/loop_alt3_12x9.png);
+  background-repeat: no-repeat;
+  background-position: center;
   width: 30px;
   height: 30px;
   display: block;
