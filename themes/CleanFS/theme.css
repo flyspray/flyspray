@@ -235,10 +235,14 @@ div#mysearches table tr {border-bottom: dotted 1px gray;text-align: left;padding
 div#mysearches table tr.last {border: 0;}
 div#mysearches td {vertical-align: middle;}
 #pmcontrol div {
+  vertical-align:middle;
   display: -moz-inline-stack; /* optional */
   display: inline-block;
   zoom: 1; /* triggers hasLayout for IE */
   *display: inline; /* target IE7 only */
+}
+#pmcontrol input[type="text"]{
+	height:auto;
 }
 #showtask #taskid {width: 50px;}
 #projectselector { /*margin-top: 3px;*/ margin-right: 10px; }
@@ -246,7 +250,7 @@ div#mysearches td {vertical-align: middle;}
 #projectselector option[selected] { font-weight: bold;}
 #pm-menu{background-color:#222;	border-bottom: solid 4px #5f9729;padding: 0px 0px 0px 10px; /*text-align:center;*/ }
 #pm-menu-list {list-style: none;display: inline-block;margin:0;}
-#pmcontrol{display: inline-block;float: right;margin: 4px 20px 0px 0px;}
+#pmcontrol{display: inline-block;float: right;margin: 6px 20px 0px 0px;}
 #pm-menu-list li {display: inline-block;}
 #pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; margin-right: 2px;color: #f9f9f9;
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
