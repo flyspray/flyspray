@@ -288,7 +288,30 @@ class Project
                     $this->_list_sql('status'), array($this->id));
         }
     }
+	
+	function listTags($pm = false)
+        {
+                global $db;
+                if ($pm) {
+                        $result= $db->Query('SELECT tag `name`, COUNT(*) `count`
+                                FROM {tags} tg
+                                JOIN {tasks} t ON t.task_id=tg.task_id
+                                WHERE t.project_id=?
+                                GROUP BY tag
+                                ORDER BY tag', array($this->id));
+                } else {
+                        $result= $db->Query('SELECT tag `name`, COUNT(*) `count`
+                                FROM {tags}
+                                GROUP BY tag
+                                ORDER BY tag');
+                }
 
+                $tags=array();
+                while ($row = $db->FetchRow($result)) {
+                        $tags[]=$row;
+                }
+                return $tags;
+        }
     // }}}
 
     // This should really be moved to class Flyspray like some other ones too.
