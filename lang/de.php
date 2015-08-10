@@ -1023,6 +1023,9 @@ $translation = array(
 'myvotes'                 => 'Meine Stimmen',
 'tag'                     => 'Schildchen',
 'tags'                    => 'Schildchen',
+'tagsinfo'                => 'Trenne die Schildchen (Label/Aufkleber/Tags) durch Semikolon ; voneinander.
+Das Tagging in Flyspray ist derzeit sehr rudimentär. Sie sind in etwa vergleichbar mit Aufklebern an einer Fensterscheibe.
+Eine optische Gestaltung, Filterung oder Einbeziehung in die Suche ist derzeit nicht vorhanden. (kann aber noch werden :-))',
 'novalues'                => 'keine Einträge',
 );
 
