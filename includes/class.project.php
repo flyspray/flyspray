@@ -293,14 +293,14 @@ class Project
         {
                 global $db;
                 if ($pm) {
-                        $result= $db->Query('SELECT tag `name`, COUNT(*)
+                        $result= $db->Query('SELECT tag `name`, COUNT(*) `count`
                                 FROM {tags} tg
                                 JOIN {tasks} t ON t.task_id=tg.task_id
                                 WHERE t.project_id=?
                                 GROUP BY tag
                                 ORDER BY tag', array($this->id));
                 } else {
-                        $result= $db->Query('SELECT tag `name`, COUNT(*)
+                        $result= $db->Query('SELECT tag `name`, COUNT(*) `count`
                                 FROM {tags}
                                 GROUP BY tag
                                 ORDER BY tag');
