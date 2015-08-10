@@ -109,6 +109,14 @@
                     <?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?>
                     <label class="left" for="only_primary"><?php echo Filters::noXSS(L('onlyprimary')); ?></label>
 
+		<?php echo tpl_checkbox('only_blocker', Get::has('only_blocker'), 'only_blocker'); ?>
+		<label class="left" for="only_blocker" id="blockerlabel"><?php echo Filters::noXSS(L('onlyblocker')); ?></label>
+		<span id="blockerornoblocker"><?php echo Filters::noXSS(L('blockerornoblocker')); ?></span>
+		<style>
+		#blockerornoblocker {display:none;color:#c00;}
+		#only_primary:checked ~ #only_blocker:checked ~ #blockerornoblocker {display:inline;}
+		</style>
+		
                     <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
                     <label class="left" for="has_attachment"><?php echo Filters::noXSS(L('hasattachment')); ?></label>
 
