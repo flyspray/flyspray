@@ -864,6 +864,7 @@ $translation = array(
 'removevote'              => 'Abstimmung entfernen',
 'voteremoved'             => 'Ihre Abstimmung wurde entfernt',
 'voteremovefailed'        => 'Ihre Abstimmung konnte momentan nicht entfernt werden.',
+'novotes'                 => 'Du hast derzeit für keine Aufgabe abgestimmt.',
 'connectedtasks'          => 'Verbundene Aufgaben:',
 'taskdependencies'        => 'Abhängigkeiten',
 'viewgraph'               => 'Diagramm anzeigen',
