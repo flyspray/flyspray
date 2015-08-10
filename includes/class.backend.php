@@ -1426,6 +1426,10 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         if (array_get($args, 'only_primary')) {
             $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
         }
+        
+        if (array_get($args, 'only_blocker')) {
+            $where[] = 'EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.task_id = t.task_id)';
+        }
 
         if (array_get($args, 'hide_subtasks')) {
             $where[] = 't.supertask_id = 0';
