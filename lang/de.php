@@ -749,6 +749,7 @@ $translation = array(
 'notify_registration'     => 'Administrator über neue Registrierungen informieren',
 'textversion'             => 'Textversion',
 'onlyprimary'             => 'Aufgaben, die keine anderen Aufgaben blockieren',
+'onlyblocker'             => 'Aufgaben, die anderen Aufgaben blockieren',
 'switch'                  => 'auswählen',
 'max'                     => 'max.',
 'dates'                   => 'Datum',
