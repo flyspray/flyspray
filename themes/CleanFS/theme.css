@@ -569,7 +569,7 @@ form #taskdetails #taskdetailsfull {
   border-radius: 3px;
 }
 #taskdetails #navigation {float: right;}
-#taskdetails h2 {color: #555;}
+#taskdetails h2 {color: #555;display:inline-block;}
 .tags span {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
@@ -1456,4 +1456,10 @@ ul.form_elements span.note {margin-left:0;}
 #submenu {padding-left:0;margin:0;}
 #submenu ~ div {clear:both;}
 #catTable input[type="text"], #catTable input[type="password"] {width:120px;}
+#taskdetails {margin:0;padding:0;margin-top:40px;}
+#taskdetailsfull {margin:0;padding:2px;}
+#comments, #related, #notify, #remind, #effort, #history{padding:0;}
+div.comment_container {margin:0;}
+div.comment_container .commenttext{padding:2px;}
+div.comment_container .comment {margin:0;width:auto;}
 }
