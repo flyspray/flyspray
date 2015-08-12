@@ -5,7 +5,19 @@
    to see what they have access to.
 */
 define('IN_FS', true);
-
+//ADD DC
+//récupération de les variable POST et GET
+/*if (count($_REQUEST) > 0)
+{
+	// Transformer le tableau associatif query (issu du GET ou POST) en variables PHP
+	foreach($_REQUEST as $cle=>$valeur)
+	{
+		//@eval("\$".$cle." = '".$valeur."';");
+		//  @eval("\$cle = \"$valeur\";");
+		echo $cle.':'.$valeur.':<br>';
+	}
+}
+*/
 require_once(dirname(__FILE__).'/header.php');
 
 // Get available do-modes
@@ -20,9 +32,6 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 } elseif (Req::has('show') || (Req::has('switch') && $do == 'details')
       || ($do == 'newtask' && Req::val('project') == '0'))  {
 	$do = 'index';
-} elseif (Req::has('code')) {
-	$_SESSION['oauth_provider'] = 'microsoft';
-	$do = 'oauth';
 }
 
 // supertask_id for add new sub-task
@@ -79,13 +88,18 @@ if (Get::val('getfile')) {
     exit;
 }
 
+
 // Load translations
 load_translations();
 
 /*******************************************************************************/
 /* Here begins the deep flyspray : html rendering                              */
 /*******************************************************************************/
-# no cache headers are now in header.php!
+
+// make browsers back button work
+header('Expires: -1');
+header('Pragma: no-cache');
+header('Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0');
 
 // see http://www.w3.org/TR/html401/present/styles.html#h-14.2.1
 header('Content-Style-Type: text/css');
@@ -107,6 +121,8 @@ if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(
     exit;
 }
 
+
+
 if ($show_task = Get::val('show_task')) {
     // If someone used the 'show task' form, redirect them
     if (is_numeric($show_task)) {
@@ -120,27 +136,10 @@ if (Flyspray::requestDuplicated()) {
     // Check that this page isn't being submitted twice
     Flyspray::show_error(3);
 }
-
-# handle all forms request that modify data
-
-if (Req::has('action')) {
-    # enforcing if the form sent the correct anti csrf token
-    # only allow token by post
-    if( !Post::has('csrftoken') ){
-        die('missingtoken');
-    }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
-        require_once(BASEDIR . '/includes/modify.inc.php');
-    }else{
-        die('wrongtoken');
-    }
-}
-
-# start collecting infos for the answer page
-
 if ($proj->id && $user->perms('manage_project')) {
     // Find out if there are any PM requests wanting attention
     $sql = $db->Query(
-            'SELECT COUNT(*) FROM {admin_requests} WHERE project_id = ? AND resolved_by = 0',
+            "SELECT COUNT(*) FROM {admin_requests} WHERE project_id = ? AND resolved_by = '0'",
             array($proj->id));
     list($count) = $db->fetchRow($sql);
 
@@ -148,11 +147,10 @@ if ($proj->id && $user->perms('manage_project')) {
 }
 if ($user->perms('is_admin')) {
     $sql = $db->Query(
-    	    'SELECT COUNT(*) FROM {admin_requests} WHERE request_type = 3 AND project_id = 0 AND resolved_by = 0');
+    	    "SELECT COUNT(*) FROM {admin_requests} WHERE request_type = '3' AND resolved_by = '0'");
     list($count) = $db->fetchRow($sql);
     $page->assign('admin_pendingreq_num', $count);
 }
-
 $sql = $db->Query(
         'SELECT  project_id, project_title, project_is_active, others_view,
                  upper(project_title) AS sort_names
@@ -160,7 +158,7 @@ $sql = $db->Query(
        ORDER BY  sort_names');
 
 $fs->projects = array_filter($db->FetchAllArray($sql), array($user, 'can_view_project'));
-
+//exit;
 // Get e-mail addresses of the admins
 if ($user->isAnon() && !$fs->prefs['user_notify']) {
     $sql = $db->Query('SELECT email_address
@@ -178,11 +176,13 @@ $page->assign('supertask_id', $supertask_id);
 
 $page->pushTpl('header.tpl');
 
+// DB modifications?
+if (Req::has('action')) {
+    require_once(BASEDIR . '/includes/modify.inc.php');
+}
+
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
-} else{
-    # not nicest solution, NO_DO currently only used on register actions 
-    $page->pushTpl('register.ok.tpl');
 }
 $page->pushTpl('footer.tpl');
 $page->setTheme($proj->prefs['theme_style']);

@@ -1,7 +1,7 @@
 <?php
 class dokuwiki_TextFormatter
 {    
-    static function render($text, $type = null, $id = null, $instructions = null)
+    function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf, $baseurl, $db;
         
@@ -77,7 +77,7 @@ class dokuwiki_TextFormatter
         
         return $return;
     }
-    static function textarea( $name, $rows, $cols, $attrs = null, $content = null) {
+    function textarea( $name, $rows, $cols, $attrs = null, $content = null) {
     	
     	$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
         $rows = intval($rows);
@@ -103,7 +103,7 @@ class dokuwiki_TextFormatter
 	 *
 	 * @param string $textareaId
 	 */
-	static function getDokuWikiToolbar( $textareaId ) {
+	function getDokuWikiToolbar( $textareaId ) {
 		global $conf, $baseurl;
 	
 		return '<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;">

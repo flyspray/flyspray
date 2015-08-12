@@ -1,5 +1,4 @@
-<?php $activeclass = ' class="active" '; ?>
-
+<?php $activeclass        = ' class="active" '; ?>
 <div id="toolboxmenu">
   <a id="projprefslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'prefs') echo $activeclass; ?>
@@ -16,9 +15,14 @@
   <a id="projreslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'resolution') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('pm', 'resolution',        $proj->id)); ?>"><?php echo Filters::noXSS(L('resolutions')); ?></a>
-  <a id="projcatlink"
-     <?php if(isset($_GET['area']) and $_GET['area'] == 'cat') echo $activeclass; ?>
-     href="<?php echo Filters::noXSS(CreateURL('pm', 'cat',        $proj->id)); ?>"><?php echo Filters::noXSS(L('categories')); ?></a>
+     
+  <a id="globcustomsfieldslink"
+    <?php if(isset($_GET['area']) and $_GET['area'] == 'customsfields') echo $activeclass; ?>
+     href="<?php echo Filters::noXSS(CreateURL('pm', 'customsfields',$proj->id)); ?>"><?php echo Filters::noXSS(L('customsfields') ); ?></a>      
+  <a id="globlistslink"
+    <?php if(isset($_GET['area']) and $_GET['area'] == 'lists') echo $activeclass; ?>
+     href="<?php echo Filters::noXSS(CreateURL('pm', 'lists',$proj->id)); ?>"><?php echo Filters::noXSS(L('addlists') ); ?></a> 
+     
   <a id="projoslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'os') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('pm', 'os',         $proj->id)); ?>"><?php echo Filters::noXSS(L('operatingsystems')); ?></a>

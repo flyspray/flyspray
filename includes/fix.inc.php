@@ -22,8 +22,8 @@ ini_set('default_charset','utf-8');
 ini_set('arg_separator.output','&amp;');
 
 // no transparent session id improperly configured servers
-if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/setup/') === false) // Skip installer, as it starts the session before calling fix.inc.php causing a warning as this can't be used when a session is already active
-	ini_set('session.use_trans_sid', 0);
+
+ini_set('session.use_trans_sid', 0); // might cause error in setup
 
 //see http://php.net/manual/en/ref.session.php#ini.session.use-only-cookies
 ini_set('session.use_only_cookies',1);
@@ -161,10 +161,7 @@ if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
 // http://ilia.ws/archives/107-Another-unserialize-abuse.html
 
 function flyspray_exception_handler($exception) {
-    // Sometimes it helps removing temporary comments from the following three lines.
-    // echo "<pre>";
-    // var_dump(debug_backtrace());
-    // echo "</pre>";
+
     die("Completely unexpected exception: " .
         htmlspecialchars($exception->getMessage(),ENT_QUOTES, 'utf-8')  . "<br/>" .
       "This should <strong> never </strong> happend, please inform Flyspray Developers");

@@ -5,7 +5,7 @@ define('IN_FS', true);
 header('Content-type: text/html; charset=utf-8');
 
 require_once('../../header.php');
-global $proj, $fs;
+global $fs;
 
 $baseurl = dirname(dirname($baseurl)) .'/' ;
 
@@ -24,29 +24,14 @@ if ($user->isAnon()) {
 
 $task = Flyspray::GetTaskDetails(Post::val('task_id'));
 if (!$user->can_edit_task($task)){
-    Flyspray::show_error(L('nopermission'));
-    die();
+	Flyspray::show_error(L('nopermission'));
+	die();
 }
 if(Post::val('name') == "due_date"){
-    $value = Flyspray::strtotime(Post::val('value'));
-    $value = intval($value);
+	$value = Flyspray::strtotime(Post::val('value'));
+	$value = intval($value);
 }
-elseif(Post::val('name') == "estimated_effort"){
-    $value = effort::EditStringToSeconds(Post::val('value'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-    $value = intval($value);
-}
-else {
-    $value = Post::val('value');
-}
-
-$oldvalue = $task[Post::val('name')];
-
+else
+	$value = Post::val('value');
 $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_time = ? WHERE task_id = ?", array($value, time(), Post::val('task_id')));
-
-// Log the changed field in task history
-Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
-
-$notify = new Notifications;
-$notify->Create(NOTIFY_TASK_CHANGED, $task['task_id']);
-
 ?>

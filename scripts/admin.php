@@ -18,10 +18,9 @@ if (!$user->perms('is_admin')) {
 }
 
 $proj = new Project(0);
-#I $proj->setCookie();
+$proj->setCookie();
 
 $page->pushTpl('admin.menu.tpl');
-
 switch ($area = Req::val('area', 'prefs')) {
     case 'users':
         $id = Flyspray::UserNameToId(Req::val('user_name'));
@@ -64,14 +63,11 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'status':
     case 'version':
     case 'newgroup':
+    //ajout DC 19/02/2015 Ajout Liste
+    case 'lists':
         $page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
         $page->pushTpl('admin.'.$area.'.tpl');
         break;
-
-    case 'translations':
-        require_once(BASEDIR.'/scripts/langdiff.php');
-        break;
-
 
     default:
         Flyspray::show_error(6);

@@ -54,22 +54,21 @@ function get_events($task_id, $where = '')
                       AND (h.field_changed='product_version' OR h.field_changed='closedby_version')
 
                 WHERE h.task_id = ? $where
-             ORDER BY event_date ASC, history_id ASC, event_type ASC", array($task_id));
+             ORDER BY event_date ASC, event_type ASC", array($task_id));
 }
 
 /**
- * XXX: A mess,remove my in 1.0. No time for that, sorry.
+ * XXX: A mess,remove my in 1.0
  */
 function event_description($history) {
     $return = '';
-    global $fs, $baseurl, $details, $proj;
+    global $fs, $baseurl, $details;
 
     $translate = array('item_summary' => 'summary', 'project_id' => 'attachedtoproject',
                        'task_type' => 'tasktype', 'product_category' => 'category', 'item_status' => 'status',
                        'task_priority' => 'priority', 'operating_system' => 'operatingsystem', 'task_severity' => 'severity',
-                       'product_version' => 'reportedversion', 'mark_private' => 'visibility',
-                       'estimated_effort' => 'estimatedeffort');
-    // if somehing gets double escaped, add it here.
+                       'product_version' => 'reportedversion', 'mark_private' => 'visibility');
+    // if soemthing gets double escaped, add it here.
     $noescape = array('new_value', 'old_value');
 
     foreach($history as $key=> $value) {
@@ -150,10 +149,6 @@ function event_description($history) {
                     }
                     $old_value = '';
                     $new_value = '';
-                    break;
-                case 'estimated_effort':
-                    $old_value = effort::SecondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-                    $new_value = effort::SecondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
                     break;
             }
             $return .= eL('fieldchanged').": {$field}";
@@ -236,14 +231,6 @@ function event_description($history) {
                  $return .= implode(', ', $users);
             }
             break;
-    // Mentioned in docs, not used anywhere. Will implement if suitable
-    // translations already exist, otherwise leave to 1.1. (Found translations)
-    case '15': // This task was added to another task's related list
-            $return .= eL('addedasrelated') . ': ' . tpl_tasklink($new_value);
-            break;
-    case '16': // This task was removed from another task's related list
-            $return .= eL('deletedasrelated') . ': ' . tpl_tasklink($new_value);
-            break;
     case '17': //Reminder added
             $return .= eL('reminderadded') . ': ' . tpl_userlink($new_value);
             break;
@@ -292,9 +279,6 @@ function event_description($history) {
         break;
     case '34': // supertask added
         $return .= eL('supertaskadded') . ' ' . tpl_tasklink($new_value);
-        break;
-    case '35': // supertask removed
-        $return .= eL('supertaskremoved') . ' ' . tpl_tasklink($new_value);
         break;
     }
 

@@ -2,11 +2,11 @@
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded
-//
+// 
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-//
+// 
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
@@ -294,7 +294,7 @@ $translation = array(
 'makepublic'              => 'сделать общедоступной',
 'taskmadeprivate'         => 'Задача помечена как частная',
 'taskmadepublic'          => 'Задача помечена как общедоступная',
-'confirmdeletecomment'    => 'Удалить этот комментарий? %s',
+'confirmdeletecomment'    => 'Удалить этот комментарий? Все вложения будут также удалены!',
 'confirmdeleteattach'     => 'Удалить это вложение?',
 'selectedhistory'         => '-Отображаются свойства выбранных событий (?)',
 'showallhistory'          => 'Показать вкладку с полной историей',

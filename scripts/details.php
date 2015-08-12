@@ -72,12 +72,12 @@ else {
     }
 
     // Sub-Tasks
-    $subtasks = $db->Query('SELECT  t.*, p.project_title 
+    $subtasks = $db->Query('SELECT  t.task_id, p.project_title 
                                  FROM  {tasks} t
 			    LEFT JOIN  {projects} p ON t.project_id = p.project_id
-                                WHERE  t.supertask_id = ?', 
+                                WHERE  t.supertask_id = ?
+                                ORDER BY t.list_order', 
                                 array($task_id));
-    $subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
     
     // Parent categories
     $parent = $db->Query('SELECT  *
@@ -94,17 +94,14 @@ else {
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
 			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.task_id = ?', array($task_id));
-    $check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
     // Check for tasks that this task blocks
-    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
+    $check_blocks = $db->Query('SELECT  t.*, s.status_name, r.resolution_name
                                   FROM  {dependencies} d
                              LEFT JOIN  {tasks} t on d.task_id = t.task_id
                              LEFT JOIN  {list_status} s ON t.item_status = s.status_id
                              LEFT JOIN  {list_resolution} r ON t.resolution_reason = r.resolution_id
-			     LEFT JOIN  {projects} p ON t.project_id = p.project_id
                                  WHERE  d.dep_task_id = ?', array($task_id));
-    $check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
 
     // Check for pending PM requests
     $get_pending  = $db->Query("SELECT  *
@@ -162,11 +159,11 @@ else {
     $page->assign('prev_id',   $prev_id);
     $page->assign('next_id',   $next_id);
     $page->assign('task_text', $task_text);
-    $page->assign('subtasks',  $subtasks_cleaned);
-    $page->assign('deps',      $check_deps_cleaned);
+    $page->assign('subtasks', $db->fetchAllArray($subtasks));
+    $page->assign('deps',      $db->fetchAllArray($check_deps));
     $page->assign('parent',    $db->fetchAllArray($parent));
-    $page->assign('blocks',    $check_blocks_cleaned);
-    $page->assign('votes',     $db->fetchAllArray($get_votes));
+    $page->assign('blocks',    $db->fetchAllArray($check_blocks));
+    $page->assign('votes',    $db->fetchAllArray($get_votes));
     $page->assign('penreqs',   $db->fetchAllArray($get_pending));
     $page->assign('d_open',    $db->fetchOne($open_deps));
     $page->assign('watched',   $db->fetchOne($watching));
@@ -224,9 +221,7 @@ else {
                         WHERE  t.task_id is NOT NULL AND is_duplicate = 0 AND ( t.mark_private = 0 OR ? = 1 )
                      ORDER BY  t.task_id ASC',
             array($task_id, $task_id, $user->perms('manage_project')));
-    $related_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
-
-    $page->assign('related', $related_cleaned);
+    $page->assign('related', $db->fetchAllArray($sql));
 
     $sql = $db->Query('SELECT  t.*, r.*, s.status_name, res.resolution_name
                          FROM  {related} r
@@ -236,8 +231,7 @@ else {
                         WHERE  is_duplicate = 1 AND r.related_task = ?
                      ORDER BY  t.task_id ASC',
                       array($task_id));
-    $duplicates_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
-    $page->assign('duplicates', $duplicates_cleaned);
+    $page->assign('duplicates', $db->fetchAllArray($sql));
 
     $sql = $db->Query('SELECT  *
                          FROM  {notifications} n
@@ -266,12 +260,8 @@ else {
         $page->pushTpl('details.tabs.remind.tpl');
     }
 
-	if ($proj->prefs['use_effort_tracking']) {
-		$page->pushTpl('details.tabs.efforttracking.tpl');
-	}
-	
     $page->pushTpl('details.tabs.history.tpl');
-    
-	
+
+    $page->pushTpl('details.tabs.efforttracking.tpl');
 }
 ?>

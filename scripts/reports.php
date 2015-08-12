@@ -36,30 +36,13 @@ $events = array(1 => L('opened'),
                 9 => L('notificationadded'),
                 10 => L('notificationdeleted'),
                 17 => L('reminderadded'),
-                18 => L('reminderdeleted'),
-                15 => L('addedasrelated'),
-                16 => L('deletedasrelated'),
-                19 => L('ownershiptaken'),
-                20 => L('closerequestmade'),
-                21 => L('reopenrequestmade'),
-                22 => L('depadded'),
-                23 => L('depaddedother'),
-                24 => L('depremoved'),
-                25 => L('depremovedother'),
-                28 => L('pmreqdenied'),
-                32 => L('subtaskadded'),
-                33 => L('subtaskremoved'),
-                34 => L('supertaskadded'),
-                35 => L('supertaskremoved'),
-    );
+                18 => L('reminderdeleted'));
 
-// Should events 19, 20, 21, 29 be here instead? 
 $user_events = array(30 => L('created'),
                      31 => L('deleted'));
 
 $page->assign('events', $events);
 $page->assign('user_events', $user_events);
-$page->assign('theuser', $user);
 
 $sort = strtoupper(Req::enum('sort', array('desc', 'asc')));
 
@@ -85,7 +68,7 @@ foreach (Req::val('events', array()) as $eventtype) {
 $where = '(' . implode(' OR ', $where) . ')';
 
 if ($proj->id) {
-    $where = $where . 'AND (t.project_id = ?  OR h.event_type IN(30, 31)) ';
+    $where = $where . 'AND (t.project_id = ?  OR h.event_type > 29) ';
     $params[] = $proj->id;
 }
 

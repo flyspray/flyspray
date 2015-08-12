@@ -32,14 +32,16 @@
       <td>
         <?php if ($req['request_type'] == 1) : ?>
         <a class="button" href="#" onclick="showhidestuff('closeform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('accept')); ?></a>
-    <div id="closeform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
-        <?php echo tpl_form(Filters::noXSS(CreateURL('pm', 'pendingreq', $proj->id))); ?>
+    <div id="closeform<?php echo Filters::noXSS($req['request_id']); ?>"
+         class="denyform">
+        <form action="" method="post" id="formclosetask">
             <div>
                 <input type="hidden" name="action" value="details.close"/>
                 <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>"/>
                 <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
                     <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
                     <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
+
                 </select>
                 <button type="submit"><?php echo Filters::noXSS(L('closetask')); ?></button>
                 <br/>
@@ -51,16 +53,11 @@
         </form>
     </div>
         <?php elseif ($req['request_type'] == 2) : ?>
-        <?php echo tpl_form(Filters::noXSS(CreateUrl('pm', 'pendingreq', $proj->id)), null, null, null, 'style="display:inline"'); ?>
-        <input type="hidden" name="action" value="reopen" />
-        <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>">
-        <input type="submit" class="button" value="<?php echo Filters::noXSS(L('accept')); ?>">
-        </form>
-        
+        <a class="button" href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=reopen&task_id=<?php echo Filters::noXSS($req['task_id']); ?>"><?php echo Filters::noXSS(L('accept')); ?></a>
         <?php endif; ?>
         <a href="#" class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('deny')); ?></a>
         <div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
-          <?php echo tpl_form(Filters::noXSS(CreateUrl('pm', 'pendingreq', $proj->id))); ?>
+          <form action="<?php echo Filters::noXSS(CreateUrl('pm', 'pendingreq', $proj->id)); ?>" method="post">
             <div>
               <input type="hidden" name="action" value="denypmreq" />
               <input type="hidden" name="req_id" value="<?php echo Filters::noXSS($req['request_id']); ?>" />

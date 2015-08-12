@@ -16,7 +16,7 @@
     <?php endforeach; ?>
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
           href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
@@ -42,7 +42,7 @@
     <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
     <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
     <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
-    <?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
+    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
     <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
     <!--[if IE]>
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>ie.css" rel="stylesheet" type="text/css" />
@@ -51,18 +51,20 @@
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
   </head>
-  <body onload="<?php
+  <body onload="perms = new Perms('permissions');<?php
         if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])):
         ?>window.setTimeout('Effect.Fade(\'mixedbar\', {duration:.3})', 10000);<?php
         elseif (isset($_SESSION['SUCCESS'])):
         ?>window.setTimeout('Effect.Fade(\'successbar\', {duration:.3})', 8000);<?php
         elseif (isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>" class="<?php echo isset($_GET['do']) ? Filters::noXSS($_GET['do']) : 'index'; ?>">
+        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>"
+				<?php if(isset($_GET['do'])) echo 'class="'.$_GET['do'].'"'; else echo 'class="index"'; ?>
+				>
 
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
-	<?php if ($fs->prefs['logo']) { ?>
-		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" />
+	<?php if (isset($fs->prefs['logo']) && $fs->prefs['logo'] != '') { ?>
+		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>">
 	<?php } ?>
 	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
 
@@ -81,23 +83,18 @@
     <div id="content">
       <div class="clear"></div>
 
-      <?php $show_message = explode(' ', $fs->prefs['pages_welcome_msg']);
-        $actions = explode('.', Req::val('action'));
-        if ($fs->prefs['intro_message'] &&
-           ($proj->id == 0 || $proj->prefs['disp_intro']) &&
-           (in_array($do, $show_message)) ):?>
-          <div id="intromessage">
-            <?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?>
-          </div>
-      <?php endif; ?>
-
-	  <?php if ($proj->id > 0): ?>
-	    <?php $show_message = explode(' ', $proj->prefs['pages_intro_msg']);
+      <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
             $actions = explode('.', Req::val('action'));
-            if ($proj->prefs['intro_message'] && (in_array($do, $show_message))): ?>
-	          <div id="intromessage">
-	            <?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id, ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?>
-	          </div>
-        <?php endif; ?>
+            if ($fs->prefs['intro_message'] &&
+                    (  $proj->id== 0 || $proj->prefs['disp_intro'] ) &&
+                    (in_array($do, $show_message) || in_array(reset($actions), $show_message)) ): ?>
+      <div id="intromessage"><?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?></div>
       <?php endif; ?>
 
+      <?php $show_message = array(/*'details',*/ 'index', /*'newtask',*/ 'reports', 'depends');
+            $actions = explode('.', Req::val('action'));
+            if ($proj->prefs['intro_message'] && (in_array($do, $show_message) || in_array(reset($actions), $show_message))): ?>
+	<div id="intromessage"><?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id,
+                               ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?></div>
+      <?php endif; ?>
+    

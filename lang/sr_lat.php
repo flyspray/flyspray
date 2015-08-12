@@ -1,6 +1,6 @@
 <?php
 
-$translation = array(
+$language = array(
 'edituser'                => 'Uredi korisnika',
 'username'                => 'Korisničko ime',
 'realname'                => 'Stvarno ime',
@@ -284,7 +284,7 @@ $translation = array(
 'makepublic'              => 'napravi ga javnim',
 'taskmadeprivate'         => 'Zadatak je sada privatan',
 'taskmadepublic'          => 'Privatnost uklonjena! Zadatak je sada javan',
-'confirmdeletecomment'    => 'Sigurni ste da želite obrisati ovaj komntar? %s',
+'confirmdeletecomment'    => 'Sigurni ste da želite obrisati ovaj komntar?  Svi priključci u vezi s njim će se obrisati!',
 'confirmdeleteattach'     => 'Sigurni ste da želite obrisati ovaj priključak?',
 'selectedhistory'         => 'Prikaz izabranih detalja istorije',
 'showallhistory'          => 'Prikaži jezičak pune istorije ponovo',
@@ -693,7 +693,7 @@ Pozdrav od',
 'userdeleted'             => 'Korisnik obrisan',
 'autoassign'              => 'Automatska dodela zadatka vlasniku kategorije',
 'ssl'                     => 'SSL',
-'updatewrong'             => 'Provera ažuriranja je uključena i u tom postupku se pojavila greška
+'updatewrong'             => 'Provera ažuriranja je uključena i u tom postupku se pojavila greška 
                              prilikom kontaktiranja servera. Ili je problem sa spoljašnjim pristupom ovog hosta,
                              ili je problem sa mrežom.
                              Molimo posetite FlySpray sajt, radi dobavljanja najnovije verzije!',

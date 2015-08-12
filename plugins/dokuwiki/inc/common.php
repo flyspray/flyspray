@@ -641,7 +641,7 @@ function pageTemplate($data){
  * @author Andreas Gohr <andi@splitbrain.org>
  */
 function rawWikiSlices($range,$id,$rev=''){
-  list($from,$to) = explode('-',$range,2);
+  list($from,$to) = split('-',$range,2);
   $text = io_readWikiPage(wikiFN($id, $rev), $id, $rev);
   if(!$from) $from = 0;
   if(!$to)   $to   = strlen($text)+1;
@@ -842,8 +842,8 @@ function notify($id,$who,$rev='',$summary='',$minor=false,$replace=array()){
     $subject = $lang['mail_changed'].' '.$id;
     $text = str_replace('@OLDPAGE@',wl($id,"rev=$rev",true),$text);
     require_once(DOKU_INC.'inc/DifferenceEngine.php');
-    $df  = new Diff(preg_split('/\n/',rawWiki($id,$rev)),
-                    preg_split('/\n/',rawWiki($id)));
+    $df  = new Diff(split("\n",rawWiki($id,$rev)),
+                    split("\n",rawWiki($id)));
     $dformat = new UnifiedDiffFormatter();
     $diff    = $dformat->format($df);
   }else{

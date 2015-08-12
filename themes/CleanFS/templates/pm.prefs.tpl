@@ -1,7 +1,7 @@
 <div id="toolbox">
   <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('preferences')); ?></h3>
 
-  <?php echo tpl_form(CreateUrl('pm', 'prefs', $proj->id)); ?>
+  <form action="<?php echo Filters::noXSS(CreateUrl('pm', 'prefs', $proj->id)); ?>" method="post">
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
@@ -30,24 +30,6 @@
             <?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
 
           </select>
-        </li>
-
-        <li>
-          <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
-          <?php
-            $pages = array(
-                'index' => L('tasklist'),
-                'toplevel' => L('toplevel'),
-                'newmultitasks' => L('addmultipletasks'),
-                'details' => L('details'),
-                'roadmap' => L('roadmap'),
-                'newtask' => L('newtask'),
-                'reports' => L('reports'),
-                'depends' => L('dependencygraph'),
-                'pm' => L('manageproject'));
-            $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
-            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
-          ?>
         </li>
 
         <li>
@@ -87,7 +69,7 @@
           <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
 
         </li>
-
+	
         <li>
           <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
           <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
@@ -134,6 +116,7 @@
           <label for="themestyle"><?php echo Filters::noXSS(L('themestyle')); ?></label>
           <select id="themestyle" name="theme_style">
             <?php echo tpl_options(Flyspray::listThemes(), Post::val('theme_style', $proj->prefs['theme_style']), true); ?>
+
           </select>
         </li>
 
@@ -141,83 +124,30 @@
           <label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
           <select id="default_entry" name="default_entry">
             <?php echo tpl_options(array('index' => L('tasklist'), 'toplevel' => L('toplevel'), 'roadmap' => L('roadmap')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
+
           </select>
         </li>
-
-        <?php // Set the selectable column names
-          // Do NOT use real database column name here and in the next list,
-          // but a term from translation table entries instead, because it's
-          // also used elsewhere to draw a localized version of the name.
-          // Look also at the end of function
-          // tpl_draw_cell in scripts/index.php for further explanation.
-          $columnnames = array(
-            'id' => L('id'),
-            'parent' => L('parent'),
-            'tasktype' => L('tasktype'),
-            'category' => L('category'),
-            'severity' => L('severity'),
-            'priority' => L('priority'),
-            'summary' => L('summary'),
-            'dateopened' => L('dateopened'),
-            'status' => L('status'),
-            'openedby' => L('openedby'),
-            'private' => L('private'),
-            'assignedto' => L('assignedto'),
-            'lastedit' => L('lastedit'),
-            'reportedin' => L('reportedin'),
-            'dueversion' => L('dueversion'),
-            'duedate' => L('duedate'),
-            'comments' => L('comments'),
-            'attachments' => L('attachments'),
-            'progress' => L('progress'),
-            'dateclosed' => L('dateclosed'),
-            'os' => L('os'),
-            'votes' => L('votes'),
-            'estimatedeffort' => L('estimatedeffort'),
-            'effort' => L('effort'));
-          $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
-         ?>
-
-        <li>
-          <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
-          <select id="default_order_by" name="default_order_by">
-            <?php echo tpl_options($columnnames, $proj->prefs['default_order_by'], false); ?>
-          </select>
-        </li>
-
-        <li>
-          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
-          <select id="default_order_by_dir" name="default_order_by_dir">
-            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['default_order_by_dir'], false); ?>
-          </select>
-        </li>
-
+  
         <li>
           <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
-          <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
-        </li>
+          <?php // Set the selectable column names
+          $columnnames = array('id', 'parent', 'tasktype', 'category', 'severity',
+          'priority', 'summary', 'dateopened', 'status', 'openedby', 'private',
+          'assignedto', 'lastedit', 'reportedin', 'dueversion', 'duedate',
+          'comments', 'attachments', 'progress', 'dateclosed', 'os', 'votes');
+          $selectedcolumns = explode(' ', Post::val('visible_columns', $proj->prefs['visible_columns']));
+          ?>
+          <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, true); ?>
 
+        </li>
         <li>
           <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
           <?php // Set the selectable field names
-          $fieldnames = array(
-            'parent' => L('parent'),
-            'tasktype' => L('tasktype'),
-            'category' => L('category'),
-            'severity' => L('severity'),
-            'priority' => L('priority'),
-            'status' => L('status'),
-            'private' => L('private'),
-            'assignedto' => L('assignedto'),
-            'reportedin' => L('reportedin'),
-            'dueversion' => L('dueversion'),
-            'duedate' => L('duedate'),
-            'progress' => L('progress'),
-            'os' => L('os'),
-            'votes' => L('votes'));
+          $fieldnames = array('parent', 'tasktype', 'category', 'severity', 'priority', 'status', 'private',
+          'assignedto', 'reportedin', 'dueversion', 'duedate', 'progress', 'os', 'votes');
           $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
           ?>
-          <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, false); ?>
+          <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, true); ?>
 
         </li>
       </ul>
@@ -236,12 +166,10 @@
           <input id="emailaddress" name="notify_email" class="text" type="text" value="<?php echo Filters::noXSS(Post::val('notify_email', $proj->prefs['notify_email'])); ?>" />
         </li>
 
-        <?php if (!empty($fs->prefs['jabber_server'])): ?>
         <li>
           <label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
           <input id="jabberid" class="text" name="notify_jabber" type="text" value="<?php echo Filters::noXSS(Post::val('notify_jabber', $proj->prefs['notify_jabber'])); ?>" />
         </li>
-        <?php endif ?>
 
         <li>
           <label for="notify_reply"><?php echo Filters::noXSS(L('replyto')); ?></label>
@@ -296,57 +224,6 @@
               <?php echo tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort'); ?>
 
           </li>
-          <li>
-              <label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
-              <input id="hours_per_manday" class="text" name="hours_per_manday" type="text"
-                     value="<?php
-                     $seconds = Post::val('hours_per_manday', $proj->prefs['hours_per_manday']);
-                     // Post::val is in HH:mm format, $proj->prefs in seconds.
-                     if (!preg_match('/^\d+$/', $seconds)) {
-                        $seconds = effort::EditStringToSeconds($seconds, $proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_COLON_MINUTES);
-                     }
-
-                    echo Filters::noXSS(effort::SecondsToEditString($seconds,$proj->prefs['hours_per_manday'], effort::FORMAT_HOURS_COLON_MINUTES));
-                    ?>" />
-          </li>
-        <li>
-          <label for="estimated_effort_format"><?php echo Filters::noXSS(L('estimatedeffortformat')); ?></label>
-          <select id="estimated_effort_format" name="estimated_effort_format">
-            <?php echo tpl_options(array(
-            effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
-            effort::FORMAT_HOURS_SPACE_MINUTES => L('hourplural') . ' ' . L('minuteplural'),
-            effort::FORMAT_HOURS_PLAIN => L('hourplural'),
-            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_MINUTES => L('minuteplural'),
-            effort::FORMAT_DAYS_PLAIN => L('mandays'),
-            effort::FORMAT_DAYS_ONE_DECIMAL => L('mandays') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('mandays') . ' ' . L('hourplural'),
-            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('mandays') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
-            effort::FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES => L('mandays') . ' ' . L('hourplural') . " " . L('minuteplural'),
-            ),
-            Post::val('estimated_effort_format', $proj->prefs['estimated_effort_format'])); ?>
-          </select>
-        </li>
-        <li>
-          <label for="current_effort_done_format"><?php echo Filters::noXSS(L('currenteffortdoneformat')); ?></label>
-          <select id="current_effort_done_format" name="current_effort_done_format">
-            <?php echo tpl_options(array(
-            effort::FORMAT_HOURS_COLON_MINUTES => L('hourplural') . ':' . L('minuteplural'),
-            effort::FORMAT_HOURS_SPACE_MINUTES => L('hourplural') . ' ' . L('minuteplural'),
-            effort::FORMAT_HOURS_PLAIN => L('hourplural'),
-            effort::FORMAT_HOURS_ONE_DECIMAL => L('hourplural') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_MINUTES => L('minuteplural'),
-            effort::FORMAT_DAYS_PLAIN => L('mandays'),
-            effort::FORMAT_DAYS_ONE_DECIMAL => L('mandays') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_DAYS_PLAIN_HOURS_PLAIN => L('mandays') . ' ' . L('hourplural'),
-            effort::FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL => L('mandays') . ' ' . L('hourplural') . ' (' . L('onedecimal') . ')',
-            effort::FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES => L('mandays') . ' ' . L('hourplural') . ":" . L('minuteplural'),
-            effort::FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES => L('mandays') . ' ' . L('hourplural') . " " . L('minuteplural'),
-            ),
-            Post::val('current_effort_done_format', $proj->prefs['current_effort_done_format'])); ?>
-          </select>
-        </li>
       </ul>
   </div>
 

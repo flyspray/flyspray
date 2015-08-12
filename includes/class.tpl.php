@@ -33,7 +33,7 @@ class Tpl
     {
         return $this->_theme;
     }
-
+    
     public function setTheme($theme)
     {
         // Check available themes
@@ -84,7 +84,7 @@ class Tpl
         // theming part
         // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
         if (strlen($this->_theme) == 0) {
-            $this->_theme = 'CleanFS/';
+            $this->_theme = 'CleanFS/'; 
         }
 
         // variables part
@@ -104,7 +104,7 @@ class Tpl
             // This is needed to catch times when there is no theme (for example setup pages)
             require BASEDIR . "/templates/" . $_tpl;
         }
-
+        
     } // }}}
 
     public function render()
@@ -147,24 +147,6 @@ class FSTpl extends Tpl
         return '';
     }
 
-}
-# draws the form start tag and the important anticsrftoken on 'post'-forms
-function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
-{
-        global $baseurl;
-        if (null === $method) {
-                $method='post';
-        }
-        if (null === $enctype) {
-                $enctype='multipart/form-data';
-        }
-
-        if(substr($action,0,4)!='http'){$action=$baseurl.$action;}
-        return '<form action="'.$action.'"'.($method=='get'?' method="get"':' method="post"').
-                ( $name!='' ? ' name="'.$name.'"':'').
-                ( ' enctype="'.$enctype.'"').
-                ( ' '.$attr).'>'.
-                ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'" />':'');
 }
 
 // {{{ costful templating functions, TODO: optimize them
@@ -291,40 +273,33 @@ function tpl_userlink($uid)
     return $cache[$uid];
 }
 
-function tpl_userlinkavatar($uid, $size, $class='', $style='')
+function tpl_userlinkgravatar($uid, $size, $float = 'left', $padding = '0px')
 {
-	global $db, $user, $baseurl, $fs;
+    global $db, $user;
 	if (is_array($uid)) {
-		list($uid, $uname, $rname) = $uid;
+        list($uid, $uname, $rname) = $uid;
 	}
-
-	$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?',
-		array(intval($uid)));
-	if ($sql && $db->countRows($sql)) {
-		list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
-	} else {
-		return;
-	}
-
+        $sql = $db->Query('SELECT user_name, real_name, email_address FROM {users} WHERE user_id = ?',
+                           array(intval($uid)));
+        if ($sql && $db->countRows($sql)) {
+            list($uname, $rname, $email) = $db->fetchRow($sql);
+        }
 	$email = md5(strtolower(trim($email)));
-	$default = 'mm';
 
-	if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
-		$image = '<img src="'.$baseurl.'/avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
+	$sql = $db->Query('SELECT profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+	if ($sql && $db->countRows($sql)) {
+		$avatar_name = $db->fetchRow($sql); 
+		$image = "<img src='"."/themes/CleanFS/images/".$avatar_name['profile_image']."' alt='".$avatar_name['profile_image']."' width='".$size."' height='".$size."'/>";
 	} else {
-		if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
-		} else {
-			$image = '';
-		}
+		$image = "<img src='http://www.gravatar.com/avatar/".$email."?s=".$size."'/>";
 	}
+    if (isset($uname)) {
+        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+        //$link = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', ''), array($url, $image)));
+        $link = "<a style='float: ".$float."; padding: ".$padding."' href=".$url." title='".$rname."'>".$image."</a>";
+    }
 
-	if (isset($uname)) {
-		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		$link = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
-	}
-	return $link;
+    return $link;
 }
 
 
@@ -425,79 +400,6 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     $page->display('common.userselect.tpl');
 }
 // }}}
-
-/**
- * Creates the options for a date format select
- * @selected The format that should by selected by default
- * @return html formatted options for a select tag
-**/
-function tpl_date_formats($selected, $detailed = false)
-{
-	$time = time();
-
-	if (!$detailed) {
-		$dateFormats = array(
-			'%d.%m.%Y' => strftime('%d.%m.%Y', $time),
-			'%d.%m.%y' => strftime('%d.%m.%y', $time),
-
-			'%Y.%m.%d' => strftime('%Y.%m.%d', $time),
-			'%y.%m.%d' => strftime('%y.%m.%d', $time),
-
-			'%d-%m-%Y' => strftime('%d-%m-%Y', $time),
-			'%d-%m-%y' => strftime('%d-%m-%y', $time),
-
-			'%Y-%m-%d' => strftime('%Y-%m-%d', $time),
-			'%y-%m-%d' => strftime('%y-%m-%d', $time),
-
-			'%d %b %Y' => strftime('%d %b %Y', $time),
-			'%d %B %Y' => strftime('%d %B %Y', $time),
-
-			'%b %d %Y' => strftime('%b %d %Y', $time),
-			'%B %d %Y' => strftime('%B %d %Y', $time),
-		);
-	}
-	else {
-		$dateFormats = array(
-			'%d.%m.%Y %H:%M' 	=> strftime('%d.%m.%Y %H:%M', $time),
-			'%d.%m.%y %H:%M' 	=> strftime('%d.%m.%y %H:%M', $time),
-
-			'%d.%m.%Y %I:%M %p' => strftime('%d.%m.%Y %I:%M %p', $time),
-			'%d.%m.%y %I:%M %p' => strftime('%d.%m.%y %I:%M %p', $time),
-
-			'%Y.%m.%d %H:%M' 	=> strftime('%Y.%m.%d %H:%M', $time),
-			'%y.%m.%d %H:%M' 	=> strftime('%y.%m.%d %H:%M', $time),
-
-			'%Y.%m.%d %I:%M %p' => strftime('%Y.%m.%d %I:%M %p', $time),
-			'%y.%m.%d %I:%M %p' => strftime('%y.%m.%d %I:%M %p', $time),
-
-			'%d-%m-%Y %H:%M' 	=> strftime('%d-%m-%Y %H:%M', $time),
-			'%d-%m-%y %H:%M' 	=> strftime('%d-%m-%y %H:%M', $time),
-
-			'%d-%m-%Y %I:%M %p' => strftime('%d-%m-%Y %I:%M %p', $time),
-			'%d-%m-%y %I:%M %p' => strftime('%d-%m-%y %I:%M %p', $time),
-
-			'%Y-%m-%d %H:%M' 	=> strftime('%Y-%m-%d %H:%M', $time),
-			'%y-%m-%d %H:%M' 	=> strftime('%y-%m-%d %H:%M', $time),
-
-			'%Y-%m-%d %I:%M %p' => strftime('%Y-%m-%d %I:%M %p', $time),
-			'%y-%m-%d %I:%M %p' => strftime('%y-%m-%d %I:%M %p', $time),
-
-			'%d %b %Y %H:%M' 	=> strftime('%d %b %Y %H:%M', $time),
-			'%d %B %Y %H:%M' 	=> strftime('%d %B %Y %H:%M', $time),
-
-			'%d %b %Y %I:%M %p' => strftime('%d %b %Y %I:%M %p', $time),
-			'%d %B %Y %I:%M %p' => strftime('%d %B %Y %I:%M %p', $time),
-
-			'%b %d %Y %H:%M' 	=> strftime('%b %d %Y %H:%M', $time),
-			'%B %d %Y %H:%M' 	=> strftime('%B %d %Y %H:%M', $time),
-
-			'%b %d %Y %I:%M %p' => strftime('%b %d %Y %I:%M %p', $time),
-			'%B %d %Y %I:%M %p' => strftime('%B %d %Y %I:%M %p', $time),
-		);
-	}
-
-	return tpl_options($dateFormats, $selected);
-}
 
 // {{{ Options for a <select>
 function tpl_options($options, $selected = null, $labelIsValue = false, $attr = null, $remove = null)
@@ -653,22 +555,14 @@ class TextFormatter
     public static function render($text, $type = null, $id = null, $instructions = null)
     {
         global $conf;
-
+        
         $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
         $methods = is_array($methods) ? $methods : array();
-
+        
         if (in_array('render', $methods)) {
             return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
                                   $text, $type, $id, $instructions);
         } else {
-            $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li>');
-            if ($conf['general']['syntax_plugin'] && $conf['general']['syntax_plugin'] != 'none') {
-                $text='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
-                .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
-                .'<br/>Temporarily handled like it is HTML until fixed<br/>'
-                .$text;
-            }
-
             //TODO: Remove Redundant Code once tested completely
             //Author: Steve Tredinnick
             //Have removed this as creating additional </br> lines even though <p> is already dealing with it
@@ -702,7 +596,7 @@ class TextFormatter
 
         //Activate CkEditor on TextAreas.
         $return .= "<script>
-                        CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
+                        CKEDITOR.replace( '".$name."' );
                     </script>";
         return $return;
     }
@@ -753,40 +647,25 @@ function tpl_draw_perms($perms)
             'create_attachments', 'delete_attachments',
             'view_history', 'close_own_tasks', 'close_other_tasks',
             'assign_to_self', 'assign_others_to_self', 'view_reports',
-            'add_votes', 'edit_own_comments', 'view_estimated_effort',
-            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap'
-    );
+            'add_votes', 'edit_own_comments','view_effort','track_effort');
 
     $yesno = array(
-            '<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
-            '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
-    );
+            '<td class="bad">' . eL('no') . '</td>',
+            '<td class="good">' . eL('yes') . '</td>');
 
-    # 20150307 peterdd: This a temporary hack
-    $i=0;
-    $html='';
-    $projpermnames='';
+    // FIXME: html belongs in a template, not in the template class
+    $html = '<table border="1" onmouseover="perms.hide()" onmouseout="perms.hide()">';
+    $html .= '<thead><tr><th colspan="2">';
+    $html .= htmlspecialchars(L('permissionsforproject').$proj->prefs['project_title'], ENT_QUOTES, 'utf-8');
+    $html .= '</th></tr></thead><tbody>';
 
-    foreach ($perms as $projperm){
-        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th>'.($i==0? '<th>'.L('permissions').'</th>' : '').'</tr></thead><tbody>';
-        foreach ($projperm as $key => $val) {
-            if (!is_numeric($key) && in_array($key, $perm_fields)) {
-               $html .= '<tr>';
-               $html .= $yesno[ ($val || $perms[0]['is_admin']) ];
-               $html .= $i==0 ? '<th>'.eL(str_replace('_','',$key)).'</th>' : '';
-               $html .= '</tr>';
-
-               # all projects have same permnames
-               $projpermnames .= $i==1 ? '<tr><td>'.eL(str_replace('_','',$key)).'</td></tr>' : '';
-            }
+    foreach ($perms[$proj->id] as $key => $val) {
+        if (!is_numeric($key) && in_array($key, $perm_fields)) {
+            $html .= '<tr><th>' . eL(str_replace('_', '', $key)) . '</th>';
+            $html .= $yesno[ ($val || $perms[0]['is_admin']) ].'</tr>';
         }
-        $html.= '</tbody></table>';
-        $i++;
     }
-    $html.='<table class="perms"><thead><th>'.L('permissions').'</th></thead><tbody>'.$projpermnames.'</tbody></table>';
-    $html.='<style>.perms tr{height:30px;}</style>';
-    # end 20150307
-    return $html;
+    return $html . '</tbody></table>';
 } // }}}
 
 /**
@@ -826,70 +705,40 @@ function tpl_disableif ($if)
 }
 
 // {{{ Url handling
-// Create an URL based upon address-rewriting preferences {{{
+// Create an URL bas ed upon address-rewriting preferences {{{
 function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf, $fs;
+    global $baseurl, $conf;
 
     $url = $baseurl;
 
     // If we do want address rewriting
-    if ($fs->prefs['url_rewriting']) {
+    if ($conf['general']['address_rewriting'] == '1') {
         switch ($type) {
-            case 'depends':
-                $return = $url . 'task/' . $arg1 . '/' . $type;
-                break;
-            case 'details':
-                $return = $url . 'task/' . $arg1;
-                break;
-            case 'edittask':
-                $return = $url . 'task/' . $arg1 . '/edit';
-                break;
-            case 'pm':
-                $return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
-                break;
+            case 'depends':   $return = $url . 'task/' .  $arg1 . '/' . $type; break;
+            case 'details':   $return = $url . 'task/' . $arg1; break;
+            case 'edittask':  $return = $url . 'task/' .  $arg1 . '/edit'; break;
+            case 'pm':        $return = $url . 'pm/proj' . $arg2 . '/' . $arg1; break;
 
             case 'admin':
             case 'edituser':
-            case 'user':
-                $return = $url . $type . '/' . $arg1;
-                break;
+            case 'user':      $return = $url . $type . '/' . $arg1; break;
 
-            case 'project':
-                $return = $url . 'proj' . $arg1;
-                break;
+            case 'project':   $return = $url . 'proj' . $arg1; break;
 
             case 'toplevel':
             case 'roadmap':
             case 'index':
-            case 'newtask':
-            case 'newmultitasks':
-                $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
-                break;
+	    case 'newtask':
+	    case 'newmultitasks':   $return = $url . $type .  '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : ''); break;
 
-            case 'editgroup':
-                $return = $url . $arg2 . '/' . $type . '/' . $arg1;
-                break;
+            case 'editgroup': $return = $url . $arg2 . '/' . $type . '/' . $arg1; break;
 
             case 'logout':
             case 'lostpw':
             case 'myprofile':
             case 'register':
-                $return = $url . $type;
-                break;
-            case 'reports':
-                $return = $url.'reports/proj'.$arg1;
-                break;
-            case 'mytasks':
-                $return = $url.'proj'.$arg1.'/dev'.$arg2;
-                break;
-            case 'tasklist':
-            	$return = $url.'proj'.$arg1;
-            	break;
-            default:
-            	$return = $baseurl . 'index.php';
-            	break;
-
+            case 'reports':  $return = $url . $type; break;
         }
     } else {
         if ($type == 'edittask') {
@@ -899,61 +748,33 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         }
 
         switch ($type) {
-            case 'admin':
-                $return = $url . '&area=' . $arg1;
-                break;
-            case 'edittask':
-                $return = $url . '&task_id=' . $arg1 . '&edit=yep';
-                break;
-            case 'pm':
-                $return = $url . '&area=' . $arg1 . '&project=' . $arg2;
-                break;
-            case 'user':
-                $return = $baseurl . 'index.php?do=user&area=users&id=' . $arg1;
-                break;
-            case 'edituser':
-                $return = $baseurl . 'index.php?do=admin&area=users&user_id=' . $arg1;
-                break;
-            case 'logout':
-                $return = $baseurl . 'index.php?do=authenticate&logout=1';
-                break;
-
+            case 'admin':     $return = $url . '&area=' . $arg1; break;
+            case 'edittask':  $return = $url . '&task_id=' . $arg1 . '&edit=yep'; break;
+            //STANDARD
+            case 'pm':        $return = $url . '&area=' . $arg1 . '&project=' . $arg2; break;
+            case 'user':      $return = $baseurl . 'index.php?do=user&area=users&id=' . $arg1; break;
+            case 'edituser':  $return = $baseurl . 'index.php?do=admin&area=users&user_id=' . $arg1; break;
+            case 'logout':    $return = $baseurl . 'index.php?do=authenticate&logout=1'; break;
+            
+            //CUSTOMS-FIELDS ROUTAGE TO pm.list.tpl
+            
+            case 'choice_lists':  $return = $baseurl . 'index.php?do=pm&area=list&lists_id='. $arg1.'&params='.$arg2; break;
+            
             case 'details':
-            case 'depends':
-                $return = $url . '&task_id=' . $arg1;
-                break;
-
-            case 'project':
-                $return = $baseurl . 'index.php?project=' . $arg1;
-                break;
-
+            case 'depends':   $return = $url . '&task_id=' . $arg1; break;
+            case 'project':   $return = $baseurl . 'index.php?project=' . $arg1; break;
             case 'roadmap':
             case 'toplevel':
             case 'index':
-            case 'newtask':
-            case 'newmultitasks':
-                $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : '');
-                break;
+	    case 'newtask':
+	    case 'newmultitasks': $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : ''); break;
 
-            case 'editgroup':
-                $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1;
-                break;
+            case 'editgroup': $return = $baseurl . 'index.php?do=' . $arg2 . '&area=editgroup&id=' . $arg1; break;
 
             case 'lostpw':
             case 'myprofile':
             case 'register':
-            case 'reports':
-            	$return = $url;
-            	break;
-            case 'mytasks':
-            	$return = $baseurl.'index.php?do=index&project='.$arg1.'&dev='.$arg2;
-            	break;
-            case 'tasklist':
-            	$return = $baseurl.'index.php?project='.$arg1;
-            	break;
-        	default:
-        		$return = $baseurl . 'index.php';
-        		break;
+            case 'reports':   $return = $url; break;
         }
     }
 
@@ -1055,12 +876,12 @@ class Url {
             $append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
         }
         $append = substr($append, 0, -1);
-
+        
         $separator = ini_get('arg_separator.output');
         if (strlen($separator) != 0) {
             $append = str_replace($separator, '&', $append);
         }
-
+        
         if ($this->getinfo('query')) {
             $this->parsed['query'] .= '&' . $append;
         } else {
@@ -1075,7 +896,7 @@ class Url {
         if (strlen($separator) != 0) {
             $append = str_replace($separator, '&', $append);
         }
-
+        
         if ($this->getinfo('query')) {
             $this->parsed['query'] .= '&' . $append;
         } else {

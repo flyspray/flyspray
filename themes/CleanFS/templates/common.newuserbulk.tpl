@@ -1,6 +1,4 @@
-<?php if ($do == 'admin'): echo tpl_form(Filters::noXSS(CreateURL($do, 'newuserbulk')),null,null,null,'id="registernewuser"');
-                     else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']),      null,null,null,'id="registernewuser"');
-endif; ?>
+<form action="<?php if ($do == 'admin'): ?><?php echo Filters::noXSS(CreateURL($do, 'newuserbulk')); ?><?php else: ?><?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?><?php endif; ?>" method="post" id="registernewuser">
   <ul class="form_elements">
     <li class="required">
       <?php if ($do == 'admin'): ?>

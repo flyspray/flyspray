@@ -52,34 +52,28 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
    <a href="<?php echo Filters::noXSS($baseurl); ?>index.php?do=index&amp;tasks=&amp;project=<?php echo Filters::noXSS($proj->id); ?>&amp;due=<?php echo Filters::noXSS($milestone['id']); ?>"><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:</a>
    <?php endif; ?>
     <?php
-    if ($proj->prefs['use_effort_tracking']) {
-        $total_estimated = 0;
-        $actual_effort = 0;
-
-        foreach($milestone['open_tasks'] as $task) {
-            $total_estimated += $task['estimated_effort'];
-            $effort = new effort($task['task_id'],0);
-            $effort->populateDetails();
-
-            foreach($effort->details as $details) {
-                $actual_effort += $details['effort'];
-            }
-            $effort = null;
-        }
-    // }
+    if($proj->prefs['use_effort_tracking']) {
+    if ($user->perms('view_effort')) {
+    $total_estimated = 0;
+    $actual_effort = 0;
+    foreach($milestone['open_tasks'] as $task)
+    {
+    $total_estimated += $task['estimated_effort'];
+    $effort = new effort($task['task_id'],0);
+    $effort->populateDetails();
+    foreach($effort->details as $details)
+    {
+    $actual_effort += $details['effort'];
+    }
+    $effort = null;
+    }
     ?>
     </br>
-    <?php
-    if ($user->perms('view_estimated_effort')) {
-        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-    } ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo ConvertSeconds($total_estimated *60 *60); ?>
     </br>
-    <?php
-    if ($user->perms('view_current_effort_done')) {
-        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('currenteffortdone')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
-    } ?>
+    <?php echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('actualeffort')); ?>: <?php echo ConvertSeconds($actual_effort); ?>
     <?php } 
-    ?>
+    } ?>
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>

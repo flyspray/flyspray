@@ -56,8 +56,8 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
 
         // Set a couple of cookies
         $passweirded = crypt($user->infos['user_pass'], $conf['general']['cookiesalt']);
-        Flyspray::setCookie('flyspray_userid', $user->id, $cookie_time,null,null,null,true);
-        Flyspray::setCookie('flyspray_passhash', $passweirded, $cookie_time,null,null,null,true);
+        Flyspray::setcookie('flyspray_userid', $user->id, $cookie_time);
+        Flyspray::setcookie('flyspray_passhash', $passweirded, $cookie_time);
         // If the user had previously requested a password change, remove the magic url
         $remove_magic = $db->Query("UPDATE {users} SET magic_url = '' WHERE user_id = ?",
                                     array($user->id));

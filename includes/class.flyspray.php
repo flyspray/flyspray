@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    public $version = '1.0 Beta dev';
+    public $version = '1.0 dev';
 
     /**
      * Flyspray preferences
@@ -82,7 +82,7 @@ class Flyspray
 
         $sizes = array();
         foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
-            if (!$val || $val < 0) {
+            if (!$val) {
                 continue;
             }
 
@@ -104,7 +104,7 @@ class Flyspray
         $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
         $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
-
+    
     protected function setDefaultTimezone()
     {
         $default_timezone = isset($this->prefs['default_timezone']) && !empty($this->prefs['default_timezone']) ? $this->prefs['default_timezone'] : 'UTC';
@@ -363,8 +363,8 @@ class Flyspray
         }
 
         if ($get_details = $db->FetchRow($get_details)) {
-            $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
-            $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
+            $get_details += array('severity_name' => $fs->severities[$get_details['task_severity']]);
+            $get_details += array('priority_name' => $fs->priorities[$get_details['task_priority']]);
         }
 
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
@@ -452,7 +452,7 @@ class Flyspray
         global $db;
         $res = $db->Query('SELECT  account_enabled, user_id, user_name, real_name, email_address
                              FROM  {users}
-                         ORDER BY  account_enabled DESC, UPPER(user_name) ASC');
+                         ORDER BY  account_enabled DESC, user_name ASC');
         return $db->FetchAllArray($res);
     }
 
@@ -521,8 +521,6 @@ class Flyspray
         // 31: User deletion
         // 32: Add new subtask
         // 33: Remove Subtask
-        // 34: Add new parent
-        // 35: Remove parent
 
         $query_params = array(intval($task_id), intval($user->id),
                              ((!is_numeric($time)) ? time() : $time),
@@ -539,7 +537,7 @@ class Flyspray
     // Log a request for an admin/project manager to do something {{{
     /**
      * Adds an admin request to the database
-     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
+     * @param integer $type 1: Task close, 2: Task re-open
      * @param integer $project_id
      * @param integer $task_id
      * @param integer $submitter
@@ -558,7 +556,7 @@ class Flyspray
     // Check for an existing admin request for a task and event type {{{;
     /**
      * Checks whether or not there is an admin request for a task
-     * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
+     * @param integer $type 1: Task close, 2: Task re-open
      * @param integer $task_id
      * @access public static
      * @return bool
@@ -630,7 +628,6 @@ class Flyspray
      * Check if a user provided the right credentials
      * @param string $username
      * @param string $password
-     * @param string $method '', 'oauth', 'ldap', 'native'
      * @access public static
      * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
      * @version 1.0
@@ -643,7 +640,7 @@ class Flyspray
         $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
 	$user_id = $db->FetchRow($temp);
 	$user_id = $user_id["id"];
-
+      	
 	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
@@ -661,7 +658,6 @@ class Flyspray
             return 0;
         }
 
-        if( method != 'ldap' ){
         //encrypt the password with the method used in the db
         switch (strlen($auth_details['user_pass'])) {
             case 40:
@@ -674,7 +670,7 @@ class Flyspray
                 $password = crypt($password, $auth_details['user_pass']); //using the salt from db
                 break;
         }
-        }
+
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
             $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
                            WHERE user_id = ?', array($auth_details['user_id']));
@@ -682,136 +678,63 @@ class Flyspray
             $_SESSION['was_locked'] = true;
         }
 
+        // Compare the crypted password to the one in the database
         // skip password check if the user is using oauth
-        if($method == 'oauth'){
-            $pwOk = true;
-        } elseif( $method == 'ldap'){
-            $pwOk = Flyspray::checkForLDAPUser($username, $password);
-        }else{
-            // Compare the crypted password to the one in the database
-            $pwOk = ($password == $auth_details['user_pass']);
-        }
-
+        $pwOk = ($method == 'oauth') ?: ($password == $auth_details['user_pass']);
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
             return $auth_details['user_id'];
         }
-        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
+        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1')
+        {
             return $auth_details['user_id'];
         }
 
         return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
     } // }}}
-
+    
     static public function checkForOauthUser($uid, $provider)
     {
         global $db;
-
+        
         if(empty($uid) || empty($provider)) {
             return false;
         }
-
+        
         $sql = $db->Query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
-
-        if ($db->fetchOne($sql)) {
+        
+        if ($db->fetchOne($sql)) { 
             return true;
         } else {
             return false;
         }
     }
 
-	/**
-	* 20150320 just added from provided patch, untested!
-	*/
-	public static function checkForLDAPUser($username, $password)
-	{
-		# TODO: add to admin settings area, maybe let user set the config at final installation step
-		$ldap_host = 'ldaphost';
-		$ldap_port = '389';
-		$ldap_version = '3';
-		$base_dn = 'OU=SBSUsers,OU=Users,OU=MyBusiness,DC=MyDomain,DC=local';
-		$ldap_search_user = 'ldapuser@mydomain.local';
-		$ldap_search_pass = "ldapuserpass";
-		$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
-		$username = $username;
-
-		if (strlen($password) == 0){ // LDAP will succeed binding with no password on AD (defaults to anon bind)
-			return false;
-		}
-
-		$rs = ldap_connect($ldap_host, $ldap_port);
-		@ldap_set_option($rs, LDAP_OPT_PROTOCOL_VERSION, $ldap_version);
-		@ldap_set_option($rs, LDAP_OPT_REFERRALS, 0);
-		$ldap_bind_dn = empty($ldap_search_user) ? NULL : $ldap_search_user;
-		$ldap_bind_pw = empty($ldap_search_pass) ? NULL : $ldap_search_pass;
-		if (!$bindok = @ldap_bind($rs, $ldap_bind_dn, $ldap_search_pass)){
-			// Uncomment for LDAP debugging
-			$error_msg = ldap_error($rs);
-			die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
-			return false;
-		} else{
-			$filter_r = str_replace("%USERNAME%", $username, $filter);
-			$result = @ldap_search($rs, $base_dn, $filter_r);
-			if (!$result){ // ldap search returned nothing or error
-				return false;
-			}
-			$result_user = ldap_get_entries($rs, $result);
-			if ($result_user["count"] == 0){ // No users match the filter
-				return false;
-			}
-			$first_user = $result_user[0];
-			$ldap_user_dn = $first_user["dn"];
-			// Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
-			if (!$bind_user = @ldap_bind($rs, $ldap_user_dn, $password)){
-				$error_msg = ldap_error($rs);
-				die("Couldn't bind using ".$ldap_user_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
-				return false;
-			} else{
-				return true;
-			}
-		}
-	}
-
 
     // Set cookie {{{
     /**
      * Sets a cookie, automatically setting the URL
-     * Now same params as PHP's builtin setcookie()
      * @param string $name
      * @param string $val
      * @param integer $time
-     * @param string $path
-     * @param string $domain
-     * @param bool $secure
-     * @param bool $httponly
      * @access public static
      * @return bool
-     * @version 1.1
+     * @version 1.0
      */
-    public static function setCookie($name, $val, $time = null, $path=null, $domain=null, $secure=false, $httponly=false)
+    public static function setCookie($name, $val, $time = null)
     {
-        if (null===$path){
-            $url = parse_url($GLOBALS['baseurl']);
-        }else{
-            $url['path']=$path;
-        }
-
+        $url = parse_url($GLOBALS['baseurl']);
         if (!is_int($time)) {
             $time = time()+60*60*24*30;
         }
-        if(null===$domain){
-            $domain='';
-        }
-        if(null===$secure){
-            $secure=false;
-        }
+
         if((strlen($name) + strlen($val)) > 4096) {
             //violation of the protocol
             trigger_error("Flyspray sent a too big cookie, browsers will not handle it");
             return false;
         }
 
-        return setcookie($name, $val, $time, $url['path'],$domain,$secure,$httponly);
+        return setcookie($name, $val, $time, $url['path']);
     } // }}}
             // Start the session {{{
     /**
@@ -826,8 +749,7 @@ class Flyspray
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
-        /*
-        # commented out IMHO weired obfuscating session names
+
         $names = array( 'GetFirefox',
                         'UseLinux',
                         'NoMicrosoft',
@@ -862,15 +784,6 @@ class Flyspray
             session_name($sessname);
             session_start();
             $_SESSION['SESSNAME'] = $sessname;
-        }
-        */
-
-        $url = parse_url($GLOBALS['baseurl']);
-        session_name('flyspray');
-        session_set_cookie_params(0,$url['path'],'','', TRUE);
-        session_start();
-        if(!isset($_SESSION['csrftoken'])){
-                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
         }
     }  // }}}
 
@@ -1050,7 +963,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-
+    
     /**
      * Returns the ID of a user with $name
      * @param string $name
@@ -1066,7 +979,7 @@ class Flyspray
 
         return intval($db->FetchOne($sql));
     }
-
+    
     /**
      * check_email
      *  checks if an email is valid
@@ -1076,7 +989,7 @@ class Flyspray
      */
     public static function check_email($email)
     {
-        return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+        return is_string($email) && filter_var($email, \FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -1187,14 +1100,14 @@ class Flyspray
     public static function write_lock($filename, $content)
     {
         if ($f = fopen($filename, 'wb')) {
-            if(flock($f, LOCK_EX)) {
+            if(flock($f, LOCK_EX)) {                
                 fwrite($f, $content);
                 flock($f, LOCK_UN);
             }
             fclose($f);
         }
     }
-
+    
     /**
      * file_get_contents replacement for remote files
      * @access public
@@ -1221,7 +1134,7 @@ class Flyspray
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
             $out .= "Host: {$url['host']}\r\n\r\n";
             $out .= "Connection: Close\r\n\r\n";
-
+            
             stream_set_timeout($conn, 5);
             fwrite($conn, $out);
 
@@ -1251,7 +1164,7 @@ class Flyspray
      */
     public function GetNotificationOptions($noneAllowed = true)
     {
-        switch ($this->prefs['user_notify'])
+        switch ($this->prefs['user_notify']) 
         {
             case 0:
                 return array(0             => L('none'));
@@ -1259,9 +1172,9 @@ class Flyspray
                 return array(NOTIFY_EMAIL  => L('email'));
             case 3:
                 return array(NOTIFY_JABBER => L('jabber'));
-
+                
         }
-
+        
         $return = array(0             => L('none'),
                         NOTIFY_EMAIL  => L('email'),
                         NOTIFY_JABBER => L('jabber'),
@@ -1269,17 +1182,24 @@ class Flyspray
         if (!$noneAllowed) {
             unset($return[0]);
         }
-
+        
         return $return;
     }
+    
+    /**
+     * getSvnRev
+     *  For internal use
+     * @access public
+     * @return string
+     */
+    public static function getSvnRev()
+    {
+        if(is_file(BASEDIR. '/REVISION') && is_dir(BASEDIR . '/.svn')) {
 
-    public static function weedOutTasks($user, $tasks) {
-        $allowedtasks = array();
-        foreach ($tasks as $task) {
-            if ($user->can_view_task($task)) {
-                $allowedtasks[] = $task;
-            }
+            return sprintf('r%d',file_get_contents(BASEDIR .'/REVISION'));
         }
-        return $allowedtasks;
+
+        return '';
     }
+
 }

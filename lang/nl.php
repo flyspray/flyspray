@@ -2,11 +2,11 @@
 //
 // This file is auto generated with .langedit.php
 // Characters are UTF-8 encoded
-//
+// 
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-//
+// 
 // Furthermore, nothing else than the language array is saved
 // when using the .langedit.php editor!
 //
@@ -295,7 +295,7 @@ $translation = array(
 'makepublic'              => 'Maak Publiekelijk',
 'taskmadeprivate'         => 'Deze taak is omgezet naar een privétaak',
 'taskmadepublic'          => 'Deze taak is weer publiekelijk gemaakt',
-'confirmdeletecomment'    => 'Weet u zeker dat u dit commentaar wilt verwijderen? %s',
+'confirmdeletecomment'    => 'Weet u zeker dat u dit commentaar wilt verwijderen? Alle toegevoegde bestanden zullen ook verwijderd worden!',
 'confirmdeleteattach'     => 'Weet u zeker dat u dit toegevoegde bestand wilt verwijderen?',
 'selectedhistory'         => 'Toon geselecteerde geschiedenisdetails',
 'showallhistory'          => 'Toon opnieuw de volledige Geschiedenistab',

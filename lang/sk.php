@@ -2,7 +2,7 @@
 
 /*******************************************************************************
  * File:              sk.php
- * Authors:           Mancuska Martin (borgcube) http://blog.borg.sk/
+ * Authors:           Mancuska Martin (borgcube) http://blog.borg.sk/ 
  *                    Pokorny Fridolin (fridex) http://fridex.yw.sk
  *                    Jan Callus(callus) jan.callus@gmail.com
  * Description:
@@ -313,7 +313,7 @@ $translation = array(
 'makepublic'              => 'Verejné',
 'taskmadeprivate'         => 'Úloha je súkromná',
 'taskmadepublic'          => 'Úloha je už verejná',
-'confirmdeletecomment'    => 'Skutočne si želáte vymazať? %s',
+'confirmdeletecomment'    => 'Skutočne si želáte vymazať? Všetky prílohy budú tiež zmazané!!',
 'confirmdeleteattach'     => 'Skutočne si prajete odtrániť túto prílohu?',
 'selectedhistory'         => 'Zobrazije podrobnosti vybranej histórie ',
 'showallhistory'          => 'Znovu zobraziť celú históriu',

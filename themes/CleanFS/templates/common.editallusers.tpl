@@ -1,59 +1,56 @@
-<script>
-function toggleCheckbox(id)
-{
-	var el = document.getElementById(id);
-	if (el != null) {
-		if (el.checked) {
-			el.checked = false;
-		}
-		else {
-			el.checked = true;
-		}
-	}
-}
-</script>
+<form action="<?php if ($do == 'admin'): ?><?php echo Filters::noXSS(CreateURL($do, 'editallusers')); ?><?php else: ?><?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?><?php endif; ?>" method="post" id="editallusers">
+  <ul class="form_elements">
+    <li class="required">
+      <?php if ($do == 'admin'): ?>
+        <input type="hidden" name="action" value="admin.editallusers" />
+        <input type="hidden" name="do" value="admin" />
+        <input type="hidden" name="area" value="editallusers" />
+      <?php endif; ?>
+    </li>
 
-<?php if ($do == 'admin'): echo tpl_form(Filters::noXSS(CreateURL($do, 'editallusers')), null, null, null, 'id="editallusers"');
-		else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']), null, null, null, 'id="editallusers"');
-endif; ?>
-<ul class="form_elements">
-	<li class="required">
-		<?php if ($do == 'admin'): ?>
-			<input type="hidden" name="action" value="admin.editallusers" />
-			<input type="hidden" name="do" value="admin" />
-			<input type="hidden" name="area" value="editallusers" />
-		<?php endif; ?>
-	</li>
-
-<table class="bulkedituser">
-	<tr class="account_header">
-		<td><label for=""></label></td>
-		<td><label for="realname"><b><?php echo Filters::noXSS(L('realname')); ?></b></label></td>
-		<td><label for="username"><b><?php echo Filters::noXSS(L('username')); ?></b></label></td>
-		<td><label for="emailaddress"><b><?php echo Filters::noXSS(L('emailaddress')); ?></b></label></td>
-	</tr>
-	<?php
-		foreach (Flyspray::ListUsers() as $usr) {
-			if ( $usr['account_enabled'] ) {
-				echo '<tr class="account_enabled" onclick="toggleCheckbox('.$usr['user_id'].')">';
-			}
-			else {
-				echo '<tr class="account_disabled" onclick="toggleCheckbox('.$usr['user_id'].')">';
-			} ?>
-
-			<td><input id="<?php echo $usr['user_id'] ?>" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
-			<td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo $usr['real_name']; ?></a></td>
-			<td><?php echo $usr['user_name']; ?></td>
-			<td><?php echo $usr['email_address']; ?></td>
+	<table class="bulkedituser">
+		<tr class="account_header">
+		        <td><label for=""></label></td>
+		        <td><label for="realname"><b><?php echo Filters::noXSS(L('realname')); ?></b></label></td>
+        		<td><label for="username"><b><?php echo Filters::noXSS(L('username')); ?></b></label></td>
+		        <td><label for="emailaddress"><b><?php echo Filters::noXSS(L('emailaddress')); ?></b></label></td>
 		</tr>
-	<?php } ?>
-</table>
+	<?php
+		/* FIXME: each TR should have an onclick that selects/deselects the checkbox for that user */
+		foreach (Flyspray::ListUsers() as $usr)
+		{ 
+			if ( $usr['account_enabled'] )
+			{
+				echo '<tr class="account_enabled">';
+			}
+			else
+			{
+				echo '<tr class="account_disabled">';
+			}
+        ?>
 
-<button type="submit" id="buSubmit" name="enable"><?php echo Filters::noXSS(L('enableaccounts')); ?></button>
-<button type="submit" id="buSubmit" name="disable"><?php echo Filters::noXSS(L('disableaccounts')); ?></button>
-<button type="submit" id="buSubmit" name="delete"><?php echo Filters::noXSS(L('deleteaccounts')); ?></button>
 
-<!-- TODO Should still add these to bulk edit, but hasn't been done yet
+		        <td><input type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
+		        <td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo $usr['real_name']; ?></a></td>
+		        <td><?php echo $usr['user_name']; ?></td>
+		        <td><?php echo $usr['email_address']; ?></td>
+		</tr>
+
+	<?php
+		}
+	?>
+
+    <br />
+
+    </table>
+
+    <br />
+
+    <button type="submit" id="buSubmit" name="enable"><?php echo Filters::noXSS(L('enableaccounts')); ?></button>
+    <button type="submit" id="buSubmit" name="disable"><?php echo Filters::noXSS(L('disableaccounts')); ?></button>
+    <button type="submit" id="buSubmit" name="delete"><?php echo Filters::noXSS(L('deleteaccounts')); ?></button>
+
+<!-- FIXME: Should still add these to bulk edit, but hasn't been done yet
     <li>
       <label for="notify_type"><?php echo Filters::noXSS(L('notifications')); ?></label>
       <select id="notify_type" name="notify_type">

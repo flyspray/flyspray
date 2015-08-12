@@ -1,6 +1,6 @@
 <?php
 
-$translation = array(
+$language = array(
 'edituser'                => 'Уреди корисник',
 'username'                => 'Корисничко име',
 'realname'                => 'Вистинско име',
@@ -284,7 +284,7 @@ $translation = array(
 'makepublic'              => 'направи јавно',
 'taskmadeprivate'         => 'Задачата е сега приватна',
 'taskmadepublic'          => 'Задачата е сега јавна',
-'confirmdeletecomment'    => 'Really delete this comment? %s',
+'confirmdeletecomment'    => 'Really delete this comment?  All attachments will also be deleted!',
 'confirmdeleteattach'     => 'Really delete this attachment?',
 'selectedhistory'         => 'Showing selected history details',
 'showallhistory'          => 'Show full history tab again',

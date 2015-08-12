@@ -250,7 +250,7 @@ class HTTPClient {
         $this->resp_headers = $this->_parseHeaders($r_headers);
         if(isset($this->resp_headers['set-cookie'])){
             foreach ((array) $this->resp_headers['set-cookie'] as $c){
-                list($key, $value, $foo) = explode('=', $cookie);
+                list($key, $value, $foo) = split('=', $cookie);
                 $this->cookies[$key] = $value;
             }
         }

@@ -30,8 +30,7 @@
 		return false;
 	}
   </script>
-<!-- <form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)); ?>" method="post" onsubmit="return checkContent()"> -->
-<?php echo tpl_form(Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)), 'newtask', 'post', 'multipart/form-data', 'onsubmit="return checkContent()"'); ?>
+<form enctype="multipart/form-data" action="<?php echo Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)); ?>" method="post" onsubmit="return checkContent()">
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <div id="actionbar">
 
@@ -190,7 +189,7 @@
                 <?php echo Filters::noXSS(L('hours')); ?>
 
             </li>
-            <?php }
+            <?php } 
             } ?>
 
           <?php if ($user->perms('manage_project')): ?>

@@ -1,0 +1,21 @@
+{
+    "name": "jamiebicknell/Sparkline",
+    "description": "PHP script to generate sparklines",
+    "keywords": [
+        "sparkline",
+        "sparklines",
+        "php",
+        "gd"
+    ],
+    "homepage": "http://github.com/jamiebicknell/Sparkline",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jamie Bicknell",
+            "homepage": "http://www.jamiebicknell.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    }
+}

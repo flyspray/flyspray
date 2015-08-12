@@ -249,7 +249,6 @@ abstract class Backend
 
             if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
                            VALUES (?,?,?)", array($user->id, $task_id, time()))) {
-                // TODO: Log event in a later version.
                 return true;
             }
         }
@@ -283,7 +282,6 @@ abstract class Backend
 
             if($db->Query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
                             array($user->id, $task_id))) {
-                // TODO: Log event in a later version.
                return true;
             }
         }
@@ -439,7 +437,6 @@ abstract class Backend
 		    // Insert into database
 		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
 			    array($task_id, $comment_id, $text, $user->id, time()));
-                    // TODO: Log event in a later version.
 	    }
 
 	    return $res;
@@ -498,7 +495,6 @@ abstract class Backend
 		    }
 
 		    $db->Query('DELETE FROM {links} WHERE link_id = ?', array($task['link_id']));
-                    // TODO: Log event in a later version.
 	    }
     }
 
@@ -533,16 +529,11 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = '', $oauth_provider = '', $profile_image = '')
+    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = null, $oauth_provider = null, $profile_image = '')
     {
         global $fs, $db, $notify, $baseurl;
-
+        
         $user_name = Backend::clean_username($user_name);
-
-    	// TODO Handle this whole create_user better concerning return false. Why did it fail?
-    	if (empty($user_name)) {
-    		return false;
-    	}
 
         // Limit length
         $real_name = substr(trim($real_name), 0, 100);
@@ -562,31 +553,33 @@ abstract class Backend
             $auto = true;
             $password = substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12));
         }
-
+        
         $db->Query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
-                               tasks_perpage, register_date, time_zone, dateformat,
-                               dateformat_extended, oauth_uid, oauth_provider, lang_code)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?, ?)",
-            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id),
-                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']));
+                               tasks_perpage, register_date, time_zone, dateformat, 
+                               dateformat_extended, oauth_uid, oauth_provider)
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?)",
+            array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id), 
+                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider));
+
+        $temp = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?',array($user_name));
+        $user_id = $db->fetchOne($temp);
+        $emailList = explode(';',$email);
+        foreach ($emailList as $mail)	//Still need to do: check email
+        {
+            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->fetchOne($count);
+            if ($count > 0)
+            {
+                Flyspray::show_error("Email address has alredy been taken");
+                return false;
+            } else if ($mail != '')
+                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",array($user_id,strtolower($mail),$oauth_uid, $oauth_provider));
+        }
 
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
-
-        $emailList = explode(';',$email);
-        foreach ($emailList as $mail) {	//Still need to do: check email
-            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
-            $count = $db->fetchOne($count);
-            if ($count > 0) {
-                Flyspray::show_error("Email address has alredy been taken");
-                return false;
-            } else if ($mail != '') {
-                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
-                        array($uid,strtolower($mail),$oauth_uid, $oauth_provider));
-            }
-        }
 
         // Now, create a new record in the users_in_groups table
         $db->Query('INSERT INTO  {users_in_groups} (user_id, group_id)
@@ -613,14 +606,22 @@ abstract class Backend
                         'only_primary' => NULL,
                         'only_watched' => NULL);
 
+
                 foreach($varnames as $tmpname) {
+
                     if($tmpname == 'iwatch') {
+
                         $tmparr = array('only_watched' => '1');
+
                     } elseif ($tmpname == 'atome') {
+
                         $tmparr = array('dev'=> $uid);
+
                     } elseif($tmpname == 'iopened') {
+
                         $tmparr = array('opened'=> $uid);
                     }
+
                     $$tmpname = $tmparr + $toserialize;
                 }
 
@@ -641,30 +642,18 @@ abstract class Backend
 
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
-        if ( ! $oauth_provider ) {
-            $users_to_notify = array();
-            // Notify admins on new user registration
-            if( $fs->prefs['notify_registration'] ) {
-                // Gather list of admin users. An empty address that comes
-                // first will break sending notification. So does probably
-                // an invalid one.
-                $sql = $db->Query('SELECT DISTINCT email_address
+        if (! $oauth_provider && $fs->prefs['notify_registration']) {
+            // Gather list of admin users
+            $sql = $db->Query('SELECT DISTINCT email_address
                                  FROM {users} u
                             LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
-                                 WHERE g.group_id = 1 AND email_address <> \'\'');
+                                 WHERE g.group_id = 1');
 
-                // If the new user is not an admin, add him to the notification list.
-                // Should do this only if account is created as enabled, otherwise
-                // notification should be done when admin request is either accepted
-                // or denied, but we lack a really suitable notification, although
-                // NOTIFY_NEW_USER is quite close.
-                $admins = $db->FetchCol($sql);
-                if (count($admins)) {
-                    $users_to_notify = $admins;
-                }
-            }
-            if (!in_array($email, $users_to_notify)) {
-                $users_to_notify[] = $email;
+            // If the new user is not an admin, add him to the notification list
+            $users_to_notify = $db->FetchCol($sql);
+            if (! in_array($email, $users_to_notify))
+            {
+                array_push($users_to_notify, $email);
             }
 
             // Notify the appropriate users
@@ -673,69 +662,42 @@ abstract class Backend
                             $users_to_notify, NOTIFY_EMAIL);
         }
 
-        // If the account is created as not enabled, no matter what any
-        // preferences might say or how the registration was made in first
-        // place, it MUST be first approved by an admin. And a small
-        // work-around: there's no field for email, so we use reason_given
-        // for that purpose.
-        if ($enabled === 0) {
-            Flyspray::AdminRequest(3, 0, 0, $uid, $email);
-        }
-
         return true;
     }
 
-	/**
-	 * Deletes a user
-	 * @param integer $uid
-	 * @access public
-	 * @return bool
-	 * @version 1.0
-	 */
-	public static function delete_user($uid)
-	{
-		global $db, $user;
+    /**
+     * Deletes a user
+     * @param integer $uid
+     * @access public
+     * @return bool
+     * @version 1.0
+     */
+    public static function delete_user($uid)
+    {
+        global $db, $user;
 
-		if (!$user->perms('is_admin')) {
-			return false;
-		}
+        if (!$user->perms('is_admin')) {
+            return false;
+        }
 
-		$userDetails = Flyspray::getUserDetails($uid);
+        $user_data = serialize(Flyspray::getUserDetails($uid));
+        $tables = array('users', 'users_in_groups', 'searches',
+                        'notifications', 'assigned');
 
-		if (is_file(BASEDIR.'/avatars/'.$userDetails['profile_image'])) {
-			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
-		}
+        foreach ($tables as $table) {
+            if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
+                return false;
+            }
+        }
 
-		$tables = array('users', 'users_in_groups', 'searches', 'notifications', 'assigned', 'votes', 'effort');
+        // for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
+        // get permissions for a task automatically
+        $db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
 
-		foreach ($tables as $table) {
-			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
-				return false;
-			}
-		}
+        Flyspray::logEvent(0, 31, $user_data);
 
-		if (!empty($userDetails['profile_image']) && is_file(BASEDIR.'/avatars/'.$userDetails['profile_image'])) {
-			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
-		}
-
-		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
-                        array($userDetails['email_address']));
-                
-		$db->Query('DELETE FROM {user_emails} WHERE email_address = ?',
-                        array($userDetails['email_address']));
-		
-                $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
-                        array($uid, $uid));
-
-		// for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
-		// get permissions for a task automatically
-		$db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
-
-		Flyspray::logEvent(0, 31, serialize($userDetails));
-
-		return true;
-	}
-
+        return true;
+    }
 
     /**
      * Deletes a project
@@ -757,12 +719,8 @@ abstract class Backend
         if (!$move_to) {
             $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
             $task_ids = $db->FetchCol($task_ids);
-            // What was supposed to be in tables field_values, notification_threads
-            // and redundant, they do not exist in database?
-            $tables = array('admin_requests', 'assigned', 'attachments', 'comments',
-                            'dependencies', 'related', 'history',
-                            'notifications',
-                            'reminders', 'votes');
+            $tables = array('admin_requests', 'assigned', 'attachments', 'comments', 'dependencies', 'related',
+                            'field_values', 'history', 'notification_threads', 'notifications', 'redundant', 'reminders', 'votes');
             foreach ($tables as $table) {
                 if ($table == 'related') {
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE this_task = ? OR related_task = ? ');
@@ -786,59 +744,6 @@ abstract class Backend
 
         foreach ($tables as $table) {
             if ($move_to && $table !== 'projects' && $table !== 'list_category') {
-                // Having a unique index in most list_* tables prevents
-                // doing just a simple update, if the list item already
-                // exists in target project, so we have to update existing
-                // tasks to use the one in target project. Something similar
-                // should be done when moving a single task to another project.
-                // Consider making this a separate function that can be used
-                // for that purpose too, if possible.
-                if (strpos($table, 'list_') === 0) {
-                    list($type, $name) = explode('_', $table);
-                    $sql = $db->Query('SELECT ' . $name . '_id, ' . $name . '_name
-                                         FROM {' . $table . '}
-                                        WHERE project_id = ?',
-                            array($pid));
-                    $rows = $db->FetchAllArray($sql);
-                    foreach ($rows as $row) {
-                        $sql = $db->Query('SELECT ' . $name . '_id
-                                             FROM {' . $table . '}
-                                            WHERE project_id = ? AND '. $name . '_name = ?', 
-                                array($move_to, $row[$name .'_name']));
-                        $new_id = $db->FetchOne($sql);
-                        if ($new_id) {
-                            switch ($name) {
-                                case 'os';
-                                    $column = 'operating_system';
-                                    break;
-                                case 'resolution';
-                                    $column = 'resolution_reason';
-                                    break;
-                                case 'tasktype';
-                                    $column = 'task_type';
-                                    break;
-                                case 'status';
-                                    $column = 'item_status';
-                                    break;
-                                case 'version';
-                                    // Questionable what to do with this one. 1.0 could
-                                    // have been still future in the old project and
-                                    // already past in the new one...
-                                    $column = 'product_version';
-                                    break;
-                            }
-                            if (isset($column)) {
-                                $db->Query('UPDATE {tasks}
-                                               SET ' . $column . ' = ?
-                                             WHERE ' . $column . ' = ?',
-                                        array($new_id, $row[$name . '_id']));
-                                $db->Query('DELETE FROM {' . $table . '}
-                                             WHERE '  . $name . '_id = ?',
-                                        array($row[$name . '_id']));
-                            }
-                        }
-                    }
-                }
                 $base_sql = 'UPDATE {' . $table . '} SET project_id = ?';
                 $sql_params = array($move_to, $pid);
             } else {
@@ -997,15 +902,8 @@ abstract class Backend
         $sql_params[] = 'closure_comment';
         $sql_values[] = '';
 
-        // Process estimated effort
-        $estimated_effort = 0;
-        if ($proj->prefs['use_effort_tracking'] && isset($sql_args['estimated_effort'])) {
-            if (($estimated_effort = effort::EditStringToSeconds($sql_args['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
-                Flyspray::show_error(L('invalideffort'));
-                $estimated_effort = 0;
-            }
-            $sql_args['estimated_effort'] = $estimated_effort;
-        }
+        $sql_params[] = 'estimated_effort';
+        $sql_values[] = $proj->prefs['use_effort_tracking'] ? $args['estimated_effort'] : 0;
 
         // Token for anonymous users
         $token = '';
@@ -1054,16 +952,14 @@ abstract class Backend
                          VALUES  ($sql_placeholder)", $sql_values);
 
 	/////////////////////////////////////Add tags///////////////////////////////////////
-    if (isset($args['tags'])) {
-    	$tagList = explode(';', $args['tags']);
-    	foreach ($tagList as $tag)
-    	{
-    		if ($tag == '')
-    			continue;
-    		$result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
+	$tagList = explode(';',$args['tags']);
+	foreach ($tagList as $tag)
+	{
+	   if ($tag == '')
+		   continue;
+	   $result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
 		                           VALUES (?,?)",array($task_id,$tag));
-    	}
-    }
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////
         // Log the assignments and send notifications to the assignees
@@ -1222,36 +1118,26 @@ abstract class Backend
      */
     public static function get_task_list($args, $visible, $offset = 0, $perpage = 20)
     {
-        global $fs, $proj, $db, $user, $conf;
+        global $proj, $db, $user, $conf;
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/
         $where  = $sql_params = array();
 
-        // PostgreSQL LIKE searches are by default case sensitive,
-        // so we use ILIKE instead. For other databases, in our case
-        // only MySQL/MariaDB, LIKE is good for our purposes.
-        $LIKEOP = 'LIKE';
-        if ($db->dblink->dataProvider == 'postgres') {
-            $LIKEOP = 'ILIKE';
-        }
-
         $select = '';
         $groupby = 't.task_id, ';
-        $from   = ' {tasks} t
-LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
-LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
-LEFT JOIN  {list_status}   lst ON t.item_status = lst.status_id
-LEFT JOIN  {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
+        $from   = '             {tasks}         t
+                     LEFT JOIN  {projects}      p   ON t.project_id = p.project_id
+                     LEFT JOIN  {list_tasktype} lt  ON t.task_type = lt.tasktype_id
+                     LEFT JOIN  {list_status}   lst ON t.item_status = lst.status_id
+                     LEFT JOIN  {list_resolution} lr ON t.resolution_reason = lr.resolution_id ';
         // Only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'cat') || in_array('category', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_category} lc  ON t.product_category = lc.category_id ';
+            $from   .= ' LEFT JOIN  {list_category} lc  ON t.product_category = lc.category_id ';
             $select .= ' lc.category_name               AS category_name, ';
             $groupby .= 'lc.category_name, ';
         }
         if (in_array('votes', $visible)) {
-            $from   .= '
-LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
+            $from   .= ' LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' COUNT(DISTINCT vot.vote_id)    AS num_votes, ';
         }
         $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
@@ -1260,68 +1146,50 @@ LEFT JOIN  {votes} vot         ON t.task_id = vot.task_id ';
             $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
         }
         if (array_get($args, 'search_in_comments')) {
-            $from   .= '
-LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
+            $from   .= ' LEFT JOIN  {comments} c          ON t.task_id = c.task_id ';
         }
         if (in_array('comments', $visible)) {
             $select .= ' (SELECT COUNT(cc.comment_id) FROM {comments} cc WHERE cc.task_id = t.task_id)  AS num_comments, ';
         }
         if (in_array('reportedin', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
-            $select .= ' lv.version_name                AS product_version_name, ';
+            $from   .= ' LEFT JOIN  {list_version} lv   ON t.product_version = lv.version_id ';
+            $select .= ' lv.version_name                AS product_version, ';
             $groupby .= 'lv.version_name, ';
         }
         if (array_get($args, 'opened') || in_array('openedby', $visible)) {
-            $from   .= '
-LEFT JOIN  {users} uo          ON t.opened_by = uo.user_id ';
+            $from   .= ' LEFT JOIN  {users} uo          ON t.opened_by = uo.user_id ';
             $select .= ' uo.real_name                   AS opened_by_name, ';
             $groupby .= 'uo.real_name, ';
         }
         if (array_get($args, 'closed')) {
-            $from   .= '
-LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
+            $from   .= ' LEFT JOIN  {users} uc          ON t.closed_by = uc.user_id ';
             $select .= ' uc.real_name                   AS closed_by_name, ';
             $groupby .= 'uc.real_name, ';
         }
         if (array_get($args, 'due') || in_array('dueversion', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
-            $select .= ' lvc.version_name               AS closedby_version_name, ';
-            $groupby .= 'lvc.version_name, lvc.list_position, ';
+            $from   .= ' LEFT JOIN  {list_version} lvc  ON t.closedby_version = lvc.version_id ';
+            $select .= ' lvc.version_name               AS closedby_version, ';
+            $groupby .= 'lvc.version_name, ';
         }
         if (in_array('os', $visible)) {
-            $from   .= '
-LEFT JOIN  {list_os} los       ON t.operating_system = los.os_id ';
+            $from   .= ' LEFT JOIN  {list_os} los       ON t.operating_system = los.os_id ';
             $select .= ' los.os_name                    AS os_name, ';
             $groupby .= 'los.os_name, ';
         }
         if (in_array('attachments', $visible) || array_get($args, 'has_attachment')) {
-            $from   .= '
-LEFT JOIN  {attachments} att   ON t.task_id = att.task_id ';
+            $from   .= ' LEFT JOIN  {attachments} att   ON t.task_id = att.task_id ';
             $select .= ' COUNT(DISTINCT att.attachment_id) AS num_attachments, ';
         }
 
-	# 20150213 currently without recursive subtasks!
-	if (in_array('effort', $visible)) {
-		$from   .= '
-LEFT JOIN  {effort} ef   ON t.task_id = ef.task_id ';
-		$select .= ' SUM( ef.effort) AS effort, ';
-	}
-
-        $from   .= '
-LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
-        $from   .= '
-LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
+        $from   .= ' LEFT JOIN  {assigned} ass      ON t.task_id = ass.task_id ';
+        $from   .= ' LEFT JOIN  {users} u           ON ass.user_id = u.user_id ';
         if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
             $select .= ' MIN(u.real_name)               AS assigned_to_name, ';
-            $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
-            $groupby .= 'ass.task_id, ';
+            $select .= ' COUNT(DISTINCT ass.user_id)    AS num_assigned, ';
         }
 
         if (array_get($args, 'only_primary')) {
-            $from   .= '
-LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
+            $from   .= ' LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[] = 'dep.depend_id IS NULL';
         }
         if (array_get($args, 'has_attachment')) {
@@ -1366,24 +1234,10 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
         $order_keys = array_intersect_key($order_keys, array_merge(array_flip($visible), array('severity' => 'task_severity')));
 
-    	// Implementing setting "Default order by"
-		if (!array_key_exists('order', $args)) {
-			if ($proj->id) {
-				$orderBy = $proj->prefs['default_order_by'];
-				$sort = $proj->prefs['default_order_by_dir'];
-			} else {
-				$orderBy = $fs->prefs['default_order_by'];
-				$sort = $fs->prefs['default_order_by_dir'];
-			}
-		} else {
-			$orderBy = $args['order'];
-			$sort = $args['sort'];
-		}
-
-        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', $orderBy), array_keys($order_keys))];
+        $order_column[0] = $order_keys[Filters::enum(array_get($args, 'order', 'priority'), array_keys($order_keys))];
         $order_column[1] = $order_keys[Filters::enum(array_get($args, 'order2', 'severity'), array_keys($order_keys))];
         $sortorder  = sprintf('%s %s, %s %s, t.task_id ASC',
-                $order_column[0], Filters::enum(array_get($args, 'sort', $sort), array('asc', 'desc')),
+                $order_column[0], Filters::enum(array_get($args, 'sort', 'desc'), array('asc', 'desc')),
                 $order_column[1], Filters::enum(array_get($args, 'sort2', 'desc'), array('asc', 'desc')));
 
         /// process search-conditions {{{
@@ -1399,13 +1253,13 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             if (in_array('', $type)) continue;
 
             if ($key == 'dev') {
-            	#setcookie('tasklist_type', 'assignedtome');
+            	setcookie('tasklist_type', 'assignedtome');
                 $from .= 'LEFT JOIN {assigned} a  ON t.task_id = a.task_id ';
                 $from .= 'LEFT JOIN {users} us  ON a.user_id = us.user_id ';
             }
             else
             {
-            	#setcookie('tasklist_type', 'project');
+            	setcookie('tasklist_type', 'project');
             }
 
             $temp = '';
@@ -1413,9 +1267,9 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             foreach ($type as $val) {
                 // add conditions for the status selection
                 if ($key == 'status' && $val == 'closed' && !in_array('open', $type)) {
-                    $temp  .= ' is_closed = 1 AND';
+                    $temp  .= " is_closed = '1' AND";
                 } elseif ($key == 'status' && !in_array('closed', $type)) {
-                    $temp .= ' is_closed = 0 AND';
+                    $temp .= " is_closed <> '1' AND";
                 }
                 if (is_numeric($val) && !is_array($db_key) && !($key == 'status' && $val == 'closed')) {
                     $temp .= ' ' . $db_key . ' = ?  OR';
@@ -1426,7 +1280,7 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR ";
+                                $temp .= ' ' . $singleDBKey . ' LIKE ? OR ';
                                 $sql_params[] = '%' . $val . '%';
                             } elseif (is_numeric($val)) {
                                 $temp .= ' ' . $singleDBKey . ' = ? OR';
@@ -1477,15 +1331,15 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where_temp = array();
 
             if (array_get($args, 'search_in_comments')) {
-                $comments .= "OR c.comment_text $LIKEOP ?";
+                $comments .= 'OR c.comment_text LIKE ?';
             }
             if (array_get($args, 'search_in_details')) {
-                $comments .= "OR t.detailed_desc $LIKEOP ?";
+                $comments .= 'OR t.detailed_desc LIKE ?';
             }
 
             foreach ($words as $word) {
                 $likeWord = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
+                $where_temp[] = "(t.item_summary LIKE ? OR t.task_id = ? $comments)";
                 array_push($sql_params, $likeWord, intval($word));
                 if (array_get($args, 'search_in_comments')) {
                     array_push($sql_params, $likeWord);
@@ -1504,16 +1358,12 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
             $where[]      = 'fsn.user_id = ?';
             $sql_params[] = $user->id;
         }
-        
-        if ($user->isAnon()) {
-            $where[] = 'p.others_view = 1';
-        }
 
         $where = (count($where)) ? 'WHERE '. join(' AND ', $where) : '';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
-             $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, ";
+             $groupby .= "p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name,{$order_column[0]},{$order_column[1]}, lr.resolution_name, ";
              $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
@@ -1521,124 +1371,36 @@ LEFT JOIN  {dependencies} dep  ON dep.dep_task_id = t.task_id ';
 
         $having = (count($having)) ? 'HAVING '. join(' AND ', $having) : '';
 
-        // Current implementation
-        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
-        $sqltext = "
-SELECT t.*, $select
-p.project_title, p.project_is_active,
-lst.status_name,
-lt.tasktype_name,
-lr.resolution_name
-FROM $from
-$where
-GROUP BY $groupby
-$having
-ORDER BY $sortorder";
-
-	$sql = $db->Query("SELECT COUNT(*) FROM ($sqltext) c", $sql_params);
-	$totalcount = $db->FetchOne($sql);
-
-	$sql = $db->Query($sqltext, $sql_params);
-	
-	# we cannot just fetchall on huge task lists into array/memory.
-	#$tasks = $db->fetchAllArray($sql);
-	$tasks = array();
-	$id_list = array();
-	$task_count = 0;
-	$totalcount=0;
-	$forbidden_tasks_count=0;
-	while ($task = $sql->FetchRow()) {
-		if ($user->can_view_task($task)){
-			if ( $task_count >= $offset && $task_count < ($offset + $perpage) ) {
-				$id_list[] = $task['task_id'];
-				$tasks[]=$task;
-			}
-            $task_count++;
-			$totalcount++;
-		} else{
-			$forbidden_tasks_count++;
-		}
-	}
-	return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
-    // # end current
-/*        
-// Alternative implementation for testing and discussion
-// In my tests, the query used was:        
-// SELECT t.*,  lc.category_name               AS category_name,  COUNT(DISTINCT vot.vote_id)    AS num_votes,  (SELECT COUNT(cc.comment_id) FROM flyspray_comments cc WHERE cc.task_id = t.task_id)  AS num_comments,  uo.real_name                   AS opened_by_name,  COUNT(DISTINCT att.attachment_id) AS num_attachments, 
-// p.project_title, p.project_is_active,
-// lst.status_name,
-// lt.tasktype_name,
-// lr.resolution_name
-// FROM  flyspray_tasks t
-// LEFT JOIN  flyspray_projects      p   ON t.project_id = p.project_id
-// LEFT JOIN  flyspray_list_tasktype lt  ON t.task_type = lt.tasktype_id
-// LEFT JOIN  flyspray_list_status   lst ON t.item_status = lst.status_id
-// LEFT JOIN  flyspray_list_resolution lr ON t.resolution_reason = lr.resolution_id 
-// LEFT JOIN  flyspray_list_category lc  ON t.product_category = lc.category_id 
-// LEFT JOIN  flyspray_votes vot         ON t.task_id = vot.task_id 
-// LEFT JOIN  flyspray_users uo          ON t.opened_by = uo.user_id 
-// LEFT JOIN  flyspray_attachments att   ON t.task_id = att.task_id 
-// LEFT JOIN  flyspray_assigned ass      ON t.task_id = ass.task_id 
-// LEFT JOIN  flyspray_users u           ON ass.user_id = u.user_id 
-// WHERE ( is_closed = 0 )
-//
-// And for Postgresql, group by:
-// GROUP BY t.task_id, lc.category_name, uo.real_name, p.project_title, p.project_is_active, lst.status_name, lt.tasktype_name, lr.resolution_name, t.task_id, t.project_id, t.task_type, t.date_opened, t.opened_by, t.is_closed, t.date_closed, t.closed_by, t.closure_comment, t.item_summary, t.detailed_desc, t.item_status, t.resolution_reason, t.product_category, t.product_version, t.closedby_version, t.operating_system, t.task_severity, t.task_priority, t.last_edited_by, t.last_edited_time, t.percent_complete, t.mark_private, t.due_date, t.anon_email, t.task_token, t.supertask_id, t.list_order, t.estimated_effort
-// For Mysql group by is always:
-// GROUP BY t.task_id
-// 
-// And order by is:
-// ORDER BY t.task_id desc, task_severity desc
-
-// In my testing, showing all projects and having total 152299 tasks, 213884 comments,
-// no votes or attachments yet, this version runs between 6500 and 7500 ms.
-// Current version between 13500 and 15500 ms.
-        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1
+        $sql = $db->Query("
+                          SELECT   t.*, $select
+                                   p.project_title, p.project_is_active,
+                                   lst.status_name AS status_name,
+                                   lt.tasktype_name AS task_type,
+                                   lr.resolution_name
                           FROM     $from
                           $where
                           GROUP BY $groupby
-                          $having) s";
-// Using limit 100. Running time depends heavily on offset.
-// With 0: between 5400 and 6000 ms.
-// With 152200: between 14000 and 17000 ms. Varies a lot, strange.
-// Current version not using limit and offset between 60000 and 61000 ms.        
-        $sqltext = "SELECT t.*, $select
-p.project_title, p.project_is_active,
-lst.status_name,
-lt.tasktype_name,
-lr.resolution_name
-FROM $from
-$where
-GROUP BY $groupby
-$having
-ORDER BY $sortorder";
+                          $having
+                          ORDER BY $sortorder", $sql_params);
 
-// Now, do we have a clear winner at least for Postgresql? What kind of running
-// times do you get using Mysql and different storage engines?
-
-        // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-        // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
-        $sql = $db->Query($sqlcount, $sql_params);
-        $totalcount = $db->FetchOne($sql);
-
-        # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
-
-        $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
         $limit = array_get($args, 'limit', -1);
-        $forbidden_tasks_count = 0;
+        $task_count = 0;
         foreach ($tasks as $key => $task) {
             $id_list[] = $task['task_id'];
             if (!$user->can_view_task($task)) {
                 unset($tasks[$key]);
-                $forbidden_tasks_count++;
+                array_pop($id_list);
+                --$task_count;
+            } elseif (!is_null($perpage) && ($task_count < $offset || ($task_count > $offset - 1 + $perpage) || ($limit > 0 && $task_count >= $limit))) {
+                unset($tasks[$key]);
             }
+
+            ++$task_count;
         }
 
-        // Work on this is not finished until $forbidden_tasks_count is always zero.
-        // echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
-        return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
-*/ # end alternative
-} # end get_task_list
-} # end class
+        return array($tasks, $id_list);
+    }
+
+}

@@ -8,7 +8,8 @@ AddDefaultCharset utf-8
 
 DirectoryIndex index.php index.html
 
-# Mod security conflicts with flyspray and you do not need it here
+#mod security conflicts with flyspray and you do not need it here
+# see also http://blog.php-security.org/archives/70-Modsecurity-vs.-PHP.html
 
 #for mod_security 1
 <IfModule mod_security.c>
@@ -19,7 +20,7 @@ DirectoryIndex index.php index.html
    SecRuleEngine Off
 </IfModule>
 
-# php5 as  apache 1/2 module
+# php5 as  apache 1/2 module 
 <IfModule mod_php5.c>
 php_flag register_globals Off
 php_flag magic_quotes_gpc Off
@@ -65,8 +66,6 @@ php_flag always_populate_raw_post_data Off
 </LimitExcept>
 
 <IfModule mod_rewrite.c>
-SetEnv HTTP_MOD_REWRITE on
-
 RewriteEngine on
 #RewriteBase /flyspray
 
@@ -81,9 +80,8 @@ RewriteRule ^task/([0-9]+)/edit$ index.php?do=details&task_id=$1&edit=yep [L,QSA
 
 RewriteRule ^newtask$ index.php?do=newtask [L,QSA]
 RewriteRule ^newtask/proj([0-9]+)$ index.php?do=newtask&project=$1 [L,QSA]
-RewriteRule ^newtask/proj([0-9]+)/supertask([0-9]+)$ index.php?do=newtask&project=$1&supertask=$2 [L,QSA]
 
-RewriteRule ^reports/proj([0-9]+)$ index.php?do=reports&project=$1 [L,QSA]
+RewriteRule ^reports$ index.php?do=reports [L,QSA]
 RewriteRule ^myprofile$ index.php?do=myprofile [L,QSA]
 RewriteRule ^user/([0-9]+)$ index.php?do=user&id=$1 [L,QSA]
 RewriteRule ^logout$ index.php?do=authenticate&logout=1 [L,QSA]
@@ -103,12 +101,7 @@ RewriteRule ^toplevel$ index.php?do=toplevel [L,QSA]
 RewriteRule ^toplevel/proj([0-9]+)$ index.php?do=toplevel&project=$1 [L,QSA]
 RewriteRule ^index$ index.php?do=index [L,QSA]
 RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
-RewriteRule ^newmultitasks/proj([0-9+])$ index.php?do=newmultitasks&project=$1 [L,QSA]
-
-RewriteRule ^proj([0-9+])/dev([0-9]+)$ index.php?project=$1&do=index&dev=$2 [L,QSA]
 
 RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
 
 </IfModule>
-
-SetEnv HTTP_HTACCESS_ENABLED on

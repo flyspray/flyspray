@@ -69,7 +69,7 @@ class Database
      */
     public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
     {
-
+    	
         $this->dbtype   = $dbtype;
         $this->dbprefix = $dbprefix;
         $ADODB_COUNTRECS = false;
@@ -241,6 +241,7 @@ class Database
         }
 
         $sql = $this->Query($sql, $sqlargs);
+
         return ($this->cache[$idx] = $this->fetchAllArray($sql));
     }
 

@@ -29,7 +29,7 @@ foreach ($projects as $project): ?>
       <strong><?php echo Filters::noXSS(L('mostwanted')); ?></strong>
         <ul>
             <?php foreach($most_wanted[$project['project_id']] as $task): ?>
-            <li><?php echo tpl_tasklink($task['task_id']); ?>, <?php echo Filters::noXSS($task['num_votes']); ?>  <?php echo ($task['num_votes']==1) ? Filters::noXSS(L('vote')) : Filters::noXSS(L('votes')); ?></li>
+            <li><?php echo tpl_tasklink($task['task_id']); ?>, <?php echo Filters::noXSS($task['num_votes']); ?> <?php echo Filters::noXSS(L('vote(s)')); ?></li>
             <?php endforeach; ?>
         </ul>
     </td>
@@ -80,44 +80,6 @@ foreach ($projects as $project): ?>
         </div>        
     </td>
   </tr>
-  <?php
-        if ($projprefs[$project['project_id']]['use_effort_tracking']) {
-        $total_estimated = 0;
-        $actual_effort = 0;
-
-        foreach($stats[$project['project_id']]['tasks'] as $task) {
-            $total_estimated += $task['estimated_effort'];
-            $effort = new effort($task['task_id'],0);
-            $effort->populateDetails();
-
-            foreach($effort->details as $details) {
-                $actual_effort += $details['effort'];
-            }
-            $effort = null;
-        }
-
-  ?>
-  <?php if ($user->perms('view_estimated_effort', $project['project_id'])) { ?>
-  <tr>
-      <th>
-          <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
-      </th>
-      <td>
-          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>
-      </td>
-  </tr>
-  <?php } ?>
-  <?php if ($user->perms('view_current_effort_done', $project['project_id'])) { ?>
-  <tr>
-      <th>
-          <?php echo Filters::noXSS(L('currenteffortdoneopen')); ?>
-      </th>
-      <td>
-          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>
-      </td>
-  </tr>
-  <?php } ?>
-  <?php } ?>
   <tr>
     <th><?php echo Filters::noXSS(L('feeds')); ?></th>
     <td>
