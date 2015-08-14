@@ -117,6 +117,16 @@ class Database
     }
 
     /**
+     * Insert_ID
+     * 
+     * @access public
+     */
+    public function Insert_ID()
+    {
+        return $this->dblink->Insert_ID();
+    }
+
+    /**
      * CountRows
      * Returns the number of rows in a result
      * @param object $result
