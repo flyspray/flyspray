@@ -319,13 +319,15 @@ abstract class Backend
                                  (task_id, date_added, last_edited_time, user_id, comment_text)
                          VALUES  ( ?, ?, ?, ?, ? )',
                     array($task['task_id'], $time, $time, $user->id, $comment_text));
-
+        /*
         $result = $db->Query('SELECT  comment_id
                                 FROM  {comments}
                                WHERE  task_id = ?
                             ORDER BY  comment_id DESC',
                             array($task['task_id']), 1);
         $cid = $db->FetchOne($result);
+         */
+        $cid = $db->Insert_ID();
 
         Flyspray::logEvent($task['task_id'], 4, $cid);
 
@@ -405,12 +407,16 @@ abstract class Backend
                         $user->id, time()));
 
             // Fetch the attachment id for the history log
+            /*
             $result = $db->Query('SELECT  attachment_id
                                     FROM  {attachments}
                                    WHERE  task_id = ?
                                 ORDER BY  attachment_id DESC',
                     array($task_id), 1);
             Flyspray::logEvent($task_id, 7, $db->fetchOne($result), $_FILES[$source]['name'][$key]);
+            */
+            $attid = $db->Insert_ID();
+            Flyspray::logEvent($task_id, 7, $attid, $_FILES[$source]['name'][$key]);
         }
 
         return $res;
@@ -1071,7 +1077,9 @@ abstract class Backend
             $sql_values[] = $value;
         }
 
-
+        /* TODO: At least with PostgreSQL, this has caused the sequence to be
+         * out of sync with reality. Must be fixed in upgrade process. Check
+         * what's the situation with MySQL.
         $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);
@@ -1080,14 +1088,14 @@ abstract class Backend
         //now, $task_id is always the first element of $sql_values
         array_unshift($sql_keys, 'task_id');
         array_unshift($sql_values, $task_id);
-
+        */
         $sql_keys_string = join(', ', $sql_keys);
         $sql_placeholder = $db->fill_placeholders($sql_values);
 
         $result = $db->Query("INSERT INTO  {tasks}
                                  ($sql_keys_string)
                          VALUES  ($sql_placeholder)", $sql_values);
-
+        $task_id = $db->Insert_ID();
 	/////////////////////////////////////Add tags///////////////////////////////////////
     if (isset($args['tags'])) {
     	$tagList = explode(';', $args['tags']);

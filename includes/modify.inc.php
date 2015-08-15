@@ -1023,8 +1023,9 @@ switch ($action = Req::val('action'))
         Post::num('disp_intro')
     ));
 
-        $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
-        $pid = $db->fetchOne($sql);
+        // $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
+        // $pid = $db->fetchOne($sql);
+        $pid = $db->Insert_ID();
 
         $cols = array( 'manage_project', 'view_tasks', 'open_new_tasks',
                 'modify_own_tasks', 'modify_all_tasks', 'view_comments',

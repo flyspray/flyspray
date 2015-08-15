@@ -130,12 +130,14 @@ class Notifications {
 	);
 
 	// grab notification id
+        /*
 	$result = $db->Query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC", array($date), 1);
 
 	$row = $db->FetchRow($result);
 	$message_id = $row['message_id'];
-
+        */
+        $message_id = $db->Insert_ID();
 	// If message could not be inserted for whatever reason...
 	if (!$message_id) {
 	    return false;
@@ -205,13 +207,15 @@ class Notifications {
                 );
 
       // grab notification id
+      /*
       $result = $db->Query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC",
                             array($date), 1);
 
       $row = $db->FetchRow($result);
       $message_id = $row['message_id'];
-
+      */
+      $message_id = $db->Insert_ID();
       // If message could not be inserted for whatever reason...
       if (!$message_id) {
           return false;
