@@ -149,7 +149,9 @@ function execute_upgrade_file($folder, $installed_version)
         if (substr($file, -4) == '.xml') {
             $schema = new adoSchema($db->dblink);
             $xml = file_get_contents($upgrade_path . '/' . $file);
-            $xml = str_replace('<table name="', '<table name="' . $conf['database']['dbprefix'], $xml);
+            // $xml = str_replace('<table name="', '<table name="' . $conf['database']['dbprefix'], $xml);
+            // Set the prefix for database objects ( before parsing)
+            $schema->setPrefix($conf['database']['dbprefix'], false);
             $schema->ParseSchemaString($xml);
             $schema->ExecuteSchema(null, true);
         }
