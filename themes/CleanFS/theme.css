@@ -549,10 +549,9 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 }
 #controlBox.active div.inner {opacity: 1;}
 div#fineprint {
-  /*border-top: 1px solid $box_border;*/
   font-size: smaller;
   margin: 5px 0;
-  padding: 10px 5px 10px 20px;
+  padding: 0;
   color: #555;
 }
 form #taskdetails #taskfields { width: 335px;}
@@ -563,12 +562,12 @@ form #taskdetails #taskdetailsfull {
 }
 #taskdetails {
   margin: 10px 0px 10px 0px;
-  padding: 10px;
+  padding: 0px;
   background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-#taskdetails #navigation {float: right;}
+#taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
 .tags span {
     background: #eee none repeat scroll 0 0;
@@ -583,18 +582,18 @@ form #taskdetails #taskdetailsfull {
   border-right: 1px solid #eee;
   padding-top: 5px;
   background: #f9f9f9;
-  margin: -10px;
+  margin: 0;
 }
 #taskdetails #taskfields ul.fieldslist {
-  margin-bottom: 35px;
+  margin-bottom: 5px;
   list-style: none;
-  margin-right: 1ex;
-  padding-left: 1ex;
+  margin-right: 0;
+  padding-left: 0;
 }
 #taskdetails #taskfields ul.fieldslist li {
   clear: both;
-  padding-top: 2%;
-  padding-bottom: 2%;
+  padding-top: 2px;
+  padding-bottom: 2px;
   overflow: auto;
   width: 100%;
   border-radius: 4px;
@@ -608,7 +607,7 @@ form #taskdetails #taskdetailsfull {
   text-align: right;
   color: #888;
 }
-#taskdetails #taskfields ul.fieldslist li .value {display:block;float:right;width:50%;height:18px;}
+#taskdetails #taskfields ul.fieldslist li .value {display:block;float:right;width:50%;}
 #taskdetails #taskfields ul.fieldslist > li:nth-child(2n-1) {background-color: #f1f1f1;}
 #taskdetails #showvotes {
   position: absolute;
@@ -620,11 +619,11 @@ form #taskdetails #taskdetailsfull {
   z-index:100;
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
-#taskdetailsfull {margin-left: 300px;padding: 2em 3em;}
+#taskdetailsfull {margin-left: 291px;padding: 2em 3em;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
-  margin-left: 300px;
+  margin-left: 291px;
   margin-top: 15px;
   border-top: 1px solid #e1e1e1;
   padding: 8px 5px;
