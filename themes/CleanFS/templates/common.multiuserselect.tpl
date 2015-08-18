@@ -1,7 +1,7 @@
                <div class="userSelectWidget">
                    <label for="find_user" class="inline" style="margin:0;padding:0;"><?php echo Filters::noXSS(L('find')); ?>:</label>
-                   <input type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
-                   <a href="javascript:unselectAll()"><?php echo Filters::noXSS(L('noone')); ?></a>
+                   <input placeholder="<?php echo Filters::noXSS(L('user')); ?>" type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
+                   <a class="button" href="javascript:unselectAll()"><?php echo Filters::noXSS(L('noone')); ?></a>
                    <br />
 
                    <select size="8" style="width:200px;" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
