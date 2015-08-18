@@ -291,15 +291,15 @@ div#mysearches td {vertical-align: middle;}
   zoom: 1; /* triggers hasLayout for IE */
   *display: inline; /* target IE7 only */
   margin: 0.3em 0.3em 0.3em 0;
-  padding: 8px 13px 8px 10px;
+  padding: 4px;
   /* Links */
-  border: 1px solid #bbbbbb;
+  border: 1px solid #bbb;
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -moz-box-shadow: 0px 1px 1px #dddddd;
-  -webkit-box-shadow: 0px 1px 1px #dddddd;
-  box-shadow: 0px 1px 1px #dddddd;
+  -moz-box-shadow: 0px 1px 1px #ddd;
+  -webkit-box-shadow: 0px 1px 1px #ddd;
+  box-shadow: 0px 1px 1px #ddd;
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
   filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
   background-color: white;
