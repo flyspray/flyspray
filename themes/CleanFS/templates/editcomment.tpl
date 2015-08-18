@@ -35,7 +35,6 @@
 					<div class="hide preview" id="preview"></div>
 					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
-				<button accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
 				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text'), $comment['comment_text']); ?>
 				<div id="addlinkbox">
 					<?php $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
@@ -79,6 +78,7 @@
 						</noscript>
 					</div>
 				<?php endif; ?>
+				<button accesskey="s" tabindex="9" type="submit" class="positive" style="display:block"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
 				</form>
 			</div>
 		</div>
