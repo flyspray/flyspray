@@ -315,18 +315,21 @@ abstract class Backend
 
         $time =  !is_numeric($time) ? time() : $time ;
 
-        $db->Query('INSERT INTO  {comments}
-                                 (task_id, date_added, last_edited_time, user_id, comment_text)
-                         VALUES  ( ?, ?, ?, ?, ? )',
+        $db->Query('INSERT INTO {comments}
+                                (task_id, date_added, last_edited_time, user_id, comment_text)
+                         VALUES ( ?, ?, ?, ?, ? )',
                     array($task['task_id'], $time, $time, $user->id, $comment_text));
 
-        $result = $db->Query('SELECT  comment_id
-                                FROM  {comments}
-                               WHERE  task_id = ?
-                            ORDER BY  comment_id DESC',
+	$cid=$db->Insert_ID();
+        /*
+        $result = $db->Query('SELECT comment_id
+                                FROM {comments}
+                               WHERE task_id = ?
+                            ORDER BY comment_id DESC',
                             array($task['task_id']), 1);
         $cid = $db->FetchOne($result);
-
+	*/
+	Backend::upload_links($task['task_id'], $cid);
         Flyspray::logEvent($task['task_id'], 4, $cid);
 
         if (Backend::upload_files($task['task_id'], $cid)) {
@@ -334,6 +337,7 @@ abstract class Backend
         } else {
             $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
+	
 
         return true;
     }
