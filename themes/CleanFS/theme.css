@@ -1022,7 +1022,7 @@ ul.form_elements li label {
       color: #555555;
 }
 ul.form_elements li label.inline {
-  display: inline;
+  display: inline;vertical-align:middle;
 }
 ul.form_elements li input {
   vertical-align: middle;
