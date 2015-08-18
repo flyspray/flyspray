@@ -68,8 +68,8 @@
 					<?php endif; ?>
 					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 						<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+						<style>#dokuwiki_toolbar {display:inline;vertical-align:bottom;}</style>
 					<?php endif; ?>
-					<button accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('addcomment')); ?></button>
 					<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
 					<div id="addlinkbox">
 						<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
@@ -109,6 +109,7 @@
 							</noscript>
 						</div>
 					<?php endif; ?>
+					<button class="button positive" accesskey="s" tabindex="9" type="submit"><?php echo Filters::noXSS(L('addcomment')); ?></button>
 					</form>
 				</div>
 			</div>
