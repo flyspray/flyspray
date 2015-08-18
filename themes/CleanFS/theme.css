@@ -1055,7 +1055,7 @@ ul.slim li div.userSelectWidget {
     vertical-align: middle;
 }
 ul.slim li div.userSelectWidget input {
-  width: 120px;
+  width: 80px;
 }
 .dateselect {
   clear: both;
