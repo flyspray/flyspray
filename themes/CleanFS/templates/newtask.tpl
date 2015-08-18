@@ -198,11 +198,13 @@
           <input id="itemsummary" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
             name="item_summary" maxlength="100" />
         </h2>
+        <!--
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
         <input id="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>" class="text" type="text"
         value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>" name="tags" maxlength="100" />
 	</div>
+	-->
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
         <?php endif; ?>
