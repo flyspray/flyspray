@@ -1,13 +1,4 @@
 <p><?php echo Filters::noXSS(L('listnote')); ?></p>
-<?php if (count($rows)): ?>
-<div id="controlBox">
-    <div class="grip"></div>
-    <div class="inner">
-        <a href="#" onclick="TableControl.up('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
-        <a href="#" onclick="TableControl.down('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
-    </div>
-</div>
-<?php endif; ?>
 <?php if ($do=='pm'):
 # show systemwide settings for this list on project setting page too ..
 ?>
@@ -51,12 +42,19 @@ $syscountlines++;
 </tr>
 <?php endforeach; ?>
 <?php else: ?>
-<tr><td colspan="<?php echo $list_type=='version' ? 5 : 4; ?>"><?php echo Filters::noXSS(L('novalues'));
-# TODO: do we have still a matching translation string name we can use instead inventing a new one?
-?></td></tr>
+<tr><td colspan="<?php echo $list_type=='version' ? 5 : 4; ?>"><?php echo Filters::noXSS(L('novalues')); ?></td></tr>
 <?php endif; ?>
 </tbody>
 </table>
+<?php endif; ?>
+<?php if (count($rows)): ?>
+<div id="controlBox">
+    <div class="grip"></div>
+    <div class="inner">
+        <a href="#" onclick="TableControl.up('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
+        <a href="#" onclick="TableControl.down('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
+    </div>
+</div>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
 <h3><?php echo $do=='pm' ? Filters::noXSS(L('projectvalues')) : Filters::noXSS(L('systemvalues'));
