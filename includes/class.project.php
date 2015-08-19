@@ -97,13 +97,12 @@ class Project
 
         $join = 't.'.join(" = l.{$type}_id OR t.", $join)." = l.{$type}_id";
 
-        return "SELECT  l.*, count(t.task_id) AS used_in_tasks
-                  FROM  {list_{$type}} l
-             LEFT JOIN  {tasks}        t  ON ($join)
-                            AND t.project_id = l.project_id
-                 WHERE  l.project_id = ?
-              GROUP BY  $groupby
-              ORDER BY  list_position";
+        return "SELECT l.*, count(t.task_id) AS used_in_tasks
+                  FROM {list_{$type}} l
+             LEFT JOIN {tasks} t ON ($join) AND (l.project_id=0 OR t.project_id = l.project_id)
+                 WHERE l.project_id = ?
+              GROUP BY $groupby
+              ORDER BY list_position";
     }
 
     /**
