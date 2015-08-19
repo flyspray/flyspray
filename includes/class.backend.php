@@ -319,16 +319,7 @@ abstract class Backend
                                 (task_id, date_added, last_edited_time, user_id, comment_text)
                          VALUES ( ?, ?, ?, ?, ? )',
                     array($task['task_id'], $time, $time, $user->id, $comment_text));
-
-	$cid=$db->Insert_ID();
-        /*
-        $result = $db->Query('SELECT comment_id
-                                FROM {comments}
-                               WHERE task_id = ?
-                            ORDER BY comment_id DESC',
-                            array($task['task_id']), 1);
-        $cid = $db->FetchOne($result);
-	*/
+        $cid = $db->Insert_ID();
 	Backend::upload_links($task['task_id'], $cid);
         Flyspray::logEvent($task['task_id'], 4, $cid);
 
@@ -409,12 +400,16 @@ abstract class Backend
                         $user->id, time()));
 
             // Fetch the attachment id for the history log
+            /*
             $result = $db->Query('SELECT  attachment_id
                                     FROM  {attachments}
                                    WHERE  task_id = ?
                                 ORDER BY  attachment_id DESC',
                     array($task_id), 1);
             Flyspray::logEvent($task_id, 7, $db->fetchOne($result), $_FILES[$source]['name'][$key]);
+            */
+            $attid = $db->Insert_ID();
+            Flyspray::logEvent($task_id, 7, $attid, $_FILES[$source]['name'][$key]);
         }
 
         return $res;
@@ -1076,6 +1071,10 @@ abstract class Backend
         }
 
 	/*
+         * TODO: At least with PostgreSQL, this has caused the sequence to be
+         * out of sync with reality. Must be fixed in upgrade process. Check
+         * what's the situation with MySQL. (It's fine, it updates the value even
+         * if the column was manually adjusted. Remove this whole block later.)
         $result = $db->Query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
         $task_id = $db->FetchOne($result);

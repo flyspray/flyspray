@@ -114,6 +114,19 @@ if (Post::val('upgrade')) {
 
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
+    
+    // Fix the sequence in tasks table for PostgreSQL.
+    if ($db->dblink->dataProvider == 'postgres') {
+        $rslt = $db->Query('SELECT MAX(task_id) FROM {tasks}');
+        $maxid = $db->FetchOne($rslt);
+        // The correct sequence should normally have a name containing at least both the table and column name in this format. 
+        $rslt = $db->Query('SELECT relname FROM pg_class WHERE NOT relname ~ \'pg_.*\' AND relname LIKE \'%' . $conf['database']['dbprefix'] . 'tasks_task_id%\' AND relkind = \'S\'');
+        if ($db->CountRows($rslt) == 1) {
+            $seqname = $db->FetchOne($rslt);
+            $db->Query('SELECT setval(?, ?)', array($seqname, $maxid));
+        }
+    }
+    // */
     $db->dblink->CompleteTrans();
     $installed_version = $fs->version;
     $page->assign('done', true);
