@@ -450,25 +450,19 @@ a { text-decoration: none;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
 #tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
+#tasklist_table .ttcolumn a, a.toggle_selected {
+  background-image: url(img/black/loop_alt3_12x9.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;}
+#tasklist_table tbody tr:hover td {border-color:#ddd;}
 
-#tasklist_table .ttcolumn a {
-  background-image: url(img/black/loop_alt3_12x9.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 30px;
-  height: 30px;
-  display: block;
-}
-a.toggle_selected {
-  background-image: url(img/black/loop_alt3_12x9.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 30px;
-  height: 30px;
-  display: block;
-}
-tr.severity1 .task_severity {background-color: white;}
-tr.severity2 .task_severity {background-color: white;}
+tr.severity1 .task_severity {background-color: #fff;}
+tr.severity2 .task_severity {background-color: #fff;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
 tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
