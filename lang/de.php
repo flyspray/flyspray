@@ -1027,7 +1027,7 @@ $translation = array(
 Das Tagging in Flyspray ist derzeit sehr rudimentär. Sie sind in etwa vergleichbar mit Aufklebern an einer Fensterscheibe.
 Eine optische Gestaltung, Filterung oder Einbeziehung in die Suche ist derzeit nicht vorhanden. (kann aber noch werden :-))',
 'novalues'                => 'keine Einträge',
-'usedintasks'             => 'verwendet',
+'usedintasks'             => 'Verwendung',
 );
 
 ?>
