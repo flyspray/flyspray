@@ -1136,7 +1136,6 @@ ul.slim li div.userSelectWidget input {
 .list .corder {width:50px;}
 .list .cshow {width:50px;}
 .list .ctense {width:80px;}
-.list .cdelete {width:80px;}
 .list input[id^='listname'], .list input[id^='listposition'] {width:100%;}
 #catTable .first{ white-space:nowrap;min-width:120px;}
 #idtablesys {background-color: #eee;}
