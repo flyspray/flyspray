@@ -22,6 +22,7 @@
 <col class="cshow"></col>
 <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
 <col class="cdelete"></col>
+<col class="cusage"></col>
 </colgroup>
 <thead>
 <tr>
@@ -30,6 +31,7 @@
     <th><?php echo Filters::noXSS(L('show')); ?></th>
     <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
     <th>&nbsp;</th>
+    <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -45,6 +47,7 @@ $syscountlines++;
     <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
     <?php if ($list_type == 'version'): ?><td title="<?php echo Filters::noXSS(L('listtensetip')); ?>"><?php echo $row[$list_type.'_tense']; ?></td><?php endif; ?>
     <td>&nbsp;</td>
+    <td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
 </tr>
 <?php endforeach; ?>
 <?php else: ?>
@@ -67,6 +70,7 @@ $syscountlines++;
     <col class="cshow"></col>
     <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
     <col class="cdelete"></col>
+    <col class="cusage"></col>
 </colgroup>
 <thead>
     <tr>
@@ -75,6 +79,7 @@ $syscountlines++;
        <th><?php echo Filters::noXSS(L('show')); ?></th>
        <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
        <th><?php echo Filters::noXSS(L('delete')); ?></th>
+       <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
      </tr>
    </thead>
    <tbody>
@@ -109,13 +114,15 @@ $syscountlines++;
         <?php endif; ?>
         name="delete[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="1" />
       </td>
+      <td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
     </tr>
     <?php endforeach; ?>
     </tbody>
     <?php if(count($rows)): ?>
+    <tfoot>
     <tr>
       <td colspan="3"></td>
-      <td class="buttons">
+      <td colspan="2" class="buttons">
         <?php if ($list_type == 'version'): ?>
         <input type="hidden" name="action" value="update_version_list" />
         <?php else: ?>
@@ -126,6 +133,7 @@ $syscountlines++;
         <button type="submit"><?php echo Filters::noXSS(L('update')); ?></button>
       </td>
     </tr>
+    </tfoot>
     <?php endif; ?>
   </table>
   <?php if (count($rows)): ?>
