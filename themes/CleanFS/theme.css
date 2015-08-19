@@ -1100,7 +1100,7 @@ ul.slim li div.userSelectWidget input {
   height: 80%;
 }
 .double_select .dualselect_selected button {
-  height: 0;
+  height: 16px;
   line-height:0;
   width: 100%;
   margin:0;
