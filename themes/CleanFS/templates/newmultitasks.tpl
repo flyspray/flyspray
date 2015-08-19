@@ -12,7 +12,7 @@
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
   <input type="hidden" name="action" value="newmultitasks.newmultitasks" />
-  <button class="button positive main" accesskey="f" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
+  <button class="button" accesskey="f" type="button" onClick="Apply()"><?php echo L('applyfirstline'); ?></button>
   <table class="list">
     <thead>
        <tr>
@@ -144,8 +144,8 @@
 
       <tr>
         <td class="buttons" colspan="<?php echo $field_num; ?>">
-          <button class="button positive main" accesskey="a" type="button" onClick="createRow('','')"><?php echo L('addmorerows'); ?></button>
-          <button class="button positive main" accesskey="s" type="submit"><?php echo L('addtasks'); ?></button>
+          <button class="button" accesskey="a" type="button" onClick="createRow('','')"><?php echo L('addmorerows'); ?></button>
+          <button class="button positive" accesskey="s" type="submit"><?php echo L('addtasks'); ?></button>
         </td>
       </tr>
      </tbody>
