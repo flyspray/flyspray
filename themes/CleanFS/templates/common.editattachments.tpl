@@ -1,6 +1,6 @@
     <?php if ($attachments): ?>
     <table class="attachments">
-      <thead><tr><th><?php echo Filters::noXSS(L('file')); ?></th><th><?php echo Filters::noXSS(L('size')); ?></th><th><?php echo Filters::noXSS(L('delete')); ?></th></tr></thead>
+      <thead><tr><th><?php echo Filters::noXSS(L('file')); ?></th><th<?php echo $user->perms('delete_attachments') ? '':' style="color:#999"'; ?>><?php echo Filters::noXSS(L('size')); ?></th><th><?php echo Filters::noXSS(L('delete')); ?></th></tr></thead>
       <?php foreach ($attachments as $attachment): ?>
       <tr>
         <td>
