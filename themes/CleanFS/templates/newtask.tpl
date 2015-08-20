@@ -195,18 +195,20 @@
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
         <h2 class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary">
           <label for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-          <input id="itemsummary" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
-            name="item_summary" maxlength="100" />
+          <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+            name="item_summary" maxlength="100" style="min-width:300px" />
         </h2>
         <!--
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
         <input id="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>" class="text" type="text"
-        value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>" name="tags" maxlength="100" />
+        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" style="min-width:300px" />
 	</div>
 	-->
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
+        <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+	<style>#dokuwiki_toolbar{display:inline-block;vertical-align:bottom;}</style>
         <?php endif; ?>
         <?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task'])); ?>
 
@@ -220,11 +222,6 @@
           <?php endif; ?>
           <input type="hidden" name="action" value="newtask.newtask" />
           <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
-          <!--<button accesskey="s" type="submit"><?php echo Filters::noXSS(L('addthistask')); ?></button>-->
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
-          <?php endif; ?>
-
           <?php if (!$user->isAnon()): ?>
           &nbsp;&nbsp;<input class="text" type="checkbox" id="notifyme" name="notifyme"
           value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?php echo Filters::noXSS(L('notifyme')); ?></label>
