@@ -62,11 +62,11 @@ div.popup {
 	background-color:#fafafa;
 }
 tr.active,
-#pm-menu-list li a.active,
-#menu-list a.active,
+#pm-menu-list a.active, #pm-menu-list a.active:hover,
+#menu-list a.active, #menu-list a.active:hover,
 #s_loginbox:checked ~ #show_loginbox,
 #s_quickactions:checked ~ #actions,
-#menu #menu-list a#show_loginbox:hover {
+#menu-list a#show_loginbox:hover {
 	background-color: #5f9729;
 }
 /* end default Flyspray color scheme */
@@ -303,8 +303,8 @@ div#mysearches td {vertical-align: middle;}
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
-#pm-menu-list li a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
-#pm-menu-list li a.active {
+#pm-menu-list a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
+#pm-menu-list a.active {
         /*color: darken($top2, 10%);*/
         border-left: none;
         border-bottom: 3px solid #5f9729;
@@ -901,7 +901,7 @@ div.success {
   color: #24380d;
 }
 a#show_loginbox {margin-right: 5px;}
-#menu a#show_loginbox.active {border-radius: 10px 10px 0 0;}
+#menu a#show_loginbox.active {border-radius: 3px 3px 0 0;}
 #loginbox {
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -1276,9 +1276,9 @@ input[type=submit]:hover, button:hover {
 */
 #show_loginbox {
     background: #494D4E;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
 div.denyform {
