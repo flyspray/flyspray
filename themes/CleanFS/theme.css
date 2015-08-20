@@ -548,6 +548,7 @@ div#fineprint {
   padding: 0;
   color: #555;
 }
+#dokuwiki_toolbar {display:inline;vertical-align:bottom;}
 form #taskdetails #taskfields { width: 335px;}
 form #taskdetails #taskdetailsfull {
   position: relative;
