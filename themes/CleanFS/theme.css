@@ -33,6 +33,7 @@ input[type=text],
 input[type=password]
 fieldset,
 body.toplevel .box,
+body .positive,
 div.box,
 p.box,
 div.roadmap,
@@ -299,15 +300,13 @@ div#mysearches td {vertical-align: middle;}
 #pm-menu-list {list-style: none;display: inline-block;margin:0;}
 #pmcontrol{display: inline-block;float: right;margin: 6px 20px 0px 0px;}
 #pm-menu-list li {display: inline-block;}
-#pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; margin-right: 2px;color: #f9f9f9;
+#pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; color: #f9f9f9;
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
 #pm-menu-list a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
 #pm-menu-list a.active {
-        /*color: darken($top2, 10%);*/
         border-left: none;
-        border-bottom: 3px solid #5f9729;
         border-top: 1px solid #6cab2e;
         border-right: 1px solid #6cab2e;
 }
@@ -367,10 +366,8 @@ a.button img, button.button img {
 a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
-body .positive {
-  /*color: white;*/
-  /*background: lighten(#5F9729, 10%);*/
-  background-color: #d2ecb9;
+body a.positive, body button.positive {
+  color: #fff;
   border: solid 1px #5a8f27;
   border-top: solid 1px #85cb41;
   border-right: solid 1px #85cb41;
@@ -378,13 +375,10 @@ body .positive {
 a.positive:hover, button.positive:hover {
   background-color: #78bf34;
   border: solid 1px #5f9729;
-  color: #529214;
-  color: white;
 }
 a.positive:active, button.positive:active {
   background-color: #529214;
   border: 1px solid #529214;
-  color: #fff;
 }
 .button.img.delete {
 	background-image: url('./img/red/x_alt_24x24.png');
