@@ -24,7 +24,7 @@ display:block;
 
 /* Central default color scheme for Flyspray.
 You can overwrite it by grouping the same css rules to your colors later in the file.
-Or load an extra 'custom.css' file in the header.tpl after loading theme.css.
+Or better load an extra 'customxxx.css' file in the header.tpl after loading theme.css.
 */
 .button,
 button,
@@ -254,7 +254,7 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
       height: 1.4em;
       border-left: dotted 1px #888888;
 }
-#menu-list li.first {border: none; }
+#menu-list li:first-child {border: none; }
 #menu-list #locked { margin-left: 7px; color: red; }
 div#mysearches {
   border-radius: 4px;
@@ -311,7 +311,7 @@ div#mysearches td {vertical-align: middle;}
         border-top: 1px solid #6cab2e;
         border-right: 1px solid #6cab2e;
 }
-#pm-menu-list li.first a {border-left: none;}
+#pm-menu-list li:first-child a {border-left: none;}
 #toplevellink {background-image: url("img/gray/folder_stroke_12x12.png");}
 #homelink {background-image: url("img/gray/list_12x11.png");}
 #newtasklink {background-image: url("img/gray/document_alt_stroke_9x12.png"); }
