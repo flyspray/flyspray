@@ -21,9 +21,58 @@ article, aside, details, figcaption, figure, dialog,
 footer, header, hgroup, menu, nav, section {
 display:block;
 }
+
+/* Central default color scheme for Flyspray.
+You can overwrite it by grouping the same css rules to your colors later in the file.
+Or load an extra 'custom.css' file in the header.tpl after loading theme.css.
+*/
+.button,
+button,
+input[type=submit],
+input[type=text],
+input[type=password]
+fieldset,
+body.toplevel .box,
+div.box,
+p.box,
+div.roadmap,
+div.error,
+div.success,
+div.mixed,
+.descbox,
+#toolboxmenu a.active,
+#submenu a.active,
+#tasklist,
+#search,
+#search fieldset,
+#intromessage,
+#toolbox,
+#toolbox div.tab,
+#taskdetails,
+#taskdetails #showvotes,
+#comments, #related, #notify, #remind, #effort, #history,
+#events,
+div#taskclosed,
+#tasklist_table th,
+#controlBox {
+	background-color:#fff;
+}
+div.denyform,
+div.popup {
+	background-color:#fafafa;
+}
+tr.active,
+#pm-menu-list li a.active,
+#menu-list a.active,
+#s_loginbox:checked ~ #show_loginbox,
+#s_quickactions:checked ~ #actions,
+#menu #menu-list a#show_loginbox:hover {
+	background-color: #5f9729;
+}
+/* end default Flyspray color scheme */
+
 body {
 line-height: 1.5; /* Line-height should always be unitless! */
-background: #fff;
 /* direction:rtl; */
 }
 table {border-collapse: separate;border-spacing: 0;}
@@ -140,7 +189,6 @@ img:-moz-broken {
 }
 div.popup {
   position: absolute;
-  background: #fafafa;
   border: #e1e1e1 1px solid;
   margin-top: 5px;
   padding: 5px;
@@ -190,7 +238,6 @@ a:hover {color: #6699cc;}
 tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
   /*background: $inverse_link; */
   color: #fff;
-  background: #5f9729;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -259,7 +306,6 @@ div#mysearches td {vertical-align: middle;}
 #pm-menu-list li a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
 #pm-menu-list li a.active {
         /*color: darken($top2, 10%);*/
-        background-color: #5f9729;
         border-left: none;
         border-bottom: 3px solid #5f9729;
         border-top: 1px solid #6cab2e;
@@ -302,7 +348,6 @@ div#mysearches td {vertical-align: middle;}
   box-shadow: 0px 1px 1px #ddd;
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
   filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
-  background-color: white;
   font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
   font-size: 100%;
   line-height: 130%;
@@ -358,7 +403,6 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 #tasklist {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -366,28 +410,24 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 #search fieldset {
     margin: 10px 0px 10px 0px;
     padding: 10px;
-    background: white;
     border: solid 1px #e1e1e1;
     border-radius: 3px;
 }
 #intromessage {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 body.toplevel .box {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   margin: 10px 0 0 10px;
@@ -444,7 +484,6 @@ body.toplevel .single-project {
 }
 td.task_progress .progress_bar_container { width: 100%;}
 a { text-decoration: none;}
-#tasklist_table th { background: #fff;}
 #tasklist_table th img {position: relative;top: 2px;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
@@ -470,7 +509,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #toolbox {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   margin-left: 120px;
@@ -481,7 +519,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #toolbox div.tab {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -514,7 +551,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
   font-weight: bold;
   width: 100px;
   padding: 1em 10px;
-  background-color: white;
   color: #3c4041;
   border: 1px solid #e1e1e1;
   border-right: none;
@@ -524,7 +560,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #controlBox {
   border: 1px solid gray;
   padding: 1px;
-  background: #fff;
   width: auto !important;
   width: 90px;
   margin-left: 40px;
@@ -558,7 +593,6 @@ form #taskdetailsfull {
 #taskdetails {
   margin: 10px 0px 10px 0px;
   padding: 0px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -608,7 +642,6 @@ form #taskdetailsfull {
   position: absolute;
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   z-index:100;
@@ -626,7 +659,6 @@ form #taskdetailsfull {
 #comments, #related, #notify, #remind, #effort, #history {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -661,7 +693,6 @@ form #taskdetailsfull {
   border-right: bottom;
   /*border-top: 1px solid lighten($top1, 30%);*/
   border-top: 2px solid #78bf34;
-  background-color: white;
   z-index: 5;
 }
 #submenu li {display: inline;}
@@ -760,11 +791,9 @@ div.comment_container .attachments
 	width: 45%;
 	margin-top: 10px;
 	padding: 10px;
-	background: white;
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
 	width: 300px;
-	
 	background-color: #ffc;
 	/*
 	background-image: url(img/gray/pin_24x24.png);
@@ -781,14 +810,12 @@ div.comment_container .attachments
     font-size: large;
 }
 
-div.comment_container .links
-{
+div.comment_container .links {
 	display: inline-block;
 	width: 45%;
 	margin-right: 3%;
 	margin-top: 10px;
 	padding: 10px;
-	background: white;
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
 	width: 300px;
@@ -796,14 +823,12 @@ div.comment_container .links
 	vertical-align: top;
 }
 
-div.comment_container .attachments img
-{
+div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
 
-div.comment_container #addlinkbox
-{
+div.comment_container #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
@@ -830,7 +855,7 @@ textarea {width: 99%;}
 #events {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
+
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -840,21 +865,18 @@ table td {vertical-align: top;}
 div.box, p.box {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 div.roadmap {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 div.error, div.success, div.mixed {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   z-index: 50;
@@ -928,7 +950,6 @@ span#advancedsearchstate img {vertical-align: middle;}
 fieldset {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -954,7 +975,6 @@ div#taskclosed {
   margin: 5px 5px 10px;
   clear: both;
   width: 20em;
-  background: white;
   border: solid 1px red;
 }
 div#taskdeps {float: left;width: 50%; margin-bottom: 8px;}
@@ -1219,7 +1239,6 @@ div#closeform {
 #taskdeps img {vertical-align:middle;margin-top:-1px;}
 input[type=text], input[type=password]{
     color: #000;
-    background: #fff;
     border: 1px solid #ccc;
     padding: 2px;
     vertical-align: middle;
@@ -1261,12 +1280,11 @@ input[type=submit]:hover, button:hover {
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
-#menu #menu-list a#show_loginbox:hover {background-color: #5f9729;}
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
 div.denyform {
 	visibility:hidden;
 	position:absolute;
-	background: none repeat scroll 0 0 #FAFAFA;
+	background-image: none;
 	border: 1px solid #E1E1E1;
 	margin-top:5px;
 	display:block;
@@ -1360,7 +1378,7 @@ a.tooltip span{
 	display:none;
 	border: 3px solid #e1e1e1;
 	border-radius: 3px;
-	background: none repeat scroll 0 0 white;
+	background-image: none;
     	margin: 10px 0;
     	padding: 10px;
 	height: 144px;
@@ -1385,8 +1403,7 @@ span.warning {
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}
 
-button.fakelinkbutton
-{
+button.fakelinkbutton {
 	display: inline-block;
 	background: none;
 	border: none;
@@ -1398,13 +1415,11 @@ button.fakelinkbutton
 	box-shadow:none;
 }
 
-button.fakelinkbutton:hover
-{
+button.fakelinkbutton:hover {
 	color: #69c;
 }
 
-button.fakelinkbutton:visited
-{
+button.fakelinkbutton:visited {
 	color: #69c;
 }
 
@@ -1453,9 +1468,10 @@ ul.form_elements span.note {margin-left:0;}
 #taskdetails {margin:0;padding:0;margin-top:40px;}
 #taskfields {float:none; border:none;}
 #taskdetailsfull {margin:0;padding:2px;}
+form #taskdetails {margin:0;}
 form #taskfields {width:auto; margin-top:20px; background-color:#fff;}
+form #taskdetailsfull {margin:0;top:auto;}
 form #taskdetailsfull button.positive {margin-left:auto;margin-right:auto;width:60%;}
-form #taskdetailsfull {margin:0;}
 #comments, #related, #notify, #remind, #effort, #history{padding:0;}
 div.comment_container {margin:0;}
 div.comment_container .commenttext{padding:2px;}
