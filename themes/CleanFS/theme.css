@@ -562,7 +562,8 @@ form #taskdetails #taskdetailsfull {
   border-radius: 3px;
 }
 #taskdetails #navigation {float: right;padding:6px;}
-#taskdetails h2 {color: #555;display:inline-block;}
+#taskdetails h2 {color: #555;display:block;}
+#taskdetails h2 input {width:99%;}
 .tags span {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
