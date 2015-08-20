@@ -193,12 +193,9 @@
 
       <div id="taskdetailsfull">
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
-        <h2 class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary">
-          <label for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-          <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
-            name="item_summary" maxlength="100" style="min-width:300px" />
-        </h2>
-        <br />
+        <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
+        <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+            name="item_summary" maxlength="100" style="width:100%;box-sizing:border-box;height:auto" />
         <!--
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
