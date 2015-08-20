@@ -34,7 +34,6 @@
 				<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 					<div class="hide preview" id="preview"></div>
 					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
-					<style>#dokuwiki_toolbar {display:inline-block;vertical-align:bottom;}</style>
 				<?php endif; ?>
 				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text'), $comment['comment_text']); ?>
 				<div id="addlinkbox">
