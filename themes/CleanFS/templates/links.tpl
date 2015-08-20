@@ -35,6 +35,7 @@ else:
 endif; ?>
 </ul>
 </div><div id="pm-menu">
+	<input id="pmmenu" type="checkbox">
 	<ul id="pm-menu-list"><?php
 	if ( count($fs->projects) ) {
 	?><li class="first">
