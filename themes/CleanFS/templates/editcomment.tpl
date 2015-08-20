@@ -36,7 +36,6 @@
 					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
 				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text'), $comment['comment_text']); ?>
-				<?php if ($user->perms('create_attachments')): ?>
 				<div id="addlinkbox">
 					<?php $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
 					$this->display('common.editlinks.tpl', 'links', $links); ?>
