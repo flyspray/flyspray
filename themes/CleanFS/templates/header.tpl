@@ -68,7 +68,7 @@
 	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
 
     </a></h1>
-
+    <label id="labelpmmenu" for="pmmenu"></label>
     <?php $this->display('links.tpl'); ?>
 
     <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>
