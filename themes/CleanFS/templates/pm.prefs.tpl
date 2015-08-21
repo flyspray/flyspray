@@ -33,7 +33,7 @@
         </li>
 
         <li>
-          <label><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+          <label class="labeltextarea"><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
           <?php
             $pages = array(
                 'index' => L('tasklist'),
