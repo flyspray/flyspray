@@ -83,30 +83,7 @@ if (!function_exists('fprintf')) {
 // Make it possible to reload page after updating language
 // Don't want to send form data again if user reloads the page
 ob_start();
-#header("Pragma: no-cache");
-#header('Content-type: text/html; charset=utf-8');
 ?>
-<!--
-<title>Lang edit</title>
-<link type="text/css" rel="stylesheet" href="/themes/CleanFS/theme.css" media="screen">
-<style type="text/css">
-pre, body, input, textarea, td{
-  font-family: Verdana;
-  font-size: 8pt;
-}
-th{
-  font-family: Verdana;
-  font-size: 10pt;
-  text-align: left;
-}
-textarea, input.edit{
-  background-color: rgba(255,255,255,0.5);
-  border-style: solid;
-  border-width: 1px;
-  border-color: '#ccb';
-}
-</style>
--->
 <script language="javascript">
 // Indicate which texts are changed, called from input and textarea onchange
 function set(id){
