@@ -1,3 +1,4 @@
+<input id="menu1" type="checkbox">
 <div id="menu"><ul id="menu-list"><?php
 if ($user->isAnon()):
 	# 20150211 peterdd: pure css toggle using checked status, no js needed
