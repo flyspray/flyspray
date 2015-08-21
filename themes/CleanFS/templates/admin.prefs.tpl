@@ -195,15 +195,12 @@
         </li>
 
         <li>
-          <label for="intromesg"><?php echo Filters::noXSS(L('mainmessage')); ?></label>
+          <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('mainmessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
             <div class="hide preview" id="preview"></div>
-          <?php endif; ?>
-          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
-          <br />
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
             <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
+          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
         </li>
       </ul>
     </div>
