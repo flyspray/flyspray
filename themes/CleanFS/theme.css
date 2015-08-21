@@ -1402,8 +1402,8 @@ th, td, caption {padding: 5px 2px;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {margin:0;display:block;float:none;padding:10px;}
 #task_id {width:120px;}
-#projectselector {position:absolute;top:0;right:0;margin:0;text-align:center;}
-#projectselectorform select{height:40px;padding-right:4px;}
+#projectselector {position:absolute;top:0;right:0;margin:0;text-align:center;max-width:40%;}
+#projectselector select{height:40px;padding-right:4px;max-width:100%;}
 #content {padding:0;min-width:unset;}
 #tasklist {padding:0;}
 table.toplevel th, table.toplevel td {display:block;}
