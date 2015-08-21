@@ -1436,7 +1436,7 @@ th, td, caption {padding: 5px 2px;}
 #labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;} /* bars */
 #menu1:checked ~ #menu{right:0;transition:0.5s;}
 #pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
-#labelpmmenu:hover, #labelmenu1:hover; #menu1:checked ~ #labelmenu1, #pmmenu:checked ~ #labelpmmenu{background-color:rgba{0,0,0,0.3};}
+#labelpmmenu:hover, #labelmenu1:hover, #menu1:checked ~ #labelmenu1, #pmmenu:checked ~ #labelpmmenu {background-color:rgba{0,0,0,0.3};}
 #pm-menu {padding:0;}
 #menu {z-index:111;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;right:-100%;transition:0.5s;}
 #pm-menu-list {z-index:110;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
