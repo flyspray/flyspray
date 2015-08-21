@@ -1,1 +1,1 @@
-Reported bugs are at http://bugs.flyspray.org/
+Reported bugs and feature requests are at http://bugs.flyspray.org/
