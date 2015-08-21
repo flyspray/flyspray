@@ -183,7 +183,7 @@
         </li>
         
         <li>
-          <label><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
+          <label class="labeltextarea"><?php echo Filters::noXSS(L('pageswelcomemsg')); ?></label>
           <?php
             $pages = array(
                 'index' => L('tasklist'),
