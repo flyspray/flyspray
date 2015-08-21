@@ -51,29 +51,21 @@
         </li>
 
         <li>
-          <label for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
+          <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
-          <?php endif; ?>
-          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message'])); ?>
-
-          <br />
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
+          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message'])); ?>
         </li>
 
         <li>
-          <label for="default_task"><?php echo Filters::noXSS(L('defaulttask')); ?></label>
+          <label class="labeltextarea" for="default_task"><?php echo Filters::noXSS(L('defaulttask')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview_taskdesc"></div>
-          <?php endif; ?>
-          <?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task'])); ?>
-
-          <br />
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <button tabindex="9" type="button" onclick="showPreview('default_task', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview_taskdesc')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
+          <?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task'])); ?>
         </li>
 
         <li>
