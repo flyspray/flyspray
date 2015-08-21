@@ -1435,7 +1435,7 @@ th, td, caption {padding: 5px 2px;}
 #pmmenu{display:none;}
 #pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
 #pm-menu {padding:0;}
-#pm-menu-list {z-index:110;display:block;position:absolute:top:48px;left:-100%;transition:0.5s;}
+#pm-menu-list {z-index:110;padding:0;display:block;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {display:block;float:none;padding:10px;}
