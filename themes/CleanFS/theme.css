@@ -1432,10 +1432,10 @@ th, td, caption {padding: 5px 2px;}
 #menu-list a:hover {border-radius:unset;}
 #labelpmmenu{color:#fff;display:block;position:absolute;top:0;width:48px;height:48px;left:48px;background-color:rgba(0,0,,0.3);}
 #labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;}
-#pmmenu{z-index:110;display:none;position:absolute;top:48px;left:-100%;transition:0.5s;width:100%;}
-#pmmenu:checked ~ #pm-menu-list{display:block;left:0;transition:0.5s;}
+#pmmenu{display:none;}
+#pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
 #pm-menu {padding:0;}
-#pm-menu-list {padding:0;display:none;}
+#pm-menu-list {z-index:110;display:block;position:absolute:top:48px;left:-100%;transition:0.5s;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {display:block;float:none;padding:10px;}
