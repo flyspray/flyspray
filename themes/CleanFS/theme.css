@@ -21,9 +21,59 @@ article, aside, details, figcaption, figure, dialog,
 footer, header, hgroup, menu, nav, section {
 display:block;
 }
+
+/* Central default color scheme for Flyspray.
+You can overwrite it by grouping the same css rules to your colors later in the file.
+Or better load an extra 'customxxx.css' file in the header.tpl after loading theme.css.
+*/
+.button,
+button,
+input[type=submit],
+input[type=text],
+input[type=password]
+fieldset,
+body.toplevel .box,
+body .positive,
+div.box,
+p.box,
+div.roadmap,
+div.error,
+div.success,
+div.mixed,
+.descbox,
+#toolboxmenu a.active,
+#submenu a.active,
+#tasklist,
+#search,
+#search fieldset,
+#intromessage,
+#toolbox,
+#toolbox div.tab,
+#taskdetails,
+#taskdetails #showvotes,
+#comments, #related, #notify, #remind, #effort, #history,
+#events,
+div#taskclosed,
+#tasklist_table th,
+#controlBox {
+	background-color:#fff;
+}
+div.denyform,
+div.popup {
+	background-color:#fafafa;
+}
+tr.active,
+#pm-menu-list a.active, #pm-menu-list a.active:hover,
+#menu-list a.active, #menu-list a.active:hover,
+#s_loginbox:checked ~ #show_loginbox,
+#s_quickactions:checked ~ #actions,
+#menu-list a#show_loginbox:hover {
+	background-color: #5f9729;
+}
+/* end default Flyspray color scheme */
+
 body {
 line-height: 1.5; /* Line-height should always be unitless! */
-background: #fff;
 /* direction:rtl; */
 }
 table {border-collapse: separate;border-spacing: 0;}
@@ -140,7 +190,6 @@ img:-moz-broken {
 }
 div.popup {
   position: absolute;
-  background: #fafafa;
   border: #e1e1e1 1px solid;
   margin-top: 5px;
   padding: 5px;
@@ -175,6 +224,8 @@ a:hover {color: #6699cc;}
 }
 #title a {color: white; text-decoration: none; display: block; padding: 25px 50px; }
 #title img { float: left; margin-right: 20px; height: 36px;}
+#labelpmmenu,#labelmenu1{display:none; cursor:pointer;}
+#pmmenu,#menu1{display:none;}
 #menu {position: absolute; top:5px; right:5px;}
 #menu-list {display: inline;margin: 0;padding: 0;list-style: none; }
 #menu-list a, #menu-list label{color: #ddd;text-decoration: none;padding: 3px 7px; }
@@ -190,7 +241,6 @@ a:hover {color: #6699cc;}
 tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
   /*background: $inverse_link; */
   color: #fff;
-  background: #5f9729;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -207,7 +257,7 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
       height: 1.4em;
       border-left: dotted 1px #888888;
 }
-#menu-list li.first {border: none; }
+#menu-list li:first-child {border: none; }
 #menu-list #locked { margin-left: 7px; color: red; }
 div#mysearches {
   border-radius: 4px;
@@ -252,20 +302,17 @@ div#mysearches td {vertical-align: middle;}
 #pm-menu-list {list-style: none;display: inline-block;margin:0;}
 #pmcontrol{display: inline-block;float: right;margin: 6px 20px 0px 0px;}
 #pm-menu-list li {display: inline-block;}
-#pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; margin-right: 2px;color: #f9f9f9;
+#pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; color: #f9f9f9;
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
-#pm-menu-list li a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
-#pm-menu-list li a.active {
-        /*color: darken($top2, 10%);*/
-        background-color: #5f9729;
+#pm-menu-list a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
+#pm-menu-list a.active {
         border-left: none;
-        border-bottom: 3px solid #5f9729;
         border-top: 1px solid #6cab2e;
         border-right: 1px solid #6cab2e;
 }
-#pm-menu-list li.first a {border-left: none;}
+#pm-menu-list li:first-child a {border-left: none;}
 #toplevellink {background-image: url("img/gray/folder_stroke_12x12.png");}
 #homelink {background-image: url("img/gray/list_12x11.png");}
 #newtasklink {background-image: url("img/gray/document_alt_stroke_9x12.png"); }
@@ -302,7 +349,6 @@ div#mysearches td {vertical-align: middle;}
   box-shadow: 0px 1px 1px #ddd;
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
   filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
-  background-color: white;
   font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
   font-size: 100%;
   line-height: 130%;
@@ -322,10 +368,8 @@ a.button img, button.button img {
 a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
-body .positive {
-  /*color: white;*/
-  /*background: lighten(#5F9729, 10%);*/
-  background-color: #d2ecb9;
+body a.positive, body button.positive {
+  color: #fff;
   border: solid 1px #5a8f27;
   border-top: solid 1px #85cb41;
   border-right: solid 1px #85cb41;
@@ -333,13 +377,10 @@ body .positive {
 a.positive:hover, button.positive:hover {
   background-color: #78bf34;
   border: solid 1px #5f9729;
-  color: #529214;
-  color: white;
 }
 a.positive:active, button.positive:active {
   background-color: #529214;
   border: 1px solid #529214;
-  color: #fff;
 }
 .button.img.delete {
 	background-image: url('./img/red/x_alt_24x24.png');
@@ -358,7 +399,6 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 #tasklist {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -366,28 +406,24 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 #search fieldset {
     margin: 10px 0px 10px 0px;
     padding: 10px;
-    background: white;
     border: solid 1px #e1e1e1;
     border-radius: 3px;
 }
 #intromessage {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 body.toplevel .box {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   margin: 10px 0 0 10px;
@@ -444,7 +480,6 @@ body.toplevel .single-project {
 }
 td.task_progress .progress_bar_container { width: 100%;}
 a { text-decoration: none;}
-#tasklist_table th { background: #fff;}
 #tasklist_table th img {position: relative;top: 2px;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
@@ -470,7 +505,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #toolbox {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   margin-left: 120px;
@@ -481,7 +515,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #toolbox div.tab {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -514,7 +547,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
   font-weight: bold;
   width: 100px;
   padding: 1em 10px;
-  background-color: white;
   color: #3c4041;
   border: 1px solid #e1e1e1;
   border-right: none;
@@ -524,7 +556,6 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 #controlBox {
   border: 1px solid gray;
   padding: 1px;
-  background: #fff;
   width: auto !important;
   width: 90px;
   margin-left: 40px;
@@ -548,8 +579,9 @@ div#fineprint {
   padding: 0;
   color: #555;
 }
-form #taskdetails #taskfields { width: 335px;}
-form #taskdetails #taskdetailsfull {
+#dokuwiki_toolbar {display:inline;vertical-align:bottom;}
+form #taskfields { width: 335px;}
+form #taskdetailsfull {
   position: relative;
   top: -20px;
   margin-left: 355px;
@@ -557,7 +589,6 @@ form #taskdetails #taskdetailsfull {
 #taskdetails {
   margin: 10px 0px 10px 0px;
   padding: 0px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -570,7 +601,7 @@ form #taskdetails #taskdetailsfull {
     margin: 3px;
     padding: 4px;
 }
-#taskdetails #taskfields {
+#taskfields {
   width: 290px;
   float: left;
   border-right: 1px solid #eee;
@@ -578,13 +609,13 @@ form #taskdetails #taskdetailsfull {
   background: #f9f9f9;
   margin: 0;
 }
-#taskdetails #taskfields ul.fieldslist {
+#taskfields ul.fieldslist {
   margin-bottom: 5px;
   list-style: none;
   margin-right: 0;
   padding-left: 0;
 }
-#taskdetails #taskfields ul.fieldslist li {
+#taskfields ul.fieldslist li {
   clear: both;
   padding-top: 2px;
   padding-bottom: 2px;
@@ -594,20 +625,19 @@ form #taskdetails #taskdetailsfull {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
 }
-#taskdetails #taskfields ul.fieldslist li .label {
+#taskfields ul.fieldslist li .label {
   display: block;
   float: left;
   width: 45%;
   text-align: right;
   color: #888;
 }
-#taskdetails #taskfields ul.fieldslist li .value {display:block;float:right;width:50%;}
-#taskdetails #taskfields ul.fieldslist > li:nth-child(2n-1) {background-color: #f1f1f1;}
+#taskfields ul.fieldslist li .value {display:block;float:right;width:50%;}
+#taskfields ul.fieldslist > li:nth-child(2n-1) {background-color: #f1f1f1;}
 #taskdetails #showvotes {
   position: absolute;
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   z-index:100;
@@ -625,7 +655,6 @@ form #taskdetails #taskdetailsfull {
 #comments, #related, #notify, #remind, #effort, #history {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -660,7 +689,6 @@ form #taskdetails #taskdetailsfull {
   border-right: bottom;
   /*border-top: 1px solid lighten($top1, 30%);*/
   border-top: 2px solid #78bf34;
-  background-color: white;
   z-index: 5;
 }
 #submenu li {display: inline;}
@@ -759,11 +787,9 @@ div.comment_container .attachments
 	width: 45%;
 	margin-top: 10px;
 	padding: 10px;
-	background: white;
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
 	width: 300px;
-	
 	background-color: #ffc;
 	/*
 	background-image: url(img/gray/pin_24x24.png);
@@ -780,14 +806,12 @@ div.comment_container .attachments
     font-size: large;
 }
 
-div.comment_container .links
-{
+div.comment_container .links {
 	display: inline-block;
 	width: 45%;
 	margin-right: 3%;
 	margin-top: 10px;
 	padding: 10px;
-	background: white;
 	border: solid 1px #e1e1e1;
 	border-radius: 3px;
 	width: 300px;
@@ -795,14 +819,12 @@ div.comment_container .links
 	vertical-align: top;
 }
 
-div.comment_container .attachments img
-{
+div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
 
-div.comment_container #addlinkbox
-{
+div.comment_container #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
@@ -829,7 +851,7 @@ textarea {width: 99%;}
 #events {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
+
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -839,21 +861,18 @@ table td {vertical-align: top;}
 div.box, p.box {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 div.roadmap {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
 div.error, div.success, div.mixed {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
   z-index: 50;
@@ -878,7 +897,7 @@ div.success {
   color: #24380d;
 }
 a#show_loginbox {margin-right: 5px;}
-#menu a#show_loginbox.active {border-radius: 10px 10px 0 0;}
+#menu a#show_loginbox.active {border-radius: 3px 3px 0 0;}
 #loginbox {
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -927,7 +946,6 @@ span#advancedsearchstate img {vertical-align: middle;}
 fieldset {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-  background: white;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
@@ -953,7 +971,6 @@ div#taskclosed {
   margin: 5px 5px 10px;
   clear: both;
   width: 20em;
-  background: white;
   border: solid 1px red;
 }
 div#taskdeps {float: left;width: 50%; margin-bottom: 8px;}
@@ -1218,7 +1235,6 @@ div#closeform {
 #taskdeps img {vertical-align:middle;margin-top:-1px;}
 input[type=text], input[type=password]{
     color: #000;
-    background: #fff;
     border: 1px solid #ccc;
     padding: 2px;
     vertical-align: middle;
@@ -1256,16 +1272,15 @@ input[type=submit]:hover, button:hover {
 */
 #show_loginbox {
     background: #494D4E;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
-#menu #menu-list a#show_loginbox:hover {background-color: #5f9729;}
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
 div.denyform {
 	visibility:hidden;
 	position:absolute;
-	background: none repeat scroll 0 0 #FAFAFA;
+	background-image: none;
 	border: 1px solid #E1E1E1;
 	margin-top:5px;
 	display:block;
@@ -1359,7 +1374,7 @@ a.tooltip span{
 	display:none;
 	border: 3px solid #e1e1e1;
 	border-radius: 3px;
-	background: none repeat scroll 0 0 white;
+	background-image: none;
     	margin: 10px 0;
     	padding: 10px;
 	height: 144px;
@@ -1384,8 +1399,7 @@ span.warning {
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}
 
-button.fakelinkbutton
-{
+button.fakelinkbutton {
 	display: inline-block;
 	background: none;
 	border: none;
@@ -1397,13 +1411,11 @@ button.fakelinkbutton
 	box-shadow:none;
 }
 
-button.fakelinkbutton:hover
-{
+button.fakelinkbutton:hover {
 	color: #69c;
 }
 
-button.fakelinkbutton:visited
-{
+button.fakelinkbutton:visited {
 	color: #69c;
 }
 
@@ -1414,15 +1426,23 @@ th, td, caption {padding: 5px 2px;}
 #title {font-size:1.2em;line-height:1.2em;background-color:#111;}
 #title a {padding:0;color:transparent;}
 #title img {float:none;margin:4px;}
-#menu-list {display:block;background-color:#222;}
-#menu-list li {float:none;display:inline-block;width:50%;padding:0;height:auto;border-left:none;text-align:center;}
+#menu-list {display:block;}
+#menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
 #menu-list a {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
+#labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:15%;}
+#labelmenu1{left:30%;}
+#labelmenu1:before{content:"\f013";font-family:fontawesome;font-size:30px;} /* cog */
+#labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;} /* bars */
+#menu1:checked ~ #menu{right:0;transition:0.5s;}
+#pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
+#labelpmmenu:hover, #labelmenu1:hover, #menu1:checked ~ #labelmenu1, #pmmenu:checked ~ #labelpmmenu {background-color:rgba(0,0,0,0.3);}
 #pm-menu {padding:0;}
-#pm-menu-list {padding:0;display:block;}
+#menu {z-index:111;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;right:-100%;transition:0.5s;}
+#pm-menu-list {z-index:110;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
-#pmcontrol {display:block;float:none;padding:10px;}
+#pmcontrol {margin:0;display:block;float:none;padding:10px;}
 #task_id {width:120px;}
 #projectselector {position:absolute;top:0;right:0;margin:0;text-align:center;}
 #projectselectorform select{height:40px;padding-right:4px;}
@@ -1432,6 +1452,9 @@ table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
 div.box, p.box {padding:0;}
 #event1 td {display:block;}
+body.admin {background-color:#300;} /* experimental: danger zone */
+body.admin h1#title {background-color: #900;background-image: none;} /* danger zone */
+body.admin #pm-menu {background-color:#600;border-bottom-color:#300;} /* danger zone */
 body.reports .box button {display: block;margin-left:auto;margin-right:auto;width:70%;}
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
@@ -1450,7 +1473,12 @@ ul.form_elements span.note {margin-left:0;}
 #submenu ~ div {clear:both;}
 #catTable input[type="text"], #catTable input[type="password"] {width:120px;}
 #taskdetails {margin:0;padding:0;margin-top:40px;}
+#taskfields {float:none; border:none;}
 #taskdetailsfull {margin:0;padding:2px;}
+form #taskdetails {margin:0;}
+form #taskfields {width:auto; margin-top:20px; background-color:#fff;}
+form #taskdetailsfull {margin:0;top:auto;}
+form #taskdetailsfull button.positive {margin-left:auto;margin-right:auto;width:60%;}
 #comments, #related, #notify, #remind, #effort, #history{padding:0;}
 div.comment_container {margin:0;}
 div.comment_container .commenttext{padding:2px;}

@@ -68,7 +68,6 @@
 	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
 
     </a></h1>
-
     <?php $this->display('links.tpl'); ?>
 
     <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>

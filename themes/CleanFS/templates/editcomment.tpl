@@ -39,27 +39,26 @@
 				<div id="addlinkbox">
 					<?php $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
 					$this->display('common.editlinks.tpl', 'links', $links); ?>
-					<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
+					<?php if ($user->perms('create_attachments')): ?>
+						<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
 						<?php echo Filters::noXSS(L('addalink')); ?>
-					</button>
-					<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
+						</button>
+						<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
 						<?php echo Filters::noXSS(L('addanotherlink')); ?>
-					</button>
-					<span style="display: none">
+						</button>
+						<span style="display: none">
 						<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
 						<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-					</span>
-					<noscript>
-						<span>
-							<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
-							<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 						</span>
-					</noscript>
+						<noscript>
+						<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+						</noscript>
+					<?php endif; ?>
 				</div>
-				<?php if ($user->perms('create_attachments')): ?>
-					<div id="uploadfilebox">
-						<?php $attachments = $proj->listAttachments($comment['comment_id'], $comment['task_id']);
-						$this->display('common.editattachments.tpl', 'attachments', $attachments); ?>
+				<div id="uploadfilebox">
+					<?php $attachments = $proj->listAttachments($comment['comment_id'], $comment['task_id']);
+					$this->display('common.editattachments.tpl', 'attachments', $attachments); ?>
+					<?php if ($user->perms('create_attachments')): ?>
 						<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
 							<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 						</button>
@@ -71,13 +70,10 @@
 							<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 						</span>
 						<noscript>
-							<span>
-								<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-								<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-							</span>
+							<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
 						</noscript>
+					<?php endif; ?>
 					</div>
-				<?php endif; ?>
 				<button accesskey="s" tabindex="9" type="submit" class="positive" style="display:block"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
 				</form>
 			</div>
