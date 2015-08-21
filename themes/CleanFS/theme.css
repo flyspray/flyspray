@@ -33,7 +33,6 @@ input[type=text],
 input[type=password]
 fieldset,
 body.toplevel .box,
-body .positive,
 div.box,
 p.box,
 div.roadmap,
@@ -63,12 +62,16 @@ div.popup {
 	background-color:#fafafa;
 }
 tr.active,
+body a.button.positive, body button.positive,
 #pm-menu-list a.active, #pm-menu-list a.active:hover,
 #menu-list a.active, #menu-list a.active:hover,
 #s_loginbox:checked ~ #show_loginbox,
 #s_quickactions:checked ~ #actions,
 #menu-list a#show_loginbox:hover {
 	background-color: #5f9729;
+}
+body a.button.positive, body button.positive {
+	color: #fff;
 }
 /* end default Flyspray color scheme */
 
@@ -369,7 +372,6 @@ a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
 body a.positive, body button.positive {
-  color: #fff;
   border: solid 1px #5a8f27;
   border-top: solid 1px #85cb41;
   border-right: solid 1px #85cb41;
@@ -694,20 +696,9 @@ form #taskdetailsfull {
 #submenu li {display: inline;}
 div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
 * html .tab div.clear {clear: none;height: 14em;}
-
-div.comment_container
-{
-	margin: 5px;
-}
-
-div.comment_container .comment_avatar
-{
-	min-width: 50px;
-	display: inline-block;
-}
-
-div.comment_container .comment
-{
+div.comment_container {margin: 5px;}
+div.comment_container .comment_avatar {	min-width: 50px;display: inline-block;}
+div.comment_container .comment {
 	position: relative;
 	display: inline-block;
 	margin-left: 10px;
@@ -718,9 +709,7 @@ div.comment_container .comment
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-
-div.comment_container .comment:before
-{
+div.comment_container .comment:before {
 	content: ' ';
 	position: absolute;
 	width: 0;
@@ -730,9 +719,7 @@ div.comment_container .comment:before
 	border: 8px solid;
 	border-color: transparent #e1e1e1 transparent transparent;
 }
-
-div.comment_container .comment:after
-{
+div.comment_container .comment:after {
 	content: ' ';
 	position: absolute;
 	width: 0;
@@ -742,9 +729,7 @@ div.comment_container .comment:after
 	border: 6px solid;
 	border-color: transparent #f1f1f1 transparent transparent;
 }
-
-div.comment_container .comment_header
-{
+div.comment_container .comment_header {
 	min-height: 30px;
 	background-color: #f1f1f1;
 	line-height: 30px;
@@ -752,20 +737,9 @@ div.comment_container .comment_header
 	padding-left: 10px;
 	border-bottom: 1px solid #e1e1e1;
 }
-
-div.comment_container .comment_header_infos
-{
-	max-width: 60%;
-}
-
-div.comment_container .comment_header_actions
-{
-	float: right;
-	margin-right: 10px;
-}
-
-div.comment_container .comment_header_usertype
-{
+div.comment_container .comment_header_infos {max-width: 60%;}
+div.comment_container .comment_header_actions {float: right;margin-right: 10px;}
+div.comment_container .comment_header_usertype {
 	border: 1px solid #e1e1e1;
 	padding: 3px;
 	margin-right: 10px;
@@ -773,16 +747,9 @@ div.comment_container .comment_header_usertype
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-
-div.comment_container .commenttext
-{
-	clear: both;
-	padding: 10px;
-}
-.commenttext pre{overflow:auto;}
-
-div.comment_container .attachments
-{
+div.comment_container .commenttext {clear: both;padding: 10px;}
+.commenttext pre {overflow:auto;}
+div.comment_container .attachments {
 	display: inline-block;
 	width: 45%;
 	margin-top: 10px;
@@ -805,7 +772,6 @@ div.comment_container .attachments
     font-family: FontAwesome;
     font-size: large;
 }
-
 div.comment_container .links {
 	display: inline-block;
 	width: 45%;
@@ -818,25 +784,20 @@ div.comment_container .links {
 	background-color: #fefefe;
 	vertical-align: top;
 }
-
 div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
-
 div.comment_container #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
 }
-
-div.comment_container #uploadfilebox
-{
+div.comment_container #uploadfilebox {
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
 }
-
 div.comment_container .commentlink {
   background-image: url(img/gray/comment_stroke_16x14.png);
   background-repeat: no-repeat;
@@ -851,7 +812,6 @@ textarea {width: 99%;}
 #events {
   margin: 10px 0px 10px 0px;
   padding: 10px;
-
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
