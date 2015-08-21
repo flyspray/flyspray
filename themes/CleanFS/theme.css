@@ -30,7 +30,7 @@ Or better load an extra 'customxxx.css' file in the header.tpl after loading the
 button,
 input[type=submit],
 input[type=text],
-input[type=password]
+input[type=password],
 fieldset,
 body.toplevel .box,
 div.box,
