@@ -1,4 +1,5 @@
 <input id="menu1" type="checkbox">
+<label id="labelmenu1" for="menu1"></label>
 <div id="menu"><ul id="menu-list"><?php
 if ($user->isAnon()):
 	# 20150211 peterdd: pure css toggle using checked status, no js needed
@@ -37,6 +38,7 @@ endif; ?>
 </ul>
 </div><div id="pm-menu">
 	<input id="pmmenu" type="checkbox">
+	<label id="labelpmmenu" for="pmmenu"></label>
 	<ul id="pm-menu-list"><?php
 	if ( count($fs->projects) ) {
 	?><li class="first">
