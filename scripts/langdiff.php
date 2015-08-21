@@ -16,7 +16,7 @@ ob_start();
 pre { margin : 0; }
 table{border-collapse:collapse;}
 .progress_bar_container{height:20px;}
-.progress_bar_container span:first-child{display:inline-block;margin-top:2px;z-index:101;color:000;}
+.progress_bar_container span:first-child{display:inline-block;margin-top:2px;z-index:101;color:#000;}
 .overview{margin-left:auto;margin-right:auto;}
 .overview td, .overview th{border:none;padding:0;}
 a.button{padding:2px 10px 2px 10px;margin:2px;}
