@@ -998,9 +998,6 @@ ul.form_elements li label.inline {
 ul.form_elements li input {
   vertical-align: middle;
 }
-ul.form_elements li textarea {
-  width: 30em;
-}
 ul.form_elements li.required label {
   font-weight: bold;
 }
