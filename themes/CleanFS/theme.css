@@ -1451,6 +1451,8 @@ table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
 div.box, p.box {padding:0;}
 #event1 td {display:block;}
+body.admin {background-color:#300;} /* experimental: danger zone */
+body.admin h1#title {background-color: #900;background-image: none;} /* danger zone */
 body.reports .box button {display: block;margin-left:auto;margin-right:auto;width:70%;}
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
