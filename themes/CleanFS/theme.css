@@ -224,8 +224,8 @@ a:hover {color: #6699cc;}
 }
 #title a {color: white; text-decoration: none; display: block; padding: 25px 50px; }
 #title img { float: left; margin-right: 20px; height: 36px;}
-#labelpmmenu{display:none;}
-#pmmenu{display:none;}
+#labelpmmenu,#labelmenu1{display:none;}
+#pmmenu,#menu1{display:none;}
 #menu {position: absolute; top:5px; right:5px;}
 #menu-list {display: inline;margin: 0;padding: 0;list-style: none; }
 #menu-list a, #menu-list label{color: #ddd;text-decoration: none;padding: 3px 7px; }
