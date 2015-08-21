@@ -1430,7 +1430,7 @@ th, td, caption {padding: 5px 2px;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
 #menu-list a {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
-#labelpmmenu,#labelmenu1{color:#fff;display:block;position:absolute;top:0;width:48px;height:48px;left:48px;background-color:rgba(0,0,,0.3);}
+#labelpmmenu,#labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:48px;height:48px;left:48px;background-color:rgba(0,0,,0.3);}
 #labelmenu1{left:96px;}
 #labelmenu1:before{content:"\f013";font-family:fontawesome;font-size:30px;} /* cog */
 #labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;} /* bars */
@@ -1453,6 +1453,7 @@ div.box, p.box {padding:0;}
 #event1 td {display:block;}
 body.admin {background-color:#300;} /* experimental: danger zone */
 body.admin h1#title {background-color: #900;background-image: none;} /* danger zone */
+body.admin #pm-menu {background-color:#600;border-bottom-color:#300;} /* danger zone */
 body.reports .box button {display: block;margin-left:auto;margin-right:auto;width:70%;}
 #footer{border-top:none;}
 #toolboxmenu {float:none;text-align:center;}
