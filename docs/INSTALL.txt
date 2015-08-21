@@ -1,24 +1,16 @@
 Installing Flyspray
-Latest version: http://flyspray.org/manual:installation
+Latest version: www.flyspray.org/manual/install
 
 This document describes the installation process for setting up Flyspray version 0.9.9. When reading this guide and performing the following install steps, please go in order; Some of the later steps require that the previous steps have been completed, otherwise the installation will fail.
 
 Preparing for install
 
-    *
-      Install PHP, MySQL or PostgreSQL, and a web server (like Apache). The latest versions of each should work nicely.
-    *
-      For MySQL installations, it's a good idea to install the MySQL Administratior and MySQL Query Browser. Both can be found here: http://dev.mysql.com/downloads/gui-tools/5.0.html
-    *
-      A good tutorial on how to get Apache, PHP, and MySQL working together is here: http://www.tanguay.at/installPhp5.php5?step=1
-    *
-      In the php.ini file, make sure that the extension php_mysql.dll is uncommented. The tutorial neglects to include this step.
-    *
-      Grab the latest release from the download page.
-    *
-      Unpack the compressed package into a directory where your webserver can reach it. It will extract into its own flyspray-version/ directory.
-    *
-      In the case, that the database user you use for your Flyspray installation cannot create a database on its own, create a database for Flyspray to use.
+   *  Install PHP, MySQL or PostgreSQL, and a web server (like Apache). The latest versions of each should work nicely.
+   *  For MySQL installations, it's a good idea to install the MySQL Administratior and MySQL Query Browser. Both can be found here: http://dev.mysql.com/downloads/gui-tools/5.0.html
+   *  In the php.ini file, make sure that the extension php_mysql.dll is uncommented. The tutorial neglects to include this step.
+   * Grab the latest release from the download page.
+   * Unpack the compressed package into a directory where your webserver can reach it. It will extract into its own flyspray-version/ directory.
+   * In the case, that the database user you use for your Flyspray installation cannot create a database on its own, create a database for Flyspray to use:
 
 # mysql -u root -p
   > CREATE DATABASE flyspray DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci; 
@@ -28,31 +20,23 @@ Preparing for install
   # mysqladmin -u root -p reload
 
 
-    *
-      Or, create a PostgreSQL database for Flyspray to use:
+   * Or, create a PostgreSQL database for Flyspray to use:
 
 su;
 su postgres;
 createuser -SDRP flyspray;
 createdb -E UNICODE -O flyspray flyspray;
 
-    *
-      Make sure the attachments/ and cache/ directory is writeable by the webserver.
+   * Make sure the attachments/ and cache/ directory is writeable by the webserver.
 
 Installation
 
-    *
-      Point your browser to http://yourserver/flyspray/ and follow along with Flyspray Setup.
-    *
-      When Setup completes, you will be automatically logged-in, and taken to your user profile where you can change details such as your Real Name.
+   * Point your browser to http://yourserver/flyspray/ and follow along with Flyspray Setup.
+   * When Setup completes, you will be automatically logged-in, and taken to your user profile where you can change details such as your Real Name.
 
 If you would like to enable support for the local Task Dependency Graphs feature, an optional additional package can be installed to enable it. Most operating systems have a package available for the free Graphviz package, either in an OS-specific package or by download direct from the Graphviz site.
 After installation
 
-    *
-      Click the 'Manage Project' link to set up your project preferences, user groups and lists.
-    *
-      Close the sample task, and start adding your own, real tasks.
-    *
-      If you need help, read the documentation, faq, and support pages.
-
+   * Click the 'Manage Project' link to set up your project preferences, user groups and lists.
+   * Close the sample task, and start adding your own, real tasks.
+   * If you need help, read the documentation, faq, and support pages.
