@@ -99,9 +99,10 @@ if (Post::val('upgrade')) {
         }
     }
 
-    $db->Query('UPDATE {projects} SET theme_style = \'CleanFS\'');
-
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
+    # No need for any filter, because dokuwiki format wouldn't be touched. But maybe ask the user
+    # first and explain that html-formatting is now used instead of plain text. Adding paragraph
+    # tags and line breaks might enhance readability.
     // For testing, do not use yet, have to discuss this one with others.
     //if (!$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
@@ -109,8 +110,6 @@ if (Post::val('upgrade')) {
     // convert_old_entries('projects', 'default_task', 'project_id');
     // convert_old_entries('comments', 'comment_text', 'comment_id');
     //}
-
-    $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array('CleanFS', 'global_theme'));
 
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
