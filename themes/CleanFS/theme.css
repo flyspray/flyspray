@@ -1025,6 +1025,7 @@ ul.slim li div.userSelectWidget {
 ul.slim li div.userSelectWidget input {
   width: 80px;
 }
+label.labeltextarea {width:auto;display:block;text-align:left;}
 .dateselect {
   clear: both;
 }
