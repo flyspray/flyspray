@@ -224,7 +224,7 @@ a:hover {color: #6699cc;}
 }
 #title a {color: white; text-decoration: none; display: block; padding: 25px 50px; }
 #title img { float: left; margin-right: 20px; height: 36px;}
-#labelpmmenu,#labelmenu1{display:none;}
+#labelpmmenu,#labelmenu1{display:none; cursor:pointer;}
 #pmmenu,#menu1{display:none;}
 #menu {position: absolute; top:5px; right:5px;}
 #menu-list {display: inline;margin: 0;padding: 0;list-style: none; }
@@ -1430,12 +1430,13 @@ th, td, caption {padding: 5px 2px;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
 #menu-list a {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
-#labelpmmenu,#labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:48px;height:48px;left:48px;background-color:rgba(0,0,,0.3);}
-#labelmenu1{left:96px;}
+#labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:15%;}
+#labelmenu1{left:30%;}
 #labelmenu1:before{content:"\f013";font-family:fontawesome;font-size:30px;} /* cog */
 #labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;} /* bars */
 #menu1:checked ~ #menu{right:0;transition:0.5s;}
 #pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
+#labelpmmenu:hover, #labelmenu1:hover; #menu1:checked ~ #labelmenu1, #pmmenu:checked ~ #labelpmmenu{background-color:rgba{0,0,0,0.3};}
 #pm-menu {padding:0;}
 #menu {z-index:111;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;right:-100%;transition:0.5s;}
 #pm-menu-list {z-index:110;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
