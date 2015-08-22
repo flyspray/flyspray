@@ -1,14 +1,14 @@
 Event.observe(window,'load',detailsInit);
 
 function detailsInit() {
-/*
-// 20150219 peterdd: deactivated this code to make parallel handling of tasks in different browser tabs possible.
+
   // set current task
   var title = document.getElementsByTagName('title')[0];
   title = title.textContent || title.text; //IE uses .text
   var arr = /\d+/.exec(title);
-  Cookie.setVar('current_task',arr[0]);
-*/
+  //Cookie.setVar('current_task',arr[0]); // dropped in favor of sessionStorage for multitab multiproject browsing.
+  sessionStorage.setItem('current_task',arr[0]);
+
   if (!$('details')) {
     // make sure the page is not in edit mode
     Event.observe(document,'keydown',keyboardNavigation);
