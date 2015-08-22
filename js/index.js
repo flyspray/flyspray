@@ -11,7 +11,7 @@ function searchInit() {
 }
 var Caret = {
   init: function () {
-    var task = Cookie.getVar('current_task') || 'top';
+    var task = sessionStorage.getItem('current_task') || 'top';
     if (task == 'bottom' || task == 'top') {
       var tab = $('tasklist_table');
       var rows = tab ? tab.getElementsByTagName('tbody')[0].getElementsByTagName('tr') : [];
@@ -28,7 +28,7 @@ var Caret = {
   keypress: function (e) {
     var src = Event.element(e);
     if (/input|select|textarea/.test(src.nodeName.toLowerCase())) {
-        // don't do anything if key is pressed in input, select or textarea
+      // don't do anything if key is pressed in input, select or textarea
       return;
     }
     if ((useAltForKeyboardNavigation && !e.altKey) ||
@@ -50,7 +50,7 @@ var Caret = {
           Event.stop(e);
           break;
       case 79:     // user pressed "o" open task
-          window.location = Caret.currentRow.getElementsByTagName('a')[0].href;
+          window.location = Caret.currentRow.getElementsByTagName('a')[0].href; // FIXME ambiguous in future: if first a is not a link to the task, e.g. a column with link to task opener 
           Event.stop(e);
           break;
     }
@@ -65,7 +65,8 @@ var Caret = {
     }
     // we've reached the bottom of the list
     if ($('next')) {
-      Cookie.setVar('current_task','top');
+      //Cookie.setVar('current_task','top'); // doesn't work well on multitab multiproject usage
+      sessionStorage.setItem('current_task','top');
       window.location = $('next').href;
       return;
     }
@@ -80,12 +81,11 @@ var Caret = {
     }
     // we've reached the top of the list
     if ($('previous')) {
-      Cookie.setVar('current_task','bottom');
+      //Cookie.setVar('current_task','bottom'); // doesn't work well on multitab multiproject usage
+      sessionStorage.setItem('current_task','bottom');
       window.location = $('previous').href;
       return;
     }
     
   }
 };
-
-
