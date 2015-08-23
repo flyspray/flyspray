@@ -14,7 +14,7 @@
       <ul class="form_elements wide">
         <li>
           <label for="projecttitle"><?php echo Filters::noXSS(L('projecttitle')); ?></label>
-          <input id="projecttitle" name="project_title" class="text" type="text" size="40" maxlength="100"
+          <input id="projecttitle" name="project_title" class="text" type="text" maxlength="100"
             value="<?php echo Filters::noXSS(Post::val('project_title', $proj->prefs['project_title'])); ?>" />
         </li>
 
@@ -232,7 +232,7 @@
       <ul class="form_elements">
         <li>
           <label for="notify_subject"><?php echo Filters::noXSS(L('notifysubject')); ?></label>
-          <input id="notify_subject" class="text" name="notify_subject" type="text" size="40" value="<?php echo Filters::noXSS(Post::val('notify_subject', $proj->prefs['notify_subject'])); ?>" />
+          <input id="notify_subject" class="text" name="notify_subject" type="text" value="<?php echo Filters::noXSS(Post::val('notify_subject', $proj->prefs['notify_subject'])); ?>" />
           <br /><span class="note"><?php echo Filters::noXSS(L('notifysubjectinfo')); ?></span>
         </li>
 
@@ -255,7 +255,7 @@
 
         <li>
           <label for="notify_types"><?php echo Filters::noXSS(L('notifytypes')); ?></label>
-          <select id="notify_types" size="10" multiple="multiple" name="notify_types[]">
+          <select id="notify_types" size="17" multiple="multiple" name="notify_types[]">
           <?php echo tpl_options(array(0 => L('none'),
                               NOTIFY_TASK_OPENED     => L('taskopened'),
                               NOTIFY_TASK_CHANGED    => L('pm.taskchanged'),
@@ -359,7 +359,6 @@
       <input type="hidden" name="action" value="pm.updateproject" />
       <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
       <button type="submit"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
-
       <button type="reset"><?php echo Filters::noXSS(L('resetoptions')); ?></button>
     </div>
   </form>
