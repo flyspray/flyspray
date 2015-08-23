@@ -987,7 +987,7 @@ ul.form_elements li label {
       zoom: 1; /* triggers hasLayout for IE */
       *display: inline; /* target IE7 only */
       vertical-align: top;
-      text-align: right;
+      text-align: end;
       padding-right: 1ex;
       padding-top: 2px;
       color: #555555;
@@ -997,6 +997,9 @@ ul.form_elements li label.inline {
 }
 ul.form_elements li input {
   vertical-align: middle;
+}
+ul.form_elements li input[type="text"], ul.form_elements li input[type="password"]  {
+	width:300px;
 }
 ul.form_elements li.required label {
   font-weight: bold;
@@ -1388,16 +1391,16 @@ th, td, caption {padding: 5px 2px;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
 #menu-list a {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
-#labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:15%;}
-#labelmenu1{left:30%;}
+#labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:20%;}
+#labelmenu1{left:35%;}
 #labelmenu1:before{content:"\f013";font-family:fontawesome;font-size:30px;} /* cog */
 #labelpmmenu:before{content:"\f0c9";font-family:fontawesome;font-size:30px;} /* bars */
-#menu1:checked ~ #menu{right:0;transition:0.5s;}
-#pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;}
+#menu1:checked ~ #menu{right:0;transition:0.5s;display:block;}
+#pmmenu:checked ~ #pm-menu-list{left:0;transition:0.5s;display:block;}
 #labelpmmenu:hover, #labelmenu1:hover, #menu1:checked ~ #labelmenu1, #pmmenu:checked ~ #labelpmmenu {background-color:rgba(0,0,0,0.3);}
 #pm-menu {padding:0;}
-#menu {z-index:111;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;right:-100%;transition:0.5s;}
-#pm-menu-list {z-index:110;padding:0;display:block;width:100%;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
+#menu {z-index:111;padding:0;display:none;width:100%;position:absolute;background-color:#333;top:48px;right:-100%;transition:0.5s;}
+#pm-menu-list {z-index:110;padding:0;display:none;width:100%;position:absolute;background-color:#333;top:48px;left:-100%;transition:0.5s;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {margin:0;display:block;float:none;padding:10px;}
@@ -1425,6 +1428,9 @@ p { text-align:justify;padding:2px;}
 #listTable{width:100%;}
 ul.form_elements {margin:0;}
 ul.form_elements span.note {margin-left:0;}
+ul.form_elements li label {text-align:start;}
+ul.form_elements li > input {margin-left:20px;}
+ul.form_elements li > input[type="text"],ul.form_elements li > input[type="password"] {display:block;margin-left:auto;margin-right:auto;width:90%;}
 .double_select {padding-left:0;}
 #toolbox div.tab {padding:0px;}
 #submenu {padding-left:0;margin:0;}
