@@ -67,7 +67,7 @@
       <ul class="form_elements">
         <li>
           <label for="pagetitle"><?php echo Filters::noXSS(L('pagetitle')); ?></label>
-          <input id="pagetitle" name="page_title" type="text" class="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
+          <input id="pagetitle" name="page_title" type="text" class="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
         </li>
 
         <li>
@@ -265,12 +265,12 @@
         <ul class="form_elements">
           <li>
             <label for="adminemail"><?php echo Filters::noXSS(L('fromaddress')); ?></label>
-            <input id="adminemail" name="admin_email" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
+            <input id="adminemail" name="admin_email" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
           </li>
 
           <li>
             <label for="smtpserv"><?php echo Filters::noXSS(L('smtpserver')); ?></label>
-            <input id="smtpserv" name="smtp_server" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
+            <input id="smtpserv" name="smtp_server" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
             <?php if (extension_loaded('openssl')) : ?>
             <?php echo tpl_checkbox('email_ssl', $fs->prefs['email_ssl'], 'email_ssl'); ?> <label class="inline" for="email_ssl"><?php echo Filters::noXSS(L('ssl')); ?></label>
             <?php echo tpl_checkbox('email_tls', $fs->prefs['email_tls'], 'email_tls'); ?> <label class="inline" for="email_tls"><?php echo Filters::noXSS(L('tls')); ?></label>
@@ -279,12 +279,12 @@
 
           <li>
             <label for="smtpuser"><?php echo Filters::noXSS(L('smtpuser')); ?></label>
-            <input id="smtpuser" name="smtp_user" class="text" type="text" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
+            <input id="smtpuser" name="smtp_user" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
           </li>
 
           <li>
             <label for="smtppass"><?php echo Filters::noXSS(L('smtppass')); ?></label>
-            <input id="smtppass" name="smtp_pass" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
+            <input id="smtppass" name="smtp_pass" class="text" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
           </li>
           <li>
               <label for="showsmtppass"><?php echo Filters::noXSS(L('showpass')); ?></label>
@@ -297,11 +297,10 @@
         <ul class="form_elements">
           <li>
             <label for="jabberserver"><?php echo Filters::noXSS(L('jabberserver')); ?></label>
-            <input id="jabberserver" class="text" type="text" name="jabber_server" size="25" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_server']); ?>" />
+            <input id="jabberserver" class="text" type="text" name="jabber_server" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_server']); ?>" />
             <?php if(extension_loaded('openssl')) : ?>
               <select id="jabber_ssl" name="jabber_ssl">
                 <?php echo tpl_options(array('0' => L('none'), '1' => L('ssl'), '2' => L('tls')), $fs->prefs['jabber_ssl']); ?>
-
               </select>
               <label class="inline" for="jabber_ssl"><?php echo Filters::noXSS(L('ssl')); ?> / <?php echo Filters::noXSS(L('tls')); ?></label>
             <?php endif; ?>
@@ -309,17 +308,17 @@
 
           <li>
             <label for="jabberport"><?php echo Filters::noXSS(L('jabberport')); ?></label>
-            <input id="jabberport" class="text" type="text" name="jabber_port" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
+            <input id="jabberport" class="text" type="text" name="jabber_port" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
           </li>
 
           <li>
             <label for="jabberusername"><?php echo Filters::noXSS(L('jabberuser')); ?></label>
-            <input id="jabberusername" class="text" type="text" name="jabber_username" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
+            <input id="jabberusername" class="text" type="text" name="jabber_username" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
           </li>
 
           <li>
             <label for="jabberpassword"><?php echo Filters::noXSS(L('jabberpass')); ?></label>
-            <input id="jabberpassword" name="jabber_password" class="text" type="password" size="40" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
+            <input id="jabberpassword" name="jabber_password" class="text" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
           </li>
 
           <li>
@@ -332,7 +331,6 @@
     </div>
 
     <div id="lookandfeel" class="tab">
-
       <ul class="form_elements">
         <li>
           <label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
