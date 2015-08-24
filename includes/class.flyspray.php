@@ -366,6 +366,8 @@ class Flyspray
             $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
             $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
         }
+	
+	$get_details['tags'] = Flyspray::getTags($task_id);
 
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
         if ($assignees = Flyspray::GetAssignees($task_id, true)) {
