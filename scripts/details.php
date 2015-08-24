@@ -35,6 +35,7 @@ if (!$user->can_view_task($task_details)) {
 	// Send user variables to the template
 	$page->assign('assigned_users', $task_details['assigned_to']);
 	$page->assign('old_assigned', implode(' ', $task_details['assigned_to']));
+	$page->assign('tags', $task_details['tags']);
 
 	$page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['item_summary']));
 
@@ -146,9 +147,6 @@ if (!$user->can_view_task($task_details)) {
 			$task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id'], $cached['content']);
 		}
 
-		$result2 = $db->Query('SELECT tag FROM {tags} WHERE task_id = ?',array($task_id));
-		$tags = $db->fetchAllArray($result2);
-		$page->assign('tags', $tags);
 		$page->assign('prev_id',   $prev_id);
 		$page->assign('next_id',   $next_id);
 		$page->assign('task_text', $task_text);
