@@ -926,6 +926,23 @@ class Flyspray
 
         return $changes;
     } // }}}
+    
+	// {{{
+        /**
+        * Get all tags of a task
+        * @access public static
+        * @return array
+        * @version 1.0
+        * old tag feature, reads flyspray_tags table!
+        * just for bit better structure and stub 
+        */
+        public static function getTags($task_id)
+        {
+                global $db;
+                $sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                return $db->FetchAllArray($sql);
+	} /// }}}
+    
     // {{{
     /**
      * Get a list of assignees for a task
