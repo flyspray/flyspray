@@ -1094,19 +1094,21 @@ abstract class Backend
 	
 	Backend::upload_links($task_id);
 	
-	/////////////////////////////////////Add tags///////////////////////////////////////
-    if (isset($args['tags'])) {
-    	$tagList = explode(';', $args['tags']);
-    	foreach ($tagList as $tag)
-    	{
-    		if ($tag == '')
-    			continue;
-    		$result2 = $db->Query("INSERT INTO {tags} (task_id, tag)
-		                           VALUES (?,?)",array($task_id,$tag));
-    	}
-    }
+	// create tags
+	if (isset($args['tags'])) {
+		$tagList = explode(';', $args['tags']);
+		$tagList = array_map('strip_tags', $tagList);
+		$tagList = array_map('trim', $tagList);
+		$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+		foreach ($tagList as $tag){
+			if ($tag == ''){
+				continue;
+			}
+			# FS1.0dev, Note: {tags} db table will be replaced by rewritten tag feature in future.
+			$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+		}
+	}
 
-        ////////////////////////////////////////////////////////////////////////////////////
         // Log the assignments and send notifications to the assignees
         if (isset($args['rassigned_to']) && is_array($args['rassigned_to']))
         {
