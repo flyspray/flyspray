@@ -460,6 +460,7 @@ $translation = array(
 'tasksummary'             => 'Zusammenfassung:',
 'newtaskadded'            => 'Ihre neue Aufgabe wurde hinzugefügt.',
 'summaryanddetails'       => 'Sie müssen sowohl eine Zusammenfassung als auch eine Beschreibung angeben.',
+'summaryrequired'         => 'Bitte geben Sie eine kurze Aufgabenbeschreibung an.',
 'goback'                  => 'zurück',
 'messagefrom'             => 'Dies ist eine Nachricht vom Flyspray Bugtracking-System auf ',
 'hasjustmodified'         => 'hat soeben folgende Aufgabe geändert:',
