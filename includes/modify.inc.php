@@ -217,11 +217,11 @@ switch ($action = Req::val('action'))
         $result = $db->Query('SELECT * from {tasks} WHERE task_id = ?', array($task['task_id']));
         $defaults = $db->fetchRow($result);
         
-        if (!Post::val('due_date')) {
+        if (!Post::has('due_date')) {
             $due_date = $defaults['due_date'];
         }
         
-        if (!Post::val('estimated_effort')) {
+        if (!Post::has('estimated_effort')) {
             $estimated_effort = $defaults['estimated_effort'];
         }
         
