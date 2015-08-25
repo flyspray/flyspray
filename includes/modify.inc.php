@@ -85,7 +85,8 @@ switch ($action = Req::val('action'))
     // ##################
     case 'newtask.newtask':
         if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
-            Flyspray::show_error(L('summaryanddetails'));
+            #Flyspray::show_error(L('summaryanddetails'));
+            Flyspray::show_error(L('summaryrequired'));
             break;
         }
 
@@ -110,7 +111,8 @@ switch ($action = Req::val('action'))
         // ##################
     case 'newmultitasks.newmultitasks':
         if(!isset($_POST['item_summary'])) {
-            Flyspray::show_error(L('summaryanddetails'));
+            #Flyspray::show_error(L('summaryanddetails'));
+            Flyspray::show_error(L('summaryrequired'));
             break;
         }
         $flag = true;
@@ -122,12 +124,17 @@ switch ($action = Req::val('action'))
         }
         $i = 0;
         foreach($_POST['detailed_desc'] as $detail) {
-            if($detail)
-                $_POST['detailed_desc'][$i] = "<p>" . $detail . "</p>";
+            if($detail){
+            	# only for ckeditor/html, not for dokuwiki (or other syntax plugins in future)
+            	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
+                  $_POST['detailed_desc'][$i] = "<p>" . $detail . "</p>";
+            	}
+            }
             $i++;
         }
         if(!$flag) {
-            Flyspray::show_error(L('summaryanddetails'));
+            #Flyspray::show_error(L('summaryanddetails'));
+            Flyspray::show_error(L('summaryrequired'));
             break;
         }
 
@@ -172,7 +179,8 @@ switch ($action = Req::val('action'))
         }
 
         if (!Post::val('item_summary')) {//description can be empty now
-            Flyspray::show_error(L('summaryanddetails'));
+            #Flyspray::show_error(L('summaryanddetails'));
+            Flyspray::show_error(L('summaryrequired'));
             break;
         }
 
