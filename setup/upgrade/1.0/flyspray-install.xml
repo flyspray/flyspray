@@ -13,10 +13,9 @@
     </field>
   </table>
   <table name="tags">
-          <field name="task_id" type="I" size="5"></field>
-	  <field name="tag" type="C" size="100"></field>
+    <field name="task_id" type="I" size="5"></field>
+    <field name="tag" type="C" size="100"></field>
   </table>
-
   <table name="admin_requests">
     <field name="request_id" type="I" size="5">
       <KEY/>
