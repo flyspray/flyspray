@@ -28,7 +28,7 @@
         <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
         <input type="hidden" name="action" value="details.close"/>
         <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-        <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
+        <select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
         <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
         <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
         </select>

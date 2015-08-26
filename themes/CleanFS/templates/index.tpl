@@ -581,7 +581,7 @@
     <fieldset>
 	<legend><b><?php echo L('closeselectedtasks'); ?></b></legend>
             <div>
-                <select class="adminlist" name="resolution_reason" onmouseup="Event.stop(event);">
+                <select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
                     <option value="0"><?php echo Filters::noXSS(L('selectareason')); ?></option>
                     <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
                 </select>
