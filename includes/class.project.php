@@ -292,14 +292,14 @@ class Project
         {
                 global $db;
                 if ($pm) {
-                        $result= $db->Query('SELECT tag `tag_name`, 1 `list_position`, 1 `show_in_list`, COUNT(*) `used_in_tasks`
+                        $result= $db->Query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
                                 FROM {tags} tg
                                 JOIN {tasks} t ON t.task_id=tg.task_id
                                 WHERE t.project_id=?
                                 GROUP BY tag
                                 ORDER BY tag', array($this->id));
                 } else {
-                        $result= $db->Query('SELECT tag `tag_name`, 1 `list_position`, 1 `show_in_list`, COUNT(*) `used_in_tasks`
+                        $result= $db->Query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
                                 FROM {tags}
                                 GROUP BY tag
                                 ORDER BY tag');
