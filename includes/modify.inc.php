@@ -950,18 +950,22 @@ switch ($action = Req::val('action'))
             unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
         //if you think different, modify functions in class.user.php directing different regiser tpl
 
-    	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
-    		// First check if htaccess is turned on
-    		if (!array_key_exists('HTTP_HTACCESS_ENABLED', $_SERVER)) {
-    			Flyspray::show_error(L('enablehtaccess'));
-    			break;
-    		}
-    		// Make sure mod_rewrite is enabled
-    		else if (!array_key_exists('HTTP_MOD_REWRITE', $_SERVER)) {
-    			Flyspray::show_error(L('nomodrewrite'));
-    			break;
-    		}
-    	}
+	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
+		# Setenv can't be used to set the env variable in .htaccess, because apache module setenv is often disabled on hostings and brings server error 500.
+		# First check if htaccess is turned on
+		#if (!array_key_exists('HTTP_HTACCESS_ENABLED', $_SERVER)) {
+		#	Flyspray::show_error(L('enablehtaccess'));
+		#	break;
+		#}
+		
+		# Make sure mod_rewrite is enabled by checking a env var defined as HTTP_MOD_REWRITE in the .htaccess .
+		# It is possible to be converted to REDIRECT_HTTP_MOD_REWRITE . It's sound weired, but that's the case here.
+		if ( !array_key_exists('HTTP_MOD_REWRITE', $_SERVER) && !array_key_exists('REDIRECT_HTTP_MOD_REWRITE' , $_SERVER) ) {
+			#print_r($_SERVER);die();
+			Flyspray::show_error(L('nomodrewrite'));
+			break;
+		}
+	}
 
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
