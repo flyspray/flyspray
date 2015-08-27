@@ -61,6 +61,11 @@ RewriteBase /
 # You can force TLS/SSL by uncommenting this 2 lines if you have a valid certificate for your domain
 #RewriteCond %{HTTPS} !=on
 #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# In the case of TLS/SSL available, set also session.cookie_secure=1
+# so that the session cookie can't be sniffed by Man-in-the-Middle or same network.
+# Depends on your server setup/webhosting if done in php.ini, .user.ini or somehow/somewhere else.
+# Ask your web hoster if you don't know.
+
 
 # used for enabling url_rewriting check in admin prefs
 RewriteRule . - [E=HTTP_MOD_REWRITE:On]
