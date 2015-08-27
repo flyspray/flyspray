@@ -3,7 +3,6 @@
 # show systemwide settings for this list on project setting page too ..
 ?>
 <h3><?php echo Filters::noXSS(L('systemvalues'));
-# TODO: do we have still a matching translation string name we can use instead inventing a new one?
 # TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
 ?></h3>
 <table class="list" id="idtablesys">
@@ -47,6 +46,9 @@ $syscountlines++;
 </tbody>
 </table>
 <?php endif; ?>
+<h3><?php echo $do=='pm' ? Filters::noXSS(L('projectvalues')) : Filters::noXSS(L('systemvalues'));
+# TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
+?></h3>
 <?php if (count($rows)): ?>
 <div id="controlBox">
     <div class="grip"></div>
@@ -57,10 +59,6 @@ $syscountlines++;
 </div>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
-<h3><?php echo $do=='pm' ? Filters::noXSS(L('projectvalues')) : Filters::noXSS(L('systemvalues'));
-# TODO: do we have still a matching translation string name we can use instead inventing a new one?
-# TODO: should be h2 tag, h1 tag for page type title, and project/flyspray title not a h1-tag in the header.
-?></h3>
 <table class="list" id="listTable">
 <colgroup>
     <col class="cname"></col>
