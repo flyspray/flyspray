@@ -33,22 +33,8 @@ php_value filter.default "unsafe_raw"
 php_flag always_populate_raw_post_data Off
 </IfModule>
 
-# php4 as **apache 1** module
-<IfModule mod_php4.c>
-php_flag register_globals Off
-php_flag magic_quotes_gpc Off
-php_flag session.use_trans_sid 0
-php_flag session.auto_start 0
-php_flag short_open_tag off
-php_flag register_argc_argv Off
-php_value filter.default "unsafe_raw"
-php_flag always_populate_raw_post_data Off
-</IfModule>
-
-#php4 as **apache 2** module
-
+# php4 as **apache 2** module
 <IfModule sapi_apache2.c>
-
 php_flag register_globals Off
 php_flag magic_quotes_gpc Off
 php_flag session.use_trans_sid 0
@@ -64,16 +50,31 @@ php_flag always_populate_raw_post_data Off
 	Deny From All
 </LimitExcept>
 
+# probably mod_negotiation plays foul with mod_rewrite on this two rules:
+#     RewriteRule ^index$ index.php?do=index [L,QSA]
+#     RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
+# So try to deactivate it by -MultiViews (which is sadly not possible in every web hosting environment - gives error500)
+#Options -MultiViews
+
 <IfModule mod_rewrite.c>
-#SetEnv HTTP_MOD_REWRITE on
-
 RewriteEngine on
-#RewriteBase /flyspray
 
-# You can force TLS/SSL if you have a valid certificate for your domain
+# Set RewriteBase to urlpath where Flyspray is accessible.
+RewriteBase /
+# Use this if Flyspray is accessible from a subdirectory of your domain.
+#RewriteBase /flyspray/
+
+# You can force TLS/SSL by uncommenting this 2 lines if you have a valid certificate for your domain
 #RewriteCond %{HTTPS} !=on
 #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# In the case of TLS/SSL available, set also session.cookie_secure=1
+# so that the session cookie can't be sniffed by Man-in-the-Middle or same network.
+# Depends on your server setup/webhosting if done in php.ini, .user.ini or somehow/somewhere else.
+# Ask your web hoster if you don't know.
 
+
+# used for enabling url_rewriting check in admin prefs
+RewriteRule . - [E=HTTP_MOD_REWRITE:On]
 
 RewriteRule ^.*\?do=admin&area=prefs$ index.php?do=admin&area=prefs [L,QSA]
 
@@ -111,9 +112,10 @@ RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
 RewriteRule ^newmultitasks/proj([0-9+])$ index.php?do=newmultitasks&project=$1 [L,QSA]
 
 RewriteRule ^proj([0-9+])/dev([0-9]+)$ index.php?project=$1&do=index&dev=$2 [L,QSA]
-
 RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
 
 </IfModule>
 
+<IfModule mod_env.c>
 #SetEnv HTTP_HTACCESS_ENABLED on
+</IfModule>
