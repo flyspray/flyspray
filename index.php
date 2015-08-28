@@ -102,9 +102,16 @@ if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 $page = new FSTpl();
 
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
+# peterdd doesn't disagree: The user gets a link on mail or jabber by reminder for instance, but isn't logged in yet.
+# So just exit; is not a good option.
 if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
-    Flyspray::show_error( L('nopermission') );
-    exit;
+	if ($user->isAnon()){
+		Flyspray::show_error( 28, false, L('pleaselogin')); # NO redirect! Give the user the chance to reach the target page immediatly after login.
+	} else{
+		# The user really has no access -> redirect to index and exit done by show_error()
+		#Flyspray::show_error( L('nopermission') ); # NO redirect!
+		Flyspray::show_error(28); # Redirect to index!
+	}
 }
 
 if ($show_task = Get::val('show_task')) {
