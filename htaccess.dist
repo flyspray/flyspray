@@ -50,6 +50,12 @@ php_flag always_populate_raw_post_data Off
 	Deny From All
 </LimitExcept>
 
+# probably mod_negotiation plays foul with mod_rewrite with this two rules:
+#     RewriteRule ^index$ index.php?do=index [L,QSA]
+#     RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
+# So try to deactivate it by -Multiviews (which is sadly not possible in every web hosting environment - gives error500)
+#Options -MultiViews
+
 <IfModule mod_rewrite.c>
 RewriteEngine on
 
