@@ -573,7 +573,7 @@ class Notifications {
           -------------------------------
          */
 
-        $body = tL('donotreply') . "\n\n";
+        $body = tL('donotreply', $lang) . "\n\n";
         $online = '';
 
         // {{{ New task opened
