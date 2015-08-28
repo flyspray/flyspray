@@ -74,6 +74,7 @@ foreach ($groups as $group){
 .perms thead th, .perms thead td {text-align:center;}
 .perms tbody th{text-align:right;}
 .perms tbody td{width:100px;text-align:center;}
+.perms tbody span i:first-child {color: #090;}
 </style>
 <table class="perms">
 <colgroup> 
