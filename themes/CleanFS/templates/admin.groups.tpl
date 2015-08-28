@@ -87,20 +87,35 @@ foreach ($groups as $group){
 </tr>
 <tr> 
 <th><?php echo L('group'); ?></th>
-<?php echo $gnames; ?></tr>
+<?php echo $gnames; ?>
 </tr>
 <tr>
 <th><?php echo L('description'); ?></th>
-<?php echo $gdesc; ?></tr>
+<?php echo $gdesc; ?>
 </tr>
 </thead>
 <tbody>
 <?php foreach ($perm_fields as $p): ?>
 <tr>
 	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
-	<?php $i=0; foreach($perms[$p] as $val): ?>
-	<?php echo ($perms['is_admin'][$i]==1 && $val == 0) ? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val]; ?>
-	<?php $i++; endforeach;?>
+<?php
+require_once('permicons.tpl');
+$i=0;
+foreach($perms[$p] as $val){
+        if ($perms['is_admin'][$i]==1 && $val == 0){
+                if(isset($permicons[$p])){
+                        echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
+                }else{
+                        echo $yesno[1];
+                }
+        } elseif($val==1 && isset($permicons[$p])){
+                echo '<td>'.$permicons[$p].'</td>';
+        } else{
+                echo $yesno[$val];
+        }
+        $i++;
+}
+?>
 </tr>
 <?php endforeach; ?>
 </tbody>
