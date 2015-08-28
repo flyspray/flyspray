@@ -8,6 +8,9 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <?php if ($fs->prefs['url_rewriting']): ?>
+    <base href="<?php echo Filters::noXSS($baseurl); ?>" />
+    <?php endif; ?>
     <?php if(trim($this->get_image('favicon'))): ?>
     <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
     <?php endif; ?>
