@@ -97,12 +97,13 @@ foreach ($groups as $group){
 <tbody>
 <?php foreach ($perm_fields as $p): ?>
 <tr>
-<th><?php echo eL(str_replace('_', '', $p)); ?></th>
-<?php $i=0; foreach($perms[$p] as $val): ?>
-<?php echo ($perms['is_admin'][$i]==1 && $val == 0) ? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val]; ?>
-<?php $i++; endforeach;?>
+	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
+	<?php $i=0; foreach($perms[$p] as $val): ?>
+	<?php echo ($perms['is_admin'][$i]==1 && $val == 0) ? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val]; ?>
+	<?php $i++; endforeach;?>
 </tr>
 <?php endforeach; ?>
+</tbody>
 </table>
 </div>
 </div>
