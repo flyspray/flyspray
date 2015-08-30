@@ -1436,7 +1436,9 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		$select.=' cache.content desccache, ';
 		$from.='
 LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
-	}
+	} else {
+            $select .= 'NULL AS desccache, ';
+        }
 
         if (array_get($args, 'only_primary')) {
             $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
