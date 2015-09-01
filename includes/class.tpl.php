@@ -859,9 +859,10 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'project':
                 $return = $url . 'proj' . $arg1;
                 break;
-
-            case 'toplevel':
+                
             case 'roadmap':
+            case 'toplevel':
+            case 'gantt':
             case 'index':
             case 'newtask':
             case 'newmultitasks':
@@ -930,6 +931,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 
             case 'roadmap':
             case 'toplevel':
+            case 'gantt':
             case 'index':
             case 'newtask':
             case 'newmultitasks':
