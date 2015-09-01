@@ -9,19 +9,22 @@ if ($user->isAnon()):
         <div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
 	</li><?php
 else:
-	?><li class="first"><a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?>"><?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)</a>
+	if ($user->perms('can_view_tasks')):
+	?><li><a href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a></li><?php
+	endif;
+	?><li><a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?> <?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)"><i class="fa fa-user fa-lg"></i></a>
 	</li><li>
 		<a id="lastsearchlink" href="#" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive"><?php echo Filters::noXSS(L('mysearch')); ?></a>
 		<div id="mysearches"><?php $this->display('links.searches.tpl'); ?></div>
 	</li><?php
 	if ($user->perms('is_admin')):
 	?><li>
-		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>"><?php echo Filters::noXSS(L('admintoolbox')); ?></a>
+		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" title="<?php echo Filters::noXSS(L('admintoolbox')); ?>"><i class="fa fa-gears fa-lg"></i></a>
 	</li><?php
 	endif;
 	?><li>
 		<a id="logoutlink" href="<?php echo Filters::noXSS(CreateURL('logout', null)); ?>"
-		accesskey="l"><?php echo Filters::noXSS(L('logout')); ?></a>
+		accesskey="l" title="<?php echo Filters::noXSS(L('logout')); ?>"><i class="fa fa-power-off fa-lg"></i></a>
 	</li><?php
 	if (isset($_SESSION['was_locked'])):
 	?><li>
