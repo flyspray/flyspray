@@ -765,6 +765,7 @@
       <col>project_id</col>
       <col>tag_name</col>
     </index>
+  </table>
   <table name="list_tasktype">
     <field name="tasktype_id" type="I" size="3">
       <KEY/>
@@ -839,7 +840,7 @@
     </index>
   </table>
   <sql>
-    <query>UPDATE projects SET visible_fields = 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes' WHERE visible_fields = '';</query>
+    <query>UPDATE projects SET visible_fields = 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes' WHERE visible_fields = ''</query>
     <query>UPDATE projects SET theme_style = 'CleanFS'</query>
     <query>UPDATE prefs SET pref_value = 'CleanFS' WHERE pref_name = 'global_theme'</query>
   </sql>
