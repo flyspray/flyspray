@@ -420,7 +420,7 @@
     </div>
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
-      <button type="submit"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
+      <button type="submit" class="positive"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
       <button type="reset"><?php echo Filters::noXSS(L('resetoptions')); ?></button>
     </div>
   </form>
