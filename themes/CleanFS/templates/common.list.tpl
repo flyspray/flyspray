@@ -188,7 +188,7 @@ $syscountlines++;
       <?php endif; ?>
       <td class="buttons">
         <input type="hidden" name="project" value="<?php echo Filters::noXSS($proj->id); ?>" />
-        <button type="submit"><?php echo Filters::noXSS(L('addnew')); ?></button>
+        <button type="submit" class="positive"><?php echo Filters::noXSS(L('addnew')); ?></button>
       </td>
     </tr>
 </tbody>
