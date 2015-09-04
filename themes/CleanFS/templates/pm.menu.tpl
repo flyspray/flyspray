@@ -11,8 +11,8 @@
      <?php if(isset($_GET['area']) and $_GET['area'] == 'tasktype') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('pm', 'tasktype', $proj->id)); ?>"><?php echo Filters::noXSS(L('tasktypes')); ?></a>
   <a id="projtglink"
-     <?php if(isset($_GET['area']) and $_GET['area'] == 'tags') echo $activeclass; ?>
-     href="<?php echo Filters::noXSS(CreateURL('pm', 'tags',  $proj->id)); ?>"><i class="fa fa-tag"></i><?php echo Filters::noXSS(L('tags')); ?></a>
+     <?php if(isset($_GET['area']) and $_GET['area'] == 'tag') echo $activeclass; ?>
+     href="<?php echo Filters::noXSS(CreateURL('pm', 'tag',  $proj->id)); ?>"><i class="fa fa-tag"></i><?php echo Filters::noXSS(L('tags')); ?></a>
   <a id="projstatuslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'status') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('pm', 'status',     $proj->id)); ?>"><?php echo Filters::noXSS(L('taskstatuses')); ?></a>
