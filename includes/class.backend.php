@@ -1104,8 +1104,24 @@ abstract class Backend
 			if ($tag == ''){
 				continue;
 			}
-			# FS1.0dev, Note: {tags} db table will be replaced by rewritten tag feature in future.
-			$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+			
+			# old tag feature
+			#$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+			
+			# new tag feature. let's do it in 2 steps, it is getting too complicated to make it cross database compatible, drawback is possible (rare) race condition (use transaction?)
+			$res=$db->Query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+			if($t=$db->FetchRow($res)){   
+				$tag_id=$t['tag_id'];
+			} else{ 
+				if( $proj->prefs['freetagging']==1){
+					# add to taglist of the project
+					$db->Query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+					$tag_id=$db->Insert_ID();
+				} else{
+					continue;
+				}
+			};
+			$db->Query("INSERT INTO {task_tags}(task_id,tag_id) VALUES(?,?)", array($task_id,$tag_id) );
 		}
 	}
 

@@ -289,6 +289,7 @@ class Project
     }
 	
 	/* between FS0.9.9.7 to FS1.0alpha2 */
+	/*
 	function listTags($pm = false)
         {
                 global $db;
@@ -312,14 +313,14 @@ class Project
                 }
                 return $tags;
         }
-
+	*/
 	/* rewrite of tags feature, FS1.0beta1 */ 
-	/*
+	
 	function listTags($pm = false)
 	{
 		global $db;
 		if ($pm) {
-			$result= $db->Query('SELECT tg.*, COUNT(*) `count`
+			$result= $db->Query('SELECT tg.*, COUNT(tt.task_id) AS used_in_tasks
 				FROM {list_tag} tg
 				LEFT JOIN {task_tag} tt ON tt.tag_id=tg.tag_id
 				LEFT JOIN {tasks} t ON t.task_id=tt.task_id
@@ -335,8 +336,6 @@ class Project
 			return $db->cached_query('tag', $this->_list_sql('tag'), array($this->id));
  		}
 	}
-	*/
-
     // }}}
 
     // This should really be moved to class Flyspray like some other ones too.

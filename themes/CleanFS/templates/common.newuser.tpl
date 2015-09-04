@@ -78,12 +78,12 @@ endif; ?>
 			<?php echo tpl_options($times, Req::val('time_zone', 0)); ?>
 			</select>
 		</li>
-
+		
 		<?php if (isset($groups)): ?>
 		<li>
 			<label for="groupin"><?php echo Filters::noXSS(L('globalgroup')); ?></label>
 			<select id="groupin" class="adminlist" name="group_in">
-			<?php echo tpl_options($groups, Req::val('group_in')); ?>
+			<?php echo tpl_options($groups, Req::val('group_in', $fs->prefs['anon_group'])); ?>
 			</select>
 		</li>
 		<?php endif; ?>

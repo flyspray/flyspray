@@ -61,7 +61,7 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'prefs':
     case 'resolution':
     case 'tasktype':
-    case 'tags':	
+    case 'tag':	
     case 'status':
     case 'version':
     case 'newgroup':
