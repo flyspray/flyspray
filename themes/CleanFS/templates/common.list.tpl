@@ -169,7 +169,7 @@ $syscountlines++;
         <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
         <?php endif; ?>
         <input type="hidden" name="area" value="<?php echo Filters::noXSS(Req::val('area')); ?>" />
-        <input type="hidden" name="do" value="<?php echo Filters::noXSS(Req::val('do')); ?>" />
+        <input type="hidden" name="do" value="<?php echo Filters::noXSS($do); ?>" />
         <input id="listnamenew" placeholder="<?php echo Filters::noXSS(L('name')); ?>" class="text" type="text" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" autofocus />
       </td>
       <td>
