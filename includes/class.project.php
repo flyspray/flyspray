@@ -320,7 +320,7 @@ class Project
 	{
 		global $db;
 		if ($pm) {
-			$result= $db->Query('SELECT tg.*, COUNT(*) AS used_in_tasks
+			$result= $db->Query('SELECT tg.*, COUNT(tt.task_id) AS used_in_tasks
 				FROM {list_tag} tg
 				LEFT JOIN {task_tag} tt ON tt.tag_id=tg.tag_id
 				LEFT JOIN {tasks} t ON t.task_id=tt.task_id
