@@ -336,8 +336,6 @@ class Project
 			return $db->cached_query('tag', $this->_list_sql('tag'), array($this->id));
  		}
 	}
-	*/
-
     // }}}
 
     // This should really be moved to class Flyspray like some other ones too.
