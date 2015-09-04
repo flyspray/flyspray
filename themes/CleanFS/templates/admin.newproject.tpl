@@ -51,7 +51,7 @@
 	 <?php echo tpl_checkbox('disp_intro', Req::val('disp_intro', 0), 'dispintro'); ?>
      </li>
       <li>
-        <td class="buttons" colspan="2"><button type="submit"><?php echo Filters::noXSS(L('createthisproject')); ?></button></td>
+        <td class="buttons" colspan="2"><button type="submit" class="positive"><?php echo Filters::noXSS(L('createthisproject')); ?></button></td>
       </li>
     </ul>
   </form>
