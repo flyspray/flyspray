@@ -1113,7 +1113,7 @@ switch ($action = Req::val('action'))
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
                 'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by', 'default_order_by_dir');
         $args = array_map('Post_to0', $cols);
-        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign'));
+        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign', 'freetagging'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
         $cols[] = 'notify_types';
         $args[] = implode(' ', (array) Post::val('notify_types'));
