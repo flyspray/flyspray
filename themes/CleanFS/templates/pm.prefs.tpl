@@ -21,14 +21,12 @@
         <li>
           <label for="defaultcatowner"><?php echo Filters::noXSS(L('defaultcatowner')); ?></label>
           <?php echo tpl_userselect('default_cat_owner', Post::val('default_cat_owner', $proj->prefs['default_cat_owner']), 'defaultcatowner'); ?>
-
         </li>
 
         <li>
           <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
           <select id="langcode" name="lang_code">
             <?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
-
           </select>
         </li>
 
@@ -71,13 +69,11 @@
         <li>
           <label for="isactive"><?php echo Filters::noXSS(L('isactive')); ?></label>
           <?php echo tpl_checkbox('project_is_active', Post::val('project_is_active', $proj->prefs['project_is_active']), 'isactive'); ?>
-
         </li>
 
         <li>
           <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
           <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
-
         </li>
 
         <li>
@@ -88,7 +84,6 @@
         <li>
           <label for="othersview"><?php echo Filters::noXSS(L('othersview')); ?></label>
           <?php echo tpl_checkbox('others_view', Post::val('others_view', $proj->prefs['others_view']), 'othersview'); ?>
-
         </li>
 
         <li>
@@ -99,19 +94,16 @@
         <li>
           <label for="anon_open"><?php echo Filters::noXSS(L('allowanonopentask')); ?></label>
           <?php echo tpl_checkbox('anon_open', Post::val('anon_open', $proj->prefs['anon_open']), 'anon_open'); ?>
-
         </li>
 
         <li>
           <label for="comment_closed"><?php echo Filters::noXSS(L('allowclosedcomments')); ?></label>
           <?php echo tpl_checkbox('comment_closed', Post::val('comment_closed', $proj->prefs['comment_closed']), 'comment_closed'); ?>
-
         </li>
 
         <li>
           <label for="auto_assign"><?php echo Filters::noXSS(L('autoassign')); ?></label>
           <?php echo tpl_checkbox('auto_assign', Post::val('auto_assign', $proj->prefs['auto_assign']), 'auto_assign'); ?>
-
         </li>
 
         <li>
@@ -119,8 +111,12 @@
           <select id="defaultdueversion" name="default_due_version">
               <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
               <?php echo tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version']), true); ?>
-
           </select>
+        </li>
+        
+        <li>
+          <label for="freetagging"><?php echo Filters::noXSS(L('freetagging')); ?></label>
+          <?php echo tpl_checkbox('freetagging', Post::val('freetagging', $proj->prefs['freetagging']), 'freetagging'); ?>
         </li>
       </ul>
     </div>
@@ -223,7 +219,6 @@
           $selectedfields = explode(' ', Post::val('visible_fields', $proj->prefs['visible_fields']));
           ?>
           <?php echo tpl_double_select('visible_fields', $fieldnames, $selectedfields, false); ?>
-
         </li>
       </ul>
     </div>
@@ -274,7 +269,6 @@
                               NOTIFY_REV_DEP_REMOVED => L('revdepaddedremoved'),
                               NOTIFY_ADDED_ASSIGNEES => L('assigneeadded')),
                               Post::val('notify_types', Flyspray::int_explode(' ', $proj->prefs['notify_types']))); ?>
-
           </select>
         </li>
       </ul>
@@ -299,7 +293,6 @@
           <li>
               <label for="useeffort"><?php echo Filters::noXSS(L('useeffort')); ?></label>
               <?php echo tpl_checkbox('use_effort_tracking', Post::val('use_effort_tracking', $proj->prefs['use_effort_tracking']), 'useeffort'); ?>
-
           </li>
           <li>
               <label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
@@ -358,7 +351,7 @@
     <div class="tbuttons">
       <input type="hidden" name="action" value="pm.updateproject" />
       <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
-      <button type="submit"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
+      <button type="submit" class="positive"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
       <button type="reset"><?php echo Filters::noXSS(L('resetoptions')); ?></button>
     </div>
   </form>
