@@ -30,8 +30,10 @@ http://flyspray.org/manual/install
 ## Dependencies
 
 ### Install php
-    LINUX:
+    Linux: Just use the package manager or one of its frontends of your Linux distribution.
+    For instance for Debian based Linux distributions:
     sudo apt-get install php
+    
 
     Windows:
     http://php.net/downloads.php
