@@ -25,7 +25,7 @@ http://flyspray.org/manual/install
 2. Remove all files **except the attachments/ directory, avatars/ directory and flyspray.conf.php**
 3. Copy the new files to the Flyspray directory
 4. Make sure flyspray.conf.php is writeable by the webserver.
-5. Open http://yourflyspray/setup/upgrade.php in your webbrowser and follow the upgrade steps
+5. Open http://yourflyspray/setup/ in your webbrowser. It detects the existing installation and you can follow the upgrade steps.
 
 ## Dependencies
 
