@@ -1,9 +1,15 @@
-Upgrading from 0.9.6 - 0.9.8 to 0.9.9
+##Upgrading 0.9.9.* to 1.0* (1.0 alphas, 1.0 betas, Flyspray master branch on github.com)##
+
+Run http://yourflyspray/setup/
+in your browser and follow the instructions.
+It detects an existing Flyspray flyspray.conf.php and missing third party components (composer).
+
+##Upgrading from 0.9.6 - 0.9.8 to 0.9.9##
 
 Run the upgrader at http://yourflyspray/setup/upgrade.php
 
 
-Upgrading from 0.9.5 to 0.9.6
+##Upgrading from 0.9.5 to 0.9.6##
 
 Configuration is no longer in header.php.  You now need to edit the
 flyspray.conf.php file to set your database config and miscellaneous
@@ -19,7 +25,7 @@ PostgreSQL users do the same, but use the upgrade_0.9.5_to_0.9.6-pgsql.php
 script instead.
 
 
-Upgrading from 0.9.4 to 0.9.5
+##Upgrading from 0.9.4 to 0.9.5##
 
 Install the ADODB database-abstraction software somewhere on your
 system and edit the new header.php to point to the adodb.inc.php file.
@@ -28,13 +34,13 @@ isn't used anymore. Load the upgrade_0.9.4_to_0.9.5-mysql.php script in your
  browser and follow the instructions.
 
 
-Upgrading from 0.9.3.1 to 0.9.4
+##Upgrading from 0.9.3.1 to 0.9.4##
 
 Load the 'upgrade_0.9.3.1_to_0.9.4.php' script in your browser and follow the
 instructions.
 
 
-Upgrading from 0.9.3 to 0.9.3.1
+##Upgrading from 0.9.3 to 0.9.3.1##
 
 Simply unpack the new files into your old Flyspray directory.  If you overwrite
 config.inc.php, you will need to re-edit it.
