@@ -204,10 +204,10 @@
 	</div>
 	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
 		<input type="checkbox" id="s_addcomment" />
-		<label class="button" for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
+		<label for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
 		<span class="fa-stack">
-		<i class="fa fa-comment fa-stack-2x"></i>
-		<i class="fa fa-plus fa-stack-1x positive"></i>
+		<i class="fa fa-comment-o fa-stack-2x"></i>
+		<i class="fa fa-plus fa-stack-1x"></i>
 		</span>
 		</label>
 		<div id="edit_add_comment">
