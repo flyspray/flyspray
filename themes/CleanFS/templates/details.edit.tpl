@@ -174,12 +174,16 @@
 	$links = $proj->listTaskLinks($task_details['task_id']);
 	$this->display('common.editlinks.tpl', 'links', $links); ?>
 	<?php if ($user->perms('create_attachments')): ?>
-		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-		<span style="display: none">
-		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-		<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-		</span>
+		<input id="link1" tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+		<script>
+		// hide the fallback input field if javascript is enabled
+		document.getElementById("link1").style.display=none;
+		</script>
 		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
+		<span style="display: none">
+			<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+			<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+		</span>
 		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	<?php endif; ?>
 	</div>
@@ -188,14 +192,18 @@
 	$attachments = $proj->listTaskAttachments($task_details['task_id']);
 	$this->display('common.editattachments.tpl', 'attachments', $attachments);
 	if ($user->perms('create_attachments')): ?>
-		<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
+		<input id="file1" tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
+		<script>
+		// hide the fallback input field if javascript is enabled
+		document.getElementById("file1").style.display=none;
+		</script>
+		<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
+			<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
+		</button>
 		<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
 			<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 		</span>
-		<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
-			<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
-		</button>
 		<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
