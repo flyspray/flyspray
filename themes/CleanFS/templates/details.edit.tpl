@@ -108,7 +108,7 @@
 	</li>
 	<?php endif; ?>
 
-	<?php if ($proj->prefs['use_effort_tracking'] && $user->perms('view_estimated_effort'): ?>
+	<?php if ($proj->prefs['use_effort_tracking'] && $user->perms('view_estimated_effort')): ?>
 	<li>
 		<label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
 		<input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="10" value="<?php echo Filters::noXSS(effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])); ?>" />
