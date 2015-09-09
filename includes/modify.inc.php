@@ -260,6 +260,37 @@ switch ($action = Req::val('action'))
             }
         }
 
+        // update tags
+        $tagList = explode(';', Post::val('tags'));  
+        $tagList = array_map('strip_tags', $tagList);
+        $tagList = array_map('trim', $tagList);
+        $tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+        $tags_changed = count(array_diff($task['tags'], $tagList)) + count(array_diff($tagList, $task['tags']));
+
+	if($tags_changed){
+		// Delete the current assigned tags for this task
+		$db->Query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
+		foreach ($tagList as $tag){
+			if ($tag == ''){
+				continue;
+			}
+
+			$res=$db->Query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+			if($t=$db->FetchRow($res)){  
+				$tag_id=$t['tag_id'];
+			} else{
+				if( $proj->prefs['freetagging']==1){   
+					# add to taglist of the project
+					$db->Query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+					$tag_id=$db->Insert_ID();
+				} else{
+					continue;
+				}
+			};
+			$db->Query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+		}
+	}
+
         // Get the details of the task we just updated
         // To generate the changed-task message
         $new_details_full = Flyspray::GetTaskDetails($task['task_id']);
@@ -269,9 +300,7 @@ switch ($action = Req::val('action'))
         $new_details = $db->FetchRow($result);
 
         foreach ($new_details as $key => $val) {
-            if (strstr($key, 'last_edited_') || $key == 'assigned_to'
-                || is_numeric($key))
-            {
+            if (strstr($key, 'last_edited_') || $key == 'assigned_to' || is_numeric($key)) {
                 continue;
             }
 
