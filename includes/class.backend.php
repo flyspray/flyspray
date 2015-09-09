@@ -1457,7 +1457,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 	# not every db system has this feature out of box
 	if('mysql' == $db->dblink->dataProvider){
 		# without distinct i see multiple times each tag (when task has several assignees too)
-		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position SEPARATOR ", ") AS tags, ';
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 	}else{
 		$select .= ' MIN(tg.tag_name) AS tags, ';
 		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
