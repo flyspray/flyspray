@@ -8,8 +8,8 @@ if ($user->isAnon()):
         <label for="s_loginbox" id="show_loginbox" accesskey="l"><?php echo Filters::noXSS(L('login')); ?></label>
         <div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
 	</li><?php
-else:
-	<li><a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?> <?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)"><i class="fa fa-user fa-lg"></i></a>
+else: ?><li>
+		<a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?> <?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)"><i class="fa fa-user fa-lg"></i></a>
 	</li><li>
 		<a id="lastsearchlink" href="#" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive"><?php echo Filters::noXSS(L('mysearch')); ?></a>
 		<div id="mysearches"><?php $this->display('links.searches.tpl'); ?></div>
