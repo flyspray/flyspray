@@ -67,8 +67,7 @@ endif; ?>
 		accesskey="a"><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
 		</li><?php
 	endif;
-	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']):
-	?><li>
+	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?><li>
 		<a id="anonopen"
 		<?php if($do == 'newtask'): ?> class="active" <?php endif; ?>
 		href="?do=newtask&amp;project=<?php echo Filters::noXSS($proj->id); ?>"><?php echo Filters::noXSS(L('opentaskanon')); ?></a>
@@ -90,19 +89,16 @@ endif; ?>
 		<a id="roadmaplink"
 		<?php if($do == 'roadmap'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id)); ?>"><?php echo Filters::noXSS(L('roadmap')); ?></a>
-	</li>
-	<?php
+	</li><?php
 	endif;
 	if (isset($hasgantt) && $proj->id && $user->perms('view_roadmap')): ?><li>
 		<a href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
 	</li>
 	<?php
 	endif;
-	if ($proj->id && $user->perms('manage_project')):
-	?><li>
+	if ($proj->id && $user->perms('manage_project')): ?><li>
 		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
-	</li>
-	<?php
+	</li><?php
 	endif;
 	if ($proj->id && isset($pm_pendingreq_num) && $pm_pendingreq_num):
 	?><li>
