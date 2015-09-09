@@ -989,6 +989,7 @@ ul.form_elements label.inline {display: inline;vertical-align:middle;}
 ul.form_elements label.labeltextarea {width:auto;display:block;text-align:left;}
 ul.form_elements input {vertical-align: middle;}
 ul.form_elements input[type="text"], ul.form_elements input[type="password"] {width:300px;}
+ul.slim li {margin-bottom:0;padding-bottom:4px;}
 ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
 ul.slim label {width:110px;}
 ul.form_elements li.required label {font-weight: bold;}
