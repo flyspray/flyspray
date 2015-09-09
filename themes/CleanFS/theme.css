@@ -610,10 +610,11 @@ form #taskdetailsfull {
 [class^='t_']:before{
 	font-family:fontawesome;
 }
-/* style your tags by their tag_id, will be moved to custom_xxx.css in future
+/* style your tags by their tag_id, will be moved to custom_xxx.css in future */
+/* fa-eur */
 /*
 .t_1{background-color:#666;}
-.t_1:before{content:'\f153';color:#cc0;} /* fa-eur */
+.t_1:before{content:'\f153';color:#cc0;}
 .t_2{background-color:#0c0;}
 .t_3{background-color:#09c;}
 */
