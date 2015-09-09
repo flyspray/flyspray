@@ -1325,6 +1325,7 @@ LEFT JOIN ({groups} pg
 	// Keep this always, could also used for showing assigned users for a task.
 	// Keeps the overall logic somewhat simpler.
 	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
+	$from .= ' LEFT JOIN {task_tag} tt ON t.task_id = tt.task_id';
         $cfrom = $from;
         
         // Seems resution name really is needed...
@@ -1433,24 +1434,43 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
 		# not every db system has this feature out of box
 		if('mysql' == $db->dblink->dataProvider){
-			$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
+			#$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
+			# without distinct i see multiple times each assignee
+			# maybe performance penalty due distinct?, solve by better groupby construction?
+			$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
 		}else{
 			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
 			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
 		}
 		// assigned table is now always included in join
 		$from .= '
--- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
-            $groupby .= 'ass.task_id, ';
-            if (array_get($args, 'dev')) {
-                $cfrom .= '
--- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+		$groupby .= 'ass.task_id, ';
+		if (array_get($args, 'dev')) {
+			$cfrom .= '
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
-		$cgroupbyarr[] = 't.task_id';
-                $cgroupbyarr[] = 'ass.task_id';
-            }
-        }
+			$cgroupbyarr[] = 't.task_id';
+			$cgroupbyarr[] = 'ass.task_id';
+		}
+	}
+        
+	# not every db system has this feature out of box
+	if('mysql' == $db->dblink->dataProvider){
+		# without distinct i see multiple times each tag (when task has several assignees too)
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position SEPARATOR ", ") AS tags, ';
+	}else{
+		$select .= ' MIN(tg.tag_name) AS tags, ';
+		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+	}
+	// task_tag join table is now always included in join
+	$from .= '
+LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
+	$groupby .= 'tt.task_id, ';
+	$cfrom .= '
+LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
+	$cgroupbyarr[] = 't.task_id';
+	$cgroupbyarr[] = 'tt.task_id';
+
 
 	# use preparsed task description cache for dokuwiki when possible
 	if($conf['general']['syntax_plugin']=='dokuwiki' && FLYSPRAY_USE_CACHE==true){
