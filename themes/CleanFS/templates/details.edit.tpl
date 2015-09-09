@@ -184,7 +184,7 @@
 		<br />
 		<span style="display: none">
 			<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-			<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+			<a href="javascript://" tabindex="9" class="button fa fa-remove fa-lg" title="<?php echo Filters::noXSS(L('remove')); ?>" onclick="removeLinkField(this, 'addlinkbox');"></a><br />
 		</span>
 	<?php endif; ?>
 	</div>
@@ -207,7 +207,7 @@
 		<br />
 		<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-			<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+			<a href="javascript://" tabindex="6" class="button fa fa-remove fa-lg" title="<?php echo Filters::noXSS(L('remove')); ?>" onclick="removeUploadField(this);"></a><br />
 		</span>
 	<?php endif; ?>
 	</div>
