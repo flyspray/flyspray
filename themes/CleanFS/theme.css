@@ -606,6 +606,7 @@ form #taskdetailsfull {
     margin: 3px;
     padding: 4px;
     font-style:normal;
+    white-space: nowrap;
 }
 /* for fonticons in tags */
 [class^='t_']:before{
