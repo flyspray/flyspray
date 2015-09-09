@@ -154,8 +154,8 @@
 	</div>
 </div>
 <div id="taskdetailsfull">
-	<label for="item_summary" class="summary">FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
-		<input placeholder="<?php echo Filters::noXSS(L('summary')); ?>" type="text" name="item_summary" id="item_summary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
+	<label for="itemsummary" class="summary">FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
+		<input placeholder="<?php echo Filters::noXSS(L('summary')); ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 	</label>
 	<label style="display:block;" for="tags" title="<?php echo Filters::noXSS(L('taginfo')); ?>"><?php echo Filters::noXSS(L('tags')); ?>:
 		<input placeholder="<?php echo Filters::noXSS(L('tags')); ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $task_details['tags'])); ?>" />
