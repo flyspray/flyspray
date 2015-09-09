@@ -249,9 +249,9 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
   -webkit-border-radius: 3px;
 }
 #menu-list a#lastsearchlink.active {
-      -moz-border-radius: 10px 10px 0px 0px;
-      -webkit-border-radius: 10px 10px 0px 0px;
-      border-radius: 10px 10px 0px 0px;
+      -moz-border-radius: 3px 3px 0px 0px;
+      -webkit-border-radius: 3px 3px 0px 0px;
+      border-radius: 3px 3px 0px 0px;
 }
 #menu-list li {
       display: block;
