@@ -73,6 +73,12 @@ $page = new Tpl;
 $page->assign('title', 'Upgrade ');
 $page->assign('short_version', UPGRADE_VERSION);
 
+if (!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
+    $page->assign('ask_for_conversion', true);
+} else {
+    $page->assign('ask_for_conversion', false);
+}
+
 //cleanup
 //the cache dir
 @rmdirr(sprintf('%s/cache/dokuwiki', APPLICATION_PATH));
@@ -100,11 +106,11 @@ if (Post::val('upgrade')) {
     }
 
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
-    # No need for any filter, because dokuwiki format wouldn't be touched. But maybe ask the user
-    # first and explain that html-formatting is now used instead of plain text. Adding paragraph
-    # tags and line breaks might enhance readability.
+    # No need for any filter, because dokuwiki format wouldn't be touched anyway. But maybe ask the user
+    # first and explain that html-formatting is now used instead of plain text on installations that didn't
+    # use dokuwiki format. Then, adding paragraph tags and line breaks might enhance readability.
     // For testing, do not use yet, have to discuss this one with others.
-    //if (!$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
+    //if ((!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') && $yes_please_convert) {
     // convert_old_entries('tasks', 'detailed_desc', 'task_id');
     // convert_old_entries('projects', 'intro_message', 'project_id');
     // convert_old_entries('projects', 'default_task', 'project_id');

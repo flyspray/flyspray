@@ -49,6 +49,11 @@
             <p><?php echo $upgrade_options; ?></p>
             <?php endif; ?>
 
+            <?php if ($ask_for_conversion): ?>
+            <h2><?php echo L('explainwhatandwhy'); ?></h2>
+            <p><?php echo L('explainwhatandwhy'); ?></p>
+            <?php endif; ?>
+
             <h2><?php echo L('performupgrade'); ?></h2>
 <p><input name="upgrade" id="upgradebutton" class="button" value="<?php echo eL('performupgrade'); ?>" type="submit" /></p>
 <?php if (isset($done)): ?>
