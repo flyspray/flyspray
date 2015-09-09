@@ -101,7 +101,7 @@
 		<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
 	</li>
 	<!-- Private -->
-	<?php if $user->can_change_private($task_details): ?>
+	<?php if ($user->can_change_private($task_details)): ?>
 	<li><?php echo in_array('private', $fields) ? '' : ' style="display:none"'; ?>>
 		<label for="private"><?php echo Filters::noXSS(L('private')); ?></label>
 		<?php echo tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private'); ?>
@@ -135,7 +135,7 @@
 	?>
 
 	<!-- If there is only one choice of projects, then don't bother showing it -->
-	<li<?php if (count($fs->projects) > 1) ? '' : ' style="display:none"'; ?>>
+	<li<?php echo (count($fs->projects) > 1) ? '' : ' style="display:none"'; ?>>
 		<label for="tasktype"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
 		<select name="project_id">
 		<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
@@ -159,7 +159,7 @@
 	<label for="tags" title="<?php echo Filters::noXSS(L('taginfo')); ?>"><?php echo Filters::noXSS(L('tags')); ?>:
 		<input placeholder="<?php echo Filters::noXSS(L('tags')); ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $task_details['tags'])); ?>" />
 	</label>
-	<?php if defined('FLYSPRAY_HAS_PREVIEW'): ?>
+	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
 	<?php endif; ?>
 	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
@@ -189,7 +189,7 @@
 	<?php endif; ?>
 	<p class="buttons">
 		<!--<button type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>-->
-		<?php if defined('FLYSPRAY_HAS_PREVIEW'): ?>
+		<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 		<?php endif; ?>
 		<button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
