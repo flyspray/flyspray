@@ -596,13 +596,27 @@ form #taskdetailsfull {
 }
 #taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
-.tags span {
+/* t_ now reserved classes for tags with their tag_id like t_123
+ Couldnt use t123 due limited regex in css and some other classes start with 't' 
+*/
+.tags span, [class^='t_'] {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
     border-radius: 3px;
     margin: 3px;
     padding: 4px;
 }
+/* for fonticons in tags */
+[class^='t_']:before{
+	font-family:fontawesome;
+}
+/* style your tags by their tag_id, will be moved to custom_xxx.css in future
+/*
+.t_1{background-color:#666;}
+.t_1:before{content:'\f153';color:#cc0;} /* fa-eur */
+.t_2{background-color:#0c0;}
+.t_3{background-color:#09c;}
+*/
 #taskfields {
   width: 290px;
   float: left;
