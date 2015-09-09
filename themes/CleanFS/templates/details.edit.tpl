@@ -7,7 +7,6 @@
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
 <div id="taskdetails">
-<div>
 	<input type="hidden" name="action" value="details.update" />
 	<input type="hidden" name="edit" value="1" />
 	<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -156,11 +155,12 @@
 	<label for="item_summary" class="summary">FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
 		<input placeholder="<?php echo Filters::noXSS(L('summary')); ?>" type="text" name="item_summary" id="item_summary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 	</label>
-	<label for="tags" title="<?php echo Filters::noXSS(L('taginfo')); ?>"><?php echo Filters::noXSS(L('tags')); ?>:
+	<label style="display:block;" for="tags" title="<?php echo Filters::noXSS(L('taginfo')); ?>"><?php echo Filters::noXSS(L('tags')); ?>:
 		<input placeholder="<?php echo Filters::noXSS(L('tags')); ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $task_details['tags'])); ?>" />
 	</label>
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
+		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 	<?php endif; ?>
 	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
 	<br />
@@ -189,9 +189,6 @@
 	<?php endif; ?>
 	<p class="buttons">
 		<!--<button type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>-->
-		<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
-		<?php endif; ?>
 		<button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
 	</p>
 
@@ -233,7 +230,6 @@
 	<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	<?php endif; ?>
-</div>
 </div>
 <div class="clear"></div>
 </div>
