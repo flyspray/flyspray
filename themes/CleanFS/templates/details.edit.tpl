@@ -67,7 +67,7 @@
 		</select>
 	</li>
 	<!-- Severity -->
-	<li<?php echo in_array('severity', $fields) ? '' : ' style="display:none"': ?>>
+	<li<?php echo in_array('severity', $fields) ? '' : ' style="display:none"'; ?>>
 		<label for="severity"><?php echo Filters::noXSS(L('severity')); ?></label>
 		<select id="severity" name="task_severity">
 		 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
