@@ -646,6 +646,7 @@ form #taskdetailsfull {
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {margin-left: 291px;padding: 2em 3em;}
+#itemsummary, #tags {width:100%;box-sizing:border-box;height:auto;margin-bottom:10px;margin-top:8px;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
@@ -787,12 +788,12 @@ div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
-div.comment_container #addlinkbox {
+div.comment_container #addlinkbox, #taskdetailsfull #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
 }
-div.comment_container #uploadfilebox {
+div.comment_container #uploadfilebox, #taskdetailsfull #uploadfilebox {
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
@@ -969,16 +970,9 @@ fieldset.advsearch_users input {margin-top: 1.5em;}
 .account_enabled:hover {background: #00FF00;}
 .account_disabled{background: #FFD1D1;border: 1px solid #F8ACAC;}
 .account_disabled:hover {background: #FF0000;}
-ul.form_elements {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 1em;
-}
-ul.form_elements li {
-  padding: 2px;
-  margin-bottom: 9px;
-}
-ul.form_elements li label {
+ul.form_elements {list-style: none;padding: 0;margin: 0 0 0 1em;}
+ul.form_elements li {padding: 2px;margin-bottom: 9px;}
+ul.form_elements label {
       width: 200px;
       display: -moz-inline-stack;
       /* optional */
@@ -989,48 +983,23 @@ ul.form_elements li label {
       text-align: end;
       padding-right: 1ex;
       padding-top: 2px;
-      color: #555555;
+      color: #555;
 }
-ul.form_elements li label.inline {
-  display: inline;vertical-align:middle;
-}
-ul.form_elements li input {
-  vertical-align: middle;
-}
-ul.form_elements li input[type="text"], ul.form_elements li input[type="password"]  {
-	width:300px;
-}
-ul.form_elements li.required label {
-  font-weight: bold;
-}
-ul.form_elements span.note {
-  margin-left: 205px;
-}
-ul.wide li label {
-  width: 250px;
-}
-ul.slim {
-  width: 390px;
-  margin: 0;
-}
-ul.slim li label {
-  width: 110px;
-}
-ul.slim li div.userSelectWidget {
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1; /* triggers hasLayout for IE */
-    *display: inline; /* target IE7 only */
-    vertical-align: middle;
-}
-ul.slim li div.userSelectWidget input {
-  width: 80px;
-}
-ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:left;}
-.dateselect {
-  clear: both;
-}
+ul.form_elements label.inline {display: inline;vertical-align:middle;}
+ul.form_elements label.labeltextarea {width:auto;display:block;text-align:left;}
+ul.form_elements input {vertical-align: middle;}
+ul.form_elements input[type="text"], ul.form_elements input[type="password"] {width:300px;}
+ul.slim li {margin-bottom:0;padding-bottom:4px;}
+ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
+ul.slim label {width:110px;}
+ul.form_elements li.required label {font-weight: bold;}
+ul.form_elements span.note {margin-left:205px;}
+ul.wide label {width:250px;}
+ul.slim {margin:0;}
+ul.slim .userSelectWidget {width:95%;margin-left:auto;margin-right:auto;}
+ul.slim .userSelectWidget input {width:100px;}
+ul.slim .userSelectWidget select {width:100%;}
+.dateselect {clear: both;}
 .dateselect label:first-child {
   width: 120px;
   text-align: right;
@@ -1038,9 +1007,7 @@ ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:lef
   float: left;
 }
 /* fancy dual selects */
-.double_select {
-  position: relative;
-}
+.double_select {position: relative;}
 .double_select .dualselect_selectable {
   height: 220px;
   width: 40%;
@@ -1175,15 +1142,17 @@ div#closeform {
     position: absolute;
 }
 #actionsform li:hover li {float: none;font-size: 11px;}
-#setparentform, #associateform,#adddepform {
+#edit_add_comment{display:none;}
+#setparentform, #associateform, #adddepform {
 	display:none;
 	background: #363a3b;
 	color:#fff;
 	padding-left: 5px;
 }
-#s_parent, #s_associate, #s_adddependent {
+#s_parent, #s_associate, #s_adddependent, #s_addcomment {
 	display:none;
 }
+#s_addcomment:checked ~ #edit_add_comment,
 #s_parent:checked ~ #setparentform,
 #s_associate:checked ~ #associateform,
 #s_adddependent:checked ~ #adddepform{
@@ -1205,31 +1174,11 @@ input[type=text], input[type=password]{
 #table input[type=text] {
     width: 120px;
 }
-/*
-input[type=submit], button {
-    background: #69C;
-    border:  1px solid #0a4193;
-    color: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 20px;
-    vertical-align: middle;
-}
-*/
 input[type=text], input[type=submit], button {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-/* button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;} */
-/*
-input[type=submit]:hover, button:hover {
-    background: #5F9729;
-    color: #fff;
-    border-color: #5F9729;
-}
-*/
 #show_loginbox {
     background: #494D4E;
     -moz-border-radius: 3px;

@@ -935,13 +935,17 @@ class Flyspray
         * @access public static
         * @return array
         * @version 1.0
-        * old tag feature, reads flyspray_tags table!
-        * just for bit better structure and stub 
         */
         public static function getTags($task_id)
         {
                 global $db;
-                $sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                # pre FS1.0beta
+                #$sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                # since FS1.0beta
+                $sql = $db->Query('SELECT tg.tag_name AS tag, tg.class FROM {task_tag} tt
+                        JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
+                        WHERE task_id = ?
+                        ORDER BY list_position', array($task_id));
                 return $db->FetchAllArray($sql);
 	} /// }}}
     
