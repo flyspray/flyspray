@@ -168,34 +168,26 @@
 	<br />
 	<button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
 	<br />
-	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?><!--
-              <button type="button" onclick="showstuff('edit_add_comment');this.style.display='none';"><?php echo Filters::noXSS(L('addcomment')); ?></button>
-              <div id="edit_add_comment" class="hide">
-              <label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
 
-              <?php if ($user->perms('create_attachments')): ?>
-              <div id="uploadfilebox_c">
-                <span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
-                  <input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-                    <a href="javascript://" tabindex="6" onclick="removeUploadField(this, 'uploadfilebox_c');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-                </span>
-              </div>
-              <button id="uploadfilebox_c_attachafile" tabindex="7" type="button" onclick="addUploadFields('uploadfilebox_c')">
-                <?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
-              </button>
-              <button id="uploadfilebox_c_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields('uploadfilebox_c')">
-                 <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
-              </button>
-              <?php endif; ?>
-
-              <textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="10"></textarea>
-              </div>-->
+	<div id="addlinkbox">
+	<?php
+	$links = $proj->listTaskLinks($task_details['task_id']);
+	$this->display('common.editlinks.tpl', 'links', $links); ?>
+	<?php if ($user->perms('create_attachments')): ?>
+		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+		<span style="display: none">
+		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+		<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+		</span>
+		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
+		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	<?php endif; ?>
+	</div>
+	<div id="uploadfilebox">
 	<?php 
 	$attachments = $proj->listTaskAttachments($task_details['task_id']);
 	$this->display('common.editattachments.tpl', 'attachments', $attachments);
 	if ($user->perms('create_attachments')): ?>
-	<div id="uploadfilebox">
 		<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
 		<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
@@ -207,23 +199,23 @@
 		<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
-	</div>
+	
 	<?php endif; ?>
-
-	<?php
-	$links = $proj->listTaskLinks($task_details['task_id']);
-	$this->display('common.editlinks.tpl', 'links', $links); ?>
-
-	<?php if ($user->perms('create_attachments')): ?>
-	<div id="addlinkbox">
-		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-		<span style="display: none">
-		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-		<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-		</span>
-		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
-		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	</div>
+	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
+	<!--
+		<input type="checkbox" id="s_addcomment" />
+		<label for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
+		<i class="fa fa-stack">
+		<span class="fa fa-comment fa-stacked-lg"></span>
+		<span class="fa fa-plus positive"></span>
+		</i>
+		</label>
+		<div id="edit_add_comment">
+		<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
+		<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="2"></textarea>
+		</div>
+	-->
 	<?php endif; ?>
 	<div class="buttons">
 		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
