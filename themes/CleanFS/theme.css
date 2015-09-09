@@ -970,16 +970,9 @@ fieldset.advsearch_users input {margin-top: 1.5em;}
 .account_enabled:hover {background: #00FF00;}
 .account_disabled{background: #FFD1D1;border: 1px solid #F8ACAC;}
 .account_disabled:hover {background: #FF0000;}
-ul.form_elements {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 1em;
-}
-ul.form_elements li {
-  padding: 2px;
-  margin-bottom: 9px;
-}
-ul.form_elements li label {
+ul.form_elements {list-style: none;padding: 0;margin: 0 0 0 1em;}
+ul.form_elements li {padding: 2px;margin-bottom: 9px;}
+ul.form_elements label {
       width: 200px;
       display: -moz-inline-stack;
       /* optional */
@@ -990,48 +983,21 @@ ul.form_elements li label {
       text-align: end;
       padding-right: 1ex;
       padding-top: 2px;
-      color: #555555;
+      color: #555;
 }
-ul.form_elements li label.inline {
-  display: inline;vertical-align:middle;
-}
-ul.form_elements li input {
-  vertical-align: middle;
-}
-ul.form_elements li input[type="text"], ul.form_elements li input[type="password"]  {
-	width:260px;
-}
-ul.form_elements li.required label {
-  font-weight: bold;
-}
-ul.form_elements span.note {
-  margin-left: 205px;
-}
-ul.wide li label {
-  width: 250px;
-}
-ul.slim {
-  width: 390px;
-  margin: 0;
-}
-ul.slim li label {
-  width: 110px;
-}
-ul.slim li div.userSelectWidget {
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1; /* triggers hasLayout for IE */
-    *display: inline; /* target IE7 only */
-    vertical-align: middle;
-}
-ul.slim li div.userSelectWidget input {
-  width: 80px;
-}
-ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:left;}
-.dateselect {
-  clear: both;
-}
+ul.form_elements label.inline {display: inline;vertical-align:middle;}
+ul.form_elements label.labeltextarea {width:auto;display:block;text-align:left;}
+ul.form_elements input {vertical-align: middle;}
+ul.form_elements input[type="text"], ul.form_elements input[type="password"] {width:300px;}
+ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
+ul.slim label {width: 110px;}
+ul.form_elements li.required label {font-weight: bold;}
+ul.form_elements span.note {margin-left: 205px;}
+ul.wide label {width: 250px;}
+ul.slim {margin: 0;}
+ul.slim .userSelectWidget input {width: 80px;}
+
+.dateselect {clear: both;}
 .dateselect label:first-child {
   width: 120px;
   text-align: right;
@@ -1039,9 +1005,7 @@ ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:lef
   float: left;
 }
 /* fancy dual selects */
-.double_select {
-  position: relative;
-}
+.double_select {position: relative;}
 .double_select .dualselect_selectable {
   height: 220px;
   width: 40%;
