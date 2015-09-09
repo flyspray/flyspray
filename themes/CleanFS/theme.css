@@ -233,10 +233,10 @@ a:hover {color: #6699cc;}
 #menu-list {display: inline;margin: 0;padding: 0;list-style: none; }
 #menu-list a, #menu-list label{color: #ddd;text-decoration: none;padding: 3px 7px; }
 #menu-list a:hover {
-  background: #494d4e;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  background: #000;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #s_loginbox, #s_quickactions { display: none;}
 #loginbox, #actionsform { display: none;}
@@ -309,7 +309,7 @@ div#mysearches td {vertical-align: middle;}
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
-#pm-menu-list a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
+#pm-menu-list a:hover { background-color: #000; border-left: 1px solid #000;}
 #pm-menu-list a.active {
         border-left: none;
         border-top: 1px solid #6cab2e;
