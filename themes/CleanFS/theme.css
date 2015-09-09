@@ -1175,15 +1175,17 @@ div#closeform {
     position: absolute;
 }
 #actionsform li:hover li {float: none;font-size: 11px;}
-#setparentform, #associateform,#adddepform {
+#edit_add_comment{display:none;}
+#setparentform, #associateform, #adddepform {
 	display:none;
 	background: #363a3b;
 	color:#fff;
 	padding-left: 5px;
 }
-#s_parent, #s_associate, #s_adddependent {
+#s_parent, #s_associate, #s_adddependent, #s_addcomment {
 	display:none;
 }
+#s_addcomment:checked ~ #edit_add_comment,
 #s_parent:checked ~ #setparentform,
 #s_associate:checked ~ #associateform,
 #s_adddependent:checked ~ #adddepform{
