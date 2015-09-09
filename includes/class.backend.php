@@ -1430,11 +1430,16 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
             $select .= ' (SELECT SUM(ef.effort) FROM {effort} ef WHERE t.task_id = ef.task_id) AS effort, ';
         }
 
-        if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
-            $select .= ' MIN(u.real_name) AS assigned_to_name, ';
-            $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
-            // assigned table is now always included in join
-            $from .= '
+	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
+		# not every db system has this feature out of box
+		if('mysql' == $db->dblink->dataProvider){
+			$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
+		}else{
+			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
+			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+		}
+		// assigned table is now always included in join
+		$from .= '
 -- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
             $groupby .= 'ass.task_id, ';

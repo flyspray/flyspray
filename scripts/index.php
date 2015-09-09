@@ -215,11 +215,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 
         case 'assignedto':
-            $value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
-            if ($task['num_assigned'] > 1) {
-                $value .= ', +' . ($task['num_assigned'] - 1);
-            }
-            break;
+		# group_concat-ed for mysql
+		$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
+		# for DBs without group_concat()
+		if('mysql' != $db->dblink->dataProvider && ($task['num_assigned'] > 1)) {
+			$value .= ', +' . ($task['num_assigned'] - 1);
+		}
+		break;
 
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
