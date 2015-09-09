@@ -195,21 +195,19 @@
 	$attachments = $proj->listTaskAttachments($task_details['task_id']);
 	$this->display('common.editattachments.tpl', 'attachments', $attachments);
 	if ($user->perms('create_attachments')): ?>
-		<div id="uploadfilebox">
-			<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
-				<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-				<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
-			</span>
-			<noscript>
-				<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-			</noscript>
-		</div>
+	<div id="uploadfilebox">
+		<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
+		<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
+			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
+			<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+		</span>
 		<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
 		<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
+	</div>
 	<?php endif; ?>
 
 	<?php
@@ -218,19 +216,17 @@
 
 	<?php if ($user->perms('create_attachments')): ?>
 	<div id="addlinkbox">
+		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
 		<span style="display: none">
 		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
 		<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
 		</span>
-		<noscript>
-		<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
-		</noscript>
+		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
+		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	</div>
-	<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
-	<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 	<?php endif; ?>
 	<div class="buttons">
-		<button type="submit" class="positve" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
+		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 		<a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('canceledit')); ?></a>
 	</div>
 </div>
