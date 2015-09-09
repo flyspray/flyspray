@@ -103,7 +103,7 @@
 	</li>
 	<!-- Private -->
 	<?php if ($user->can_change_private($task_details)): ?>
-	<li><?php echo in_array('private', $fields) ? '' : ' style="display:none"'; ?>>
+	<li<?php echo in_array('private', $fields) ? '' : ' style="display:none"'; ?>>
 		<label for="private"><?php echo Filters::noXSS(L('private')); ?></label>
 		<?php echo tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private'); ?>
 	</li>
