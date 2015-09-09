@@ -1438,6 +1438,9 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 			# without distinct i see multiple times each assignee
 			# maybe performance penalty due distinct?, solve by better groupby construction?
 			$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
+			# maybe later for building links to users
+			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
+			#$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
 		}else{
 			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
 			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
@@ -1458,6 +1461,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 	if('mysql' == $db->dblink->dataProvider){
 		# without distinct i see multiple times each tag (when task has several assignees too)
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
 	}else{
 		$select .= ' MIN(tg.tag_name) AS tags, ';
 		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
