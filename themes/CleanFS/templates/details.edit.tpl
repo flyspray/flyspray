@@ -203,19 +203,17 @@
 	<?php endif; ?>
 	</div>
 	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
-	<!--
 		<input type="checkbox" id="s_addcomment" />
-		<label for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
-		<i class="fa fa-stack">
-		<span class="fa fa-comment fa-stacked-lg"></span>
-		<span class="fa fa-plus positive"></span>
-		</i>
+		<label class="button" for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
+		<span class="fa-stack">
+		<i class="fa fa-comment fa-stack-2x"></i>
+		<i class="fa fa-plus fa-stack-1x positive"></i>
+		</span>
 		</label>
 		<div id="edit_add_comment">
 		<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
 		<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="2"></textarea>
 		</div>
-	-->
 	<?php endif; ?>
 	<div class="buttons">
 		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
