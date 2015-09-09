@@ -646,6 +646,7 @@ form #taskdetailsfull {
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {margin-left: 291px;padding: 2em 3em;}
+#itemsummary, #tags {width:100%;box-sizing:border-box;height:auto;margin-bottom:10px;margin-top:8px;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
@@ -998,7 +999,7 @@ ul.form_elements li input {
   vertical-align: middle;
 }
 ul.form_elements li input[type="text"], ul.form_elements li input[type="password"]  {
-	width:300px;
+	width:260px;
 }
 ul.form_elements li.required label {
   font-weight: bold;
@@ -1207,31 +1208,11 @@ input[type=text], input[type=password]{
 #table input[type=text] {
     width: 120px;
 }
-/*
-input[type=submit], button {
-    background: #69C;
-    border:  1px solid #0a4193;
-    color: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 20px;
-    vertical-align: middle;
-}
-*/
 input[type=text], input[type=submit], button {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-/* button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;} */
-/*
-input[type=submit]:hover, button:hover {
-    background: #5F9729;
-    color: #fff;
-    border-color: #5F9729;
-}
-*/
 #show_loginbox {
     background: #494D4E;
     -moz-border-radius: 3px;
