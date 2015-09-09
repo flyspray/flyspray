@@ -1727,8 +1727,15 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
         }
 
 	if ($user->isAnon()) {
-            $where[] = 't.mark_private = 0 AND p.others_view = 1 AND t.is_closed = 0 ';
-        }
+		$where[] = 't.mark_private = 0 AND p.others_view = 1';
+		if(array_key_exists('status', $args)){
+			if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
+				$where[] = 't.is_closed = 1';
+			} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
+				$where[] = 't.is_closed = 0';
+			}
+		}
+	}
 
         $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 
