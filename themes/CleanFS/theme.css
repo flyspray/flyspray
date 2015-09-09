@@ -787,12 +787,12 @@ div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
-div.comment_container #addlinkbox {
+div.comment_container #addlinkbox, #taskdetailsfull #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
 }
-div.comment_container #uploadfilebox {
+div.comment_container #uploadfilebox, #taskdetailsfull #uploadfilebox {
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
