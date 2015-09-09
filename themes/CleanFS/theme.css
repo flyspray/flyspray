@@ -990,12 +990,13 @@ ul.form_elements label.labeltextarea {width:auto;display:block;text-align:left;}
 ul.form_elements input {vertical-align: middle;}
 ul.form_elements input[type="text"], ul.form_elements input[type="password"] {width:300px;}
 ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
-ul.slim label {width: 110px;}
+ul.slim label {width:110px;}
 ul.form_elements li.required label {font-weight: bold;}
-ul.form_elements span.note {margin-left: 205px;}
-ul.wide label {width: 250px;}
-ul.slim {margin: 0;}
-ul.slim .userSelectWidget input {width: 80px;}
+ul.form_elements span.note {margin-left:205px;}
+ul.wide label {width:250px;}
+ul.slim {margin:0;}
+ul.slim .userSelectWidget input {width:80px;}
+ul.slim .userSelectWidget select {width:100%;}
 
 .dateselect {clear: both;}
 .dateselect label:first-child {
