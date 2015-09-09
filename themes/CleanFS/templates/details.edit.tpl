@@ -199,10 +199,10 @@
 		<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
-	
 	<?php endif; ?>
 	</div>
-	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
+	<div class="buttons">
+		<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
 		<input type="checkbox" id="s_addcomment" />
 		<label for="s_addcomment" title="<?php echo Filters::noXSS(L('addcomment')); ?>">
 		<span class="fa-stack">
@@ -214,8 +214,8 @@
 		<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
 		<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="2"></textarea>
 		</div>
-	<?php endif; ?>
-	<div class="buttons">
+		<br />
+		<?php endif; ?>
 		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 		<a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('canceledit')); ?></a>
 	</div>
