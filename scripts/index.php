@@ -173,10 +173,17 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = tpl_tasklink($task, $task['task_id']);
             break;
         case 'summary':
-            $value = tpl_tasklink($task, utf8_substr($task['item_summary'], 0, 55));
-            if (utf8_strlen($task['item_summary']) > 55) {
-                $value .= '...';
-            }
+		$value = tpl_tasklink($task, utf8_substr($task['item_summary'], 0, 55));
+		if (utf8_strlen($task['item_summary']) > 55) {
+			$value .= '...';
+		}
+		# <i> instead of <span> in future for smaller size
+		# we need also some bytes for classes like <i class="t123">tagname</i>
+		if($task['tags']!=''){
+			$tags=explode(',', $task['tags']);
+			$tags=implode('</span><span>', $tags);
+			$value.='<span class="tags"><span>'.$tags.'</span>';
+		}
             break;
 
         case 'tasktype':
