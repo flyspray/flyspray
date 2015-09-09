@@ -131,7 +131,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 // tpl function that  draws a cell {{{
 
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
-	global $fs, $proj, $page, $user;
+	global $fs, $db, $proj, $page, $user;
 
 	$indexes = array (
             'id'         => 'task_id',
@@ -229,7 +229,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		# group_concat-ed for mysql
 		$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
 		# for DBs without group_concat()
-		if('mysql' != $db->dblink->dataProvider && ($task['num_assigned'] > 1)) {
+		if( ('mysql' != $db->dblink->dataProvider) && ($task['num_assigned'] > 1)) {
 			$value .= ', +' . ($task['num_assigned'] - 1);
 		}
 		break;
