@@ -997,7 +997,7 @@ ul.form_elements span.note {margin-left:205px;}
 ul.wide label {width:250px;}
 ul.slim {margin:0;}
 ul.slim .userSelectWidget input {width:80px;}
-ul.slim .userSelectWidget select {width:100%;}
+ul.slim .userSelectWidget select {width:95%;}
 
 .dateselect {clear: both;}
 .dateselect label:first-child {
