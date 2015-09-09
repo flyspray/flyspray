@@ -177,7 +177,7 @@
 		<input id="link1" tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
 		<script>
 		// hide the fallback input field if javascript is enabled
-		document.getElementById("link1").style.display=none;
+		document.getElementById("link1").style.display='none';
 		</script>
 		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 		<span style="display: none">
@@ -195,7 +195,7 @@
 		<input id="file1" tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
 		<script>
 		// hide the fallback input field if javascript is enabled
-		document.getElementById("file1").style.display=none;
+		document.getElementById("file1").style.display='none';
 		</script>
 		<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
 			<?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
