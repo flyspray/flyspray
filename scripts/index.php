@@ -182,7 +182,11 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		if($task['tags']!=''){
 			$tags=explode(',', $task['tags']);
 			$tags=implode('</span><span>', $tags);
-			$value.='<span class="tags"><span>'.$tags.'</span>';
+			$tgs='';
+			for($i=0;$i< count($tags); $i++){
+				$tgs.='<span class="t'.$tagids[$i].'">'.$tags[$i].'</span>';
+			}
+                        $value.='<span class="tags">'.$tgs.'</span>';
 		}
             break;
 
