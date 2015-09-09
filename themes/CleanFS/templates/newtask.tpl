@@ -195,11 +195,11 @@
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
         <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
-            name="item_summary" maxlength="100" style="width:100%;box-sizing:border-box;height:auto;margin-bottom:20px;margin-top:8px;" />
+            name="item_summary" maxlength="100" />
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
         <input id="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>" class="text" type="text"
-        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" style="min-width:300px" />
+        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" />
 	</div>
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
