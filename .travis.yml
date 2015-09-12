@@ -4,7 +4,7 @@ php:
 #  - 5.2
   - 5.3
   - 5.4
-  
+
 # no extensive travis testing before we have some real tests and project stable
 #  - 5.5
 #  - 5.6
@@ -14,6 +14,7 @@ php:
 env:
 - DB=mysql
 - DB=pgsql
+#- DB=mariadb
 
 install:
 - composer require adodb/adodb-php:5.*
