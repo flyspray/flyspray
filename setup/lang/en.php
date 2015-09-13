@@ -34,5 +34,14 @@ $language=array(
 'database'           => 'database',
 'recommended'        => 'recommended',
 'actual'             => 'actual',
+'yes'                => 'Yes',
+'no'                 => 'No',
+'explainwhatandwhyheader' => 'Formatting of task descriptions and comments has changed',
+'explainwhatandwhycontent' => 'Previously those installations of Flyspray that didn\'t use dokuwiki formatting engine stored data as plain text. '
+    . 'We now use HTML as the default and can try to add paragraph and line break tags to already existing data entries, so your data retains it\'s '
+    . 'structure. But if your existing data already contains manually added HTML tags something probably goes wrong and you have some corrupted '
+    . 'entries in your database that must be manually fixed. If unsure, answer "No", unless you can examine the situation before proceeding. '
+    . 'If you are fluent in programming with PHP, see also at the end of setup/upgrade.php, look at what it does and possibly modify according to '
+    . 'your needs. ',
 );
 ?>

@@ -50,8 +50,11 @@
             <?php endif; ?>
 
             <?php if ($ask_for_conversion): ?>
-            <h2><?php echo L('explainwhatandwhy'); ?></h2>
-            <p><?php echo L('explainwhatandwhy'); ?></p>
+            <h2><?php echo L('explainwhatandwhyheader'); ?></h2>
+            <p><?php echo L('explainwhatandwhycontent'); ?></p>
+            <p><input name="yes_please_do_convert" type="checkbox"/><?php echo eL('yes'); ?>
+                <input name="no_please_do_not_convert" type="checkbox"/><?php echo eL('no'); ?></p>
+
             <?php endif; ?>
 
             <h2><?php echo L('performupgrade'); ?></h2>

@@ -110,12 +110,15 @@ if (Post::val('upgrade')) {
     # first and explain that html-formatting is now used instead of plain text on installations that didn't
     # use dokuwiki format. Then, adding paragraph tags and line breaks might enhance readability.
     // For testing, do not use yet, have to discuss this one with others.
-    //if ((!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') && $yes_please_convert) {
-    // convert_old_entries('tasks', 'detailed_desc', 'task_id');
-    // convert_old_entries('projects', 'intro_message', 'project_id');
-    // convert_old_entries('projects', 'default_task', 'project_id');
-    // convert_old_entries('comments', 'comment_text', 'comment_id');
-    //}
+    if ((!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') && Post::val('yes_please_do_convert')) {
+        convert_old_entries('tasks', 'detailed_desc', 'task_id');
+        convert_old_entries('projects', 'intro_message', 'project_id');
+        convert_old_entries('projects', 'default_task', 'project_id');
+        convert_old_entries('comments', 'comment_text', 'comment_id');
+        $page->assign('conversion', true);
+    } else {
+        $page->assign('conversion', false);
+    }
 
     // we should be done at this point
     $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
@@ -589,7 +592,7 @@ function fix_version_table($dups) {
 function convert_old_entries($table, $column, $key) {
     global $db;
 
-    // Assuming that anything not beginning with <p> was made with older
+    // Assuming that anything not beginning with < was made with older
     // versions of flyspray. This will not catch neither those old entries
     // where the user for some reason really added paragraph tags nor those
     // made with development version before fixing ckeditors configuration
@@ -597,7 +600,7 @@ function convert_old_entries($table, $column, $key) {
     // should be just good enough.
     $sql = $db->Query("SELECT $key, $column "
             . "FROM {". $table . "} "
-            . "WHERE $column NOT LIKE '<p>%'");
+            . "WHERE $column NOT LIKE '<%'");
     $entries = $db->fetchAllArray($sql);
 
     # We should probably better use existing and proven filters for the conversions
