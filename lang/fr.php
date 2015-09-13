@@ -1016,12 +1016,12 @@ $translation = array(
 'commentedon'             => 'a commenté le',
 'maxvoteperday'           => 'Maximum de votes par jour',
 'votesperproject'         => 'Nombre limite de votes utilisateur par projet',
-'votelimitreached'        => 'Vous avez atteint la limite de votes pour ce projet. Consulter votre profil pour voir les tâches pour lesquelles vous avez voté. Vous pouvez également revenir sur vos votes. De cette façon nous pouvons voir quelles tâches sont plus importantes pour vous. Les tâches résolues vous permette de voter de nouveau.',
+'votelimitreached'        => 'Vous avez atteint la limite de votes pour ce projet. Consultez votre profil pour voir les tâches pour lesquelles vous avez voté. Vous pouvez également revenir sur vos votes. De cette façon, nous pouvons voir quelles tâches sont plus importantes pour vous. Les tâches résolues vous permettent de voter de nouveau.',
 'myvotes'                 => 'Mes Votes',
 'tag'                     => 'Tag',
 'tags'                    => 'Tags',
 'tagsinfo'                => 'Tagguer librement des tâches dans Flyspray :
-Séparé les tags par ;
+Séparer les tags par ;
 Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la recherche ou les filtres. Ils sont actuellement juste comme des post-it sur une fenêtre.',
 'novalues'                => 'aucune entrée',
 'youhaveregistered'       => 'Vous êtes inscrit sur Flyspray. Vous trouverez vos détails ci-après :',
