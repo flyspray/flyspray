@@ -59,7 +59,7 @@ $sql = $db->Query("UPDATE {tasks} SET " . Post::val('name') . " = ?,last_edited_
 $proj= new Project($task['project_id']);
 
 // Log the changed field in task history
-Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
+Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), time());
 
 // Get the details of the task we just updated to generate the changed-task message
 $new_details_full = Flyspray::GetTaskDetails($task['task_id']);
