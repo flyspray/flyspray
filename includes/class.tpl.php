@@ -675,9 +675,6 @@ class TextFormatter
             //possibly an conversion from Dokuwiki syntax to html issue, left in in case anyone has issues and needs to comment out
             //$text = ' ' . nl2br($text) . ' ';
             
-            // Change URLs into hyperlinks
-            $text = preg_replace('#[[:space:]|^[:alpha:]]+[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]#', '<a href="\0">\0</a>', $text);
-
             // Change FS#123 into hyperlinks to tasks
             return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
         }
