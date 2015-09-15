@@ -330,7 +330,79 @@
     </tr>
 </thead>
 <tbody>
-<?php foreach ($tasks as $task_details):?>
+     <?php
+	$i = -1;
+
+	foreach ($tasks as $task_details):
+		$i++;
+		if ( $i == 5 )
+		{
+    ?>
+    <tr id="support4">
+	<td></td>
+	<td></td>
+	<td></td>
+	<td colspan=<?php echo  count($visible);?>>
+	        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> 
+		<ins class="adsbygoogle"
+		     style="display:block"
+		     data-ad-client="ca-pub-1201923297792693"
+		     data-ad-slot="7450624364"
+		     data-ad-format="auto"></ins>
+	        <script> 
+	                (adsbygoogle = window.adsbygoogle || []).push({}); 
+	        </script>
+	</td> 
+    </tr>
+
+     <?php
+		}
+		elseif ( $i == 11 )
+		{
+    ?>
+    <tr id="support5">
+	<td></td>
+	<td></td>
+	<td></td>
+	<td colspan=<?php echo  count($visible);?>>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<ins class="adsbygoogle"
+			     style="display:inline-block;width:728px;height:15px"
+			     data-ad-client="ca-pub-1201923297792693"
+			     data-ad-slot="5823957169"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</td> 
+    </tr>
+
+     <?php
+		}
+		elseif ( $i == 17 )
+		{
+    ?>
+    <tr id="support6">
+	<td></td>
+	<td></td>
+	<td></td>
+	<td colspan=<?php echo  count($visible);?>>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<ins class="adsbygoogle"
+		     style="display:block"
+		     data-ad-client="ca-pub-1201923297792693"
+		     data-ad-slot="4347223963"
+		     data-ad-format="auto"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</td> 
+    </tr>
+
+
+
+    <?php
+	}
+    ?>
     <tr id="task<?php echo $task_details['task_id']; ?>" class="severity<?php echo Filters::noXSS($task_details['task_severity']); ?>" onmouseover="Show(this,<?php echo $task_details['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task_details['task_id']; ?>)">
         <td class="caret">
         </td>
