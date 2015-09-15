@@ -665,7 +665,7 @@ class Flyspray
             return 0;
         }
 
-        if( method != 'ldap' ){
+        if( $method != 'ldap' ){
         //encrypt the password with the method used in the db
         switch (strlen($auth_details['user_pass'])) {
             case 40:

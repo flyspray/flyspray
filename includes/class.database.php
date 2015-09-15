@@ -133,7 +133,7 @@ class Database
      * @access public
      * @return int
      */
-    public function CountRows(&$result)
+    public function CountRows($result)
     {
         return (int) $result->RecordCount();
     }
@@ -152,12 +152,12 @@ class Database
     /**
      * FetchRow
      *
-     * @param & $result
+     * @param $result
      * @access public
      * @return void
      */
 
-    public function FetchRow(&$result)
+    public function FetchRow($result)
     {
         return $result->FetchRow();
     }
@@ -165,13 +165,13 @@ class Database
     /**
      * fetchCol
      *
-     * @param & $result
+     * @param $result
      * @param int $col
      * @access public
      * @return void
      */
 
-    public function fetchCol(&$result, $col=0)
+    public function fetchCol($result, $col=0)
     {
         $tab = array();
         while ($tmp = $result->fetchRow()) {
@@ -257,11 +257,11 @@ class Database
     /**
      * FetchOne
      *
-     * @param & $result
+     * @param $result
      * @access public
      * @return array
      */
-    public function FetchOne(&$result)
+    public function FetchOne($result)
     {
         $row = $this->FetchRow($result);
         return (count($row) ? $row[0] : '');
@@ -270,11 +270,11 @@ class Database
     /**
      * FetchAllArray
      *
-     * @param & $result
+     * @param $result
      * @access public
      * @return array
      */
-    public function FetchAllArray(&$result)
+    public function FetchAllArray($result)
     {
         return $result->GetArray();
     }
@@ -290,7 +290,7 @@ class Database
      * @access public
      * @return array process the returned array with foreach ($return as $row) {}
      */
-    public function GroupBy(&$result, $column)
+    public function GroupBy($result, $column)
     {
         $rows = array();
         while ($row = $this->FetchRow($result)) {
