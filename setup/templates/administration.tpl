@@ -30,9 +30,20 @@ function ShowHidePassword(id) {
 						<td align="right"><label for="showpassword"><?php echo L('showpassword'); ?></label></td>
 						<td align="center"><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
 					</tr>
+					<tr>
+						<td>Syntax<br>If you are unsure choose Text/dokuwiki.
+						The switch from dokuwiki to HTML is easy. 
+						But a switch from HTML back to dokuwiki or another text format like markdown is nearly impossible without some information loss like deep nested HTML content or formatting.</td>
+						<td>
+						<select name="syntax_plugin">
+							<option value="dokuwiki">Text/Dokuwiki</option>
+							<option value="">HTML/CKEditor</option>
+						</select>
+						</td>
+					</tr>
 					<?php if ($daemonise): ?>
 					<tr>
-						<td align="right">Reminder daemon</td>
+						<td align="right" title="You can setup a crontab entry that calls scheduler.php in a time interval. This setting can be switched on/off everytime in Flyspray admin section.">Enable scheduling</td>
 						<td align="center"><?php echo $daemonise; ?></td>
 					</tr>
 					<?php endif; ?>
