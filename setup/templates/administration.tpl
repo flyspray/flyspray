@@ -51,16 +51,11 @@ function ShowHidePassword(id) {
 				<p>
 				The Database schema has been populated. Please follow the instructions to complete the Admin configuration.
 				</p>
+				<p>
 				1) Admin <strong>Email, Username, Password</strong> are values for the Administrator of your <?php echo Filters::noXSS($product_name); ?>
-
 				Installation. You can change these values through the administration section of <?php echo Filters::noXSS($product_name); ?>.
 				</p>
-
-				<p>
-				 2) The <strong>Reminder Daemon</strong>.
-				 Starting with the 0.9.8 release, <?php echo Filters::noXSS($product_name); ?> has a background daemon. This is required for Jabber notifications, reminders
-                 and other scheduled actions which will added to Flyspray in the future.
-				</p>
+				<p>Choosing a Syntax is a setting that cannot be simply changed and is set at install for the whole Flyspray installation. Choose Text/Dokuwiki if you are unsure which you choose.</p>
 
 				<input type="hidden" name="db_type" value="<?php echo Filters::noXSS($db_type); ?>" />
 				<input type="hidden" name="db_hostname" value="<?php echo Filters::noXSS($db_hostname); ?>" />
