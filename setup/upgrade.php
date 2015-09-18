@@ -73,7 +73,7 @@ $page = new Tpl;
 $page->assign('title', 'Upgrade ');
 $page->assign('short_version', UPGRADE_VERSION);
 
-if (!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') {
+if (!isset($conf['general']['syntax_plugin']) || !$conf['general']['syntax_plugin'] || $conf['general']['syntax_plugin'] == 'none') {
     $page->assign('ask_for_conversion', true);
 } else {
     $page->assign('ask_for_conversion', false);
@@ -110,7 +110,7 @@ if (Post::val('upgrade')) {
     # first and explain that html-formatting is now used instead of plain text on installations that didn't
     # use dokuwiki format. Then, adding paragraph tags and line breaks might enhance readability.
     // For testing, do not use yet, have to discuss this one with others.
-    if ((!isset($conf['syntax_plugin']) || !$conf['syntax_plugin'] || $conf['syntax_plugin'] == 'none') && Post::val('yes_please_do_convert')) {
+    if ((!isset($conf['general']['syntax_plugin']) || !$conf['general']['syntax_plugin'] || $conf['general']['syntax_plugin'] == 'none') && Post::val('yes_please_do_convert')) {
         convert_old_entries('tasks', 'detailed_desc', 'task_id');
         convert_old_entries('projects', 'intro_message', 'project_id');
         convert_old_entries('projects', 'default_task', 'project_id');
