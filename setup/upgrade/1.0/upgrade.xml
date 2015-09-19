@@ -447,7 +447,7 @@
     </field>
     <field name="freetagging" type="I" size="1">
       <NOTNULL/>
-      <DEFAULT value="0"/>>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="tasks">

@@ -10,7 +10,6 @@
                <td><strong>Install<strong></td>
                <td align="left">
                   <?php echo Filters::noXSS($version); ?>
-
                </td>
             </tr>
             <tr>
@@ -22,9 +21,12 @@
                <td>
                <select name="db_type">
                  <?php echo tpl_options(array_combine(array_map(create_function('$x', 'return $x[2];'), $databases), array_keys($databases)), $db_type); ?>
-
                </select>
                </td>
+            </tr>
+            <tr>
+               <td>Database name</td>
+               <td align="left"><input class="inputbox text" type="text" name="db_name" value="<?php echo Filters::noXSS($db_name); ?>" /></td>
             </tr>
             <tr>
                <td>Database user name</td>
@@ -33,10 +35,6 @@
             <tr>
                <td>Database password</td>
                <td align="left"><input class="inputbox" class="password" type="password" name="db_password" value="<?php echo Filters::noXSS($db_password); ?>" /></td>
-            </tr>
-            <tr>
-               <td>Database name</td>
-               <td align="left"><input class="inputbox text" type="text" name="db_name" value="<?php echo Filters::noXSS($db_name); ?>" /></td>
             </tr>
             <tr>
                <td>Table prefix</td>
