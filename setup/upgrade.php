@@ -611,7 +611,11 @@ function convert_old_entries($table, $column, $key) {
         $id = $entry[$key];
         $data = $entry[$column];
 
-        $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+                $data = htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        } else{
+                $data = htmlspecialchars($data, ENT_QUOTES , 'UTF-8');
+        }
         // Convert two or more line breaks to paragrahs, Windows/Unix/Linux formats
         $data = preg_replace('/(\h*\r?\n)+\h*\r?\n/', "</p><p>", $data);
         // Data coming from Macs has only carriage returns, and couldn't say
