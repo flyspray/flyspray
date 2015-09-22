@@ -440,6 +440,7 @@ body.toplevel .single-project {
   display: block;
   height: auto;
 }
+body.myprofile .box {display:inline-block;vertical-align:top;}
 .progress_bar_container {
   width: 150px;
   margin: 0 5px;
@@ -480,8 +481,8 @@ body.toplevel .single-project {
     line-height: 1em;
     text-shadow: 0 0 6px white;
 }
-td.task_progress .progress_bar_container { width: 100%;}
-a { text-decoration: none;}
+td.task_progress .progress_bar_container {width: 100%;}
+a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
