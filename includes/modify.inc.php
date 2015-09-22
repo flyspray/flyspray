@@ -475,8 +475,9 @@ switch ($action = Req::val('action'))
             Backend::add_notification($user->id, $task['task_id']);
         }
 
-        $_SESSION['SUCCESS'] = L('commentaddedmsg');
-        break;
+	$_SESSION['SUCCESS'] = L('commentaddedmsg');
+	Flyspray::Redirect(CreateURL('details', $task['task_id']));
+	break;
 
         // ##################
         // Tracking
