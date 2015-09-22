@@ -2351,22 +2351,26 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('votefailed'));
             break;
         }
+        // TODO: Log event in a later version.
         break;
 
-        // TODO: Log event in a later version.
 
-        // ##################
-        // Removing a vote for a task
-        // ##################
-    case 'details.removevote':
-        if (Backend::remove_vote($user->id, $task['task_id'])) {
-            $_SESSION['SUCCESS'] = L('voteremoved');
-        } else {
-            Flyspray::show_error(L('voteremovefailed'));
-            break;
-        }
+	// ##################
+	// Removing a vote for a task
+	// ##################
+	# used to remove a vote from myprofile page
+	case 'removevote':
+	# peterdd: I found no details.removevote action in source, so details.removevote is not used, but was planned on the task details page or in the old blue theme?
+	case 'details.removevote':
+		if (Backend::remove_vote($user->id, $task['task_id'])) {
+			$_SESSION['SUCCESS'] = L('voteremoved');
+		} else {
+			Flyspray::show_error(L('voteremovefailed'));
+			break;
+		}
+		// TODO: Log event in a later version, but also see if maybe done here Backend::remove_vote()...
+	break;
 
-        // TODO: Log event in a later version.
 
         // ##################
         // set supertask id
