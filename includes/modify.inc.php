@@ -514,6 +514,8 @@ switch ($action = Req::val('action'))
             $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
+        
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#effort');
         break;
 
         // ##################
