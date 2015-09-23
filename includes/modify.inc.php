@@ -1855,6 +1855,7 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyadded');
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
@@ -1866,6 +1867,9 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyremoved');
+        # if on details page we should redirect to details with a GET
+        # but what if the request comes from another page (like myprofile for instance maybe in future)
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
