@@ -960,7 +960,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'myprofile':
             case 'register':
             case 'reports':
-            	$return = $url;
+            	$return = $url . '&project=' . $arg1;
             	break;
             case 'mytasks':
             	$return = $baseurl.'index.php?do=index&project='.$arg1.'&dev='.$arg2;
