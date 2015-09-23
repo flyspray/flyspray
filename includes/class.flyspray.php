@@ -158,6 +158,9 @@ class Flyspray
 
         $url = FlySpray::absoluteURI($url);
 
+	if($_SERVER['REQUEST_METHOD']=='POST' && version_compare(PHP_VERSION, '5.4.0')>=0 ) {
+		http_response_code(303);
+	}
         header('Location: '. $url);
 
         if ($rfc2616 && isset($_SERVER['REQUEST_METHOD']) &&

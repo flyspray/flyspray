@@ -339,6 +339,7 @@ switch ($action = Req::val('action'))
         Backend::upload_links($task['task_id'], '0', 'userlink');
 
         $_SESSION['SUCCESS'] = L('taskupdated');
+        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
         // ##################
@@ -361,6 +362,8 @@ switch ($action = Req::val('action'))
         Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
+        # FIXME there are several pages using this form, details and pendingreq at least
+        #Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     case 'details.associatesubtask':
@@ -459,6 +462,8 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 13);
 
         $_SESSION['SUCCESS'] = L('taskreopenedmsg');
+	# FIXME there are several pages using this form, details and pendingreq at least
+	#Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
         // ##################
@@ -475,8 +480,9 @@ switch ($action = Req::val('action'))
             Backend::add_notification($user->id, $task['task_id']);
         }
 
-        $_SESSION['SUCCESS'] = L('commentaddedmsg');
-        break;
+	$_SESSION['SUCCESS'] = L('commentaddedmsg');
+	Flyspray::Redirect(CreateURL('details', $task['task_id']));
+	break;
 
         // ##################
         // Tracking
@@ -512,6 +518,8 @@ switch ($action = Req::val('action'))
             $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
+        
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#effort');
         break;
 
         // ##################
@@ -1174,6 +1182,7 @@ switch ($action = Req::val('action'))
         // Update project prefs for following scripts
         $proj = new Project($proj->id);
         $_SESSION['SUCCESS'] = L('projectupdated');
+        Flyspray::Redirect(CreateURL('pm', 'prefs', $proj->id));
         break;
 
         // ##################
@@ -1851,6 +1860,7 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyadded');
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
@@ -1862,6 +1872,9 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyremoved');
+        # if on details page we should redirect to details with a GET
+        # but what if the request comes from another page (like myprofile for instance maybe in future)
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
