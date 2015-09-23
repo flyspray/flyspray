@@ -230,7 +230,7 @@
 		</div>
 		<br />
 		<?php endif; ?>
-		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;taskid=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
+		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 		<a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('canceledit')); ?></a>
 	</div>
 </div>
