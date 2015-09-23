@@ -98,7 +98,7 @@
 	</li>
 	<!-- Due Date -->
 	<li<?php echo (in_array('duedate', $fields) && $user->perms('modify_all_tasks')) ? '' : ' style="display:none"'; ?>>
-		<label for="duedate"><?php echo Filters::noXSS(L('duedate')); ?></label>
+		<label for="due_date"><?php echo Filters::noXSS(L('duedate')); ?></label>
 		<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
 	</li>
 	<!-- Private -->
@@ -111,7 +111,7 @@
 
 	<?php if ($proj->prefs['use_effort_tracking'] && $user->perms('view_estimated_effort')): ?>
 	<li>
-		<label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
+		<label for="estimated_effort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
 		<input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="10" value="<?php echo Filters::noXSS(effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])); ?>" />
 		<?php echo Filters::noXSS(L('hours')); ?>
 	</li>
@@ -137,8 +137,8 @@
 
 	<!-- If there is only one choice of projects, then don't bother showing it -->
 	<li<?php echo (count($fs->projects) > 1) ? '' : ' style="display:none"'; ?>>
-		<label for="tasktype"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
-		<select name="project_id">
+		<label for="project_id"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
+		<select name="project_id" id="project_id">
 		<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
 		</select>
 	</li>
