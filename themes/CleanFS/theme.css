@@ -248,6 +248,7 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
 }
+#s_loginbox:checked ~ #show_loginbox{border-radius: 3px 3px 0 0;}
 #menu-list a#lastsearchlink.active {
       -moz-border-radius: 3px 3px 0px 0px;
       -webkit-border-radius: 3px 3px 0px 0px;
@@ -875,14 +876,13 @@ div.success {
   color: #24380d;
 }
 a#show_loginbox {margin-right: 5px;}
-#menu a#show_loginbox.active {border-radius: 3px 3px 0 0;}
 #loginbox {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  border-radius: 3px 0 3px 3px;
+  -moz-border-radius: 3px 0 3px 3px;
+  -webkit-border-radius: 3px 0 3px 3px;
   background: #ddd;
   border: solid 3px #5f9729;
-  right: 5px;
+  right: 2px;
   z-index: 200;
   min-width: 240px;
   padding-top: 15px;
@@ -1198,10 +1198,11 @@ input[type=text], input[type=submit], button {
     border-radius: 3px;
 }
 #show_loginbox {
-    background: #494D4E;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+	cursor:pointer;
+	background: #494D4E;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
 div.denyform {
