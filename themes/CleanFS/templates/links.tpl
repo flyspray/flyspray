@@ -63,9 +63,8 @@ endif; ?>
 	if ($proj->id && $user->perms('add_multiple_tasks')) :
 	?><li>
 		<a id="newmultitaskslink" href="<?php echo Filters::noXSS(CreateURL('newmultitasks', $proj->id)); ?>"
-		<?php if($do == 'newmultitasks'): ?> class="active" <?php endif; ?>
-		accesskey="a"><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
-		</li><?php
+		<?php if($do == 'newmultitasks'): ?> class="active"<?php endif; ?>><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
+	</li><?php
 	endif;
 	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?><li>
 		<a id="anonopen"
