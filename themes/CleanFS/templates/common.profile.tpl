@@ -79,7 +79,7 @@
       <li>
             <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
             <select id="langcode" name="lang_code">
-                <?php echo tpl_options(array_merge(array('browser', 'project'), Flyspray::listLangs(), Req::val('lang_code', $theuser->infos['lang_code']), true); ?>
+                <?php echo tpl_options(array_merge(array('browser', 'project'), Flyspray::listLangs()), Req::val('lang_code', $theuser->infos['lang_code']), true); ?>
             </select>
         </li>
       <li>
