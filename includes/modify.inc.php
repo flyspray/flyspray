@@ -362,6 +362,8 @@ switch ($action = Req::val('action'))
         Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
+        # FIXME there are several pages using this form, details and pendingreq at least
+        #Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     case 'details.associatesubtask':
@@ -460,6 +462,8 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 13);
 
         $_SESSION['SUCCESS'] = L('taskreopenedmsg');
+	# FIXME there are several pages using this form, details and pendingreq at least
+	#Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
         // ##################
