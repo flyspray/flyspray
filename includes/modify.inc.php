@@ -1182,6 +1182,7 @@ switch ($action = Req::val('action'))
         // Update project prefs for following scripts
         $proj = new Project($proj->id);
         $_SESSION['SUCCESS'] = L('projectupdated');
+        Flyspray::Redirect(CreateURL('pm', 'prefs', $proj->id));
         break;
 
         // ##################
