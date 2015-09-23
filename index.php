@@ -23,6 +23,8 @@ if ($do == 'admin' && Req::has('switch') && Req::val('project') != '0') {
 } elseif (Req::has('code')) {
 	$_SESSION['oauth_provider'] = 'microsoft';
 	$do = 'oauth';
+} elseif( Req::has('do') && Req::val('do') == 'tasklist') {
+	$do='index';
 }
 
 // supertask_id for add new sub-task
