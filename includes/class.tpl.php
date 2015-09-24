@@ -959,9 +959,13 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'lostpw':
             case 'myprofile':
             case 'register':
-            case 'reports':
             	$return = $url;
             	break;
+
+            case 'reports':
+            	$return = $url . '&project=' . $arg1;
+            	break;
+
             case 'mytasks':
             	$return = $baseurl.'index.php?do=index&project='.$arg1.'&dev='.$arg2;
             	break;
