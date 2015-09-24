@@ -90,10 +90,11 @@ endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id)); ?>"><?php echo Filters::noXSS(L('roadmap')); ?></a>
 	</li><?php
 	endif;
-	if (isset($hasgantt) && $proj->id && $user->perms('view_roadmap')): ?><li>
-		<a href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
-	</li>
-	<?php
+	if (file_exists(BASEDIR . '/scripts/gantt.php') && $proj->id && $user->perms('view_roadmap')): ?><li>
+		<a id="gantt"
+		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
+		href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
+	</li><?php
 	endif;
 	if ($proj->id && $user->perms('manage_project')): ?><li>
 		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
