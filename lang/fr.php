@@ -751,6 +751,7 @@ $translation = array(
 'textversion'             => 'Version texte',
 'onlyprimary'             => 'Tâches n\'en bloquant aucune autre',
 'onlyblocker'             => 'Tâches bloquants d\'autres tâches',
+'blockerornoblocker'      => 'La sélection simultanée des options "bloquant" et "non bloquant" n\'est pas cohérente.',
 'switch'                  => 'Basculer',
 'max'                     => 'max.',
 'dates'                   => 'Dates',
