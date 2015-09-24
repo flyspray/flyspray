@@ -322,7 +322,7 @@
           </li>
 
           <li>
-              <label for="showjabberppass"><?php echo Filters::noXSS(L('showpass')); ?></label>
+              <label for="showjabberpass"><?php echo Filters::noXSS(L('showpass')); ?></label>
               <input id="showjabberpass" name="show_jabber_pass" class="text" type="checkbox"  onclick="ShowHidePassword('jabberpassword')"/>
           </li>
 
@@ -375,26 +375,26 @@
         ?>
 
         <li>
-          <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
+          <label for="default_order_by"><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $fs->prefs['default_order_by'], false); ?>
           </select>
         </li>
 
         <li>
-          <label><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
+          <label for="default_order_by_dir"><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
           <select id="default_order_by_dir" name="default_order_by_dir">
             <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $fs->prefs['default_order_by_dir'], false); ?>
           </select>
         </li>
 
           <li>
-            <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
+            <label class="labeltextarea"><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
             <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
           </li>
 
           <li>
-            <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
+            <label class="labeltextarea"><?php echo Filters::noXSS(L('visiblefields')); ?></label>
             <?php // Set the selectable field names
             $fieldnames = array(
                 'parent' => L('parent'),
