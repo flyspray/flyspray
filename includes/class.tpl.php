@@ -860,10 +860,14 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
                 $return = $url . 'proj' . $arg1;
                 break;
                 
+            case 'reports':    
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
             case 'index':
+            	$return = $url.$type.'/proj'.$arg1;
+            	break;
+            	
             case 'newtask':
             case 'newmultitasks':
                 $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
@@ -879,17 +883,14 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'register':
                 $return = $url . $type;
                 break;
-            case 'reports':
-                $return = $url.'reports/proj'.$arg1;
-                break;
+            
             case 'mytasks':
                 $return = $url.'proj'.$arg1.'/dev'.$arg2;
                 break;
             case 'tasklist':
 		# FIXME We need to know the 'default_entry' setting of the target project
 		# and cannot just use the current global $proj in every case.
-		# But creating a $project object with additional sql request just for one link creation 
-		# is too much overhead.
+		# Using info from $fs object seems promising. But that needs some works in class.flyspray.php first.
 
 		# see also .htaccess for the mapping
 		#if($proj->prefs['default_entry']=='index'){
@@ -943,10 +944,15 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
                 $return = $baseurl . 'index.php?project=' . $arg1;
                 break;
 
+            case 'reports':
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
             case 'index':
+            case 'tasklist':
+            	$return = $url . '&project=' . $arg1;
+            	break;
+
             case 'newtask':
             case 'newmultitasks':
                 $return = $url . '&project=' . $arg1 . ($arg2 ? '&supertask=' . $arg2 : '');
@@ -962,17 +968,11 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             	$return = $url;
             	break;
 
-            case 'reports':
-            	$return = $url . '&project=' . $arg1;
-            	break;
-
             case 'mytasks':
             	$return = $baseurl.'index.php?do=index&project='.$arg1.'&dev='.$arg2;
             	break;
-            case 'tasklist':
-            	$return = $baseurl.'index.php?project='.$arg1;
-            	break;
-        	default:
+
+            default:
         		$return = $baseurl . 'index.php';
         		break;
         }
