@@ -161,16 +161,16 @@ $sql = $db->Query(
            FROM  {projects}
        ORDER BY  sort_names');
 
-$fs->projects = array_filter($db->FetchAllArray($sql), array($user, 'can_view_project'));
-/*
-# project_id as index for easier access, needs testing and maybe simplification 
+# old:
+#$fs->projects = array_filter($db->FetchAllArray($sql), array($user, 'can_view_project'));
+
+# new: project_id as index for easier access, needs testing and maybe simplification 
 # similiar situation also includes/class.flyspray.php function listProjects()
 $sres=$db->FetchAllArray($sql);
 foreach($sres as $p){
         $prs[$p['project_id']]=$p;
 }
 $fs->projects = array_filter($prs, array($user, 'can_view_project'));
-*/
 
 
 // Get e-mail addresses of the admins
