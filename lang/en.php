@@ -1031,12 +1031,11 @@ Regards,',
 'myvotes'                 => 'My Votes',
 'tag'                     => 'Tag',
 'tags'                    => 'Tags',
-'tagsinfo'                => 'Free tagging/labeling of tasks in Flyspray:
-Separate tags by ;
-Tags are currently not managable and are not used for search or filtering. They are currently just like additional stickers on a window.',
+'tagsinfo'                => 'Free tagging/labeling of tasks in Flyspray: Separate tags by ; They aren\'t used yet for searching, sorting or filtering.',
 'novalues'                => 'no entries',
 'youhaveregistered'       => 'You have registered at Flyspray. Your details are as follows:',
 'youhaveregisterednotify' => 'Your registration at Flyspray has been accepted by Administrators.',
 'usedintasks'             => 'Usage',
+'freetagging'             => 'allow user defined tags',
 );
 ?>
