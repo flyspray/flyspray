@@ -888,25 +888,17 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
                 $return = $url.'proj'.$arg1.'/dev'.$arg2;
                 break;
             case 'tasklist':
-		# FIXME We need to know the 'default_entry' setting of the target project
-		# and cannot just use the current global $proj in every case.
-		# Using info from $fs object seems promising. But that needs some works in class.flyspray.php first.
-
 		# see also .htaccess for the mapping
-		#if($proj->prefs['default_entry']=='index'){
-		#	$return = $url.'proj'.$arg1;
-		#}else{
+		if($fs[$arg1]['default_entry']=='index'){
+			$return = $url.'proj'.$arg1;
+		}else{
 			$return = $url.$type.'/proj'.$arg1;
-		#}
-		
-		# old version, ignoring 'default_entry', always assuming tasklist is default
-		#$return = $url.'proj'.$arg1;
+		}
 
             	break;
             default:
             	$return = $baseurl . 'index.php';
             	break;
-
         }
     } else {
         if ($type == 'edittask') {
