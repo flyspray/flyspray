@@ -889,7 +889,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
                 break;
             case 'tasklist':
 		# see also .htaccess for the mapping
-		if($fs->projects[$arg1]['default_entry']=='index'){
+		if($arg1>0 && $fs->projects[$arg1]['default_entry']=='index'){
 			$return = $url.'proj'.$arg1;
 		}else{
 			$return = $url.$type.'/proj'.$arg1;
