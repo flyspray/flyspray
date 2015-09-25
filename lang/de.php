@@ -1029,6 +1029,9 @@ Das Tagging in Flyspray ist derzeit sehr rudimentär. Sie sind in etwa vergleich
 Eine optische Gestaltung, Filterung oder Einbeziehung in die Suche ist derzeit nicht vorhanden. (kann aber noch werden :-))',
 'novalues'                => 'keine Einträge',
 'usedintasks'             => 'Verwendung',
+'youhaveregistered'       => 'Sie haben sich bei Flyspray registriert. Ihre Anmeldedaten sind folgende:',
+'youhaveregisterednotify' => 'Ihre Registrierung bei Flyspray wurde bestätigt.',
+'freetagging'             => 'nutzerdefinierte Schildchen',
 );
 
 ?>
