@@ -120,11 +120,16 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     }
 
 
-    $new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
-    $html = sprintf('<a title="%s" href="%s">%s</a>',
-            eL('sortthiscolumn'), Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, $new_order))), $html);
+	$new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
+	# unneeded params from $_GET for the sort links
+	$params=array_merge($_GET, $new_order);
+	unset($params['do']);
+	unset($params['project']);
+	unset($params['switch']);
+	$html = sprintf('<a title="%s" href="%s">%s</a>',
+		eL('sortthiscolumn'), Filters::noXSS(CreateURL('tasklist', $proj->id, null, $params )), $html);
 
-    return sprintf($format, $class, $html);
+	return sprintf($format, $class, $html);
 }
 
 // }}}
