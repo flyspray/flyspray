@@ -105,7 +105,7 @@ function load_translations(){
 	# 20150211 add language preferences detection of visitors
 	# locale_accept_from_http() not available on every hosting, so we must parse it self.
 	# TODO ..and we can loop later through $langs until we find a matching translation file
-	if( !isset($lang_code) || $lang_code=='' || $lang_code=='browser' ){
+	if((!isset($lang_code) || $lang_code=='' || $lang_code=='browser') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
 		foreach( explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $lang) {
 			# taken from a php.net comment
 			$pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})'.
