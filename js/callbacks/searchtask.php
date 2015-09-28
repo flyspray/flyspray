@@ -34,7 +34,7 @@ $params = array(
 $sql = $db->Query('SELECT count(*) 
 		   FROM {tasks} t
 		   WHERE t.project_id = ? 
-		   	AND t.item_summary = ? 
+		   	AND t.item_summary like ? 
 		   	AND t.detailed_desc like ?'
 		   $params);
 $sametask = $db->fetchOne($sql);
