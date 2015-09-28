@@ -17,7 +17,7 @@
 			return true;
 		}
 		var detail = document.getElementById("details").value;
-    		var project_id = $$('input[name="project_id"]')[0].value;
+    		var project_id = document.getElementsByName('project_id')[0].value;
 
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
