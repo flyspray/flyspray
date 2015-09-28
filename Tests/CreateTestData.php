@@ -1,4 +1,8 @@
 <?php
+
+# quick safety
+exit;
+
 // Use this only on a new test installation, code does not work on
 // an existing one, and never will.
 
