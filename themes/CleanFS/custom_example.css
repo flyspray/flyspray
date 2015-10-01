@@ -1,0 +1,7 @@
+/* customization example. Use for color customization, avoid layout changes. */
+
+tr.severity5 {background: #f96 linear-gradient(#f96, #f85) repeat scroll 0 0;}
+tr.severity4 {background: #fe0 linear-gradient(#fe0, #fc0) repeat scroll 0 0;}
+tr.severity3 {background: #fe9 linear-gradient(#fe9, #fd9) repeat scroll 0 0;}
+tr.severity2 {background: #eee linear-gradient(#fff, #eee) repeat scroll 0 0;}
+tr.severity1 {}
