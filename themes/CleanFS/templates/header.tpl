@@ -18,6 +18,13 @@
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+<?php
+# property 'custom_css' not (yet) implemented or exists in project table..
+# property 'theme_style' exists, but is used for complete theme directories, even if since FS1.0 only one template structure (CleanFS/) is maintained.
+#$proj->prefs['custom_css']='custom_example.css';
+if(isset($proj->prefs['custom_css'])): ?>
+        <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()).$proj->prefs['custom_css']; ?>" rel="stylesheet" type="text/css" />
+<?php endif; ?>
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
           href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
     <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
