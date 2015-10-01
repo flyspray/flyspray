@@ -4,7 +4,7 @@ require_once('../../header.php');
 
 
 // Require inputs
-if(!Post::has('detail') || !Post::has('summary') || !Post::has('project_id'))
+if(!Post::has('detail') || !Post::has('summary'))
 {
   return;
 }
@@ -26,7 +26,7 @@ if(!$user->can_open_task($proj)){
 
 // Prepare SQL params
 $params = array(
-  'project_id' => Post::num('project_id'),
+  'project_id' => $proj->id,
   'summary' => "%" . trim(Post::val('summary')) . "%",
   'details' => "%" . trim(Post::val('detail')) . "%"
 );
