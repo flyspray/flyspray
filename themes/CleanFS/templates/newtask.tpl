@@ -17,10 +17,12 @@
 			return true;
 		}
 		var detail = document.getElementById("details").value;
+    		var project_id = document.getElementsByName('project_id')[0].value;
+
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
 		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlHttp.send("summary=" + summary + "&detail=" + detail);
+		xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
 		if(xmlHttp.status === 200) {
 			if(xmlHttp.responseText > 0) {
 				var res = confirm("There is already a similar task, do you still want to create?");
