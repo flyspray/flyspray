@@ -43,11 +43,16 @@ if (in_array('effort', $visible) && !$user->perms('view_current_effort_done')) {
     unset($visible[array_search('effort', $visible)]);
 }
 
+# for csv export no paging limits
+if (Get::has('export_list')) {
+        $offset = -1;
+        $perpage = -1;
+}
+
 list($tasks, $id_list, $totalcount, $forbiddencount) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
-//-- Added 2/1/2014 LAE. See if user wants to export the task list
 if (Get::has('export_list')) {
- export_task_list();
+	export_task_list();
 }
 
 $page->uses('tasks', 'offset', 'perpage', 'pagenum', 'visible');
