@@ -43,7 +43,6 @@ $language=array(
     . 'entries in your database that must be manually fixed. If unsure, answer "No", unless you can examine the situation before proceeding. '
     . 'If you are fluent in programming with PHP, see also at the end of setup/upgrade.php, look at what it does and possibly modify according to '
     . 'your needs. ',
-'databasesetup'=>'Database Setup',
 'databaseconfiguration'=>'Database Configuration for ',
 'proceedtoadmin'=>'Proceed to Administration setup',
 'databasehostname'=>'database hostname',
