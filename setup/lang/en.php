@@ -60,6 +60,7 @@ If you are not sure about these details, please consult with your administrator 
 'databasepassword'=>'database password',
 'databasepasswordhint'=>'',
 'tableprefix'=>'table prefix',
-'tableprefixhint'=>'Optional table prefix to avoid collisions with existing tables. "flyspray_" or "fs_" are good choices.',    
+'tableprefixhint'=>'Optional table prefix to avoid collisions with existing tables. "flyspray_" or "fs_" are good choices.',
+'next'=>'Next',
 );
 ?>
