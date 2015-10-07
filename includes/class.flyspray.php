@@ -22,7 +22,7 @@ class Flyspray
      * @access public
      * @var string
      */
-    public $version = '1.0 Beta dev';
+    public $version = '1.0-beta';
 
     /**
      * Flyspray preferences
