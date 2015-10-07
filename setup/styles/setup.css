@@ -24,21 +24,18 @@
 */
 
 body {
-  background-color:#E6EEF6; color:#FFFFFF;
   margin:0; padding:0; border:none;
-  font-family: Verdana, 'Avante Garde', sans-serif; font-size:13px;
+  font-family: Verdana, sans-serif; font-size:13px;
 }
 #center{
   text-align:center; padding-bottom:15px;
 }
-#container {
-  margin-top: 1em; margin-bottom:0; margin-left:auto; margin-right:auto; padding:0; border:1px solid #47617B;
-  width:740px;
-}
+#container {margin-left:auto; margin-right:auto; padding:0;}
 #header {
-  background-color:#47617B; color:#1C450B; background-image:url(../images/title.png);
+  background-color:#47617B; background-image:url(../images/title.png);
   background-position: 0px 10px; background-repeat: no-repeat; background-attachment:scroll;
-  margin:0; padding:0; border-bottom:2px solid #688EB4;  border-top: 6px solid #688EB4;
+  margin:0; padding:0; 
+  
 }
 #logo {
   /*background-image:url(../../images/helptickets_logo.gif); */
@@ -55,8 +52,6 @@ body {
   text-decoration: none; color:#3AFF53; background-color:transparent;
   border: 0; padding: 0; margin: 0 auto;
 }
-
-
 
 #navigation {
   float: left;
