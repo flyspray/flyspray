@@ -43,5 +43,23 @@ $language=array(
     . 'entries in your database that must be manually fixed. If unsure, answer "No", unless you can examine the situation before proceeding. '
     . 'If you are fluent in programming with PHP, see also at the end of setup/upgrade.php, look at what it does and possibly modify according to '
     . 'your needs. ',
+'databasesetup'=>'Database Setup',
+'databaseconfiguration'=>'Database Configuration for ',
+'proceedtoadmin'=>'Proceed to Administration setup',
+'databasehostname'=>'database hostname',
+'databasehostnamehint'=>'Enter the <strong>database hostname</strong> of the server Flyspray is to be installed on. This is usually "localhost" or an IP.',
+'databasetype'=>'database type',
+'databasetypehint'=>'Choose the <strong>database type</strong>. If you have both the choice between MySQL driver and MySQLi driver, use MySQLi. The old MySQL driver (mysql_*) is deprecated in PHP since a long time. If you have MariaDB as MySQL replacement, select MySQLi.',
+'databasename'=>'database name',
+'databasenamehint'=>'Insert a name of an existing database or a new name. If the database not exists, Flyspray tries to create that database for you. Use simple names like "flyspray".',
+'databaseusername'=>'database username',
+'databaseusernamehint'=>'Enter the <strong>database username and password</strong>.
+Flyspray requires that you have a database setup with a username and password to install the database schema.
+If you are not sure about these details, please consult with your administrator or web hosting provider.
+(Local xampp or wampp servers default installs could work with "root" and an empty password field)',
+'databasepassword'=>'database password',
+'databasepasswordhint'=>'',
+'tableprefix'=>'table prefix',
+'tableprefixhint'=>'Optional table prefix to avoid collisions with existing tables. "flyspray_" or "fs_" are good choices.',    
 );
 ?>
