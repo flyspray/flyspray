@@ -927,7 +927,9 @@ class Setup extends Flyspray
             $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
-            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
+            #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
+            # if possible set correct default character set for mysql.
+            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci') );
             if (!$dict->ExecuteSQLArray($sqlarray)) {
                 $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
                 $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
