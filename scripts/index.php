@@ -439,18 +439,19 @@ if (Get::val('toggleadvanced')) {
 }
 // Update check {{{
 if(Get::has('hideupdatemsg')) {
-    unset($_SESSION['latest_version']);
-} else if ($conf['general']['update_check'] && $user->perms('is_admin')
-           && $fs->prefs['last_update_check'] < time()-60*60*24*3) {
-    if (!isset($_SESSION['latest_version'])) {
-        $latest = Flyspray::remote_request('http://flyspray.org/version.txt', GET_CONTENTS);
-		//if for some silly reason we get and empty response, we use the actual version
+	unset($_SESSION['latest_version']);
+} else if ($conf['general']['update_check'] 
+	&& $user->perms('is_admin')
+	&& $fs->prefs['last_update_check'] < time()-60*60*24*3) {
+	if (!isset($_SESSION['latest_version'])) {
+		$latest = Flyspray::remote_request('http://www.flyspray.org/version.txt', GET_CONTENTS);
+		# if for some silly reason we get an empty response, we use the actual version
  		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ;
-        $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
+ 		$db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
 	}
 }
 if (isset($_SESSION['latest_version']) && version_compare($fs->version, $_SESSION['latest_version'] , '<') ) {
-    $page->assign('updatemsg', true);
+	$page->assign('updatemsg', true);
 }
 // }}}
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('tasklist'));
