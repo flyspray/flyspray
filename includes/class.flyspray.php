@@ -1250,7 +1250,7 @@ class Flyspray
 
         if ($conn = @fsockopen($connect, $port, $errno, $errstr, 10)) {
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
-            $out .= "Host: {$url['host']}\r\n\r\n";
+            $out .= "Host: {$url['host']}\r\n";
             $out .= "Connection: Close\r\n\r\n";
 
             stream_set_timeout($conn, 5);
