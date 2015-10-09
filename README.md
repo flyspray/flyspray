@@ -45,8 +45,11 @@ http://flyspray.org/manual/install
     You can find Composer using the following link: https://getcomposer.org/
 
 #### Installing via command lines
+
     curl -sS https://getcomposer.org/installer | php
-    or if you don't have curl
+
+Or if you don't have curl:
+
     php -r "readfile('https://getcomposer.org/installer');" | php
 
 #### Windows users can dowload Windows installer on https://getcomposer.org/download/
