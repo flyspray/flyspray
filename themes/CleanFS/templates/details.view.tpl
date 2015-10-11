@@ -695,7 +695,10 @@ function quick_edit(elem, id)
 
     <div id="taskinfo">
         <?php if(!count($deps)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php 
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="dependency_table" class="table" width="100%">
             <caption><?php echo (count($deps)==1) ? eL('taskdependsontask') : eL('taskdependsontasks'); ?></caption>
             <thead>
@@ -752,7 +755,10 @@ function quick_edit(elem, id)
 
         <!-- This task blocks the following tasks: -->
         <?php if(!count($blocks)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="blocking_table" class="table" width="100%">
             <caption><?php echo (count($blocks)==1) ? eL('taskblock') : eL('taskblocks'); ?></caption>
             <thead>
@@ -816,7 +822,10 @@ function quick_edit(elem, id)
             }
         ?>
         <?php if(!count($subtasks)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="subtask_table" class="table" width="100%">
             <caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
             <thead>
