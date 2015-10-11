@@ -369,7 +369,7 @@ a.button img, button.button img {
   height: 16px;
   float: none;
 }
-a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
+a.button:hover, button:hover, .button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
 body a.positive, body button.positive {
