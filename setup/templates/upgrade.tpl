@@ -35,7 +35,7 @@
 	</div>
 <?php if (!$upgrade_possible): ?>
 	<p style="clear:both">Apparently, an upgrade is not possible. <?php echo Filters::noXSS($todo); ?></p>
-	<p style="text-align:center"><a class="button" href="../../">Back to Home</a></p>
+	<p style="text-align:center"><a class="button" href="../">Back to Home</a></p>
 <?php else: ?>
 	<p><?php echo L('upgradepossible'); ?></p>
 	<h2><?php echo L('precautions'); ?></h2>
