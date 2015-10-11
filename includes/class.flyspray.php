@@ -385,29 +385,32 @@ class Flyspray
 
         return $get_details;
     } // }}}
-    // List projects {{{
-    /**
-     * Returns a list of all projects
-     * @param bool $active_only show only active projects
-     * @access public static
-     * @return array
-     * @version 1.0
-     */
-    public static function listProjects(/*$active_only = true*/) // FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
-    {
-        global $db;
 
-        $query = 'SELECT  project_id, project_title FROM {projects}';
+	// List projects {{{
+	/**
+	* Returns a list of all projects
+	* @param bool $active_only show only active projects
+	* @access public static
+	* @return array
+	* @version 1.0
+	*/
+	// FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
+	# comment by peterdd 20151012: reenabled param active_only with false as default. I do not see a problem within current Flyspray version. But consider using $fs->projects when possible, saves this extra sql request.
+	public static function listProjects($active_only = false)
+	{
+		global $db;
+		$query = 'SELECT project_id, project_title, project_is_active FROM {projects}';
 
-//         if ($active_only)  {
-//             $query .= ' WHERE  project_is_active = 1';
-//         }
+		if ($active_only) {
+			$query .= ' WHERE project_is_active = 1';
+		}
 
-        $query .= ' ORDER BY  project_id ASC';
+		$query .= ' ORDER BY project_is_active DESC, project_id DESC'; # active first, latest projects first for option groups and new projects are probably the most used.
 
-        $sql = $db->Query($query);
-        return $db->fetchAllArray($sql);
-    } // }}}
+		$sql = $db->Query($query);
+		return $db->fetchAllArray($sql);
+	} // }}}
+    
     // List themes {{{
     /**
      * Returns a list of all themes
