@@ -446,7 +446,8 @@ class Project
         $results = array();
 
         for ($i = 0; $i < $days; $i++) {
-            $event_date = (string) strtotime("-{$i} day", strtotime($date_end));
+            #$event_date = (string) strtotime("-{$i} day", strtotime($date_end));
+            $event_date = (string) strtotime("-{$i} day", $date_end);
             $results[date('Y-m-d', $event_date)] = 0;
         }
 
