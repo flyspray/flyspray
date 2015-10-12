@@ -4,6 +4,25 @@
 if (!$project_count): ?>
   <meta http-equiv="Refresh" content="0;url=/index.php?project=0&do=index" />
 <?php endif; ?>
+<style type="text/css">
+.activity::after {
+content: "\25B4";
+position: absolute;
+right: -3px;
+bottom:-5px;
+text-align: right;
+color:#c00;
+}
+.activity img{
+padding-right:1px;
+background-color:#c00;
+}
+.activity {
+display: block;
+position: relative;
+width: 160px;
+}
+</style>
 <?php
 foreach ($projects as $project): ?>
 <div class="box<?php if ($project_count == 1) echo ' single-project' ?>">
@@ -54,13 +73,13 @@ foreach ($projects as $project): ?>
  
   <tr>
     <th><?php echo Filters::noXSS(L('myactivity')); ?></th>
-  	<td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></td>
+  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
   </tr>
   <?php endif; ?>
   <?php if ($user->isAnon()): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
-    <td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></td>
+    <td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></span></td>
   </tr>
   <?php endif; ?>
   <tr>
