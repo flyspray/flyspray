@@ -21,8 +21,13 @@ class Flyspray
      * Current Flyspray version. Change this for each release.  Don't forget!
      * @access public
      * @var string
+     * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
+     * For making github release use e.g. '1.0-beta' here.
+     * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
+     * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
+     * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
      */
-    public $version = '1.0-rc-dev';
+	public $version = '1.0-rc dev';
 
     /**
      * Flyspray preferences
