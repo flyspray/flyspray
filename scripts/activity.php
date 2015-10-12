@@ -25,7 +25,7 @@ if ((Get::has('project_id') && Get::val('graph', 'project') == 'project')) {
         $data = Project::getDayActivityByProject($thirtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'));
     }
     
-    $data = implode(',', array_reverse($data));
+    $data = implode(',', $data);
     
 //User Graph
 } else if(Get::has('user_id') && Get::has('project_id') && Get::val('graph') == 'user') {
@@ -42,7 +42,7 @@ if ((Get::has('project_id') && Get::val('graph', 'project') == 'project')) {
         $data = User::getDayActivityByUser($thirtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'), Get::num('user_id'));
     }
     
-    $data = implode(',', array_reverse($data));
+    $data = implode(',', $data);
 } else {
     $data = '';
 }
