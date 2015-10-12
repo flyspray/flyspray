@@ -30,7 +30,7 @@ width: 160px;
 # $projects are now sorted active first, then inactive
 $lastprojectactive=1;
 foreach ($projects as $project): ?>
-  <?php if($lastprojectactive==1 && $project['project_is_active']==0) : ?>
+  <?php if( count($projects)>1 && $lastprojectactive==1 && $project['project_is_active']==0) : ?>
     <div style="clear:both;padding-top:20px;border-bottom:1px solid #999;"></div>
     <input type="checkbox" id="s_inactive" />
     <label class="button" style="display:block;width:100px;" for="s_inactive"><?php echo Filters::noXSS(L('showinactive')); ?></label>
