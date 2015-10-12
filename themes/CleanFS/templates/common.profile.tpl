@@ -100,7 +100,7 @@
       <?php endif; ?>
       <li>
         <label for="groupin"><?php echo Filters::noXSS(L('globalgroup')); ?></label>
-        <select id="groupin" class="adminlist" name="group_in" <?php echo Filters::noXSS(tpl_disableif(!$user->perms('is_admin'))); ?>>
+        <select id="groupin" class="adminlist" name="group_in" <?php echo tpl_disableif(!$user->perms('is_admin')); ?>>
           <?php echo tpl_options($groups, Req::val('group_in', $theuser->infos['global_group'])); ?>
         </select>
         <input type="hidden" name="old_global_id" value="<?php echo Filters::noXSS($theuser->infos['global_group']); ?>" />
@@ -109,7 +109,7 @@
       <?php if ($proj->id): ?>
       <li>
         <label for="projectgroupin"><?php echo Filters::noXSS(L('projectgroup')); ?></label>
-        <select id="projectgroupin" class="adminlist" name="project_group_in" <?php echo Filters::noXSS(tpl_disableif(!$user->perms('manage_project'))); ?>>
+        <select id="projectgroupin" class="adminlist" name="project_group_in" <?php echo tpl_disableif(!$user->perms('manage_project')); ?>>
           <?php echo tpl_options(array_merge($project_groups, array(0 => array('group_name' => L('none'), 0 => 0, 'group_id' => 0, 1 => L('none')))), Req::val('project_group_in', $theuser->perms('project_group'))); ?>
         </select>
           <input type="hidden" name="old_project_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
