@@ -540,7 +540,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 				$html.='</optgroup>';  
 			}
 			# just a temp hack, we currently use optgroups only for project dropdown...
-			$html.='<optgroup label="'.($optgroup==1 ? L('active') : L('inactive')).'">';
+			$html.='<optgroup'.($optgroup==0 ? ' label="'.L('inactive').'"' : '' ).'>';
 			$ingroup=true;  
 		}
 
