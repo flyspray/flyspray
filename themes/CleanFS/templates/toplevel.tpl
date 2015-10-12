@@ -22,9 +22,21 @@ display: block;
 position: relative;
 width: 160px;
 }
+#s_inactive {display:none;}
+#s_inactive ~ .box {display: none;}
+#s_inactive:checked ~ .box {display: inline-block;}
 </style>
 <?php
+# $projects are now sorted active first, then inactive
+$lastprojectactive=1;
 foreach ($projects as $project): ?>
+  <?php if($lastprojectactive==1 && $project['project_is_active']==0) : ?>
+    <div style="clear:both;padding-top:20px;border-bottom:1px solid #999;"></div>
+    <input type="checkbox" id="s_inactive" />
+    <label class="button" style="display:block;width:100px;" for="s_inactive"><?php echo Filters::noXSS(L('showinactive')); ?></label>
+  <?php endif; ?>
+  <?php $lastprojectactive=$project['project_is_active']; ?>
+
 <div class="box<?php if ($project_count == 1) echo ' single-project' ?>">
 <h2><a href="<?php echo Filters::noXSS(CreateUrl('project', $project['project_id'])); ?>"><?php echo Filters::noXSS($project['project_title']); ?></a></h2>
 
