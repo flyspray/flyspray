@@ -63,23 +63,15 @@ foreach ($projects as $project): ?>
         </ul>
     </td>
     <?php endif; ?>
-
   </tr>
-  <?php if (!$user->isAnon()): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
-  	<td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></td>
+  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
   </tr>
- 
+  <?php if (!$user->isAnon()): ?> 
   <tr>
     <th><?php echo Filters::noXSS(L('myactivity')); ?></th>
   	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
-  </tr>
-  <?php endif; ?>
-  <?php if ($user->isAnon()): ?>
-  <tr>
-    <th><?php echo Filters::noXSS(L('activity')); ?></th>
-    <td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></span></td>
   </tr>
   <?php endif; ?>
   <tr>
