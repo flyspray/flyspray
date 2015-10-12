@@ -500,42 +500,67 @@ function tpl_date_formats($selected, $detailed = false)
 }
 
 // {{{ Options for a <select>
+/**
+ * @options array of values
+ * For optgroups, the values should be presorted by the optgroups
+ * example:
+ * $options=array(
+ * 	array(3,'project3',1), # active project group
+ * 	array(2,'project2',1),
+ * 	array(5,'project5',0)  # inactive project optgroup
+ * ); tpl_options($options, 2)
+*/
 function tpl_options($options, $selected = null, $labelIsValue = false, $attr = null, $remove = null)
 {
-    $html = '';
+	$html = '';
 
-    // force $selected to be an array.
-    // this allows multi-selects to have multiple selected options.
+	// force $selected to be an array.
+	// this allows multi-selects to have multiple selected options.
+	$selected = is_array($selected) ? $selected : (array) $selected;
+	$options = is_array($options) ? $options : (array) $options;
 
-    // operate by value ..
-    $selected = is_array($selected) ? $selected : (array) $selected;
-    $options = is_array($options) ? $options : (array) $options;
+	$lastoptgroup=0;
+	$optgroup=0;
+        $ingroup=false;
+	foreach ($options as $value=>$label) {
+		if (is_array($label)) {
+			$value = $label[0];
+			$optgroup=isset($label[2]) ? $label[2] : 0;
+			$label = $label[1];
+		}
+		$label = htmlspecialchars($label, ENT_QUOTES, 'utf-8');
+		$value = $labelIsValue ? $label : htmlspecialchars($value, ENT_QUOTES, 'utf-8');
 
-    foreach ($options as $value=>$label)
-    {
-        if (is_array($label)) {
-            $value = $label[0];
-            $label = $label[1];
-        }
-        $label = htmlspecialchars($label, ENT_QUOTES, 'utf-8');
-        $value = $labelIsValue ? $label
-                               : htmlspecialchars($value, ENT_QUOTES, 'utf-8');
+		if ($value === $remove) {
+			continue;
+		}
 
-        if ($value === $remove) {
-            continue;
-        }
+		if ($optgroup!=$lastoptgroup) {
+			if ($ingroup) {
+				$html.='</optgroup>';  
+			}
+			# just a temp hack, we currently use optgroups only for project dropdown...
+			$html.='<optgroup label="'.($optgroup==1 ? L('active') : L('inactive')).'">';
+			$ingroup=true;  
+		}
 
-        $html .= '<option value="'.$value.'"';
-        if (in_array($value, $selected)) {
-            $html .= ' selected="selected"';
-        }
-        $html .= ($attr ? join_attrs($attr): '') . '>' . $label . '</option>';
-    }
-    if (!$html) {
-        $html .= '<option value="0">---</option>';
-    }
+		$html .= '<option value="'.$value.'"';
+		if (in_array($value, $selected)) {
+			$html .= ' selected="selected"';
+		}
+		$html .= ($attr ? join_attrs($attr): '') . '>' . $label . '</option>';
+		$lastoptgroup=$optgroup;
+	}
+	
+	if ($ingroup) { 
+	$html.='</optgroup>';
+	}
+	
+	if (!$html) {
+		$html .= '<option value="0">---</option>';
+	}
 
-    return $html;
+	return $html;
 } // }}}
 // {{{ Double <select>
 function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)
