@@ -155,20 +155,20 @@ if ($user->perms('is_admin')) {
     $page->assign('admin_pendingreq_num', $count);
 }
 
-$sql = $db->Query(
-        'SELECT  project_id, project_title, project_is_active, others_view, default_entry,
-                 upper(project_title) AS sort_names
-           FROM  {projects}
-       ORDER BY  sort_names');
-
-# old:
-#$fs->projects = array_filter($db->FetchAllArray($sql), array($user, 'can_view_project'));
+# a bit hacky: First 3 MUST be project_id, project_title, project_is_active in this order!
+# This first 3 indexes are used by tpl_options currently..
+# removed upper(project_title) for sorting, should be handled by database collation (utf8_general_ci)
+$sql = $db->Query('
+	SELECT project_id, project_title, project_is_active, others_view, default_entry
+	FROM {projects}
+	ORDER BY project_is_active DESC, project_title'
+);
 
 # new: project_id as index for easier access, needs testing and maybe simplification 
 # similiar situation also includes/class.flyspray.php function listProjects()
 $sres=$db->FetchAllArray($sql);
 foreach($sres as $p){
-        $prs[$p['project_id']]=$p;
+	$prs[$p['project_id']]=$p;
 }
 $fs->projects = array_filter($prs, array($user, 'can_view_project'));
 
