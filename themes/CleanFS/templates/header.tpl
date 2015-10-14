@@ -65,7 +65,7 @@ if(isset($proj->prefs['custom_css'])): ?>
         elseif (isset($_SESSION['SUCCESS'])):
         ?>window.setTimeout('Effect.Fade(\'successbar\', {duration:.3})', 8000);<?php
         elseif (isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>" class="<?php echo isset($do) ? Filters::noXSS($do) : 'index'; ?>">
+        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
     <!-- Display title and logo if desired -->
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
