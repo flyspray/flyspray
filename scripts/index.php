@@ -330,16 +330,16 @@ function do_cmp($a, $b)
 */
 function export_task_list()
 {
-        global $tasks, $fs, $user, $sort, $orderby, $proj;
+	global $tasks, $fs, $user, $sort, $orderby, $proj;
 
-        if (!is_array($tasks)){
-                return;
-        }
+	if (!is_array($tasks)){
+		return;
+	}
 
-        # TODO enforcing user permissions on allowed fields
-        # TODO Flyspray 1.1 or later: selected fields by user request, saved user settings, tasklist settings or project defined list which fields should appear in an export
-        # TODO Flyspray 1.1 or later: export in .ods open document spreadsheet, .xml ....
-        $indexes = array (
+	# TODO enforcing user permissions on allowed fields
+	# TODO Flyspray 1.1 or later: selected fields by user request, saved user settings, tasklist settings or project defined list which fields should appear in an export
+	# TODO Flyspray 1.1 or later: export in .ods open document spreadsheet, .xml ....
+	$indexes = array (
             'id'         => 'task_id',
             'project'    => 'project_title',
             'tasktype'   => 'task_type',
@@ -394,20 +394,25 @@ function export_task_list()
         ob_clean();
         flush();
 
-        $output = fopen('php://output', 'w');
-        #fputcsv($output, $projectinfo);
-        $headings= array(
-        	'ID',
-        	'Category',
-        	'Task Type',
-        	'Severity',
-        	'Summary',
-        	'Status',
-        	'Progress',
-        	$user->perms('view_estimated_effort') ?'Estimated Effort':'',
-        	// $user->perms('view_current_effort_done') ?'Done Effort':'',
-        	'Description',
-        );
+	$output = fopen('php://output', 'w');
+	#fputcsv($output, $projectinfo)
+	$headings= array(
+		'ID',
+		'Category',
+		'Task Type',
+		'Severity',
+		'Summary',
+		'Status',
+		'Progress',
+		'date_opened',
+		'date_closed',
+		'due_date',
+		'supertask_id',
+		$user->perms('view_estimated_effort') ?'Estimated Effort':'',
+		// $user->perms('view_current_effort_done') ?'Done Effort':'',
+		'Description',
+	);
+
         # TODO maybe if user just want localized headings for nonenglish speaking audience..
         #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
         fputcsv($output, $headings);
@@ -420,6 +425,10 @@ function export_task_list()
                         $task['item_summary'],
                         $task['status_name'],
                         $task['percent_complete'],
+                        $task['date_opened'],
+                        $task['date_closed'],
+                        $task['due_date'],
+                        $task['supertask_id'],
                         ($user->perms('view_estimated_effort') && $proj->prefs['use_effort_tracking']) ? $task['estimated_effort'] : '',
                         // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
                         $task['detailed_desc']
