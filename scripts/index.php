@@ -89,7 +89,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
-    $class   = '';
+    $class   = $colname;
     $html    = eL($colname);
 /*
     if ($colname == 'comments' || $colname == 'attachments') {
@@ -107,7 +107,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	}
 
     if (Get::val('order') == $colname) {
-        $class  = ' class="orderby"';
+        $class .= ' orderby';
         $sort1  = Get::safe('sort', 'desc') == 'desc' ? 'asc' : 'desc';
         $sort2  = Get::safe('sort2', 'desc');
         $order2 = Get::safe('order2');
@@ -134,7 +134,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	$html = sprintf('<a title="%s" href="%s">%s</a>',
 		eL('sortthiscolumn'), Filters::noXSS(CreateURL('tasklist', $proj->id, null, $params )), $html);
 
-	return sprintf($format, $class, $html);
+	return sprintf($format, 'class="'.$class.'"', $html);
 }
 
 // }}}
