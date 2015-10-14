@@ -21,7 +21,7 @@
 <?php
 # property 'custom_css' not (yet) implemented or exists in project table..
 # property 'theme_style' exists, but is used for complete theme directories, even if since FS1.0 only one template structure (CleanFS/) is maintained.
-#$proj->prefs['custom_css']='custom_example.css';
+$proj->prefs['custom_css']='custom_example.css';
 if(isset($proj->prefs['custom_css'])): ?>
         <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()).$proj->prefs['custom_css']; ?>" rel="stylesheet" type="text/css" />
 <?php endif; ?>
