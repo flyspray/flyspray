@@ -784,9 +784,9 @@ div.comment_container .attachments {
 	*/
 	vertical-align: top;
 }
-.attachments::after {
+div.attachments::after {
     color: #999;
-    content: "\f0c6"; /*paperclip*/
+    content: "\f0c6"; /*fa-paperclip*/
     float: right;
     font-family: FontAwesome;
     font-size: large;
