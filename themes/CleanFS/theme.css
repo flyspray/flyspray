@@ -499,7 +499,7 @@ a {text-decoration: none;}
 }
 #tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
-
+#tasklist_table tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
 tr.severity2 .task_severity {background-color: #fff;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
