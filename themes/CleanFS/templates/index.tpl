@@ -337,7 +337,7 @@
 		if($col == 'progress'):?>
 	<td class="task_progress"><div class="progress_bar_container"><span><?php echo $task['percent_complete']; ?>%</span><div class="progress_bar" style="width:<?php echo $task['percent_complete']; ?>%"></div></div></td>
 		<?php else:
-		echo tpl_draw_cell($task_details, $col);
+		echo tpl_draw_cell($task, $col);
 		endif;
 	endforeach;
 	?>
