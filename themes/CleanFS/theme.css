@@ -499,7 +499,7 @@ a {text-decoration: none;}
 }
 #tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
-
+#tasklist_table tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
 tr.severity2 .task_severity {background-color: #fff;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
@@ -784,9 +784,9 @@ div.comment_container .attachments {
 	*/
 	vertical-align: top;
 }
-.attachments::after {
+div.attachments::after {
     color: #999;
-    content: "\f0c6"; /*paperclip*/
+    content: "\f0c6"; /*fa-paperclip*/
     float: right;
     font-family: FontAwesome;
     font-size: large;
@@ -1264,15 +1264,15 @@ div.denyform {
 	min-height: 50px;
 	padding: 8px 5px;
 }
-.assignedto {border:0px;border-collapse: collapse;}
-.assignedto table, .assignedto td {
+table.assignedto {border:0px;border-collapse: collapse;}
+table.assignedto tr {height: 30px;}
+table.assignedto td {
 	margin:0px;
 	padding:0px;
 	padding-right: 5px;
 	vertical-align: middle;
 }
-.assignedto tr {height: 30px;}
-.assignedto img {padding-top: 2px;}
+table.assignedto img {padding-top: 2px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}
