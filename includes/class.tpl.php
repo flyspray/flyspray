@@ -1001,6 +1001,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
     }
     return $url->get();
 } // }} }
+
 // Page  numbering {{{
 // Thanks to Nathan Fritz for this.  http://www.netflint.net/
 function pagenums($pagenum, $perpage, $totalcount)
@@ -1017,18 +1018,23 @@ function pagenums($pagenum, $perpage, $totalcount)
     $pages  = ceil($totalcount / $perpage);
     $output = sprintf(eL('page'), $pagenum, $pages);
 
-    if (!($totalcount / $perpage <= 1)) {
-        $output .= '<span class="DoNotPrint"> &nbsp;&nbsp;--&nbsp;&nbsp; ';
+    if ( $totalcount / $perpage > 1 ) {
+ 	$params=$_GET;
+ 	# unset unneeded params for shorter urls
+	unset($params['do']);
+	unset($params['project']);
+	unset($params['switch']);
+        $output .= '<span class="pagenums DoNotPrint">';
 
         $start  = max(1, $pagenum - 4 + min(2, $pages - $pagenum));
         $finish = min($start + 4, $pages);
 
         if ($start > 1) {
-            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => 1))));
+            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
             $output .= sprintf('<a href="%s">&lt;&lt;%s </a>', $url, eL('first'));
         }
         if ($pagenum > 1) {
-            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum - 1))));
+            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
             $output .= sprintf('<a id="previous" accesskey="p" href="%s">&lt; %s</a> - ', $url, eL('previous'));
         }
 
@@ -1040,17 +1046,17 @@ function pagenums($pagenum, $perpage, $totalcount)
             if ($pagelink == $pagenum) {
                 $output .= sprintf('<strong>%d</strong>', $pagelink);
             } else {
-                $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagelink))));
+                $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
                 $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
             }
         }
 
         if ($pagenum < $pages) {
-            $url =  Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pagenum + 1))));
+            $url =  Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
             $output .= sprintf(' - <a id="next" accesskey="n" href="%s">%s &gt;</a>', $url, eL('next'));
         }
         if ($finish < $pages) {
-            $url = Filters::noXSS(CreateURL('index', $proj->id, null, array_merge($_GET, array('pagenum' => $pages))));
+            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
             $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last'));
         }
         $output .= '</span>';

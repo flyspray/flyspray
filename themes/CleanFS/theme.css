@@ -406,6 +406,7 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border-radius: 3px;
 }
 #tasklist_table {width: 100%;}
+span.pagenums:before{ content:"--";padding-left:10px;padding-right:10px;}
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
