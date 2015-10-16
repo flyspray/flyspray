@@ -327,7 +327,7 @@
 </thead>
 <tbody>
 <?php foreach ($tasks as $task):?>
-<tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  $t['closed'] ==1 ? ' closed': '';?>" onmouseover="Show(this,<?php echo $task['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task['task_id']; ?>)">
+<tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  $t['is_closed'] ==1 ? ' closed': '';?>" onmouseover="Show(this,<?php echo $task['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task['task_id']; ?>)">
 	<td class="caret"></td>
 	<?php if (!$user->isAnon() && $proj->id !=0): ?>
 	<td class="ttcolumn"><input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="<?php echo $task['task_id']; ?>"/></td>
