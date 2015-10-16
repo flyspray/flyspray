@@ -1264,15 +1264,15 @@ div.denyform {
 	min-height: 50px;
 	padding: 8px 5px;
 }
-.assignedto {border:0px;border-collapse: collapse;}
-.assignedto table, .assignedto td {
+table.assignedto {border:0px;border-collapse: collapse;}
+table.assignedto tr {height: 30px;}
+table.assignedto td {
 	margin:0px;
 	padding:0px;
 	padding-right: 5px;
 	vertical-align: middle;
 }
-.assignedto tr {height: 30px;}
-.assignedto img {padding-top: 2px;}
+table.assignedto img {padding-top: 2px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}
