@@ -1,19 +1,12 @@
 <script type="text/javascript">
-
-    function ShowHidePassword(id)
-    {
-        if(document.getElementById(id).type=="text")
-        {
+function ShowHidePassword(id) {
+        if(document.getElementById(id).type=="text") {
             document.getElementById(id).type="password";
-        }
-        else
-        {
+        } else {
             document.getElementById(id).type="text";
         }
-    }
-
+}
 </script>
-
 <script>
     /*
     * Second argument is always the parent calling to deactivate not needed childs
@@ -52,7 +45,6 @@
         }
     }
 </script>
-
 <div id="toolbox">
   <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('preferences')); ?></h3>
   <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
@@ -333,10 +325,19 @@
     <div id="lookandfeel" class="tab">
       <ul class="form_elements">
         <li>
-          <label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
-          <select id="globaltheme" name="global_theme">
-            <?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
-          </select>
+		<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
+		<select id="globaltheme" name="global_theme">
+		<?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
+        	</select>
+		<label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
+        	<select id="customstyle" name="custom_style">
+		<?php 
+		$nocustom=array('no'=>L('no'));
+		$customstyles=glob_compat(BASEDIR ."/themes/".($fs->prefs['global_theme'])."/custom_*.css");
+		$customstyles=array_merge($nocustom,$customstyles);
+		echo tpl_options($customstyles, $fs->prefs['custom_style'], true); 
+		?>
+        	</select>
         </li>
 
         <?php // Set the selectable column names
