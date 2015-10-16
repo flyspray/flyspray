@@ -1004,6 +1004,10 @@ switch ($action = Req::val('action'))
 		}
 	}
 
+	if( substr(Post::val('custom_style'), -4) != '.css'){
+		$_POST['custom_style']='';
+	}
+
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
