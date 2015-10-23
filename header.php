@@ -87,11 +87,21 @@ if (in_array(Req::val('do'), array('details', 'depends', 'editcomment'))) {
 
 if (!isset($project_id)) {
     // Determine which project we want to see
-    if (($project_id = Cookie::val('flyspray_project')) == '') {
-        $project_id = $fs->prefs['default_project'];
+    if ( Req::val('project_name') != '') {
+         $result = $db->Query('SELECT project_id
+                               FROM {projects} WHERE project_title = ?', array( Req::val('project_name')));
+         $project_id = $db->FetchOne($result);
     }
-    $project_id = Req::val('project', Req::val('project_id', $project_id));
+
+    if (!isset($project_id)) {
+        if (($project_id = Cookie::val('flyspray_project')) == '') {
+            $project_id = $fs->prefs['default_project'];
+        }
+        $project_id = Req::val('project', Req::val('project_id', $project_id));
+    }
 }
+
+
 
 $proj = new Project($project_id);
 # no more project cookie!
