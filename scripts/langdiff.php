@@ -70,8 +70,9 @@ if ($lang != 'en' && file_exists($translationfile)) {
 
         }
 	echo '</table>';
-	if ( $i > 0 )
+	if ( $i > 0 ){
 		echo '<p>',$i,' out of ',sizeof($language),' keys to translate.</p>';
+	}
 	echo '<h2>The following translation keys should be deleted from the translation:</h2>';
 	echo '<table cellspacing="0">';
 	$i = 0;
@@ -82,6 +83,11 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		}
 	}
 	echo '</table>';
+	if ( $i > 0 ){
+		echo '<p>'.$i.' entries can be removed from this translation.</p>';
+	} else{
+		echo '<p><i class="fa fa-check fa-2x"></i> None</p>';
+	}
 	echo '<h2><a name="compare"></a>Direct comparision between english and '.htmlspecialchars($lang).'</h2>';
 	echo '<table>
 		<colgroup></colgroup>
