@@ -149,7 +149,7 @@ if(!file_exists("$lang.php") && !file_exists("$lang.php.work")) {
 }
 
 $limit = 30;
-$begin = (int)(@$_GET['begin'] / $limit) * $limit;
+$begin = isset($_GET['begin']) ? (int)($_GET['begin'] / $limit) * $limit : 0;
 
 // Was show missing pressed?
 $show_empty = (!isset($_POST['search']) && isset($_REQUEST['empty']));  // Either POST or URL
