@@ -103,27 +103,29 @@ function set(id){
 // Set current directory to where the language files are
 chdir("lang");
 
-$lang = @$_GET['lang'];
+$lang = isset($_GET['lang']) ? $_GET['lang']:false;
 $fail = '';
 if(!$lang || !preg_match('/^[a-zA-Z0-9_]+$/', $lang)){
 	$fail .= "Language code not supplied correctly<br>\n";
 }
-if(!file_exists('en.php'))
-  $fail .= "The english language file <code>en.php</code> is missing. Make sure this script is run from the same directory as the language files <code>.../flyspray/lang/</code><br>\n";
-if($fail)
-  die($fail."<b>Usage:</b> <a href='?do=langedit&lang='>&lt;lang code&gt;</a> where &lt;lang code&gt; should be replaced by your languge, e.g. <b>de</b> for German.");
-
+if(!file_exists('en.php')) {
+	$fail .= "The english language file <code>en.php</code> is missing. Make sure this script is run from the same directory as the language files <code>.../flyspray/lang/</code><br>\n";
+}
+if($fail) {
+	die($fail."<b>Usage:</b> <a href='?do=langedit&lang='>&lt;lang code&gt;</a> where &lt;lang code&gt; should be replaced by your language, e.g. <b>de</b> for German.");
+}
 // Read english language file in array $language (assumed to be UTF-8 encoded)
 require('en.php');
-if(!is_array(@$language))
-  die("Invalid language file for english");
+if(!is_array(@$language)){
+	die("Invalid language file for english");
+}  
 $count = count($language);
 
 // Read the translation file in array $translation (assumed to be UTF-8 encoded)
 $working_copy = false;
-if(!file_exists("$lang.php") && !file_exists("$lang.php.work"))
+if(!file_exists("$lang.php") && !file_exists("$lang.php.work")) {
   echo "A new language file will be created: <code>$lang.php</code>\n";
-else {
+} else {
   if($lang != 'en') {
     if(file_exists(".$lang.php.work")) {
       $working_copy = true;
@@ -152,16 +154,17 @@ $begin = (int)(@$_GET['begin'] / $limit) * $limit;
 // Was show missing pressed?
 $show_empty = (!isset($_POST['search']) && isset($_REQUEST['empty']));  // Either POST or URL
 // Any text in search box?
-if(!$show_empty && isset($_POST['search_for']))
+if(!$show_empty && isset($_POST['search_for'])) {
   $search = trim($_POST['search_for']);
-else if(!$show_empty && isset($_GET['search_for']))
+} else if(!$show_empty && isset($_GET['search_for'])) {
   $search = trim(urldecode($_GET['search_for']));
-else
+} else {
   $search = "";
+}
 // Path to this file
-$self = "{$_SERVER['PHP_SELF']}?do=langedit&lang=$lang";
+$self = "{$_SERVER['PHP_SCRIPTNAME']}?do=langedit&lang=$lang";
 
-if(isset($_POST['confirm'])){
+if(isset($_POST['confirm'])) {
   // Make a backup
   unlink(".$lang.php.bak");
   rename("$lang.php", ".$lang.php.bak");
@@ -169,7 +172,7 @@ if(isset($_POST['confirm'])){
   // Reload page, so that form data won't get posted again on refresh
   header("location: $self&begin=$begin" . ($search? "&search_for=".urlencode($search): "") . ($show_empty? "&empty=": ""));
   exit;
-} else if(isset($_POST['submit']) && isset($_POST['L'])){
+} else if(isset($_POST['submit']) && isset($_POST['L'])) {
   // Save button was pressed
   update_language($lang, $_POST['L'], @$_POST['E']);
   // Reload page, so that form data won't get posted again on refresh
@@ -183,32 +186,36 @@ echo "<form action=\"$self&do=langedit&begin=$begin". ($show_empty? "&empty=": "
 echo "<table cellspacing=0 cellpadding=1>\n<tr><td colspan=3>";
 // Make page links
 for($p = 0; $p < $count; $p += $limit){
-  if($p)
-    echo " | ";
-  $bgn = $p+1;
-  $end = min($p+$limit, $count);
-  if($p != $begin || $search || $show_empty)
-    echo "<a href=\"$self&begin=$bgn\">$bgn&hellip;$end</a>\n";  // Show all links when searching or display all missing strings
-  else
-    echo "<b>$bgn&hellip;$end</b>\n";
+	if($p){
+		echo " | ";
+	}
+	$bgn = $p+1;
+	$end = min($p+$limit, $count);
+	if($p != $begin || $search || $show_empty) {
+		echo "<a href=\"$self&begin=$bgn\">$bgn&hellip;$end</a>\n";  // Show all links when searching or display all missing strings
+	} else {
+		echo "<b>$bgn&hellip;$end</b>\n";
+	}
 }
-// Submit button
-echo "</td><td>\n";
-echo "<input type=\"submit\" name=\"submit\" value=\"Save changes\" title=\"Saves changes to a work file\"> \n";
-// Confirmation button
-echo "<input type=\"submit\" name=\"confirm\" id=\"id_confirm\" value=\"Confirm all changes\"".(!$working_copy? " disabled": "")." title=\"Confirm all changes and replace the original language file\"> \n";
-echo "<br>\n";
-if($working_copy)
+?>
+</td><td>
+<input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
+<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''); ?> title="Confirm all changes and replace the original language file">
+<br>
+<?php 
+if($working_copy) {
   echo "Your changes are stored in <code>.$lang.php.work</code> until you press 'Confirm all changes'<br>";
+}
 // Search
-echo "<input type=\"text\" name=\"search_for\" value=\"$search\"><input type=\"submit\" name=\"search\" value=\"Search\">\n";
+echo '<input type="text" name="search_for" value="'.$search.'"><input type="submit" name="search" value="Search">';
 // List empty
-if($lang != 'en')
-  echo "<input type=\"submit\" name=\"empty\" value=\"Show missing\" title=\"Show all texts that have no translation\"> \n";
-
-echo "</td></tr>\n";
-
-echo "<tr><th colspan=2>Key</th><th>English</th><th>Translation: $lang</th></tr>\n";
+if($lang != 'en') {
+  echo '<input type="submit" name="empty" value="Show missing" title="Show all texts that have no translation">';
+}
+?>
+</td></tr>
+<tr><th colspan=2>Key</th><th>English</th><th>Translation:<?php echo $lang; ?></th></tr>
+<?php 
 $i = 0;  // Counter to find offset
 $j = 0;  // Counter for background shading
 foreach ($language as $key => $val){
@@ -220,25 +227,25 @@ foreach ($language as $key => $val){
     // Key
     echo '<tr style="background-color:'.$bg.'" valign="top"><td align="right">'.($i+1).'</td><td><b>'.$key.'</b></td>';
     // English (underline leading and trailing spaces)
-    $space = "<b style=\"color:red;\" title=\"Remember to include a space in the translation!\">_</b>";
-    echo "<td>". (preg_match("/^[ \t]/",$val)? $space: "") . nl2br(htmlentities($val)). (preg_match("/[ \t]$/",$val)? $space: "") ."</td>\n";
-    echo "<td align=\"right\"><nobr>";
-    echo "<input type=\"checkbox\" disabled id=\"id_checkbox_$key\">\n";
-    echo "<input type=\"hidden\" disabled id=\"id_hidden_$key\" name=\"E[$key]\">\n";
+    $space = '<b style="color:#c00;" title="Remember to include a space in the translation!">_</b>';
+    echo '<td>'. (preg_match("/^[ \t]/",$val)? $space: "") . nl2br(htmlentities($val)). (preg_match("/[ \t]$/",$val)? $space: "") ."</td>\n";
+    echo '<td align="right"><nobr>';
+    echo '<input type="checkbox" disabled="disabled" id="id_checkbox_'.$key.'">';
+    echo '<input type="hidden" disabled="disabled" id="id_hidden_'.$key.'" name="E['.$key.']">';
     // Count lines in both english and translation
     $lines = 1 + max(preg_match_all("/\n/", $val, $matches), preg_match_all("/\n/", $trans, $matches));
     // Javascript call on some input events
-    $onchange = "onchange=\"set('$key');\" onkeypress=\"set('$key');\"";
+    $onchange = 'onchange="set(\''.$key.''\');" onkeypress="set(\''.$key.''\');"';
     // \ is displayed as \\ in edit fields to allow \n as line feed
     $trans = str_replace("\\", "\\\\", $trans);
     if($lines > 1 || strlen(utf8_decode($val)) > 60 || strlen(utf8_decode($trans)) > 60){
       // Format long texts for <textarea>, remove spaces after each new line
       $trans = preg_replace("/\n[ \t]+|\\n/", "\n", htmlentities($trans, ENT_NOQUOTES, "UTF-8"));
-      echo "<textarea cols=79 rows=".max(4,$lines)." name=\"L[$key]\" $onchange>\n$trans</textarea>";
+      echo '<textarea cols=79 rows='.max(4,$lines).' name="L['.$key.']" '.$onchange.'>'.$trans.'</textarea>';
     } else{
       // Format short texts for <input type=text>
       $trans = str_replace(array("\n", "\""), array("\\n", "&quot;"), $trans);
-      echo "<input class=\"edit\" type=\"text\" name=\"L[$key]\" value=\"$trans\" size=80 $onchange>";
+      echo '<input class="edit" type="text" name="L['.$key.']" value="'.$trans.'" size=80 '.$onchange.'>';
     }
     echo "</nobr></td></tr>\n";
 
@@ -267,8 +274,7 @@ $page->uses('content');
 $page->pushTpl('admin.translation.tpl');
 
 // Parse string for \n and \\ to be replaced by <lf> and \
-function parseNL($str)
-{
+function parseNL($str) {
   $pos = 0;
   while(($pos = strpos($str, "\\", $pos)) !== false){
     switch(substr($str, $pos, 2)){
@@ -284,18 +290,19 @@ function parseNL($str)
   return $str;
 }
 
-function update_language($lang, &$strings, $edit)
-{
+function update_language($lang, &$strings, $edit) {
   global $language, $translation;
 
-  if(!is_array($edit))
+  if(!is_array($edit)) {
     return;
+  }
   // Form data contains UTF-8 encoded text
   foreach($edit as $key => $dummy){
-    if(@$strings[$key])
+    if(@$strings[$key]) {
       $translation[$key] = parseNL($strings[$key]);
-    else
+    } else {
       unset($translation[$key]);
+    }
   }
   // Make a backup just in case!
   if(!file_exists(".$lang.php.safe")){
@@ -321,10 +328,12 @@ function update_language($lang, &$strings, $edit)
     ."// \n"
     ."// Furthermore, nothing else than the language array is saved\n"
     ."// when using the langedit.php editor!\n//\n");
-  if($lang == 'en')
+  if($lang == 'en') {
     fprintf($file, "\$language = array(\n");
-  else
+  } else {
     fprintf($file, "\$translation = array(\n");
+  }
+  
   // The following characters will be escaped in multiline strings
   // in the following order:
   // \    => \\
@@ -337,12 +346,14 @@ function update_language($lang, &$strings, $edit)
   // Write the array to the file, ordered as the english language file
   foreach($language as $key => $val){
     $trans = @$translation[$key];
-    if(!$trans)
+    if(!$trans) {
       continue;
-    if(strstr($trans, "\n"))  // Use double quotes for multiline
+    }
+    if(strstr($trans, "\n")) {  // Use double quotes for multiline
       fprintf($file, "%-26s=> \"%s\",\n", "'$key'", str_replace($pattern, $replace, $trans));
-    else  // Use single quotes for single lines, only \ and ' needs escaping
+    } else {  // Use single quotes for single lines, only \ and ' needs escaping
       fprintf($file, "%-26s=> '%s',\n", "'$key'", str_replace(array("\\","'"), array("\\\\", "\\'"), $trans));
+    }
   }
   fprintf($file, ");\n\n?".">\n");  // PHP end tag currupts some syntax color coders
   fclose($file);
