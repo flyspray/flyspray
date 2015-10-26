@@ -167,7 +167,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 			echo '<tr>
 			<td><a href="?do=langdiff&lang='.substr($workfile,1,-9).'">'.$workfile.'</a></td>
 			<td></td>
-			<td><a class="button" href="?do=langedit&lang='.substr($lang,1,-9).'">'.L('translate').' '.substr($lang,1,-9).'</a></td>
+			<td><a class="button" href="?do=langedit&lang='.substr($workfile,1,-9).'">'.L('translate').' '.substr($workfile,1,-9).'</a></td>
 			</tr>';
 		}
 		closedir($handle);
