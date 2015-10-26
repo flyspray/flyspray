@@ -122,8 +122,8 @@ if ($lang != 'en' && file_exists($translationfile)) {
 			 && !(substr($file,-5)=='.safe') ) {
 				# if a .$lang.php.work file but no $lang.php exists yet
 				if( substr($file,-5)=='.work' && !is_file(substr($file,1,-9)) ){
-					$workfiles[]=$file;						
-				else{
+					$workfiles[]=$file;
+				} else{
 					$langfiles[]=$file;
 				}
 			}
