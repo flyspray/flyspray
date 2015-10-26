@@ -167,7 +167,7 @@ for($p = 0; $p < $count; $p += $limit){
 ?>
 </td><td>
 <input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
-<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''); ?> title="Confirm all changes and replace the original language file">
+<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''; ?> title="Confirm all changes and replace the original language file">
 <br>
 <?php 
 if($working_copy) {
@@ -202,7 +202,7 @@ foreach ($language as $key => $val){
     // Count lines in both english and translation
     $lines = 1 + max(preg_match_all("/\n/", $val, $matches), preg_match_all("/\n/", $trans, $matches));
     // Javascript call on some input events
-    $onchange = 'onchange="set(\''.$key.''\');" onkeypress="set(\''.$key.''\');"';
+    $onchange = 'onchange="set(\''.$key.'\');" onkeypress="set(\''.$key.'\');"';
     // \ is displayed as \\ in edit fields to allow \n as line feed
     $trans = str_replace("\\", "\\\\", $trans);
     if($lines > 1 || strlen(utf8_decode($val)) > 60 || strlen(utf8_decode($trans)) > 60){
