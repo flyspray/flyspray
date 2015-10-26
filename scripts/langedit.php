@@ -47,39 +47,6 @@ if(!$user->perms('manage_project')) {
     Flyspray::show_error(28);
 }
 
-/**
- * Replace fprintf()
- *
- * @category    PHP
- * @package     PHP_Compat
- * @link        http://php.net/function.fprintf
- * @author      Aidan Lister <aidan@php.net>
- * @version     $Revision: 1.13 $
- * @since       PHP 5
- * @require     PHP 4.0.0 (user_error)
- */
-if (!function_exists('fprintf')) {
-   function fprintf() {
-        $args = func_get_args();
-
-        if (count($args) < 2) {
-            user_error('Wrong parameter count for fprintf()', E_USER_WARNING);
-            return;
-        }
-
-        $resource_handle = array_shift($args);
-        $format = array_shift($args);
-
-        if (!is_resource($resource_handle)) {
-            user_error('fprintf() supplied argument is not a valid stream resource',
-                E_USER_WARNING);
-            return false;
-        }
-
-        return fwrite($resource_handle, vsprintf($format, $args));
-    }
-}
-
 // Make it possible to reload page after updating language
 // Don't want to send form data again if user reloads the page
 ob_start();
@@ -101,7 +68,7 @@ function set(id){
 <?php
 
 // Set current directory to where the language files are
-chdir("lang");
+chdir('lang');
 
 $lang = isset($_GET['lang']) ? $_GET['lang']:false;
 $fail = '';
@@ -123,29 +90,29 @@ $count = count($language);
 
 // Read the translation file in array $translation (assumed to be UTF-8 encoded)
 $working_copy = false;
-if(!file_exists("$lang.php") && !file_exists("$lang.php.work")) {
-  echo "A new language file will be created: <code>$lang.php</code>\n";
+if(!file_exists($lang.'.php') && !file_exists('.'.$lang.'.php.work')) {
+	echo '<h3>A new language file will be created: <code>'.$lang.'.php</code></h2>';
 } else {
-  if($lang != 'en') {
-    if(file_exists(".$lang.php.work")) {
-      $working_copy = true;
-      include_once(".$lang.php.work"); // Read the translation array (work in progress)
-    } else{
-      include("$lang.php"); // Read the original translation array - maybe again, no _once here!
-    }
-  } else if(file_exists(".en.php.work")){
-    $working_copy = true;
-    $tmp = $language;
-    include_once(".en.php.work"); // Read the language array (work in progress)
-    $translation = $language;  // Edit the english language file
-    $language = $tmp;
-  } else{
-    $translation = $language;  // Edit the english language file
-  }
+	if($lang != 'en') {
+		if(file_exists('.'.$lang.'.php.work')) {
+			$working_copy = true;
+			include_once('.'.$lang.'.php.work'); // Read the translation array (work in progress)
+		} else{
+			include($lang.'.php'); // Read the original translation array - maybe again, no _once here!
+		}
+	} else if(file_exists('.en.php.work')){
+		$working_copy = true;
+		$tmp = $language;
+		include_once('.en.php.work'); // Read the language array (work in progress)
+		$translation = $language;  // Edit the english language file
+		$language = $tmp;
+	} else{
+		$translation = $language;  // Edit the english language file
+	}
 
-  if(!is_array(@$translation)){
-    echo "<b>Warning: </b>the translation file does not contain the \$translation array, a new file will be created: <code>$lang.php</code>\n";
-  }
+	if(!is_array(@$translation)){
+		echo "<b>Warning: </b>the translation file does not contain the \$translation array, a new file will be created: <code>$lang.php</code>\n";
+	}
 }
 
 $limit = 30;
@@ -155,11 +122,11 @@ $begin = isset($_GET['begin']) ? (int)($_GET['begin'] / $limit) * $limit : 0;
 $show_empty = (!isset($_POST['search']) && isset($_REQUEST['empty']));  // Either POST or URL
 // Any text in search box?
 if(!$show_empty && isset($_POST['search_for'])) {
-  $search = trim($_POST['search_for']);
+	$search = trim($_POST['search_for']);
 } else if(!$show_empty && isset($_GET['search_for'])) {
-  $search = trim(urldecode($_GET['search_for']));
+	$search = trim(urldecode($_GET['search_for']));
 } else {
-  $search = "";
+	$search = "";
 }
 // Path to this file
 $self = "{$_SERVER['PHP_SCRIPTNAME']}?do=langedit&lang=$lang";
