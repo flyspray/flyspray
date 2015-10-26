@@ -129,7 +129,7 @@ if(!$show_empty && isset($_POST['search_for'])) {
 	$search = "";
 }
 // Path to this file
-$self = "{$_SERVER['PHP_SCRIPTNAME']}?do=langedit&lang=$lang";
+$self = "{$_SERVER['SCRIPT_NAME']}?do=langedit&lang=$lang";
 
 if(isset($_POST['confirm'])) {
   // Make a backup
