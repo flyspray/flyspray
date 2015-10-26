@@ -117,6 +117,8 @@ if ($lang != 'en' && file_exists($translationfile)) {
 	# readdir
 	$english=$language;
 	$max=count($english);
+	$langfiles=array();
+	$workfiles=array();
 	if ($handle = opendir('lang')) {
 		$languages=array();
 		while (false !== ($file = readdir($handle))) {
