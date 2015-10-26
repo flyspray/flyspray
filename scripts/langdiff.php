@@ -119,7 +119,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 			}
 		}
 		asort($langfiles);
-		echo '<table class="overview"><thead><tr><th>File</th><th>Progress</th><th> </th></tr></thead>';
+		echo '<table class="overview"><thead><tr><th>'.L('file').'</th><th>'.L('progress').'</th><th> </th></tr></thead>';
 		foreach($langfiles as $lang){
 			unset($translation);
 			require('lang/'.$lang); # file $language variable
