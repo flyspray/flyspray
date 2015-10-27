@@ -21,6 +21,8 @@ install:
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
+- curl -s http://getcomposer.org/installer | php
+- php composer.phar install
 - if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS flyspray_test;" -U postgres; fi
 - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE flyspray_test;" -U postgres; fi
 - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS flyspray_test;" -uroot; fi
