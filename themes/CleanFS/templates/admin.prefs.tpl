@@ -283,6 +283,33 @@ function ShowHidePassword(id) {
               <input id="showsmtppass" name="show_smtp_pass" class="text" type="checkbox"  onclick="ShowHidePassword('smtppass')"/>
           </li>
         </ul>
+Test currently active email settings: <button onclick="testEmail();return false;">Test</button><div id="emailresult" style="display:inline-block;"></div> . And also check if you received the test email in the mail account of the current user (see 'myprofile'-page).
+<script>
+function testEmail(){
+	var xmlHttp = new XMLHttpRequest();
+
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState == 4){
+			var target = document.getElementById('emailresult');
+			if(xmlHttp.status == 200){
+				if(xmlHttp.responseText=='ok'){
+					target.style["background-color"]='#66ff00';
+					target.innerHTML = '<i class="fa fa-check fa-2x"></i> '+xmlHttp.responseText;
+				} else{
+					target.innerHTML = '<i class="fa fa-warning fa-2x" style="color:#ff0"></i>' + xmlHttp.responseText;
+					target.style["background-color"]='#ff6600';
+				}
+			} else{
+				target.innerHTML = '<i class="fa fa-warning fa-2x" style="color:#ff0"></i>' + xmlHttp.responseText;
+				target.style["background-color"]='#ff6600';
+			}
+		}
+	}
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/testemail.php", true);
+	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlHttp.send("name=email&csrftoken=<?php echo $_SESSION['csrftoken'] ?>");
+}
+</script>    
       </fieldset>
 
       <fieldset><legend><?php echo Filters::noXSS(L('jabbernotify')); ?></legend>
