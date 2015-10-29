@@ -34,8 +34,8 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
 * Usage: Open this file like ?do=langdiff?lang=de in your browser.
 *    "de" represents your language code.
 */
-$lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
-if (!ctype_alnum($lang)) {
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+if( preg_match('/[^a-zA-Z_]/', $lang)) {
 	die('Invalid language name.');
 }
 
