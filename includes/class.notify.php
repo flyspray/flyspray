@@ -1038,7 +1038,7 @@ class Notifications {
             $get_users = $db->Query("SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
                                       u.notify_online, u.notify_type, u.notify_own, u.lang_code
                                 FROM {users} u
-                                WHERE u.jabber_id IN ('$desired')");
+                                WHERE u.jabber_id IN ('$desired') AND u.jabber_id <> ''");
 
             self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
             
