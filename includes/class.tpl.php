@@ -768,25 +768,47 @@ function formatDate($timestamp, $extended = false, $default = '')
     //it returned utf-8 encoded by the system
     return strftime(Filters::noXSS($dateformat), (int) $timestamp);
 } /// }}}
-// {{{ Draw permissi ons table
+
+// {{{ Draw permissions table
 function tpl_draw_perms($perms)
 {
-    global $proj;
+	global $proj;
 
-    $perm_fields = array('is_admin', 'manage_project', 'view_tasks',
-            'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks', 'edit_assignments',
-            'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-            'create_attachments', 'delete_attachments',
-            'view_history', 'close_own_tasks', 'close_other_tasks',
-            'assign_to_self', 'assign_others_to_self', 'view_reports',
-            'add_votes', 'edit_own_comments', 'view_estimated_effort',
-            'track_effort', 'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap'
-    );
+	$perm_fields = array(
+		'is_admin',
+		'manage_project',
+		'view_tasks',
+		'view_groups_tasks',
+		'view_own_tasks',
+		'open_new_tasks',
+		'add_multiple_tasks',
+		'modify_own_tasks',
+		'modify_all_tasks',
+		'create_attachments',
+		'delete_attachments',
+		'assign_to_self',
+		'assign_others_to_self',
+		'edit_assignments',
+		'close_own_tasks',
+		'close_other_tasks',
+		'view_roadmap',
+		'view_history',
+		'view_reports',
+		'add_votes',
+		'view_comments',
+		'add_comments',
+		'edit_comments',
+		'edit_own_comments',
+		'delete_comments',
+		'view_estimated_effort',
+		'view_current_effort_done',
+		'track_effort'
+	);
 
-    $yesno = array(
-            '<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
-            '<td class="good fa fa-check" title="'.eL('yes').'"></td>'
-    );
+	$yesno = array(
+		'<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
+		'<td class="good fa fa-check" title="'.eL('yes').'"></td>'
+	);
 
     # 20150307 peterdd: This a temporary hack
     $i=0;
