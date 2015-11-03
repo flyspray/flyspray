@@ -38,15 +38,34 @@
   </form>
 <?php
 $perm_fields = array(
-'is_admin', 'manage_project', 'view_tasks',
-'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks', 'edit_assignments',
-'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-'create_attachments', 'delete_attachments',
-'view_history', 'close_own_tasks', 'close_other_tasks',
-'assign_to_self', 'assign_others_to_self', 'view_reports',
-'add_votes', 'edit_own_comments', 'view_estimated_effort',
-'track_effort', 'view_current_effort_done', 'add_multiple_tasks',
-'view_roadmap'
+'is_admin',
+'manage_project',
+'view_tasks',
+'view_groups_tasks', # TODO: What is the definition of "group's task" and how does it effect project views?
+'view_own_tasks',    # TODO: What is the definition of "own task" and how does it effect project views?
+'open_new_tasks',
+'add_multiple_tasks',
+'modify_own_tasks',
+'modify_all_tasks',
+'create_attachments',
+'delete_attachments',
+'assign_to_self',
+'assign_others_to_self',
+'edit_assignments',
+'close_own_tasks',
+'close_other_tasks',
+'view_roadmap',
+'view_history',
+'view_reports',
+'add_votes',
+'view_comments',
+'add_comments',
+'edit_comments',
+'edit_own_comments',
+'delete_comments',
+'view_estimated_effort',
+'view_current_effort_done',
+'track_effort'
 );
 
 $yesno = array(
@@ -55,6 +74,7 @@ $yesno = array(
 );
 
 # 20150727 peterdd: This a temporary hack
+# TODO: table similiar to admin.groups.tpl, maybe with option to toggle on/off global groups. (with CSS)
 $i = 0;
 $html = 'TODO: Show also global group permissions as hint for understanding permission system better for project managers.
 <table class="permcols"><tr>';
