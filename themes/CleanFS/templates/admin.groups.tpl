@@ -61,7 +61,7 @@ $perm_fields = array(
 'delete_comments',
 'view_estimated_effort',
 'view_current_effort_done',
-'track_effort',
+'track_effort'
 );
 
 $yesno = array(
