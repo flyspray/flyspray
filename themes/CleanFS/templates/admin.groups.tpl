@@ -32,7 +32,6 @@
 <div><a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a></div>
 
 <?php
-<?php
 $perm_fields = array(
 'is_admin',
 'manage_project',
