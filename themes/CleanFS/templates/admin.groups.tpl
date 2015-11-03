@@ -32,16 +32,36 @@
 <div><a class="button" href="<?php echo Filters::noXSS(CreateURL('admin', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a></div>
 
 <?php
+<?php
 $perm_fields = array(
-'is_admin', 'manage_project',
-'view_tasks', 'open_new_tasks', 'add_multiple_tasks', 'modify_own_tasks', 'modify_all_tasks',
-'create_attachments', 'delete_attachments',
-'assign_to_self', 'assign_others_to_self', 'edit_assignments',
-'close_own_tasks', 'close_other_tasks',
-'view_roadmap', 'view_history', 'view_reports',
+'is_admin',
+'manage_project',
+'view_tasks',
+'view_groups_tasks', # TODO: What is the definition of "group's task" and how does it effect project views?
+'view_own_tasks',    # TODO: What is the definition of "own task" and how does it effect project views?
+'open_new_tasks',
+'add_multiple_tasks',
+'modify_own_tasks',
+'modify_all_tasks',
+'create_attachments',
+'delete_attachments',
+'assign_to_self',
+'assign_others_to_self',
+'edit_assignments',
+'close_own_tasks',
+'close_other_tasks',
+'view_roadmap',
+'view_history',
+'view_reports',
 'add_votes',
-'view_comments', 'add_comments', 'edit_comments', 'edit_own_comments', 'delete_comments',
-'view_estimated_effort', 'view_current_effort_done', 'track_effort'
+'view_comments',
+'add_comments',
+'edit_comments',
+'edit_own_comments',
+'delete_comments',
+'view_estimated_effort',
+'view_current_effort_done',
+'track_effort',
 );
 
 $yesno = array(
@@ -102,6 +122,7 @@ foreach ($groups as $group){
 <?php
 require_once('permicons.tpl');
 $i=0;
+# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
 foreach($perms[$p] as $val){
         if ($perms['is_admin'][$i]==1 && $val == 0){
                 if(isset($permicons[$p])){
