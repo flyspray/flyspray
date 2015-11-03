@@ -1,6 +1,8 @@
 <?php
 $permicons=array(
 'view_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
+'view_groups_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
+'view_own_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'view_roadmap'=>'<span class="fa fa-stack"><i class="fa fa-road fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'view_history'=>'<span class="fa fa-stack"><i class="fa fa-history fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'view_reports'=>'<span class="fa fa-stack"><i class="fa fa-line-chart fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
