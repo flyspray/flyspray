@@ -3,7 +3,7 @@
 </div>
 <div class="box"><h3><?php echo L('myvotes'); ?></h3>
 <?php if(count($votes)>0): ?>
-<table>
+<table id="myvotes">
 <thead>
 <tr>
 <th><?php echo L('project'); ?></th>
@@ -13,7 +13,7 @@
 </thead>
 <tbody>
 <?php foreach($votes as $vote): ?>
-<tr>
+<tr<?php echo $vote['is_closed'] ? ' class="closed"':''; ?>>
 <td><?php echo $vote['project_title']; ?></td>
 <td><?php echo $vote['item_summary']; ?></td> 
 <td><?php echo tpl_form(Filters::noXSS(CreateURL('myprofile', $vote['task_id'])));?>
