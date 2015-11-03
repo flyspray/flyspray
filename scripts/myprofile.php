@@ -20,7 +20,7 @@ if ($user->isAnon()) {
 # maybe add 'AND t.is_closed<>1' if we want only show votes of active tasks, that are taken for the votes limit.
 # How can a user unvote such now unvisible tasks to get back under his voting limit for the project?
 $votes=$db->query('
-  SELECT v.*, t.project_id, t.item_summary, p.project_title
+  SELECT v.*, t.project_id, t.item_summary, t.task_type, t.is_closed, p.project_title
   FROM {votes} v
   JOIN {tasks} t ON t.task_id=v.task_id
   LEFT JOIN {projects} p ON p.project_id=t.project_id
