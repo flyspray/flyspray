@@ -1009,6 +1009,15 @@ switch ($action = Req::val('action'))
 		$_POST['custom_style']='';
 	}
 
+	# TODO validation
+	/*
+	if( Post::val('default_order_by2') !=''){
+		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+	} else{
+		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+	}
+	*/
+	
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
