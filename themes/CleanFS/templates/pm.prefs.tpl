@@ -188,7 +188,7 @@
           <select id="default_order_by2" name="default_order_by2">
             <?php echo tpl_options($columnnames, $proj->prefs['sorting'][1]['field'], false); ?>
           </select>
-          <select id="default_order_by_dir2" name="default_order_by_dir2" disabled="disabled">
+          <select id="default_order_by_dir2" name="default_order_by_dir2">
             <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][1]['dir'], false); ?>
           </select>
         </li>
