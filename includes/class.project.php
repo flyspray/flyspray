@@ -93,17 +93,17 @@ class Project
         if(preg_match('![^A-Za-z0-9_]!', $type)) {
             return '';
         }
-        //Get the column names of list tables for the group by statement
+        // Get the column names of list tables for the group by statement
         $groupby = $db->GetColumnNames('{list_' . $type . '}',  'l.' . $type . '_id', 'l.');
 
         $join = 't.'.join(" = l.{$type}_id OR t.", $join)." = l.{$type}_id";
 
-        return "SELECT l.*, count(t.task_id) AS used_in_tasks
-                  FROM {list_{$type}} l
-             LEFT JOIN {tasks} t ON ($join) AND (l.project_id=0 OR t.project_id = l.project_id)
-                 WHERE l.project_id = ?
-              GROUP BY $groupby
-              ORDER BY list_position";
+	return "SELECT l.*, COUNT(t.task_id) AS used_in_tasks, COUNT(CASE t.is_closed WHEN 0 THEN 1 ELSE NULL END) AS opentasks, COUNT(CASE t.is_closed WHEN 1 THEN 1 ELSE NULL END) AS closedtasks
+		FROM {list_{$type}} l
+		LEFT JOIN {tasks} t ON ($join) AND (l.project_id=0 OR t.project_id = l.project_id)
+		WHERE l.project_id = ?
+		GROUP BY $groupby
+		ORDER BY list_position";
     }
 
     /**
