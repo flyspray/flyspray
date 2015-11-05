@@ -976,18 +976,18 @@ switch ($action = Req::val('action'))
 
         /* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
-                'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-                'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
-                'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
-			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by', 'default_order_by_dir',
-                'max_vote_per_day', 'votes_per_project', 'url_rewriting',
-                'custom_style');
-        if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
-            unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
-        //if you think different, modify functions in class.user.php directing different regiser tpl
-
+		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
+		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
+		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
+		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
+		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
+		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
+		'custom_style');
+        if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
+            unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
+        	// if you think different, modify functions in class.user.php directing different regiser tpl
+        }
 	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
 		# Setenv can't be used to set the env variable in .htaccess, because apache module setenv is often disabled on hostings and brings server error 500.
 		# First check if htaccess is turned on
@@ -1010,13 +1010,12 @@ switch ($action = Req::val('action'))
 	}
 
 	# TODO validation
-	/*
-	if( Post::val('default_order_by2') !=''){
+	if( Post::val('default_order_by2') !='' && Post::val('default_order_by2') !='n'){
 		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
 	} else{
 		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
 	}
-	*/
+	
 	
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
@@ -1162,7 +1161,7 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by', 'default_order_by_dir');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
         $args = array_map('Post_to0', $cols);
         $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign', 'freetagging'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
@@ -1182,7 +1181,6 @@ switch ($action = Req::val('action'))
         }
 
         # TODO validation
-        /*
         if( Post::val('default_order_by2') !=''){
                 $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
         } else{
@@ -1190,7 +1188,6 @@ switch ($action = Req::val('action'))
         }
         $cols[]='default_order_by';
         $args[]= $_POST['default_order_by'];
-        */
 
         $args[] = $proj->id;
 
