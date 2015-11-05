@@ -1181,6 +1181,17 @@ switch ($action = Req::val('action'))
             $cols[] = 'hours_per_manday';
         }
 
+        # TODO validation
+        /*
+        if( Post::val('default_order_by2') !=''){
+                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+        } else{
+                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+        }
+        $cols[]='default_order_by';
+        $args[]= $_POST['default_order_by'];
+        */
+
         $args[] = $proj->id;
 
         $update = $db->Query("UPDATE  {projects}
