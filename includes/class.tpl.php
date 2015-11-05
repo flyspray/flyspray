@@ -533,8 +533,14 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 			$value = $data[0];
 			$label = $data[1];
 			# just a temp hack, we currently use optgroups only for project dropdown...
-			#$optgroup=isset($data[2]) ? $data[2] : 0;
 			$optgroup=array_key_exists('project_is_active',$data) ? $data['project_is_active'] : 0;
+			if (array_key_exists('project_title', $data) && $optgroup!=$lastoptgroup) {
+				if ($ingroup) {
+					$html.='</optgroup>';
+				}
+				$html.='<optgroup'.($optgroup==0 ? ' label="'.L('inactive').'"' : '' ).'>';
+				$ingroup=true;
+			}
 		} else{
 			$value=$idx;
 			$label=$data;
@@ -544,15 +550,6 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 
 		if ($value === $remove) {
 			continue;
-		}
-
-		# just a temp hack, we currently use optgroups only for project dropdown...
-		if (array_key_exists('project_title', $data) && $optgroup!=$lastoptgroup) {
-			if ($ingroup) {
-				$html.='</optgroup>';
-			}
-			$html.='<optgroup'.($optgroup==0 ? ' label="'.L('inactive').'"' : '' ).'>';
-			$ingroup=true;
 		}
 
 		$html .= '<option value="'.$value.'"';
