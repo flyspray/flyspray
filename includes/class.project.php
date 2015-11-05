@@ -28,7 +28,7 @@ class Project
                         }else{
                                 $sorting[]=array(
                                         'field'=>trim(substr($rule, 0, $last_space)),
-                                        'dir'=>substr($rule, $last_space)
+                                        'dir'=>trim(substr($rule, $last_space))
                                 );
                         }
                 }
