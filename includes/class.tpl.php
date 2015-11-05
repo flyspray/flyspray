@@ -501,6 +501,12 @@ function tpl_date_formats($selected, $detailed = false)
 
 // {{{ Options for a <select>
 /**
+ * FIXME peterdd: This function is currently often called by templates with just 
+ * results from sqltablequeries like  select * from tablex, 
+ * so data[0] and data[1] of each row works only by table structure convention as wished.
+ * not by names, lack of a generic optgroup feature, css-id, css-classes, disabled option.
+ * Maybe rewrite a as tpl_select() ..
+ * 
  * @options array of values
  * For optgroups, the values should be presorted by the optgroups
  * example:
@@ -522,26 +528,28 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 	$lastoptgroup=0;
 	$optgroup=0;
         $ingroup=false;
-	foreach ($options as $value=>$label) {
-		if (is_array($label)) {
-			$value = $label[0];
-			$optgroup=isset($label[2]) ? $label[2] : 0;
-			$label = $label[1];
+	foreach ($options as $idx=>$data) {
+		if (is_array($data)) {
+			$value = $data[0];
+			$label = $data[1];
+			# just a temp hack, we currently use optgroups only for project dropdown...
+			$optgroup=array_key_exists('project_is_active',$data) ? $data['project_is_active'] : 0;
+			if (array_key_exists('project_title', $data) && $optgroup!=$lastoptgroup) {
+				if ($ingroup) {
+					$html.='</optgroup>';
+				}
+				$html.='<optgroup'.($optgroup==0 ? ' label="'.L('inactive').'"' : '' ).'>';
+				$ingroup=true;
+			}
+		} else{
+			$value=$idx;
+			$label=$data;
 		}
 		$label = htmlspecialchars($label, ENT_QUOTES, 'utf-8');
 		$value = $labelIsValue ? $label : htmlspecialchars($value, ENT_QUOTES, 'utf-8');
 
 		if ($value === $remove) {
 			continue;
-		}
-
-		if ($optgroup!=$lastoptgroup) {
-			if ($ingroup) {
-				$html.='</optgroup>';  
-			}
-			# just a temp hack, we currently use optgroups only for project dropdown...
-			$html.='<optgroup'.($optgroup==0 ? ' label="'.L('inactive').'"' : '' ).'>';
-			$ingroup=true;  
 		}
 
 		$html .= '<option value="'.$value.'"';
@@ -552,7 +560,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 		$lastoptgroup=$optgroup;
 	}
 	
-	if ($ingroup) { 
+	if ($ingroup) {
 	$html.='</optgroup>';
 	}
 	
@@ -562,6 +570,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 
 	return $html;
 } // }}}
+
 // {{{ Double <select>
 function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)
 {
