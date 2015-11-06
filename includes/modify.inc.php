@@ -1370,6 +1370,7 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('userupdated');
+        Flyspray::Redirect(CreateURL('myprofile'));
         break;
         // ##################
         // approving a new user registration
