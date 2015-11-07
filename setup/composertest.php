@@ -36,6 +36,14 @@ header("Pragma: no-cache");
 	</head>
 	<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
 		<h2>It seems you try to install a development version of Flyspray.</h2>
+		<?php
+		$installrequires=array();
+		if(!extension_loaded("openssl"){ $installrequires[]='openssl';}
+		if(!extension_loaded("phar"){ $installrequires[]='phar'; }
+		if(count($installrequires)>0){
+			echo '<div class="error">Missing php extensions: '.implode(' ', $installrequires).'</div>';
+		}
+		?>
 		<h2><?php echo L('needcomposer'); ?></h2>
 		<a href="<?php echo $composerit; ?>" class="button" style="margin:auto;max-width:300px;text-align:center;display:block;font-size:2em;"><?php echo L('installcomposer'); ?></a>
 		<p style="margin-top:50px;">
