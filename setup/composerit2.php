@@ -52,7 +52,9 @@ header("Pragma: no-cache");
 			if (getenv('OS') == 'Windows_NT' && isset($_SERVER['PHPRC']) && strstr($_SERVER['PHPRC'], 'xampp')) {
 				$phpexe=$_SERVER['PHPRC'].'\php.exe';
 			}
-			$cmd2 = $phpexe.' composer.phar --working-dir=.. install';
+			
+			#$cmd2 = $phpexe.' composer.phar --working-dir=.. install';
+			$cmd2 = 'COMPOSER_HOME=. '.$phpexe.' composer.phar --working-dir=.. install >debug1.txt 2>debug2.txt';
 
 			# with chdir('..');
 			#$cmd2 = 'php composer.phar install';
@@ -60,6 +62,9 @@ header("Pragma: no-cache");
 			echo $cmd2.'<br/><br/>';
 			shell_exec($cmd2);
 			echo '<strong>Done</strong>';
+			$debug1='<pre>'.readfile('debug1.txt').'</pre>';
+			$debug2='<pre>'.readfile('debug2.txt').'</pre>';
+			echo $debug1.'<br />'.$debug2.'<br /><strong>Done</strong>';
 
 			echo '<h3>Step 4: Checking and cleaning:</h3>';
 			if (is_readable('../vendor/autoload.php')) {
@@ -68,6 +73,8 @@ header("Pragma: no-cache");
 				echo 'Composer installation failed<br />';
 			}
 			if (is_file('composer.phar')) {
+				unlink('debug1.txt');
+				unlink('debug2.txt');
 				unlink('composer.phar');
 			}
 			echo 'Cleanup made<br /><br />';
