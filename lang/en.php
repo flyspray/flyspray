@@ -35,6 +35,7 @@ $language = array(
 'attachfiles'             => 'Attach files',
 'vote'                    => 'Vote',
 'groupenabled'            => 'Members can login',
+'groupopen'               => 'Members can login',
 'tasktypelist'            => 'Task Types list',
 'categorylist'            => 'Categories list',
 'oslist'                  => 'Operating Systems list',
