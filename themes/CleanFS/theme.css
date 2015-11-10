@@ -599,6 +599,8 @@ form #taskdetailsfull {
 }
 #taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
+
+.group.inactive{ background-color:#eee;}
 /* t_ now reserved classes for tags with their tag_id like t_123
  Couldnt use t123 due limited regex in css and some other classes start with 't' 
 */
