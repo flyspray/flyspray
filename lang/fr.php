@@ -45,6 +45,7 @@ $translation = array(
 'attachfiles'             => 'Joindre des fichiers',
 'vote'                    => 'Vote',
 'groupenabled'            => 'Les membres peuvent se connecter',
+'groupopen'               => 'Les membres peuvent se connecter',
 'tasktypelist'            => 'Liste des types de tâche',
 'categorylist'            => 'Liste des catégories',
 'oslist'                  => 'Liste des systèmes d\'exploitation',
