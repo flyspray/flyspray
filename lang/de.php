@@ -46,6 +46,7 @@ $translation = array(
 'vote'                    => 'Stimme',
 'tovote'                  => 'abstimmen',
 'groupenabled'            => 'Mitglieder können sich anmelden (Gruppe aktiv)',
+'groupopen'               => 'Mitglieder können sich anmelden (Gruppe aktiv)',
 'tasktypelist'            => 'Aufgabentypen',
 'categorylist'            => 'Kategorien',
 'oslist'                  => 'Betriebssysteme',
