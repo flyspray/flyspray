@@ -2037,18 +2037,21 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        foreach (Post::val('users') as $user_id => $val) {
-            if (Post::val('switch_to_group') == '0') {
-                $db->Query('DELETE FROM  {users_in_groups}
-                                  WHERE  user_id = ? AND group_id = ?',
-                array($user_id, Post::val('old_group')));
-            } else {
-                $db->Query('UPDATE  {users_in_groups}
-                               SET  group_id = ?
-                             WHERE  user_id = ? AND group_id = ?',
-                array(Post::val('switch_to_group'), $user_id, Post::val('old_group')));
-            }
-        }
+	foreach (Post::val('users') as $user_id => $val) {
+                if($user->id!=$user_id || $proj->id!=0){
+			if (Post::val('switch_to_group') == '0') {
+				$db->Query('DELETE FROM {users_in_groups} WHERE user_id=? AND group_id=?',
+					array($user_id, Post::val('old_group'))
+				);
+			} else {
+				$db->Query('UPDATE {users_in_groups} SET group_id=? WHERE user_id=? AND group_id=?',
+					array(Post::val('switch_to_group'), $user_id, Post::val('old_group'))
+				);
+			}
+		} else {
+			Flyspray::show_error(L('nosuicide'));
+		}	
+	}
 
         // TODO: Log event in a later version.
 
