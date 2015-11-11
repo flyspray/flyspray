@@ -601,10 +601,7 @@ form #taskdetailsfull {
 #taskdetails h2 {color: #555;display:inline-block;}
 
 .group.inactive{ background-color:#eee;}
-/* t_ now reserved classes for tags with their tag_id like t_123
- Couldnt use t123 due limited regex in css and some other classes start with 't' 
-*/
-.tags span, [class^='t_'] {
+.tag {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -613,17 +610,15 @@ form #taskdetailsfull {
     font-style:normal;
     white-space: nowrap;
 }
-/* for fonticons in tags */
-[class^='t_']:before{
+.tag:before{
 	font-family:fontawesome;
 }
-/* style your tags by their tag_id, will be moved to custom_xxx.css in future */
-/* fa-eur */
+/* style your tags by their tag_id, may be managed by tag list management in admin/proeject settings */
 /*
-.t_1{background-color:#666;}
-.t_1:before{content:'\f153';color:#cc0;}
-.t_2{background-color:#0c0;}
-.t_3{background-color:#09c;}
+.tag.t1{background-color:#666;}
+.tag.t1:before{content:'\f153';color:#cc0;}
+.tag.t2{background-color:#0c0;}
+.tag.t3{background-color:#09c;}
 */
 #taskfields {
   width: 290px;
