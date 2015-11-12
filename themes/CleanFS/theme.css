@@ -605,10 +605,11 @@ form #taskdetailsfull {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
     border-radius: 3px;
-    margin: 3px;
-    padding: 4px;
+    margin-left: 3px;
+    padding: 3px;
     font-style:normal;
     white-space: nowrap;
+    vertical-align:middle;
 }
 .tag:before{
 	font-family:fontawesome;
