@@ -1173,6 +1173,8 @@ switch ($action = Req::val('action'))
         $args[] = Post::num('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
+        $cols[] = 'custom_style';
+        $args[] = Post::val('custom_style');
 
         // Convert to seconds.
         if (Post::val('hours_per_manday')) {
