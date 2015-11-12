@@ -1010,6 +1010,7 @@ $translation = array(
 'nosuicide'               => 'Sehr geehrter Nutzer, es ist nicht erlaubt Ihren Zugang zu Flyspray zu zerstören in dem Sie Ihr eigenes Konto deaktivieren oder Ihre Gruppe wechseln. The empathic brother of HAL9000',
 'musthavesameproject'     => 'Ober- und Unteraufgabe müssen das gleiche Projekt haben.',
 'defaultorderby'          => 'Aufgabenliste standardmäßig sortieren nach',
+'defaultorderby2'         => '2. Sortierkriterium',
 'viewowntasks'            => 'Eigene Aufgaben anzeigen',
 'viewgroupstasks'         => 'Gruppenaufgaben anzeigen',
 'urlrewriting'            => 'hübsche URLs',
