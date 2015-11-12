@@ -679,21 +679,21 @@ function quick_edit(elem, id)
     </div>
 
 
-    <div id="taskdetailsfull">
-        <h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
-            FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
-        </h2>
-        <span class="tags"><?php foreach($tags as $tag): ?><span class="tag"><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
-        <div id="taskdetailstext"><?php echo $task_text; ?></div>
+<div id="taskdetailsfull">
+	<h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
+	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
+	</h2>
+	<span class="tags"><?php foreach($tags as $tag): ?><span class="tag t<?php echo $tag['tag_id']; ?>"><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
+	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
 
         <?php $links = $proj->listTaskLinks($task_details['task_id']);
         $this->display('common.links.tpl', 'links', $links); ?>
-    </div>
+</div>
 
-    <div id="taskinfo">
+<div id="taskinfo">
         <?php if(!count($deps)==0): ?>
         <?php 
         # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
