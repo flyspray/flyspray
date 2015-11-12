@@ -405,14 +405,19 @@ function testEmail(){
         <li>
           <label for="default_order_by"><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
-            <?php echo tpl_options($columnnames, $fs->prefs['default_order_by'], false); ?>
+            <?php echo tpl_options($columnnames, $proj->prefs['sorting'][0]['field'], false); ?>
+          </select>
+          <select id="default_order_by_dir" name="default_order_by_dir">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][0]['dir'], false); ?>
           </select>
         </li>
-
-        <li>
-          <label for="default_order_by_dir"><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
-          <select id="default_order_by_dir" name="default_order_by_dir">
-            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $fs->prefs['default_order_by_dir'], false); ?>
+				<li>
+          <label for="default_order_by2"><?php echo Filters::noXSS(L('defaultorderby2')); ?></label>
+          <select id="default_order_by2" name="default_order_by2">
+            <?php echo tpl_options($columnnames, $proj->prefs['sorting'][1]['field'], false); ?>
+          </select>
+          <select id="default_order_by_dir2" name="default_order_by_dir2">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][1]['dir'], false); ?>
           </select>
         </li>
 
