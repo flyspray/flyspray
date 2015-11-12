@@ -104,7 +104,7 @@ if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 $page = new FSTpl();
 
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
-if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
+if ( ! $user->can_view_project(Req::val($project_id))) {
     Flyspray::show_error( L('nopermission') );
     exit;
 }
@@ -164,7 +164,7 @@ $sql = $db->Query('
 	ORDER BY project_is_active DESC, project_title'
 );
 
-# new: project_id as index for easier access, needs testing and maybe simplification 
+# new: project_id as index for easier access, needs testing and maybe simplification
 # similiar situation also includes/class.flyspray.php function listProjects()
 $sres=$db->FetchAllArray($sql);
 foreach($sres as $p){
@@ -193,7 +193,7 @@ $page->pushTpl('header.tpl');
 if (!defined('NO_DO')) {
     require_once(BASEDIR . "/scripts/$do.php");
 } else{
-    # not nicest solution, NO_DO currently only used on register actions 
+    # not nicest solution, NO_DO currently only used on register actions
     $page->pushTpl('register.ok.tpl');
 }
 $page->pushTpl('footer.tpl');
