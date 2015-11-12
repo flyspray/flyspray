@@ -188,13 +188,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$value .= '...';
 		}
 		# <i> instead of <span> in future for smaller size
-		# we need also some bytes for classes like <i class="t123">tagname</i>
+		# we need also some bytes for classes like <i class="tag t123">tagname</i>
 		if($task['tags']!=''){
 			$tags=explode(',', $task['tags']);
 			$tagids=explode(',', $task['tagids']);
 			$tgs='';
 			for($i=0;$i< count($tags); $i++){
-				$tgs.='<i class="t_'.$tagids[$i].'">'.$tags[$i].'</i>';
+				$tgs.='<i class="tag t'.$tagids[$i].'">'.$tags[$i].'</i>';
 			}
                         $value.=$tgs;
 		}
