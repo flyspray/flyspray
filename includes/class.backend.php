@@ -1673,13 +1673,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
 
         // Implementing setting "Default order by"
         if (!array_key_exists('order', $args)) {
-            if ($proj->id) {
-                /*
-                $orderBy = $proj->prefs['default_order_by'];
-                $sort = $proj->prefs['default_order_by_dir'];
-                */
-
-                # future
+        	# now also for $proj->id=0 (allprojects)
                 $orderBy = $proj->prefs['sorting'][0]['field'];
                 $sort =    $proj->prefs['sorting'][0]['dir'];
                 if (count($proj->prefs['sorting']) >1){
@@ -1689,14 +1683,6 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
                         $orderBy2='severity';
                         $sort2='DESC';
                 }
-
-            } else {
-                $orderBy = $fs->prefs['default_order_by'];
-                $sort = $fs->prefs['default_order_by_dir'];
-                # temp
-                $orderBy2='severity';
-                $sort2='DESC';
-            }
         } else {
             $orderBy = $args['order'];
             $sort = $args['sort'];
