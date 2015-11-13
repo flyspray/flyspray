@@ -1505,16 +1505,16 @@ switch ($action = Req::val('action'))
 			}
 
 			if($lt=='tag'){
-				$update = $db->Query("UPDATE  $list_table_name
-					SET  $list_column_name = ?, list_position = ?, show_in_list = ?
-					WHERE  $list_id = ? AND project_id = ?",
-					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
 				);
 			} else{
-				$update = $db->Query("UPDATE  $list_table_name
-					SET  $list_column_name = ?, list_position = ?, show_in_list = ?, class=?
-					WHERE  $list_id = ? AND project_id = ?",
-					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
 				);
 			}
 		} else {
