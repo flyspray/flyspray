@@ -95,7 +95,7 @@ $syscountlines++;
     $countlines++;
 ?>
 <tr>
-    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?><?php echo isset($row['class']) ? ' '.Filters::noXSS($row['class']) : ''; ?>"><?php echo 't'.$row[$list_type.'_id']; ?></i></td><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?><?php echo isset($row['class']) ? ' '.Filters::noXSS($row['class']) : ''; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
     <td>
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
