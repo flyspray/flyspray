@@ -1481,34 +1481,46 @@ switch ($action = Req::val('action'))
         $listposition = Post::val('list_position');
         $listshow     = Post::val('show_in_list');
         $listdelete   = Post::val('delete');
+        if($lt=='tag'){
+                $listclass = Post::val('list_class');
+        }
+	foreach ($listnames as $id => $listname) {
+        	if ($listname != '') {
+			if (!isset($listshow[$id])) {
+				$listshow[$id] = 0;
+			}
 
-        foreach ($listnames as $id => $listname) {
-            if ($listname != '') {
-                if (!isset($listshow[$id])) {
-                    $listshow[$id] = 0;
-                }
-
-                $check = $db->Query("SELECT COUNT(*)
+			$check = $db->Query("SELECT COUNT(*)
                                        FROM $list_table_name
                                       WHERE (project_id = 0 OR project_id = ?)
                                         AND $list_column_name = ?
                                         AND $list_id <> ?",
-                                    array($proj->id, $listnames[$id], $id));
-                $itemexists = $db->FetchOne($check);
+                                    array($proj->id, $listnames[$id], $id)
+			);
+			$itemexists = $db->FetchOne($check);
 
-                if ($itemexists) {
-                    Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
-                    return;
-                }
+			if ($itemexists) {
+				Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+				return;
+			}
 
-                $update = $db->Query("UPDATE  $list_table_name
-                                         SET  $list_column_name = ?, list_position = ?, show_in_list = ?
-                                       WHERE  $list_id = ? AND project_id = ?",
-                array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id));
-            } else {
-                Flyspray::show_error(L('fieldsmissing'));
-            }
-        }
+			if($lt=='tag'){
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
+				);
+			} else{
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
+				);
+			}
+		} else {
+			Flyspray::show_error(L('fieldsmissing'));
+		}
+	}
 
         if (is_array($listdelete) && count($listdelete)) {
             $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
