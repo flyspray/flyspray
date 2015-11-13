@@ -102,7 +102,7 @@ $syscountlines++;
     </td>
     <?php if ($list_type == 'tag'): ?>
     <td>
-        <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row['class']); ?>]"
+        <input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row['class']); ?>]"
           value="<?php echo Filters::noXSS($row['class']); ?>" />
     </td>
     <?php endif; ?>
