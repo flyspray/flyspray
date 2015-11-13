@@ -7,7 +7,7 @@
 ?></h3>
 <table class="list" id="idtablesys">
 <colgroup>
-    <?php if ($list_type == 'tag'): ?><col class="ctag"></col><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><col class="ctag" /><?php endif; ?>
     <col class="cname" />
     <?php if ($list_type == 'tag'): ?><col class="cclasses" /><?php endif; ?>
     <col class="corder" />
