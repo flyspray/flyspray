@@ -2,5 +2,5 @@
 <span class="autocomplete" id="<?php echo Filters::noXSS($name); ?>_complete"></span>
 <script type="text/javascript">
     showstuff('<?php echo Filters::noJsXSS($name); ?>_complete');
-    new Ajax.Autocompleter('<?php echo Filters::noJsXSS($id); ?>', '<?php echo Filters::noJsXSS($name); ?>_complete', '<?php echo Filters::noXSS($baseurl); ?>js/callbacks/usersearch.php', {})
+    new Ajax.Autocompleter('<?php echo Filters::noJsXSS($id); ?>', '<?php echo Filters::noJsXSS($name); ?>_complete', baseurl + 'js/callbacks/usersearch.php', {})
 </script>
