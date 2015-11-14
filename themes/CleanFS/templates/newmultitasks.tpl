@@ -171,7 +171,7 @@
 		tds[length-3].innerHTML = res;
 		table.insertBefore(clone, table.lastElementChild);
 		showstuff("assigned_to[" + index + "]_complete");
-		new Ajax.Autocompleter(tds[length-3].getElementsByTagName("input")[0].id, tds[length-3].getElementsByTagName("span")[0].id, "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/usersearch.php", null);
+		new Ajax.Autocompleter(tds[length-3].getElementsByTagName("input")[0].id, tds[length-3].getElementsByTagName("span")[0].id, baseurl + "js/callbacks/usersearch.php", null);
 	}
 	function removeRow(elem)
 	{
