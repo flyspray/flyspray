@@ -1,39 +1,41 @@
 <script type="text/javascript">
 
-function hideAll(allTasks)
+function hideAll(milestone_id)
 {
-    for (i = 0; i < allTasks.length; i++) {
-        if (!allTasks[i]) continue;
-        hidestuff('dd'+ allTasks[i]);
-        hidestuff('hide'+ allTasks[i]);
-        showstuff('expand'+ allTasks[i], 'inline');
-    }
+  var taskid='', milestone_tasks = document.getElementsByClassName('task_milestone' + milestone_id);
+
+  for (i = 0; i < milestone_tasks.length; i++)
+  {
+    taskid = milestone_tasks[i].id.replace('dd', '');
+    hidestuff('dd' + taskid);
+    hidestuff('hide' + taskid);
+    showstuff('expand' + taskid, 'inline');
+  }
 }
 
-function showAll(allTasks)
+function showAll(milestone_id)
 {
-    for (i = 0; i < allTasks.length; i++) {
-        if (!allTasks[i]) continue;
-        showstuff('dd'+ allTasks[i]);
-        hidestuff('expand'+ allTasks[i]);
-        showstuff('hide'+ allTasks[i], 'inline');
-    }
+  var taskid='', milestone_tasks = document.getElementsByClassName('task_milestone' + milestone_id);
+
+  for (i = 0; i < milestone_tasks.length; i++)
+  {
+    taskid = milestone_tasks[i].id.replace('dd', '');
+    showstuff('dd' + taskid);
+    hidestuff('expand' + taskid);
+    showstuff('hide' + taskid, 'inline');
+  }
 }
 </script>
 
 <?php foreach($data as $milestone): ?>
-
-<script type="text/javascript">
-allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
-</script>
 
 <div class="box roadmap">
 <h3><?php echo Filters::noXSS(L('roadmapfor')); ?> <?php echo Filters::noXSS($milestone['name']); ?>
 
     <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
-      <a href="javascript:showAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('expandall')); ?></a> |
-      <a href="javascript:hideAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('collapseall')); ?></a>
+      <a href="javascript:showAll(<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('expandall')); ?></a> |
+      <a href="javascript:hideAll(<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('collapseall')); ?></a>
     </small>
     <?php endif; ?>
 </h3>
@@ -93,7 +95,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
           <a class="hide" id="hide<?php echo Filters::noXSS($task['task_id']); ?>" href="javascript:hidestuff('dd<?php echo Filters::noXSS($task['task_id']); ?>');hidestuff('hide<?php echo Filters::noXSS($task['task_id']); ?>');showstuff('expand<?php echo Filters::noXSS($task['task_id']); ?>', 'inline')"><?php echo Filters::noXSS(L('collapse')); ?></a>
         </small>
       </dt>
-      <dd id="dd<?php echo Filters::noXSS($task['task_id']); ?>" style="display: none;">
+      <dd id="dd<?php echo Filters::noXSS($task['task_id']); ?>" class="task_milestone<?php echo $milestone['id']; ?>" style="display:none;">
         <?php echo TextFormatter::render($task['detailed_desc'], 'rota', $task['task_id'], $task['content']); ?>
 
         <br style="position:absolute;" />
