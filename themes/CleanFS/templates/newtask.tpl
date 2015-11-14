@@ -20,7 +20,7 @@
     		var project_id = document.getElementsByName('project_id')[0].value;
 
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
+		xmlHttp.open("POST", baseurl + "js/callbacks/searchtask.php", false);
 		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
 		if(xmlHttp.status === 200) {
@@ -205,7 +205,7 @@
 	</div>
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
-        <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+        <button tabindex="9" type="button" onclick="showPreview('details', baseurl, 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
         <?php endif; ?>
         <?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task'])); ?>
 
