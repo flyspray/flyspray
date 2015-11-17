@@ -337,7 +337,7 @@ function toggleSearchBox(themeurl) {
   }
 }
 function deletesearch(id, url) {
-    var img = $('rs' + id).getElementsByTagName('img')[0].src = url + 'themes/CleanFS/ajax_load.gif';
+    $('rs' + id).getElementsByTagName('i')[0].className='fa fa-spinner fa-spin';
     url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {
     		method: 'post',
@@ -393,8 +393,9 @@ function showPreview(textfield, baseurl, field)
     var preview = $(field);
     emptyElement(preview);
 
-    var img = document.createElement('img');
-    img.src = baseurl + 'themes/CleanFS/ajax_load.gif';
+    var img = document.createElement('i');
+    //img.src = baseurl + 'themes/CleanFS/ajax_load.gif';
+    img.className='fa fa-spinner fa-spin fa-lg'; // fontawesome animated fonticon
     img.id = 'temp_img';
     img.alt = 'Loading...';
     preview.appendChild(img);
