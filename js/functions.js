@@ -337,7 +337,7 @@ function toggleSearchBox(themeurl) {
   }
 }
 function deletesearch(id, url) {
-    $('rs' + id).getElementsByTagName('i')[0].className='fa fa-spinner fa-spin';
+    $('rs' + id).getElementsByTagName('i')[0].className='fa fa-spinner fa-spin fa-lg';
     url = url + 'js/callbacks/deletesearches.php';
     var myAjax = new Ajax.Request(url, {
     		method: 'post',
