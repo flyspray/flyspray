@@ -23,17 +23,13 @@ function showAll(allTasks)
 
 <?php foreach($data as $milestone): ?>
 
-<script type="text/javascript">
-allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
-</script>
-
 <div class="box roadmap">
 <h3><?php echo Filters::noXSS(L('roadmapfor')); ?> <?php echo Filters::noXSS($milestone['name']); ?>
 
     <?php if (count($milestone['open_tasks'])): ?>
     <small class="DoNotPrint">
-      <a href="javascript:showAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('expandall')); ?></a> |
-      <a href="javascript:hideAll(allTasks<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('collapseall')); ?></a>
+      <a href="javascript:showAll(<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('expandall')); ?></a> |
+      <a href="javascript:hideAll(<?php echo Filters::noXSS($milestone['id']); ?>)"><?php echo Filters::noXSS(L('collapseall')); ?></a>
     </small>
     <?php endif; ?>
 </h3>
@@ -51,7 +47,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
    <?php if(count($milestone['open_tasks'])): ?>
    <a href="<?php echo Filters::noXSS($baseurl); ?>index.php?do=index&amp;tasks=&amp;project=<?php echo Filters::noXSS($proj->id); ?>&amp;due=<?php echo Filters::noXSS($milestone['id']); ?>"><?php echo Filters::noXSS(count($milestone['open_tasks'])); ?> <?php echo Filters::noXSS(L('opentasks')); ?>:</a>
    <?php endif; ?>
-    <?php
+   <?php
     if ($proj->prefs['use_effort_tracking']) {
         $total_estimated = 0;
         $actual_effort = 0;
@@ -66,20 +62,22 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
             }
             $effort = null;
         }
-    // }
+
+      echo '<br />';
+
+      if ($user->perms('view_estimated_effort')) {
+          echo Filters::noXSS(L('opentasks')) .' - ' . Filters::noXSS(L('totalestimatedeffort')) . ': ' . effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+      }
+
+      echo '<br />';
+
+      if ($user->perms('view_current_effort_done')) {
+          echo Filters::noXSS(L('opentasks')) . ' - ' . Filters::noXSS(L('currenteffortdone')) . ': ' . effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
+      } 
+      
+    }
     ?>
-    <br />
-    <?php
-    if ($user->perms('view_estimated_effort')) {
-        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('totalestimatedeffort')); ?>: <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-    } ?>
-    <br />
-    <?php
-    if ($user->perms('view_current_effort_done')) {
-        echo Filters::noXSS(L('opentasks')); ?> - <?php echo Filters::noXSS(L('currenteffortdone')); ?>: <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
-    } ?>
-    <?php } 
-    ?>
+    
 </p>
 
 <?php if(count($milestone['open_tasks'])): ?>
@@ -93,7 +91,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
           <a class="hide" id="hide<?php echo Filters::noXSS($task['task_id']); ?>" href="javascript:hidestuff('dd<?php echo Filters::noXSS($task['task_id']); ?>');hidestuff('hide<?php echo Filters::noXSS($task['task_id']); ?>');showstuff('expand<?php echo Filters::noXSS($task['task_id']); ?>', 'inline')"><?php echo Filters::noXSS(L('collapse')); ?></a>
         </small>
       </dt>
-      <dd id="dd<?php echo Filters::noXSS($task['task_id']); ?>" style="display: none;">
+      <dd id="dd<?php echo Filters::noXSS($task['task_id']); ?>" class="task_milestone<?php echo $milestone['id']; ?>" style="display:none;">
         <?php echo TextFormatter::render($task['detailed_desc'], 'rota', $task['task_id'], $task['content']); ?>
 
         <br style="position:absolute;" />
