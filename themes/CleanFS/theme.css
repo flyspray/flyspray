@@ -58,7 +58,7 @@ div#taskclosed,
 	background-color:#fff;
 }
 div.denyform,
-div.popup {
+div.popup, div#mysearches {
 	background-color:#fafafa;
 }
 tr.active,
@@ -267,18 +267,17 @@ div#mysearches {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #dddddd;
   border: solid 3px #5f9729;
-  width: 218px;
   overflow: auto;
   max-height: 25em;
   display: none;
   position: absolute;
-  left: 0;
+  right: 0;
   top: 1.4em;
   margin-top: 1px;
   z-index: 5;
   padding: 2px 5px 3px;
+  box-sizing:border-box;
 }
 div#mysearches table#mysearchestable {border-collapse: collapse;width: 100%;margin-bottom: 0;}
 div#mysearches table#mysearchestable a {color: #3c4041;font-weight: normal;}
