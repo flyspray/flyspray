@@ -69,6 +69,7 @@ $translation = array(
 'baseurl'                 => 'Basis-URL für diese Installation',
 'replyaddress'            => 'Antwortadresse für E-Mail-Benachrichtigungen',
 'themestyle'              => 'Design',
+'customstyle'             => 'angepasst',
 'language'                => 'Sprache',
 'anonview'                => 'Anonyme Benutzer dürfen Aufgaben sehen',
 'allowanon'               => 'Anonyme Benutzer dürfen neue Aufgaben anlegen',
