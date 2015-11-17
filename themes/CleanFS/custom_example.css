@@ -25,7 +25,7 @@ tr .pri1, tr .pri2, tr .pri3, tr .pri4, tr .pri5
 { visibility:hidden;width:20px;max-width:20px;white-space:nowrap;text-overflow:hidden;font-size:16px;}
 
 tr .typ1:before { visibility:visible;content:"\f188";font-family:fontawesome;color:#900;} /*fa-bug*/
-tr .typ2:before { visibility:visible;content:"\f06b";font-family:fontawesome;color:#6c0;} /*fa-gift*/
+tr .typ2:before { visibility:visible;content:"\f06b";font-family:fontawesome;color:#390;} /*fa-gift*/
 tr .typ3:before { visibility:visible;content:"\f19d";font-family:fontawesome;color:#000;} /*fa-graduation-cap*/
 tr .typ4:before { visibility:visible;content:"\f111";font-family:fontawesome;color:#009;} /*fa-circle*/
 
