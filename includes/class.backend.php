@@ -1466,7 +1466,9 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 	} else{
 		# FIXME: GROUP_CONCAT() for postgresql?
 		$select .= ' MIN(tg.tag_name) AS tags, ';
-		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+		$select .= ' MIN(tg.tag_id) AS tagids, ';
+		$select .= " '' AS tagclass, ";
 	}
 	// task_tag join table is now always included in join
 	$from .= '
