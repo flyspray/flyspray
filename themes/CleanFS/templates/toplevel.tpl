@@ -4,8 +4,39 @@
 if (!$project_count): ?>
   <meta http-equiv="Refresh" content="0;url=/index.php?project=0&do=index" />
 <?php endif; ?>
+<style type="text/css">
+.activity::after {
+content: "\25B4";
+position: absolute;
+right: -3px;
+bottom:-5px;
+text-align: right;
+color:#c00;
+}
+.activity img{
+padding-right:1px;
+background-color:#c00;
+}
+.activity {
+display: block;
+position: relative;
+width: 160px;
+}
+#s_inactive {display:none;}
+#s_inactive ~ .box {display: none;}
+#s_inactive:checked ~ .box {display: inline-block;}
+</style>
 <?php
+# $projects are now sorted active first, then inactive
+$lastprojectactive=1;
 foreach ($projects as $project): ?>
+  <?php if( count($projects)>1 && $lastprojectactive==1 && $project['project_is_active']==0) : ?>
+    <div style="clear:both;padding-top:20px;border-bottom:1px solid #999;"></div>
+    <input type="checkbox" id="s_inactive" />
+    <label class="button" style="display:block;width:100px;" for="s_inactive"><?php echo Filters::noXSS(L('showinactive')); ?></label>
+  <?php endif; ?>
+  <?php $lastprojectactive=$project['project_is_active']; ?>
+
 <div class="box<?php if ($project_count == 1) echo ' single-project' ?>">
 <h2><a href="<?php echo Filters::noXSS(CreateUrl('project', $project['project_id'])); ?>"><?php echo Filters::noXSS($project['project_title']); ?></a></h2>
 
@@ -44,23 +75,15 @@ foreach ($projects as $project): ?>
         </ul>
     </td>
     <?php endif; ?>
-
   </tr>
-  <?php if (!$user->isAnon()): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
-  	<td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></td>
+  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
   </tr>
- 
+  <?php if (!$user->isAnon()): ?> 
   <tr>
     <th><?php echo Filters::noXSS(L('myactivity')); ?></th>
-  	<td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></td>
-  </tr>
-  <?php endif; ?>
-  <?php if ($user->isAnon()): ?>
-  <tr>
-    <th><?php echo Filters::noXSS(L('activity')); ?></th>
-    <td><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>"/></td>
+  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
   </tr>
   <?php endif; ?>
   <tr>

@@ -1104,8 +1104,24 @@ abstract class Backend
 			if ($tag == ''){
 				continue;
 			}
-			# FS1.0dev, Note: {tags} db table will be replaced by rewritten tag feature in future.
-			$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+			
+			# old tag feature
+			#$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+			
+			# new tag feature. let's do it in 2 steps, it is getting too complicated to make it cross database compatible, drawback is possible (rare) race condition (use transaction?)
+			$res=$db->Query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+			if($t=$db->FetchRow($res)){   
+				$tag_id=$t['tag_id'];
+			} else{ 
+				if( $proj->prefs['freetagging']==1){
+					# add to taglist of the project
+					$db->Query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+					$tag_id=$db->Insert_ID();
+				} else{
+					continue;
+				}
+			};
+			$db->Query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
 		}
 	}
 
@@ -1309,6 +1325,7 @@ LEFT JOIN ({groups} pg
 	// Keep this always, could also used for showing assigned users for a task.
 	// Keeps the overall logic somewhat simpler.
 	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
+	$from .= ' LEFT JOIN {task_tag} tt ON t.task_id = tt.task_id';
         $cfrom = $from;
         
         // Seems resution name really is needed...
@@ -1414,29 +1431,59 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
             $select .= ' (SELECT SUM(ef.effort) FROM {effort} ef WHERE t.task_id = ef.task_id) AS effort, ';
         }
 
-        if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
-            $select .= ' MIN(u.real_name) AS assigned_to_name, ';
-            $select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
-            // assigned table is now always included in join
-            $from .= '
--- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
+		# not every db system has this feature out of box
+		if('mysql' == $db->dblink->dataProvider){
+			#$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
+			# without distinct i see multiple times each assignee
+			# maybe performance penalty due distinct?, solve by better groupby construction?
+			$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
+			# maybe later for building links to users
+			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
+			#$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
+		}else{
+			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
+			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+		}
+		// assigned table is now always included in join
+		$from .= '
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
-            $groupby .= 'ass.task_id, ';
-            if (array_get($args, 'dev')) {
-                $cfrom .= '
--- LEFT JOIN {assigned} ass ON t.task_id = ass.task_id
+		$groupby .= 'ass.task_id, ';
+		if (array_get($args, 'dev')) {
+			$cfrom .= '
 LEFT JOIN {users} u ON ass.user_id = u.user_id ';
-		$cgroupbyarr[] = 't.task_id';
-                $cgroupbyarr[] = 'ass.task_id';
-            }
-        }
+			$cgroupbyarr[] = 't.task_id';
+			$cgroupbyarr[] = 'ass.task_id';
+		}
+	}
+        
+	# not every db system has this feature out of box
+	if('mysql' == $db->dblink->dataProvider){
+		# without distinct i see multiple times each tag (when task has several assignees too)
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
+	}else{
+		$select .= ' MIN(tg.tag_name) AS tags, ';
+		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+	}
+	// task_tag join table is now always included in join
+	$from .= '
+LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
+	$groupby .= 'tt.task_id, ';
+	$cfrom .= '
+LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
+	$cgroupbyarr[] = 't.task_id';
+	$cgroupbyarr[] = 'tt.task_id';
+
 
 	# use preparsed task description cache for dokuwiki when possible
 	if($conf['general']['syntax_plugin']=='dokuwiki' && FLYSPRAY_USE_CACHE==true){
 		$select.=' cache.content desccache, ';
 		$from.='
 LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
-	}
+	} else {
+            $select .= 'NULL AS desccache, ';
+        }
 
         if (array_get($args, 'only_primary')) {
             $where[] = 'NOT EXISTS (SELECT 1 FROM {dependencies} dep WHERE dep.dep_task_id = t.task_id)';
@@ -1626,13 +1673,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
 
         // Implementing setting "Default order by"
         if (!array_key_exists('order', $args)) {
-            if ($proj->id) {
-                /*
-                $orderBy = $proj->prefs['default_order_by'];
-                $sort = $proj->prefs['default_order_by_dir'];
-                */
-
-                # future
+        	# now also for $proj->id=0 (allprojects)
                 $orderBy = $proj->prefs['sorting'][0]['field'];
                 $sort =    $proj->prefs['sorting'][0]['dir'];
                 if (count($proj->prefs['sorting']) >1){
@@ -1642,14 +1683,6 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
                         $orderBy2='severity';
                         $sort2='DESC';
                 }
-
-            } else {
-                $orderBy = $fs->prefs['default_order_by'];
-                $sort = $fs->prefs['default_order_by_dir'];
-                # temp
-                $orderBy2='severity';
-                $sort2='DESC';
-            }
         } else {
             $orderBy = $args['order'];
             $sort = $args['sort'];
@@ -1709,8 +1742,15 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
         }
 
 	if ($user->isAnon()) {
-            $where[] = 't.mark_private = 0 AND p.others_view = 1 AND t.is_closed = 0 ';
-        }
+		$where[] = 't.mark_private = 0 AND p.others_view = 1';
+		if(array_key_exists('status', $args)){
+			if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
+				$where[] = 't.is_closed = 1';
+			} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
+				$where[] = 't.is_closed = 0';
+			}
+		}
+	}
 
         $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 

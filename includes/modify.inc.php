@@ -260,6 +260,37 @@ switch ($action = Req::val('action'))
             }
         }
 
+        // update tags
+        $tagList = explode(';', Post::val('tags'));  
+        $tagList = array_map('strip_tags', $tagList);
+        $tagList = array_map('trim', $tagList);
+        $tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+        $tags_changed = count(array_diff($task['tags'], $tagList)) + count(array_diff($tagList, $task['tags']));
+
+	if($tags_changed){
+		// Delete the current assigned tags for this task
+		$db->Query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
+		foreach ($tagList as $tag){
+			if ($tag == ''){
+				continue;
+			}
+
+			$res=$db->Query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+			if($t=$db->FetchRow($res)){  
+				$tag_id=$t['tag_id'];
+			} else{
+				if( $proj->prefs['freetagging']==1){   
+					# add to taglist of the project
+					$db->Query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+					$tag_id=$db->Insert_ID();
+				} else{
+					continue;
+				}
+			};
+			$db->Query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+		}
+	}
+
         // Get the details of the task we just updated
         // To generate the changed-task message
         $new_details_full = Flyspray::GetTaskDetails($task['task_id']);
@@ -269,9 +300,7 @@ switch ($action = Req::val('action'))
         $new_details = $db->FetchRow($result);
 
         foreach ($new_details as $key => $val) {
-            if (strstr($key, 'last_edited_') || $key == 'assigned_to'
-                || is_numeric($key))
-            {
+            if (strstr($key, 'last_edited_') || $key == 'assigned_to' || is_numeric($key)) {
                 continue;
             }
 
@@ -310,6 +339,7 @@ switch ($action = Req::val('action'))
         Backend::upload_links($task['task_id'], '0', 'userlink');
 
         $_SESSION['SUCCESS'] = L('taskupdated');
+        Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
         // ##################
@@ -332,6 +362,8 @@ switch ($action = Req::val('action'))
         Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
+        # FIXME there are several pages using this form, details and pendingreq at least
+        #Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
     case 'details.associatesubtask':
@@ -430,6 +462,8 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 13);
 
         $_SESSION['SUCCESS'] = L('taskreopenedmsg');
+	# FIXME there are several pages using this form, details and pendingreq at least
+	#Flyspray::Redirect(CreateURL('details', $task['task_id']));
         break;
 
         // ##################
@@ -446,8 +480,9 @@ switch ($action = Req::val('action'))
             Backend::add_notification($user->id, $task['task_id']);
         }
 
-        $_SESSION['SUCCESS'] = L('commentaddedmsg');
-        break;
+	$_SESSION['SUCCESS'] = L('commentaddedmsg');
+	Flyspray::Redirect(CreateURL('details', $task['task_id']));
+	break;
 
         // ##################
         // Tracking
@@ -483,6 +518,8 @@ switch ($action = Req::val('action'))
             $effort->addEffort(Post::val('effort_to_add'), $proj);
             $_SESSION['SUCCESS'] = L('efforttrackingadded');
         }
+        
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#effort');
         break;
 
         // ##################
@@ -939,17 +976,18 @@ switch ($action = Req::val('action'))
 
         /* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
-                'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-                'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
-                'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
-			    'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
-                'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
-                'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by', 'default_order_by_dir',
-                'max_vote_per_day', 'votes_per_project', 'url_rewriting');
-        if(Post::val('need_approval') == '1' && Post::val('spam_proof'))
-            unset($_POST['spam_proof']);//if self register request admin to approve, disable spam_proof
-        //if you think different, modify functions in class.user.php directing different regiser tpl
-
+		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
+		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
+		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
+		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
+		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
+		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
+		'custom_style');
+        if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
+            unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
+        	// if you think different, modify functions in class.user.php directing different regiser tpl
+        }
 	if (Post::val('url_rewriting') == '1' && !$fs->prefs['url_rewriting']) {
 		# Setenv can't be used to set the env variable in .htaccess, because apache module setenv is often disabled on hostings and brings server error 500.
 		# First check if htaccess is turned on
@@ -967,6 +1005,18 @@ switch ($action = Req::val('action'))
 		}
 	}
 
+	if( substr(Post::val('custom_style'), -4) != '.css'){
+		$_POST['custom_style']='';
+	}
+
+	# TODO validation
+	if( Post::val('default_order_by2') !='' && Post::val('default_order_by2') !='n'){
+		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+	} else{
+		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+	}
+	
+	
         foreach ($settings as $setting) {
             $db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -1111,9 +1161,9 @@ switch ($action = Req::val('action'))
         $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
                 'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
                 'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format', 'default_order_by', 'default_order_by_dir');
+                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
         $args = array_map('Post_to0', $cols);
-        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign'));
+        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign', 'freetagging'));
         $args = array_merge($args, array_map(array('Post', 'num'), $ints));
         $cols[] = 'notify_types';
         $args[] = implode(' ', (array) Post::val('notify_types'));
@@ -1123,12 +1173,23 @@ switch ($action = Req::val('action'))
         $args[] = Post::num('disp_intro');
         $cols[] = 'default_cat_owner';
         $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
+        $cols[] = 'custom_style';
+        $args[] = Post::val('custom_style');
 
         // Convert to seconds.
         if (Post::val('hours_per_manday')) {
             $args[] = effort::EditStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
             $cols[] = 'hours_per_manday';
         }
+
+        # TODO validation
+        if( Post::val('default_order_by2') !=''){
+                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+        } else{
+                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+        }
+        $cols[]='default_order_by';
+        $args[]= $_POST['default_order_by'];
 
         $args[] = $proj->id;
 
@@ -1145,6 +1206,7 @@ switch ($action = Req::val('action'))
         // Update project prefs for following scripts
         $proj = new Project($proj->id);
         $_SESSION['SUCCESS'] = L('projectupdated');
+        Flyspray::Redirect(CreateURL('pm', 'prefs', $proj->id));
         break;
 
         // ##################
@@ -1310,6 +1372,7 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('userupdated');
+        Flyspray::Redirect(CreateURL('myprofile'));
         break;
         // ##################
         // approving a new user registration
@@ -1418,34 +1481,46 @@ switch ($action = Req::val('action'))
         $listposition = Post::val('list_position');
         $listshow     = Post::val('show_in_list');
         $listdelete   = Post::val('delete');
+        if($lt=='tag'){
+                $listclass = Post::val('list_class');
+        }
+	foreach ($listnames as $id => $listname) {
+        	if ($listname != '') {
+			if (!isset($listshow[$id])) {
+				$listshow[$id] = 0;
+			}
 
-        foreach ($listnames as $id => $listname) {
-            if ($listname != '') {
-                if (!isset($listshow[$id])) {
-                    $listshow[$id] = 0;
-                }
-
-                $check = $db->Query("SELECT COUNT(*)
+			$check = $db->Query("SELECT COUNT(*)
                                        FROM $list_table_name
                                       WHERE (project_id = 0 OR project_id = ?)
                                         AND $list_column_name = ?
                                         AND $list_id <> ?",
-                                    array($proj->id, $listnames[$id], $id));
-                $itemexists = $db->FetchOne($check);
+                                    array($proj->id, $listnames[$id], $id)
+			);
+			$itemexists = $db->FetchOne($check);
 
-                if ($itemexists) {
-                    Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
-                    return;
-                }
+			if ($itemexists) {
+				Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+				return;
+			}
 
-                $update = $db->Query("UPDATE  $list_table_name
-                                         SET  $list_column_name = ?, list_position = ?, show_in_list = ?
-                                       WHERE  $list_id = ? AND project_id = ?",
-                array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id));
-            } else {
-                Flyspray::show_error(L('fieldsmissing'));
-            }
-        }
+			if($lt=='tag'){
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
+				);
+			} else{
+				$update = $db->Query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
+				);
+			}
+		} else {
+			Flyspray::show_error(L('fieldsmissing'));
+		}
+	}
 
         if (is_array($listdelete) && count($listdelete)) {
             $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
@@ -1822,6 +1897,7 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyadded');
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
@@ -1833,6 +1909,9 @@ switch ($action = Req::val('action'))
         // TODO: Log event in a later version.
 
         $_SESSION['SUCCESS'] = L('notifyremoved');
+        # if on details page we should redirect to details with a GET
+        # but what if the request comes from another page (like myprofile for instance maybe in future)
+        Flyspray::Redirect(CreateURL('details', $task['task_id']).'#notify');
         break;
 
         // ##################
@@ -1972,18 +2051,21 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        foreach (Post::val('users') as $user_id => $val) {
-            if (Post::val('switch_to_group') == '0') {
-                $db->Query('DELETE FROM  {users_in_groups}
-                                  WHERE  user_id = ? AND group_id = ?',
-                array($user_id, Post::val('old_group')));
-            } else {
-                $db->Query('UPDATE  {users_in_groups}
-                               SET  group_id = ?
-                             WHERE  user_id = ? AND group_id = ?',
-                array(Post::val('switch_to_group'), $user_id, Post::val('old_group')));
-            }
-        }
+	foreach (Post::val('users') as $user_id => $val) {
+                if($user->id!=$user_id || $proj->id!=0){
+			if (Post::val('switch_to_group') == '0') {
+				$db->Query('DELETE FROM {users_in_groups} WHERE user_id=? AND group_id=?',
+					array($user_id, Post::val('old_group'))
+				);
+			} else {
+				$db->Query('UPDATE {users_in_groups} SET group_id=? WHERE user_id=? AND group_id=?',
+					array(Post::val('switch_to_group'), $user_id, Post::val('old_group'))
+				);
+			}
+		} else {
+			Flyspray::show_error(L('nosuicide'));
+		}	
+	}
 
         // TODO: Log event in a later version.
 
@@ -2322,22 +2404,26 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('votefailed'));
             break;
         }
+        // TODO: Log event in a later version.
         break;
 
-        // TODO: Log event in a later version.
 
-        // ##################
-        // Removing a vote for a task
-        // ##################
-    case 'details.removevote':
-        if (Backend::remove_vote($user->id, $task['task_id'])) {
-            $_SESSION['SUCCESS'] = L('voteremoved');
-        } else {
-            Flyspray::show_error(L('voteremovefailed'));
-            break;
-        }
+	// ##################
+	// Removing a vote for a task
+	// ##################
+	# used to remove a vote from myprofile page
+	case 'removevote':
+	# peterdd: I found no details.removevote action in source, so details.removevote is not used, but was planned on the task details page or in the old blue theme?
+	case 'details.removevote':
+		if (Backend::remove_vote($user->id, $task['task_id'])) {
+			$_SESSION['SUCCESS'] = L('voteremoved');
+		} else {
+			Flyspray::show_error(L('voteremovefailed'));
+			break;
+		}
+		// TODO: Log event in a later version, but also see if maybe done here Backend::remove_vote()...
+	break;
 
-        // TODO: Log event in a later version.
 
         // ##################
         // set supertask id

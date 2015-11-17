@@ -26,6 +26,7 @@ $translation = array(
 'attachfiles'             => 'Pridruži fajl',
 'vote'                    => 'Glasaj',
 'groupenabled'            => 'Članovi se mogu prijavljivati',
+'groupopen'               => 'Članovi se mogu prijavljivati',
 'tasktypelist'            => 'Lista tipova zadataka',
 'categorylist'            => 'Lista kategorija',
 'oslist'                  => 'Lista operativnih sistema',

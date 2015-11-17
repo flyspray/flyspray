@@ -8,20 +8,20 @@ if ($user->isAnon()):
         <label for="s_loginbox" id="show_loginbox" accesskey="l"><?php echo Filters::noXSS(L('login')); ?></label>
         <div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
 	</li><?php
-else:
-	?><li class="first"><a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?>"><?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)</a>
+else: ?><li>
+		<a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?> <?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)"><i class="fa fa-user fa-lg"></i></a>
 	</li><li>
 		<a id="lastsearchlink" href="#" accesskey="m" onclick="showhidestuff('mysearches');return false;" class="inactive"><?php echo Filters::noXSS(L('mysearch')); ?></a>
 		<div id="mysearches"><?php $this->display('links.searches.tpl'); ?></div>
 	</li><?php
 	if ($user->perms('is_admin')):
 	?><li>
-		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>"><?php echo Filters::noXSS(L('admintoolbox')); ?></a>
+		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" title="<?php echo Filters::noXSS(L('admintoolbox')); ?>"><i class="fa fa-gears fa-lg"></i></a>
 	</li><?php
 	endif;
 	?><li>
 		<a id="logoutlink" href="<?php echo Filters::noXSS(CreateURL('logout', null)); ?>"
-		accesskey="l"><?php echo Filters::noXSS(L('logout')); ?></a>
+		accesskey="l" title="<?php echo Filters::noXSS(L('logout')); ?>"><i class="fa fa-power-off fa-lg"></i></a>
 	</li><?php
 	if (isset($_SESSION['was_locked'])):
 	?><li>
@@ -63,12 +63,10 @@ endif; ?>
 	if ($proj->id && $user->perms('add_multiple_tasks')) :
 	?><li>
 		<a id="newmultitaskslink" href="<?php echo Filters::noXSS(CreateURL('newmultitasks', $proj->id)); ?>"
-		<?php if($do == 'newmultitasks'): ?> class="active" <?php endif; ?>
-		accesskey="a"><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
-		</li><?php
+		<?php if($do == 'newmultitasks'): ?> class="active"<?php endif; ?>><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
+	</li><?php
 	endif;
-	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']):
-	?><li>
+	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?><li>
 		<a id="anonopen"
 		<?php if($do == 'newtask'): ?> class="active" <?php endif; ?>
 		href="?do=newtask&amp;project=<?php echo Filters::noXSS($proj->id); ?>"><?php echo Filters::noXSS(L('opentaskanon')); ?></a>
@@ -90,14 +88,17 @@ endif; ?>
 		<a id="roadmaplink"
 		<?php if($do == 'roadmap'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id)); ?>"><?php echo Filters::noXSS(L('roadmap')); ?></a>
-	</li>
-	<?php
+	</li><?php
 	endif;
-	if ($proj->id && $user->perms('manage_project')):
-	?><li>
+	if (file_exists(BASEDIR . '/scripts/gantt.php') && $proj->id && $user->perms('view_roadmap')): ?><li>
+		<a id="gantt"
+		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
+		href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
+	</li><?php
+	endif;
+	if ($proj->id && $user->perms('manage_project')): ?><li>
 		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
-	</li>
-	<?php
+	</li><?php
 	endif;
 	if ($proj->id && isset($pm_pendingreq_num) && $pm_pendingreq_num):
 	?><li>

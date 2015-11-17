@@ -527,6 +527,33 @@
       <col>status_name</col>
     </index>
   </table>
+  <table name="list_tag">
+    <field name="tag_id" type="I" size="5">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="project_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="tag_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="list_position" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="show_in_list" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="class" type="C" size="100"/>
+    <index name="tag_name">
+      <UNIQUE/>
+      <col>project_id</col>
+      <col>tag_name</col>
+    </index>
+  </table>
   <table name="list_tasktype">
     <field name="tasktype_id" type="I" size="3">
       <KEY/>
@@ -773,6 +800,12 @@
     <field name="default_order_by_dir" type="C" size="5">
       <NOTNULL/>
       <DEFAULT value="desc"/>
+    </field>
+    <field name="custom_style" type="C" size="32">
+    </field>
+    <field name="freetagging" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>>
     </field>
   </table>
   <table name="registrations">
@@ -1033,6 +1066,19 @@
       <col>project_id</col>
     </index>
   </table>
+  <table name="task_tag">
+    <field name="task_id" type="I" size="5">
+      <KEY/>
+    </field>
+    <field name="tag_id" type="I" size="5">
+      <KEY/>
+    </field>
+    <index name="task_id_tag">
+      <UNIQUE/>
+      <col>task_id</col>
+      <col>tag_id</col>
+    </index>
+  </table>
   <table name="users">
     <field name="user_id" type="I" size="3">
       <KEY/>
@@ -1271,8 +1317,9 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'url_rewriting', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'max_vote_per_day', '2');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'votes_per_project', '10');</query>
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id', 'DESC');</query>
-    <query>INSERT INTO tasks VALUES (1, 1, 1, 1130024797, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'custom_style', '');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id', 'DESC', '', 1 );</query>
+    <query>INSERT INTO tasks VALUES (1, 1, 1, UNIX_TIMESTAMP(), 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
     <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>

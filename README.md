@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray)
+[![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray) Flyspray/peterdd
+
+[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray
 
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at http://bugs.flyspray.org
 
@@ -25,13 +27,15 @@ http://flyspray.org/manual/install
 2. Remove all files **except the attachments/ directory, avatars/ directory and flyspray.conf.php**
 3. Copy the new files to the Flyspray directory
 4. Make sure flyspray.conf.php is writeable by the webserver.
-5. Open http://yourflyspray/setup/upgrade.php in your webbrowser and follow the upgrade steps
+5. Open http://yourflyspray/setup/ in your webbrowser. It detects the existing installation and you can follow the upgrade steps.
 
 ## Dependencies
 
 ### Install php
-    LINUX:
+    Linux: Just use the package manager or one of its frontends of your Linux distribution.
+    For instance for Debian based Linux distributions:
     sudo apt-get install php
+    
 
     Windows:
     http://php.net/downloads.php
@@ -41,8 +45,11 @@ http://flyspray.org/manual/install
     You can find Composer using the following link: https://getcomposer.org/
 
 #### Installing via command lines
+
     curl -sS https://getcomposer.org/installer | php
-    or if you don't have curl
+
+Or if you don't have curl:
+
     php -r "readfile('https://getcomposer.org/installer');" | php
 
 #### Windows users can dowload Windows installer on https://getcomposer.org/download/

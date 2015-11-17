@@ -26,6 +26,7 @@ $translation = array(
 'attachfiles'             => 'Fájl csatolása',
 'vote'                    => 'Szavazás',
 'groupenabled'            => 'Tagok beléphetnek',
+'groupopen'               => 'Tagok beléphetnek',
 'tasktypelist'            => 'Hibajegy típusok listája',
 'categorylist'            => 'Kategóriák listája',
 'oslist'                  => 'Rendszerek listája',

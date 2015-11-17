@@ -224,7 +224,7 @@ class Setup extends Flyspray
    */
    public function CheckPhpCompatibility()
    {
-      // Check the PHP version. Recommended version is 4.3.9 and above
+      // Check the PHP version.
       $this->mPhpVersionStatus = version_compare(PHP_VERSION, $this->mPhpRequired, '>=');
 
       // Return an html formated Yes/No string
@@ -727,25 +727,20 @@ class Setup extends Flyspray
                'admin_username' => array('Administrator\'s username', 'string', true),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
-			   'reminder_daemon' => array('Reminder Daemon', 'option', false),
+               'syntax_plugin' => array('Syntax', 'option', true), # required true while testing, for release could be false.
+		'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
-            if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values'))
-            {
+            if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values')) {
                // Set a page heading in case of errors.
                $_SESSION['page_heading'] = 'Administration Processing';
 
-               if ($this->ProcessAdminConfig($data))
-               {
+               if ($this->ProcessAdminConfig($data)) {
                   $this->DisplayCompletion($data);
-               }
-               else
-               {
+               } else {
                   $_POST['action'] = 'administration';
                   $this->DisplayAdministration();
                }
-            }
-            else
-            {
+            } else {
                $_POST['action'] = 'administration';
                $this->DisplayAdministration();
             }
@@ -761,8 +756,9 @@ class Setup extends Flyspray
 
    public function ProcessAdminConfig($data)
    {
-      // Extract the varibales to local namespace
+      // Extract the variables to local namespace
       extract($data);
+	if(!isset($syntax_plugin)){$syntax_plugin="";}
 
       $config_intro	=
       "; <?php die( 'Do not access this page directly.' ); ?>
@@ -772,13 +768,13 @@ class Setup extends Flyspray
       ; database itself and are managed directly within the Flyspray admin interface.
       ; You should consider putting this file somewhere that isn't accessible using
       ; a web browser, and editing header.php to point to wherever you put this file.\n";
-      $config_intro	= str_replace("\t", "", $config_intro);
+      $config_intro = str_replace("\t", "", $config_intro);
 
       // Create a random cookie salt
       $cookiesalt = md5(uniqid(mt_rand(), true));
 
 	  // check to see if to enable the Reminder Daemon.
-      $daemonise	= ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
+      $daemonise = ( (isset($data['reminder_daemon'])) && ($data['reminder_daemon'] == 1) )
 					? 1
 					: 0;
       $db_prefix = (isset($data['db_prefix']) ? $data['db_prefix'] : '');
@@ -800,7 +796,7 @@ class Setup extends Flyspray
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
-      $config[] = "syntax_plugin = \"none\"                               ; Plugin name for Flyspray's syntax (use any non-existing plugin name for deafult syntax)";
+      $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; Plugin name for Flyspray\'s syntax (use any non-existing plugin name for default syntax)';
       $config[] = "update_check = \"1\"                               ; Boolean. 0 = off, 1 = on.";
       $config[] = "\n";
       $config[] = "[attachments]";
@@ -931,7 +927,9 @@ class Setup extends Flyspray
             $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
-            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
+            #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
+            # if possible set correct default character set for mysql.
+            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci') );
             if (!$dict->ExecuteSQLArray($sqlarray)) {
                 $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
                 $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
@@ -1083,7 +1081,7 @@ class Setup extends Flyspray
    * @param string $type The type of html format to return
    * @return string Depending on the type of format to return
    */
-   public function ReturnStatus($boolean, $type = 'yes')
+   public static function ReturnStatus($boolean, $type = 'yes')
    {
       // Do a switch on the type of status
       switch($type)

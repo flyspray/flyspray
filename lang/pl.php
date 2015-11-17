@@ -26,6 +26,7 @@ $translation = array(
 'attachfiles'             => 'Dołączanie plików',
 'vote'                    => 'Głosowanie',
 'groupenabled'            => 'Członkowie mogą się logować',
+'groupopen'               => 'Członkowie mogą się logować',
 'tasktypelist'            => 'Lista typów zgłoszeń',
 'categorylist'            => 'Lista kategorii',
 'oslist'                  => 'Lista systemów operacyjnych',

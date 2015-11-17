@@ -34,8 +34,8 @@ require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
 * Usage: Open this file like ?do=langdiff?lang=de in your browser.
 *    "de" represents your language code.
 */
-$lang = ( isset($_GET['lang']) ? $_GET['lang'] : 'en');
-if (!ctype_alnum($lang)) {
+$lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+if( preg_match('/[^a-zA-Z_]/', $lang)) {
 	die('Invalid language name.');
 }
 
@@ -70,8 +70,9 @@ if ($lang != 'en' && file_exists($translationfile)) {
 
         }
 	echo '</table>';
-	if ( $i > 0 )
+	if ( $i > 0 ){
 		echo '<p>',$i,' out of ',sizeof($language),' keys to translate.</p>';
+	}
 	echo '<h2>The following translation keys should be deleted from the translation:</h2>';
 	echo '<table cellspacing="0">';
 	$i = 0;
@@ -82,6 +83,11 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		}
 	}
 	echo '</table>';
+	if ( $i > 0 ){
+		echo '<p>'.$i.' entries can be removed from this translation.</p>';
+	} else{
+		echo '<p><i class="fa fa-check fa-2x"></i> None</p>';
+	}
 	echo '<h2><a name="compare"></a>Direct comparision between english and '.htmlspecialchars($lang).'</h2>';
 	echo '<table>
 		<colgroup></colgroup>
@@ -111,15 +117,32 @@ if ($lang != 'en' && file_exists($translationfile)) {
 	# readdir
 	$english=$language;
 	$max=count($english);
+	$langfiles=array();
+	$workfiles=array();
 	if ($handle = opendir('lang')) {
 		$languages=array();
 		while (false !== ($file = readdir($handle))) {
-			if ($file != "." && $file != ".." && $file!='.langdiff.php' && $file!='.langedit.php' && !(substr($file,-4)=='.bak') && !(substr($file,-5)=='.safe') ) {
-				$langfiles[]=$file;
+			if ($file != "." 
+			 && $file != ".." 
+			 && $file!='.langdiff.php' 
+			 && $file!='.langedit.php' 
+			 && !(substr($file,-4)=='.bak') 
+			 && !(substr($file,-5)=='.safe') ) {
+				# if a .$lang.php.work file but no $lang.php exists yet
+				if( substr($file,-5)=='.work'){ 
+					if(!is_file('lang/'.substr($file,1,-5)) ){
+						$workfiles[]=$file;
+					}
+				} else{ 
+					$langfiles[]=$file;
+				}
 			}
 		}
 		asort($langfiles);
-		echo '<table class="overview"><thead><tr><th>File</th><th>Progress</th><th> </th></tr></thead>';
+		asort($workfiles);
+		echo '<table class="overview">
+		<thead><tr><th>'.L('file').'</th><th>'.L('progress').'</th><th> </th></tr></thead>
+		<tbody>';
 		foreach($langfiles as $lang){
 			unset($translation);
 			require('lang/'.$lang); # file $language variable
@@ -148,8 +171,15 @@ if ($lang != 'en' && file_exists($translationfile)) {
 				echo '<tr><td>en.php</td><td>is reference and fallback</td><td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">Translate '.substr($lang,0,-4).'</a></td></tr>';
 			}
 		}
+		foreach($workfiles as $workfile){
+			echo '<tr>
+			<td><a href="?do=langdiff&lang='.substr($workfile,1,-9).'">'.$workfile.'</a></td>
+			<td></td>
+			<td><a class="button" href="?do=langedit&lang='.substr($workfile,1,-9).'">'.L('translate').' '.substr($workfile,1,-9).'</a></td>
+			</tr>';
+		}
 		closedir($handle);
-		echo '</table>';
+		echo '</tbody></table>';
 	}
 }
 
@@ -160,4 +190,3 @@ $page->uses('content');
 $page->pushTpl('admin.translation.tpl');
 
 ?>
-

@@ -679,23 +679,26 @@ function quick_edit(elem, id)
     </div>
 
 
-    <div id="taskdetailsfull">
-        <h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
-            FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
-        </h2>
-        <span class="tags"><?php foreach($tags as $tag): ?><span><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
-        <div id="taskdetailstext"><?php echo $task_text; ?></div>
+<div id="taskdetailsfull">
+	<h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
+	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
+	</h2>
+	<span class="tags"><?php foreach($tags as $tag): ?><span class="tag t<?php echo $tag['tag_id']; ?>"><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
+	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
         $this->display('common.attachments.tpl', 'attachments', $attachments); ?>
 
         <?php $links = $proj->listTaskLinks($task_details['task_id']);
         $this->display('common.links.tpl', 'links', $links); ?>
-    </div>
+</div>
 
-    <div id="taskinfo">
+<div id="taskinfo">
         <?php if(!count($deps)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php 
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="dependency_table" class="table" width="100%">
             <caption><?php echo (count($deps)==1) ? eL('taskdependsontask') : eL('taskdependsontasks'); ?></caption>
             <thead>
@@ -752,7 +755,10 @@ function quick_edit(elem, id)
 
         <!-- This task blocks the following tasks: -->
         <?php if(!count($blocks)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="blocking_table" class="table" width="100%">
             <caption><?php echo (count($blocks)==1) ? eL('taskblock') : eL('taskblocks'); ?></caption>
             <thead>
@@ -816,7 +822,10 @@ function quick_edit(elem, id)
             }
         ?>
         <?php if(!count($subtasks)==0): ?>
-        <?php $projects = $fs->listProjects(); ?>
+        <?php
+        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
+        #$projects = $fs->listProjects();
+        ?>
         <table id="subtask_table" class="table" width="100%">
             <caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
             <thead>

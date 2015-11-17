@@ -169,17 +169,21 @@ class Notifications {
       return $db->FetchAllArray($notifications);
    }
 
-   static function NotificationsHaveBeenRead($ids) {
-      global $db, $fs, $user;
+	static function NotificationsHaveBeenRead($ids) {
+		global $db, $fs, $user;
 
-      $readones = join(",", array_map('intval', $ids));
-
-      $db->Query("DELETE FROM {notification_recipients}
-                        WHERE message_id IN ($readones)
-                          AND notify_method = ? AND notify_address = ?",
-                 array('o', $user['user_id']));
-
-   }
+		$readones = join(",", array_map('intval', $ids));
+		if($readones !=''){	
+			$db->Query("
+				DELETE FROM {notification_recipients}
+				WHERE message_id IN ($readones)
+				AND notify_method = ?
+				AND notify_address = ?",
+				array('o', $user['user_id']
+				)
+			);
+		}
+	}
 
    // {{{ Store Jabber messages for sending later
    function StoreJabber( $to, $subject, $body )
@@ -271,78 +275,71 @@ class Notifications {
 
       include_once BASEDIR . '/includes/class.jabber2.php';
 
-
-      if (empty($fs->prefs['jabber_server'])
-          || empty($fs->prefs['jabber_port'])
-          || empty($fs->prefs['jabber_username'])
-          || empty($fs->prefs['jabber_password'])) {
-            return false;
+      if ( empty($fs->prefs['jabber_server'])
+        || empty($fs->prefs['jabber_port'])
+        || empty($fs->prefs['jabber_username'])
+        || empty($fs->prefs['jabber_password'])) {
+          return false;
       }
 
-      // get listing of all pending jabber notifications
-      $result = $db->Query("SELECT DISTINCT message_id
+		// get listing of all pending jabber notifications
+		$result = $db->Query("SELECT DISTINCT message_id
                             FROM {notification_recipients}
                             WHERE notify_method='j'");
 
-      if (!$db->CountRows($result))
-      {
-         return false;
-      }
+		if (!$db->CountRows($result)) {
+			return false;
+		}
 
-      $JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
+		$JABBER = new Jabber($fs->prefs['jabber_username'] . '@' . $fs->prefs['jabber_server'],
                    $fs->prefs['jabber_password'],
                    $fs->prefs['jabber_ssl'],
                    $fs->prefs['jabber_port']);
-      $JABBER->login();
+		$JABBER->login();
 
+		// we have notifications to process - connect
+		$JABBER->log("We have notifications to process...");
+		$JABBER->log("Starting Jabber session:");
 
-      // we have notifications to process - connect
-      $JABBER->log("We have notifications to process...");
-      $JABBER->log("Starting Jabber session:");
+		$ids = array();
 
-      $ids = array();
+		while ( $row = $db->FetchRow($result) ) {
+			$ids[] = $row['message_id'];
+		}
 
-      while ( $row = $db->FetchRow($result) )
-      {
-         $ids[] = $row['message_id'];
-      }
+		$desired = join(",", array_map('intval', $ids));
+		$JABBER->log("message ids to send = {" . $desired . "}");
 
-      $desired = join(",", array_map('intval', $ids));
-      $JABBER->log("message ids to send = {" . $desired . "}");
+			// removed array usage as it's messing up the select
+			// I suspect this is due to the variable being comma separated
+			// Jamin W. Collins 20050328
+			$notifications = $db->Query("
+				SELECT * FROM {notification_messages}
+				WHERE message_id IN ($desired)
+				ORDER BY time_created ASC"
+			);
+		$JABBER->log("number of notifications {" . $db->CountRows($notifications) . "}");
 
-      // removed array usage as it's messing up the select
-      // I suspect this is due to the variable being comma separated
-      // Jamin W. Collins 20050328
-      $notifications = $db->Query("SELECT * FROM {notification_messages}
-                                   WHERE message_id IN ($desired)
-                                   ORDER BY time_created ASC"
-                                 );
+		// loop through notifications
+		while ( $notification = $db->FetchRow($notifications) ) {
+			$subject = $notification['message_subject'];
+			$body    = $notification['message_body'];
 
-      $JABBER->log("number of notifications {" . $db->CountRows($notifications) . "}");
-
-      // loop through notifications
-      while ( $notification = $db->FetchRow($notifications) )
-      {
-         $subject = $notification['message_subject'];
-         $body    = $notification['message_body'];
-
-         $JABBER->log("Processing notification {" . $notification['message_id'] . "}");
-
-            $recipients = $db->Query("SELECT * FROM {notification_recipients}
-                                      WHERE message_id = ?
-                                      AND notify_method = 'j'",
-                                      array($notification['message_id'])
-                                    );
+			$JABBER->log("Processing notification {" . $notification['message_id'] . "}");
+			$recipients = $db->Query("
+				SELECT * FROM {notification_recipients}
+				WHERE message_id = ?
+				AND notify_method = 'j'",
+				array($notification['message_id'])
+			);
 
             // loop through recipients
-            while ($recipient = $db->FetchRow($recipients) )
-            {
+            while ($recipient = $db->FetchRow($recipients) ) {
                $jid = $recipient['notify_address'];
                $JABBER->log("- attempting send to {" . $jid . "}");
 
                // send notification
-               if ($JABBER->send_message($jid, $body, $subject, 'normal'))
-               {
+               if ($JABBER->send_message($jid, $body, $subject, 'normal')) {
                    // delete entry from notification_recipients
                    $result = $db->Query("DELETE FROM {notification_recipients}
                                          WHERE message_id = ?
@@ -361,8 +358,7 @@ class Notifications {
                                   array($notification['message_id'])
                                 );
 
-            if ( $db->CountRows($result) == 0 )
-            {
+            if ( $db->CountRows($result) == 0 ) {
                $JABBER->log("No further recipients for message id {" . $notification['message_id'] . "}");
                // remove notification no more recipients
                $result = $db->Query("DELETE FROM {notification_messages}
@@ -573,7 +569,7 @@ class Notifications {
           -------------------------------
          */
 
-        $body = tL('donotreply') . "\n\n";
+        $body = tL('donotreply', $lang) . "\n\n";
         $online = '';
 
         // {{{ New task opened
@@ -984,76 +980,82 @@ class Notifications {
     }
 
 // }}}
-    // {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
-   function Address($task_id, $type) {
-        global $db, $fs, $proj, $user;
 
-        $users = array();
+	// {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
+	function Address($task_id, $type) {
+		global $db, $fs, $proj, $user;
 
-        $emails = array();
-        $jabbers = array();
-        $onlines = array();
+		$users = array();
+		$emails = array();
+		$jabbers = array();
+		$onlines = array();
 
-        $task_details = Flyspray::GetTaskDetails($task_id);
+		$task_details = Flyspray::GetTaskDetails($task_id);
 
-        // Get list of users from the notification tab
-        $get_users = $db->Query('SELECT *
-                                   FROM {notifications} n
-                              LEFT JOIN {users} u ON n.user_id = u.user_id
-                                  WHERE n.task_id = ?', array($task_id));
-
+		// Get list of users from the notification tab
+		$get_users = $db->Query('
+			SELECT * FROM {notifications} n
+			LEFT JOIN {users} u ON n.user_id = u.user_id
+			WHERE n.task_id = ?',
+			array($task_id)
+		);
         self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
 
-        // Get list of assignees
-        $get_users = $db->Query('SELECT *
-                                   FROM {assigned} a
-                              LEFT JOIN {users} u ON a.user_id = u.user_id
-                                  WHERE a.task_id = ?', array($task_id));
-
+		// Get list of assignees
+		$get_users = $db->Query('
+			SELECT * FROM {assigned} a
+			LEFT JOIN {users} u ON a.user_id = u.user_id
+			WHERE a.task_id = ?',
+			array($task_id)
+		);
         self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
-        // Now, we add the project contact addresses...
-        // ...but only if the task is public
-        if ($task_details['mark_private'] != '1' && in_array($type, Flyspray::int_explode(' ', $proj->prefs['notify_types']))) {
+
+		// Now, we add the project contact addresses...
+		// ...but only if the task is public
+		if ($task_details['mark_private'] != '1' 
+		    && in_array($type, Flyspray::int_explode(' ', $proj->prefs['notify_types']))) {
+
             // FIXME! Have to find users preferred language here too,
             // must fetch from database. But the address could also be a mailing
             // list address and user not exist in database, use fs->prefs in that case,
 
-            $proj_emails = preg_split('/[\s,;]+/', $proj->prefs['notify_email'], -1, PREG_SPLIT_NO_EMPTY);
-            $desired = implode("','", $proj_emails);
-            /*
-            echo "<pre>";
-            echo $desired;
-            echo "</pre>";
-             */
-            $get_users = $db->Query("SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
-                                      u.notify_online, u.notify_type, u.notify_own, u.lang_code
-                                FROM {users} u
-                                WHERE u.email_address IN ('$desired')");
+			$proj_emails = preg_split('/[\s,;]+/', $proj->prefs['notify_email'], -1, PREG_SPLIT_NO_EMPTY);
+			$desired = implode("','", $proj_emails);
+			if($desired !=''){
+				$get_users = $db->Query("
+					SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+					u.notify_online, u.notify_type, u.notify_own, u.lang_code
+					FROM {users} u
+					WHERE u.email_address IN ('$desired')"
+				);
 
-            self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+				self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+			}
+			
+			$proj_jids = explode(',', $proj->prefs['notify_jabber']);
+			$desired = implode("','", $proj_jids);
+			if($desired!='') {
+				$get_users = $db->Query("
+					SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+					u.notify_online, u.notify_type, u.notify_own, u.lang_code
+					FROM {users} u
+					WHERE u.jabber_id IN ('$desired')"
+				);
+				self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+			}
 
-            $proj_jids = explode(',', $proj->prefs['notify_jabber']);
-            $desired = implode("','", $proj_jids);
-
-            $get_users = $db->Query("SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
-                                      u.notify_online, u.notify_type, u.notify_own, u.lang_code
-                                FROM {users} u
-                                WHERE u.jabber_id IN ('$desired')");
-
-            self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+			// Now, handle notification addresses that are not assigned to any user...
+			foreach ($proj_emails as $email) {
+				if (!array_key_exists($email, $emails)) {
+					$emails[$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
+				}
+			}
             
-            // Now, handle notification addresses that are not assigned to any user...
-            foreach ($proj_emails as $email) {
-                if (!array_key_exists($email, $emails)) {
-                    $emails[$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
-                }
-            }
-            
-            foreach ($proj_jids as $jabber) {
-                if (!array_key_exists($jabber, $jabbers)) {
-                    $jabbers[$jabber] = array('recipient' => $jabber, 'lang' => $fs->prefs['lang_code']);
-                }
-            }
+			foreach ($proj_jids as $jabber) {
+				if (!array_key_exists($jabber, $jabbers)) {
+					$jabbers[$jabber] = array('recipient' => $jabber, 'lang' => $fs->prefs['lang_code']);
+				}
+			}
             /*
             echo "<pre>";
             echo var_dump($proj_emails);
@@ -1061,12 +1063,13 @@ class Notifications {
             echo "</pre>";
             */
             // End of checking if a task is private
-        }
-        // Send back three arrays containing the notification addresses
-        return array($emails, $jabbers, $onlines);
-    }
+		}
+		// Send back three arrays containing the notification addresses
+		return array($emails, $jabbers, $onlines);
+	}
 
 // }}}
+
     // {{{ Fix the message data
         /**
          * fixMsgData

@@ -1,3 +1,5 @@
+<?php $this->display('shortcuts.tpl'); ?>
+
 </div>
 <p id="footer">
     <!-- Please don't remove this line - it helps promote Flyspray -->

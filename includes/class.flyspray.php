@@ -21,8 +21,13 @@ class Flyspray
      * Current Flyspray version. Change this for each release.  Don't forget!
      * @access public
      * @var string
+     * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
+     * For making github release use e.g. '1.0-beta' here.
+     * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
+     * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
+     * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
      */
-    public $version = '1.0 Beta dev';
+	public $version = '1.0-rc dev';
 
     /**
      * Flyspray preferences
@@ -82,6 +87,10 @@ class Flyspray
 
         $sizes = array();
         foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
+        	if($val === '-1'){
+				// unlimited value in php configuration
+				$val = PHP_INT_MAX;
+			}
             if (!$val || $val < 0) {
                 continue;
             }
@@ -158,6 +167,9 @@ class Flyspray
 
         $url = FlySpray::absoluteURI($url);
 
+	if($_SERVER['REQUEST_METHOD']=='POST' && version_compare(PHP_VERSION, '5.4.0')>=0 ) {
+		http_response_code(303);
+	}
         header('Location: '. $url);
 
         if ($rfc2616 && isset($_SERVER['REQUEST_METHOD']) &&
@@ -378,29 +390,32 @@ class Flyspray
 
         return $get_details;
     } // }}}
-    // List projects {{{
-    /**
-     * Returns a list of all projects
-     * @param bool $active_only show only active projects
-     * @access public static
-     * @return array
-     * @version 1.0
-     */
-    public static function listProjects(/*$active_only = true*/) // FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
-    {
-        global $db;
 
-        $query = 'SELECT  project_id, project_title FROM {projects}';
+	// List projects {{{
+	/**
+	* Returns a list of all projects
+	* @param bool $active_only show only active projects
+	* @access public static
+	* @return array
+	* @version 1.0
+	*/
+	// FIXME: $active_only would not work since the templates are accessing the returned array implying to be sortyed by project id, which is aparently wrong and error prone ! Same applies to the case when a project was deleted, causing a shift in the project id sequence, hence -> severe bug!
+	# comment by peterdd 20151012: reenabled param active_only with false as default. I do not see a problem within current Flyspray version. But consider using $fs->projects when possible, saves this extra sql request.
+	public static function listProjects($active_only = false)
+	{
+		global $db;
+		$query = 'SELECT project_id, project_title, project_is_active FROM {projects}';
 
-//         if ($active_only)  {
-//             $query .= ' WHERE  project_is_active = 1';
-//         }
+		if ($active_only) {
+			$query .= ' WHERE project_is_active = 1';
+		}
 
-        $query .= ' ORDER BY  project_id ASC';
+		$query .= ' ORDER BY project_is_active DESC, project_id DESC'; # active first, latest projects first for option groups and new projects are probably the most used.
 
-        $sql = $db->Query($query);
-        return $db->fetchAllArray($sql);
-    } // }}}
+		$sql = $db->Query($query);
+		return $db->fetchAllArray($sql);
+	} // }}}
+    
     // List themes {{{
     /**
      * Returns a list of all themes
@@ -665,7 +680,7 @@ class Flyspray
             return 0;
         }
 
-        if( method != 'ldap' ){
+        if( $method != 'ldap' ){
         //encrypt the password with the method used in the db
         switch (strlen($auth_details['user_pass'])) {
             case 40:
@@ -928,23 +943,27 @@ class Flyspray
 
         return $changes;
     } // }}}
-    
+
 	// {{{
         /**
         * Get all tags of a task
         * @access public static
         * @return array
         * @version 1.0
-        * old tag feature, reads flyspray_tags table!
-        * just for bit better structure and stub 
         */
         public static function getTags($task_id)
         {
                 global $db;
-                $sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                # pre FS1.0beta
+                #$sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                # since FS1.0beta
+                $sql = $db->Query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
+                        JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
+                        WHERE task_id = ?
+                        ORDER BY list_position', array($task_id));
                 return $db->FetchAllArray($sql);
 	} /// }}}
-    
+
     // {{{
     /**
      * Get a list of assignees for a task
@@ -1243,7 +1262,7 @@ class Flyspray
 
         if ($conn = @fsockopen($connect, $port, $errno, $errstr, 10)) {
             $out =  "GET {$url['path']} HTTP/1.0\r\n";
-            $out .= "Host: {$url['host']}\r\n\r\n";
+            $out .= "Host: {$url['host']}\r\n";
             $out .= "Connection: Close\r\n\r\n";
 
             stream_set_timeout($conn, 5);

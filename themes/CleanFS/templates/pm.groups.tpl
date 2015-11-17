@@ -1,52 +1,46 @@
 <div id="toolbox">
-  <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('groupmanage')); ?></h3>
-  <?php if ($user->perms('is_admin')): ?>
-  <p>
-    <!--<img src="<?php echo Filters::noXSS($this->get_image('personal')); ?>" alt="" class="middle" />-->
-    <a href="<?php echo Filters::noXSS(CreateURL('admin', 'newuser', $proj->id)); ?>"><?php echo Filters::noXSS(L('newuser')); ?></a>
-  </p>
-  <?php endif; ?>
-  <p>
-    <!--<img src="<?php echo Filters::noXSS($this->get_image('kuser')); ?>" alt="" class="middle" />-->
-    <a href="<?php echo Filters::noXSS(CreateURL('pm', 'newgroup', $proj->id)); ?>"><?php echo Filters::noXSS(L('newgroup')); ?></a>
-  </p>
+<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('groupmanage')); ?></h2>
+<?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo CreateURL('admin', 'newuser', $proj->id); ?>"><i class="fa fa-user-plus fa-lg fa-fw"></i> <?php echo Filters::noXSS(L('newuser')); ?></a><?php endif; ?>
+<a class="button" href="<?php echo Filters::noXSS(CreateURL('pm', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a>
   
-  <div class="groupedit">
-  <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-    <ul class="form_elements">
-      <li>
-        <label for="selectgroup"><?php echo Filters::noXSS(L('editgroup')); ?></label>
-        <select name="id" id="selectgroup"><?php echo tpl_options(Flyspray::ListGroups($proj->id)); ?></select>
-        <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
-        <input type="hidden" name="do" value="pm" />
-        <input type="hidden" name="area" value="editgroup" />
-        <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
-      </li>
-    </ul>
-  </form>
-  <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-    <ul class="form_elements">
-      <li>
-        <label for="edit_user"><?php echo Filters::noXSS(L('edituser')); ?></label>
-        <?php echo tpl_userselect('user_name', '', 'edit_user'); ?>               
-        <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
-  
-        <input type="hidden" name="do" value="user" />
-        <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
-      </li>
-    </ul>
-  </form>
+<form style="display:inline-block" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+<label for="edit_user"><?php echo Filters::noXSS(L('edituser')); ?></label>
+<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>               
+<button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
+<input type="hidden" name="do" value="user" />
+<input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
+</form>
 <?php
+# 'group_open 'is not relevant for project groups, so lets not add it here.
 $perm_fields = array(
-'is_admin', 'manage_project', 'view_tasks',
-'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks', 'edit_assignments',
-'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-'create_attachments', 'delete_attachments',
-'view_history', 'close_own_tasks', 'close_other_tasks',
-'assign_to_self', 'assign_others_to_self', 'view_reports',
-'add_votes', 'edit_own_comments', 'view_estimated_effort',
-'track_effort', 'view_current_effort_done', 'add_multiple_tasks',
-'view_roadmap'
+'is_admin',
+'manage_project',
+'view_tasks',
+'view_groups_tasks', # TODO: What is the definition of "group's task" and how does it effect project views?
+'view_own_tasks',    # TODO: What is the definition of "own task" and how does it effect project views?
+'open_new_tasks',
+'add_multiple_tasks',
+'modify_own_tasks',
+'modify_all_tasks',
+'create_attachments',
+'delete_attachments',
+'assign_to_self',
+'assign_others_to_self',
+'edit_assignments',
+'close_own_tasks',
+'close_other_tasks',
+'view_roadmap',
+'view_history',
+'view_reports',
+'add_votes',
+'view_comments',
+'add_comments',
+'edit_comments',
+'edit_own_comments',
+'delete_comments',
+'view_estimated_effort',
+'view_current_effort_done',
+'track_effort'
 );
 
 $yesno = array(
@@ -54,54 +48,84 @@ $yesno = array(
   '<td title="'.eL('yes').'"><i class="good fa fa-check fa-lg"></i></td>'
 );
 
-# 20150727 peterdd: This a temporary hack
-$i = 0;
-$html = 'TODO: Show also global group permissions as hint for understanding permission system better for project managers.
-<table class="permcols"><tr>';
-$projpermnames = '';
-
 $merge=array_merge($groups,$globalgroups);
 
+$perms=array();
+$gmembers='';
+$gnames='';
+$gdesc='';
+$cols='';
 foreach ($merge as $group){
-  $html .= '<td><table class="perms'.($group['project_id']==0 ? ' globalgroup':'').'"><thead>
-  <tr>'.
-  ($i == 0 ? '<th>'.L('groupmembers').'</th>' : '').
-  '<td>'.$group['users'].'</td>
-  </tr> 
-  <tr>'.
-  ($i == 0 ? '<th>'.L('group').' </th>' : '').
-  '<th>'.($group['project_id']==0 ? $group['group_name'] : '<a class="button" style="white-space:nowrap" title="'.eL('editgroup')
-.'" href="?id='.$group['group_id'].'&amp;do=pm&amp;area=editgroup&amp;project='.$group['project_id'].'">'.$group['group_name']
-.'<i class="fa fa-pencil fa-lg fa-fw"></i></a>').'</th>
-  </tr>
-  <tr>'.
-  ($i == 0 ? '<th>'.L('description').'</th>' : '').
-  '<td>'.$group['group_desc'].'</td></tr>
-  </thead><tbody>';
-  foreach ($group as $key => $val) {
-    if (!is_numeric($key) && in_array($key, $perm_fields)) {
-      $html .= '<tr>';
-      $html .= $i == 0 ? '<th style="max-width:300px;white-space:nowrap">'.eL(str_replace('_', '', $key)).'</th>' : '';
-      $html .= ($group['is_admin'] && $val == 0)? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val];
-      $html .= '</tr>';
-      $projpermnames .= $i == 1 ? '<tr><td>'.eL(str_replace('_', '', $key)).'</td></tr>' : '';
-    }
-  }
-  $html .= '</tbody></table></td>';
-  $i++;
+	$cols.='<col class="group g'.$group['group_id'].($group['project_id']==0?' globalgroup':'').($group['project_id']==0 && $group['group_open']==0?' inactive':'').'"></col>';
+	$gmembers.='<td>'.$group['users'].'</td>';
+	if($group['project_id']!=0) {
+		$gnames.='<td><a class="button" title="'.eL('editgroup').'" href="'.(CreateURL('editgroup', $group['group_id'], 'pm')).'">'.$group['group_name'].'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
+	} else {
+		$gnames.='<th title="'.eL('isglobalgroup').'">'.$group['group_name'].'</th>';
+	}
+	$gdesc.='<td>'.$group['group_desc'].'</td>';
+	foreach ($group as $key => $val) {
+		if (!is_numeric($key) && in_array($key, $perm_fields)) {
+			$perms[$key][]=$val;
+		}
+	}
 }
-$html .= '</tr></table>
-<style>
-.permcols th, .permcols td {padding:0;margin:0;}
-.perms, .permcols {border-collapse:collapse;}
-.perms thead{border-bottom:1px solid #999;}
-.perms th, .perms td {max-width:120px;max-height:24px;height:24px;text-overflow:ellipsis;overflow:hidden;border:none;padding:2px;}
-.perms td{text-align:center;}
-.perms th{text-align:right;}
-.perms.globalgroup {background-color:#eee;}
-.perms tr:nth-child(3) td {height:3em;overflow:hidden;text-overflow:ellipsis;display:block;}
-</style>';
-echo $html;
 ?>
-  </div>
+<style>
+.perms {border-collapse:collapse;margin-top:20px;}
+.perms tbody tr:hover {background-color:#eee;}
+.perms td, .perms th{border:1px solid #999;}
+.perms thead th, .perms thead td {text-align:center;}
+.perms tbody th{text-align:right;}
+.perms tbody td{width:100px;text-align:center;}
+.perms tbody span i:first-child {color: #090;}
+.group.globalgroup {background-color:#ddd;}
+.group.globalgroup.inactive {background-color:#ccc;}
+</style>
+<table class="perms">
+<colgroup>
+<col></col>
+<?php echo $cols; ?>
+</colgroup>
+<thead>
+<tr>
+<th><?php echo L('groupmembers'); ?></th>
+<?php echo $gmembers; ?>
+</tr>
+<tr>
+<th><?php echo L('group'); ?></th>
+<?php echo $gnames; ?>
+</tr>
+<tr>
+<th><?php echo L('description'); ?></th>
+<?php echo $gdesc; ?>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($perm_fields as $p): ?>
+<tr>
+<th><?php echo eL(str_replace('_', '', $p)); ?></th>
+<?php
+require_once('permicons.tpl');
+$i=0; 
+# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+foreach($perms[$p] as $val){
+  if ($perms['is_admin'][$i]==1 && $val == 0){
+    if(isset($permicons[$p])){
+      echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
+    }else{
+      echo $yesno[1];
+    }
+  } elseif($val==1 && isset($permicons[$p])){
+    echo '<td>'.$permicons[$p].'</td>';
+  } else{
+    echo $yesno[$val];
+  }
+  $i++;
+} 
+?>
+</tr> 
+<?php endforeach; ?>
+</tbody>
+</table>
 </div>

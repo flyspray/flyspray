@@ -17,10 +17,12 @@
 			return true;
 		}
 		var detail = document.getElementById("details").value;
+    		var project_id = document.getElementsByName('project_id')[0].value;
+
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
 		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlHttp.send("summary=" + summary + "&detail=" + detail);
+		xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
 		if(xmlHttp.status === 200) {
 			if(xmlHttp.responseText > 0) {
 				var res = confirm("There is already a similar task, do you still want to create?");
@@ -194,15 +196,13 @@
       <div id="taskdetailsfull">
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-        <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" class="text severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
-            name="item_summary" maxlength="100" style="width:100%;box-sizing:border-box;height:auto;margin-bottom:20px;margin-top:8px;" />
-        <!--
+        <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+            name="item_summary" maxlength="100" />
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
         <input id="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>" class="text" type="text"
-        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" style="min-width:300px" />
+        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" />
 	</div>
-	-->
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
         <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>

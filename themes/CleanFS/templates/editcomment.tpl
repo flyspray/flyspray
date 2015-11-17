@@ -74,7 +74,8 @@
 						</noscript>
 					<?php endif; ?>
 					</div>
-				<button accesskey="s" tabindex="9" type="submit" class="positive" style="display:block"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
+				<button accesskey="s" tabindex="9" type="submit" class="positive"><?php echo Filters::noXSS(L('saveeditedcomment')); ?></button>
+				<a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $comment['task_id'])); ?>"><?php echo Filters::noXSS(L('canceledit')); ?></a>
 				</form>
 			</div>
 		</div>

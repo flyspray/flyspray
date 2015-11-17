@@ -36,6 +36,7 @@ $translation = array(
 'attachfiles'             => 'Vedhæft fil',
 'vote'                    => 'Stem',
 'groupenabled'            => 'Medlemmer kan logge ind',
+'groupopen'               => 'Medlemmer kan logge ind',
 'tasktypelist'            => 'Opgave typer',
 'categorylist'            => 'Kategorier',
 'oslist'                  => 'Operativsystemer',

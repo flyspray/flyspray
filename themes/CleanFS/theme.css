@@ -233,10 +233,10 @@ a:hover {color: #6699cc;}
 #menu-list {display: inline;margin: 0;padding: 0;list-style: none; }
 #menu-list a, #menu-list label{color: #ddd;text-decoration: none;padding: 3px 7px; }
 #menu-list a:hover {
-  background: #494d4e;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  background: #000;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #s_loginbox, #s_quickactions { display: none;}
 #loginbox, #actionsform { display: none;}
@@ -248,10 +248,11 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
 }
+#s_loginbox:checked ~ #show_loginbox{border-radius: 3px 3px 0 0;}
 #menu-list a#lastsearchlink.active {
-      -moz-border-radius: 10px 10px 0px 0px;
-      -webkit-border-radius: 10px 10px 0px 0px;
-      border-radius: 10px 10px 0px 0px;
+      -moz-border-radius: 3px 3px 0px 0px;
+      -webkit-border-radius: 3px 3px 0px 0px;
+      border-radius: 3px 3px 0px 0px;
 }
 #menu-list li {
       display: block;
@@ -309,7 +310,7 @@ div#mysearches td {vertical-align: middle;}
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
-#pm-menu-list a:hover { background-color: #3c4041; border-left: 1px solid #3c4041;}
+#pm-menu-list a:hover { background-color: #000; border-left: 1px solid #000;}
 #pm-menu-list a.active {
         border-left: none;
         border-top: 1px solid #6cab2e;
@@ -368,7 +369,7 @@ a.button img, button.button img {
   height: 16px;
   float: none;
 }
-a.button:hover, button.button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
+a.button:hover, button:hover, .button:hover, input[type=submit] {background-color: #f2f2f2;border: 1px solid #a1a1a1;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
 body a.positive, body button.positive {
@@ -405,6 +406,7 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border-radius: 3px;
 }
 #tasklist_table {width: 100%;}
+span.pagenums:before{ content:"--";padding-left:10px;padding-right:10px;}
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -440,6 +442,7 @@ body.toplevel .single-project {
   display: block;
   height: auto;
 }
+body.myprofile .box {display:inline-block;vertical-align:top;}
 .progress_bar_container {
   width: 150px;
   margin: 0 5px;
@@ -480,8 +483,8 @@ body.toplevel .single-project {
     line-height: 1em;
     text-shadow: 0 0 6px white;
 }
-td.task_progress .progress_bar_container { width: 100%;}
-a { text-decoration: none;}
+td.task_progress .progress_bar_container {width: 100%;}
+a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
 #tasklist_table td.caret {width: 15px;padding: 0 !important;}
@@ -497,7 +500,7 @@ a { text-decoration: none;}
 }
 #tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
-
+#tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
 tr.severity2 .task_severity {background-color: #fff;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
@@ -596,13 +599,28 @@ form #taskdetailsfull {
 }
 #taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
-.tags span {
+
+.group.inactive{ background-color:#eee;}
+.tag {
     background: #eee none repeat scroll 0 0;
     border: 1px solid #ddd;
     border-radius: 3px;
-    margin: 3px;
-    padding: 4px;
+    margin-left: 3px;
+    padding: 3px;
+    font-style:normal;
+    white-space: nowrap;
+    vertical-align:middle;
 }
+.tag:before{
+	font-family:fontawesome;
+}
+/* style your tags by their tag_id, may be managed by tag list management in admin/proeject settings */
+/*
+.tag.t1{background-color:#666;}
+.tag.t1:before{content:'\f153';color:#cc0;}
+.tag.t2{background-color:#0c0;}
+.tag.t3{background-color:#09c;}
+*/
 #taskfields {
   width: 290px;
   float: left;
@@ -646,6 +664,7 @@ form #taskdetailsfull {
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {margin-left: 291px;padding: 2em 3em;}
+#itemsummary, #tags {width:100%;box-sizing:border-box;height:auto;margin-bottom:10px;margin-top:8px;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskinfo {
@@ -764,9 +783,9 @@ div.comment_container .attachments {
 	*/
 	vertical-align: top;
 }
-.attachments::after {
+div.attachments::after {
     color: #999;
-    content: "\f0c6"; /*paperclip*/
+    content: "\f0c6"; /*fa-paperclip*/
     float: right;
     font-family: FontAwesome;
     font-size: large;
@@ -787,12 +806,12 @@ div.comment_container .attachments img {
 	position: relative;
 	top: 4px;
 }
-div.comment_container #addlinkbox {
+div.comment_container #addlinkbox, #taskdetailsfull #addlinkbox {
 	display: inline-block;
 	width: 50%;
 	vertical-align: top;
 }
-div.comment_container #uploadfilebox {
+div.comment_container #uploadfilebox, #taskdetailsfull #uploadfilebox {
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
@@ -856,14 +875,13 @@ div.success {
   color: #24380d;
 }
 a#show_loginbox {margin-right: 5px;}
-#menu a#show_loginbox.active {border-radius: 3px 3px 0 0;}
 #loginbox {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  border-radius: 3px 0 3px 3px;
+  -moz-border-radius: 3px 0 3px 3px;
+  -webkit-border-radius: 3px 0 3px 3px;
   background: #ddd;
   border: solid 3px #5f9729;
-  right: 5px;
+  right: 2px;
   z-index: 200;
   min-width: 240px;
   padding-top: 15px;
@@ -969,16 +987,9 @@ fieldset.advsearch_users input {margin-top: 1.5em;}
 .account_enabled:hover {background: #00FF00;}
 .account_disabled{background: #FFD1D1;border: 1px solid #F8ACAC;}
 .account_disabled:hover {background: #FF0000;}
-ul.form_elements {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 1em;
-}
-ul.form_elements li {
-  padding: 2px;
-  margin-bottom: 9px;
-}
-ul.form_elements li label {
+ul.form_elements {list-style: none;padding: 0;margin: 0 0 0 1em;}
+ul.form_elements li {padding: 2px;margin-bottom: 9px;}
+ul.form_elements label {
       width: 200px;
       display: -moz-inline-stack;
       /* optional */
@@ -989,48 +1000,23 @@ ul.form_elements li label {
       text-align: end;
       padding-right: 1ex;
       padding-top: 2px;
-      color: #555555;
+      color: #555;
 }
-ul.form_elements li label.inline {
-  display: inline;vertical-align:middle;
-}
-ul.form_elements li input {
-  vertical-align: middle;
-}
-ul.form_elements li input[type="text"], ul.form_elements li input[type="password"]  {
-	width:300px;
-}
-ul.form_elements li.required label {
-  font-weight: bold;
-}
-ul.form_elements span.note {
-  margin-left: 205px;
-}
-ul.wide li label {
-  width: 250px;
-}
-ul.slim {
-  width: 390px;
-  margin: 0;
-}
-ul.slim li label {
-  width: 110px;
-}
-ul.slim li div.userSelectWidget {
-    display: -moz-inline-stack;
-    /* optional */
-    display: inline-block;
-    zoom: 1; /* triggers hasLayout for IE */
-    *display: inline; /* target IE7 only */
-    vertical-align: middle;
-}
-ul.slim li div.userSelectWidget input {
-  width: 80px;
-}
-ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:left;}
-.dateselect {
-  clear: both;
-}
+ul.form_elements label.inline {display: inline;vertical-align:middle;}
+ul.form_elements label.labeltextarea {width:auto;display:block;text-align:left;}
+ul.form_elements input {vertical-align: middle;}
+ul.form_elements input[type="text"], ul.form_elements input[type="password"] {width:300px;}
+ul.slim li {margin-bottom:0;padding-bottom:4px;}
+ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
+ul.slim label {width:110px;}
+ul.form_elements li.required label {font-weight: bold;}
+ul.form_elements span.note {margin-left:205px;}
+ul.wide label {width:250px;}
+ul.slim {margin:0;}
+ul.slim .userSelectWidget {width:95%;margin-left:auto;margin-right:auto;}
+ul.slim .userSelectWidget input {width:100px;}
+ul.slim .userSelectWidget select {width:100%;}
+.dateselect {clear: both;}
 .dateselect label:first-child {
   width: 120px;
   text-align: right;
@@ -1038,9 +1024,7 @@ ul.form_elements li label.labeltextarea {width:auto;display:block;text-align:lef
   float: left;
 }
 /* fancy dual selects */
-.double_select {
-  position: relative;
-}
+.double_select {position: relative;}
 .double_select .dualselect_selectable {
   height: 220px;
   width: 40%;
@@ -1175,15 +1159,17 @@ div#closeform {
     position: absolute;
 }
 #actionsform li:hover li {float: none;font-size: 11px;}
-#setparentform, #associateform,#adddepform {
+#edit_add_comment{display:none;}
+#setparentform, #associateform, #adddepform {
 	display:none;
 	background: #363a3b;
 	color:#fff;
 	padding-left: 5px;
 }
-#s_parent, #s_associate, #s_adddependent {
+#s_parent, #s_associate, #s_adddependent, #s_addcomment {
 	display:none;
 }
+#s_addcomment:checked ~ #edit_add_comment,
 #s_parent:checked ~ #setparentform,
 #s_associate:checked ~ #associateform,
 #s_adddependent:checked ~ #adddepform{
@@ -1205,36 +1191,17 @@ input[type=text], input[type=password]{
 #table input[type=text] {
     width: 120px;
 }
-/*
-input[type=submit], button {
-    background: #69C;
-    border:  1px solid #0a4193;
-    color: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 20px;
-    vertical-align: middle;
-}
-*/
 input[type=text], input[type=submit], button {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-/* button {vertical-align: middle; margin-bottom: 2px; line-height: 20px;} */
-/*
-input[type=submit]:hover, button:hover {
-    background: #5F9729;
-    color: #fff;
-    border-color: #5F9729;
-}
-*/
 #show_loginbox {
-    background: #494D4E;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+	cursor:pointer;
+	background: #494D4E;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
 div.denyform {
@@ -1296,15 +1263,15 @@ div.denyform {
 	min-height: 50px;
 	padding: 8px 5px;
 }
-.assignedto {border:0px;border-collapse: collapse;}
-.assignedto table, .assignedto td {
+table.assignedto {border:0px;border-collapse: collapse;}
+table.assignedto tr {height: 30px;}
+table.assignedto td {
 	margin:0px;
 	padding:0px;
 	padding-right: 5px;
 	vertical-align: middle;
 }
-.assignedto tr {height: 30px;}
-.assignedto img {padding-top: 2px;}
+table.assignedto img {padding-top: 2px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}

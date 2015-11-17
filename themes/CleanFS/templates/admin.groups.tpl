@@ -33,65 +33,114 @@
 
 <?php
 $perm_fields = array(
-'is_admin', 'manage_project', 'view_tasks',
-'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks', 'edit_assignments',
-'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-'create_attachments', 'delete_attachments',
-'view_history', 'close_own_tasks', 'close_other_tasks',
-'assign_to_self', 'assign_others_to_self', 'view_reports',
-'add_votes', 'edit_own_comments', 'view_estimated_effort',
-'track_effort', 'view_current_effort_done', 'add_multiple_tasks',
-'view_roadmap'
+'group_open',
+'is_admin',
+'manage_project',
+'view_tasks',
+'view_groups_tasks', # TODO: What is the definition of "group's task" and how does it effect project views?
+'view_own_tasks',    # TODO: What is the definition of "own task" and how does it effect project views?
+'open_new_tasks',
+'add_multiple_tasks',
+'modify_own_tasks',
+'modify_all_tasks',
+'create_attachments',
+'delete_attachments',
+'assign_to_self',
+'assign_others_to_self',
+'edit_assignments',
+'close_own_tasks',
+'close_other_tasks',
+'view_roadmap',
+'view_history',
+'view_reports',
+'add_votes',
+'view_comments',
+'add_comments',
+'edit_comments',
+'edit_own_comments',
+'delete_comments',
+'view_estimated_effort',
+'view_current_effort_done',
+'track_effort'
 );
 
 $yesno = array(
-	'<td style="color:#ccc" title="'.eL('no').'">-</td>',
-	'<td title="'.eL('yes').'"><i class="good fa fa-check fa-lg"></i></td>'
+        '<td style="color:#ccc" title="'.eL('no').'">-</td>',
+        '<td title="'.eL('yes').'"><i class="good fa fa-check fa-lg"></i></td>'
 );
 
-# 20150307 peterdd: This a temporary hack
-$i = 0;
-$html = '<table class="permcols"><tr>';
-$projpermnames = '';
-
+$perms=array();
+$gmembers='';
+$gnames='';
+$gdesc='';
+$cols='';
 foreach ($groups as $group){
-	#print_r($group);
-	$html .= '<td><table class="perms"><thead>
-	<tr>'.
-	($i == 0 ? '<th>'.L('groupmembers').'</th>' : '').
-	'<td>'.$group['users'].'</td>
-	</tr>
-	<tr>'.
-	($i == 0 ? '<th>'.L('group').' </th>' : '').
-	'<th><a class="button" style="white-space:nowrap" title="'.eL('editgroup').'" href="?id='.$group['group_id'].'&amp;do=admin&amp;area=editgroup">'.$group['group_name'].'<i class="fa fa-pencil fa-lg fa-fw"></i></a></th>
-	</tr>
-	<tr>'.
-	($i == 0 ? '<th>'.L('description').'</th>' : '').
-	'<td style="height:6em;overflow:hidden;width:10em">'.$group['group_desc'].'</td></tr>
-	</thead><tbody>';
+	$cols.='<col class="group g'.$group['group_id'].($group['group_open']==0?' inactive':'').'"></col>';
+	$gmembers.='<td>'.$group['users'].'</td>';
+	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(CreateURL('editgroup', $group['group_id'], 'admin'))).'">'.$group['group_name']
+		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
+	$gdesc   .='<td>'.$group['group_desc'].'</td>';
 	foreach ($group as $key => $val) {
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
-			$html .= '<tr>';
-			$html .= $i == 0 ? '<th style="max-width:300px;white-space:nowrap">'.eL(str_replace('_', '', $key)).'</th>' : '';
-			$html .= ($group['is_admin'] && $val == 0)? '<td title="'.eL('yes').' - Permission granted because of is_admin">(<i class="fa fa-check"></i>)</td>' : $yesno[$val];
-			$html .= '</tr>';
-			$projpermnames .= $i == 1 ? '<tr><td>'.eL(str_replace('_', '', $key)).'</td></tr>' : '';
+			$perms[$key][]=$val;
 		}
 	}
-	$html .= '</tbody></table></td>';
-	$i++;
 }
-$html .= '</tr></table>
-<style>
-.permcols th, .permcols td {padding:0;margin:0;}
-.perms, .permcols {border-collapse:collapse;}
-.perms thead{border-bottom:1px solid #999;}
-.perms th, .perms td {max-width:120px;max-height:24px;height:24px;text-overflow:ellipsis;overflow:hidden;border:none;padding:2px;}
-.perms td{text-align:center;}
-.perms th{text-align:right;}
-</style>';
-
-echo $html;
 ?>
+<style>
+.perms {border-collapse:collapse;}
+.perms tbody tr:hover {background-color:#eee;}
+.perms td, .perms th{border:1px solid #999;}
+.perms thead th, .perms thead td {text-align:center;}
+.perms tbody th{text-align:right;}
+.perms tbody td{width:100px;text-align:center;}
+.perms tbody span i:first-child {color: #090;}
+</style>
+<table class="perms">
+<colgroup> 
+<col></col>
+<?php echo $cols; ?>
+</colgroup>
+<thead>
+<tr>
+<th><?php echo L('groupmembers'); ?></th>
+<?php echo $gmembers; ?>
+</tr>
+<tr> 
+<th><?php echo L('group'); ?></th>
+<?php echo $gnames; ?>
+</tr>
+<tr>
+<th><?php echo L('description'); ?></th>
+<?php echo $gdesc; ?>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($perm_fields as $p): ?>
+<tr>
+	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
+<?php
+require_once('permicons.tpl');
+$i=0;
+# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+foreach($perms[$p] as $val){
+        if ($perms['is_admin'][$i]==1 && $val == 0){
+                if(isset($permicons[$p])){
+                        echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
+                }else{
+                        echo $yesno[1];
+                }
+        } elseif($val==1 && isset($permicons[$p])){
+                echo '<td>'.$permicons[$p].'</td>';
+        } else{
+                echo $yesno[$val];
+        }
+        $i++;
+}
+?>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
 </div>
 </div>
