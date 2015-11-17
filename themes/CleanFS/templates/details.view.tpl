@@ -726,26 +726,17 @@ function quick_edit(elem, id)
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
-
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
                 <!-- <td>Assignees TODO</td> -->
                 <td>
-                    <?php
-                        echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])));
-                    ?>
+                    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
                     <input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
                     <input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                     <input type="hidden" name="action" value="removedep" />
-                    <input type="image"  src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
+                    <button type="submit" title="<?php echo Filters::noXSS(L('remove')); ?>" class="fa fa-unlink fa-lg"></button>
                     </form>
-                    <!--
-                    <a class="removedeplink"
-                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
-                        <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
-                    </a>
-                    -->
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -786,26 +777,17 @@ function quick_edit(elem, id)
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
-
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
                 <!-- <td>Assignees TODO</td> -->
                 <td>
-                    <?php
-                        echo tpl_form(Filters::noXSS(CreateURL('details', $dependency['task_id'])));
-                    ?>
+                    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $dependency['task_id']))); ?>
                     <input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
                     <input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                     <input type="hidden" name="action" value="removedep" />
-                    <input type="image"  src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
+                    <button type="submit" title="<?php echo Filters::noXSS(L('remove')); ?>" class="fa fa-unlink fa-lg"></button>
                     </form>
-                    <!--
-                    <a class="removedeplink"
-                       href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=details&amp;action=removedep&amp;depend_id=<?php echo Filters::noXSS($dependency['depend_id']); ?>&amp;task_id=<?php echo Filters::noXSS($dependency['task_id']); ?>&amp;return_task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>">
-                        <img src="<?php echo Filters::noXSS($this->get_image('button_cancel')); ?>" alt="<?php echo Filters::noXSS(L('remove')); ?>" title="<?php echo Filters::noXSS(L('remove')); ?>"/>
-                    </a>
-                    -->
                 </td>
             </tr>
             <?php endforeach; ?>
