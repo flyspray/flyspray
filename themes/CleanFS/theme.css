@@ -269,6 +269,7 @@ div#mysearches {
   -webkit-border-radius: 4px;
   border: solid 3px #5f9729;
   overflow: auto;
+  min-width:240px;
   max-height: 25em;
   display: none;
   position: absolute;
