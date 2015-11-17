@@ -58,6 +58,7 @@ $language = array(
 'baseurl'                 => 'Base URL for this installation',
 'replyaddress'            => 'Reply email address for notifications',
 'themestyle'              => 'Theme / Style',
+'customstyle'             => 'custom',
 'language'                => 'Language',
 'anonview'                => 'Allow anonymous users to view tasks',
 'allowanon'               => 'Allow anonymous users to open new tasks',
