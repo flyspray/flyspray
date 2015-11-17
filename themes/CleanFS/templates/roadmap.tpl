@@ -23,6 +23,10 @@ function showAll(allTasks)
 
 <?php foreach($data as $milestone): ?>
 
+-<script type="text/javascript">
+-allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milestone['open_tasks'] as $task): echo $task['task_id'] . ','; endforeach; ?>];
+-</script>
+
 <div class="box roadmap">
 <h3><?php echo Filters::noXSS(L('roadmapfor')); ?> <?php echo Filters::noXSS($milestone['name']); ?>
 
