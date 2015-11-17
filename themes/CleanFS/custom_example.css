@@ -16,9 +16,8 @@ tr.severity3, tr.severity3 .task_severity, tr.severity3 .task_id {background: #f
 tr.severity2 .task_severity, tr.severity2 .task_id {background: #eee linear-gradient(#fff, #eee) repeat scroll 0 0;}
 
 /* highly experimental! may move to default css if finshed */
-#tasklist_table tbody tr td {padding-top:0px; padding-bottom:0px;border-top:none; border-bottom:1px dotted #ccc;}
-th.tasktype, th.severity, th.priority
-{ width:20px;max-width:20px;overflow:hidden;}
+#tasklist_table tbody tr td {padding-top:0px; padding-bottom:0px;border-top:none; border-bottom:1px dotted #ccc;vertical-align:middle;}
+th.tasktype, th.severity, th.priority {width:20px;max-width:20px;overflow:hidden;}
 
 tr .typ1, tr .typ2, tr .typ3, tr .typ4, tr .typ5,
 tr .sev1, tr .sev2, tr .sev3, tr .sev4, tr .sev5,
