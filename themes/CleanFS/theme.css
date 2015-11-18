@@ -611,9 +611,8 @@ form #taskdetailsfull {
     white-space: nowrap;
     vertical-align:middle;
 }
-.tag:before{
-	font-family:fontawesome;
-}
+.tag:before {font-family:fontawesome;}
+.tag:after {content:attr(title);}
 /* style your tags by their tag_id, may be managed by tag list management in admin/proeject settings */
 /*
 .tag.t1{background-color:#666;}
