@@ -238,11 +238,12 @@ function quick_edit(elem, id)
 				}else{
 					target.innerHTML = text;
 				}
-				// TODO show some kind of ok sign icon for a successful save
+				elem.parentNode.className='fa fa-check';
 				show_hide(elem, false);
 			}else{
 				// TODO show error message returned from the server and let quickedit form open
-				elem.parentNode.style["background-color"]='#ff6600'; // at least show something went wrong
+				
+				elem.parentNode.className='fa fa-warning';
 			}
 		}
 	}
