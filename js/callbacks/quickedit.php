@@ -43,7 +43,7 @@ if (!$user->can_edit_task($task)){
 # maybe FUTURE: add (dynamic read from database) allowed CUSTOM FIELDS checks for the project and user
 # (if there is urgent request for implementing custom fields into Flyspray and using of tag-feature isn't enough to accomplish - like numbers/dates/timestamps as custom fields)
 $allowedFields=array('due_date','item_status','percent_complete','task_type','product_category','task_severity','task_priority','product_version','closedby_version');
-if ($proj->prefs['use_effort_tracking'] && $user->perm('track_effort')){
+if ($proj->prefs['use_effort_tracking'] && $user->perms('track_effort')){
 	$allowedFields[]='estimated_effort';
 }
 
