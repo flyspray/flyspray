@@ -3,9 +3,6 @@ _tags.css will be overwritten by Flyspray upgrades.
 Your customized tags.css will stay untouched during Flyspray upgrades and reflects your tag settings in admin area.
 */
 
-/* show the text of the tag by default */
-.tag:after { content:attr(title);}
-
 /* you can overwrite default tag style from theme.css */
 /*.tag {border-width:3px;}*/
 
