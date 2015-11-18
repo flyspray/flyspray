@@ -27,7 +27,7 @@
      href="<?php echo Filters::noXSS(CreateURL('admin', 'version')); ?>"><?php echo Filters::noXSS(L('versions') ); ?></a>
   <a id="globoslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'os') echo $activeclass; ?>
-     href="<?php echo Filters::noXSS(CreateURL('admin', 'os')); ?>"><?php echo Filters::noXSS(L('operatingsystems')); ?></a>
+     href="<?php echo Filters::noXSS(CreateURL('admin', 'os')); ?>"><i class="fa fa-linux"></i><i class="fa fa-windows"></i><i class="fa fa-apple"></i> <?php echo Filters::noXSS(L('operatingsystems')); ?></a>
   <a id="globnewprojlink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'newproject') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'newproject')); ?>"><?php echo Filters::noXSS(L('newproject')); ?></a>
