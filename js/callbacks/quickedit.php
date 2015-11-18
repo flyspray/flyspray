@@ -122,6 +122,8 @@ switch(Post::val('name')){
 		}
 		break;
 	default:
+		header(':', true, 403);
+		die(L('invalidField'));
 		break;
 }
 
