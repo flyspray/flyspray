@@ -229,8 +229,8 @@ function quick_edit(elem, id)
 
 	xmlHttp.onreadystatechange = function(){
 		if(xmlHttp.readyState == 4){
+			var target = elem.previousElementSibling;
 			if(xmlHttp.status == 200){
-				var target = elem.previousElementSibling;
 				if(target.getElementsByTagName("span").length > 0)//for progress
 				{
 					target.getElementsByTagName("span")[0].innerHTML = text;
@@ -238,12 +238,13 @@ function quick_edit(elem, id)
 				}else{
 					target.innerHTML = text;
 				}
-				elem.parentNode.className='fa fa-check';
+				target.className='fa fa-check';
+				elem.className='fa fa-check';
 				show_hide(elem, false);
 			}else{
 				// TODO show error message returned from the server and let quickedit form open
-				
-				elem.parentNode.className='fa fa-warning';
+				target.className='fa fa-warning';
+				elem.className='fa fa-warning';
 			}
 		}
 	}
