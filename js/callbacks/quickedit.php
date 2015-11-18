@@ -82,7 +82,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'item_status':
-		$res=$db->Query('SELECT * FROM {list_status} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND status_id=?', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_status} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND status_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -90,7 +90,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'task_type':
-		$res=$db->Query('SELECT * FROM {list_tasktype} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND tasktype_id=?', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_tasktype} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND tasktype_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -98,7 +98,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'operating_system':
-		$res=$db->Query('SELECT * FROM {list_os} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND os_id=?', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_os} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND os_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -106,7 +106,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'product_category':
-		$res=$db->Query('SELECT * FROM {list_category} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND category_id=?', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_category} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND category_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -114,14 +114,14 @@ switch(Post::val('name')){
 		break;
 
 	case 'product_version':
-		$res=$db->Query('SELECT * FROM {list_version} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=2', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=2', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
 		}
 		break;
 	case 'closedby_version':
-		$res=$db->Query('SELECT * FROM {list_version} FROM WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=3', array($task['project_id'], $value) );
+		$res=$db->Query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=3', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
