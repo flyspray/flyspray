@@ -1376,6 +1376,7 @@ th, td, caption {padding: 5px 2px;}
 #tasklist {padding:0;}
 table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
+body.toplevel.p0 .box {width:auto;}
 div.box, p.box {padding:0;}
 #event1 td {display:block;}
 body.admin {background-color:#300;} /* experimental: danger zone */
