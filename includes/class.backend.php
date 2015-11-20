@@ -1299,6 +1299,20 @@ abstract class Backend
             $LIKEOP = 'ILIKE';
         }
 
+	# GROUP_CONCAT() feature is not in SQL Standard, but very useful for us.
+	if('mysql' == $db->dblink->dataProvider){
+		$GCONCATS=' GROUP_CONCAT(';
+		$GCONCATE=')';
+	} elseif('postgres' == $db->dblink->dataProvider)){
+		$GCONCATS=' array_to_string(array_agg(';
+		$GCONCATE='))';
+	} else{
+		# unknown db or unknown solution of group_concat feature
+		# lame fallback, add a PHP notice/message?
+		$GCONCATS=' MIN(';
+		$GCONCATE=')';
+	}
+
         $select = '';
         $groupby = 't.task_id, ';
         $cgroupbyarr = array();
@@ -1437,13 +1451,16 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 			#$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
 			# without distinct i see multiple times each assignee
 			# maybe performance penalty due distinct?, solve by better groupby construction?
-			$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
+			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
 			# maybe later for building links to users
-			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
-			#$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
-		}else{
+			$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
+		} elseif('postgres'== $db->dblink->dataProvider){
+			$select .= $GCONCATS.' DISTINCT u.real_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
+			$select .= $GCONCATS.' DISTINCT u.user_id ORDER BY u.user_id'.$CONCATE.' AS assignedids, ';
+		} else{
 			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
-			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id) AS num_assigned, ';
 		}
 		// assigned table is now always included in join
 		$from .= '
@@ -1465,11 +1482,6 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
 	} elseif( 'postgres'==substr($db->dbtype,0,8) ){
-		# Maybe make GCONCATS and GCONCATE global for reuse within Flyspray? Maybe put into the db wrapper class
-		# $db->GCONCATS (start) / $db->GCONCATE (end) and make a generic solution?
-		# Discuss it with ADODB/Adodb dudes?
-		$GCONCATS='array_to_string(array_agg(';
-		$GCONCATE='))';
 		$select .= $GCONCATS.' DISTINCT tg.tag_name ORDER BY tg.list_position '.$GCONCATE.' AS tags, ';
 		$select .= $GCONCATS.' DISTINCT tg.tag_id ORDER BY tg.list_position '.$GCONCATE.' AS tagids, ';
 		$select .= $GCONCATS.' DISTINCT tg.class ORDER BY tg.list_position '.$GCONCATE.' AS tagclass, ';
