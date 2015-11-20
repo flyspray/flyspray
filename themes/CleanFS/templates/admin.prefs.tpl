@@ -50,9 +50,9 @@ function ShowHidePassword(id) {
   <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
+   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
-   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
   </ul>
 
    <div id="general" class="tab">
@@ -351,21 +351,23 @@ function testEmail(){
 
     <div id="lookandfeel" class="tab">
       <ul class="form_elements">
-        <li>
-		<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
-		<select id="globaltheme" name="global_theme">
-		<?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
-        	</select>
-		<label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
-        	<select id="customstyle" name="custom_style">
-		<?php 
-		$nocustom=array('no'=>L('no'));
-		$customstyles=glob_compat(BASEDIR ."/themes/".($fs->prefs['global_theme'])."/custom_*.css");
-		$customstyles=array_merge($nocustom,$customstyles);
-		echo tpl_options($customstyles, $fs->prefs['custom_style'], true); 
-		?>
-        	</select>
-        </li>
+			<li>
+			<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
+			<select id="globaltheme" name="global_theme">
+			<?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
+			</select>
+			<label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
+			<select id="customstyle" name="custom_style">
+			<?php
+			$customs[]=array('', L('no'));
+			$customstyles=glob_compat(BASEDIR ."/themes/".($proj->prefs['theme_style'])."/custom_*.css");
+			foreach ($customstyles as $cs){
+				$customs[]=array($cs,$cs);
+			}
+			echo tpl_options($customs, $proj->prefs['custom_style']);
+			?>
+			</select>
+      </li>
 
         <?php // Set the selectable column names
             // Do NOT use real database column name here and in the next list,

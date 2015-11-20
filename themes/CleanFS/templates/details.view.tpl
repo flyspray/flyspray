@@ -229,8 +229,8 @@ function quick_edit(elem, id)
 
 	xmlHttp.onreadystatechange = function(){
 		if(xmlHttp.readyState == 4){
+			var target = elem.previousElementSibling;
 			if(xmlHttp.status == 200){
-				var target = elem.previousElementSibling;
 				if(target.getElementsByTagName("span").length > 0)//for progress
 				{
 					target.getElementsByTagName("span")[0].innerHTML = text;
@@ -238,11 +238,13 @@ function quick_edit(elem, id)
 				}else{
 					target.innerHTML = text;
 				}
-				// TODO show some kind of ok sign icon for a successful save
+				target.className='fa fa-check';
+				elem.className='fa fa-check';
 				show_hide(elem, false);
 			}else{
 				// TODO show error message returned from the server and let quickedit form open
-				elem.parentNode.style["background-color"]='#ff6600'; // at least show something went wrong
+				target.className='fa fa-warning';
+				elem.className='fa fa-warning';
 			}
 		}
 	}
@@ -683,7 +685,7 @@ function quick_edit(elem, id)
 	<h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
 	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
 	</h2>
-	<span class="tags"><?php foreach($tags as $tag): ?><span class="tag t<?php echo $tag['tag_id']; ?>"><?php echo Filters::noXSS($tag['tag']); ?></span><?php endforeach; ?></span>
+	<span class="tags"><?php foreach($tags as $tag): ?><span class="tag t<?php echo $tag['tag_id'].($tag['class']? ' '.$tag['class'] : ''); ?>" title="<?php echo Filters::noXSS($tag['tag']); ?>"></span><?php endforeach; ?></span>
 	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);

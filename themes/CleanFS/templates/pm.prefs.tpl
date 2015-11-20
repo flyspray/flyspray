@@ -130,10 +130,12 @@
         <label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
         <select id="customstyle" name="custom_style">
         <?php
-        $nocustom=array('no'=>L('no'));
+        $customs[]=array('', L('no'));
         $customstyles=glob_compat(BASEDIR ."/themes/".($proj->prefs['theme_style'])."/custom_*.css");
-        $customstyles=array_merge($nocustom, $customstyles);
-        echo tpl_options($customstyles, $proj->prefs['custom_style'], true);
+        foreach ($customstyles as $cs){
+          $customs[]=array($cs,$cs);
+        }
+        echo tpl_options($customs, $proj->prefs['custom_style']);
         ?>
         </select>
       </li>
