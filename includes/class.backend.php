@@ -1455,9 +1455,11 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 			# maybe later for building links to users
 			$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
 			$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.profile_image ORDER BY u.user_id) AS assigned_image, ';
 		} elseif('postgres'== $db->dblink->dataProvider){
 			$select .= $GCONCATS.' DISTINCT u.real_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
 			$select .= $GCONCATS.' DISTINCT u.user_id ORDER BY u.user_id'.$CONCATE.' AS assignedids, ';
+			$select .= $GCONCATS.' DISTINCT u.profile_image ORDER BY u.user_id'.$CONCATE.' AS assigned_image, ';
 		} else{
 			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
 			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id) AS num_assigned, ';
