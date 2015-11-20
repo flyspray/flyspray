@@ -1457,14 +1457,24 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		}
 	}
         
-	# not every db system has this feature out of box
+	# not every db system has this feature out of box, it is not standard sql
+	# TODO dbtype vs. dataProvider vs. dataBase
 	if('mysql' == $db->dblink->dataProvider){
-		# without distinct i see multiple times each tag (when task has several assignees too)
+		# without distinct I see multiple times each tag (when task has several assignees too)
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+	} elseif( 'postgres'==substr($db->dbtype,0,8) ){
+		# Maybe make GCONCATS and GCONCATE global for reuse within Flyspray? Maybe put into the db wrapper class
+		# $db->GCONCATS (start) / $db->GCONCATE (end) and make a generic solution?
+		# Discuss it with ADODB/Adodb dudes?
+		$GCONCATS='array_to_string(array_agg(';
+		$GCONCATE='))';
+		$select .= $GCONCATS.' DISTINCT tg.tag_name ORDER BY tg.list_position '.$GCONCATE.' AS tags, ';
+		$select .= $GCONCATS.' DISTINCT tg.tag_id ORDER BY tg.list_position '.$GCONCATE.' AS tagids, ';
+		$select .= $GCONCATS.' DISTINCT tg.class ORDER BY tg.list_position '.$GCONCATE.' AS tagclass, ';
 	} else{
-		# FIXME: GROUP_CONCAT() for postgresql?
+		# unsupported groupconcat or we just do not know how write it for the other databasetypes in this section 
 		$select .= ' MIN(tg.tag_name) AS tags, ';
 		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
 		$select .= ' MIN(tg.tag_id) AS tagids, ';
