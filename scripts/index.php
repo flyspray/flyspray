@@ -1,9 +1,9 @@
 <?php
 
 /*
-   This script sets up and shows the front page with
-   the list of all available tasks that the user is
-   allowed to view.
+   This script sets up and shows the tasklist page.
+   It is for historical reason called index.php, because it was also the frontpage.
+   But now there can be a different pagetype set up as frontpage in Flyspray.
 */
 
 
