@@ -602,8 +602,7 @@ form #taskdetailsfull {
 
 .group.inactive{ background-color:#eee;}
 .tag {
-    background: #eee none repeat scroll 0 0;
-    border: 1px solid #ddd;
+    background: #ccc none repeat scroll 0 0;
     border-radius: 3px;
     margin-left: 3px;
     padding: 3px;
