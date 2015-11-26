@@ -383,7 +383,6 @@ $translation = array(
 'anyversion'              => 'in beliebiger Version geöffnet',
 'dueversion'              => 'fällig in Version',
 'lastedit'                => 'zuletzt geändert',
-'lastmodifiedby'          => 'zuletzt geändert von',
 'os'                      => 'Betriebssystem',
 'reportedin'              => 'betrifft Version',
 'taskrange'               => 'zeige Aufgaben %d - %d von %d',
