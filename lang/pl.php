@@ -1,5 +1,5 @@
 <?php
-(
+
 $translation = array(
 'edituser'                => 'Edycja danych użytkownika',
 'username'                => 'Nazwa',
