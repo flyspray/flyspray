@@ -190,7 +190,7 @@ function ShowHidePassword(id) {
           <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('mainmessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
             <div class="hide preview" id="preview"></div>
-            <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
+            <button tabindex="9" type="button" onclick="showPreview('intromesg', baseurl, 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
           <?php endif; ?>
           <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
         </li>
@@ -305,7 +305,7 @@ function testEmail(){
 			}
 		}
 	}
-	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/testemail.php", true);
+	xmlHttp.open("POST", baseurl + "js/callbacks/testemail.php", true);
 	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlHttp.send("name=email&csrftoken=<?php echo $_SESSION['csrftoken'] ?>");
 }

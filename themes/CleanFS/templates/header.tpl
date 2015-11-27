@@ -59,6 +59,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
+    <script type="text/javascript">var baseurl ="<?php echo Filters::noXSS($baseurl); ?>";</script>
   </head>
   <body onload="<?php
         if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])):
