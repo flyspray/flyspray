@@ -283,7 +283,7 @@ function ShowHidePassword(id) {
               <input id="showsmtppass" name="show_smtp_pass" class="text" type="checkbox"  onclick="ShowHidePassword('smtppass')"/>
           </li>
         </ul>
-Test currently active email settings: <button onclick="testEmail();return false;">Test</button><div id="emailresult" style="display:inline-block;"></div> . And also check if you received the test email in the mail account of the current user (see 'myprofile'-page).
+  <?php echo Filters::noXSS(L('testmailsettings')); ?>: <button onclick="testEmail();return false;"><?php echo Filters::noXSS(L('test')); ?></button><div id="emailresult" style="display:inline-block;"></div> <?php echo Filters::noXSS(L('testmailsettingsnotice')); ?>.
 <script>
 function testEmail(){
 	var xmlHttp = new XMLHttpRequest();
