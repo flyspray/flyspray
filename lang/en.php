@@ -1044,5 +1044,9 @@ Regards,',
 'youhaveregisterednotify' => 'Your registration at Flyspray has been accepted by Administrators.',
 'usedintasks'             => 'Usage',
 'freetagging'             => 'allow user defined tags',
+'keyboardshortcuts'       => 'Keyboard shortcuts',
+'testmailsettings'        => 'Test currently active email settings',
+'test'                    => 'Test',
+'testmailsettingsnotice'  => 'And also check if you received the test email in the mail account of the current user (see \'myprofile\'-page)',
 );
 ?>
