@@ -306,13 +306,12 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		return;
 	}
 
-	$email = md5(strtolower(trim($email)));
-	$default = 'mm';
-
 	if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
 		$image = '<img src="'.$baseurl.'/avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
 	} else {
 		if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
+			$email = md5(strtolower(trim($email)));
+			$default = 'mm';
 			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
 			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
 		} else {
