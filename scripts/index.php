@@ -154,9 +154,11 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'summary'    => 'item_summary',
             'dateopened' => 'date_opened',
             'status'     => 'status_name',
-            'openedby'   => 'opened_by_name',
+            'openedby'   => 'opened_by',
+            'openedbyname'=> 'opened_by_name',
             'assignedto' => 'assigned_to_name',
             'lastedit'   => 'max_date',
+            'editedby'   => 'last_edited_by',
             'reportedin' => 'product_version_name',
             'dueversion' => 'closedby_version_name',
             'duedate'    => 'due_date',
@@ -164,6 +166,8 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'votes'      => 'num_votes',
             'attachments'=> 'num_attachments',
             'dateclosed' => 'date_closed',
+            'closedby'   => 'closed_by',
+            'commentedby'=> 'commented_by',
             'progress'   => '',
             'os'         => 'os_name',
             'private'    => 'mark_private',
@@ -248,7 +252,20 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
-
+            
+        case 'commentedby':
+        case 'openedby':
+        case 'editedby':
+        case 'closedby':
+                $value = '';
+                # a bit expensive! tpl_userlinkavatar()  an additional sql query for each new user in the output table
+                # at least tpl_userlink() uses a $cache array so query for repeated users 
+                if ($task[$indexes[$colname]] > 0) {
+                        #$value = $task[$indexes[$colname]] !='0' ? $task[$indexes[$colname]] : '';
+                        $value = tpl_userlinkavatar($task[$indexes[$colname]],30);
+                }
+                break;
+                
         case 'parent':
             $value = '';
             if ($task['supertask_id'] > 0) {
