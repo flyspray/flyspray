@@ -290,42 +290,39 @@ function tpl_userlink($uid)
 
     return $cache[$uid];
 }
-
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
 	global $db, $user, $baseurl, $fs;
-	if (is_array($uid)) {
-		list($uid, $uname, $rname) = $uid;
-	}
 
-	$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?',
-		array(intval($uid)));
-	if ($sql && $db->countRows($sql)) {
-		list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
-	} else {
-		return;
-	}
+	static $avacache=array();
 
-	if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
-		$image = '<img src="'.$baseurl.'/avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
-	} else {
-		if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-			$email = md5(strtolower(trim($email)));
-			$default = 'mm';
-			$url = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-			$image = '<img src="'.$url.'" width="'.$size.'" height="'.$size.'"/>';
+	if($uid>0 && empty($avacache[$uid])){
+		$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+		if ($sql && $db->countRows($sql)) {
+			list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
 		} else {
-			$image = '';
+			return;
+		}
+
+		if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
+			$image = '<img src="'.$baseurl.'avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
+		} else {
+			if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
+				$email = md5(strtolower(trim($email)));
+				$default = 'mm';
+				$imgurl = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
+				$image = '<img src="'.$imgurl.'" width="'.$size.'" height="'.$size.'"/>';
+			} else {
+				$image = '<i class="fa fa-user" style="font-size:'.$size.'px"></i>';
+			}
+		}
+		if (isset($uname)) {
+			$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			$avacache[$uid] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 		}
 	}
-
-	if (isset($uname)) {
-		$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		$link = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
-	}
-	return $link;
+	return $avacache[$uid];
 }
-
 
 function tpl_fast_tasklink($arr)
 {
