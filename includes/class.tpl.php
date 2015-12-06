@@ -1096,7 +1096,7 @@ class Url {
     public $url = '';
     public $parsed;
 
-    public function url($url = '') {
+    public function __construct($url = '') {
         $this->url = $url;
         $this->parsed = parse_url($this->url);
     }
