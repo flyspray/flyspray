@@ -260,10 +260,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 $value = '';
                 # a bit expensive! tpl_userlinkavatar()  an additional sql query for each new user in the output table
                 # at least tpl_userlink() uses a $cache array so query for repeated users 
-                if ($task[$indexes[$colname]] > 0) {
-                        #$value = $task[$indexes[$colname]] !='0' ? $task[$indexes[$colname]] : '';
-                        $value = tpl_userlinkavatar($task[$indexes[$colname]],30);
-                }
+		if ($task[$indexes[$colname]] > 0) {
+			if ($fs->prefs['enable_avatars']==1){
+				$value = tpl_userlinkavatar($task[$indexes[$colname]],30);
+			} else{
+				$value = tpl_userlink($task[$indexes[$colname]]);
+			}
+		}
                 break;
                 
         case 'parent':
