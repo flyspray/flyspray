@@ -1300,10 +1300,10 @@ abstract class Backend
         }
 
 	# GROUP_CONCAT() feature is not in SQL Standard, but very useful for us.
-	if('mysql' == $db->dblink->dataProvider){
+	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
 		$GCONCATS=' GROUP_CONCAT(';
 		$GCONCATE=')';
-	} elseif('postgres' == $db->dblink->dataProvider)){
+	} elseif($conf['database']['dbtype']=='pgsql')){
 		$GCONCATS=' array_to_string(array_agg(';
 		$GCONCATE='))';
 	} else{
@@ -1447,16 +1447,7 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 
 	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
 		# not every db system has this feature out of box
-		if('mysql' == $db->dblink->dataProvider){
-			#$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
-			# without distinct i see multiple times each assignee
-			# maybe performance penalty due distinct?, solve by better groupby construction?
-			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
-			# maybe later for building links to users
-			$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
-			$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
-			$select .= ' GROUP_CONCAT(DISTINCT u.profile_image ORDER BY u.user_id) AS assigned_image, ';
-		} elseif('postgres'== $db->dblink->dataProvider){
+		if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql' || $conf['database']['dbtype']=='pgsql'){
 			$select .= $GCONCATS.' DISTINCT u.real_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
 			$select .= $GCONCATS.' DISTINCT u.user_id ORDER BY u.user_id'.$CONCATE.' AS assignedids, ';
 			$select .= $GCONCATS.' DISTINCT u.profile_image ORDER BY u.user_id'.$CONCATE.' AS assigned_image, ';
@@ -1477,13 +1468,7 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 	}
         
 	# not every db system has this feature out of box, it is not standard sql
-	# TODO dbtype vs. dataProvider vs. dataBase
-	if('mysql' == $db->dblink->dataProvider){
-		# without distinct I see multiple times each tag (when task has several assignees too)
-		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
-		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
-		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
-	} elseif( 'postgres'==substr($db->dbtype,0,8) ){
+	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql' || $conf['database']['dbtype']=='pgsql'){
 		$select .= $GCONCATS.' DISTINCT tg.tag_name ORDER BY tg.list_position '.$GCONCATE.' AS tags, ';
 		$select .= $GCONCATS.' DISTINCT tg.tag_id ORDER BY tg.list_position '.$GCONCATE.' AS tagids, ';
 		$select .= $GCONCATS.' DISTINCT tg.class ORDER BY tg.list_position '.$GCONCATE.' AS tagclass, ';
