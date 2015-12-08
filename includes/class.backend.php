@@ -1448,11 +1448,11 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
 		# not every db system has this feature out of box
 		if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql' || $conf['database']['dbtype']=='pgsql'){
-			$select .= $GCONCATS.' DISTINCT u.real_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
+			$select .= $GCONCATS.' DISTINCT u.user_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
 			$select .= $GCONCATS.' DISTINCT u.user_id ORDER BY u.user_id'.$CONCATE.' AS assignedids, ';
 			$select .= $GCONCATS.' DISTINCT u.profile_image ORDER BY u.user_id'.$CONCATE.' AS assigned_image, ';
 		} else{
-			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
+			$select .= ' MIN(u.user_name) AS assigned_to_name, ';
 			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id) AS num_assigned, ';
 		}
 		// assigned table is now always included in join
