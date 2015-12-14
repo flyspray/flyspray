@@ -75,7 +75,7 @@ if (Req::num('task_id')) {
 }
 
 if(isset($_SESSION)) {
-    unset($_SESSION['SUCCESS'], $_SESSION['ERROR']);
+    unset($_SESSION['SUCCESS'], $_SESSION['ERROR'], $_SESSION['ERRORS']);
 }
 
 switch ($action = Req::val('action'))
@@ -174,25 +174,20 @@ switch ($action = Req::val('action'))
         // ##################
     case 'details.update':
         if (!$user->can_edit_task($task)) {
-            Flyspray::show_error(L('nopermission'));//TODO: create a better error message
-            break;
+		Flyspray::show_error(L('nopermission'));//TODO: create a better error message
+		break;
         }
 
-        if (!Post::val('item_summary')) {//description can be empty now
-            #Flyspray::show_error(L('summaryanddetails'));
-            Flyspray::show_error(L('summaryrequired'));
-            break;
-        }
-
-        if ($due_date = Post::val('due_date', 0)) {
-            $due_date = Flyspray::strtotime(Post::val('due_date'));
-        }
-
-        $estimated_effort = 0;
-        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
-            Flyspray::show_error(L('invalideffort'));
-            break;
-        }
+	$errors=array();
+	$move=0;
+	if($task['project_id'] != Post::val('project_id')) {
+		$toproject=new Project(Post::val('project_id'));
+		if($user->can_open_task($toproject)){
+			$move=1;
+		} else{
+			$errors['movingtoprojectforbidden']=1;
+		}
+	}
 
         // Check that a task is not moved to a different project than its
         // possible parent or subtasks. Note that even closed tasks are
@@ -207,9 +202,104 @@ switch ($action = Req::val('action'))
         // if there are any subtasks or a parent, check that the project is not changed.
         if ($check && $check['sub_id']) {
             if ($check['project'] != Post::val('project_id')) {
-                Flyspray::show_error(L('movingtodifferentproject'));
-                break;
+		$errors['movingtodifferentproject']=1;
             }
+        }
+
+
+	# summary form input fields, so user get notified what needs to be done right to be accepted
+        if (!Post::val('item_summary')) {
+		# description can be empty now
+		#Flyspray::show_error(L('summaryanddetails'));
+		#Flyspray::show_error(L('summaryrequired'));
+		$errors['summaryrequired']=L('summaryrequired');
+        }
+
+	# ids of severity and priority are (probably!) intentional fixed in Flyspray. 
+	if( !is_numeric(Post::val('task_severity')) || Post::val('task_severity')>5 || Post::val('task_severity')<0 ){
+		$errors['invalidseverity']=1;
+	}
+
+	if( !is_numeric(Post::val('task_priority')) || Post::val('task_priority')>5 || Post::val('task_priority')<0 ){
+		$errors['invalidpriority']=1;
+	}
+
+	if( !is_numeric(Post::val('percent_complete')) || Post::val('percent_complete')>100 || Post::val('percent_complete')<0 ){
+		$errors['invalidprogress']=1;
+	}
+
+	# Description for the following FIXME's here when moving a task to a different project:
+	# - Do we use the old invalid values? (current behavior until 1.0-beta2, invalid id-values in database can be set, can result in php-'notices' or values arent shown on pages)
+	# - Or set to default value of the new project? And inform the user to adjust the task properties in the new project?
+	# - Or create a new tasktype for the new project, but:
+	#    - Has the user the permission to create a new tasktype for the new project?
+	#    - similiar named tasktypes exists?
+	#
+	# Maybe let's go with 2 steps when in this situation:
+	# When user want move task to other project, a second page shows the form again but form shows old id-based values and the form selectors with the id-values of the new project.
+	# Maybe in the selector an option 'create list value for new project from current project value'. (if the user has the permission!)
+
+	# which $proj should we use here? $proj object is set in header.php by a request param before modify.inc.php is loaded, so it can differ from $task['project_id']!
+	if($move==1){
+		$statusarray=$toproject->listTaskStatuses();
+	} else{
+		$statusarray=$proj->listTaskStatuses();
+	}
+	# FIXME what if we move to diff project, but the status_id is defined for the old project only (not global)?
+	if( !is_numeric(Post::val('item_status')) || false===Flyspray::array_find('status_id', Post::val('item_status'), $statusarray) ){
+		$errors['invalidstatus']=1;
+	}
+
+	if($move==1){
+		$typearray=$toproject->listTaskTypes();
+	} else{
+		$typearray=$proj->listTaskTypes();
+	}
+	# FIXME what if we move to diff project, but tasktype_id is defined for the old project only?
+	if( !is_numeric(Post::val('task_type')) || false===Flyspray::array_find('tasktype_id', Post::val('task_type'), $typearray) ){
+		$errors['invalidtasktype']=1;
+	}
+
+	if($move==1){
+		$versionarray=$toproject->listVersions();
+	} else{
+		$versionarray=$proj->listVersions();
+	}
+	# FIXME what if we move to diff project, but version_id is defined for the old project only?
+	if( !is_numeric(Post::val('reportedver')) || false===Flyspray::array_find('version_id', Post::val('reportedver'), $versionarray) ){
+		$errors['invalidreportedversion']=1;
+	}
+	if( !is_numeric(Post::val('closedby_version')) || false===Flyspray::array_find('version_id', Post::val('closedby_version'), $versionarray) ){
+		$errors['invaliddueversion']=1;
+	}
+
+	if($move==1){
+		$catarray=$toproject->listCategories();
+	} else{
+		$catarray=$proj->listCategories();
+	}
+	# FIXME what if we move to diff project, but category_id is defined for the old project only?
+	if( !is_numeric(Post::val('product_category')) || false===Flyspray::array_find('category_id', Post::val('product_category'), $catarray) ){
+		$errors['invalidcategory']=1;
+	}
+
+	if($move==1){
+		$osarray=$toproject->listOs();
+	} else{
+		$osarray=$proj->listOs();
+	}
+	# FIXME what if we move to diff project, but os_id is defined for the old project only?
+	if( !is_numeric(Post::val('operating_system')) || false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray) ){
+		$errors['invalidos']=1;
+	}
+
+        if ($due_date = Post::val('due_date', 0)) {
+		$due_date = Flyspray::strtotime(Post::val('due_date'));
+        }
+
+        $estimated_effort = 0;
+        if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
+		$errors['invalideffort']=1;
         }
 
         $time = time();
@@ -225,6 +315,13 @@ switch ($action = Req::val('action'))
             $estimated_effort = $defaults['estimated_effort'];
         }
         
+	
+	if(count($errors)>0){
+		# some invalid input by the user. Do not save the input and in the details-edit-template show the user where in the form the invalid values are.
+		$_SESSION['ERRORS']=$errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
+		break;
+	}
+
         $db->Query('UPDATE  {tasks}
                        SET  project_id = ?, task_type = ?, item_summary = ?,
                             detailed_desc = ?, item_status = ?, mark_private = ?,
