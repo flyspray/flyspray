@@ -142,7 +142,7 @@
 
 	<!-- If there is only one choice of projects, then don't bother showing it -->
 	<li<?php echo (count($fs->projects) > 1) ? '' : ' style="display:none"'; ?>>
-		<label for="project_id"><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
+		<label for="project_id"<?php echo isset($_SESSION['ERRORS']['movingtorestrictedproject']) ? ' class="errorinput" title="'.eL('movingtorestrictedproject').'"':''; ?>><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
 		<select name="project_id" id="project_id">
 		<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
 		</select>
