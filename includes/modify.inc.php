@@ -185,7 +185,7 @@ switch ($action = Req::val('action'))
 		if($user->can_open_task($toproject)){
 			$move=1;
 		} else{
-			$errors['movingtoprojectforbidden']=1;
+			$errors['movingtorestrictedproject']=1;
 		}
 	}
 
