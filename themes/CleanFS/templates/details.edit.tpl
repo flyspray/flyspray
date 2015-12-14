@@ -8,6 +8,11 @@
 -->
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
+<style>
+/* can be moved to default theme.css later, when the multiple errors/messages-feature is matured. currently used only here. */
+.errorinput{color:#c00 !important;}
+.errorinput::before{display:block;content: attr(title);}
+</style>
 <div id="taskdetails">
 	<input type="hidden" name="action" value="details.update" />
 	<input type="hidden" name="edit" value="1" />
@@ -17,14 +22,14 @@
 	<ul class="form_elements slim">
 	<!-- Status -->
 	<li<?php echo in_array('status', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="status"><?php echo Filters::noXSS(L('status')); ?></label>
+		<label for="status"<?php echo isset($_SESSION['ERRORS']['invalidstatus']) ? ' class="errorinput" title="'.eL('invalidstatus').'"':''; ?>><?php echo Filters::noXSS(L('status')); ?></label>
 		<select id="status" name="item_status" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
 		<?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? $task_details['item_status'] : STATUS_UNCONFIRMED))); ?>
 		</select>
 	</li>
 	<!-- Progress -->
 	<li<?php echo in_array('progress', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
+		<label for="percent"<?php echo isset($_SESSION['ERRORS']['invalidprogress']) ? ' class="errorinput" title="'.eL('invalidprogress').'"':''; ?>><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
 		<select id="percent" name="percent_complete" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
 		<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
@@ -32,14 +37,14 @@
 	</li>
 	<!-- Task Type-->
 	<li<?php echo in_array('tasktype', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="tasktype"><?php echo Filters::noXSS(L('tasktype')); ?></label>
+		<label for="tasktype"<?php echo isset($_SESSION['ERRORS']['invalidtasktype']) ? ' class="errorinput" title="'.eL('invalidtasktype').'"':''; ?>><?php echo Filters::noXSS(L('tasktype')); ?></label>
 		<select id="tasktype" name="task_type">
 		<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 		</select>
 	</li>
 	<!-- Category -->
 	<li<?php echo in_array('category', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="category"><?php echo Filters::noXSS(L('category')); ?></label>
+		<label for="category"<?php echo isset($_SESSION['ERRORS']['invalidcategory']) ? ' class="errorinput" title="'.eL('invalidcategory').'"':''; ?>><?php echo Filters::noXSS(L('category')); ?></label>
 		<select id="category" name="product_category">
 		<?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
 		</select>
@@ -62,35 +67,35 @@
 	</li>
 	<!-- OS -->
 	<li<?php echo in_array('os', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="os"><?php echo Filters::noXSS(L('operatingsystem')); ?></label>
+		<label for="os"<?php echo isset($_SESSION['ERRORS']['invalidos']) ? ' class="errorinput" title="'.eL('invalidos').'"':''; ?>><?php echo Filters::noXSS(L('operatingsystem')); ?></label>
 		<select id="os" name="operating_system">
 		<?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
 		</select>
 	</li>
 	<!-- Severity -->
 	<li<?php echo in_array('severity', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="severity"><?php echo Filters::noXSS(L('severity')); ?></label>
+		<label for="severity"<?php echo isset($_SESSION['ERRORS']['invalidseverity']) ? ' class="errorinput" title="'.eL('invalidseverity').'"':''; ?>><?php echo Filters::noXSS(L('severity')); ?></label>
 		<select id="severity" name="task_severity">
 		 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
 		</select>
 	</li>
 	<!-- Priority -->
 	<li<?php echo in_array('priority', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="priority"><?php echo Filters::noXSS(L('priority')); ?></label>
+		<label for="priority"<?php echo isset($_SESSION['ERRORS']['invalidpriority']) ? ' class="errorinput" title="'.eL('invalidpriority').'"':''; ?>><?php echo Filters::noXSS(L('priority')); ?></label>
 		<select id="priority" name="task_priority" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
 		</select>
 	</li>
 	<!-- Reported In -->
 	<li<?php echo in_array('reportedin', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="reportedver"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
+		<label for="reportedver"<?php echo isset($_SESSION['ERRORS']['invalidversion']) ? ' class="errorinput" title="'.eL('invalidversion').'"':''; ?>><?php echo Filters::noXSS(L('reportedversion')); ?></label>
 		<select id="reportedver" name="reportedver">
 		<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
 		</select>
 	</li>
 	<!-- Due Version -->
 	<li<?php echo in_array('dueversion', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
+		<label for="dueversion"<?php echo isset($_SESSION['ERRORS']['invalidversion']) ? ' class="errorinput" title="'.eL('invalidversion').'"':''; ?>><?php echo Filters::noXSS(L('dueinversion')); ?></label>
 		<select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
 		<?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
@@ -154,7 +159,7 @@
 	</div>
 </div>
 <div id="taskdetailsfull">
-	<label for="itemsummary" class="summary">FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
+	<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
 		<input placeholder="<?php echo Filters::noXSS(L('summary')); ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 	</label>
 	<?php
