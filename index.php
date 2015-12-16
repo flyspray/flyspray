@@ -206,5 +206,5 @@ if(isset($_SESSION)) {
         $currentrequest = md5(serialize($_POST));
         unset($_SESSION['requests_hash'][$currentrequest]);
     }
-    unset($_SESSION['ERROR'], $_SESSION['SUCCESS']);
+    unset($_SESSION['ERROR'], $_SESSION['ERRORS'], $_SESSION['SUCCESS']);
 }
