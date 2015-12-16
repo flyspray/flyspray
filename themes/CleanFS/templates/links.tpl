@@ -50,7 +50,7 @@ endif; ?>
 	if ( (!$user->isAnon() && $user->perms('view_tasks')) || ($user->isAnon() && $proj->id >0 && $proj->prefs['others_view'])):
 	?><li>
 		<a id="homelink"
-		<?php if($do == 'index' && !isset($_GET['dev'])): ?> class="active" <?php endif; ?>
+		<?php if($do == 'index' && !(isset($_GET['dev']) && !$user->isAnon() && $_GET['dev'] == $user->id)): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('tasklist', $proj->id)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
 	</li><?php
 	endif;
@@ -74,7 +74,7 @@ endif; ?>
 	endif;
 	if ($proj->id && !$user->isAnon()): ?><li>
 		<a id="mytaskslink"
-		<?php if(isset($_GET['dev']) && $do == 'index' && $_GET['dev']): ?> class="active" <?php endif; ?>
+		<?php if($do == 'index' && isset($_GET['dev']) && $_GET['dev'] == $user->id): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('mytasks', $proj->id, $user->id, null)); ?>"><?php echo Filters::noXSS(L('myassignedtasks')); ?></a>
 	</li><?php
 	endif;
