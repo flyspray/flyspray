@@ -228,7 +228,7 @@ switch ($action = Req::val('action'))
 		$errors['invalidprogress']=1;
 	}
 
-	# Description for the following FIXME's here when moving a task to a different project:
+	# Description for the following list values here when moving a task to a different project:
 	# - Do we use the old invalid values? (current behavior until 1.0-beta2, invalid id-values in database can be set, can result in php-'notices' or values arent shown on pages)
 	# - Or set to default value of the new project? And inform the user to adjust the task properties in the new project?
 	# - Or create a new tasktype for the new project, but:
@@ -236,8 +236,15 @@ switch ($action = Req::val('action'))
 	#    - similiar named tasktypes exists?
 	#
 	# Maybe let's go with 2 steps when in this situation:
-	# When user want move task to other project, a second page shows the form again but form shows old id-based values and the form selectors with the id-values of the new project.
-	# Maybe in the selector an option 'create list value for new project from current project value'. (if the user has the permission!)
+	# When user want move task to other project, a second page shows the form again but:
+	# dropdown list forms show - maybe divided as optiongroups - :
+	# -global list values ()
+	# -current project list values
+	# -target project list values
+	# -option to create a new option based on current project value (if the user has the permission for the target project!)
+	# -option to set to default value in target project or unset value
+	# Also consider that not all list dropdown field may be shown to the user because of project settings (visible_fields)!
+	
 
 	# which $proj should we use here? $proj object is set in header.php by a request param before modify.inc.php is loaded, so it can differ from $task['project_id']!
 	if($move==1){
@@ -255,7 +262,7 @@ switch ($action = Req::val('action'))
 	} else{
 		$typearray=$proj->listTaskTypes();
 	}
-	# FIXME what if we move to diff project, but tasktype_id is defined for the old project only?
+	# FIXME what if we move to diff project, but tasktype_id is defined for the old project only (not global)?
 	if( !is_numeric(Post::val('task_type')) || false===Flyspray::array_find('tasktype_id', Post::val('task_type'), $typearray) ){
 		$errors['invalidtasktype']=1;
 	}
@@ -265,11 +272,10 @@ switch ($action = Req::val('action'))
 	} else{
 		$versionarray=$proj->listVersions();
 	}
-	# FIXME what if we move to diff project, but version_id is defined for the old project only?
-	if( !is_numeric(Post::val('reportedver')) || false===Flyspray::array_find('version_id', Post::val('reportedver'), $versionarray) ){
+	if( !is_numeric(Post::val('reportedver')) || ( isset($_POST['reportedver']) && $_POST['reportedver']!=='0' && false===Flyspray::array_find('version_id', Post::val('reportedver'), $versionarray)) ){
 		$errors['invalidreportedversion']=1;
 	}
-	if( !is_numeric(Post::val('closedby_version')) || false===Flyspray::array_find('version_id', Post::val('closedby_version'), $versionarray) ){
+	if( !is_numeric(Post::val('closedby_version')) || ( isset($_POST['closedby_version']) && $_POST['closedby_version']!=='0' && false===Flyspray::array_find('version_id', Post::val('closedby_version'), $versionarray) ) ){
 		$errors['invaliddueversion']=1;
 	}
 
@@ -278,7 +284,7 @@ switch ($action = Req::val('action'))
 	} else{
 		$catarray=$proj->listCategories();
 	}
-	# FIXME what if we move to diff project, but category_id is defined for the old project only?
+	# FIXME what if we move to diff project, but category_id is defined for the old project only (not global)?
 	if( !is_numeric(Post::val('product_category')) || false===Flyspray::array_find('category_id', Post::val('product_category'), $catarray) ){
 		$errors['invalidcategory']=1;
 	}
@@ -288,7 +294,7 @@ switch ($action = Req::val('action'))
 	} else{
 		$osarray=$proj->listOs();
 	}
-	# FIXME what if we move to diff project, but os_id is defined for the old project only?
+	# FIXME what if we move to diff project, but os_id is defined for the old project only (not global)?
 	if( !is_numeric(Post::val('operating_system')) || false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray) ){
 		$errors['invalidos']=1;
 	}
@@ -319,6 +325,11 @@ switch ($action = Req::val('action'))
 	if(count($errors)>0){
 		# some invalid input by the user. Do not save the input and in the details-edit-template show the user where in the form the invalid values are.
 		$_SESSION['ERRORS']=$errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
+		$_SESSION['ERROR']=L('invalidinput'); 
+		# pro and contra http 303 redirect here:
+                # - good: browser back button works, browser history.
+                # -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
+                #Flyspray::Redirect(CreateURL('edittask', $task['task_id']));
 		break;
 	}
 
@@ -357,7 +368,9 @@ switch ($action = Req::val('action'))
             }
         }
 
-        // update tags
+	# FIXME what if we move to diff project, but tag(s) is/are defined for the old project only (not global)?
+	#    - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
+	// update tags
         $tagList = explode(';', Post::val('tags'));  
         $tagList = array_map('strip_tags', $tagList);
         $tagList = array_map('trim', $tagList);
