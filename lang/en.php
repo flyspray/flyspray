@@ -1048,5 +1048,13 @@ Regards,',
 'testmailsettings'        => 'Test currently active email settings',
 'test'                    => 'Test',
 'testmailsettingsnotice'  => 'And also check if you received the test email in the mail account of the current user (see \'myprofile\'-page)',
+'invalidinput'            => 'Oh, there are some incompatible properties set that must be resolved before moving this task to a different project.',
+'invalidstatus'           => 'Please choose a valid task status when moving a task to a different project.',
+'invalidcategory'         => 'Please choose a valid category when moving a task to a different project.',
+'invalidreportedversion'  => 'Please choose a valid report version when moving a task to a different project.',
+'invaliddueversion'       => 'Please choose a valid due version when moving a task to a different project.',
+'invalidos'               => 'Please choose a valid operating system when moving a task to a different project.',
+'invalidtags'             => 'Please choose only allowed tags when moving a task to a different project.',
+'invalidassignees'        => 'Please choose only allowed assignees when moving a task to a different project.',
 );
 ?>
