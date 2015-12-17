@@ -12,6 +12,7 @@
 <style>
 /* can be moved to default theme.css later, when the multiple errors/messages-feature is matured. currently used only here. */
 .errorinput{color:#c00 !important;}
+li.errorinput{background-color:#fc9;}
 .errorinput::before{display:block;content: attr(title);}
 </style>
 <div id="taskdetails">
@@ -88,10 +89,22 @@
 		</select>
 	</li>
 	<!-- Reported In -->
-	<li<?php echo in_array('reportedin', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="reportedver"<?php echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? ' class="errorinput" title="'.eL('invalidreportedversion').'"':''; ?>><?php echo Filters::noXSS(L('reportedversion')); ?></label>
+	<li<?php
+		# show the reportedversion if invalid when moving tasks - even if not in the visible list.
+		echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? ' class="errorinput"' : (in_array('reportedin', $fields) ? '' : ' style="display:none"'); ?>>
+		<?php echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? '<span class="errorinput" style="display:block;">'.eL('invalidreportedversion').'</span>' : ''; ?>
+		<label for="reportedver"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
 		<select id="reportedver" name="reportedver">
-		<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
+			<?php
+			# TODO seperate also global option from current project option by optgroup or css classes
+			# we need better listVersions() / tpl_options() / tpl_select()
+			echo (isset($move) && $move==1)? '<optgroup label="'.L('currentproject').'">' :'';
+			echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
+			echo (isset($move) && $move==1)? '</optgroup>' :'';
+			<?php
+			if(isset($move) && $move==1) :
+				echo '<optgroup label="'.L('targetproject').'">'.tpl_options($toproject->listVersions(false, false, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])).'</optgroup>';
+			endif; ?>
 		</select>
 	</li>
 	<!-- Due Version -->
