@@ -1,13 +1,11 @@
 <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="taskeditform"'); ?>
-<!--
-<div id="actionbar">
-	<button class="button positive" type="submit" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
-	<a class="button" href="<?php echo Filters::noXSS(CreateUrl('details', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('canceledit')); ?></a>
-	<div class="clear"></div>
-</div>
--->
 <!-- Grab fields wanted for this project so we can only show those we want -->
-<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); ?>
+<?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); 
+# FIXME The template should respect the ordering of 'visible_fields', aren't they?
+# Maybe define a 'put visible_fields in default ordering'-button in project settings to let them make consistent with other projects and a no-brainer.
+# But let also project managers have the choice to sort to the order they want it.
+
+?>
 <style>
 /* can be moved to default theme.css later, when the multiple errors/messages-feature is matured. currently used only here. */
 .errorinput{color:#c00 !important;}
@@ -88,14 +86,14 @@
 	</li>
 	<!-- Reported In -->
 	<li<?php echo in_array('reportedin', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="reportedver"<?php echo isset($_SESSION['ERRORS']['invalidversion']) ? ' class="errorinput" title="'.eL('invalidversion').'"':''; ?>><?php echo Filters::noXSS(L('reportedversion')); ?></label>
+		<label for="reportedver"<?php echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? ' class="errorinput" title="'.eL('invalidreportedversion').'"':''; ?>><?php echo Filters::noXSS(L('reportedversion')); ?></label>
 		<select id="reportedver" name="reportedver">
 		<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
 		</select>
 	</li>
 	<!-- Due Version -->
 	<li<?php echo in_array('dueversion', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="dueversion"<?php echo isset($_SESSION['ERRORS']['invalidversion']) ? ' class="errorinput" title="'.eL('invalidversion').'"':''; ?>><?php echo Filters::noXSS(L('dueinversion')); ?></label>
+		<label for="dueversion"<?php echo isset($_SESSION['ERRORS']['invaliddueversion']) ? ' class="errorinput" title="'.eL('invaliddueversion').'"':''; ?>><?php echo Filters::noXSS(L('dueinversion')); ?></label>
 		<select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
 		<?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
