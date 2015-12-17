@@ -192,7 +192,7 @@
 		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
 		<br />
-		<span style="display: none">
+		<span style="display: none"><?php /* this span is shown/copied by javascript when adding links */ ?>
 			<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
 			<a href="javascript://" tabindex="9" class="button fa fa-remove fa-lg" title="<?php echo Filters::noXSS(L('remove')); ?>" onclick="removeLinkField(this, 'addlinkbox');"></a><br />
 		</span>
@@ -215,7 +215,7 @@
 			<?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
 		</button>
 		<br />
-		<span style="display: none"><?php // this span is shown/copied in javascript when adding files ?>
+		<span style="display: none"><?php /* this span is shown/copied by javascript when adding files */ ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
 			<a href="javascript://" tabindex="6" class="button fa fa-remove fa-lg" title="<?php echo Filters::noXSS(L('remove')); ?>" onclick="removeUploadField(this);"></a><br />
 		</span>
