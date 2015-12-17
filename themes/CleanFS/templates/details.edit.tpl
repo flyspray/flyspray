@@ -5,6 +5,9 @@
 # Maybe define a 'put visible_fields in default ordering'-button in project settings to let them make consistent with other projects and a no-brainer.
 # But let also project managers have the choice to sort to the order they want it.
 
+# FIXME If user wants a task to be moved to other project and a hidden list value (not in visible_fields) would be not legal in the target project:
+# Should we show that dropdown-list even if the field is not in the $fields-array to give the user the chance to resolve the issue?
+# The field list dropdown is not a secret for webtech-people, it is just not visible by css display:none;
 ?>
 <style>
 /* can be moved to default theme.css later, when the multiple errors/messages-feature is matured. currently used only here. */
