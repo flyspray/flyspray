@@ -1032,6 +1032,8 @@ class Flyspray
     /**
      * Returns the key number of an array which contains an array like array($key => $value)
      * For use with SQL result arrays
+     * returns 0 for first index, so take care if you want check when useing to check if a value exists, use ===
+     *
      * @param string $key
      * @param string $value
      * @param array $array
@@ -1046,6 +1048,7 @@ class Flyspray
                 return $num;
             }
         }
+	return false;
     }
 
     /**
