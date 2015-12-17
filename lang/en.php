@@ -1056,5 +1056,9 @@ Regards,',
 'invalidos'               => 'Please choose a valid operating system when moving a task to a different project.',
 'invalidtags'             => 'Please choose only allowed tags when moving a task to a different project.',
 'invalidassignees'        => 'Please choose only allowed assignees when moving a task to a different project.',
+'customize'               => 'customize',
+'hidesubs'                => 'hide subtasks',
+'hideprivate'             => 'hide private tasks',
+'hideclosed'              => 'hide closed tasks',
 );
 ?>
