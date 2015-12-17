@@ -295,7 +295,7 @@ switch ($action = Req::val('action'))
 		$osarray=$proj->listOs();
 	}
 	# FIXME what if we move to diff project, but os_id is defined for the old project only (not global)?
-	if( !is_numeric(Post::val('operating_system')) || false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray) ){
+	if( !is_numeric(Post::val('operating_system')) || ( isset($_POST['operating_system']) && $_POST['operating_system']!=='0' && false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray)) ){
 		$errors['invalidos']=1;
 	}
 
