@@ -1060,5 +1060,7 @@ Regards,',
 'hidesubs'                => 'hide subtasks',
 'hideprivate'             => 'hide private tasks',
 'hideclosed'              => 'hide closed tasks',
+'currentproject'          => 'current project',
+'targetproject'           => 'target project',
 );
 ?>
