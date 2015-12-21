@@ -567,6 +567,136 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 	return $html;
 } // }}}
 
+
+// {{{ tpl_select()
+/**
+ * builds a complete HTML-select with select options
+ *
+ * supports free choosable attributes for select, options and optgroup tags. optgroups can also be nested.
+ *
+ * @author peterdd 
+ *
+ * @param array key-values pairs and can be nested
+ *
+ * @return string the complete html-select
+ * 
+ * @since 1.0.0-beta3
+ * 
+ * @example
+ * example output of print_r($array) to see the structure of the param $array
+ * Array
+  (
+    [name] => varname          // required if you want submit it with a form to the server
+    [attr] => Array            // optional 
+        (
+            [id] => selid   // optional
+            [class] => selclass1  // optional
+        )
+    [options] => Array         // optional, but without doesn't make much sense ;-)
+        (
+            [0] => Array       // at least one would be useful
+                (
+                    [value] => opt1val     // recommended
+                    [label] => opt1label   // recommended
+                    [disabled] => 1        // optional
+                    [selected] => 1        // optional
+                    [attr] => Array        // optional
+                        (
+                            [id] => opt1id        // optional
+                            [class] => optclass1  // optional
+                        )
+                )
+            [1] => Array
+                (
+                    [optgroup] => 1          // this tells the function that now comes an optgroup
+                    [label] => optgrouplabel // optional
+                    [attr] => Array          // optional
+                        (
+                            [id] => optgroupid1        // optional
+                            [class] => optgroupclass1  // optional
+                        )
+                    [options] => Array
+                        // ... nested options and optgroups can follow here....
+                )
+                // ... and so on          
+        )
+  )
+ */
+function tpl_select($select=array()){
+
+	$attrjoin='';
+	foreach($select['attr'] as $key=>$val){
+		$attrjoin.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+	}
+	$html='<select name="'.$select['name'].'"'.$attrjoin.'>';
+	$html.=tpl_selectoptions($select['options']);
+	$html.="\n".'</select>';
+	return $html;
+} // }}}
+
+
+// {{{ tpl_selectoptions()
+/**
+ * tpl_selectoptions()  
+ *
+ * @author peterdd 
+ *
+ * @param array key-values pairs and can be nested
+ *
+ * @return string option- and optgroup-tags as one string
+ * 
+ * @since 1.0.0-beta3
+ * 
+ * called by tpl_select()
+ * called recursively by itself 
+ * Can also be called alone from template if the templates writes the wrapping select-tags.
+ *
+ * @example see [options]-array of example of tpl_select()
+ */
+function tpl_selectoptions($options=array(), $level=0){
+	$html='';
+	# such deep nesting is too weired - probably an endless loop lets
+	# return before something bad happens
+	if( $level>10){
+		return;
+	}
+	#print_r($options);
+	#print_r($level);
+	foreach($options as $o){
+		if($o['optgroup']==1){
+			# we have an optgroup
+			$html.="\n".str_repeat("\t",$level).'<optgroup label="'.$o['label'].'"';
+			if(isset($o['attr'])){
+				foreach($o['attr'] as $key=>$val){
+					$html.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+				}
+			}
+			$html.='>';
+			# may contain options and suboptgroups..
+			$html.=tpl_selectoptions($o['options'], $level+1);
+			$html.="\n".str_repeat("\t",$level).'</optgroup>';
+		} else{
+			# we have a simple option
+			$html.="\n".str_repeat("\t",$level).'<option value="'.htmlspecialchars($o['value'], ENT_QUOTES, 'utf-8').'"';
+			if(isset($o['disabled'])){
+				$html.=' disabled="disabled"'; # xhtml compatible
+			}
+			if(isset($o['selected'])){
+				$html.=' selected="selected"'; # xhtml compatible
+			}
+			if(isset($o['attr'])){
+				foreach($o['attr'] as $key=>$val){
+					$html.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+				}
+			}
+			$html.='>'.htmlspecialchars($o['label'], ENT_QUOTES, 'utf-8').'</option>';
+		}
+	}
+		
+	return $html;
+} // }}}
+
+
 // {{{ Double <select>
 function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)
 {
