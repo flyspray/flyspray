@@ -7,6 +7,7 @@
 <var name="dbname" value="flyspray_test"/>
 <var name="dbuser" value="root"/>
 <var name="dbpass" value=""/>
+<var name="dbprefix" value="flyspray_"/>
 </php>
 <testsuites>
 <testsuite name="Flyspray Test Suite">
