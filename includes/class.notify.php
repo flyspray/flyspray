@@ -993,12 +993,22 @@ class Notifications {
 		$task_details = Flyspray::GetTaskDetails($task_id);
 
 		// Get list of users from the notification tab
+
+		// Decision: If a notification-user have the limited-flag set, only
+		// task-relevant messages should be send to him
+		if($type>4){
+			$limitedStr = " AND n.limited = 0";
+		}else{
+			$limitedStr = "";
+		}
+
 		$get_users = $db->Query('
 			SELECT * FROM {notifications} n
 			LEFT JOIN {users} u ON n.user_id = u.user_id
-			WHERE n.task_id = ?',
+			WHERE n.task_id = ? '.$limitedStr,
 			array($task_id)
 		);
+
         self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
 
 		// Get list of assignees

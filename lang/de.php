@@ -252,7 +252,7 @@ $translation = array(
 'addtolist'               => 'zu Liste hinzufügen',
 'addmyself'               => 'mich selbst zu dieser Liste hinzufügen',
 'removemyself'            => 'mich selbst von dieser Liste entfernen',
-'theseusersnotify'        => 'Folgende Benutzer erhalten detaillierte Benachrichtigungen, sobald sich die Aufgabe ändert: ',
+'theseusersnotify'        => 'Die Folgenden Benutzer erhalten detaillierte Benachrichtigungen, sobald sich die Aufgabe ändert. Ist ein Benutzer als \'Eingeschränkt\' markiert, wird er nur über reine Task-Änderungen benachrichtigt.',
 'attachedtoproject'       => 'gehört zu Projekt',
 'reminders'               => 'Erinnerungen',
 'system'                  => 'System',
@@ -1034,6 +1034,7 @@ $translation = array(
 'testmailsettings'        => 'Testet die aktuellen Email-Einstellungen',
 'test'                    => 'Testen',
 'testmailsettingsnotice'  => 'Prüfen Sie anschließend auch, ob an das Email-Konto des aktuell eingeloggten Benutzers (siehe \'Meine Benutzerdaten\') eine Test-Email eingegangen ist',
+'limited'                 => 'Eingeschränkt',
 );
 
 ?>

@@ -23,11 +23,12 @@ abstract class Backend
      * @param integer $user_id
      * @param array $tasks
      * @param bool $do Force execution independent of user permissions
+	 * @param bool $limited Limits notifications for a single user
      * @access public
      * @return bool
      * @version 1.0
      */
-    public static function add_notification($user_id, $tasks, $do = false)
+    public static function add_notification($user_id, $tasks, $do = false, $limited = false)
     {
         global $db, $user;
 
@@ -63,8 +64,8 @@ abstract class Backend
                               array($row['task_id'], $user_id));
 
             if (!$db->CountRows($notif)) {
-                $db->Query('INSERT INTO {notifications} (task_id, user_id)
-                                 VALUES  (?,?)', array($row['task_id'], $user_id));
+                $db->Query('INSERT INTO {notifications} (task_id, user_id, limited)
+                                 VALUES  (?,?,?)', array($row['task_id'], $user_id, $limited?1:0));
                 Flyspray::logEvent($row['task_id'], 9, $user_id);
             }
         }
