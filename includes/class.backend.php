@@ -1485,9 +1485,9 @@ LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
 
 	# use preparsed task description cache for dokuwiki when possible
 	if($conf['general']['syntax_plugin']=='dokuwiki' && FLYSPRAY_USE_CACHE==true){
-		$select.=' cache.content desccache, ';
+		$select.=' MIN(cache.content) desccache, ';
 		$from.='
-LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
+LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 	} else {
             $select .= 'NULL AS desccache, ';
         }
