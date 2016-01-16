@@ -6,10 +6,11 @@
             <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
             <input type="hidden" name="do" value="<?php echo Filters::noXSS(Req::val('do')); ?>" />
             <input type="hidden" name="area" value="editgroup" />
+            <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
         </div>
     </form>
     <hr />
-  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
+  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do, array('project'=>$proj->id)))); ?>
     <table class="box">
       <tr>
         <td>
