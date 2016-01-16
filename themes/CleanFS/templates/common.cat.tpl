@@ -28,6 +28,7 @@ if (count($categories)) : ?>
          <th><?php echo Filters::noXSS(L('owner')); ?></th>
          <th><?php echo Filters::noXSS(L('show')); ?></th>
          <th><?php echo Filters::noXSS(L('delete')); ?></th>
+         <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
        </tr>
      </thead>
      <tbody>
@@ -55,12 +56,13 @@ if (count($categories)) : ?>
           <?php if ($row['used_in_tasks']): ?>disabled="disabled"<?php endif; ?>
           name="delete[<?php echo Filters::noXSS($row['category_id']); ?>]" value="1" />
         </td>
+        <td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
       </tr>
       <?php endforeach; ?>
       </tbody>
       <?php if($countlines > -1): ?>
       <tr>
-        <td colspan="3"></td>
+        <td colspan="4"></td>
         <td class="buttons">
           <input type="hidden" name="action" value="update_category" />
           <input type="hidden" name="list_type" value="category" />

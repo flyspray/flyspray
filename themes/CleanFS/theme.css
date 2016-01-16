@@ -602,8 +602,7 @@ form #taskdetailsfull {
 
 .group.inactive{ background-color:#eee;}
 .tag {
-    background: #eee none repeat scroll 0 0;
-    border: 1px solid #ddd;
+    background: #ccc none repeat scroll 0 0;
     border-radius: 3px;
     margin-left: 3px;
     padding: 3px;
@@ -611,9 +610,9 @@ form #taskdetailsfull {
     white-space: nowrap;
     vertical-align:middle;
 }
-.tag:before {font-family:fontawesome;}
+.tag:before {font-family:fontawesome;padding-right:3px;}
 .tag:after {content:attr(title);}
-/* style your tags by their tag_id, may be managed by tag list management in admin/proeject settings */
+/* style your tags by their tag_id, may be managed by tag list management in admin/project settings */
 /*
 .tag.t1{background-color:#666;}
 .tag.t1:before{content:'\f153';color:#cc0;}

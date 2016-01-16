@@ -1,5 +1,5 @@
 <input type="checkbox" id="s_shortcuts" />
-<label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> Keyboard shortcuts</label>
+<label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> <?php echo Filters::noXSS(L('keyboardshortcuts')); ?></label>
 <div id="shortcuts">
 <label for="s_shortcuts" id="shortcutclose"><i class="fa fa-close fa-2x"></i></label>
 <h3>Available keyboard shortcuts</h3>

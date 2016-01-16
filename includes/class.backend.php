@@ -741,7 +741,10 @@ abstract class Backend
 		}
 
 		$tables = array('users', 'users_in_groups', 'searches', 'notifications', 'assigned', 'votes', 'effort');
-
+		# FIXME Deleting a users effort without asking when user is deleted may not be wanted in every situation.
+		# For example for billing a project and the deleted user worked for a project.
+		# The better solution is to just deactivate the user, but maybe there are cases a user MUSt be deleted from the database.
+		# Move that effort to an 'anonymous users' effort if the effort(s) was legal and should be measured for project(s)?
 		foreach ($tables as $table) {
 			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
 				return false;
@@ -755,8 +758,8 @@ abstract class Backend
 		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
                         array($userDetails['email_address']));
                 
-		$db->Query('DELETE FROM {user_emails} WHERE email_address = ?',
-                        array($userDetails['email_address']));
+		$db->Query('DELETE FROM {user_emails} WHERE id = ?',
+                        array($uid));
 		
                 $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
                         array($uid, $uid));
@@ -1491,9 +1494,9 @@ LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
 
 	# use preparsed task description cache for dokuwiki when possible
 	if($conf['general']['syntax_plugin']=='dokuwiki' && FLYSPRAY_USE_CACHE==true){
-		$select.=' cache.content desccache, ';
+		$select.=' MIN(cache.content) desccache, ';
 		$from.='
-LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
+LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 	} else {
             $select .= 'NULL AS desccache, ';
         }
