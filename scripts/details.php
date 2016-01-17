@@ -61,7 +61,7 @@ if (!$user->can_view_task($task_details)) {
 		$page->assign('userlist', $userlist);
 
 		# user tries to move a task to a different project:
-		if($move==1){
+		if(isset($move) && $move==1){
 			$page->assign('move', 1);
 			$page->assign('toproject', $toproject);
 		}
