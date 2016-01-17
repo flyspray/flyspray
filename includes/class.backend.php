@@ -1302,20 +1302,6 @@ abstract class Backend
             $LIKEOP = 'ILIKE';
         }
 
-	# GROUP_CONCAT() feature is not in SQL Standard, but very useful for us.
-	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
-		$GCONCATS=' GROUP_CONCAT(';
-		$GCONCATE=')';
-	} elseif($conf['database']['dbtype']=='pgsql'){
-		$GCONCATS=' array_to_string(array_agg(';
-		$GCONCATE='))';
-	} else{
-		# unknown db or unknown solution of group_concat feature
-		# lame fallback, add a PHP notice/message?
-		$GCONCATS=' MIN(';
-		$GCONCATE=')';
-	}
-
         $select = '';
         $groupby = 't.task_id, ';
         $cgroupbyarr = array();
@@ -1450,10 +1436,14 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 
 	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
 		# not every db system has this feature out of box
-		if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql' || $conf['database']['dbtype']=='pgsql'){
-			$select .= $GCONCATS.' DISTINCT u.user_name ORDER BY u.user_id'.$CONCATE.' AS assigned_to_name, ';
-			$select .= $GCONCATS.' DISTINCT u.user_id ORDER BY u.user_id'.$CONCATE.' AS assignedids, ';
-			$select .= $GCONCATS.' DISTINCT u.profile_image ORDER BY u.user_id'.$CONCATE.' AS assigned_image, ';
+		if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
+			$select .= ' GROUP_CONCAT(DISTINCT u.user_name ORDER BY u.user_id) AS assigned_to_name, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.profile_image ORDER BY u.user_id) AS assigned_image, ';
+		} elseif( $conf['database']['dbtype']=='pgsql'){
+			$select .= " array_to_string(array_agg(u.user_name ORDER BY u.user_id), ',') AS assigned_to_name, ";
+			$select .= " array_to_string(array_agg(CAST(u.user_id as text) ORDER BY u.user_id), ',') AS assignedids, ";
+                        $select .= " array_to_string(array_agg(u.profile_image ORDER BY u.user_id), ',') AS assigned_image, ";
 		} else{
 			$select .= ' MIN(u.user_name) AS assigned_to_name, ';
 			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id) AS num_assigned, ';
@@ -1471,10 +1461,14 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 	}
         
 	# not every db system has this feature out of box, it is not standard sql
-	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql' || $conf['database']['dbtype']=='pgsql'){
-		$select .= $GCONCATS.' DISTINCT tg.tag_name ORDER BY tg.list_position '.$GCONCATE.' AS tags, ';
-		$select .= $GCONCATS.' DISTINCT tg.tag_id ORDER BY tg.list_position '.$GCONCATE.' AS tagids, ';
-		$select .= $GCONCATS.' DISTINCT tg.class ORDER BY tg.list_position '.$GCONCATE.' AS tagclass, ';
+	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
+		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
+		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+	} elseif($conf['database']['dbtype']=='pgsql'){
+		$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
+		$select .= " array_to_string(array_agg(CAST(tg.tag_id as text) ORDER BY tg.list_position), ',') AS tagids, ";
+		$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
 	} else{
 		# unsupported groupconcat or we just do not know how write it for the other databasetypes in this section 
 		$select .= ' MIN(tg.tag_name) AS tags, ';
