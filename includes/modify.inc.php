@@ -845,6 +845,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // Check email format
+        if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
+        {
+            Flyspray::show_error(L('novalidemail'));
+            break;
+        }
+
         if (Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
