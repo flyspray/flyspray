@@ -845,6 +845,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // Check email format
+        if (!filter_var(Post::val('email_address'), FILTER_VALIDATE_EMAIL))
+        {
+            Flyspray::show_error(L('wrongemailformat'));
+            break;
+        }
+
         if (Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
