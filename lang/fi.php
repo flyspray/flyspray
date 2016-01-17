@@ -45,6 +45,7 @@ $translation = array(
 'attachfiles'             => 'Liitä tiedostoja',
 'vote'                    => 'Äänestä',
 'groupenabled'            => 'Jäsenet voivat kirjautua',
+'groupopen'               => 'Jäsenet voivat kirjautua',
 'tasktypelist'            => 'Tehtävätyypit',
 'categorylist'            => 'Luokitukset',
 'oslist'                  => 'Käyttöjärjestelmät',

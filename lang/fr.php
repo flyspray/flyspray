@@ -45,6 +45,7 @@ $translation = array(
 'attachfiles'             => 'Joindre des fichiers',
 'vote'                    => 'Vote',
 'groupenabled'            => 'Les membres peuvent se connecter',
+'groupopen'               => 'Les membres peuvent se connecter',
 'tasktypelist'            => 'Liste des types de tâche',
 'categorylist'            => 'Liste des catégories',
 'oslist'                  => 'Liste des systèmes d\'exploitation',
@@ -1027,7 +1028,14 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'novalues'                => 'aucune entrée',
 'youhaveregistered'       => 'Vous êtes inscrit sur Flyspray. Vous trouverez vos détails ci-après :',
 'youhaveregisterednotify' => 'Votre inscription sur Flyspray a été acceptée par les Administrateurs.',
-'usedintasks'             => 'Utilisation'
+'usedintasks'             => 'Utilisation',
+'active'                  => 'Actif(s)',
+'inactive'                => 'Désactivé(s)',
+'showinactive'            => 'Afficher les projets désactivés',
+'hideinactive'            => 'Masquer les projets désactivés',
+'summaryrequired'         => 'Vous devez renseigner un court résumé de la tâche',
+'defaultorderby2'         => 'Ensuite par',
+'freetagging'             => "Autoriser la création de tags par l'utilisateur"
 );
 
 ?>

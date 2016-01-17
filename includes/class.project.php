@@ -2,19 +2,19 @@
 
 class Project
 {
-    var $id = 0;
-    var $prefs = array();
+	var $id = 0;
+	var $prefs = array();
 
-    function Project($id)
-    {
-        global $db, $fs;
+	function __construct($id)
+	{
+		global $db, $fs;
 
-        if (is_numeric($id)) {
-            $sql = $db->Query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
-                                 FROM {projects} p
-                            LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
-                                WHERE p.project_id = ?", array($id));
-            if ($db->countRows($sql)) {
+		if (is_numeric($id)) {
+			$sql = $db->Query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
+				FROM {projects} p
+				LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
+				WHERE p.project_id = ?", array($id));
+			if ($db->countRows($sql)) {
                 $this->prefs = $db->FetchRow($sql);
                 $this->id    = (int) $this->prefs['project_id'];
                 $sortrules=explode(',', $this->prefs['default_order_by']);
@@ -32,15 +32,15 @@ class Project
                                 );
                         }
                 }
-                # using an extra name until default_order_by_dir completely removed
-                $this->prefs['sorting']=$sorting; # we can use this also for highlighting in template which columns are sorted by default in task list!
-                
-                return;
-            }
-        }
+				# using an extra name until default_order_by_dir completely removed
+				$this->prefs['sorting']=$sorting; # we can use this also for highlighting in template which columns are sorted by default in task list!
 
-        $this->id = 0;
-        $this->prefs['project_title'] = L('allprojects');
+				return;
+			}
+		}
+
+		$this->id = 0;
+		$this->prefs['project_title'] = L('allprojects');
         $this->prefs['feed_description']  = L('feedforall');
         $this->prefs['theme_style']   = $fs->prefs['global_theme'];
         $this->prefs['lang_code']   = $fs->prefs['lang_code'];
@@ -58,19 +58,26 @@ class Project
         $this->prefs['hours_per_manday'] = 0;
         $this->prefs['estimated_effort_format'] = 0;
         $this->prefs['current_effort_done_format'] = 0;
-    	$this->prefs['default_order_by'] = 'id';
-    	$this->prefs['default_order_by_dir'] = 'desc';
-    	$this->prefs['custom_style']= $fs->prefs['custom_style'];
+        $this->prefs['custom_style']= $fs->prefs['custom_style'];
 
-        # future field content examples of 'default_order_by':
-        #$this->prefs['default_order_by'] = 'id DESC';
-        #$this->prefs['default_order_by'] = 'severity DESC, priority DESC'; 
-
-        $this->prefs['sorting'] = array(
-                0=>array('field'=>'id','dir'=>'desc'),
-                1=>array('field'=>'severity','dir'=>'desc')
-        );
-    }
+		$sortrules=explode(',', $fs->prefs['default_order_by']);
+		foreach($sortrules as $rule){
+			$last_space=strrpos($rule, ' ');
+			if ($last_space === false){
+				# temporarly
+				$sorting[]=array('field'=>$rule, 'dir'=> $fs->prefs['default_order_by_dir']);
+				# future - when column default_order_by_dir removed from project table:
+				#$sorting[]=array('field'=>$rule, 'dir'=>'desc');
+			}else{
+				$sorting[]=array(
+				'field'=>trim(substr($rule, 0, $last_space)),
+				'dir'=>trim(substr($rule, $last_space))
+				);
+			}
+		}
+		# using an extra name until default_order_by_dir completely removed
+		$this->prefs['sorting']=$sorting;
+	}
 
     # 20150219 peterdd: deprecated
     function setCookie()

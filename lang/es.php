@@ -38,6 +38,7 @@ $translation = array(
 'attachfiles'             => 'Adjuntar archivos',
 'vote'                    => 'Votar',
 'groupenabled'            => 'Los miembros pueden identificarse',
+'groupopen'               => 'Los miembros pueden identificarse',
 'tasktypelist'            => 'Lista de tipos de tarea',
 'categorylist'            => 'Lista de categorías',
 'oslist'                  => 'Lista de sistemas operativos',

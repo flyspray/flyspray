@@ -33,6 +33,7 @@
 
 <?php
 $perm_fields = array(
+'group_open',
 'is_admin',
 'manage_project',
 'view_tasks',
@@ -74,7 +75,7 @@ $gnames='';
 $gdesc='';
 $cols='';
 foreach ($groups as $group){
-	$cols.='<col></col>';
+	$cols.='<col class="group g'.$group['group_id'].($group['group_open']==0?' inactive':'').'"></col>';
 	$gmembers.='<td>'.$group['users'].'</td>';
 	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(CreateURL('editgroup', $group['group_id'], 'admin'))).'">'.$group['group_name']
 		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';

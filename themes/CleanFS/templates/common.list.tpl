@@ -7,16 +7,20 @@
 ?></h3>
 <table class="list" id="idtablesys">
 <colgroup>
-<col class="cname"></col>
-<col class="corder"></col>
-<col class="cshow"></col>
-<?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
-<col class="cdelete"></col>
-<col class="cusage"></col>
+    <?php if ($list_type == 'tag'): ?><col class="ctag" /><?php endif; ?>
+    <col class="cname" />
+    <?php if ($list_type == 'tag'): ?><col class="cclasses" /><?php endif; ?>
+    <col class="corder" />
+    <col class="cshow" />
+    <?php if ($list_type == 'version'): ?><col class="ctense" /><?php endif; ?>
+    <col class="cdelete" />
+    <col class="cusage" />
 </colgroup>
 <thead>
 <tr>
+    <?php if ($list_type == 'tag'): ?><th>ID</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('name')); ?></th>
+    <?php if ($list_type == 'tag'): ?><th>CSS Classes</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('order')); ?></th>
     <th><?php echo Filters::noXSS(L('show')); ?></th>
     <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
@@ -32,7 +36,9 @@ foreach ($sysrows as $row):
 $syscountlines++;
 ?>
 <tr>
+    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
     <td class="first"><?php echo Filters::noXSS($row[$list_type.'_name']); ?></td>
+    <?php if ($list_type == 'tag'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
     <td title="<?php echo Filters::noXSS(L('ordertip')); ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
     <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
     <?php if ($list_type == 'version'): ?><td title="<?php echo Filters::noXSS(L('listtensetip')); ?>"><?php echo $row[$list_type.'_tense']; ?></td><?php endif; ?>
@@ -61,34 +67,46 @@ $syscountlines++;
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
 <table class="list" id="listTable">
 <colgroup>
-    <col class="cname"></col>
-    <col class="corder"></col>
-    <col class="cshow"></col>
-    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
-    <col class="cdelete"></col>
-    <col class="cusage"></col>
+    <?php if ($list_type == 'tag'): ?><col class="ctag" /><?php endif; ?>
+    <col class="cname" />
+    <?php if ($list_type == 'tag'): ?><col class="cclasses" /><?php endif; ?>
+    <col class="corder" />
+    <col class="cshow" />
+    <?php if ($list_type == 'version'): ?><col class="ctense" /><?php endif; ?>
+    <col class="cdelete" />
+    <col class="cusage" />
 </colgroup>
 <thead>
-    <tr>
-       <th><?php echo Filters::noXSS(L('name')); ?></th>
-       <th><?php echo Filters::noXSS(L('order')); ?></th>
-       <th><?php echo Filters::noXSS(L('show')); ?></th>
-       <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
-       <th><?php echo Filters::noXSS(L('delete')); ?></th>
-       <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
-     </tr>
-   </thead>
-   <tbody>
-    <?php
+<tr>
+    <?php if ($list_type == 'tag'): ?><th>ID</th><?php endif; ?>
+    <th><?php echo Filters::noXSS(L('name')); ?></th>
+    <?php if ($list_type == 'tag'): ?><th>CSS Classes</th><?php endif; ?>
+    <th><?php echo Filters::noXSS(L('order')); ?></th>
+    <th><?php echo Filters::noXSS(L('show')); ?></th>
+    <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
+    <th><?php echo Filters::noXSS(L('delete')); ?></th>
+    <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+</tr>
+</thead>
+<tbody>
+<?php
     $countlines = -1;
     foreach ($rows as $row):
-    $countlines++; ?>
-    <tr>
-      <td class="first">
+    $countlines++;
+?>
+<tr>
+    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?><?php echo isset($row['class']) ? ' '.Filters::noXSS($row['class']) : ''; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
+    <td>
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
-      </td>
-      <td title="<?php echo Filters::noXSS(L('ordertip')); ?>">
+    </td>
+    <?php if ($list_type == 'tag'): ?>
+    <td>
+        <input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
+          value="<?php echo Filters::noXSS($row['class']); ?>" />
+    </td>
+    <?php endif; ?>
+    <td title="<?php echo Filters::noXSS(L('ordertip')); ?>">
         <input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
       </td>
       <td title="<?php echo Filters::noXSS(L('showtip')); ?>">
@@ -150,11 +168,11 @@ $syscountlines++;
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, $list_type, $proj->id))); ?>
 <table class="list">
 <colgroup>
-    <col class="cname"></col>
-    <col class="corder"></col>
-    <col class="cshow"></col>
-    <?php if ($list_type == 'version'): ?><col class="ctense"></col><?php endif; ?>
-    <col class="cdelete"></col>
+    <col class="cname" />
+    <col class="corder" />
+    <col class="cshow" />
+    <?php if ($list_type == 'version'): ?><col class="ctense" /><?php endif; ?>
+    <col class="cdelete" />
 </colgroup>
 <tbody>
 <tr>

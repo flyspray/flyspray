@@ -1,11 +1,13 @@
 <?php
 
-# quick safety
-exit;
+# temp: just wrapped that code in a function so it is not run by phpunit
+function createTestData(){
+    # quick safety
+    exit;
 
-if (PHP_SAPI !== 'cli') {
-    die('');
-}
+    if (PHP_SAPI !== 'cli') {
+        die('');
+    }
 
 // Use this only on a new test installation, code does not work on
 // an existing one, and never will.
@@ -589,4 +591,5 @@ function add_project_data() {
     }
 }
 
+} // end function creatTestData
 ?>

@@ -1,0 +1,19 @@
+/* template example for customizable tags.css.
+_tags.css will be overwritten by Flyspray upgrades.
+Your customized tags.css will stay untouched during Flyspray upgrades and reflects your tag settings in admin area.
+*/
+
+/* you can overwrite default tag style from theme.css */
+/*.tag {border-width:3px;}*/
+
+/* just a predefined collection of available colors here. So you can map it to tagid's or tag classes */
+.tag.tphone, t1 { background-color:#900;color:#fff;}
+.tag.tfax, t2 { background-color:#ff0;color:#000;}
+.tag.temail, t3 {background-color:#009;color:#fff;}
+
+/* some public icons */
+.tag:before {font-family:fontawesome;}
+.tag.tphone:before {content:'\f098';}
+.tag.tfax:before {content:'\f1ac';}
+.tag.temail:before {content:'\f0e0';}
+.tag.tphone:after, .tag.tphone:after {content:'';} /* hide the title again */

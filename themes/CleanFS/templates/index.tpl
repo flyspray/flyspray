@@ -296,6 +296,7 @@
 		d.style.top = (cY+10) + "px";
 	}
 	function Show(elem, id) {
+		if(cY == 0) return;
 		var div = document.getElementById("desc_"+id);
 		AssignPosition(div);
 		div.style.display = "block";

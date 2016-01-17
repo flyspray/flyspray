@@ -741,7 +741,10 @@ abstract class Backend
 		}
 
 		$tables = array('users', 'users_in_groups', 'searches', 'notifications', 'assigned', 'votes', 'effort');
-
+		# FIXME Deleting a users effort without asking when user is deleted may not be wanted in every situation.
+		# For example for billing a project and the deleted user worked for a project.
+		# The better solution is to just deactivate the user, but maybe there are cases a user MUSt be deleted from the database.
+		# Move that effort to an 'anonymous users' effort if the effort(s) was legal and should be measured for project(s)?
 		foreach ($tables as $table) {
 			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
 				return false;
@@ -755,8 +758,8 @@ abstract class Backend
 		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
                         array($userDetails['email_address']));
                 
-		$db->Query('DELETE FROM {user_emails} WHERE email_address = ?',
-                        array($userDetails['email_address']));
+		$db->Query('DELETE FROM {user_emails} WHERE id = ?',
+                        array($uid));
 		
                 $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
                         array($uid, $uid));
@@ -1462,9 +1465,13 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		# without distinct i see multiple times each tag (when task has several assignees too)
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
-	}else{
+		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+	} else{
+		# FIXME: GROUP_CONCAT() for postgresql?
 		$select .= ' MIN(tg.tag_name) AS tags, ';
-		$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
+		$select .= ' MIN(tg.tag_id) AS tagids, ';
+		$select .= " '' AS tagclass, ";
 	}
 	// task_tag join table is now always included in join
 	$from .= '
@@ -1478,9 +1485,9 @@ LEFT JOIN {list_tag} tg ON tt.tag_id = tg.tag_id ';
 
 	# use preparsed task description cache for dokuwiki when possible
 	if($conf['general']['syntax_plugin']=='dokuwiki' && FLYSPRAY_USE_CACHE==true){
-		$select.=' cache.content desccache, ';
+		$select.=' MIN(cache.content) desccache, ';
 		$from.='
-LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
+LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 	} else {
             $select .= 'NULL AS desccache, ';
         }
@@ -1673,13 +1680,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
 
         // Implementing setting "Default order by"
         if (!array_key_exists('order', $args)) {
-            if ($proj->id) {
-                /*
-                $orderBy = $proj->prefs['default_order_by'];
-                $sort = $proj->prefs['default_order_by_dir'];
-                */
-
-                # future
+        	# now also for $proj->id=0 (allprojects)
                 $orderBy = $proj->prefs['sorting'][0]['field'];
                 $sort =    $proj->prefs['sorting'][0]['dir'];
                 if (count($proj->prefs['sorting']) >1){
@@ -1689,14 +1690,6 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type="task" ';
                         $orderBy2='severity';
                         $sort2='DESC';
                 }
-
-            } else {
-                $orderBy = $fs->prefs['default_order_by'];
-                $sort = $fs->prefs['default_order_by_dir'];
-                # temp
-                $orderBy2='severity';
-                $sort2='DESC';
-            }
         } else {
             $orderBy = $args['order'];
             $sort = $args['sort'];

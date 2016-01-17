@@ -16,9 +16,8 @@ tr.severity3, tr.severity3 .task_severity, tr.severity3 .task_id {background: #f
 tr.severity2 .task_severity, tr.severity2 .task_id {background: #eee linear-gradient(#fff, #eee) repeat scroll 0 0;}
 
 /* highly experimental! may move to default css if finshed */
-#tasklist_table tbody tr td {padding-top:0px; padding-bottom:0px;border-top:none; border-bottom:1px dotted #ccc;}
-th.tasktype, th.severity, th.priority
-{ width:20px;max-width:20px;overflow:hidden;}
+#tasklist_table tbody tr td {padding-top:0px; padding-bottom:0px;border-top:none; border-bottom:1px dotted #ccc;vertical-align:middle;}
+th.tasktype, th.severity, th.priority {width:20px;max-width:20px;overflow:hidden;}
 
 tr .typ1, tr .typ2, tr .typ3, tr .typ4, tr .typ5,
 tr .sev1, tr .sev2, tr .sev3, tr .sev4, tr .sev5,
@@ -26,8 +25,8 @@ tr .pri1, tr .pri2, tr .pri3, tr .pri4, tr .pri5
 { visibility:hidden;width:20px;max-width:20px;white-space:nowrap;text-overflow:hidden;font-size:16px;}
 
 tr .typ1:before { visibility:visible;content:"\f188";font-family:fontawesome;color:#900;} /*fa-bug*/
-tr .typ2:before { visibility:visible;content:"\f06b";font-family:fontawesome;color:#6c0;} /*fa-gift*/
-tr .typ3:before { visibility:visible;content:"\f19d";font-family:fontawesome;color:#990;} /*fa-graduation-cap*/
+tr .typ2:before { visibility:visible;content:"\f06b";font-family:fontawesome;color:#390;} /*fa-gift*/
+tr .typ3:before { visibility:visible;content:"\f19d";font-family:fontawesome;color:#000;} /*fa-graduation-cap*/
 tr .typ4:before { visibility:visible;content:"\f111";font-family:fontawesome;color:#009;} /*fa-circle*/
 
 tr .sev1:before { visibility:visible;content:"";font-family:fontawesome;color:#fff;} /**/

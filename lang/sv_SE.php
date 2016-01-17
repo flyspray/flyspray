@@ -35,6 +35,7 @@ $translation = array(
 'attachfiles'             => 'Bifoga filer',
 'vote'                    => 'Rösta',
 'groupenabled'            => 'Medlemmar kan logga in',
+'groupopen'               => 'Medlemmar kan logga in',
 'tasktypelist'            => 'Ärendetypslista',
 'categorylist'            => 'Kategorilista',
 'oslist'                  => 'Operativsystemslista',

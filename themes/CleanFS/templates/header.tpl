@@ -18,6 +18,11 @@
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+<?php 
+# include an optional, customized css file for tag styling (all projects, loads even for guests)
+if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
+	<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>tags.css" rel="stylesheet" type="text/css" />
+<?php endif; ?>
 <?php if($proj->prefs['custom_style'] !=''): ?>
 	<link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()).$proj->prefs['custom_style']; ?>" rel="stylesheet" type="text/css" />
 <?php endif; ?>

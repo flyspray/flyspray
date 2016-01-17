@@ -36,6 +36,7 @@ $translation = array(
 'attachfiles'             => 'Voeg bijlagen toe',
 'vote'                    => 'Leden kunnen inloggen',
 'groupenabled'            => 'Leden kunnen inloggen',
+'groupopen'               => 'Leden kunnen inloggen',
 'tasktypelist'            => 'Lijst met taaktypes',
 'categorylist'            => 'Categorielijst',
 'oslist'                  => 'Besturingssysteemlijst',

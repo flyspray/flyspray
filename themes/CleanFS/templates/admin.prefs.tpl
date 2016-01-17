@@ -50,9 +50,9 @@ function ShowHidePassword(id) {
   <?php echo tpl_form(CreateURL('admin', 'prefs')); ?>
   <ul id="submenu">
    <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
+   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
-   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
   </ul>
 
    <div id="general" class="tab">
@@ -283,7 +283,7 @@ function ShowHidePassword(id) {
               <input id="showsmtppass" name="show_smtp_pass" class="text" type="checkbox"  onclick="ShowHidePassword('smtppass')"/>
           </li>
         </ul>
-Test currently active email settings: <button onclick="testEmail();return false;">Test</button><div id="emailresult" style="display:inline-block;"></div> . And also check if you received the test email in the mail account of the current user (see 'myprofile'-page).
+  <?php echo Filters::noXSS(L('testmailsettings')); ?>: <button onclick="testEmail();return false;"><?php echo Filters::noXSS(L('test')); ?></button><div id="emailresult" style="display:inline-block;"></div> <?php echo Filters::noXSS(L('testmailsettingsnotice')); ?>.
 <script>
 function testEmail(){
 	var xmlHttp = new XMLHttpRequest();
@@ -351,21 +351,23 @@ function testEmail(){
 
     <div id="lookandfeel" class="tab">
       <ul class="form_elements">
-        <li>
-		<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
-		<select id="globaltheme" name="global_theme">
-		<?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
-        	</select>
-		<label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
-        	<select id="customstyle" name="custom_style">
-		<?php 
-		$nocustom=array('no'=>L('no'));
-		$customstyles=glob_compat(BASEDIR ."/themes/".($fs->prefs['global_theme'])."/custom_*.css");
-		$customstyles=array_merge($nocustom,$customstyles);
-		echo tpl_options($customstyles, $fs->prefs['custom_style'], true); 
-		?>
-        	</select>
-        </li>
+			<li>
+			<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
+			<select id="globaltheme" name="global_theme">
+			<?php echo tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true); ?>
+			</select>
+			<label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
+			<select id="customstyle" name="custom_style">
+			<?php
+			$customs[]=array('', L('no'));
+			$customstyles=glob_compat(BASEDIR ."/themes/".($proj->prefs['theme_style'])."/custom_*.css");
+			foreach ($customstyles as $cs){
+				$customs[]=array($cs,$cs);
+			}
+			echo tpl_options($customs, $proj->prefs['custom_style']);
+			?>
+			</select>
+      </li>
 
         <?php // Set the selectable column names
             // Do NOT use real database column name here and in the next list,
@@ -388,6 +390,7 @@ function testEmail(){
                 'private' => L('private'),
                 'assignedto' => L('assignedto'),
                 'lastedit' => L('lastedit'),
+                'editedby' => L('editedby'),
                 'reportedin' => L('reportedin'),
                 'dueversion' => L('dueversion'),
                 'duedate' => L('duedate'),
@@ -395,6 +398,7 @@ function testEmail(){
                 'attachments' => L('attachments'),
                 'progress' => L('progress'),
                 'dateclosed' => L('dateclosed'),
+                'closedby' => L('closedby'),
                 'os' => L('os'),
                 'votes' => L('votes'),
                 'estimatedeffort' => L('estimatedeffort'),
@@ -405,14 +409,19 @@ function testEmail(){
         <li>
           <label for="default_order_by"><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
-            <?php echo tpl_options($columnnames, $fs->prefs['default_order_by'], false); ?>
+            <?php echo tpl_options($columnnames, $proj->prefs['sorting'][0]['field'], false); ?>
+          </select>
+          <select id="default_order_by_dir" name="default_order_by_dir">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][0]['dir'], false); ?>
           </select>
         </li>
-
-        <li>
-          <label for="default_order_by_dir"><?php echo Filters::noXSS(L('defaultorderbydirection')); ?></label>
-          <select id="default_order_by_dir" name="default_order_by_dir">
-            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $fs->prefs['default_order_by_dir'], false); ?>
+				<li>
+          <label for="default_order_by2"><?php echo Filters::noXSS(L('defaultorderby2')); ?></label>
+          <select id="default_order_by2" name="default_order_by2">
+            <?php echo tpl_options($columnnames, $proj->prefs['sorting'][1]['field'], false); ?>
+          </select>
+          <select id="default_order_by_dir2" name="default_order_by_dir2">
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][1]['dir'], false); ?>
           </select>
         </li>
 

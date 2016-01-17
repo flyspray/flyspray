@@ -943,7 +943,7 @@ class Flyspray
 
         return $changes;
     } // }}}
-    
+
 	// {{{
         /**
         * Get all tags of a task
@@ -957,13 +957,13 @@ class Flyspray
                 # pre FS1.0beta
                 #$sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
                 # since FS1.0beta
-                $sql = $db->Query('SELECT tg.tag_name AS tag, tg.class FROM {task_tag} tt
+                $sql = $db->Query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
                         JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
                         WHERE task_id = ?
                         ORDER BY list_position', array($task_id));
                 return $db->FetchAllArray($sql);
 	} /// }}}
-    
+
     // {{{
     /**
      * Get a list of assignees for a task
@@ -1032,6 +1032,8 @@ class Flyspray
     /**
      * Returns the key number of an array which contains an array like array($key => $value)
      * For use with SQL result arrays
+     * returns 0 for first index, so take care if you want check when useing to check if a value exists, use ===
+     *
      * @param string $key
      * @param string $value
      * @param array $array
@@ -1046,6 +1048,7 @@ class Flyspray
                 return $num;
             }
         }
+	return false;
     }
 
     /**

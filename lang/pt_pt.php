@@ -40,6 +40,7 @@ $translation = array(
 'attachfiles'             => 'Anexar ficheiros',
 'vote'                    => 'Votar',
 'groupenabled'            => 'Membros podem-se conectar',
+'groupopen'               => 'Membros podem-se conectar',
 'tasktypelist'            => 'Lista de Tipos de Tarefas',
 'categorylist'            => 'Lista de Categorias',
 'oslist'                  => 'Lista de Sistemas Operativos',

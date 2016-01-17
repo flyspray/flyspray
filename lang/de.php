@@ -2,11 +2,11 @@
 //
 // This file is auto generated with langedit.php
 // Characters are UTF-8 encoded
-//
+// 
 // Be careful when editing this file manually, some text editors
 // may convert text to UCS-2 or similar (16-bit) which is NOT
 // readable by the PHP parser
-//
+// 
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
@@ -44,8 +44,8 @@ $translation = array(
 'addcomments'             => 'Kommentare hinzufügen',
 'attachfiles'             => 'Dateien anhängen',
 'vote'                    => 'Stimme',
-'tovote'                  => 'abstimmen',
 'groupenabled'            => 'Mitglieder können sich anmelden (Gruppe aktiv)',
+'groupopen'               => 'Mitglieder können sich anmelden (Gruppe aktiv)',
 'tasktypelist'            => 'Aufgabentypen',
 'categorylist'            => 'Kategorien',
 'oslist'                  => 'Betriebssysteme',
@@ -68,6 +68,7 @@ $translation = array(
 'baseurl'                 => 'Basis-URL für diese Installation',
 'replyaddress'            => 'Antwortadresse für E-Mail-Benachrichtigungen',
 'themestyle'              => 'Design',
+'customstyle'             => 'angepasst',
 'language'                => 'Sprache',
 'anonview'                => 'Anonyme Benutzer dürfen Aufgaben sehen',
 'allowanon'               => 'Anonyme Benutzer dürfen neue Aufgaben anlegen',
@@ -228,7 +229,7 @@ $translation = array(
 'canceledit'              => 'abbrechen',
 'anonymous'               => 'Anonymer Reporter',
 'complete'                => 'erledigt',
-'closedby'                => 'geschlossen',
+'closedby'                => 'geschlossen von',
 'reasonforclosing'        => 'Grund für das Schließen:',
 'reopenthistask'          => 'Aufgabe wieder öffnen',
 'comments'                => 'Kommentare',
@@ -259,8 +260,8 @@ $translation = array(
 'projectvalues'           => 'Projektspezifische Listenwerte',
 'remindthisuser'          => 'diesen Benutzer',
 'thisoften'               => 'alle',
-'remind'                  => 'erinnern',
 'startafter'              => 'Zeit bis zur ersten Erinnerung',
+'hour'                    => 'Stunde',
 'hours'                   => 'Stunden',
 'day'                     => 'Tag',
 'days'                    => 'Tage',
@@ -326,6 +327,7 @@ $translation = array(
 'taskmadeprivate'         => 'Diese Aufgabe wurde versteckt',
 'taskmadepublic'          => 'Diese Aufgabe wurde wieder veröffentlicht',
 'confirmdeletecomment'    => 'Diesen Kommentar wirklich löschen? %s',
+'attachementswilldeleted' => 'Alle Anhänge werden ebenfalls gelöscht!',
 'confirmdeleteattach'     => 'Diesen Anhang wirklich löschen?',
 'selectedhistory'         => 'Verlauf für markierten Eintrag anzeigen',
 'showallhistory'          => 'Kompletten "Verlauf"-Tab wieder anzeigen',
@@ -414,6 +416,7 @@ $translation = array(
 'nosearches'              => 'Keine Suchprofile vorhanden',
 'saving'                  => 'Speichern...',
 'votes'                   => 'Stimmen',
+'tovote'                  => 'abstimmen',
 'allclosedtasks'          => 'alle geschlossenen ',
 'password'                => 'Passwort',
 'login'                   => 'Login',
@@ -785,7 +788,6 @@ $translation = array(
 'defaulttask'             => 'Standard Aufgabenbeschreibung',
 'all'                     => 'alles',
 'events.useraddedtoassignees'=> 'Zuständigen hinzugefügt',
-'vote'                    => 'Stimme',
 'eventlog'                => 'Berichte',
 'assignmentchanged'       => 'Zuständigkeit geändert',
 'detailedinfo'            => 'Details',
@@ -917,6 +919,7 @@ $translation = array(
 'parenttaskid'            => 'Oberaufgaben-ID',
 'invalidsupertaskid'      => 'Oberaufgaben-ID ist ungültig.',
 'supertaskadded'          => 'Gruppierungsaufgabe hinzugefügt.',
+'supertaskremoved'        => 'Übergeordnete Aufgabe gelöscht',
 'effort'                  => 'Aufwand',
 'efforttracking'          => 'Aufwandmessung',
 'useeffort'               => 'Projekt nutzt Aufwandmessung',
@@ -968,14 +971,13 @@ $translation = array(
 'onlyoauthreg'            => 'nur Anmeldung per OAuth erlauben',
 'estimatedeffortformat'   => 'Anzeigeformat für geschätzten Arbeitsaufwand',
 'currenteffortdoneformat' => 'Anzeigeformat für erfolgten Arbeitsaufwand',
-'minuteplural'            => 'Minuten',
-'minutesingular'          => 'Minute',
 'minute'                  => 'Minute',
 'minutes'                 => 'Minuten',
+'minuteplural'            => 'Minuten',
+'minutesingular'          => 'Minute',
 'minuteabbrev'            => 'min',
 'hourplural'              => 'Stunden',
 'hoursingular'            => 'Stunde',
-'hour'                    => 'Stunde',
 'hourabbrev'              => 'h',
 'estimatedeffortopen'     => 'geschätzter Arbeitsaufwand offener Aufgaben',
 'currenteffortdoneopen'   => 'bisher erfolgter Arbeitsaufwand bei offenen Aufgaben',
@@ -992,23 +994,18 @@ $translation = array(
 'pleaseselect'            => 'Bitte auswählen',
 'closeselectedtasks'      => 'ausgewählte Aufgaben schließen',
 'closetasks'              => 'Aufgaben schließen',
-'hintforbulkimport'       => '<b>Hinweise zum Mehrfachimport</b>
-  <ol>
-  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
-  <li>Currently you can only paste Summary and Details.</li>
-  <li>Die Aufgabenzuweisung hat eine Autovervollständigenfunktion, einfach anfangen Namen einzutippen und Vorschläge werden angezeigt.</li>
-  </ol>',
+'hintforbulkimport'       => "<b>Hinweise zum Mehrfachimport</b>\n  <ol>\n  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>\n  <li>Currently you can only paste Summary and Details.</li>\n  <li>Die Aufgabenzuweisung hat eine Autovervollständigenfunktion, einfach anfangen Namen einzutippen und Vorschläge werden angezeigt.</li>\n  </ol>",
 'taskissubtaskof'         => 'Die Aufgabe ist eine Unteraufgabe von',
 'applyfirstline'          => 'Erste Zeile in alle darunter kopieren',
 'addmorerows'             => 'weitere Zeilen einfügen',
 'addtasks'                => 'Aufgaben eintragen',
 'massopsdisabled'         => 'Die Massenbearbeitung von Aufgaben ist derzeit abgeschaltet für Flyspray 1.0. Diese Fähigkeit wird wieder freigeschaltet, sobald die Überarbeitung abgeschlossen ist.',
 'viewroadmap'             => 'Planung anschauen',
-'attachementswilldeleted' => 'Alle Anhänge werden ebenfalls gelöscht!',
-'supertaskremoved'        => 'Übergeordnete Aufgabe gelöscht',
 'nosuicide'               => 'Sehr geehrter Nutzer, es ist nicht erlaubt Ihren Zugang zu Flyspray zu zerstören in dem Sie Ihr eigenes Konto deaktivieren oder Ihre Gruppe wechseln. The empathic brother of HAL9000',
+'movingtodifferentproject'=> 'Verschieben von einer Aufgabe zu einem anderen Projekt welche eine Ober- oder Unteraufgabe ist, ist nicht erlaubt. Sie müssen erst die Verbindung zwischen den Aufgaben trennen.',
 'musthavesameproject'     => 'Ober- und Unteraufgabe müssen das gleiche Projekt haben.',
 'defaultorderby'          => 'Aufgabenliste standardmäßig sortieren nach',
+'defaultorderby2'         => '2. Sortierkriterium',
 'viewowntasks'            => 'Eigene Aufgaben anzeigen',
 'viewgroupstasks'         => 'Gruppenaufgaben anzeigen',
 'urlrewriting'            => 'hübsche URLs',
@@ -1016,11 +1013,10 @@ $translation = array(
 'nomodrewrite'            => 'Der "Mod rewrite" ist nicht auf Ihrem Server verfügbar, daher kann "url rewriting" nicht angewendet werden',
 'on'                      => 'aktiviert',
 'off'                     => 'deaktiviert',
+'defaultorderbydirection' => 'Standardmäßig sortiert als',
 'ascending'               => 'aufsteigend',
 'descending'              => 'absteigend',
 'myassignedtasks'         => 'Meine Aufgaben',
-'defaultorderbydirection' => 'Standardmäßig sortiert als',
-'movingtodifferentproject'=> 'Verschieben von einer Aufgabe zu einem anderen Projekt welche eine Ober- oder Unteraufgabe ist, ist nicht erlaubt. Sie müssen erst die Verbindung zwischen den Aufgaben trennen.',
 'commentedon'             => 'schrieb am',
 'maxvoteperday'           => 'Stimmen pro Tag',
 'votesperproject'         => 'Stimmen pro Projekt',
@@ -1034,6 +1030,10 @@ $translation = array(
 'youhaveregisterednotify' => 'Ihre Registrierung bei Flyspray wurde bestätigt.',
 'usedintasks'             => 'Verwendung',
 'freetagging'             => 'nutzerdefinierte Schildchen',
+'keyboardshortcuts'       => 'Tastenkürzel',
+'testmailsettings'        => 'Testet die aktuellen Email-Einstellungen',
+'test'                    => 'Testen',
+'testmailsettingsnotice'  => 'Prüfen Sie anschließend auch, ob an das Email-Konto des aktuell eingeloggten Benutzers (siehe \'Meine Benutzerdaten\') eine Test-Email eingegangen ist',
 );
 
 ?>

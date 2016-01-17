@@ -47,6 +47,7 @@ $translation = array(
 'attachfiles'             => 'Priložiť súbory',
 'vote'                    => 'Hlasuj',
 'groupenabled'            => 'Členovia sa môžu prihlásiť',
+'groupopen'               => 'Členovia sa môžu prihlásiť',
 'tasktypelist'            => 'Zoznam typov dotazov',
 'categorylist'            => 'Zoznam kategórií',
 'oslist'                  => 'Zoznam operačných systémov',

@@ -59,6 +59,12 @@ if (!$user->can_view_task($task_details)) {
 			$page->assign('assignees', $db->FetchCol($assignees));
 		}
 		$page->assign('userlist', $userlist);
+
+		# user tries to move a task to a different project:
+		if(isset($move) && $move==1){
+			$page->assign('move', 1);
+			$page->assign('toproject', $toproject);
+		}
 		$page->pushTpl('details.edit.tpl');
 	} else {
 		$prev_id = $next_id = 0;
