@@ -1306,7 +1306,7 @@ abstract class Backend
 	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
 		$GCONCATS=' GROUP_CONCAT(';
 		$GCONCATE=')';
-	} elseif($conf['database']['dbtype']=='pgsql')){
+	} elseif($conf['database']['dbtype']=='pgsql'){
 		$GCONCATS=' array_to_string(array_agg(';
 		$GCONCATE='))';
 	} else{
