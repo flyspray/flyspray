@@ -61,7 +61,7 @@ foreach ($merge as $group){
 	if($group['project_id']!=0) {
 		$gnames.='<td><a class="button" title="'.eL('editgroup').'" href="'.(CreateURL('editgroup', $group['group_id'], 'pm')).'">'.$group['group_name'].'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
 	} else {
-		$gnames.='<th title="'.eL('isglobalgroup').'">'.$group['group_name'].'</th>';
+		$gnames.='<th title="'.eL('globalgroup').'">'.$group['group_name'].'</th>';
 	}
 	$gdesc.='<td>'.$group['group_desc'].'</td>';
 	foreach ($group as $key => $val) {
