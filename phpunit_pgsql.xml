@@ -2,8 +2,12 @@
 <phpunit bootstrap="Tests/bootstrap.php" colors="true">
 <php>
 <var name="db_dsn" value="pgsql:dbname=flyspray_test;host=localhost"/>
-<var name="db_username" value="postgres"/>
-<var name="db_password" value=""/>
+<var name="dbtype" value="pgsql"/>
+<var name="dbhost" value="localhost"/>
+<var name="dbname" value="flyspray_test"/>
+<var name="dbuser" value="postgres"/>
+<var name="dbpass" value=""/>
+<var name="dbprefix" value="flyspray_"/>
 </php>
 <testsuites>
 <testsuite name="Flyspray Test Suite">
