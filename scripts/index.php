@@ -243,8 +243,8 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         case 'assignedto':
 		# group_concat-ed for mysql
 		$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
-		# for DBs without group_concat()
-		if( ('mysql' != $db->dblink->dataProvider) && ($task['num_assigned'] > 1)) {
+		# fallback for DBs we haven't written sql string aggregation yet (currently with group_concat() mysql and array_agg() postgresql)
+                if( ('postgres' != $db->dblink->dataProvider) && ('mysql' != $db->dblink->dataProvider) && ($task['num_assigned'] > 1)) {
 			$value .= ', +' . ($task['num_assigned'] - 1);
 		}
 		break;
