@@ -1034,6 +1034,20 @@ $translation = array(
 'testmailsettings'        => 'Testet die aktuellen Email-Einstellungen',
 'test'                    => 'Testen',
 'testmailsettingsnotice'  => 'Prüfen Sie anschließend auch, ob an das Email-Konto des aktuell eingeloggten Benutzers (siehe \'Meine Benutzerdaten\') eine Test-Email eingegangen ist',
+'invalidinput'            => 'Es liegen ungültige Aufgaben-Eigenschaften vor, die korrigiert werden müssen, um die Aufgabe zu einem anderen Projekt verschieben zu können',
+'invalidstatus'           => 'Bitte wählen Sie einen gültigen Eintrag für \'Status\' aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invalidcategory'         => 'Bitte wählen Sie einen gültigen Eintrag für \'Kategorie\' aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invalidreportedversion'  => 'Bitte wählen Sie einen gültigen Eintrag für \'betrifft Version\' aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invaliddueversion'       => 'Bitte wählen Sie einen gültigen Eintrag für \'fällig in Version\' aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invalidos'               => 'Bitte wählen Sie einen gültigen Eintrag für \'Betriebssystem\' aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invalidtags'             => 'Bitte wählen Sie nur gültige Schildchen aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'invalidassignees'        => 'Bitte wählen Sie nur gültige Zuständige aus, um die Aufgabe zu einem anderen Projekt zu verschieben',
+'customize'               => 'anpassen',
+'hidesubs'                => 'verstecke Unteraufgaben',
+'hideprivate'             => 'verstecke private Aufgaben',
+'hideclosed'              => 'verstecke geschlossene Aufgaben',
+'currentproject'          => 'Aktuelles Projekt',
+'targetproject'           => 'Zielprojekt',
 );
 
 ?>
