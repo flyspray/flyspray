@@ -96,6 +96,13 @@ if (!isset($project_id)) {
     if (($project_id = Cookie::val('flyspray_project')) == '') {
         $project_id = $fs->prefs['default_project'];
     }
+
+    // Force default value if input format is not allowed
+    if(is_array(Req::val('project')))
+    {
+      Req::set('project', $fs->prefs['default_project']);
+    }
+
     $project_id = Req::val('project', Req::val('project_id', $project_id));
 }
 
