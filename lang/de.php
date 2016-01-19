@@ -1048,6 +1048,15 @@ $translation = array(
 'hideclosed'              => 'verstecke geschlossene Aufgaben',
 'currentproject'          => 'Aktuelles Projekt',
 'targetproject'           => 'Zielprojekt',
+'availablekeybshortcuts'  => 'Verfügbare Tastenkürzel',
+'logindialoglogout'       => 'Login-Dialog / Logout',
+'focustaskidsearch'       => 'fokussiere \'Zeige Aufgabe #\'',
+'openselectedtask'        => 'öffne ausgewählte Aufgabe',
+'movecursorup'            => 'bewege Cursor nach open',
+'movecursordown'          => 'bewege Cursor nach unten',
+'taskdetails'             => 'Aufgabendetails',
+'taskediting'             => 'Aufgabenbearbeitung',
+'savetask'                => 'speichere Aufgabe',
 );
 
 ?>
