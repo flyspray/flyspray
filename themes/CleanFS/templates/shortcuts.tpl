@@ -21,7 +21,7 @@
 <li><kbd>n</kbd> <?php echo Filters::noXSS(L('nexttask')); ?></li>
 <li><kbd>p</kbd> <?php echo Filters::noXSS(L('previoustask')); ?></li>
 </ul>
-<h4><?php echo Filters::noXSS(L('addedittask')); ?></h4>
+<h4><?php echo Filters::noXSS(L('taskediting')); ?></h4>
 <ul>
 <li><kbd>SHIFT+ALT+s</kbd> <?php echo Filters::noXSS(L('savetask')); ?></li>
 </ul>

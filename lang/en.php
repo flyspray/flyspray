@@ -1069,7 +1069,7 @@ Regards,',
 'movecursorup'            => 'move cursor up',
 'movecursordown'          => 'move cursor down',
 'taskdetails'             => 'Task Details',
-'addedittask'             => 'Add/Edit Task',
+'taskediting'             => 'Task Editing',
 'savetask'                => 'save task'
 );
 ?>
