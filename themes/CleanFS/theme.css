@@ -966,7 +966,6 @@ a.datelink {
   vertical-align: middle;
 }
 hr { /*color: $box_border;*/ border: none; border-top: 1px solid #e1e1e1;}
-.perms{display:inline-block;vertical-align:top;}
 .bad{color:#900;}
 .good{color:#090;}
 
