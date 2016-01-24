@@ -1035,7 +1035,26 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'hideinactive'            => 'Masquer les projets désactivés',
 'summaryrequired'         => 'Vous devez renseigner un court résumé de la tâche',
 'defaultorderby2'         => 'Ensuite par',
-'freetagging'             => "Autoriser la création de tags par l'utilisateur"
+'freetagging'             => "Autoriser la création de tags par l'utilisateur",
+'customstyle'             => 'personnalisé',
+'keyboardshortcuts'       => 'Raccourcis clavier',
+'testmailsettings'        => 'Tester l\'envoi d\'email avec la configuration actuellement active',
+'test'                    => 'Tester',
+'testmailsettingsnotice'  => 'Et vérifier également que vous avez bien reçu l\'email de test dans la boîte mail de l\'utilisateur actuel (Voir la page "Mon profil")',
+'invalidinput'            => 'Certaines propriétés sont incompatibles et doivent être modifiées avant de déplacer cette tâche vers un autre projet.',
+'invalidstatus'           => 'Veuillez sélectionner un statut valide pour cette tâche lors d\'un déplacement vers un autre projet',
+'invalidcategory'         => 'Veuillez sélectionner une catégorie valide pour cette tâche lors d\'un déplacement vers un autre projet',
+'invalidreportedversion'  => 'Veuillez sélectionner une version de base valide pour cette tâche lors d\'un déplacement vers un autre projet',
+'invaliddueversion'       => 'Veuillez sélectionner une version de livrable valide pour cette tâche lors d\'un déplacement vers un autre projet',
+'invalidos'               => 'Veuillez sélectionner un système d\'exploitation valide pour cette tâche lors d\'un déplacement vers un autre projet',
+'invalidtags'             => 'Veuillez ne sélectionner que des tags autorisés pour cette tâche lors d\'un déplacement vers un autre projet',
+'invalidassignees'        => 'Veuillez ne sélectionner que des utilisateurs assignés autorisés pour cette tâche lors d\'un déplacement vers un autre projet',
+'customize'               => 'Personnaliser',
+'hidesubs'                => 'Masquer les sous-tâches',
+'hideprivate'             => 'Masquer les tâches privées',
+'hideclosed'              => 'Masquer les tâches closes',
+'currentproject'          => 'Projet actuel',
+'targetproject'           => 'Projet de destination'
 );
 
 ?>
