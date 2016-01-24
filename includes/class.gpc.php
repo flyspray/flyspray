@@ -48,11 +48,12 @@ abstract class Req
         return Filters::isAlnum(Req::val($key));
     }
 
-    // Set a request value
-    public static function set($key, $value = null)
-    {
-      $_REQUEST[$key] = $value;
-    }
+	/**
+	 * Overwrites or sets a request value
+	 */
+	public static function set($key, $value = null) {
+		$_REQUEST[$key] = $value;
+	}
 }
 
  // }}}
