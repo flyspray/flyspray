@@ -508,12 +508,13 @@ tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
 
 /* small names over avatars */
-td.task_openedby > a, td.task_assignedto > a {position: relative;}
+td.task_openedby > a, td.task_assignedto > a {position:relative;line-height:0;display:inline-block;}
+td.task_openedby > a .fa-user {color:#eee;}
 td.task_assignedto > a {margin-right:2px;}
 td.task_openedby > a::after, td.task_assignedto > a::after {
 	background-color: rgba(255, 255, 255, 0.5);
 	bottom: 0;
-	color: #036;
+	color: #003;
 	content: attr(title);
 	font-size: 8px;
 	left: 0;
@@ -523,6 +524,7 @@ td.task_openedby > a::after, td.task_assignedto > a::after {
 	padding-left:1px;
 	padding-right:1px;
 }
+td.task_openedby > a:hover::after, td.task_assignedto > a:hover::after {background-color:rgba(255,255,255,0.9);}
 
 #toolbox {
   margin: 10px 0px 10px 0px;
