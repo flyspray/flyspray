@@ -512,9 +512,9 @@ td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {position:re
 td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
 td.task_assignedto > a {margin-right:2px;}
 td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a::after {
-	background-color: rgba(255, 255, 255, 0.5);
+	background-color: rgba(255, 255, 255, 0);
 	bottom: 0;
-	color: #003;
+	color: rgba(0,0,0,0);
 	content: attr(title);
 	font-size: 8px;
 	left: 0;
@@ -524,7 +524,7 @@ td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a
 	padding-left:1px;
 	padding-right:1px;
 }
-td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_assignedto > a:hover::after {background-color:rgba(255,255,255,0.9);}
+td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_assignedto > a:hover::after {color:#000;background-color:rgba(255,255,255,0.9);}
 
 #toolbox {
   margin: 10px 0px 10px 0px;
