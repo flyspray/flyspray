@@ -1436,17 +1436,17 @@ LEFT JOIN {list_os} los ON t.operating_system = los.os_id ';
 
 	if (array_get($args, 'dev') || in_array('assignedto', $visible)) {
 		# not every db system has this feature out of box
-		if('mysql' == $db->dblink->dataProvider){
-			#$select .= ' GROUP_CONCAT(u.real_name) AS assigned_to_name, ';
-			# without distinct i see multiple times each assignee
-			# maybe performance penalty due distinct?, solve by better groupby construction?
-			$select .= ' GROUP_CONCAT(DISTINCT u.real_name) AS assigned_to_name, ';
-			# maybe later for building links to users
-			#$select .= ' GROUP_CONCAT(DISTINCT u.real_name ORDER BY u.user_id) AS assigned_to_name, ';
-			#$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
-		}else{
-			$select .= ' MIN(u.real_name) AS assigned_to_name, ';
-			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id)  AS num_assigned, ';
+		if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
+			$select .= ' GROUP_CONCAT(DISTINCT u.user_name ORDER BY u.user_id) AS assigned_to_name, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.user_id ORDER BY u.user_id) AS assignedids, ';
+			$select .= ' GROUP_CONCAT(DISTINCT u.profile_image ORDER BY u.user_id) AS assigned_image, ';
+		} elseif( $conf['database']['dbtype']=='pgsql'){
+			$select .= " array_to_string(array_agg(u.user_name ORDER BY u.user_id), ',') AS assigned_to_name, ";
+			$select .= " array_to_string(array_agg(CAST(u.user_id as text) ORDER BY u.user_id), ',') AS assignedids, ";
+                        $select .= " array_to_string(array_agg(u.profile_image ORDER BY u.user_id), ',') AS assigned_image, ";
+		} else{
+			$select .= ' MIN(u.user_name) AS assigned_to_name, ';
+			$select .= ' (SELECT COUNT(assc.user_id) FROM {assigned} assc WHERE assc.task_id = t.task_id) AS num_assigned, ';
 		}
 		// assigned table is now always included in join
 		$from .= '
@@ -1460,14 +1460,17 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
 		}
 	}
         
-	# not every db system has this feature out of box
-	if('mysql' == $db->dblink->dataProvider){
-		# without distinct i see multiple times each tag (when task has several assignees too)
+	# not every db system has this feature out of box, it is not standard sql
+	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+	} elseif($conf['database']['dbtype']=='pgsql'){
+		$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
+		$select .= " array_to_string(array_agg(CAST(tg.tag_id as text) ORDER BY tg.list_position), ',') AS tagids, ";
+		$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
 	} else{
-		# FIXME: GROUP_CONCAT() for postgresql?
+		# unsupported groupconcat or we just do not know how write it for the other databasetypes in this section 
 		$select .= ' MIN(tg.tag_name) AS tags, ';
 		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
 		$select .= ' MIN(tg.tag_id) AS tagids, ';
