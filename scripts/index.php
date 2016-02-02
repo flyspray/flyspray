@@ -241,10 +241,25 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             break;
 
         case 'assignedto':
-		# group_concat-ed for mysql
-		$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
-		# for DBs without group_concat()
-		if( ('mysql' != $db->dblink->dataProvider) && ($task['num_assigned'] > 1)) {
+		# group_concat-ed for mysql/pgsql
+		#$value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
+		$value='';
+		$anames=explode(',',$task[$indexes[$colname]]);
+		$aids=explode(',',$task['assignedids']);
+		$aimages=explode(',',$task['assigned_image']);
+		for($a=0;$a < count($anames);$a++){
+			if($aids[$a]){
+				if ($fs->prefs['enable_avatars']==1 && $aimages[$a]){
+					$value.=tpl_userlinkavatar($aids[$a],30);
+				} else{
+					$value.=tpl_userlink($aids[$a]);
+				}
+				#$value.='<a href="'.$aids[$a].'">'.htmlspecialchars($anames[$a], ENT_QUOTES, 'utf-8').'</a>';
+			}
+		}
+
+		# fallback for DBs we haven't written sql string aggregation yet (currently with group_concat() mysql and array_agg() postgresql)
+		if( ('postgres' != $db->dblink->dataProvider) && ('mysql' != $db->dblink->dataProvider) && ($task['num_assigned'] > 1)) {
 			$value .= ', +' . ($task['num_assigned'] - 1);
 		}
 		break;
