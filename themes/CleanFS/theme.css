@@ -509,6 +509,7 @@ tr.severity5 .task_severity {background-color: #f5d1d1;}
 
 /* small names over avatars */
 td.task_openedby > a, td.task_assignedto > a {position: relative;}
+td.task_assignedto > a {margin-right:2px;}
 td.task_openedby > a::after, td.task_assignedto > a::after {
 	background-color: rgba(255, 255, 255, 0.5);
 	bottom: 0;
