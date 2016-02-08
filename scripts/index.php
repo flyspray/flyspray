@@ -253,7 +253,6 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 				#if ($fs->prefs['enable_avatars']==1 && $aimages[$a]){
 				#	$value.=tpl_userlinkavatar($aids[$a],30);
 				#} else{
-					$value.= $value !='' ? ', ':'';
 					$value.=tpl_userlink($aids[$a]);
 				#}
 				#$value.='<a href="'.$aids[$a].'">'.htmlspecialchars($anames[$a], ENT_QUOTES, 'utf-8').'</a>';
