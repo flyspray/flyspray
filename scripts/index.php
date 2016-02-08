@@ -249,11 +249,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		$aimages=explode(',',$task['assigned_image']);
 		for($a=0;$a < count($anames);$a++){
 			if($aids[$a]){
-				if ($fs->prefs['enable_avatars']==1 && $aimages[$a]){
-					$value.=tpl_userlinkavatar($aids[$a],30);
-				} else{
+				# deactivated: avatars looks too ugly in the tasklist, user's name needs to be visible on a first look here, without needed mouse hovering..
+				#if ($fs->prefs['enable_avatars']==1 && $aimages[$a]){
+				#	$value.=tpl_userlinkavatar($aids[$a],30);
+				#} else{
+					$value.= $value !='' ? ', ':'';
 					$value.=tpl_userlink($aids[$a]);
-				}
+				#}
 				#$value.='<a href="'.$aids[$a].'">'.htmlspecialchars($anames[$a], ENT_QUOTES, 'utf-8').'</a>';
 			}
 		}
@@ -276,11 +278,12 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
                 # a bit expensive! tpl_userlinkavatar()  an additional sql query for each new user in the output table
                 # at least tpl_userlink() uses a $cache array so query for repeated users 
 		if ($task[$indexes[$colname]] > 0) {
-			if ($fs->prefs['enable_avatars']==1){
-				$value = tpl_userlinkavatar($task[$indexes[$colname]],30);
-			} else{
+			# deactivated: avatars looks too ugly in the tasklist, user's name needs to be visible on a first look here, without needed mouse hovering..
+			#if ($fs->prefs['enable_avatars']==1){
+			#	$value = tpl_userlinkavatar($task[$indexes[$colname]],30);
+			#} else{
 				$value = tpl_userlink($task[$indexes[$colname]]);
-			}
+			#}
 		}
                 break;
                 
