@@ -507,10 +507,11 @@ tr.severity3 .task_severity {background-color: #f5e7e7;}
 tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
 
-/* small names over avatars */
-td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {position:relative;line-height:1;display:inline-block;}
+
+td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:inline-block;}
 td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
 td.task_assignedto > a {margin-right:2px;}
+/* small names over avatars */
 td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a::after {
 	background-color: rgba(255, 255, 255, 0);
 	bottom: 0;
