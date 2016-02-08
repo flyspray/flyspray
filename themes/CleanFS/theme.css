@@ -498,7 +498,7 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1;}
+#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1;vertical-align:middle;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
@@ -508,7 +508,7 @@ tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
 
 
-td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:inline-block;}
+td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:block;padding:3px;}
 td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
 td.task_assignedto > a {margin-right:2px;}
 /* small names over avatars */
