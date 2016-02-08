@@ -508,7 +508,7 @@ tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
 
 /* small names over avatars */
-td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {position:relative;line-height:0;display:inline-block;}
+td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {position:relative;line-height:1;display:inline-block;}
 td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
 td.task_assignedto > a {margin-right:2px;}
 td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a::after {
@@ -518,7 +518,7 @@ td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a
 	content: attr(title);
 	font-size: 8px;
 	left: 0;
-	line-height: 0.8em;
+	line-height:1;
 	position: absolute;
 	text-align: center;
 	padding-left:1px;
