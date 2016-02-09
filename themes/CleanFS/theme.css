@@ -1019,7 +1019,7 @@ fieldset.advsearch_dates label {margin: 0 5px;}
 .search_select {float: left;position: relative;margin-right: 10px;}
 .search_select .multisel {position: absolute;white-space: nowrap;}
 .search_select select {margin-top: 1.5em;height:158px;}
-.search_select select#percent option {font-size: 10px;height: 11px;}
+.search_select select#percent option {font-size: 10px;height: 12px;}
 fieldset.advsearch_users .multisel {position: absolute;white-space: nowrap;}
 fieldset.advsearch_users input {margin-top: 1.5em;}
 /* --------------------------- FORMS -----------------------*/
