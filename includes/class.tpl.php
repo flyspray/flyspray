@@ -663,7 +663,7 @@ function tpl_selectoptions($options=array(), $level=0){
 	#print_r($options);
 	#print_r($level);
 	foreach($options as $o){
-		if($o['optgroup']==1){
+		if(isset($o['optgroup'])){
 			# we have an optgroup
 			$html.="\n".str_repeat("\t",$level).'<optgroup label="'.$o['label'].'"';
 			if(isset($o['attr'])){
