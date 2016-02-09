@@ -25,29 +25,4 @@
 <ul>
 <li><kbd>SHIFT+ALT+s</kbd> <?php echo Filters::noXSS(L('savetask')); ?></li>
 </ul>
-TODO:complete the list<br /> for accesskey usage different shortcuts on Windows, Mac, Linux .., currently shown for Firefox
 </div>
-<style>
-#shortcutlabel { cursor:pointer; }
-#shortcutclose { cursor:pointer;float:right; }
-#shortcuts {
-  display:none;
-  position:fixed;
-  z-index:100;
-  background:#fff;
-  border:1px solid #999;
-  border-radius:10px;
-  padding:10px;
-  box-shadow:0 0 400px #000;
-  top:50%;
-  height:500px;
-  margin-top:-250px;
-  left:50%;
-  width:300px;
-  margin-left:-150px;
-}
-#s_shortcuts {display:none;}
-#s_shortcuts:checked ~ #shortcuts {
-  display: block;
-}
-</style>
