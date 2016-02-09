@@ -611,6 +611,28 @@ form #taskdetailsfull {
   top: -20px;
   margin-left: 355px;
 }
+
+#shortcutlabel { cursor:pointer; }
+#shortcutclose { cursor:pointer;float:right; }
+#shortcuts {
+  display:none;
+  position:fixed;
+  z-index:100;
+  background:#fff;
+  border:1px solid #999;
+  border-radius:10px;
+  padding:10px;
+  box-shadow:0 0 400px #000;
+  top:50%;
+  margin-top:-250px;
+  height:500px;
+  left:50%;
+  width:300px;
+  margin-left:-150px;
+}
+#s_shortcuts {display:none;}
+#s_shortcuts:checked ~ #shortcuts {display: block;}
+
 #taskdetails {
   margin: 10px 0px 10px 0px;
   padding: 0px;
@@ -1409,6 +1431,7 @@ body.reports .box button {display: block;margin-left:auto;margin-right:auto;widt
 #toolboxmenu a.active {border-top-right-radius:5px;width:31%;padding:6px 2px;float:none;border-color:#78bf34 #78bf34 transparent #78bf34;}
 #toolbox {margin:0;padding:0;border-radius:0;padding-top:10px;position:relative;}
 #controlBox {position:relative;margin-left:140px;}
+#shortcuts {border-radius:5px;padding:5px;box-shadow:0 0 400px #000;top:50%;margin-top:-150px;height:300px;overflow:auto;}
 h3 {padding-left:6px;}
 p { text-align:justify;padding:2px;}
 #listTable{width:100%;}
