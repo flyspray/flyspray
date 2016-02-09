@@ -1128,6 +1128,7 @@ div#closeform {
   position: absolute;
   right: 5px;
   top: 3em;
+  z-index:300;
 }
 #actionsform {
     border-radius: 3px;
@@ -1141,7 +1142,7 @@ div#closeform {
     position: absolute;
     right: 5px;
     top: 3em;
-    z-index: 500;
+    z-index: 200;
 }
 #actionsform ul {
     font-family: Arial, Verdana;
