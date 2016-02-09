@@ -229,10 +229,13 @@
 <?php
 # new: use of tpl_select() which provides much more control
 # maybe move some of the php code from here to scripts/index.php ...
-$percentages = array();
-$percentages[]=array('value'=>'', 'label'=>L('anyprogress') );
 $selected=Get::val('percent', '');
 $selected = is_array($selected) ? $selected : (array) $selected;
+$percentages = array();
+$percentages[]=array('value'=>'', 'label'=>L('anyprogress') );
+if(in_array('', $selected, true)){
+        $percentages[0]['attr']['selected']='selected';
+}
 for($i = 0; $i <= 100; $i += 10){
 	$opt = array();
 	$opt['value'] = $i;
@@ -241,7 +244,7 @@ for($i = 0; $i <= 100; $i += 10){
 	# styling of html select options probably works only in a few browsers (at least firefox), but where it works it can be an added value.
 	$opt['attr']=array('style'=>'background:linear-gradient(90deg,#0c0 0%,#0c0 '.$i.'%, #fff '.$i.'%, #fff 100%)');
 	$opt['attr']=array('class'=>'percent'.$i);
-	if(in_array($i, $selected)){
+	if(in_array("$i", $selected)){
 		$opt['attr']['selected']='selected';
 	}
 	$percentages[]=$opt;
