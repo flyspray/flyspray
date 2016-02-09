@@ -220,7 +220,7 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
-                        <select name="percent[]" id="percent" multiple="multiple" size="12">
+                        <select name="percent[]" id="percent" multiple="multiple" size="8">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
                             <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', '')); ?>
                         </select>

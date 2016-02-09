@@ -32,7 +32,7 @@ li.errorinput{background-color:#fc9;}
 	<!-- Progress -->
 	<li<?php echo in_array('progress', $fields) ? '' : ' style="display:none"'; ?>>
 		<label for="percent"<?php echo isset($_SESSION['ERRORS']['invalidprogress']) ? ' class="errorinput" title="'.eL('invalidprogress').'"':''; ?>><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
-		<select id="percent" name="percent_complete" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
+		<select id="percent" name="percent_complete" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
 		<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
 		<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
 		</select>
