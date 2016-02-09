@@ -32,15 +32,14 @@ tr .pri1, tr .pri2, tr .pri3, tr .pri4, tr .pri5
 tr .typ1:before, tr .typ2:before, tr .typ3:before, tr .typ4:before,
 tr .sev1:before, tr .sev2:before, tr .sev3:before, tr .sev4:before, tr .sev5:before,
 tr .pri1:before, tr .pri2:before, tr .pri3:before, tr .pri4:before, tr .pri5:before {
-  border-bottom-color: #ccc;
-  border-bottom-style: dotted;
-  border-bottom-width: 1px;
+  border-bottom: #ccc dotted 1px;
   bottom: 0;
   box-sizing: border-box;
   font-family: fontawesome;
   position: absolute;
   visibility: visible;
   width: 100%;
+  line-height:24px;
 }
 tr .typ1:before {content:"\f188";color:#900;} /*fa-bug*/
 tr .typ2:before {content:"\f06b";color:#390;} /*fa-gift*/
@@ -51,7 +50,7 @@ tr .sev1:before {content:"";color:#fff;} /**/
 tr .sev2:before {content:"";color:#fff;} /**/
 tr .sev3:before {content:"";color:#cc0;} /**/
 tr .sev4:before {content:"\f06d";color:#c60;} /*fa-fire*/
-/* tr .sev5:before {content:"\f1e2";font-family:fontawesome;color:#600;} */ /*fa-bomb*/
+/* tr .sev5:before {content:"\f1e2";color:#600;} */ /*fa-bomb*/
 tr .sev5:before {content:"\f0e7";color:#600;} /*fa-bolt*/
 
 tr .pri1:before {content:"\f236";color:#ccc;} /*fa-bed*/
