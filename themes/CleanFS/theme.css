@@ -629,6 +629,7 @@ form #taskdetailsfull {
   left:50%;
   width:300px;
   margin-left:-150px;
+  box-sizing:border-box;
 }
 #s_shortcuts {display:none;}
 #s_shortcuts:checked ~ #shortcuts {display: block;}
