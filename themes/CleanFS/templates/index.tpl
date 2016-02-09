@@ -220,10 +220,44 @@
 		    <div style="display:none">
 		    <?php } ?>
                         <label class="default multisel" for="percent"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
+                        <!-- legacy: tpl_options()
                         <select name="percent[]" id="percent" multiple="multiple" size="12">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
                             <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', '')); ?>
                         </select>
+                        -->
+<?php
+# new: use of tpl_select() which provides much more control
+# maybe move some of the php code from here to scripts/index.php ...
+$percentages = array();
+$percentages[]=array('value'=>'', 'label'=>L('anyprogress') );
+$selected=Get::val('percent', '');
+$selected = is_array($selected) ? $selected : (array) $selected;
+for($i = 0; $i <= 100; $i += 10){
+	$opt = array();
+	$opt['value'] = $i;
+	$opt['label'] = $i;
+	# goes to theme.css ..
+	# styling of html select options probably works only in a few browsers (at least firefox), but where it works it can be an added value.
+	$opt['attr']=array('style'=>'background:linear-gradient(90deg,#0c0 0%,#0c0 '.$i.'%, #fff '.$i.'%, #fff 100%)');
+	$opt['attr']=array('class'=>'percent'.$i);
+	if(in_array($i, $selected)){
+		$opt['attr']['selected']='selected';
+	}
+	$percentages[]=$opt;
+}
+echo tpl_select(
+	array(
+		'name'=>'percent[]',
+		'attr'=>array(
+			'id'=>'percent',
+			'multiple'=>'multiple',
+			'size'=>12
+		),
+		'options'=>$percentages
+	)
+);
+?>
                     </div>
                     <div class="clear"></div>
                 </fieldset>
