@@ -47,20 +47,20 @@ endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('toplevel', $proj->id)); ?>"><?php echo Filters::noXSS(L('overview')); ?></a>
 	</li><?php
 	}
-	if ( (!$user->isAnon() && $user->perms('view_tasks')) || ($user->isAnon() && $proj->id >0 && $proj->prefs['others_view'])):
+	if( (!$user->isAnon() && $user->perms('view_tasks')) || ($user->isAnon() && $proj->id >0 && $proj->prefs['others_view'])):
 	?><li>
 		<a id="homelink"
 		<?php if($do == 'index' && !(isset($_GET['dev']) && !$user->isAnon() && $_GET['dev'] == $user->id)): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('tasklist', $proj->id)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
 	</li><?php
 	endif;
-	if ($proj->id && $user->perms('open_new_tasks')):
+	if($proj->id && $user->perms('open_new_tasks')):
 	?><li>
 		<a id="newtasklink" href="<?php echo Filters::noXSS(CreateURL('newtask', $proj->id)); ?>"
 		<?php if($do == 'newtask'): ?> class="active" <?php endif; ?>
 		accesskey="a"><?php echo Filters::noXSS(L('addnewtask')); ?></a>
 	</li><?php
-	if ($proj->id && $user->perms('add_multiple_tasks')) :
+	if($proj->id && $user->perms('add_multiple_tasks')) :
 	?><li>
 		<a id="newmultitaskslink" href="<?php echo Filters::noXSS(CreateURL('newmultitasks', $proj->id)); ?>"
 		<?php if($do == 'newmultitasks'): ?> class="active"<?php endif; ?>><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
@@ -72,25 +72,25 @@ endif; ?>
 		href="?do=newtask&amp;project=<?php echo Filters::noXSS($proj->id); ?>"><?php echo Filters::noXSS(L('opentaskanon')); ?></a>
 	</li><?php
 	endif;
-	if ($proj->id && !$user->isAnon()): ?><li>
+	if(!$user->isAnon()): ?><li>
 		<a id="mytaskslink"
 		<?php if($do == 'index' && isset($_GET['dev']) && $_GET['dev'] == $user->id): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('mytasks', $proj->id, $user->id, null)); ?>"><?php echo Filters::noXSS(L('myassignedtasks')); ?></a>
 	</li><?php
 	endif;
-	if ($user->perms('view_reports')): ?><li>
+	if($user->perms('view_reports')): ?><li>
 		<a id="reportslink"
 		<?php if( $do == 'reports'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id)); ?>"><?php echo Filters::noXSS(L('reports')); ?></a>
 	</li><?php
 	endif;
-	if ($proj->id && ($user->perms('view_roadmap') || ($user->isAnon() && $proj->prefs['others_viewroadmap'])) ): ?><li>
+	if($proj->id && ($user->perms('view_roadmap') || ($user->isAnon() && $proj->prefs['others_viewroadmap'])) ): ?><li>
 		<a id="roadmaplink"
 		<?php if($do == 'roadmap'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('roadmap', $proj->id)); ?>"><?php echo Filters::noXSS(L('roadmap')); ?></a>
 	</li><?php
 	endif;
-	if (file_exists(BASEDIR . '/scripts/gantt.php') && $proj->id && $user->perms('view_roadmap')): ?><li>
+	if(file_exists(BASEDIR . '/scripts/gantt.php') && $proj->id && $user->perms('view_roadmap')): ?><li>
 		<a id="gantt"
 		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(CreateURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
