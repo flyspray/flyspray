@@ -7,7 +7,7 @@
     <?php else: ?>
     <del>
     <?php endif; ?>
-      <?php
+    <?php
       // Strip the mimetype to get the icon image name
       list($main) = explode('/', $attachment['file_type']);
        $imgdir = BASEDIR . "/themes/".Filters::noXSS($proj->prefs['theme_style'])."/mime/";
@@ -34,7 +34,14 @@
       (<?php echo Filters::noXSS(round($attachment['file_size']/1024,1)); ?> <?php echo Filters::noXSS(L('KiB')); ?>)
       <?php else: ?>
       (<?php echo Filters::noXSS(round($attachment['file_size']/1024/1024,2)); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
-      <?php endif; ?>
+    <?php endif; ?>
+    <?php
+    # showing additional download links for images is a temporary fix, because the lightbox plugin used in <=FS1.0 (a lightbox version from 2008!) catches also right mouse clicks :-(.
+    # So you cannot just choose 'Save as..' context menu option.
+    # When the javascript based features of Flyspray (a big task, planned ~FS1.1) moved complete to (probably) jquery (used also by dokuwiki so prefered) and a jquery based lightbox/fancybox is used, this can be removed.
+    if(file_exists(BASEDIR . '/attachments/' . $attachment['file_name']) && substr($attachment['file_type'], 0, 5) == 'image' ): ?>
+    <a class="fa fa-download" title="Download <?php echo Filters::noXSS($attachment['orig_name']); ?>" href="?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>"></a>
+    <?php endif; ?>
     <br />
   <?php endforeach; ?>
   </div>
