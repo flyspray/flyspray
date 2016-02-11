@@ -41,10 +41,10 @@ tr .pri1:before, tr .pri2:before, tr .pri3:before, tr .pri4:before, tr .pri5:bef
   width: 100%;
   line-height:24px;
 }
-tr .typ1:before {content:"\f188";color:#900;} /*fa-bug*/
-tr .typ2:before {content:"\f06b";color:#390;} /*fa-gift*/
-tr .typ3:before {content:"\f19d";color:#000;} /*fa-graduation-cap*/
-tr .typ4:before {content:"\f111";color:#009;} /*fa-circle*/
+.typ1:before {content:"\f188";color:#900;} /*fa-bug*/
+.typ2:before {content:"\f06b";color:#390;} /*fa-gift*/
+.typ3:before {content:"\f19d";color:#000;} /*fa-graduation-cap*/
+.typ4:before {content:"\f111";color:#009;} /*fa-circle*/
 
 tr .sev1:before {content:"";color:#fff;} /**/
 tr .sev2:before {content:"";color:#fff;} /**/
