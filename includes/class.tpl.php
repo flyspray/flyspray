@@ -253,7 +253,13 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 
     // to store search options
     $params = $_GET;
-    unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+    	unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+	# We can unset the project param for shorter urls because flyspray knows project_id from current task data.
+	# Except we made a search from an 'all projects' view before, so the prev/next navigation on details page knows
+	# if it must search only in the project of current task or all projects the user is allowed to see tasks.
+	if(!isset($params['advancedsearch']) || (isset($params['project']) && $params['project']!=0) ){
+		unset($params['project']);
+	}
 
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
     $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8');
