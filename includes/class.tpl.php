@@ -253,7 +253,12 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 
     // to store search options
     $params = $_GET;
-    	unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+	unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+	if(isset($params['event_number'])){
+		# shorter links to tasks from report page
+		unset($params['events'], $params['event_number'], $params['fromdate'], $params['todate'], $params['submit']);
+	}
+
 	# We can unset the project param for shorter urls because flyspray knows project_id from current task data.
 	# Except we made a search from an 'all projects' view before, so the prev/next navigation on details page knows
 	# if it must search only in the project of current task or all projects the user is allowed to see tasks.
