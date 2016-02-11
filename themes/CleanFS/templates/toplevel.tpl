@@ -44,15 +44,15 @@ foreach ($projects as $project): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('viewtasks')); ?></th>
     <td>
-        <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;status[]="><?php echo Filters::noXSS(L('All')); ?></a> -
-        <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;status[]=open"><?php echo Filters::noXSS(L('open')); ?></a> -
-        <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;openedfrom=-1+week"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
-        <?php if (!$user->isAnon()): ?>
-          <br />
-          <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;dev=<?php echo Filters::noXSS($user->id); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
-          <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;only_watched=1"><?php echo Filters::noXSS(L('taskswatched')); ?></a> -
-          <a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=index&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>&amp;opened=<?php echo Filters::noXSS($user->id); ?>"><?php echo Filters::noXSS(L('tasksireported')); ?></a>
-        <?php endif; ?>
+      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('status[]'=>'')); ?>"><?php echo Filters::noXSS(L('All')); ?></a> -
+      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('status[]'=>'open')); ?>"><?php echo Filters::noXSS(L('open')); ?></a> -
+      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('openedfrom'=>'-1+week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
+      <?php if (!$user->isAnon()): ?>
+        <br />
+        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('dev'=>$user->id)); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
+        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('only_watched'=>1)); ?>"><?php echo Filters::noXSS(L('taskswatched')); ?></a> -
+        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('opened'=>$user->id)); ?>"><?php echo Filters::noXSS(L('tasksireported')); ?></a>
+      <?php endif; ?>
     </td>
     
     <?php if ($project_count == 1 and isset($most_wanted[$project['project_id']])): ?>
