@@ -1218,6 +1218,11 @@ div#closeform {
 #s_adddependent:checked ~ #adddepform{
 	display:block;
 }
+#actionsform #adddepform * {display: inline-block;}
+#actionsform #adddepform button{
+	background-color:#fff;
+	color:#000;
+}
 #taskdeps h4 {margin-bottom:0.3em;}
 #taskdeps table {margin:0 0 0.8em -0.2em;}
 #taskdeps td {padding:0.2em 0.4em;}
