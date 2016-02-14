@@ -1218,8 +1218,8 @@ div#closeform {
 #s_adddependent:checked ~ #adddepform{
 	display:block;
 }
-#actionsform #adddepform * {display: inline-block;}
-#actionsform #adddepform button{
+#actionsform #setparentform *, #actionsform #associateform *, #actionsform #adddepform * {display: inline-block;}
+#actionsform #setparentform button, #actionsform #associateform button, #actionsform #adddepform button {
 	background-color:#fff;
 	color:#000;
 }
