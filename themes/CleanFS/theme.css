@@ -1194,6 +1194,7 @@ div#closeform {
   border:none;
   font-weight:normal;
   font-size:12px;
+  box-shadow:none;
 }
 #actionsform ul li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
@@ -1222,6 +1223,13 @@ div#closeform {
 #actionsform #setparentform button, #actionsform #associateform button, #actionsform #adddepform button {
 	background-color:#fff;
 	color:#000;
+	margin-right:4px;
+	margin-bottom:4px;
+}
+#actionsform #setparentform input[type=text],
+#actionsform #associateform input[type=text],
+#actionsform #adddepform input[type=text] {
+	width:60px;
 }
 #taskdeps h4 {margin-bottom:0.3em;}
 #taskdeps table {margin:0 0 0.8em -0.2em;}
