@@ -131,10 +131,10 @@
             <?php if ($user->can_add_task_dependency($task_details)): ?>
             <li><input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><?php echo Filters::noXSS(L('adddependenttask')); ?></label>
               <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
-              <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
               <input type="hidden" name="action" value="details.newdep" />
               <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-              <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
+              <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
+              FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
               <button type="submit" name="submit"><?php echo Filters::noXSS(L('add')); ?></button>
               </form>
             </li>
