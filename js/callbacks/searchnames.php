@@ -1,15 +1,16 @@
 <?php
-/*
-    This script is the AJAX callback that performs a search
-    for users, and returns true if the user_name is not given.
-*/
+
+/**
+ * This script is the AJAX callback that performs a search
+ *  for users, and returns true if the user_name is not given.
+ */
 
 define('IN_FS', true);
 
 header('Content-type: text/html; charset=utf-8');
 
 require_once('../../header.php');
-$baseurl = dirname(dirname($baseurl)) .'/' ;
+
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));
@@ -40,11 +41,11 @@ $get_users = $db->Query('  SELECT  count(u.user_name) AS anz_u_user,
 
 while ($row = $db->FetchRow($get_users))
 {
-    if ($row['anz_u_user'] > '0' || $row['anz_r_user'] > '0') {
-         $html = 'false|' . eL('usernametaken');
-    } else {
-         $html = 'true';
-    }
+  if ($row['anz_u_user'] > '0' || $row['anz_r_user'] > '0') {
+    $html = 'false|' . eL('usernametaken');
+  } else {
+    $html = 'true';
+  }
 }
 
 echo $html;
