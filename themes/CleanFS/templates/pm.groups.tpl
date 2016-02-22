@@ -103,12 +103,17 @@ foreach ($merge as $group){
 </thead>
 <tbody>
 <?php foreach ($perm_fields as $p): ?>
-<tr>
+<tr<?php 
+# TODO view_own_tasks
+echo ($p=='view_tasks'     && $proj->prefs['others_view']) ?       ' class="everybody"':'';
+echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="everybody"':'';
+echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="everybody"':'';
+?>>
 <th><?php echo eL(str_replace('_', '', $p)); ?></th>
 <?php
 require_once('permicons.tpl');
 $i=0; 
-# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+
 foreach($perms[$p] as $val){
   if ($perms['is_admin'][$i]==1 && $val == 0){
     if(isset($permicons[$p])){
