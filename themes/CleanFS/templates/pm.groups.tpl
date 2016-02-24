@@ -105,7 +105,7 @@ foreach ($merge as $group){
 <?php foreach ($perm_fields as $p): ?>
 <tr<?php 
 # TODO view_own_tasks
-echo ($p=='view_tasks'     && $proj->prefs['others_view']) ?       ' class="everybody"':'';
+echo ( ($p=='view_tasks' || $p=='view_groups_tasks' || $p=='view_own_tasks')  && $proj->prefs['others_view']) ? ' class="everybody"':'';
 echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="everybody"':'';
 echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="everybody"':'';
 ?>>
