@@ -37,7 +37,8 @@ endif; ?>
 
 		<li class="required">
 			<label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?>*</label>
-			<input id="emailaddress" name="email_address" class="text required" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" /> <em><?php echo Filters::noXSS(L('validemail')); ?></em>
+			<input id="emailaddress" name="email_address" class="text required" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" />
+			<!-- <em><?php echo Filters::noXSS(L('validemail')); ?></em> -->
 		</li>
 
 		<li>
