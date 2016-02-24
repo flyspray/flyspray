@@ -964,6 +964,15 @@ form#login #links a.active {
 }
 form#login .remember_me {float: right;}
 span#advancedsearchstate img {vertical-align: middle;}
+
+#sc2{position:relative;}
+.save_search{position:absolute;right:0;top:-3em;}
+#sc2,#s_searchstate{display:none;}
+#searchstateactions{color:#999;display:block;cursor:pointer;}
+#s_searchstate:checked ~ #sc2 {display:block;}
+#s_searchstate ~ label::before { content: "\25bc";}
+#s_searchstate:checked ~ label::before { content: "\25b2";}
+
 fieldset {
   margin: 10px 0px 10px 0px;
   padding: 10px;
