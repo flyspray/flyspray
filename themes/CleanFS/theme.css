@@ -611,6 +611,10 @@ form #taskdetailsfull {
   margin-left: 355px;
 }
 
+/* style tables in task comments (dokuwiki) */
+table.inline{border-collapse:collapse;}
+table.inline td {border:1px solid #ccc; padding:4px;}
+
 #shortcutlabel { cursor:pointer; }
 #shortcutclose { cursor:pointer;float:right; }
 #shortcuts {
