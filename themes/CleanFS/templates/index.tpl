@@ -74,23 +74,15 @@
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
   <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
   <input type="hidden" name="do" value="index"/>
-  <input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'/>
-<style>
-#sc2,#s_searchstate{display:none;}
-#searchstateactions{color:#999;display:block;cursor:pointer;}
-#s_searchstate:checked ~ #sc2 {display:block;}
-#s_searchstate ~ label::before { content: "\25bc";}
-#s_searchstate:checked ~ label::before { content: "\25b2";}
-</style>
+
 <input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
 <label id="searchstateactions" for="s_searchstate"><?php echo Filters::noXSS(L('advanced')); ?></label>
 <div id="sc2" class="switchcontent">
+<input type='submit' name='export_list' value='<?php echo Filters::noXSS(L('exporttasklist')); ?>'/>
 <?php if (!$user->isAnon()): ?>
-<fieldset>
   <div class="save_search"><label for="save_search" id="lblsaveas"><?php echo Filters::noXSS(L('saveas'));?></label>
    <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/> <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?php echo Filters::noXSS(L('saving')); ?>', '<?php echo Filters::noJsXSS($_SESSION['csrftoken']); ?>')" type="button"><?php echo Filters::noXSS(L('OK')); ?></button>
   </div>
-</fieldset>
 <?php endif; ?>
 <fieldset class="advsearch_misc">
    <legend><?php echo Filters::noXSS(L('miscellaneous')); ?></legend>
