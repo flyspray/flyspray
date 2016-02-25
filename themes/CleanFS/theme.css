@@ -225,7 +225,7 @@ a:hover {color: #6699cc;}
   /*border-bottom: 4px solid $dominant;*/
   margin: 0;
 }
-#title a {color: white; text-decoration: none; display: block; padding: 25px 50px; }
+#title a {color: white; text-decoration: none; display: inline-block; padding: 25px 50px; }
 #title img { float: left; margin-right: 20px; height: 36px;}
 #labelpmmenu,#labelmenu1{display:none; cursor:pointer;}
 #pmmenu,#menu1{display:none;}
@@ -1414,7 +1414,8 @@ button.fakelinkbutton:visited {
 th, td, caption {padding: 5px 2px;}
 #menu { position:static;clear:both;background-color:#111;}
 #title {font-size:1.2em;line-height:1.2em;background-color:#111;}
-#title a {padding:0;color:transparent;}
+#title a {padding:0;}
+#title a span{display:none;}
 #title img {float:none;margin:4px;}
 #menu-list {display:block;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
