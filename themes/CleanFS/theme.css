@@ -1419,7 +1419,7 @@ th, td, caption {padding: 5px 2px;}
 #title img {float:none;margin:4px;}
 #menu-list {display:block;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
-#menu-list a, #menu-list label {display:block;border:1px solid #333;height:24px;}
+#menu-list a, #menu-list > label {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
 #labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:20%;}
 #labelmenu1{left:35%;}
