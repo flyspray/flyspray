@@ -292,14 +292,18 @@ function tpl_userlink($uid)
         }
     }
 
-    if (isset($uname)) {
-        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-        $cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
-    } elseif (empty($cache[$uid])) {
-        $cache[$uid] = eL('anonymous');
-    }
+	if (isset($uname)) {
+		#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
+		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
+		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
+		$url = CreateURL('user', $uid);
+		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
+	} elseif (empty($cache[$uid])) {
+		$cache[$uid] = eL('anonymous');
+	}
 
-    return $cache[$uid];
+	return $cache[$uid];
 }
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
@@ -328,7 +332,11 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			}
 		}
 		if (isset($uname)) {
-			$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
+			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
+			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
+			$url = CreateURL('user', $uid);
 			$avacache[$uid] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 		}
 	}
