@@ -220,6 +220,12 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $class.=' pri'.$task['task_priority'];
             break;
 
+	case 'attachments':
+	case 'comments':
+	case 'votes':
+		$value = $task[$indexes[$colname]]>0 ? $task[$indexes[$colname]]:'';
+		break;
+
         case 'lastedit':
         case 'duedate':
         case 'dateopened':
