@@ -239,6 +239,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             } else {
                 $value = htmlspecialchars($task[$indexes[$colname]], ENT_QUOTES, 'utf-8');
             }
+            $class.=' sta'.$task['item_status'];
             break;
 
         case 'progress':
