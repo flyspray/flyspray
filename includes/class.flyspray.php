@@ -1115,14 +1115,30 @@ class Flyspray
 
     /**
      * check_email
-     *  checks if an email is valid
-     * @param string $email
+     *  checks if one or several emails are valid
+     * @param string $email one or several emails separated by a ';'
      * @access public
-     * @return bool
+     * @return bool false if one email is not valid. Otherwise, it returns true
      */
     public static function check_email($email)
     {
-        return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+      if(!is_string($email))
+      {
+	return false;
+      }
+      
+      // Handle multiple emails
+      $xpt = explode(';', $email);
+      
+      foreach($xpt as $address)
+      {
+	if(!filter_var($address, FILTER_VALIDATE_EMAIL))
+	{
+	  return false;
+	}
+      }
+
+      return true;
     }
 
     /**
