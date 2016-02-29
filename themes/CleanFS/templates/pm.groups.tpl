@@ -72,7 +72,7 @@ foreach ($merge as $group){
 }
 ?>
 <style>
-.perms {border-collapse:collapse;margin-top:20px;}
+.perms {border-collapse:collapse;margin-top:20px;display:block;}
 .perms tbody tr:hover {background-color:#eee;}
 .perms td, .perms th{border:1px solid #999;}
 .perms thead th, .perms thead td {text-align:center;}
