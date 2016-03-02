@@ -22,6 +22,9 @@ require_once OBJECTS_PATH.'/class.flyspray.php';
 require_once OBJECTS_PATH.'/i18n.inc.php';
 require_once OBJECTS_PATH.'/class.tpl.php';
 
+// Load translations
+load_translations();
+
 # must be sure no-cache before any possible redirect, we maybe come back later here after composer install stuff.
 header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
