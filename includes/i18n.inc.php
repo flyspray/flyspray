@@ -137,6 +137,7 @@ function load_translations(){
 		$lang_code ='en';
 	}
 
+	$lang_code = strtolower($lang_code);
 	$translation = BASEDIR.'/lang/'.$lang_code.'.php';
 	if ($lang_code != 'en' && is_readable($translation)) {
 		include_once($translation);
