@@ -390,7 +390,7 @@ Użytkownik: ",
 
 Pozdrowienia,",
 'yourusername'            => ' twoja nazwa użytkownika ',
-'locale'                  => 'pl_PL',
+'locale'                  => 'pl-PL',
 'filenotexist'            => 'Plik nie istnieje lub nie masz uprawnień aby go pobrać.',
 'showtask'                => 'Pokaż zgłoszenie',
 'now'                     => 'Teraz',
