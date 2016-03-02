@@ -463,9 +463,6 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
   position: absolute;
   left: 0;
   top: 0;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   background-color: #78bf34; /* fallback/image non-cover color */
   background-image: -moz-linear-gradient(#acdc7d, #78bf34); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#acdc7d), to(#78bf34)); /* Safari 4+, Chrome 1+ */
