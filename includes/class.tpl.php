@@ -81,12 +81,6 @@ class Tpl
             return;
         }
 
-        // theming part
-        // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
-        if (strlen($this->_theme) == 0) {
-            $this->_theme = 'CleanFS/';
-        }
-
         // variables part
         if (!is_null($_arg0)) {
             $this->assign($_arg0, $_arg1);
@@ -416,7 +410,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
 // }}}
 // {{{ user selector
 function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
-    global $db, $user;
+    global $db, $user, $proj;
 
     if (!$id) {
         $id = $name;
@@ -433,6 +427,7 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
 
 
     $page = new FSTpl;
+    $page->setTheme($proj->prefs['theme_style']);
     $page->assign('name', $name);
     $page->assign('id', $id);
     $page->assign('value', $value);
@@ -723,8 +718,11 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
     static $tpl = null;
 
     if (!$tpl) {
+    	global $proj;
+
         // poor man's cache
         $tpl = new FSTpl();
+        $tpl->setTheme($proj->prefs['theme_style']);
     }
 
     settype($selected, 'array');
