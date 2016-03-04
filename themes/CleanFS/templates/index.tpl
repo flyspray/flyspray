@@ -401,7 +401,6 @@ echo tpl_select(
 <!-- Bulk editing Tasks -->
 <?php if (!$user->isAnon() && $proj->id !=0 && $total): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
-<script>Effect.Fade('bulk_edit_selectedItems');</script>
 <div id="bulk_edit_selectedItems" style="display:none">
     <fieldset>
         <legend><b><?php echo Filters::noXSS(L('updateselectedtasks')); ?></b></legend>
