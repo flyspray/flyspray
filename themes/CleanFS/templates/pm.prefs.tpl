@@ -117,8 +117,8 @@
           <label for="freetagging"><?php echo Filters::noXSS(L('freetagging')); ?></label>
           <?php echo tpl_checkbox('freetagging', Post::val('freetagging', $proj->prefs['freetagging']), 'freetagging'); ?>
       </li>
-      </ul>
-    </div>
+    </ul>
+  </div>
 
   <div id="lookandfeel" class="tab">
     <ul class="form_elements wide">
@@ -185,7 +185,7 @@
          ?>
 
         <li>
-          <label><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
+          <label for="default_order_by"><?php echo Filters::noXSS(L('defaultorderby')); ?></label>
           <select id="default_order_by" name="default_order_by">
             <?php echo tpl_options($columnnames, $proj->prefs['sorting'][0]['field'], false); ?>
           </select>
@@ -196,7 +196,7 @@
         </li>
 
         <li>
-          <label><?php echo Filters::noXSS(L('defaultorderby2')); ?></label>
+          <label for="default_order_by2"><?php echo Filters::noXSS(L('defaultorderby2')); ?></label>
           <select id="default_order_by2" name="default_order_by2">
             <?php echo tpl_options($columnnames, $proj->prefs['sorting'][1]['field'], false); ?>
           </select>
