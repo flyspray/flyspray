@@ -98,7 +98,7 @@ function load_translations(){
 	# if no valid lang_code, return english
 	# valid == a-z and "_" case insensitive
 
-	if(array_key_exists('lang_code', $user->infos)){
+	if (isset($user) && array_key_exists('lang_code', $user->infos)){
 		$lang_code=$user->infos['lang_code'];
 	}
 
@@ -152,7 +152,7 @@ function load_translations(){
 
         FlySprayI18N::setDefault($language);
     // correctly translate title since language not set when initialising the project
-    if (!$proj->id) {
+    if (isset($proj) && !$proj->id) {
         $proj->prefs['project_title'] = L('allprojects');
         $proj->prefs['feed_description']  = L('feedforall');
     }
