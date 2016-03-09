@@ -174,7 +174,7 @@ switch ($action = Req::val('action'))
         // ##################
     case 'details.update':
         if (!$user->can_edit_task($task)) {
-		Flyspray::show_error(L('nopermission'));//TODO: create a better error message
+		Flyspray::show_error(L('nopermission')); # TODO create a better error message
 		break;
         }
 
@@ -189,23 +189,38 @@ switch ($action = Req::val('action'))
 		}
 	}
 
-        // Check that a task is not moved to a different project than its
-        // possible parent or subtasks. Note that even closed tasks are
-        // included in the result, a task can be always reopened later.
-        $result = $db->Query('SELECT p.task_id parent_id, p.project_id project, s.task_id sub_id
-                             FROM {tasks} p
-                        LEFT JOIN {tasks} s ON p.task_id = s.supertask_id
-                            WHERE p.task_id = ? OR s.task_id = ?',
-                array($task['task_id'], $task['task_id']));
-        $check = $db->fetchRow($result);
+	if($move==1){
+		# Check that a task is not moved to a different project than its
+		# possible parent or subtasks. Note that even closed tasks are
+		# included in the result, a task can be always reopened later.
+		$result = $db->Query('
+			SELECT parent.task_id, parent.project_id FROM {tasks} p
+			JOIN {tasks} parent ON parent.task_id = p.supertask_id
+			WHERE p.task_id = ?
+			AND parent.project_id <> ?',
+			array( $task['task_id'], Post::val('project_id') )
+		);
+		$parentcheck = $db->fetchRow($result);
+		if ($parentcheck && $parentcheck['task_id']) {
+			if ($parentcheck['project_id'] != Post::val('project_id')) {
+				$errors['denymovehasparent']=L('denymovehasparent');
+			}
+		}
 
-        // if there are any subtasks or a parent, check that the project is not changed.
-        if ($check && $check['sub_id']) {
-            if ($check['project'] != Post::val('project_id')) {
-		$errors['movingtodifferentproject']=1;
-            }
-        }
+		$result = $db->Query('
+			SELECT sub.task_id, sub.project_id FROM {tasks} p
+			JOIN {tasks} sub ON p.task_id = sub.supertask_id
+			WHERE p.task_id = ?
+			AND sub.project_id <> ?',
+			array( $task['task_id'], Post::val('project_id') )
+		);
+		$subcheck = $db->fetchRow($result);
 
+		# if there are any subtasks, check that the project is not changed
+		if ($subcheck && $subcheck['task_id']) {
+			$errors['denymovehassub']=L('denymovehassub');
+		}
+	}
 
 	# summary form input fields, so user get notified what needs to be done right to be accepted
         if (!Post::val('item_summary')) {
@@ -252,7 +267,9 @@ switch ($action = Req::val('action'))
 	} else{
 		$statusarray=$proj->listTaskStatuses();
 	}
-	# FIXME what if we move to diff project, but the status_id is defined for the old project only (not global)?
+
+	# FIXME what if we move to different project, but the status_id is defined for the old project only (not global)?
+	# FIXME what if we move to different project and item_status selection is deactivated/not shown in edit task page?
 	if( !is_numeric(Post::val('item_status')) || false===Flyspray::array_find('status_id', Post::val('item_status'), $statusarray) ){
 		$errors['invalidstatus']=1;
 	}
@@ -262,11 +279,17 @@ switch ($action = Req::val('action'))
 	} else{
 		$typearray=$proj->listTaskTypes();
 	}
-	# FIXME what if we move to diff project, but tasktype_id is defined for the old project only (not global)?
+
+	# FIXME what if we move to different project, but tasktype_id is defined for the old project only (not global)?
+	# FIXME what if we move to different project and task_type selection is deactiveated/not shown in edit task page?
 	if( !is_numeric(Post::val('task_type')) || false===Flyspray::array_find('tasktype_id', Post::val('task_type'), $typearray) ){
 		$errors['invalidtasktype']=1;
 	}
 
+        # FIXME what if we move to different project and reportedver selection is deactivated/not shown in edit task page?
+        # FIXME what if we move to different project and reportedver is deactiveated/not shown in edit task page?
+        # FIXME what if we move to different project and closedby_version selection is deactivated/not shown in edit task page?
+        # FIXME what if we move to different project and closedby_version is deactiveated/not shown in edit task page?
 	if($move==1){
 		$versionarray=$toproject->listVersions();
 	} else{
@@ -279,22 +302,24 @@ switch ($action = Req::val('action'))
 		$errors['invaliddueversion']=1;
 	}
 
+	# FIXME what if we move to different project, but category_id is defined for the old project only (not global)?
+        # FIXME what if we move to different project and category selection is deactivated/not shown in edit task page?
 	if($move==1){
 		$catarray=$toproject->listCategories();
 	} else{
 		$catarray=$proj->listCategories();
 	}
-	# FIXME what if we move to diff project, but category_id is defined for the old project only (not global)?
 	if( !is_numeric(Post::val('product_category')) || false===Flyspray::array_find('category_id', Post::val('product_category'), $catarray) ){
 		$errors['invalidcategory']=1;
 	}
 
+	# FIXME what if we move to different project, but os_id is defined for the old project only (not global)?
+	# FIXME what if we move to different project and operating_system selection is deactivated/not shown in edit task page?
 	if($move==1){
 		$osarray=$toproject->listOs();
 	} else{
 		$osarray=$proj->listOs();
 	}
-	# FIXME what if we move to diff project, but os_id is defined for the old project only (not global)?
 	if( !is_numeric(Post::val('operating_system')) || ( isset($_POST['operating_system']) && $_POST['operating_system']!=='0' && false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray)) ){
 		$errors['invalidos']=1;
 	}
@@ -368,9 +393,10 @@ switch ($action = Req::val('action'))
             }
         }
 
-	# FIXME what if we move to diff project, but tag(s) is/are defined for the old project only (not global)?
-	#    - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
-	// update tags
+	# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
+	# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
+	#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
+	# update tags
         $tagList = explode(';', Post::val('tags'));  
         $tagList = array_map('strip_tags', $tagList);
         $tagList = array_map('trim', $tagList);
