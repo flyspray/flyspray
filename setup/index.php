@@ -817,6 +817,21 @@ class Setup extends Flyspray
       $config[] = 'microsoft_secret = ""';
       $config[] = 'microsot_id = ""';
       $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
+      $config[] = "\n";
+      $config[] = "[cas]";
+      $config[] = "; These are only needed if you plan to use CAS Server for login.";
+      $config[] = "; If use CAS, password and oauth authenticate will disable.";
+      $config[] = "; You can enable CAS authenticate to setup \"cas_host\", clear \"cas_host\" value for disable.";
+      $config[] = 'cas_version = "SAML_VERSION_1_1"  ; CAS Version protocol: \"SAML_VERSION_1_1\", \"CAS_VERSION_1_0\",  \"CAS_VERSION_2_0\" or  \"CAS_VERSION_3_0\", ';
+      $config[] = 'cas_host = ""                     ; CAS Server Full Hostname, Example : \"you-cas-server.com\". (Required)';
+      $config[] = 'cas_context = ""                  ; CAS Server context, Example: \"/cas\".';
+      $config[] = 'cas_port = ""                     ; CAS Server port, Normally for a https server it is \"443\".';
+      $config[] = 'cas_server_ca_cert_url = ""       ; Url to download the cas server certificate. (Required)';
+      $config[] = 'cas_server_ca_cert_path = ""      ; Path to the ca chain that issued the cas server certificate. (Required)';
+      $config[] = 'cas_attr_email = ""               ; CAS User Attribute for email, Example: \"email\". (Required)';
+      $config[] = 'cas_attr_first_name = ""          ; CAS User Attribute for first name, Example: \"first_name\".';
+      $config[] = 'cas_attr_last_name = ""           ; CAS User Attribute for last name, Example: \"last_name\".';
+      $config[] = 'cas_attr_user_id = ""             ; CAS User Attribute for user id, Example: \"uid\". (Required)';
 
       $config_text = $config_intro . implode( "\n", $config );
 
