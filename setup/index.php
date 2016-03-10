@@ -516,7 +516,7 @@ class Setup extends Flyspray
    */
    public function GetIniSetting($option)
    {
-      return (ini_get($option) == '1' ? 'ON' : 'OFF');
+      return (ini_get($option) == '1' ? L('on') : L('off'));
    }
 
    /**
@@ -580,15 +580,15 @@ class Setup extends Flyspray
       // Array of the setting name, php ini name and the recommended value
       $test_settings =
       array(
-            array ('Safe Mode','safe_mode','OFF'),
-            array ('File Uploads','file_uploads','ON'),
-            array ('Magic Quotes GPC','magic_quotes_gpc','OFF'),
-            array ('Register Globals','register_globals','OFF'),
+            array ('Safe Mode','safe_mode', L('off')),
+            array ('File Uploads','file_uploads', L('on')),
+            array ('Magic Quotes GPC','magic_quotes_gpc', L('off')),
+            array ('Register Globals','register_globals', L('off')),
             //array ('Output Buffering','output_buffering','OFF'),
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo','ON');
+          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo', L('on'));
       }
 
       $output = '';
@@ -617,12 +617,12 @@ class Setup extends Flyspray
 
         if ($value == 1) {
 
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> Enable';
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" /> Disable';
+                $selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> '.L('enable');
+                $selection .= '<input type="radio" name="reminder_daemon" value="0" /> '.L('disable');
         } else {
 
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" /> Enable';
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> Disable';
+                $selection .= '<input type="radio" name="reminder_daemon" value="1" /> '.L('enable');
+                $selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> '.L('disable');
         }
             return $selection;
 
@@ -1088,36 +1088,36 @@ class Setup extends Flyspray
       {
       case 'yes':
          return ($boolean)
-         ?  '<span class="green">Yes</span>'
-         :  '<span class="red">No</span>';
+		 ?  '<span class="green">'.L('yes').'</span>'
+         :  '<span class="red">'.L('no').'</span>';
          break;
 
       case 'available':
          return ($boolean)
-         ?  '<span class="green">Available</span>'
-         :  '<span class="red">Missing</span>';
+         ?  '<span class="green">'.L('available').'</span>'
+         :  '<span class="red">'.L('missing').'</span>';
          break;
 
       case 'writeable':
          return ($boolean)
-         ?  '<span class="green">Writeable</span>'
-         :  '<span class="red">Un-writeable</span>';
+         ?  '<span class="green">'.L('writeable').'</span>'
+         :  '<span class="red">'.L('unwriteable').'</span>';
          break;
 
       case 'on':
          return ($boolean)
-         ?  '<span class="green">ON</span>'
-         :  '<span class="red">OFF</span>';
+         ?  '<span class="green">'.L('on').'</span>'
+         :  '<span class="red">'.L('off').'</span>';
          break;
       case 'support':
          return ($boolean)
-         ?  '<span class="green">Supported</span>'
-         :  '<span class="red">X</span>';
+         ?  '<span class="green">'.L('supported').'</span>'
+         :  '<span class="red">'.L('x').'</span>';
          break;
       default:
          return ($boolean)
-         ?  '<span class="green">True</span>'
-         :  '<span class="red">False</span>';
+         ?  '<span class="green">'.L('true').'</span>'
+         :  '<span class="red">'.L('false').'</span>';
          break;
       }
    }
