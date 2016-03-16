@@ -845,6 +845,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
+        // Check email format
+        if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
+        {
+            Flyspray::show_error(L('novalidemail'));
+            break;
+        }
+
         if (Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
@@ -1350,6 +1357,13 @@ switch ($action = Req::val('action'))
 
                 if (!Post::val('real_name') || (!Post::val('email_address') && !Post::val('jabber_id'))) {
                     Flyspray::show_error(L('realandnotify'));
+                    break;
+                }
+
+                // Check email format
+                if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
+                {
+                    Flyspray::show_error(L('novalidemail'));
                     break;
                 }
 

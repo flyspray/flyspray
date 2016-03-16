@@ -6,7 +6,6 @@
 define('IN_FS', true);
 
 require_once('../../header.php');
-$baseurl = dirname(dirname($baseurl)) .'/' ;
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));

@@ -1049,6 +1049,15 @@ $language = array(
 'currentproject'          => 'current project',
 'targetproject'           => 'target project',
 'limited'                 => 'Limited',
+'availablekeybshortcuts'  => 'Available keyboard shortcuts',
+'logindialoglogout'       => 'Login Dialog / Logout',
+'focustaskidsearch'       => 'focus taskid search',
+'openselectedtask'        => 'open selected task',
+'movecursorup'            => 'move cursor up',
+'movecursordown'          => 'move cursor down',
+'taskdetails'             => 'Task Details',
+'taskediting'             => 'Task Editing',
+'savetask'                => 'save task'
 );
 
 ?>

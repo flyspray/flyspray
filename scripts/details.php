@@ -40,18 +40,34 @@ if (!$user->can_view_task($task_details)) {
 	$page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['item_summary']));
 
 	if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS']))) && $user->can_edit_task($task_details)) {
-		$result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
-                            FROM {users} u
-                       LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
-                       LEFT JOIN {groups} g ON g.group_id = uig.group_id
-                           WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
-                                 AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
-                        ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id ? $proj->id : -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
+		$result = $db->Query('
+			SELECT g.project_id, u.user_id, u.user_name, u.real_name, g.group_id, g.group_name
+			FROM {users} u
+			JOIN {users_in_groups} uig ON u.user_id = uig.user_id
+			JOIN {groups} g ON g.group_id = uig.group_id
+			WHERE (g.show_as_assignees = 1 OR g.is_admin = 1)
+			AND (g.project_id = 0 OR g.project_id = ?)
+			AND u.account_enabled = 1
+			ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC',
+			($proj->id ? $proj->id : -1)
+		); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
+
 		$userlist = array();
+		$userids = array();
 		while ($row = $db->FetchRow($result)) {
-			$userlist[$row['group_name']][] = array(0 => $row['user_id'], 
-                            1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']));
+			if( !in_array($row['user_id'], $userids) ){
+				$userlist[$row['group_id']][] = array(
+					0 => $row['user_id'],
+					1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']),
+					2 => $row['project_id'],
+					3 => $row['group_name']
+				);
+				$userids[]=$row['user_id'];
+			} else{
+				# user is probably in a global group with assignee permission listed, so no need to show second time in a project group.
+			}
 		}
+
 		if (is_array(Post::val('rassigned_to'))) {
 			$page->assign('assignees', Post::val('rassigned_to'));
 		} else {
@@ -61,7 +77,7 @@ if (!$user->can_view_task($task_details)) {
 		$page->assign('userlist', $userlist);
 
 		# user tries to move a task to a different project:
-		if($move==1){
+		if(isset($move) && $move==1){
 			$page->assign('move', 1);
 			$page->assign('toproject', $toproject);
 		}

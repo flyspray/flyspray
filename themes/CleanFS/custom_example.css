@@ -16,28 +16,45 @@ tr.severity3, tr.severity3 .task_severity, tr.severity3 .task_id {background: #f
 tr.severity2 .task_severity, tr.severity2 .task_id {background: #eee linear-gradient(#fff, #eee) repeat scroll 0 0;}
 
 /* highly experimental! may move to default css if finshed */
-#tasklist_table tbody tr td {padding-top:0px; padding-bottom:0px;border-top:none; border-bottom:1px dotted #ccc;vertical-align:middle;}
+#tasklist_table tbody tr td {border-top:none;border-bottom:1px dotted #ccc;vertical-align:middle;}
+#tasklist_table tbody tr td.task_opendby,
+#tasklist_table tbody tr td.task_editedby,
+#tasklist_table tbody tr td.task_assignedto {padding-top:0px; padding-bottom:0px;}
 th.tasktype, th.severity, th.priority {width:20px;max-width:20px;overflow:hidden;}
 
+/* padding done by the ::before pseudoelement.. */
+#tasklist_table .task_tasktype, #tasklist_table .task_severity,#tasklist_table .task_priority {padding-left: 0;padding-right: 0;}
 tr .typ1, tr .typ2, tr .typ3, tr .typ4, tr .typ5,
 tr .sev1, tr .sev2, tr .sev3, tr .sev4, tr .sev5,
 tr .pri1, tr .pri2, tr .pri3, tr .pri4, tr .pri5
-{ visibility:hidden;width:20px;max-width:20px;white-space:nowrap;text-overflow:hidden;font-size:16px;}
+{position:relative;visibility:hidden;border-bottom-width:0 !important;width:20px;max-width:20px;white-space:nowrap;text-overflow:hidden;font-size:16px;}
 
-tr .typ1:before { visibility:visible;content:"\f188";font-family:fontawesome;color:#900;} /*fa-bug*/
-tr .typ2:before { visibility:visible;content:"\f06b";font-family:fontawesome;color:#390;} /*fa-gift*/
-tr .typ3:before { visibility:visible;content:"\f19d";font-family:fontawesome;color:#000;} /*fa-graduation-cap*/
-tr .typ4:before { visibility:visible;content:"\f111";font-family:fontawesome;color:#009;} /*fa-circle*/
+tr .typ1:before, tr .typ2:before, tr .typ3:before, tr .typ4:before,
+tr .sev1:before, tr .sev2:before, tr .sev3:before, tr .sev4:before, tr .sev5:before,
+tr .pri1:before, tr .pri2:before, tr .pri3:before, tr .pri4:before, tr .pri5:before {
+  border-bottom: #ccc dotted 1px;
+  bottom: 0;
+  box-sizing: border-box;
+  font-family: fontawesome;
+  position: absolute;
+  visibility: visible;
+  width: 100%;
+  line-height:24px;
+}
+.typ1:before {content:"\f188";color:#900;} /*fa-bug*/
+.typ2:before {content:"\f06b";color:#390;} /*fa-gift*/
+.typ3:before {content:"\f19d";color:#000;} /*fa-graduation-cap*/
+.typ4:before {content:"\f111";color:#009;} /*fa-circle*/
 
-tr .sev1:before { visibility:visible;content:"";font-family:fontawesome;color:#fff;} /**/
-tr .sev2:before { visibility:visible;content:"";font-family:fontawesome;color:#fff;} /**/
-tr .sev3:before { visibility:visible;content:"";font-family:fontawesome;color:#cc0;} /**/
-tr .sev4:before { visibility:visible;content:"\f06d";font-family:fontawesome;color:#c60;} /*fa-fire*/
-/* tr .sev5:before { visibility:visible;content:"\f1e2";font-family:fontawesome;color:#600;} */ /*fa-bomb*/
-tr .sev5:before { visibility:visible;content:"\f0e7";font-family:fontawesome;color:#600;} /*fa-bolt*/
+tr .sev1:before {content:"";color:#fff;} /**/
+tr .sev2:before {content:"";color:#fff;} /**/
+tr .sev3:before {content:"";color:#cc0;} /**/
+tr .sev4:before {content:"\f06d";color:#c60;} /*fa-fire*/
+/* tr .sev5:before {content:"\f1e2";color:#600;} */ /*fa-bomb*/
+tr .sev5:before {content:"\f0e7";color:#600;} /*fa-bolt*/
 
-tr .pri1:before { visibility:visible;content:"\f236";font-family:fontawesome;color:#ccc;} /*fa-bed*/
-tr .pri2:before { visibility:visible;content:"";font-family:fontawesome;color:#ccc;}
-tr .pri3:before { visibility:visible;content:"\f04b";font-family:fontawesome;color:#f90;font-size:10px;} /*fa-forward*/
-tr .pri4:before { visibility:visible;content:"\f04b\f04b";font-family:fontawesome;color:#c60;font-size:10px;} /*fa-forward*/
-tr .pri5:before { visibility:visible;content:"\f04b\f04b\f04b";font-family:fontawesome;color:#900;font-size:10px;} /*fa-forward*/
+tr .pri1:before {content:"\f236";color:#ccc;} /*fa-bed*/
+tr .pri2:before {content:"";color:#ccc;}
+tr .pri3:before {content:"\f04b";color:#f90;font-size:10px;} /*fa-forward*/
+tr .pri4:before {content:"\f04b\f04b";color:#c60;font-size:10px;} /*fa-forward*/
+tr .pri5:before {content:"\f04b\f04b\f04b";color:#900;font-size:10px;} /*fa-forward*/

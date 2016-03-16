@@ -86,6 +86,7 @@ allTasks<?php echo Filters::noXSS($milestone['id']); ?> = [<?php foreach($milest
 <dl class="roadmap">
     <?php foreach($milestone['open_tasks'] as $task): ?>
       <dt class="severity<?php echo Filters::noXSS($task['task_severity']); ?>">
+        <i class="fa typ<?php echo $task['task_type']; ?>"></i>
         <?php echo tpl_tasklink($task['task_id']); ?>
 
         <small class="DoNotPrint">

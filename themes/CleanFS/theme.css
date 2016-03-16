@@ -225,7 +225,7 @@ a:hover {color: #6699cc;}
   /*border-bottom: 4px solid $dominant;*/
   margin: 0;
 }
-#title a {color: white; text-decoration: none; display: block; padding: 25px 50px; }
+#title a {color: white; text-decoration: none; display: inline-block; padding: 25px 50px; }
 #title img { float: left; margin-right: 20px; height: 36px;}
 #labelpmmenu,#labelmenu1{display:none; cursor:pointer;}
 #pmmenu,#menu1{display:none;}
@@ -303,7 +303,7 @@ div#mysearches td {vertical-align: middle;}
 #projectselector button { margin-bottom: 2px;}
 #projectselector option[selected] { font-weight: bold;}
 #pm-menu{background-color:#222;	border-bottom: solid 4px #5f9729;padding: 0px 0px 0px 10px; /*text-align:center;*/ }
-#pm-menu-list {list-style: none;display: inline-block;margin:0;}
+#pm-menu-list {list-style: none;display: inline-block;margin:0;min-height:30px;}
 #pmcontrol{display: inline-block;float: right;margin: 6px 20px 0px 0px;}
 #pm-menu-list li {display: inline-block;}
 #pm-menu-list li a {display: block; line-height: 1.4em; padding: 11px 11px 8px 35px; color: #f9f9f9;
@@ -445,13 +445,13 @@ body.toplevel .single-project {
 body.myprofile .box {display:inline-block;vertical-align:top;}
 .progress_bar_container {
   width: 150px;
-  margin: 0 5px;
-  border: solid 1px #000;
-  height: 11px;
+  margin:0;
+  border: solid 1px rgba(0,0,0,0.3);
+  height: 15px;
   position: relative;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
   display: -moz-inline-stack; /* optional */
   display: inline-block;
   zoom: 1; /* triggers hasLayout for IE */
@@ -460,15 +460,10 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 }
 .progress_bar_container .progress_bar {
   height: 100%;
-  background: #5f9729;
-  border-right: 1px solid #2d4713;
   position: absolute;
   left: 0;
   top: 0;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  background-color: #acdc7d; /* fallback/image non-cover color */
+  background-color: #78bf34; /* fallback/image non-cover color */
   background-image: -moz-linear-gradient(#acdc7d, #78bf34); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#acdc7d), to(#78bf34)); /* Safari 4+, Chrome 1+ */
   background-image: -webkit-linear-gradient(#acdc7d, #78bf34); /* Safari 5.1+, Chrome 10+ */
@@ -477,13 +472,14 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 .progress_bar_container span {
     text-align: center;
     position: absolute;
-    z-index: 100;
+    z-index: 1;
     width: 100%;
     font-size: 10px;
     line-height: 1em;
     text-shadow: 0 0 6px white;
+    top:2px;
 }
-td.task_progress .progress_bar_container {width: 100%;}
+td.task_progress .progress_bar_container {width: 100%;box-sizing:border-box;}
 a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
 #tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
@@ -498,7 +494,7 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;}
+#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
@@ -506,6 +502,26 @@ tr.severity2 .task_severity {background-color: #fff;}
 tr.severity3 .task_severity {background-color: #f5e7e7;}
 tr.severity4 .task_severity {background-color: #f5dddd;}
 tr.severity5 .task_severity {background-color: #f5d1d1;}
+
+
+td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:block;padding:3px;}
+td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
+td.task_assignedto > a {margin-right:2px;}
+/* small names over avatars */
+td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a::after {
+	background-color: rgba(255, 255, 255, 0);
+	bottom: 0;
+	color: rgba(0,0,0,0);
+	content: attr(title);
+	font-size: 8px;
+	left: 0;
+	line-height:1;
+	position: absolute;
+	text-align: center;
+	padding-left:1px;
+	padding-right:1px;
+}
+td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_assignedto > a:hover::after {color:#000;background-color:rgba(255,255,255,0.9);}
 
 #toolbox {
   margin: 10px 0px 10px 0px;
@@ -591,6 +607,33 @@ form #taskdetailsfull {
   top: -20px;
   margin-left: 355px;
 }
+
+/* style tables in task comments (dokuwiki) */
+table.inline{border-collapse:collapse;}
+table.inline td {border:1px solid #ccc; padding:4px;}
+
+#shortcutlabel { cursor:pointer; }
+#shortcutclose { cursor:pointer;float:right; }
+#shortcuts {
+  display:none;
+  position:fixed;
+  z-index:100;
+  background:#fff;
+  border:1px solid #999;
+  border-radius:10px;
+  padding:10px;
+  box-shadow:0 0 400px #000;
+  top:50%;
+  margin-top:-250px;
+  height:500px;
+  left:50%;
+  width:300px;
+  margin-left:-150px;
+  box-sizing:border-box;
+}
+#s_shortcuts {display:none;}
+#s_shortcuts:checked ~ #shortcuts {display: block;}
+
 #taskdetails {
   margin: 10px 0px 10px 0px;
   padding: 0px;
@@ -975,7 +1018,8 @@ fieldset.advsearch_misc label {margin-right: 10px; white-space: nowrap;}
 fieldset.advsearch_dates label {margin: 0 5px;}
 .search_select {float: left;position: relative;margin-right: 10px;}
 .search_select .multisel {position: absolute;white-space: nowrap;}
-.search_select select {margin-top: 1.5em;}
+.search_select select {margin-top: 1.5em;height:158px;}
+.search_select select#percent option {font-size: 10px;height: 12px;}
 fieldset.advsearch_users .multisel {position: absolute;white-space: nowrap;}
 fieldset.advsearch_users input {margin-top: 1.5em;}
 /* --------------------------- FORMS -----------------------*/
@@ -1094,6 +1138,10 @@ ul.slim .userSelectWidget select {width:100%;}
 #idtablesys {background-color: #eee;}
 #listpositionnew {width:100%;}
 
+.perms .everybody{position:relative;}
+.perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
+.perms .everybody > * { background-color: #6c6; }
+
 /* closing task form */
 div#closeform {
   border-radius: 3px;
@@ -1108,6 +1156,7 @@ div#closeform {
   position: absolute;
   right: 5px;
   top: 3em;
+  z-index:300;
 }
 #actionsform {
     border-radius: 3px;
@@ -1121,7 +1170,7 @@ div#closeform {
     position: absolute;
     right: 5px;
     top: 3em;
-    z-index: 500;
+    z-index: 200;
 }
 #actionsform ul {
     font-family: Arial, Verdana;
@@ -1149,6 +1198,7 @@ div#closeform {
   border:none;
   font-weight:normal;
   font-size:12px;
+  box-shadow:none;
 }
 #actionsform ul li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
@@ -1172,6 +1222,18 @@ div#closeform {
 #s_associate:checked ~ #associateform,
 #s_adddependent:checked ~ #adddepform{
 	display:block;
+}
+#actionsform #setparentform *, #actionsform #associateform *, #actionsform #adddepform * {display: inline-block;}
+#actionsform #setparentform button, #actionsform #associateform button, #actionsform #adddepform button {
+	background-color:#fff;
+	color:#000;
+	margin-right:4px;
+	margin-bottom:4px;
+}
+#actionsform #setparentform input[type=text],
+#actionsform #associateform input[type=text],
+#actionsform #adddepform input[type=text] {
+	width:60px;
 }
 #taskdeps h4 {margin-bottom:0.3em;}
 #taskdeps table {margin:0 0 0.8em -0.2em;}
@@ -1349,11 +1411,12 @@ button.fakelinkbutton:visited {
 th, td, caption {padding: 5px 2px;}
 #menu { position:static;clear:both;background-color:#111;}
 #title {font-size:1.2em;line-height:1.2em;background-color:#111;}
-#title a {padding:0;color:transparent;}
+#title a {padding:0;}
+#title a span{display:none;}
 #title img {float:none;margin:4px;}
 #menu-list {display:block;}
 #menu-list li {float:none;display:block;padding:0;height:auto;border-left:none;text-align:center;}
-#menu-list a {display:block;border:1px solid #333;height:24px;}
+#menu-list li > a, #menu-list li > label {display:block;border:1px solid #333;height:24px;}
 #menu-list a:hover {border-radius:unset;}
 #labelpmmenu, #labelmenu1{text-align:center;color:#fff;display:block;position:absolute;top:0;width:15%;height:48px;left:20%;}
 #labelmenu1{left:35%;}
@@ -1388,6 +1451,7 @@ body.reports .box button {display: block;margin-left:auto;margin-right:auto;widt
 #toolboxmenu a.active {border-top-right-radius:5px;width:31%;padding:6px 2px;float:none;border-color:#78bf34 #78bf34 transparent #78bf34;}
 #toolbox {margin:0;padding:0;border-radius:0;padding-top:10px;position:relative;}
 #controlBox {position:relative;margin-left:140px;}
+#shortcuts {border-radius:5px;padding:5px;box-shadow:0 0 400px #000;top:50%;margin-top:-150px;height:300px;overflow:auto;}
 h3 {padding-left:6px;}
 p { text-align:justify;padding:2px;}
 #listTable{width:100%;}

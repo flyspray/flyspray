@@ -66,3 +66,4 @@
   <?php endif; ?>
 </table>
 </fieldset>
+<div><?php if($user->perms('is_admin')): ?><a href="<?php echo CreateURL('edituser', $theuser->id); ?>" class="button"><?php echo L('edituser'); ?></a><?php endif; ?></div>

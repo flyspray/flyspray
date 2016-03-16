@@ -1,10 +1,10 @@
 			<div id="right">
 			<form action="<?php echo Filters::noXSS($site_index); ?><?php echo Filters::noXSS($complete_action); ?>" method="post" name="database_form">
-				<h1>Install status</h1>
-				<h2>Congratulations! <?php echo Filters::noXSS($product_name); ?> is now installed and ready to run.</h2>
+				<h1><?php echo Filters::noXSS(L('installstatus')); ?></h1>
+				<h2><?php echo Filters::noXSS(L('congratulations')); ?></h2>
 				<div class="installBlock">
 				<p class="error">
-					Please remove the setup directory now.
+					<?php echo Filters::noXSS(L('removesetupdirectory')); ?>
 				</p>	
 				<?php
 				if (!$config_writeable)
@@ -54,7 +54,7 @@
 				<?php endif; ?>
 				</div>
 				<div class="clr"></div>
-				<h2>View Site</h2>
+				<h2><?php echo Filters::noXSS(L('viewsite')); ?></h2>
 				<div class="installBlock">
 				<div class="formBlock farRight" style="display:inline;">
 				<?php if ($admin_username && $admin_password): ?>
@@ -64,10 +64,10 @@
 					<input type="hidden" name="password" value="<?php echo Filters::noXSS($admin_password); ?>" />
 				<?php endif; ?>
 					<input type="hidden" name="remember_login" value="1" />
-					<input class="button" type="submit" name="next" value="Next >>" />
+					<input class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" />
 				</div>
 				<p>
-				Proceed to <?php echo Filters::noXSS($product_name); ?> index
+				<?php echo Filters::noXSS(L('proceedtoindex')); ?>
 				</p>
 				</div>
 			</form>

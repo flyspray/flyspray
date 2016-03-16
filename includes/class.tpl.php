@@ -253,7 +253,18 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 
     // to store search options
     $params = $_GET;
-    unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+	unset($params['do'], $params['action'], $params['task_id'], $params['switch']);
+	if(isset($params['event_number'])){
+		# shorter links to tasks from report page
+		unset($params['events'], $params['event_number'], $params['fromdate'], $params['todate'], $params['submit']);
+	}
+
+	# We can unset the project param for shorter urls because flyspray knows project_id from current task data.
+	# Except we made a search from an 'all projects' view before, so the prev/next navigation on details page knows
+	# if it must search only in the project of current task or all projects the user is allowed to see tasks.
+	if(!isset($params['advancedsearch']) || (isset($params['project']) && $params['project']!=0) ){
+		unset($params['project']);
+	}
 
     $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
     $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8');
@@ -281,14 +292,18 @@ function tpl_userlink($uid)
         }
     }
 
-    if (isset($uname)) {
-        $url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-        $cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
-    } elseif (empty($cache[$uid])) {
-        $cache[$uid] = eL('anonymous');
-    }
+	if (isset($uname)) {
+		#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
+		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
+		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
+		$url = CreateURL('user', $uid);
+		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
+	} elseif (empty($cache[$uid])) {
+		$cache[$uid] = eL('anonymous');
+	}
 
-    return $cache[$uid];
+	return $cache[$uid];
 }
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
@@ -317,7 +332,11 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			}
 		}
 		if (isset($uname)) {
-			$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
+			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
+			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
+			$url = CreateURL('user', $uid);
 			$avacache[$uid] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 		}
 	}
@@ -566,6 +585,136 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 
 	return $html;
 } // }}}
+
+
+// {{{ tpl_select()
+/**
+ * builds a complete HTML-select with select options
+ *
+ * supports free choosable attributes for select, options and optgroup tags. optgroups can also be nested.
+ *
+ * @author peterdd 
+ *
+ * @param array key-values pairs and can be nested
+ *
+ * @return string the complete html-select
+ * 
+ * @since 1.0.0-beta3
+ * 
+ * @example
+ * example output of print_r($array) to see the structure of the param $array
+ * Array
+  (
+    [name] => varname          // required if you want submit it with a form to the server
+    [attr] => Array            // optional 
+        (
+            [id] => selid   // optional
+            [class] => selclass1  // optional
+        )
+    [options] => Array         // optional, but without doesn't make much sense ;-)
+        (
+            [0] => Array       // at least one would be useful
+                (
+                    [value] => opt1val     // recommended
+                    [label] => opt1label   // recommended
+                    [disabled] => 1        // optional
+                    [selected] => 1        // optional
+                    [attr] => Array        // optional
+                        (
+                            [id] => opt1id        // optional
+                            [class] => optclass1  // optional
+                        )
+                )
+            [1] => Array
+                (
+                    [optgroup] => 1          // this tells the function that now comes an optgroup
+                    [label] => optgrouplabel // optional
+                    [attr] => Array          // optional
+                        (
+                            [id] => optgroupid1        // optional
+                            [class] => optgroupclass1  // optional
+                        )
+                    [options] => Array
+                        // ... nested options and optgroups can follow here....
+                )
+                // ... and so on          
+        )
+  )
+ */
+function tpl_select($select=array()){
+
+	$attrjoin='';
+	foreach($select['attr'] as $key=>$val){
+		$attrjoin.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+	}
+	$html='<select name="'.$select['name'].'"'.$attrjoin.'>';
+	$html.=tpl_selectoptions($select['options']);
+	$html.="\n".'</select>';
+	return $html;
+} // }}}
+
+
+// {{{ tpl_selectoptions()
+/**
+ * tpl_selectoptions()  
+ *
+ * @author peterdd 
+ *
+ * @param array key-values pairs and can be nested
+ *
+ * @return string option- and optgroup-tags as one string
+ * 
+ * @since 1.0.0-beta3
+ * 
+ * called by tpl_select()
+ * called recursively by itself 
+ * Can also be called alone from template if the templates writes the wrapping select-tags.
+ *
+ * @example see [options]-array of example of tpl_select()
+ */
+function tpl_selectoptions($options=array(), $level=0){
+	$html='';
+	# such deep nesting is too weired - probably an endless loop lets
+	# return before something bad happens
+	if( $level>10){
+		return;
+	}
+	#print_r($options);
+	#print_r($level);
+	foreach($options as $o){
+		if(isset($o['optgroup'])){
+			# we have an optgroup
+			$html.="\n".str_repeat("\t",$level).'<optgroup label="'.$o['label'].'"';
+			if(isset($o['attr'])){
+				foreach($o['attr'] as $key=>$val){
+					$html.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+				}
+			}
+			$html.='>';
+			# may contain options and suboptgroups..
+			$html.=tpl_selectoptions($o['options'], $level+1);
+			$html.="\n".str_repeat("\t",$level).'</optgroup>';
+		} else{
+			# we have a simple option
+			$html.="\n".str_repeat("\t",$level).'<option value="'.htmlspecialchars($o['value'], ENT_QUOTES, 'utf-8').'"';
+			if(isset($o['disabled'])){
+				$html.=' disabled="disabled"'; # xhtml compatible
+			}
+			if(isset($o['selected'])){
+				$html.=' selected="selected"'; # xhtml compatible
+			}
+			if(isset($o['attr'])){
+				foreach($o['attr'] as $key=>$val){
+					$html.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+				}
+			}
+			$html.='>'.htmlspecialchars($o['label'], ENT_QUOTES, 'utf-8').'</option>';
+		}
+	}
+		
+	return $html;
+} // }}}
+
 
 // {{{ Double <select>
 function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)

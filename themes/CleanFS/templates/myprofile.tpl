@@ -31,3 +31,4 @@
 endif; ?>
 </div>
 <div class="box"><h3><?php echo eL('permissionsforproject').' '.$proj->prefs['project_title']; ?></h3><?php echo tpl_draw_perms($user->perms); ?></div>
+<div class="clear"></div>

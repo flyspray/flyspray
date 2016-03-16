@@ -76,25 +76,28 @@ text-decoration: none;
 ');
 }
 
-// Any "do" mode that accepts a task_id or id field should be added here.
+// Any "do" mode that accepts a task_id field should be added here.
 if (in_array(Req::val('do'), array('details', 'depends', 'editcomment'))) {
     if (Req::num('task_id')) {
-        $result = $db->Query('SELECT  project_id
-                                FROM  {tasks} WHERE task_id = ?', array(Req::num('task_id')));
+        $result = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Req::num('task_id')));
+        $project_id = $db->FetchOne($result);
+    }
+}
+
+if (Req::val('do') =='pm' && Req::val('area')=='editgroup') {
+    if (Req::num('id')) {
+        $result = $db->Query('SELECT project_id FROM {groups} WHERE group_id = ?', array(Req::num('id')));
         $project_id = $db->FetchOne($result);
     }
 }
 
 if (!isset($project_id)) {
-    // Determine which project we want to see
-    if (($project_id = Cookie::val('flyspray_project')) == '') {
         $project_id = $fs->prefs['default_project'];
-    }
-    $project_id = Req::val('project', Req::val('project_id', $project_id));
+        # Force default value if input format is not allowed
+        if(is_array(Req::val('project'))) {
+                Req::set('project', $fs->prefs['default_project']);
+        }
+        $project_id = Req::val('project', Req::val('project_id', $project_id));
 }
 
 $proj = new Project($project_id);
-# no more project cookie!
-#$proj->setCookie();
-
-

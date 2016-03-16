@@ -8,6 +8,9 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <?php if ($fs->prefs['url_rewriting']): ?>
+    <base href="<?php echo Filters::noXSS($baseurl); ?>" />
+    <?php endif; ?>
     <?php if(trim($this->get_image('favicon'))): ?>
     <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
     <?php endif; ?>
@@ -17,7 +20,7 @@
     <?php endforeach; ?>
     <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
     <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
@@ -59,8 +62,8 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
-  </head>
-  <body onload="<?php
+</head>
+<body onload="<?php
         if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])):
         ?>window.setTimeout('Effect.Fade(\'mixedbar\', {duration:.3})', 10000);<?php
         elseif (isset($_SESSION['SUCCESS'])):
@@ -68,13 +71,9 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
         elseif (isset($_SESSION['ERROR'])):
         ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
-    <!-- Display title and logo if desired -->
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
-	<?php if ($fs->prefs['logo']) { ?>
-		<img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" />
-	<?php } ?>
-	<?php echo Filters::noXSS($proj->prefs['project_title']); ?>
-
+	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" /><?php } ?>
+	<span><?php echo Filters::noXSS($proj->prefs['project_title']); ?></span>
     </a></h1>
     <?php $this->display('links.tpl'); ?>
 
@@ -86,26 +85,14 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <div id="successbar" class="success bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div></div>
     <?php endif; ?>
 
-    <div id="content">
-      <div class="clear"></div>
-
-      <?php $show_message = explode(' ', $fs->prefs['pages_welcome_msg']);
-        $actions = explode('.', Req::val('action'));
-        if ($fs->prefs['intro_message'] &&
-           ($proj->id == 0 || $proj->prefs['disp_intro']) &&
-           (in_array($do, $show_message)) ):?>
-          <div id="intromessage">
-            <?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?>
-          </div>
-      <?php endif; ?>
-
-	  <?php if ($proj->id > 0): ?>
-	    <?php $show_message = explode(' ', $proj->prefs['pages_intro_msg']);
-            $actions = explode('.', Req::val('action'));
-            if ($proj->prefs['intro_message'] && (in_array($do, $show_message))): ?>
-	          <div id="intromessage">
-	            <?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id, ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?>
-	          </div>
-        <?php endif; ?>
-      <?php endif; ?>
-
+<div id="content">
+	<div class="clear"></div>
+	<?php $show_message = explode(' ', $fs->prefs['pages_welcome_msg']);
+	if ($fs->prefs['intro_message'] && ($proj->id == 0 || $proj->prefs['disp_intro']) && (in_array($do, $show_message)) ):?>
+	<div id="intromessage"><?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?></div>
+	<?php endif; ?>
+	<?php if ($proj->id > 0):
+	$show_message = explode(' ', $proj->prefs['pages_intro_msg']);
+	if ($proj->prefs['intro_message'] && (in_array($do, $show_message))): ?>
+	<div id="intromessage"><?php echo TextFormatter::render($proj->prefs['intro_message'], 'msg', $proj->id, ($proj->prefs['last_updated'] < $proj->prefs['cache_update']) ? $proj->prefs['pm_instructions'] : ''); ?></div>
+	<?php endif; endif; ?>
