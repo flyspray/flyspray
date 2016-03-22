@@ -612,7 +612,7 @@ form #taskdetailsfull {
 table.inline{border-collapse:collapse;}
 table.inline td {border:1px solid #ccc; padding:4px;}
 
-#shortcutlabel { cursor:pointer; }
+#shortcutlabel { cursor:pointer;padding-left:1em;}
 #shortcutclose { cursor:pointer;float:right; }
 #shortcuts {
   display:none;
@@ -631,8 +631,19 @@ table.inline td {border:1px solid #ccc; padding:4px;}
   margin-left:-150px;
   box-sizing:border-box;
 }
+#shortcutsmodal {
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+  cursor:pointer;
+}
 #s_shortcuts {display:none;}
-#s_shortcuts:checked ~ #shortcuts {display: block;}
+#s_shortcuts:checked ~ #shortcuts, #s_shortcuts:checked ~ #shortcutsmodal {display: block;}
 
 #taskdetails {
   margin: 10px 0px 10px 0px;
