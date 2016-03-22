@@ -625,7 +625,7 @@ table.inline td {border:1px solid #ccc; padding:4px;}
   box-shadow:0 0 400px #000;
   top:50%;
   margin-top:-250px;
-  height:500px;
+  height:520px;
   left:50%;
   width:300px;
   margin-left:-150px;
@@ -644,6 +644,13 @@ table.inline td {border:1px solid #ccc; padding:4px;}
 }
 #s_shortcuts {display:none;}
 #s_shortcuts:checked ~ #shortcuts, #s_shortcuts:checked ~ #shortcutsmodal {display: block;}
+#shortcuts > ul {
+    list-style: outside none none;
+    margin-left: 0;
+    padding-left: 0;
+}
+#shortcuts li{line-height:2em;}
+kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2px;}
 
 #taskdetails {
   margin: 10px 0px 10px 0px;
