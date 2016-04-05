@@ -311,7 +311,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 
 	static $avacache=array();
 
-	if($uid>0 && empty($avacache[$uid])){
+	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
 		$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
 		if ($sql && $db->countRows($sql)) {
 			list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
@@ -337,10 +337,10 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 			$url = CreateURL('user', $uid);
-			$avacache[$uid] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
+			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
 		}
 	}
-	return $avacache[$uid];
+	return $avacache[$uid][$size];
 }
 
 function tpl_fast_tasklink($arr)

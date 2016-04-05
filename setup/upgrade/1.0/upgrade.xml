@@ -826,6 +826,29 @@
       <col>version_tense</col>
     </index>
   </table>
+  <table name="notifications">
+    <field name="notify_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="limited" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="task_id_notifs">
+      <UNIQUE/>
+      <col>task_id</col>
+      <col>user_id</col>
+    </index>
+  </table>
   <table name="task_tag">
     <field name="task_id" type="I" size="5">
       <KEY/>

@@ -1,5 +1,15 @@
 <?php
-
+//
+// This file is auto generated with langedit.php
+// Characters are UTF-8 encoded
+// 
+// Be careful when editing this file manually, some text editors
+// may convert text to UCS-2 or similar (16-bit) which is NOT
+// readable by the PHP parser
+// 
+// Furthermore, nothing else than the language array is saved
+// when using the langedit.php editor!
+//
 $language = array(
 'edituser'                => 'Edit user',
 'accountenabled'          => 'Account Enabled',
@@ -242,7 +252,7 @@ $language = array(
 'addtolist'               => 'Add to list',
 'addmyself'               => 'Add myself to this list',
 'removemyself'            => 'Remove myself from this list',
-'theseusersnotify'        => 'These users will receive detailed notifications whenever this task changes.',
+'theseusersnotify'        => 'These users will receive detailed notifications whenever this task changes. If a user marked as \'limited\', only the main task-changes will be send.',
 'attachedtoproject'       => 'Attached to Project',
 'reminders'               => 'Reminders',
 'system'                  => 'System',
@@ -404,7 +414,7 @@ $language = array(
 'hidemessage'             => '(remind me later)',
 'saveas'                  => 'Save search as',
 'nosearches'              => 'No saved searches',
-'saving'                   => 'Saving...',
+'saving'                  => 'Saving...',
 'votes'                   => 'Votes',
 'tovote'                  => 'Vote',
 'allclosedtasks'          => 'All Closed Tasks',
@@ -413,15 +423,9 @@ $language = array(
 'rememberme'              => 'Remember me',
 'lostpassword'            => 'Lost password?',
 'lostpwforfs'             => 'Lost password for Flyspray',
-'lostpwmsg1'              => 'Hi.
-
-I have lost my password for Flyspray on ',
-'lostpwmsg2'              => ', please provide me with a new password.
-
-Username: ',
-'regards'                 => '
-
-Regards,',
+'lostpwmsg1'              => "Hi.\n\nI have lost my password for Flyspray on ",
+'lostpwmsg2'              => ", please provide me with a new password.\n\nUsername: ",
+'regards'                 => "\n\nRegards,",
 'yourusername'            => ' your username ',
 'locale'                  => 'en-US',
 'filenotexist'            => 'File does not exist, or you do not have permission to access it.',
@@ -450,12 +454,7 @@ Regards,',
 'permissions'             => 'View Permissions',
 'hide'                    => 'Hide',
 'pendingreq'              => 'PM requests waiting',
-'errorpage'               => 'Flyspray cannot provide the page you requested.
-                                 Perhaps you requested a task that does not exist, or you
-                                 do not have permission to view the page you wanted.<br /><br />
-                                 You may have tried to use a naughty URL to interact with the database
-                                 backend using SQL injection.  If this is true, go to the corner and think
-                                 about your actions.  When you return, please do not do it again!',
+'errorpage'               => "Flyspray cannot provide the page you requested.\n                                 Perhaps you requested a task that does not exist, or you\n                                 do not have permission to view the page you wanted.<br /><br />\n                                 You may have tried to use a naughty URL to interact with the database\n                                 backend using SQL injection.  If this is true, go to the corner and think\n                                 about your actions.  When you return, please do not do it again!",
 'permissionsforproject'   => 'Permissions for ',
 'switchto'                => 'Switch to',
 'lastsearch'              => 'Last search',
@@ -738,15 +737,11 @@ Regards,',
 'userdeleted'             => 'User deleted',
 'autoassign'              => 'Auto-assign a task to the category owner',
 'ssl'                     => 'SSL',
-'updatewrong'             => 'You have the update check feature enabled, but an error ocurred while trying
-                             to contact the update server, either your host do not allow outbound connections
-                             or the error was caused by a network problem.
-                             Please visit the flyspray website to make sure you are running the latest version.',
+'updatewrong'             => "You have the update check feature enabled, but an error ocurred while trying\n                             to contact the update server, either your host do not allow outbound connections\n                             or the error was caused by a network problem.\n                             Please visit the flyspray website to make sure you are running the latest version.",
 'deleteproject'           => 'Delete this project and move contents to',
 'projectdeleted'          => 'Project deleted successfully',
 'feedforall'              => 'Feed for all projects',
 'usercreated'             => 'User created',
-'userdeleted'             => 'User deleted',
 'created'                 => 'Created',
 'deleted'                 => 'Deleted',
 'userid'                  => 'User ID',
@@ -792,7 +787,7 @@ Regards,',
 'couldnotaddusernotif'    => 'Could not add this user to the notification list.',
 'defaulttask'             => 'Default task description',
 'all'                     => 'all',
-'events.useraddedtoassignees' => 'User added to assignees',
+'events.useraddedtoassignees'=> 'User added to assignees',
 'eventlog'                => 'Event log',
 'assignmentchanged'       => 'Assignment changed',
 'detailedinfo'            => 'Detailed information',
@@ -889,9 +884,6 @@ Regards,',
 'nouserstoadd'            => 'No Users To Add. Please ensure Name, Username, and Email are defined for each user.',
 'dispintro'               => 'Display main introductory message',
 'mainmessage'             => 'Main introductory message',
-/* note only the English version for 'dispintro' is supported
- * other languages should also be taken cared of in the future*/
-
 'setsupertask'            => 'Set Super-Task ID:',
 'supertaskmodified'       => 'Super-Task ID has been modified',
 'set'                     => 'Set',
@@ -958,7 +950,6 @@ Regards,',
 'adminrequestswaiting'    => 'Admin requests waiting',
 'clicktoedit'             => 'Click on each field to quick edit',
 'confirmedit'             => 'confirm',
-'canceledit'              => 'cancel',
 'regapprovedbyadmin'      => 'Registrations approved by admins (disable confirmation code)',
 'activity'                => 'Activity',
 'myactivity'              => 'My activity',
@@ -1003,12 +994,7 @@ Regards,',
 'pleaseselect'            => 'Please select',
 'closeselectedtasks'      => 'Close selected tasks',
 'closetasks'              => 'close tasks',
-'hintforbulkimport'       => '<b>Tips for bulk importing:</b>
-  <ol>
-  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>
-  <li>Currently you can only paste Summary and Details.</li>
-  <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>
-  </ol>',
+'hintforbulkimport'       => "<b>Tips for bulk importing:</b>\n  <ol>\n  <li>Copy and paste from an excel spreadsheet or CSV by pasting one entire column.</li>\n  <li>Currently you can only paste Summary and Details.</li>\n  <li>There are suggestions when you assign to someone, and to no-one if there is no matched name.</li>\n  </ol>",
 'taskissubtaskof'         => 'This task is a sub task of',
 'applyfirstline'          => 'Apply first line',
 'addmorerows'             => 'Add more rows',
@@ -1016,7 +1002,7 @@ Regards,',
 'massopsdisabled'         => 'Sorry, bulk editing is currently disabled for Flyspray 1.0. We plan to finish implementation for a later release of Flyspray. You can enable them in source code again at your own risk, but read the comments there before doing it.',
 'viewroadmap'             => 'Can view roadmap',
 'nosuicide'               => 'Dear user, my program doesn\'t allow you to destroy your access to Flyspray by disabling your own account or switching your own group. The empathic brother of HAL9000',
-'movingtodifferentproject' => 'Moving a task that has either a parent or subtasks to a different project is not allowed. You must break the connection between them first.',
+'movingtodifferentproject'=> 'Moving a task that has either a parent or subtasks to a different project is not allowed. You must break the connection between them first.',
 'musthavesameproject'     => 'Parent and subtask must belong to the same project.',
 'defaultorderby'          => 'Order tasklist by default by',
 'defaultorderby2'         => 'then by',
@@ -1050,6 +1036,8 @@ Regards,',
 'testmailsettingsnotice'  => 'And also check if you received the test email in the mail account of the current user (see \'myprofile\'-page)',
 'invalidinput'            => 'Oh, there are some incompatible properties set that must be resolved before moving this task to a different project.',
 'invalidstatus'           => 'Please choose a valid task status when moving a task to a different project.',
+'invalidprogress'         => 'Please choose a valid progress when moving a task to a different project.',
+'invalidpriority'         => 'Please choose a valid priority when moving a task to a different project.',
 'invalidcategory'         => 'Please choose a valid category when moving a task to a different project.',
 'invalidreportedversion'  => 'Please choose a valid report version when moving a task to a different project.',
 'invaliddueversion'       => 'Please choose a valid due version when moving a task to a different project.',
@@ -1062,6 +1050,7 @@ Regards,',
 'hideclosed'              => 'hide closed tasks',
 'currentproject'          => 'current project',
 'targetproject'           => 'target project',
+'limited'                 => 'Limited',
 'availablekeybshortcuts'  => 'Available keyboard shortcuts',
 'logindialoglogout'       => 'Login Dialog / Logout',
 'focustaskidsearch'       => 'focus taskid search',
@@ -1072,4 +1061,5 @@ Regards,',
 'taskediting'             => 'Task Editing',
 'savetask'                => 'save task'
 );
+
 ?>

@@ -2013,7 +2013,12 @@ switch ($action = Req::val('action'))
         } else {
             $userId = Flyspray::UserNameToId(Req::val('user_name'));
         }
-        if (!Backend::add_notification($userId, Req::val('ids'))) {
+		if (Req::val('notif_limited')) {
+			$limited = Req::val('notif_limited')!="";
+		} else {
+			$limited = false;
+		}
+        if (!Backend::add_notification($userId, Req::val('ids'), false, $limited)) {
             Flyspray::show_error(L('couldnotaddusernotif'));
             break;
         }
