@@ -25,7 +25,7 @@
                 <td><?php echo Filters::noXSS(formatDate($details['date_added'], true)); ?></td>
                 <td><?php echo tpl_userlink($details['user_id']); ?></td>
                 <td><?php
-            if($details['effort'] == 0)
+            if($details['effort'] == 0 && $details['end_timestamp']==false)
              { ?>
                     <?php echo Filters::noXSS(L('trackinginprogress')); ?> (<?php
 
