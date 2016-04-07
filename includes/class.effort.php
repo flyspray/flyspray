@@ -115,15 +115,21 @@ class effort
     }
 
     /**
-     * Removes any outstanding tracking requests for this task for this user, as a user can only have
-     * one tracking request at any time, this should only ever return a row count of one.
+     * Removes any outstanding tracking requests for this task for this user.
      */
     public function cancelTracking()
     {
         global $db;
-
-        $db->Query('DELETE FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
-
+    
+        # 2016-07-04: also remove invalid finished 0 effort entries that were accidently possible up to Flyspray 1.0-rc
+        $db->Query('DELETE FROM {effort}
+            WHERE user_id='.$this->_userId.'
+            AND task_id='.$this->_task_id.'
+            AND (
+                end_timestamp IS NULL
+                OR (start_timestamp=end_timestamp AND effort=0)
+            );'
+        );
     }
 
     public function populateDetails()
