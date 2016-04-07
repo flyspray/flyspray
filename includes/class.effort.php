@@ -276,7 +276,7 @@ class effort
         if (!isset($string) || empty($string)) {
             return 0;
         }
-        
+
         $factor = ($factor == 0 ? 86400 : $factor);
         
         $matches = array();
@@ -295,6 +295,10 @@ class effort
                 return FALSE;
             }
         }
+
+		if($matches[3]==0 && $matches[5]==0) {
+			return FALSE;
+		}
             
         $effort = ($matches[2] * $factor) + ($matches[3] * 3600) + ($matches[5] * 60);
         return $effort;
