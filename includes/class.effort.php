@@ -38,22 +38,31 @@ class effort
     /**
      * Manually add effort to the effort table for this issue / user.
      *
-     * @param $effort_to_add int Amount of Effort in hours to add to effort table.
+     * @param $effort_to_add int amount of effort in hh:mm to add to effort table.
      */
     public function addEffort($effort_to_add, $proj)
     {
         global $db;
 
+        # note: third parameter seem useless, not used by EditStringToSeconds().., maybe drop it..
         $effort = self::EditStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
         if ($effort === FALSE) {
             Flyspray::show_error(L('invalideffort'));
-            return;
+            return false;
         }
 
-        $db->Query('INSERT INTO  {effort}
-                                         (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
-                                 VALUES  ( ?, ?, ?, ?,?,? )',
-            array   ($this->_task_id, time(), $this->_userId,time(),time(),$effort));
+        # quickfix to avoid useless table entries.
+        if($effort==0){ 
+            Flyspray::show_error(L('zeroeffort'));
+            return false;
+        } else{
+            $db->Query('INSERT INTO {effort}
+                (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
+                VALUES  ( ?, ?, ?, ?,?,? )',
+                array($this->_task_id, time(), $this->_userId,time(),time(),$effort)
+            );
+            return true;
+        }
     }
 
     /**
