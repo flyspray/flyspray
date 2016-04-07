@@ -628,10 +628,11 @@ switch ($action = Req::val('action'))
             $_SESSION['SUCCESS'] = L('efforttrackingcancelled');
         }
 
-        if(Post::val('manual_effort')){
-            $effort->addEffort(Post::val('effort_to_add'), $proj);
-            $_SESSION['SUCCESS'] = L('efforttrackingadded');
-        }
+	if(Post::val('manual_effort')){
+		if($effort->addEffort(Post::val('effort_to_add'), $proj)){
+			$_SESSION['SUCCESS'] = L('efforttrackingadded');
+		}
+	}
         
         Flyspray::Redirect(CreateURL('details', $task['task_id']).'#effort');
         break;
