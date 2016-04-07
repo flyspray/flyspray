@@ -77,7 +77,7 @@ text-decoration: none;
 }
 
 // Any "do" mode that accepts a task_id field should be added here.
-if (in_array(Req::val('do'), array('details', 'depends', 'editcomment'))) {
+if (in_array(Req::val('do'), array('details', 'depends', 'editcomment')) || Req::val('name') == "estimated_effort") {
     if (Req::num('task_id')) {
         $result = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Req::num('task_id')));
         $project_id = $db->FetchOne($result);
