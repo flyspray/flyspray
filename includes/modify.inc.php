@@ -219,8 +219,12 @@ switch ($action = Req::val('action'))
 	if( !is_numeric(Post::val('task_severity')) || Post::val('task_severity')>5 || Post::val('task_severity')<0 ){
 		$errors['invalidseverity']=1;
 	}
-
-	if( !is_numeric(Post::val('task_priority')) || Post::val('task_priority')>5 || Post::val('task_priority')<0 ){
+	
+	# peterdd:temp fix to allow pirority 6 again
+	# But I think about 1-5 valid (and 0 for unset) only in future to harmonize
+	# with other trackers/taskplaner software and for severity-priority graphs like
+	# https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method
+	if( !is_numeric(Post::val('task_priority')) || Post::val('task_priority')>6 || Post::val('task_priority')<0 ){
 		$errors['invalidpriority']=1;
 	}
 
