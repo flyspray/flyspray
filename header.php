@@ -77,7 +77,7 @@ text-decoration: none;
 }
 
 # load the correct $proj early also for checks on quickedit.php taskediting calls
-if( (BASEDIR.'/js/callbacks/quickedit.php' == $_SERVER['SCRIPT_FILENAME']) && Post::num('task_id')){
+if( (BASEDIR.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'callbacks'.DIRECTORY_SEPARATOR.'quickedit.php' == $_SERVER['SCRIPT_FILENAME']) && Post::num('task_id')){
         $result = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::num('task_id')));
         $project_id = $db->FetchOne($result);
 }
