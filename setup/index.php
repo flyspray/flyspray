@@ -839,6 +839,13 @@ class Setup extends Flyspray
       // Setting the database for the ADODB connection
       require_once($this->mAdodbPath);
 
+	# 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3 . For instance on german 1und1 managed linux servers ( e.g. $db_hostname ='localhost:/tmp/mysql5.sock' )
+	if( $db_type=='mysqli' && 'localhost:/'==substr($db_hostname,0,11) ){
+		$dbsocket=substr($db_hostname,10);
+		$db_hostname='localhost';
+		ini_set( 'mysqli.default_socket', $dbsocket );
+	}
+
       $this->mDbConnection =& NewADOConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
       $this->mDbConnection->SetCharSet('utf8');
@@ -900,11 +907,15 @@ class Setup extends Flyspray
          trigger_error('ADODB Libraries missing or not correct version');
       }
 
+	# 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3 . For instance on german 1und1 managed linux servers ( e.g. $data['db_hostname'] ='localhost:/tmp/mysql5.sock' )
+	if( strtolower($data['db_type'])=='mysqli' && 'localhost:/'==substr($data['db_hostname'],0,11) ){
+		$dbsocket=substr($data['db_hostname'],10);
+		$data['db_hostname']='localhost';
+		ini_set( 'mysqli.default_socket', $dbsocket );
+	}
+
       // Setting the database type for the ADODB connection
       $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
-
-      /* check hostname/username/password */
-
       if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
          $_SESSION['page_heading'] = 'Database Processing';
