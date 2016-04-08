@@ -73,7 +73,15 @@ class Database
         $this->dbtype   = $dbtype;
         $this->dbprefix = $dbprefix;
         $ADODB_COUNTRECS = false;
-        
+    
+        # 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
+        # For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
+        if( $dbtype=='mysqli' && 'localhost:/'==substr($dbhost,0,11) ){
+            $dbsocket=substr($dbhost,10);
+            $dbhost='localhost';
+            ini_set( 'mysqli.default_socket', $dbsocket );
+        }
+
         $this->dblink = NewADOConnection($this->dbtype);
         $this->dblink->Connect($dbhost, $dbuser, $dbpass, $dbname);
 
