@@ -1,3 +1,10 @@
-Changelog is now online
+We do not update a manual changelog file anymore.
 
-http://www.flyspray.org/changelog
+Manual written changelog summaries are shown on Flyspray github releases
+https://github.com/Flyspray/flyspray/releases
+
+Full source code changes available here
+https://github.com/Flyspray/flyspray/commits/master
+
+Closed reported bug reports and changes on our own bugtracker on bugs.flyspray.org here:
+https://bugs.flyspray.org/index.php?do=tasklist&project=1&status[0]=closed
