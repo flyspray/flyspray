@@ -1,4 +1,7 @@
 Installing Flyspray
+
+For Flyspray 1.0-* see /README.md too.
+
 Latest version: www.flyspray.org/manual/install
 
 This document describes the installation process for setting up Flyspray version 0.9.9. When reading this guide and performing the following install steps, please go in order; Some of the later steps require that the previous steps have been completed, otherwise the installation will fail.
