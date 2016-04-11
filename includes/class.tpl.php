@@ -312,32 +312,38 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 	static $avacache=array();
 
 	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
-		$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
-		if ($sql && $db->countRows($sql)) {
-			list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
-		} else {
-			return;
+		if (!isset($avacache[$uid]['uname'])) {
+			$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+			if ($sql && $db->countRows($sql)) {
+				list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
+			} else {
+				return;
+			}
+			$avacache[$uid]['profile_image'] = $profile_image;
+			$avacache[$uid]['uname'] = $uname;
+			$avacache[$uid]['rname'] = $rname;
+			$avacache[$uid]['email'] = $email;
 		}
 
-		if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
-			$image = '<img src="'.$baseurl.'avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
+		if (is_file(BASEDIR.'/avatars/'.$avacache[$uid]['profile_image'])) {
+			$image = '<img src="'.$baseurl.'avatars/'.$avacache[$uid]['profile_image'].'"/>';
 		} else {
 			if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-				$email = md5(strtolower(trim($email)));
+				$email = md5(strtolower(trim($avacache[$uid]['email'])));
 				$default = 'mm';
 				$imgurl = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-				$image = '<img src="'.$imgurl.'" width="'.$size.'" height="'.$size.'"/>';
+				$image = '<img src="'.$imgurl.'"/>';
 			} else {
 				$image = '<i class="fa fa-user" style="font-size:'.$size.'px"></i>';
 			}
 		}
-		if (isset($uname)) {
+		if (isset($avacache[$uid]['uname'])) {
 			#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
 			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 			$url = CreateURL('user', $uid);
-			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
+			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$avacache[$uid]['rname'].'">'.$image.'</a>';
 		}
 	}
 	return $avacache[$uid][$size];
