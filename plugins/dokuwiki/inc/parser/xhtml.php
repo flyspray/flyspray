@@ -137,9 +137,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
 
         // write the header
-        $this->doc .= DOKU_LF.'<h'.$level.'><a name="'.$hid.'" id="'.$hid.'">';
-        $this->doc .= $this->_xmlEntities($text);
-        $this->doc .= "</a></h$level>".DOKU_LF;
+        $this->doc .= DOKU_LF.'<h'.$level.' id="'.$hid.'">'.$this->_xmlEntities($text)."</h$level>".DOKU_LF;
     }
 
      /**
