@@ -114,7 +114,7 @@ RewriteRule ^tasklist/proj([0-9]+)$ index.php?do=tasklist&project=$1 [L,QSA]
 # homepage (can be tasklist, toplevel, or roadmap; maybe gantt in future too)
 RewriteRule ^index$ index.php?do=index [L,QSA]
 RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
-RewriteRule ^newmultitasks/proj([0-9+])$ index.php?do=newmultitasks&project=$1 [L,QSA]
+RewriteRule ^newmultitasks/proj([0-9]+)$ index.php?do=newmultitasks&project=$1 [L,QSA]
 
 RewriteRule ^proj([0-9]+)/dev([0-9]+)$ index.php?project=$1&do=index&dev=$2 [L,QSA]
 RewriteRule ^proj([0-9]+)$ index.php?project=$1 [L,QSA]
