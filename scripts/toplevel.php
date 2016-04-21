@@ -20,7 +20,6 @@ if ($proj->id && $user->can_view_project($proj->prefs)) {
   # anon users should not see details of a restricted project but anon tasks creation allowed
   # but in /index.php we filter now by 'can_select_project', not 'can_view_project' anymore.
   $projects= array_filter($projects, array($user, 'can_view_project'));
-  $fs->projects=$projects; # for the template links.tpl
 }
 
 if(count($projects)>0){
