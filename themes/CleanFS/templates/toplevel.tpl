@@ -46,7 +46,7 @@ foreach ($projects as $project): ?>
     <td>
       <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'')); ?>"><?php echo Filters::noXSS(L('All')); ?></a> -
       <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'open')); ?>"><?php echo Filters::noXSS(L('open')); ?></a> -
-      <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('openedfrom'=>'-1+week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
+      <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('openedfrom'=>'-1 week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
       <?php if (!$user->isAnon()): ?>
         <br />
         <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('dev'=>$user->id, 'devsm'=>'userid')); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
