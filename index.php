@@ -104,7 +104,7 @@ if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 $page = new FSTpl();
 
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
-if (Req::has('project') && Req::val('project') != 0 && !$user->can_view_project(Req::val('project'))) {
+if (Req::has('project') && Req::val('project') != 0 && !$user->can_select_project(Req::val('project'))) {
     Flyspray::show_error( L('nopermission') );
     exit;
 }
