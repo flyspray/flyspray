@@ -170,7 +170,7 @@ $sres=$db->FetchAllArray($sql);
 foreach($sres as $p){
 	$prs[$p['project_id']]=$p;
 }
-$fs->projects = array_filter($prs, array($user, 'can_view_project'));
+$fs->projects = array_filter($prs, array($user, 'can_select_project'));
 
 
 // Get e-mail addresses of the admins
