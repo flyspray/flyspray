@@ -14,7 +14,7 @@ if (!defined('IN_FS')) {
 // Need to get function ConvertSeconds
 require_once(BASEDIR . '/includes/class.effort.php');
 
-if (!$user->can_view_project($proj->id)) {
+if (!$user->can_select_project($proj->id)) {
     $proj = new Project(0);
 }
 

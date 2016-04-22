@@ -197,6 +197,32 @@ class User
           || ($this->perms('project_is_active', $proj)
               && ($this->perms('others_view', $proj) || $this->perms('project_group', $proj)));
     }
+    
+    /* can_select_project() is similiar to can_view_project(), but
+     * allows anonymous users/guests to select this project if the project allows anon task creation,
+     * but all other stuff is restricted.
+     */
+    public function can_select_project($proj)
+    {
+        if (is_array($proj) && isset($proj['project_id'])) {
+            $proj = $proj['project_id'];
+        }
+
+        return (
+		   $this->perms('view_tasks', $proj)
+		|| $this->perms('view_groups_tasks', $proj)
+		|| $this->perms('view_own_tasks', $proj)
+		)
+		||
+		(
+			$this->perms('project_is_active', $proj)
+			&& (
+				   $this->perms('others_view', $proj)
+				|| $this->perms('project_group', $proj)
+				|| $this->perms('anon_open', $proj)
+			)
+        	);
+    }
 
     public function can_view_task($task)
     {

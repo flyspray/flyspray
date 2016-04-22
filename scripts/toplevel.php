@@ -17,7 +17,12 @@ if ($proj->id && $user->can_view_project($proj->prefs)) {
   );
 } else {
   $projects = $fs->projects;
+  # anon users should not see details of a restricted project but anon tasks creation allowed
+  # but in /index.php we filter now by 'can_select_project', not 'can_view_project' anymore.
+  $projects= array_filter($projects, array($user, 'can_view_project'));
 }
+
+if(count($projects)>0){
 
 $most_wanted = array();
 $stats = array();
@@ -87,4 +92,7 @@ foreach ($projects as $project) {
 $page->uses('most_wanted', 'stats', 'projects', 'assigned_to_myself', 'projprefs');
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('toplevel'));
 $page->pushTpl('toplevel.tpl');
+} else{
+  # mmh what we want to show anon users with only the 'create anon task' permission enabled?...
+}
 ?>

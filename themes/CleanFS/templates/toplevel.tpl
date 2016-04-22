@@ -44,14 +44,14 @@ foreach ($projects as $project): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('viewtasks')); ?></th>
     <td>
-      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('status[]'=>'')); ?>"><?php echo Filters::noXSS(L('All')); ?></a> -
-      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('status[]'=>'open')); ?>"><?php echo Filters::noXSS(L('open')); ?></a> -
-      <a href="<?php echo CreateURL('project', $project['project_id'], null, array('openedfrom'=>'-1+week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
+      <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'')); ?>"><?php echo Filters::noXSS(L('All')); ?></a> -
+      <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'open')); ?>"><?php echo Filters::noXSS(L('open')); ?></a> -
+      <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('openedfrom'=>'-1 week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
       <?php if (!$user->isAnon()): ?>
         <br />
-        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('dev'=>$user->id)); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
-        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('only_watched'=>1)); ?>"><?php echo Filters::noXSS(L('taskswatched')); ?></a> -
-        <a href="<?php echo CreateURL('project', $project['project_id'], null, array('opened'=>$user->id)); ?>"><?php echo Filters::noXSS(L('tasksireported')); ?></a>
+        <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('dev'=>$user->id, 'devsm'=>'userid')); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
+        <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('only_watched'=>1)); ?>"><?php echo Filters::noXSS(L('taskswatched')); ?></a> -
+        <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('opened'=>$user->id, 'openedsm'=>'userid')); ?>"><?php echo Filters::noXSS(L('tasksireported')); ?></a>
       <?php endif; ?>
     </td>
     
