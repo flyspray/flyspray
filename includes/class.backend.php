@@ -1586,13 +1586,22 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
         $sql_params[] = $user->id;
 	}
         /// process search-conditions {{{
-        $submits = array('type' => 'task_type', 'sev' => 'task_severity',
-            'due' => 'closedby_version', 'reported' => 'product_version',
-            'cat' => 'product_category', 'status' => 'item_status',
-            'percent' => 'percent_complete', 'pri' => 'task_priority',
-            'dev' => array('ass.user_id', 'u.user_name', 'u.real_name'),
-            'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
-            'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
+        $submits = array(
+		'type' => 'task_type',
+		'sev' => 'task_severity',
+		'due' => 'closedby_version',
+		'reported' => 'product_version',
+		'cat' => 'product_category',
+		'status' => 'item_status',
+		'percent' => 'percent_complete',
+		'pri' => 'task_priority',
+		'dev' => array('ass.user_id', 'u.user_name', 'u.real_name'),
+		'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
+		'closed' => array('closed_by', 'uc.user_name', 'uc.real_name')
+	);
+	$devsm = array_get($args, 'devsm', ''); # devsearchmode: empty is default and searches in all 3 fields
+        $openedsm = array_get($args, 'openedsm', '');
+        $closedsm = array_get($args, 'closededsm', '');
         foreach ($submits as $key => $db_key) {
             $type = array_get($args, $key, ($key == 'status') ? 'open' : '');
             settype($type, 'array');
@@ -1615,14 +1624,47 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' ass.user_id is NULL OR';
+                        $temp .= ' ass.user_id is NULL  OR';
+                    } elseif($key=='dev' && $devsm!=''){
+                                if($devsm=='userid'){
+                                        $temp .= ' ass.user_id = ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($devsm=='username'){
+                                        $temp .= ' u.user_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($devsm=='realname'){
+                                        $temp .= ' u.real_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }
+                    } elseif($key=='opened' && $openedsm!=''){
+                                if($openedsm=='userid'){
+                                        $temp .= ' opened_by = ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($openedsm=='username'){
+                                        $temp .= ' uo.user_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($devsm=='realname'){
+                                        $temp .= ' uo.real_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }
+                    } elseif($key=='closed' && $closedsm!=''){
+                                if($closedsm=='userid'){
+                                        $temp .= ' closed_by = ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($closedsm=='username'){
+                                        $temp .= ' oc.user_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }elseif($closedsm=='username'){
+                                        $temp .= ' uc.real_name '.$LIKEOP.' ? AND';
+                                        $sql_params[] = $val;
+                                }
                     } else {
                         foreach ($db_key as $singleDBKey) {
                             if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ?  OR";
                                 $sql_params[] = '%' . $val . '%';
                             } elseif (is_numeric($val)) {
-                                $temp .= ' ' . $singleDBKey . ' = ? OR';
+                                $temp .= ' ' . $singleDBKey . ' = ?  OR';
                                 $sql_params[] = $val;
                             }
                         }
@@ -1647,7 +1689,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
 
             if ($temp) {
-                $where[] = '(' . substr($temp, 0, -3) . ')';
+                $where[] = '(' . substr($temp, 0, -3) . ')'; # strip the last ' OR' or 'AND' from that part
             }
         }
 /// }}}
