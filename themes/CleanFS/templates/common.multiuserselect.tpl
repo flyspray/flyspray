@@ -5,7 +5,7 @@
 <br />
 <select size="8" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
 <?php foreach ($userlist as $group => $users): ?>
-	<optgroup <?php echo ($users[0][2]==0? 'class="globalgroup" title="'.(Filters::noXSS(L('globalgroup'))).'"':''); ?>label="<?php echo Filters::noXSS($users[0][3]); ?>">
+	<optgroup <?php echo ($users[0][2]==0 ? 'class="globalgroup" title="'.(Filters::noXSS(L('globalgroup'))).'" ':''); ?>label="<?php echo Filters::noXSS($users[0][3]); ?>">
 	<?php foreach ($users as $info): ?>
 		<option value="<?php echo Filters::noXSS($info[0]); ?>" <?php if (in_array($info[0], $assignees)): ?>selected="selected"<?php endif; ?>><?php echo Filters::noXSS($info[1]); ?></option>
 	<?php endforeach; ?>
