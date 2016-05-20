@@ -773,6 +773,8 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 }
 #submenu li {display: inline;}
 div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
+.tab{display:none;}
+.tab.active{display:block;}
 * html .tab div.clear {clear: none;height: 14em;}
 div.comment_container {margin: 5px;}
 div.comment_container .comment_avatar {	min-width: 50px;display: inline-block;}

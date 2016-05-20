@@ -34,12 +34,16 @@ function showTabById(tabid, noEval) { // {{{
   }
   for (i=0; i<divs.length; i++) {
     if (divs[i].className && (divs[i].className.indexOf('tab') > -1)) {
-      divs[i].style.display = 'none';
+      //divs[i].style.display = 'none';
+      if (divs[i].className && (divs[i].className.indexOf(' active') > -1)) {
+        divs[i].className = divs[i].className.substr(0, divs[i].className.length-7);
+      }
     }
   }
 
   if (tab) {
-    tab.style.display = 'block';
+    //tab.style.display = 'block';
+    tab.className = tab.className +' active';
 
     if (submenu) {
       var links = submenu.getElementsByTagName('a');
