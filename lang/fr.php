@@ -1058,7 +1058,7 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'invalidprogress'         => 'Merci de choisir une valeur de progression correcte.',
 'invalidpriority'         => 'Merci de choisir une valeur de priorité correcte.',
 'invalidseverity'         => 'Merci de choisir une valeur de gravité correcte.',
-'availablekeybshortcuts'  => 'Activer les raccourcies clavier',
+'availablekeybshortcuts'  => 'Activer les raccourcis clavier',
 'logindialoglogout'       => 'Se connecter/Se déconnecter',
 'focustaskidsearch'       => 'Rechercher par ID de tâche',
 'openselectedtask'        => 'Ouvrir la tâche sélectionnée',
