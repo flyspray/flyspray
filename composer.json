@@ -4,7 +4,7 @@
     "description": "The Flyspray bug tracking system.",
     "keywords": ["bug","bugs","tracker","issue","issues", "web"],
     "homepage": "http://flyspray.org",
-    "license": "",
+    "license": "LGPL-2.1",
     "require": {
         "swiftmailer/swiftmailer": "@stable",
         "adodb/adodb-php": "5.*",
