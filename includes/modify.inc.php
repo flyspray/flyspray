@@ -1372,7 +1372,7 @@ switch ($action = Req::val('action'))
                     break;
                 }
 
-                if ( (!$user->perms('is_admin') || $user->id == Post::val('user_id')) && !Post::val('oldpass')
+                if ( (!$user->perms('is_admin') && $user->id == Post::val('user_id')) && !Post::val('oldpass')
                 && (Post::val('changepass') || Post::val('confirmpass')) ) {
                     Flyspray::show_error(L('nooldpass'));
                     break;
