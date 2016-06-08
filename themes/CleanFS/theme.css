@@ -142,6 +142,7 @@ pre[class*="code "]::before {
 pre.code {
     background-color: #fff;
     border: 1px solid #ddd;
+    overflow:auto;
 }
 
 li ul, li ol { margin: 0; }
