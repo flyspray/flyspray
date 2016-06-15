@@ -234,7 +234,7 @@ a:hover {color: #6699cc;}
   background-image: -moz-linear-gradient(#3c4041, #242627); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3c4041), to(#242627)); /* Safari 4+, Chrome 1+ */
   background-image: -webkit-linear-gradient(#3c4041, #242627); /* Safari 5.1+, Chrome 10+ */
-  background-image: -o-linear-gradient(#3c4041, #242627); /* Opera 11.10+ */
+  background-image: linear-gradient(#3c4041, #242627); /* CSS3 CR, IE10+ */
   /*border-bottom: 1px solid #6cab2e;*/
   /*border-bottom: 4px solid $dominant;*/
   margin: 0;
@@ -481,7 +481,7 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
   background-image: -moz-linear-gradient(#acdc7d, #78bf34); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#acdc7d), to(#78bf34)); /* Safari 4+, Chrome 1+ */
   background-image: -webkit-linear-gradient(#acdc7d, #78bf34); /* Safari 5.1+, Chrome 10+ */
-  background-image: -o-linear-gradient(#acdc7d, #78bf34); /* Opera 11.10+ */
+  background-image: linear-gradient(#acdc7d, #78bf34); /* CSS3, IE10+ */
 }
 .progress_bar_container span {
     text-align: center;
