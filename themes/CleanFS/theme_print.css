@@ -32,11 +32,16 @@ a:link:after, a:visited:after {content:" (" attr(href) ")";font-size:90%;}
 #menu,
 #actionbar,
 #shortcuts,
-#shortcutmodal,
+#shortcutlabel,
+#shortcutsmodal,
 #footer,
 .commenttext >form,
+#related button,
 #formaddrelatedtask,
-#formaddreminder,
-#notify >form {
+#remind >fieldset,
+#notify >form,
+#notify button,
+#s_shortcuts,
+#s_quickactions,{
 display: none;
 }
