@@ -123,6 +123,7 @@ a { color: #06c; text-decoration: underline; }
 blockquote { margin: 1.5em; font-style: italic;}
 strong, dfn { font-weight: bold; }
 em, dfn { font-style: italic; }
+em.u {text-decoration: underline;} /* dokuwiki underline*/
 sup, sub { line-height: 0; }
 /*
 abbr,acronym { border-bottom: 1px dotted #666; }
