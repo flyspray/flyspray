@@ -17,6 +17,7 @@
     <field name="tag" type="C" size="100"></field>
   </table>
   <table name="admin_requests">
+    <descr>Pending requests for admins and PMs to attend to</descr>
     <field name="request_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -59,6 +60,7 @@
     </index>
   </table>
   <table name="assigned">
+    <descr>Who is assigned what task</descr>
     <field name="assigned_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -78,6 +80,7 @@
     </index>
   </table>
   <table name="attachments">
+    <descr>List the names and locations of files attached to tasks</descr>
     <field name="attachment_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -117,6 +120,7 @@
     </index>
   </table>
   <table name="cache">
+  	<descr>Table to cache RSS/Atom feeds</descr>
     <field name="id" type="I" size="6">
       <KEY/>
       <AUTOINCREMENT/>
@@ -186,6 +190,7 @@
     </index>
   </table>
   <table name="dependencies">
+  	<descr>Task inter-dependencies</descr>
     <field name="depend_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -232,6 +237,7 @@
         </index>
     </table>
   <table name="groups">
+  	<descr>User Groups for the Flyspray bug killer</descr>
     <field name="group_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -450,6 +456,7 @@
     </index>
   </table>
   <table name="list_os">
+  	<descr>Operating system list for the Flyspray bug killer</descr>
     <field name="os_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -502,6 +509,7 @@
     </index>
   </table>
   <table name="list_status">
+  	<descr>List of statuses for Flyspray the bug killer.</descr>
     <field name="status_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -555,6 +563,7 @@
     </index>
   </table>
   <table name="list_tasktype">
+  	<descr>List of task types for Flyspray the bug killer.</descr>
     <field name="tasktype_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -615,6 +624,7 @@
     </index>
   </table>
   <table name="notification_messages">
+  	<descr>Notification body and subject</descr>
     <field name="message_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -631,6 +641,7 @@
     </field>
   </table>
   <table name="notification_recipients">
+  	<descr>Notification recipient list</descr>
     <field name="recipient_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -647,6 +658,7 @@
     </field>
   </table>
   <table name="notifications">
+  	<descr>Extra task notifications are stored here</descr>
     <field name="notify_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -869,6 +881,7 @@
     </index>
   </table>
   <table name="reminders">
+  	<descr>Scheduled reminders about tasks</descr>
     <field name="reminder_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -902,6 +915,7 @@
     </field>
   </table>
   <table name="searches">
+  	<descr>Saves custom searches</descr>
     <field name="id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1080,6 +1094,7 @@
     </index>
   </table>
   <table name="users">
+  	<descr>Users for the Flyspray bug killer</descr>
     <field name="user_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1171,6 +1186,7 @@
     </index>
   </table>
   <table name="users_in_groups">
+  	<descr>Which users are in which groups</descr>
     <field name="record_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1193,6 +1209,7 @@
     </index>
   </table>
   <table name="votes">
+  	<descr>votes for tasks</descr>
     <field name="vote_id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
