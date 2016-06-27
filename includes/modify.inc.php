@@ -362,23 +362,52 @@ switch ($action = Req::val('action'))
 		break;
 	}
 
-        $db->Query('UPDATE  {tasks}
-                       SET  project_id = ?, task_type = ?, item_summary = ?,
-                            detailed_desc = ?, item_status = ?, mark_private = ?,
-                            product_category = ?, closedby_version = ?, operating_system = ?,
-                            task_severity = ?, task_priority = ?, last_edited_by = ?,
-                            last_edited_time = ?, due_date = ?, percent_complete = ?, product_version = ?,
-                            estimated_effort = ?
-                     WHERE  task_id = ?',
-        array(Post::val('project_id', $defaults['project_id']), Post::val('task_type', $defaults['task_type']),
-            Post::val('item_summary', $defaults['item_summary']), Post::val('detailed_desc', $defaults['detailed_desc']),
-            Post::val('item_status', $defaults['item_status']), intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
-            Post::val('product_category', $defaults['product_category']), Post::val('closedby_version', $defaults['closedby_version']),
-            Post::val('operating_system', $defaults['operating_system']), Post::val('task_severity', $defaults['task_severity']),
-            Post::val('task_priority', $defaults['task_priority']), intval($user->id), $time, intval($due_date),
-            Post::val('percent_complete', $defaults['percent_complete']), Post::val('reportedver', $defaults['product_version']),
-            intval($estimated_effort),
-            $task['task_id']));
+	# FIXME/TODO: If a user has only 'edit own task edit' permission and task remains in the same project,
+	# but there are not all fields visible/editable so the browser do not send that values with the form,
+	# the sql update query should not touch that fields. And it should not overwrite the field with the default value in this case.
+	# So this update query should be build dynamic (And for the future: when 'custom fields' are implemented ..)
+	# Alternative: Read task field values before update query.
+	# And we should check too what task fields the 'edit own task only'-user is allowed to change.
+	# (E.g ignore form fields the user is not allowed to change. Currently hardcoded in template..)
+	$db->Query('UPDATE {tasks}
+		SET
+		project_id = ?,
+		task_type = ?,
+		item_summary = ?,
+		detailed_desc = ?,
+		item_status = ?,
+		mark_private = ?,
+		product_category = ?,
+		closedby_version = ?,
+		operating_system = ?,
+		task_severity = ?,
+		task_priority = ?,
+		last_edited_by = ?,
+		last_edited_time = ?,
+		due_date = ?,
+		percent_complete = ?,
+		product_version = ?,
+		estimated_effort = ?
+		WHERE task_id = ?',
+		array(
+			Post::val('project_id', $defaults['project_id']),
+			Post::val('task_type', $defaults['task_type']),
+			Post::val('item_summary', $defaults['item_summary']),
+			Post::val('detailed_desc', $defaults['detailed_desc']),
+			Post::val('item_status', $defaults['item_status']),
+			intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
+			Post::val('product_category', $defaults['product_category']),
+			Post::val('closedby_version', $defaults['closedby_version']),
+			Post::val('operating_system', $defaults['operating_system']),
+			Post::val('task_severity', $defaults['task_severity']),
+			Post::val('task_priority', $defaults['task_priority']),
+			intval($user->id), $time, intval($due_date),
+			Post::val('percent_complete', $defaults['percent_complete']),
+			Post::val('reportedver', $defaults['product_version']),
+			intval($estimated_effort),
+			$task['task_id']
+		)
+	);
 
         // Update the list of users assigned this task
         $assignees = (array) Post::val('rassigned_to');
