@@ -1427,8 +1427,9 @@ switch ($action = Req::val('action'))
                     break;
                 }
 
-                if ( (!$user->perms('is_admin') || $user->id == Post::val('user_id')) && !Post::val('oldpass')
-                && (Post::val('changepass') || Post::val('confirmpass')) ) {
+                # current CleanFS template skips oldpass input requirement for admin accounts: if someone is able to catch an admin session he could simply create another admin acc for example.
+                #if ( (!$user->perms('is_admin') || $user->id == Post::val('user_id')) && !Post::val('oldpass')
+                if ( !$user->perms('is_admin') && !Post::val('oldpass') && (Post::val('changepass') || Post::val('confirmpass')) ) {
                     Flyspray::show_error(L('nooldpass'));
                     break;
                 }
