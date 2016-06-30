@@ -179,6 +179,13 @@ switch ($action = Req::val('action'))
         }
 
 	$errors=array();
+
+	# TODO add checks who should be able to move a task, modify_all_tasks perm should not be enough and the target project perms are required too.
+	# - User has project manager permission in source project AND in target project: Allowed to move task
+	# - User has project manager permission in source project, but NOT in target project: Can send request to PUSH task to target project. A user with project manager permission of target project can accept the PUSH request.
+	# - User has NO project manager permission in source project, but in target project: Can send request to PULL task to target project. A user with project manager permission of source project can accept the PULL request.
+	# - User has calculated can_edit_task permission in source project AND (at least) newtask perm in target project: Can send a request to move task (similiar to 'close task please'-request) with the target project id, sure.
+
 	$move=0;
 	if($task['project_id'] != Post::val('project_id')) {
 		$toproject=new Project(Post::val('project_id'));
