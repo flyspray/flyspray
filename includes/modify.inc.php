@@ -376,6 +376,14 @@ switch ($action = Req::val('action'))
 	# Alternative: Read task field values before update query.
 	# And we should check too what task fields the 'edit own task only'-user is allowed to change.
 	# (E.g ignore form fields the user is not allowed to change. Currently hardcoded in template..)
+
+	# Dynamic creation of the UPDATE query required
+	# First step: Settings which task fields can be changed by 'permission level': Based on situation found in FS 1.0-rc1 'status quo' in backend::create_task() and CleanFS/templates/template details.edit.tpl
+	#$basicfields[]=array('item_summary','detailed_desc', 'task_type', 'product_category', 'operating_system', 'task_severity', 'percent_complete', 'product_version', 'estimated_effort'); # modify_own_tasks, anon_open
+	#$devfields[]=array('task_priority', 'due_date', 'item_status', 'closedby_version'); # modify_all_tasks
+	#$managerfields[]=array('project_id','mark_private'); # manage_project
+	#$customfields[]=array(); # Flyspray 1.? future: perms depend of each custom field setting in a project..
+
 	$db->Query('UPDATE {tasks}
 		SET
 		project_id = ?,
