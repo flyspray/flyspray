@@ -37,9 +37,6 @@ body.toplevel .box,
 div.box,
 p.box,
 div.roadmap,
-div.error,
-div.success,
-div.mixed,
 .descbox,
 #toolboxmenu a.active,
 #submenu a.active,
@@ -925,17 +922,19 @@ div#successanderrors {
   min-width:300px;
   left: 35%;
 }
-div.error {
-  background: #ffe6e2 url(img/red/x_alt_24x24.png) no-repeat 9px 7px;
+div.error, div.success {
   margin-bottom: 1px;
   padding-left: 50px;
+  padding-top: 6px;
+  padding-bottom: 6px;	
+}
+div.error {
   color: #4b1710;
+  background: #ffe6e2 url(img/red/x_alt_24x24.png) no-repeat 7px 6px;
 }
 div.success {
-  background: #e8f9d4 url(img/green/check_24x20.png) no-repeat 10px 9px;
-  margin-bottom: 1px;
-  padding-left: 50px;
   color: #24380d;
+  background: #e8f9d4 url(img/green/check_24x20.png) no-repeat 8px 6px;
 }
 a#show_loginbox {margin-right: 5px;}
 #loginbox {
