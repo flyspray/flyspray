@@ -238,19 +238,19 @@ switch ($action = Req::val('action'))
         }
 
 	# ids of severity and priority are (probably!) intentional fixed in Flyspray. 
-	if( !is_numeric(Post::val('task_severity')) || Post::val('task_severity')>5 || Post::val('task_severity')<0 ){
+	if( isset($_POST['task_severity']) && (!is_numeric(Post::val('task_severity')) || Post::val('task_severity')>5 || Post::val('task_severity')<0 ) ){
 		$errors['invalidseverity']=1;
 	}
 	
-	# peterdd:temp fix to allow pirority 6 again
+	# peterdd:temp fix to allow priority 6 again
 	# But I think about 1-5 valid (and 0 for unset) only in future to harmonize
 	# with other trackers/taskplaner software and for severity-priority graphs like
 	# https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method
-	if( !is_numeric(Post::val('task_priority')) || Post::val('task_priority')>6 || Post::val('task_priority')<0 ){
+	if( isset($_POST['task_priority']) && (!is_numeric(Post::val('task_priority')) || Post::val('task_priority')>6 || Post::val('task_priority')<0 ) ){
 		$errors['invalidpriority']=1;
 	}
 
-	if( !is_numeric(Post::val('percent_complete')) || Post::val('percent_complete')>100 || Post::val('percent_complete')<0 ){
+	if( isset($_POST['percent_complete']) && (!is_numeric(Post::val('percent_complete')) || Post::val('percent_complete')>100 || Post::val('percent_complete')<0 ) ){
 		$errors['invalidprogress']=1;
 	}
 
@@ -281,7 +281,7 @@ switch ($action = Req::val('action'))
 
 	# FIXME what if we move to different project, but the status_id is defined for the old project only (not global)?
 	# FIXME what if we move to different project and item_status selection is deactivated/not shown in edit task page?
-	if( !is_numeric(Post::val('item_status')) || false===Flyspray::array_find('status_id', Post::val('item_status'), $statusarray) ){
+	if( isset($_POST['item_status']) && (!is_numeric(Post::val('item_status')) || false===Flyspray::array_find('status_id', Post::val('item_status'), $statusarray) ) ){
 		$errors['invalidstatus']=1;
 	}
 
@@ -293,7 +293,7 @@ switch ($action = Req::val('action'))
 
 	# FIXME what if we move to different project, but tasktype_id is defined for the old project only (not global)?
 	# FIXME what if we move to different project and task_type selection is deactiveated/not shown in edit task page?
-	if( !is_numeric(Post::val('task_type')) || false===Flyspray::array_find('tasktype_id', Post::val('task_type'), $typearray) ){
+	if( isset($_POST['task_type']) && (!is_numeric(Post::val('task_type')) || false===Flyspray::array_find('tasktype_id', Post::val('task_type'), $typearray) ) ){
 		$errors['invalidtasktype']=1;
 	}
 
@@ -306,10 +306,10 @@ switch ($action = Req::val('action'))
 	} else{
 		$versionarray=$proj->listVersions();
 	}
-	if( !is_numeric(Post::val('reportedver')) || ( isset($_POST['reportedver']) && $_POST['reportedver']!=='0' && false===Flyspray::array_find('version_id', Post::val('reportedver'), $versionarray)) ){
+	if( isset($_POST['reportedver']) && (!is_numeric(Post::val('reportedver')) || ( $_POST['reportedver']!=='0' && false===Flyspray::array_find('version_id', Post::val('reportedver'), $versionarray)) ) ){
 		$errors['invalidreportedversion']=1;
 	}
-	if( !is_numeric(Post::val('closedby_version')) || ( isset($_POST['closedby_version']) && $_POST['closedby_version']!=='0' && false===Flyspray::array_find('version_id', Post::val('closedby_version'), $versionarray) ) ){
+	if( isset($_POST['closedby_version']) && (!is_numeric(Post::val('closedby_version')) || ( $_POST['closedby_version']!=='0' && false===Flyspray::array_find('version_id', Post::val('closedby_version'), $versionarray)) ) ){
 		$errors['invaliddueversion']=1;
 	}
 
@@ -320,7 +320,7 @@ switch ($action = Req::val('action'))
 	} else{
 		$catarray=$proj->listCategories();
 	}
-	if( !is_numeric(Post::val('product_category')) || false===Flyspray::array_find('category_id', Post::val('product_category'), $catarray) ){
+	if( isset($_POST['product_category']) && (!is_numeric(Post::val('product_category')) || false===Flyspray::array_find('category_id', Post::val('product_category'), $catarray) ) ){
 		$errors['invalidcategory']=1;
 	}
 
@@ -331,13 +331,13 @@ switch ($action = Req::val('action'))
 	} else{
 		$osarray=$proj->listOs();
 	}
-	if( !is_numeric(Post::val('operating_system')) || ( isset($_POST['operating_system']) && $_POST['operating_system']!=='0' && false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray)) ){
+	if( isset($_POST['operating_system']) && (!is_numeric(Post::val('operating_system')) || ( $_POST['operating_system']!=='0' && false===Flyspray::array_find('os_id', Post::val('operating_system'), $osarray)) ) ){
 		$errors['invalidos']=1;
 	}
 
-        if ($due_date = Post::val('due_date', 0)) {
+	if ($due_date = Post::val('due_date', 0)) {
 		$due_date = Flyspray::strtotime(Post::val('due_date'));
-        }
+	}
 
         $estimated_effort = 0;
         if (($estimated_effort = effort::EditStringToSeconds(Post::val('estimated_effort'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
@@ -349,15 +349,15 @@ switch ($action = Req::val('action'))
         $result = $db->Query('SELECT * from {tasks} WHERE task_id = ?', array($task['task_id']));
         $defaults = $db->fetchRow($result);
         
-        if (!Post::has('due_date')) {
-            $due_date = $defaults['due_date'];
-        }
-        
-        if (!Post::has('estimated_effort')) {
-            $estimated_effort = $defaults['estimated_effort'];
-        }
-        
-	
+	if (!Post::has('due_date')) {
+		$due_date = $defaults['due_date'];
+	}
+
+	if (!Post::has('estimated_effort')) {
+		$estimated_effort = $defaults['estimated_effort'];
+	}
+
+
 	if(count($errors)>0){
 		# some invalid input by the user. Do not save the input and in the details-edit-template show the user where in the form the invalid values are.
 		$_SESSION['ERRORS']=$errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
@@ -377,12 +377,33 @@ switch ($action = Req::val('action'))
 	# And we should check too what task fields the 'edit own task only'-user is allowed to change.
 	# (E.g ignore form fields the user is not allowed to change. Currently hardcoded in template..)
 
+/*
 	# Dynamic creation of the UPDATE query required
 	# First step: Settings which task fields can be changed by 'permission level': Based on situation found in FS 1.0-rc1 'status quo' in backend::create_task() and CleanFS/templates/template details.edit.tpl
 	#$basicfields[]=array('item_summary','detailed_desc', 'task_type', 'product_category', 'operating_system', 'task_severity', 'percent_complete', 'product_version', 'estimated_effort'); # modify_own_tasks, anon_open
-	#$devfields[]=array('task_priority', 'due_date', 'item_status', 'closedby_version'); # modify_all_tasks
-	#$managerfields[]=array('project_id','mark_private'); # manage_project
+	$basicfields=$proj->prefs['basic_fields'];
+
+	# peterdd: just saved a bit work in progress for future dynamic sql update string
+	$sqlup='';
+	foreach($basicfields as $bf){
+		$sqlup.=' '.$bf.' = ?,';
+		$sqlparam[]= Post::val($bf, $oldvals[$bf]);
+	}
+	$sqlup.=' last_edited_by = ?,';
+	$sqlparam[]= $user->id;
+	$sqlup.=' last_edited_time = ?,';
+	$sqlparam[]= $time;
+
+	$devfields[]=array('task_priority', 'due_date', 'item_status', 'closedby_version'); # modify_all_tasks
+	$managerfields[]=array('project_id','mark_private'); # manage_project
 	#$customfields[]=array(); # Flyspray 1.? future: perms depend of each custom field setting in a project..
+
+	$sqlparam[]=$task['task_id'];
+	$sqlupdate='UPDATE {tasks} SET '.$sqlup.' WHERE task_id = ?';
+
+	echo '<pre>';print_r($sqlupdate);print_r($sqlparam);die();
+	$db->Query($sqlupdate, $sqlparam);
+*/
 
 	$db->Query('UPDATE {tasks}
 		SET
