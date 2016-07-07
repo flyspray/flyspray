@@ -716,8 +716,6 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   overflow: auto;
   width: 100%;
   border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
 }
 #taskfields ul.fieldslist li .label {
   display: block;
@@ -768,11 +766,7 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   margin: 4px 0 0 2px;
   padding: 7px 10px 1px 10px;
   border-top-left-radius: 5px;
-  -moz-border-top-left-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  -moz-border-top-right-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
 }
 #submenu a:hover {background-color: #d6d8d9;}
 #submenu a.active {
@@ -799,8 +793,6 @@ div.comment_container .comment {
 	border: 1px solid #e1e1e1;
 	vertical-align: top;
 	width: 700px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 div.comment_container .comment:before {
@@ -837,8 +829,6 @@ div.comment_container .comment_header_usertype {
 	border: 1px solid #e1e1e1;
 	padding: 3px;
 	margin-right: 10px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 div.comment_container .commenttext {clear: both;padding: 10px;}
@@ -924,37 +914,32 @@ div.roadmap {
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-div.error, div.success, div.mixed {
-  margin: 10px 0px 10px 0px;
-  padding: 10px;
-  border: solid 1px #e1e1e1;
+div#successanderrors {
+  border: none;
   border-radius: 3px;
   z-index: 50;
-  margin: 30px 20px 0 20px;
-  color: white;
+  margin: 30px auto 0 auto;
   position: absolute;
   top: 0;
   width: 30%;
+  min-width:300px;
   left: 35%;
 }
 div.error {
   background: #ffe6e2 url(img/red/x_alt_24x24.png) no-repeat 9px 7px;
-  border: solid 1px #962E21;
+  margin-bottom: 1px;
   padding-left: 50px;
   color: #4b1710;
 }
-div.mixed {background: #ffcc00 url(frown.png) no-repeat 5px 1px;}
 div.success {
   background: #e8f9d4 url(img/green/check_24x20.png) no-repeat 10px 9px;
-  border: solid 1px #53821F;
+  margin-bottom: 1px;
   padding-left: 50px;
   color: #24380d;
 }
 a#show_loginbox {margin-right: 5px;}
 #loginbox {
   border-radius: 3px 0 3px 3px;
-  -moz-border-radius: 3px 0 3px 3px;
-  -webkit-border-radius: 3px 0 3px 3px;
   background: #ddd;
   border: solid 3px #5f9729;
   right: 2px;
@@ -984,15 +969,11 @@ form#login #links a:hover {
   text-decoration: none;
   color: #dddddd;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 form#login #links a.active {
   background: #dddddd;
   color: #3c4041;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 form#login .remember_me {float: right;}
 span#advancedsearchstate img {vertical-align: middle;}
