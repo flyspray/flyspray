@@ -77,12 +77,12 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 	<?php if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])): ?>
 	<div id="successanderrors" onclick="this.style.display='none'">
 	<?php endif; ?>
-		<?php if(isset($_SESSION['SUCCESS'])): ?><div class="success"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div>		<?php endif; ?>
-		<?php if(isset($_SESSION['ERROR'])): ?><div class="error"><?php echo Filters::noXSS($_SESSION['ERROR']); ?></div><?php endif; ?>
+		<?php if(isset($_SESSION['SUCCESS'])): ?><div class="success"><i class="fa fa-check" aria-hidden="true"></i> <?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div><?php endif; ?>
+		<?php if(isset($_SESSION['ERROR'])): ?><div class="error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo Filters::noXSS($_SESSION['ERROR']); ?></div><?php endif; ?>
 		<?php if(isset($_SESSION['ERRORS'])): ?>
 		<?php
 		foreach(array_keys($_SESSION['ERRORS']) as $e){
-			echo '<div class="error">'.eL($e).'</div>';
+			echo '<div class="error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '.eL($e).'</div>';
 		}
 		?>
 		<?php endif; ?>
