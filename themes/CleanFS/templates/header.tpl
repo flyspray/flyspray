@@ -65,7 +65,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 </head>
 <body onload="<?php
         if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])):
-        ?>window.setTimeout('Effect.Fade(\'successanderrors\', {duration:.3})', 10000);
+        ?>/* window.setTimeout('Effect.Fade(\'successanderrors\', {duration:.3})', 10000); */
         <?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
