@@ -1151,6 +1151,7 @@ ul.slim .userSelectWidget select {width:100%;}
 #idtablesys {background-color: #eee;}
 #listpositionnew {width:100%;}
 
+.perms tbody th[title] {text-decoration: underline dotted;}
 .perms .everybody{position:relative;}
 .perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
 .perms .everybody > * { background-color: #6c6; }
