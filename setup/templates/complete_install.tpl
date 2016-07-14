@@ -41,9 +41,10 @@
 		<input type="hidden" name="user_name" value="<?php echo Filters::noXSS($admin_username); ?>" />
 		<input type="hidden" name="password" value="<?php echo Filters::noXSS($admin_password); ?>" />
 		<?php endif; ?>
+		<p><?php echo Filters::noXSS(L('proceedtoindex')); ?></p>
 		<input type="hidden" name="remember_login" value="1" />
 		<button class="button" type="submit" name="next" value="next"><?php echo Filters::noXSS(L('viewsite')); ?></button>
-		<p><?php echo Filters::noXSS(L('proceedtoindex')); ?></p>
+		
 	</div>
 </form>
 </div>
