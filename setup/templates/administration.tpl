@@ -14,9 +14,9 @@ function ShowHidePassword(id) {
 }
 </script>
 
-	<p><?php echo Filters::noXSS(L('adminsetuptip1')); ?></p>
-	<p><?php echo Filters::noXSS(L('adminsetuptip2')); ?></p>
-	<p><?php echo Filters::noXSS(L('adminsetuptip3')); ?></p>
+	<p><?php echo L('adminsetuptip1'); ?></p>
+	<p><?php echo L('adminsetuptip2'); ?></p>
+	<p><?php echo L('adminsetuptip3'); ?></p>
 
 	<table class="formBlock">
 	<tr>
