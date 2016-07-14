@@ -37,11 +37,12 @@ body {
 
 
 #stepbar div {
-  color: #47617B;
+  box-sizing:border-box;
+  height:36px;
   font-weight: bold;
   padding: 10px;
-  border: 1px solid #688EB4;
-  margin-bottom: 2px;
+  background-color:#ddd;
+  margin-right:10px;
   display:inline-block;
   position:relative; /* for the :after rightarrow */
 }
@@ -50,20 +51,21 @@ body {
   color: #3AFF53;
   background-color: #47617B;
 }
-#stepbar .done { background-color: #0c0;color:#000;}
+#stepbar .done { background-color: #999;color:#000;}
 /* css arrow to right */
 #stepbar div:after{
   position:absolute;
+  content:"";
   right:-10px;
   width:0;
   height:0;
   top:0;
-  border-top:10px solid transparent;
-  border-bottom:10px solid transparent;
-  border-left:10px solid #fff;
+  border-top:18px solid transparent;
+  border-bottom:18px solid transparent;
+  border-left:8px solid #ddd;
 }
 #stepbar .step-on:after{border-left-color:#3AFF53;}
-#stepbar .done:after{border-left-color:#0c0;}
+#stepbar .done:after{border-left-color:#999;}
 
 .install {
   margin-left: auto;
