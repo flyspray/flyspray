@@ -13,8 +13,9 @@
   </div><!-- End of logo -->
 </div><!-- End of header -->
 <div id="content">
-  <div id="stepbar">
-    <h1><?php echo Filters::noXSS(L('progress')); ?></h1>
+  <div id="stepbar" title="<?php echo Filters::noXSS(L('progress')); ?>">
+    <!-- <div><?php echo Filters::noXSS(L('progress')); ?></div> -->
+    <div class="done">3rd party libs</div>
     <div <?php echo (!isset($_POST['action'])) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('preinstallcheck')); ?></div>
     <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'database')) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('databasesetup')); ?></div>
     <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'administration')) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('administration')); ?></div>
