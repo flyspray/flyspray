@@ -104,9 +104,9 @@
 
 	<h2><?php echo Filters::noXSS(L('proceedtodbsetup')); ?></h2>
 	<div class="installBlock">
-		<form class="formBlock farRight" action="index.php" method="post" name="adminForm" style="display:inline;">
+		<form action="index.php" method="post" name="adminForm">
 			<input type="hidden" name="action" value="database" />
-			<input name="next" type="submit" class="button" value="<?php echo Filters::noXSS(L('next')); ?> >>" <?php echo Filters::noXSS(tpl_disableif(!$status)); ?> />
+			<input name="next" type="submit" class="button" value="<?php echo Filters::noXSS(L('next')); ?>" <?php echo Filters::noXSS(tpl_disableif(!$status)); ?> />
 		</form>
 		<?php if (!$status) { ?>
 			<p>
