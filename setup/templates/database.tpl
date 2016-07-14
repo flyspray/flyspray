@@ -39,14 +39,9 @@
                <td><?php echo L('tableprefixhint'); ?></td>
             </tr>
             </table>
-      </div>
 
-      <h2><?php echo Filters::noXSS(L('proceedtoadmin')); ?></h2>
-      <div class="installBlock">
-            <div class="formBlock farRight">
             <input type="hidden" name="action" value="administration" />
-            <input class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> &gt;&gt;" />
-            </div>
+            <button class="button" type="submit" name="next" value="next"><?php echo Filters::noXSS(L('proceedtoadmin')); ?></button>
       </div>
 </form>
 </div>
