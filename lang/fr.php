@@ -1054,7 +1054,19 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'hideprivate'             => 'Masquer les tâches privées',
 'hideclosed'              => 'Masquer les tâches closes',
 'currentproject'          => 'Projet actuel',
-'targetproject'           => 'Projet de destination'
+'targetproject'           => 'Projet de destination',
+'invalidprogress'         => 'Merci de choisir une valeur de progression correcte.',
+'invalidpriority'         => 'Merci de choisir une valeur de priorité correcte.',
+'invalidseverity'         => 'Merci de choisir une valeur de gravité correcte.',
+'availablekeybshortcuts'  => 'Activer les raccourcis clavier',
+'logindialoglogout'       => 'Se connecter/Se déconnecter',
+'focustaskidsearch'       => 'Rechercher par ID de tâche',
+'openselectedtask'        => 'Ouvrir la tâche sélectionnée',
+'movecursorup'            => 'Déplacer le curseur vers le haut',
+'movecursordown'          => 'Déplacer le curseur vers le bas',
+'taskdetails'             => 'Détails de la tâche',
+'taskediting'             => 'Édition de la tâche',
+'savetask'                => 'Enregistrer la tâche'
 );
 
 ?>

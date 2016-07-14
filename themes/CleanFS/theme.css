@@ -1,5 +1,6 @@
 /* ------------------ IMPORTS -------------------- */
 @import url("../../js/jscalendar/calendar-system.css");
+@import url("geshi.css");
 /*@import url("./fonts/octicons/octicons.css");*/
 /*@import url("calendar.css");*/
 /* reset.css - Resets default browser CSS.
@@ -36,9 +37,6 @@ body.toplevel .box,
 div.box,
 p.box,
 div.roadmap,
-div.error,
-div.success,
-div.mixed,
 .descbox,
 #toolboxmenu a.active,
 #submenu a.active,
@@ -122,6 +120,7 @@ a { color: #06c; text-decoration: underline; }
 blockquote { margin: 1.5em; font-style: italic;}
 strong, dfn { font-weight: bold; }
 em, dfn { font-style: italic; }
+em.u {text-decoration: underline;} /* dokuwiki underline*/
 sup, sub { line-height: 0; }
 /*
 abbr,acronym { border-bottom: 1px dotted #666; }
@@ -132,6 +131,18 @@ del { color:#666; }
 */
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+/* only matches pre tags if there is a language set too e.g. '<pre class="code php">' */
+pre[class*="code "]::before {
+    background: #eee none repeat scroll 0 0;
+    content: attr(class);
+    display: block;
+}
+pre.code {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    overflow:auto;
+}
+
 li ul, li ol { margin: 0; }
 ul, ol { margin: 0 1.5em 1.5em 0; padding-left: 2em; }
 ul { list-style-type: disc; }
@@ -221,7 +232,7 @@ a:hover {color: #6699cc;}
   background-image: -moz-linear-gradient(#3c4041, #242627); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3c4041), to(#242627)); /* Safari 4+, Chrome 1+ */
   background-image: -webkit-linear-gradient(#3c4041, #242627); /* Safari 5.1+, Chrome 10+ */
-  background-image: -o-linear-gradient(#3c4041, #242627); /* Opera 11.10+ */
+  background-image: linear-gradient(#3c4041, #242627); /* CSS3 CR, IE10+ */
   /*border-bottom: 1px solid #6cab2e;*/
   /*border-bottom: 4px solid $dominant;*/
   margin: 0;
@@ -468,7 +479,7 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
   background-image: -moz-linear-gradient(#acdc7d, #78bf34); /* Firefox 3.6+ */
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#acdc7d), to(#78bf34)); /* Safari 4+, Chrome 1+ */
   background-image: -webkit-linear-gradient(#acdc7d, #78bf34); /* Safari 5.1+, Chrome 10+ */
-  background-image: -o-linear-gradient(#acdc7d, #78bf34); /* Opera 11.10+ */
+  background-image: linear-gradient(#acdc7d, #78bf34); /* CSS3, IE10+ */
 }
 .progress_bar_container span {
     text-align: center;
@@ -702,8 +713,6 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   overflow: auto;
   width: 100%;
   border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
 }
 #taskfields ul.fieldslist li .label {
   display: block;
@@ -754,11 +763,7 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   margin: 4px 0 0 2px;
   padding: 7px 10px 1px 10px;
   border-top-left-radius: 5px;
-  -moz-border-top-left-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  -moz-border-top-right-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
 }
 #submenu a:hover {background-color: #d6d8d9;}
 #submenu a.active {
@@ -773,6 +778,8 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 }
 #submenu li {display: inline;}
 div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
+.tab{display:none;}
+.tab.active{display:block;}
 * html .tab div.clear {clear: none;height: 14em;}
 div.comment_container {margin: 5px;}
 div.comment_container .comment_avatar {	min-width: 50px;display: inline-block;}
@@ -783,8 +790,6 @@ div.comment_container .comment {
 	border: 1px solid #e1e1e1;
 	vertical-align: top;
 	width: 700px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 div.comment_container .comment:before {
@@ -821,8 +826,6 @@ div.comment_container .comment_header_usertype {
 	border: 1px solid #e1e1e1;
 	padding: 3px;
 	margin-right: 10px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 div.comment_container .commenttext {clear: both;padding: 10px;}
@@ -908,37 +911,32 @@ div.roadmap {
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-div.error, div.success, div.mixed {
-  margin: 10px 0px 10px 0px;
-  padding: 10px;
-  border: solid 1px #e1e1e1;
+div#successanderrors {
+  border: none;
   border-radius: 3px;
   z-index: 50;
-  margin: 30px 20px 0 20px;
-  color: white;
+  margin: 30px auto 0 auto;
   position: absolute;
   top: 0;
   width: 30%;
+  min-width:300px;
   left: 35%;
 }
-div.error {
-  background: #ffe6e2 url(img/red/x_alt_24x24.png) no-repeat 9px 7px;
-  border: solid 1px #962E21;
-  padding-left: 50px;
-  color: #4b1710;
+div.error, div.success {
+  border-bottom: 1px solid rgba(0,0,0,0.5);
+  padding: 6px;
 }
-div.mixed {background: #ffcc00 url(frown.png) no-repeat 5px 1px;}
+div.error {
+  color: #4b1710;
+  background: #ffe6e2;
+}
 div.success {
-  background: #e8f9d4 url(img/green/check_24x20.png) no-repeat 10px 9px;
-  border: solid 1px #53821F;
-  padding-left: 50px;
   color: #24380d;
+  background: #e8f9d4;
 }
 a#show_loginbox {margin-right: 5px;}
 #loginbox {
   border-radius: 3px 0 3px 3px;
-  -moz-border-radius: 3px 0 3px 3px;
-  -webkit-border-radius: 3px 0 3px 3px;
   background: #ddd;
   border: solid 3px #5f9729;
   right: 2px;
@@ -968,15 +966,11 @@ form#login #links a:hover {
   text-decoration: none;
   color: #dddddd;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 form#login #links a.active {
   background: #dddddd;
   color: #3c4041;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 form#login .remember_me {float: right;}
 span#advancedsearchstate img {vertical-align: middle;}
@@ -1157,6 +1151,7 @@ ul.slim .userSelectWidget select {width:100%;}
 #idtablesys {background-color: #eee;}
 #listpositionnew {width:100%;}
 
+.perms tbody th[title] {text-decoration: underline dotted;}
 .perms .everybody{position:relative;}
 .perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
 .perms .everybody > * { background-color: #6c6; }
@@ -1401,6 +1396,7 @@ span.warning {
 /* typical colorings for task type and permissions */
 .fa-bug{color:#c30;}
 .fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
+.fa-exclamation-triangle{color:#c00;}
 .fa-check{color:#090;}
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}

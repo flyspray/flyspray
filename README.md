@@ -66,7 +66,7 @@ Point your webbrowser where use unzipped the download file and follow the config
     
 Point your webbrowser where use unzipped the download file and follow the configuration instructions.
     
-#### Windows users can dowload Windows installer on https://getcomposer.org/download/
+#### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.
 
 #### Download vendors

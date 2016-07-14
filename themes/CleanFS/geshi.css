@@ -1,0 +1,16 @@
+/* geshi code syntax highlighting colors */
+.code .br0 {color:#6c6;}
+.code .es0 {color:#009;font-weight:700;}
+.code .kw1 {color:#b1b100;}
+.code .kw2 {color:#000;font-weight:700;}
+.code .kw3 {color:#006;}
+.code .kw4 {color:#933;}
+.code .me0 {color:#060;}
+.code .nu0 {color:#c6c;}
+.code .re4 {color:#099;}
+.code .sc0 {color:#0bd;}
+.code .sc1 {color:#db0;}
+.code .sc2 {color:#090;}
+.code .st0 {color:red;}
+.code .co1,.code .co2,.code .coMULTI {color:gray;font-style:italic;}
+.code .kw5,.code .re0,.code .re1,.code .re2 {color:#00f;}

@@ -19,7 +19,12 @@
 			<td>XML Extension</td>
 			<td align="left"><b><?php echo Setup::ReturnStatus($xmlStatus); ?></b></td>
 			<td>&nbsp;</td>
-			</tr>
+		</tr>
+		<tr>
+			<td>cURL Library</td>
+			<td align="left"><b><?php echo Setup::ReturnStatus(extension_loaded('curl'), 'yes'); ?></b></td>
+			<td>required if you want allow Oauth2 authentications</td>
+		</tr>
 		<tr>
 			<td>GD Library</td>
 			<td align="left"><b><?php echo Setup::ReturnStatus(extension_loaded('gd'), 'yes'); ?></b></td>

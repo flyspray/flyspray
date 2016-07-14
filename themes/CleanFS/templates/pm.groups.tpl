@@ -109,7 +109,7 @@ echo ( ($p=='view_tasks' || $p=='view_groups_tasks' || $p=='view_own_tasks')  &&
 echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="everybody"':'';
 echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="everybody"':'';
 ?>>
-<th><?php echo eL(str_replace('_', '', $p)); ?></th>
+<th<?php echo ($p=='modify_own_tasks') ? ' title="Fields allowed to change: '.implode(', ', $proj->prefs['basic_fields']).'"':''; ?>><?php echo eL(str_replace('_', '', $p)); ?></th>
 <?php
 require_once('permicons.tpl');
 $i=0; 

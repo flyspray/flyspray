@@ -794,7 +794,7 @@ class Setup extends Flyspray
       $config[] = '[general]';
       $config[] = "cookiesalt = \"$cookiesalt\"			; Randomisation value for cookie encoding";
       $config[] = 'output_buffering = "on"				; Available options: "on" or "gzip"';
-      $config[] = "passwdcrypt = \"md5\"					; Available options: \"crypt\", \"md5\", \"sha1\" (Deprecated, do not change the default)";
+      $config[] = 'passwdcrypt = ""         ; Available options: "" which chooses best default (coming FS1.0: using crypt/password_hash() with blowfish), "crypt" (auto salted md5), "md5",  "sha1" Note: md5 and sha1 are considered insecure for hashing passwords, avoid if possible.';
       $config[] = "dot_path = \"\" ; Path to the dot executable (for graphs either dot_public or dot_path must be set)";
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
