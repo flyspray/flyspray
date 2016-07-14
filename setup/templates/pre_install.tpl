@@ -101,10 +101,7 @@
 		located at <strong><?php echo APPLICATION_PATH . DIRECTORY_SEPARATOR . 'flyspray.conf.php'; ?></strong>.
 		</p>
 		<?php endif; ?>
-	</div>
 
-	<h2><?php echo Filters::noXSS(L('proceedtodbsetup')); ?></h2>
-	<div class="installBlock">
 		<?php if (!$status) { ?>
 			<p>
 			You seem to have problems with the Pre-install configuration. Once you have fixed the
@@ -116,7 +113,7 @@
 		<?php } ?>
 		<form action="index.php" method="post" name="adminForm">
 			<input type="hidden" name="action" value="database" />
-			<input name="next" type="submit" class="button" value="<?php echo Filters::noXSS(L('next')); ?>" <?php echo Filters::noXSS(tpl_disableif(!$status)); ?> />
+			<button name="next" type="submit" class="button" value="next" <?php echo Filters::noXSS(tpl_disableif(!$status)); ?> ><?php echo Filters::noXSS(L('proceedtodbsetup')); ?></button>
 		</form>
 	</div>
 </div>
