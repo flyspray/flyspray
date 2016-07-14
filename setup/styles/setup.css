@@ -84,7 +84,7 @@ body {
   color:#000;
 }
 
-input.button {
+.button {
   display: block;
   font-size: 4em;
   margin: 0.5em auto;
