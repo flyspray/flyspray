@@ -14,7 +14,11 @@ function ShowHidePassword(id) {
 }
 </script>
 
-	<table class="formBlock" style="width:68%;">
+	<p><?php echo Filters::noXSS(L('adminsetuptip1')); ?></p>
+	<p><?php echo Filters::noXSS(L('adminsetuptip2')); ?></p>
+	<p><?php echo Filters::noXSS(L('adminsetuptip3')); ?></p>
+
+	<table class="formBlock">
 	<tr>
 		<td align="right"><?php echo Filters::noXSS(L('adminemail')); ?></td>
 		<td align="center"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" size="30" /></td>
@@ -47,9 +51,6 @@ function ShowHidePassword(id) {
 	</tr>
 	<?php endif; ?>
 	</table>
-	<p><?php echo Filters::noXSS(L('adminsetuptip1')); ?></p>
-	<p><?php echo Filters::noXSS(L('adminsetuptip2')); ?></p>
-	<p><?php echo Filters::noXSS(L('adminsetuptip3')); ?></p>
 
 	<input type="hidden" name="db_type" value="<?php echo Filters::noXSS($db_type); ?>" />
 	<input type="hidden" name="db_hostname" value="<?php echo Filters::noXSS($db_hostname); ?>" />
@@ -57,15 +58,11 @@ function ShowHidePassword(id) {
 	<input type="hidden" name="db_password" value="<?php echo Filters::noXSS($db_password); ?>" />
 	<input type="hidden" name="db_name" value="<?php echo Filters::noXSS($db_name); ?>" />
 	<input type="hidden" name="db_prefix" value="<?php echo Filters::noXSS($db_prefix); ?>" />
-	</div>
 
-	<h2><?php echo Filters::noXSS(L('proceedtofinalsetup')); ?></h2>
-	<div class="installBlock">
-		<div class="formBlock farRight" style="display:inline;">
-			<input type="hidden" name="action" value="complete" />
-			<input class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" />
-		</div>
-		<p><?php echo Filters::noXSS(L('proceedtofinalsetuptext')); ?></p>
+	<p><?php echo Filters::noXSS(L('proceedtofinalsetuptext')); ?></p>
+	<input type="hidden" name="action" value="complete" />
+	<button class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" ><?php echo Filters::noXSS(L('proceedtofinalsetup')); ?></button>
+		
 	</div>
 </form>
 </div>
