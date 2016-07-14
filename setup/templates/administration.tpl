@@ -36,7 +36,7 @@ function ShowHidePassword(id) {
 		<td align="center"><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
 	</tr>
 	<tr>
-		<td><?php echo Filters::noXSS(L('syntaxtext')); ?></td>
+		<td><?php echo L('syntaxtext'); ?></td>
 		<td>
 			<select name="syntax_plugin">
 			<option value="dokuwiki">Text/Dokuwiki</option>
