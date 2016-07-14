@@ -47,6 +47,12 @@ ini_set('session.hash_function',1);
 
 ini_set('auto_detect_line_endings', 0);
 
+# for using stronger blowfish hashing functions also with php5.3 < yourphpversion < php5.5
+# minimal php5.3.8 recommended, see https://github.com/ircmaxell/password_compat
+if(!function_exists('password_hash')){
+	require_once dirname(__FILE__).'/password_compat.php';
+}
+
 ini_set('include_path', join( PATH_SEPARATOR, array(
   dirname(__FILE__) . '/external' ,
   ini_get('include_path'))));

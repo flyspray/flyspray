@@ -413,7 +413,7 @@ function showPreview(textfield, baseurl, field)
 }
 function checkname(value){
     // FIXME: If username contains anything that is not a number or a digit, then show an error and don't let them register
-    var re=/^[A-Za-z0-9]*$/;
+    var re=/^[A-Za-z0-9_\.\-]*$/;
 
     if (re.test(value)==false)
     {

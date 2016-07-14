@@ -1,4 +1,13 @@
 language: php
+
+# Container-based infrastructure
+sudo: false
+
+# Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
 # composer needs at least php5.3.2, so php5.2 can't be tested here. Only with a full release with all additional packages yet installed..
 #  - 5.2
@@ -17,12 +26,10 @@ env:
 #- DB=mariadb
 
 install:
-- composer require adodb/adodb-php:5.*
+  - composer install
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
-- curl -s http://getcomposer.org/installer | php
-- php composer.phar install
 - if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS flyspray_test;" -U postgres; fi
 - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE flyspray_test;" -U postgres; fi
 - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS flyspray_test;" -uroot; fi
