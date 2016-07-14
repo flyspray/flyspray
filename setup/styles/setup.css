@@ -25,7 +25,7 @@ body {
   border: 0; padding: 0; margin: 0 auto;
   padding-left:260px;
 }
-
+#content {max-width:800px;margin-left:auto;margin-right:auto;}
 #footer {
   background-color: #688EB4;
   padding: 5px;
@@ -34,10 +34,7 @@ body {
   text-align: right;
 }
 
-#stepbar .step-on {
-  color: #3AFF53;
-  background-color: #47617B;
-}
+
 
 #stepbar div {
   color: #47617B;
@@ -46,7 +43,27 @@ body {
   border: 1px solid #688EB4;
   margin-bottom: 2px;
   display:inline-block;
+  position:relative; /* for the :after rightarrow */
 }
+
+#stepbar .step-on {
+  color: #3AFF53;
+  background-color: #47617B;
+}
+#stepbar .done { background-color: #0c0;color:#000;}
+/* css arrow to right */
+#stepbar div:after{
+  position:absolute;
+  right:-10px;
+  width:0;
+  height:0;
+  top:0;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-left:10px solid #fff;
+}
+#stepbar .step-on:after{border-left-color:#3AFF53;}
+#stepbar .done:after{border-left-color:#0c0;}
 
 .install {
   margin-left: auto;
