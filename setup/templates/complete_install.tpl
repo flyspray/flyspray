@@ -30,23 +30,19 @@
 		if ($admin_username && $admin_password): ?>
 		<h3>Administration Login Details</h3>
 		<p>
-			<strong>Username : <?php echo Filters::noXSS($admin_username); ?></strong><br />
-			<strong>Password : <?php echo Filters::noXSS($admin_password); ?></strong>
+		<strong>Username: <?php echo Filters::noXSS($admin_username); ?></strong><br />
+		<strong>Password: <?php echo Filters::noXSS($admin_password); ?></strong>
 		</p>
 		<?php endif; ?>
-	</div>
-	<h2><?php echo Filters::noXSS(L('viewsite')); ?></h2>
-	<div class="installBlock">
-		<div class="formBlock farRight" style="display:inline;">
-			<?php if ($admin_username && $admin_password): ?>
-			<input type="hidden" name="return_to" value="./" />
-			<input type="hidden" name="do" value="authenticate" />
-			<input type="hidden" name="user_name" value="<?php echo Filters::noXSS($admin_username); ?>" />
-			<input type="hidden" name="password" value="<?php echo Filters::noXSS($admin_password); ?>" />
-			<?php endif; ?>
-			<input type="hidden" name="remember_login" value="1" />
-			<input class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" />
-		</div>
+
+		<?php if ($admin_username && $admin_password): ?>
+		<input type="hidden" name="return_to" value="./" />
+		<input type="hidden" name="do" value="authenticate" />
+		<input type="hidden" name="user_name" value="<?php echo Filters::noXSS($admin_username); ?>" />
+		<input type="hidden" name="password" value="<?php echo Filters::noXSS($admin_password); ?>" />
+		<?php endif; ?>
+		<input type="hidden" name="remember_login" value="1" />
+		<button class="button" type="submit" name="next" value="next"><?php echo Filters::noXSS(L('viewsite')); ?></button>
 		<p><?php echo Filters::noXSS(L('proceedtoindex')); ?></p>
 	</div>
 </form>
