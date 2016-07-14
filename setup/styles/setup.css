@@ -83,8 +83,11 @@ body {
   background: #E9ECEF;
   color:#000;
 }
-.farRight {
-  width:auto; text-align:right;
+
+input.button {
+  display: block;
+  font-size: 4em;
+  margin: 0.5em auto;
 }
 
 a {
