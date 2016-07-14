@@ -64,12 +64,9 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <?php endforeach; ?>
 </head>
 <body onload="<?php
-        if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'mixedbar\', {duration:.3})', 10000);<?php
-        elseif (isset($_SESSION['SUCCESS'])):
-        ?>window.setTimeout('Effect.Fade(\'successbar\', {duration:.3})', 8000);<?php
-        elseif (isset($_SESSION['ERROR'])):
-        ?>window.setTimeout('Effect.Fade(\'errorbar\', {duration:.3})', 8000);<?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
+        if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])):
+        ?>/* window.setTimeout('Effect.Fade(\'successanderrors\', {duration:.3})', 10000); */
+        <?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
 	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" /><?php } ?>
@@ -77,13 +74,21 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     </a></h1>
     <?php $this->display('links.tpl'); ?>
 
-    <?php if (isset($_SESSION['SUCCESS']) && isset($_SESSION['ERROR'])): ?>
-    <div id="mixedbar" class="mixed bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?><br /><?php echo Filters::noXSS($_SESSION['ERROR']); ?></div></div>
-    <?php elseif (isset($_SESSION['ERROR'])): ?>
-    <div id="errorbar" class="error bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['ERROR']); ?></div></div>
-    <?php elseif (isset($_SESSION['SUCCESS'])): ?>
-    <div id="successbar" class="success bar" onclick="this.style.display='none'"><div class="errpadding"><?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div></div>
-    <?php endif; ?>
+	<?php if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])): ?>
+	<div id="successanderrors" onclick="this.style.display='none'">
+	<?php endif; ?>
+		<?php if(isset($_SESSION['SUCCESS'])): ?><div class="success"><i class="fa fa-check" aria-hidden="true"></i> <?php echo Filters::noXSS($_SESSION['SUCCESS']); ?></div><?php endif; ?>
+		<?php if(isset($_SESSION['ERROR'])): ?><div class="error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo Filters::noXSS($_SESSION['ERROR']); ?></div><?php endif; ?>
+		<?php if(isset($_SESSION['ERRORS'])): ?>
+		<?php
+		foreach(array_keys($_SESSION['ERRORS']) as $e){
+			echo '<div class="error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '.eL($e).'</div>';
+		}
+		?>
+		<?php endif; ?>
+	<?php if(isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])): ?>
+	</div>
+	<?php endif;?>
 
 <div id="content">
 	<div class="clear"></div>

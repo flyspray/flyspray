@@ -15,25 +15,39 @@ class Project
 				LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
 				WHERE p.project_id = ?", array($id));
 			if ($db->countRows($sql)) {
-                $this->prefs = $db->FetchRow($sql);
-                $this->id    = (int) $this->prefs['project_id'];
-                $sortrules=explode(',', $this->prefs['default_order_by']);
-                foreach($sortrules as $rule){
-                        $last_space=strrpos($rule, ' ');
-                        if ($last_space === false){
-                        	# temporarly
-                                $sorting[]=array('field'=>$rule, 'dir'=> $this->prefs['default_order_by_dir']);
-                                # future - when column default_order_by_dir removed from project table:
-                                #$sorting[]=array('field'=>$rule, 'dir'=>'desc');
-                        }else{
-                                $sorting[]=array(
-                                        'field'=>trim(substr($rule, 0, $last_space)),
-                                        'dir'=>trim(substr($rule, $last_space))
-                                );
-                        }
-                }
+				$this->prefs = $db->FetchRow($sql);
+				$this->id    = (int) $this->prefs['project_id'];
+				$sortrules=explode(',', $this->prefs['default_order_by']);
+				foreach($sortrules as $rule){
+					$last_space=strrpos($rule, ' ');
+					if ($last_space === false){
+						# temporarly
+						$sorting[]=array('field'=>$rule, 'dir'=> $this->prefs['default_order_by_dir']);
+						# future - when column default_order_by_dir removed from project table:
+						#$sorting[]=array('field'=>$rule, 'dir'=>'desc');
+					}else{
+						$sorting[]=array(
+							'field'=>trim(substr($rule, 0, $last_space)),
+							'dir'=>trim(substr($rule, $last_space))
+						);
+					}
+				}
 				# using an extra name until default_order_by_dir completely removed
 				$this->prefs['sorting']=$sorting; # we can use this also for highlighting in template which columns are sorted by default in task list!
+
+				# For users with only the 'modify_own_tasks' permission within the project
+				# Currently hardcoded here to have it available for Flyspray1.0. May move to dbfield in future. 
+				$this->prefs['basic_fields']=array(
+					'item_summary',
+					'detailed_desc', 
+					'task_type', 
+					'product_category',
+					'operating_system', 
+					'task_severity', 
+					'percent_complete', 
+					'product_version', 
+					'estimated_effort'
+				);
 
 				return;
 			}
