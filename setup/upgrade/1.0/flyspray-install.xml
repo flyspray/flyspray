@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <schema version="0.3">
   <table name="user_emails">
+  	<descr>multiple addresses for users. subject to change in FS1.1+!</descr>
     <field name="id" type="I" size="5"></field>
     <field name="email_address" type="C" size="100"></field>
     <field name="oauth_uid" type="C" size="255">
@@ -13,10 +14,12 @@
     </field>
   </table>
   <table name="tags">
+  	<desc>Do not use this table. pre FS1.0-beta table</desc>
     <field name="task_id" type="I" size="5"></field>
     <field name="tag" type="C" size="100"></field>
   </table>
   <table name="admin_requests">
+    <descr>Pending requests for admins and PMs to attend to</descr>
     <field name="request_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -59,6 +62,7 @@
     </index>
   </table>
   <table name="assigned">
+    <descr>Who is assigned what task</descr>
     <field name="assigned_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -78,6 +82,7 @@
     </index>
   </table>
   <table name="attachments">
+    <descr>List the names and locations of files attached to tasks</descr>
     <field name="attachment_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -117,6 +122,7 @@
     </index>
   </table>
   <table name="cache">
+  	<descr>Table to cache RSS/Atom feeds</descr>
     <field name="id" type="I" size="6">
       <KEY/>
       <AUTOINCREMENT/>
@@ -155,6 +161,7 @@
     </index>
   </table>
   <table name="comments">
+    <descr>task comments</descr>
     <field name="comment_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -186,6 +193,7 @@
     </index>
   </table>
   <table name="dependencies">
+  	<descr>Task inter-dependencies</descr>
     <field name="depend_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -205,6 +213,7 @@
     </index>
   </table>
     <table name="effort">
+    	<descr>log of time spent on tasks</descr>
         <field name="effort_id" type="I" size="10">
             <KEY/>
             <AUTOINCREMENT/>
@@ -232,6 +241,7 @@
         </index>
     </table>
   <table name="groups">
+  	<descr>User Groups for the Flyspray bug killer</descr>
     <field name="group_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -380,6 +390,7 @@
     </index>
   </table>
   <table name="history">
+  	<descr>log of Flyspray activities</descr>
     <field name="history_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -416,6 +427,7 @@
     </index>
   </table>
   <table name="list_category">
+    <descr>hierarchic task categories</descr>
     <field name="category_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -450,6 +462,7 @@
     </index>
   </table>
   <table name="list_os">
+  	<descr>Operating system list for the Flyspray bug killer</descr>
     <field name="os_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -476,6 +489,7 @@
     </index>
   </table>
   <table name="list_resolution">
+ 	<descr>task close reasons</descr>
     <field name="resolution_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -502,6 +516,7 @@
     </index>
   </table>
   <table name="list_status">
+  	<descr>List of possible task statuses</descr>
     <field name="status_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -528,6 +543,7 @@
     </index>
   </table>
   <table name="list_tag">
+  	<descr>definition of tags/labels for tasks</descr>
     <field name="tag_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -555,6 +571,7 @@
     </index>
   </table>
   <table name="list_tasktype">
+  	<descr>List of possible task types</descr>
     <field name="tasktype_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -581,6 +598,7 @@
     </index>
   </table>
   <table name="list_version">
+  	<descr>list of project versions/milestones/software release versions</descr>
     <field name="version_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -615,6 +633,7 @@
     </index>
   </table>
   <table name="notification_messages">
+  	<descr>Notification body and subject</descr>
     <field name="message_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -631,6 +650,7 @@
     </field>
   </table>
   <table name="notification_recipients">
+  	<descr>Notification recipient list</descr>
     <field name="recipient_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -647,6 +667,7 @@
     </field>
   </table>
   <table name="notifications">
+  	<descr>Extra task notification registrations are stored here</descr>
     <field name="notify_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -666,6 +687,7 @@
     </index>
   </table>
   <table name="prefs">
+  	<descr>global settings of Flyspray</descr>
     <field name="pref_id" type="I" size="1">
       <KEY/>
       <AUTOINCREMENT/>
@@ -676,6 +698,7 @@
     <field name="pref_value" type="X" />
   </table>
   <table name="projects">
+  	<descr>project settings</descr>
     <field name="project_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -809,6 +832,7 @@
     </field>
   </table>
   <table name="registrations">
+  	<descr>table for yet unconfirmed user registrations</descr>
     <field name="reg_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -845,6 +869,7 @@
     </field>
   </table>
   <table name="related">
+  	<descr>contains loose task relations to another task or task duplicates</descr>
     <field name="related_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -869,6 +894,7 @@
     </index>
   </table>
   <table name="reminders">
+  	<descr>scheduled task reminders</descr>
     <field name="reminder_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -902,6 +928,7 @@
     </field>
   </table>
   <table name="searches">
+  	<descr>Saves custom searches of users</descr>
     <field name="id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -922,6 +949,7 @@
     </field>
   </table>
   <table name="tasks">
+  	<desc>main table for storing tasks</desc>
     <field name="task_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1067,6 +1095,7 @@
     </index>
   </table>
   <table name="task_tag">
+  	<desc>join table to add tags/labels to tasks</desc>
     <field name="task_id" type="I" size="5">
       <KEY/>
     </field>
@@ -1080,6 +1109,7 @@
     </index>
   </table>
   <table name="users">
+  	<descr>user accounts of Flyspray</descr>
     <field name="user_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1171,6 +1201,7 @@
     </index>
   </table>
   <table name="users_in_groups">
+  	<descr>Which users are in which groups</descr>
     <field name="record_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1193,6 +1224,7 @@
     </index>
   </table>
   <table name="votes">
+  	<descr>votes for tasks</descr>
     <field name="vote_id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1214,6 +1246,7 @@
   </index>
   </table>
   <table name="links">
+  	<descr>link a resource (e.g. an URL) with a task - in a more structured way than the task description text area.</descr>
     <field name="link_id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
