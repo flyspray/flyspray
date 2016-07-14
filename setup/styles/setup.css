@@ -47,24 +47,23 @@ body {
   position:relative; /* for the :after rightarrow */
 }
 
-#stepbar .step-on {
-  color: #3AFF53;
-  background-color: #47617B;
-}
-#stepbar .done { background-color: #999;color:#000;}
+#stepbar .step-on { background-color:#47617B; color:#3AFF53;}
+#stepbar .done { background-color:#999; color:#000;}
+
 /* css arrow to right */
 #stepbar div:after{
   position:absolute;
   content:"";
-  right:-10px;
   width:0;
   height:0;
   top:0;
+  
   border-top:18px solid transparent;
   border-bottom:18px solid transparent;
   border-left:8px solid #ddd;
+  right:-8px;
 }
-#stepbar .step-on:after{border-left-color:#3AFF53;}
+#stepbar .step-on:after{border-left-color:#47617B;}
 #stepbar .done:after{border-left-color:#999;}
 
 .install {
