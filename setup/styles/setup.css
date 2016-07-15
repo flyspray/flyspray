@@ -107,6 +107,7 @@ a { text-decoration: none; }
   display: block;
   font-size: 3em;
   margin: 0.5em auto;
+  cursor:pointer;
 }
 
 .error {
