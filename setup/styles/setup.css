@@ -20,7 +20,7 @@ a { text-decoration: none; }
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
   -o-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
+  filter: gray; /* IE6-9 */
   filter: grayscale(100%); /* grayscale until a transparent logo exists that match colors of default theme */
 }
 #logo h1 {
