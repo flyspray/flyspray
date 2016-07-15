@@ -82,8 +82,6 @@ a { text-decoration: none; }
   border-left:8px solid #ddd;
   right:-8px;
 }
-#stepbar .step-on::after, #stepbar .step-on::before{border-left-color:#5f9729;}
-#stepbar .done::after, #stepbar .done::before{border-left-color:#bbb;}
 
 #stepbar div::before {
   position: absolute;
@@ -97,6 +95,10 @@ a { text-decoration: none; }
   border-left: 8px solid transparent;
   left:-8px;
 }
+#stepbar .step-on::after{border-left-color:#5f9729;}
+#stepbar .step-on::before{border-top-color:#5f9729;border-bottom-color:#5f9729;}
+#stepbar .done::after{border-left-color:#bbb;}
+#stepbar .done::before{border-top-color:#bbb;border-bottom-color:#bbb;}
 #stepbar div:first-child::before{display:none;}
 
 .install {
