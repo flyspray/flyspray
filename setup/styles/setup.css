@@ -3,7 +3,7 @@ body {
   font-family: Verdana, sans-serif;
   font-size:13px;
 }
-
+a { text-decoration: none; }
 #header {
   background-color:#47617B; 
   margin:0; padding:0; 
@@ -21,19 +21,23 @@ body {
 #logo h1 a {
   display: block;
   height: 90px;
-  text-decoration: none; color:#3AFF53;
+  color:#fff;
   border: 0; padding: 0; margin: 0 auto;
   padding-left:260px;
 }
 #content {max-width:800px;margin-left:auto;margin-right:auto;}
-#footer {
-  background-color: #688EB4;
-  padding: 5px;
-  margin:0;
-  border-top: 2px solid #47617B;
-  text-align: right;
-}
 
+#footer {
+  background-color: #333;
+  padding: 1em;
+  margin:0;
+  border-top: 2px solid #5f9729;
+  text-align: center;
+}
+#footer p, #footer ul{display:inline-block;}
+#footer li {display:inline-block; list-style:none;}
+#footer a{ display:inline-block; padding:0.5em; color:#fff; }
+#footer a:hover {background-color:#000;}
 
 #stepbar{ margin-top:1em;}
 #stepbar div {
@@ -47,8 +51,8 @@ body {
   position:relative; /* for the :after rightarrow */
 }
 
-#stepbar .step-on { background-color:#47617B; color:#3AFF53;}
-#stepbar .done { background-color:#999; color:#000;}
+#stepbar .step-on { background-color:#5f9729; color:#fff;}
+#stepbar .done { background-color:#bbb; color:#000;}
 
 /* css arrow to right */
 #stepbar div:after{
@@ -71,16 +75,16 @@ body {
   margin-right: auto;
   margin-bottom: .5em;
   padding: 10px;
-  border: 1px solid #688EB4;
+  border: 1px solid #ddd;
   max-width: 700px;
-  background-color: #F1F3F5;
+  background-color: #f1f1f1;
 }
 
 .formBlock {
-  border: 1px solid #688EB4;
+  border: 1px solid #ddd;
   padding:5px;
   margin:5px;
-  background: #E9ECEF;
+  background: #f1f1f1;
   color:#000;
 }
 
@@ -88,19 +92,6 @@ body {
   display: block;
   font-size: 3em;
   margin: 0.5em auto;
-}
-
-a {
-  color : #998900;
-  text-decoration : none;
-}
-a:hover {
-  color : #999999;
-  text-decoration : underline;
-}
-a:active {
-  color : #FF6600;
-  text-decoration : underline;
 }
 
 .error {
