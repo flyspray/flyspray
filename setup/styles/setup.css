@@ -68,7 +68,7 @@ a { text-decoration: none; }
 }
 
 #stepbar .step-on { background-color:#5f9729; color:#fff;}
-#stepbar .done { background-color:#bbb; color:#000;}
+#stepbar .done { background-color:#333; color:#ccc;}
 
 /* css arrow to right */
 #stepbar div:after{
@@ -98,8 +98,8 @@ a { text-decoration: none; }
 }
 #stepbar .step-on::after{border-left-color:#5f9729;}
 #stepbar .step-on::before{border-top-color:#5f9729;border-bottom-color:#5f9729;}
-#stepbar .done::after{border-left-color:#bbb;}
-#stepbar .done::before{border-top-color:#bbb;border-bottom-color:#bbb;}
+#stepbar .done::after{border-left-color:#333;}
+#stepbar .done::before{border-top-color:#333;border-bottom-color:#333;}
 #stepbar div:first-child::before{display:none;}
 
 .install {
