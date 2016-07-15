@@ -62,6 +62,7 @@ a { text-decoration: none; }
   padding: 10px;
   background-color:#ddd;
   margin-right:10px;
+  margin-bottom:6px; /* when it wraps on small displays */
   display:inline-block;
   position:relative; /* for the :after rightarrow */
 }
