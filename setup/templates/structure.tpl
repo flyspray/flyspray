@@ -16,10 +16,30 @@
   <div id="stepbar" title="<?php echo Filters::noXSS(L('progress')); ?>">
     <!-- <div><?php echo Filters::noXSS(L('progress')); ?></div> -->
     <div class="done">3rd party libs</div>
-    <div <?php echo (!isset($_POST['action'])) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('preinstallcheck')); ?></div>
-    <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'database')) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('databasesetup')); ?></div>
-    <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'administration')) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('administration')); ?></div>
-    <div <?php echo (isset($_POST['action']) && ($_POST['action'] == 'complete')) ? 'class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('installflyspray')); ?></div>
+    <div<?php
+    if(!isset($_POST['action'])){
+      echo ' class="step-on"';
+    } elseif( $_POST['action'] == 'database' || $_POST['action'] == 'administration' || $_POST['action'] == 'complete' ){
+      echo ' class="done"';
+    } ?>><?php echo Filters::noXSS(L('preinstallcheck')); ?></div>
+    <div<?php
+    if(isset($_POST['action'])){
+      if( $_POST['action'] == 'database' ){
+        echo ' class="step-on"';
+      } elseif( $_POST['action'] == 'administration' || $_POST['action'] == 'complete' ){
+        echo ' class="done"';
+      }
+    }
+    ?>><?php echo Filters::noXSS(L('databasesetup')); ?></div>
+    <div<?php
+    if(isset($_POST['action'])){
+      if($_POST['action'] == 'administration'){
+        echo ' class="step-on"';
+      } elseif($_POST['action'] == 'complete'){
+        echo ' class="done"';
+      }
+    } ?>><?php echo Filters::noXSS(L('administration')); ?></div>
+    <div<?php echo (isset($_POST['action']) && ($_POST['action'] == 'complete')) ? ' class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('installflyspray')); ?></div>
   </div>
   <?php echo $body; ?>
 </div><!-- End of content -->
