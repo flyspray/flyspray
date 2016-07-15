@@ -6,7 +6,7 @@ body {
 a { text-decoration: none; }
 #header {
   /*background-color:#47617B;*/
-  background-color:#535353; /* matching grayscale brightness of title.png */
+  background-color:#5e5e5e; /* matching grayscale brightness of title.png */
   margin:0;
   padding:0;
   border-bottom:4px solid #5f9729;
