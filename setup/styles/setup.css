@@ -33,6 +33,7 @@ a { text-decoration: none; }
   margin:0;
   border-top: 2px solid #5f9729;
   text-align: center;
+  color:#ccc;
 }
 #footer p, #footer ul{display:inline-block;}
 #footer li {display:inline-block; list-style:none;}
@@ -67,8 +68,8 @@ a { text-decoration: none; }
   border-left:8px solid #ddd;
   right:-8px;
 }
-#stepbar .step-on:after{border-left-color:#47617B;}
-#stepbar .done:after{border-left-color:#999;}
+#stepbar .step-on:after{border-left-color:#5f9729;}
+#stepbar .done:after{border-left-color:#bbb;}
 
 .install {
   margin-left: auto;
