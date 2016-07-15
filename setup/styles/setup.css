@@ -5,24 +5,38 @@ body {
 }
 a { text-decoration: none; }
 #header {
-  background-color:#47617B; 
-  margin:0; padding:0; 
+  /*background-color:#47617B;*/
+  background-color:#535353; /* matching grayscale brightness of title.png */
+  margin:0;
+  padding:0;
+  border-bottom:4px solid #5f9729;
 }
 #logo {
   background-image:url(../images/title.png);
-  background-position: 20px 10px;
+  background-position: 10px 10px;
   background-repeat: no-repeat;
   background-attachment:scroll;
+  
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  filter: grayscale(100%); /* grayscale until a transparent logo exists that match colors of default theme */
 }
 #logo h1 {
-  padding:0; margin:0;
-  font-size:2em; line-height: 90px;
+  padding:0;
+  margin:0;
+  font-size:2em;
+  line-height: 90px;
+  font-weight:normal;
 }
 #logo h1 a {
   display: block;
   height: 90px;
   color:#fff;
-  border: 0; padding: 0; margin: 0 auto;
+  border: 0;
+  padding: 0;
+  margin: 0 auto;
   padding-left:260px;
 }
 #content {max-width:800px;margin-left:auto;margin-right:auto;}
