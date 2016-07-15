@@ -1,10 +1,10 @@
-      <div id="right">
-         <form action="index.php" method="post" name="database_form">
-         <?php echo $message; ?>
+<div>
+<form action="index.php" method="post" name="database_form">
+      <?php echo $message; ?>
 
-         <h1><?php echo Filters::noXSS(L('databasesetup')); ?></h1>
-         <h2><?php echo Filters::noXSS(L('databaseconfiguration')); ?><?php echo Filters::noXSS($version); ?></h2>
-         <div class="installBlock">
+      <h1><?php echo Filters::noXSS(L('databasesetup')); ?></h1>
+      <h2><?php echo Filters::noXSS(L('databaseconfiguration')); ?><?php echo Filters::noXSS($version); ?></h2>
+      <div class="installBlock">
             <table class="formBlock" style="width:auto">
             <tr>
                <td><?php echo Filters::noXSS(L('databasehostname')); ?></td>
@@ -39,15 +39,9 @@
                <td><?php echo L('tableprefixhint'); ?></td>
             </tr>
             </table>
-         </div>
-         <div class="clr"></div>
-         <h2><?php echo Filters::noXSS(L('proceedtoadmin')); ?></h2>
-         <div class="installBlock">
-            <div class="formBlock farRight">
+
             <input type="hidden" name="action" value="administration" />
-            <input class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> &gt;&gt;" />
-            </div>
-         </div>
-         </form>
-      </div><!-- end of right -->
-      <div class="clr"></div>
+            <button class="button" type="submit" name="next" value="next"><?php echo Filters::noXSS(L('proceedtoadmin')); ?></button>
+      </div>
+</form>
+</div>

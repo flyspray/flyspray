@@ -6,18 +6,15 @@
 <link rel="stylesheet" href="styles/setup.css" type="text/css" media="screen" />
 </head>
 <body>
-<div id="center">
-  <div id="container">
-    <div id="header">
+<div id="header">
       <div id="logo">
         <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - The bug Killer!"><?php echo L('upgrade'); ?></a></h1>
       </div><!-- End of logo -->
-    </div><!-- End of header -->
-    <div id="content">
-      <div id="bodyContent">
-      <form action="upgrade.php" method="post" onsubmit="document.getElementById('upgradebutton').disabled = true;return true;" >
-      <input type="hidden" name="upgrade" value="1" />
-        <div class="install">
+</div><!-- End of header -->
+<div id="content">
+<form action="upgrade.php" method="post" onsubmit="document.getElementById('upgradebutton').disabled = true;return true;" >
+	<input type="hidden" name="upgrade" value="1" />
+	<div class="install">
             <h2><?php echo L('preconditionchecks'); ?></h2>
             <p><?php echo sprintf(L('versioncompare'), $installed_version, $short_version); ?></p>
             <p><?php echo L('writeaccessconf'); ?></p>
@@ -67,18 +64,13 @@
 	<p>We do not get upgrade progress feedback while the upgrading process is running, but if it takes longer it can be a sign of problem.</p>
 	<?php endif; ?>
 <?php endif; ?>
-        </div><!-- End of install -->
-        </form>
-        <div class="clr"></div>
-      </div><!-- End of bodyContent -->
-      <div class="clr"></div>
-    </div><!-- End of content -->
-    <div id="footer">
+	</div><!-- End of install -->
+</form>
+</div><!-- End of content -->
+<div id="footer">
       <p>Flyspray <?php echo Filters::noXSS($fs->version); ?><br />
         Copyright 2004-<?php echo Filters::noXSS(date('Y')); ?> &copy; The Flyspray team.  All rights reserved.
       </p>
-    </div><!-- End of footer -->
-  </div><!-- End of container -->
-</div><!-- End of center -->
+</div><!-- End of footer -->
 </body>
 </html>
