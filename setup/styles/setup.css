@@ -82,8 +82,22 @@ a { text-decoration: none; }
   border-left:8px solid #ddd;
   right:-8px;
 }
-#stepbar .step-on:after{border-left-color:#5f9729;}
-#stepbar .done:after{border-left-color:#bbb;}
+#stepbar .step-on::after, #stepbar .step-on::before{border-left-color:#5f9729;}
+#stepbar .done::after, #stepbar .done::before{border-left-color:#bbb;}
+
+#stepbar div::before {
+  position: absolute;
+  content: "";
+  height: 0;
+  width: 0;
+  top: 0;
+  
+  border-bottom: 18px solid #ddd;
+  border-top: 18px solid #ddd;
+  border-left: 8px solid transparent;
+  left:-8px;
+}
+#stepbar div:first-child::before{display:none;}
 
 .install {
   margin-left: auto;
