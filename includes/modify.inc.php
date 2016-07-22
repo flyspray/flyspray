@@ -1593,7 +1593,13 @@ switch ($action = Req::val('action'))
         }
 
         $_SESSION['SUCCESS'] = L('userupdated');
-        Flyspray::Redirect(CreateURL('myprofile'));
+        if ($action === 'myprofile.edituser') {
+                Flyspray::Redirect(CreateURL('myprofile'));
+        } elseif ($action === 'admin.edituser' && Post::val('area') === 'users') {
+                Flyspray::Redirect(CreateURL('edituser', Post::val('user_id')));
+        } else {
+                Flyspray::Redirect(CreateURL('user', Post::val('user_id')));
+        }
         break;
         // ##################
         // approving a new user registration
