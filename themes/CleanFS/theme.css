@@ -1393,6 +1393,8 @@ span.warning {
     color: red;
     font-weight: bold;
 }
+
+#globoslink .fa, #projoslink .fa{padding-right: 3px;}
 /* typical colorings for task type and permissions */
 .fa-bug{color:#c30;}
 .fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
