@@ -455,6 +455,7 @@ body.toplevel .single-project {
   height: auto;
 }
 body.myprofile .box {display:inline-block;vertical-align:top;}
+#editgroup, #listuser{display:inline-block;vertical-align:top;}
 .progress_bar_container {
   width: 150px;
   margin:0;
