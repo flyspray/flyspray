@@ -112,7 +112,8 @@
         <select id="projectgroupin" class="adminlist" name="project_group_in" <?php echo tpl_disableif(!$user->perms('manage_project')); ?>>
           <?php echo tpl_options(array_merge($project_groups, array(0 => array('group_name' => L('none'), 0 => 0, 'group_id' => 0, 1 => L('none')))), Req::val('project_group_in', $theuser->perms('project_group'))); ?>
         </select>
-          <input type="hidden" name="old_group_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
+        <input type="hidden" name="old_group_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
+        <input type="hidden" name="project_id" value="<?php echo $proj->id; ?>" />
       </li>
       <?php endif; ?>
       <li>
