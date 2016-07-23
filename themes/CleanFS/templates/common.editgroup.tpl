@@ -1,4 +1,3 @@
-<fieldset class="box"> <legend><?php echo Filters::noXSS(L('editgroup')); ?></legend>
     <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
         <div>
             <label for="selectgroup"><?php echo Filters::noXSS(L('editgroup')); ?></label>
@@ -8,9 +7,10 @@
             <input type="hidden" name="area" value="editgroup" />
         </div>
     </form>
-    <hr />
-  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
-    <table class="box">
+
+<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
+<fieldset class="box"> <legend><?php echo Filters::noXSS(L('editgroup')); ?> <?php echo Filters::noXSS(Req::val('group_name', $group_details['group_name'])); ?></legend>
+<table class="box">
       <tr>
         <td>
           <label for="groupname"><?php echo Filters::noXSS(L('groupname')); ?></label>
@@ -155,32 +155,31 @@
         <td><label><input type="checkbox" name="delete_group" /> <?php echo Filters::noXSS(L('deletegroup')); ?></label></td>
         <td><select name="move_to">
               <?php echo tpl_options( array_merge( ($proj->id) ? array(L('nogroup')) : array(), Flyspray::listGroups($proj->id)), null, false, null, $group_details['group_id']); ?>
-
             </select>
         </td>
       </tr>
       <?php endif; ?>
       <tr>
-        <td><label for="add_user"><?php echo Filters::noXSS(L('addusergroup')); ?></label></td>
+        <td><label for="add_user"><i class="fa fa-user"></i> <?php echo Filters::noXSS(L('addusergroup')); ?></label></td>
         <td>
             <?php echo tpl_userselect('uid', '', 'add_user'); ?>
-
         </td>
       </tr>
       <tr>
         <td colspan="2" class="buttons">
           <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
-          <input type="hidden" name="action" value="<?php echo Filters::noXSS(Req::val('action', $do . '.editgroup')); ?>" />
+          <input type="hidden" name="action" value="<?php echo Filters::noXSS(Req::val('action', $do.'.editgroup')); ?>" />
           <input type="hidden" name="area" value="editgroup" />
           <input type="hidden" name="group_id" value="<?php echo Filters::noXSS($group_details['group_id']); ?>" />
           <button type="submit"><?php echo Filters::noXSS(L('updatedetails')); ?></button>
         </td>
       </tr>
     </table>
-  </form>
-  <hr />
-  <?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
-   <div>
+</fieldset>
+</form>
+
+<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
+<fieldset>
     <h3><?php echo Filters::noXSS(L('groupmembers')); ?></h3>
     <table id="manage_users_in_groups" class="userlist">
     <thead>
@@ -230,6 +229,5 @@
   <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
   <input type="hidden" name="action" value="movetogroup" />
   <input type="hidden" name="old_group" value="<?php echo Filters::noXSS($group_details['group_id']); ?>" />
-  </div>
+ </fieldset>
  </form>
-</fieldset>
