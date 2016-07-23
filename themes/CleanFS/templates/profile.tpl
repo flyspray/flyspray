@@ -33,6 +33,7 @@
       <input type="hidden" name="old_group_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
       <input type="hidden" name="action" value="admin.edituser" />
       <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($theuser->id); ?>" />
+      <input type="hidden" name="project_id" value="<?php echo $proj->id; ?>" />
       <input type="hidden" name="onlypmgroup" value="1" />
       <button type="submit"><?php echo Filters::noXSS(L('update')); ?></button>
     </form>
