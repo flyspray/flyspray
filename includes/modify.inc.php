@@ -1583,7 +1583,7 @@ switch ($action = Req::val('action'))
 
             endif; // end non project group changes
 
-        if ($user->perms('manage_project') && !is_null(Post::val('project_group_in')) && Post::val('project_group_in') != Post::val('old_project_id')) {
+        if ($user->perms('manage_project') && !is_null(Post::val('project_group_in')) && Post::val('project_group_in') != Post::val('old_group_id')) {
             $db->Query('DELETE FROM {users_in_groups} WHERE group_id = ? AND user_id = ?',
                          array(Post::val('old_project_id'), Post::val('user_id')));
             if (Post::val('project_group_in')) {
