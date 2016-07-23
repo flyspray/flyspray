@@ -1,4 +1,4 @@
-    <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+    <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get" id="groupselect">
         <div>
             <label for="selectgroup"><?php echo Filters::noXSS(L('editgroup')); ?></label>
             <select name="id" id="selectgroup"><?php echo tpl_options(Flyspray::ListGroups($proj->id), Req::num('id')); ?></select>
@@ -8,7 +8,7 @@
         </div>
     </form>
 
-<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
+<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do)), null, null, null, 'id="editgroup"'); ?>
 <fieldset class="box"> <legend><?php echo Filters::noXSS(L('editgroup')); ?> <?php echo Filters::noXSS(Req::val('group_name', $group_details['group_name'])); ?></legend>
 <table class="box">
       <tr>
@@ -178,7 +178,7 @@
 </fieldset>
 </form>
 
-<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do))); ?>
+<?php echo tpl_form(Filters::noXSS(CreateURL('editgroup', Req::num('id'), $do)), null, null, null, 'id="userlist"'); ?>
 <fieldset>
     <h3><?php echo Filters::noXSS(L('groupmembers')); ?></h3>
     <table id="manage_users_in_groups" class="userlist">
