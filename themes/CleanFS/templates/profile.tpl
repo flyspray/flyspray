@@ -30,7 +30,7 @@
         <?php $sel = $theuser->perms('project_group') == '' ? 0 : $theuser->perms('project_group'); ?>
         <?php echo tpl_options(array_merge($project_groups, array(0 => array('group_name' => L('none'), 0 => 0, 'group_id' => 0, 1 => L('none')))), $sel); ?>
       </select>
-      <input type="hidden" name="old_project_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
+      <input type="hidden" name="old_group_id" value="<?php echo Filters::noXSS($theuser->perms('project_group')); ?>" />
       <input type="hidden" name="action" value="admin.edituser" />
       <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($theuser->id); ?>" />
       <input type="hidden" name="onlypmgroup" value="1" />
