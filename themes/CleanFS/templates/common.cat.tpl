@@ -26,7 +26,7 @@ foreach ($sysrows as $row):
 $syscountlines++;
 ?>  
 <tr>
-  <td class="first"><?php echo str_repeat('&nbsp;',$row['depth']).Filters::noXSS($row['category_name']); ?></td>
+  <td class="first"><span class="depthmark"><?php echo str_repeat('&rarr;', $row['depth']); ?></span><?php echo Filters::noXSS($row['category_name']); ?></td>
   <td><?php echo ($row['category_owner']==0)? '': Filters::noXSS($row['category_owner']); ?></td>
   <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
   <td>&nbsp;</td>
