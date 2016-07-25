@@ -85,7 +85,7 @@ if (!$user->can_view_task($task_details)) {
 				foreach($gcats as $cat){
 					$gcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('globalcategories'), 'options'=>$gcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesglobal'), 'options'=>$gcatopts);
 			}
 			# listprojectcats
 			$pcats=$proj->listCategories($proj->id);
@@ -93,7 +93,7 @@ if (!$user->can_view_task($task_details)) {
 				foreach($pcats as $cat){
 					$pcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('projectcategories'), 'options'=>$pcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesproject'), 'options'=>$pcatopts);
 			}
 			# listtargetcats
 			$tcats=$toproject->listCategories($toproject->id);
@@ -101,7 +101,7 @@ if (!$user->can_view_task($task_details)) {
 				foreach($tcats as $cat){
 					$tcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('targetcategories'), 'options'=>$tcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriestarget'), 'options'=>$tcatopts);
 			}
 		}else{
 			# just the normal merged global/projectcats
