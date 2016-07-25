@@ -47,9 +47,12 @@ li.errorinput{background-color:#fc9;}
 	<!-- Category -->
 	<li<?php echo in_array('category', $fields) ? '' : ' style="display:none"'; ?>>
 		<label for="category"<?php echo isset($_SESSION['ERRORS']['invalidcategory']) ? ' class="errorinput" title="'.eL('invalidcategory').'"':''; ?>><?php echo Filters::noXSS(L('category')); ?></label>
+		<?php echo tpl_select($catselect); ?>
+		<!--
 		<select id="category" name="product_category">
 		<?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
 		</select>
+		-->
 	</li>
 	<!-- Assigned To-->
 	<li<?php echo in_array('assignedto', $fields) ? '' : ' style="display:none"'; ?>>
