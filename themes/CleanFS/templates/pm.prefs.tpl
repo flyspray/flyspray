@@ -79,15 +79,20 @@
           <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
           <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
       </li>
-
-      <li>
-          <label for="othersview"><?php echo Filters::noXSS(L('othersview')); ?></label>
-          <?php echo tpl_checkbox('others_view', Post::val('others_view', $proj->prefs['others_view']), 'othersview'); ?>
-      </li>
-
+      
       <li>
           <label for="othersviewroadmap"><?php echo Filters::noXSS(L('othersviewroadmap')); ?></label>
-          <?php echo tpl_checkbox('others_viewroadmap', Post::val('others_viewroadmap', $proj->prefs['others_viewroadmap']), 'othersviewroadmap'); ?>
+          <?php 
+          # note for FS1.0: This setting is currently also used as anon/public permission for: show project name, activity, stats, milestone progress
+          # but not listing tasks per milestone
+          echo tpl_checkbox('others_viewroadmap', Post::val('others_viewroadmap', $proj->prefs['others_viewroadmap']), 'othersviewroadmap'); ?>
+      </li>
+      
+      <li>
+          <label for="othersview"><?php echo Filters::noXSS(L('othersview')); ?></label>
+          <?php
+          # note for FS1.0: This setting is current anon/public task view permission for: listing tasks (toplevel, tasklist, roadmap, RSS feed, ..)
+          echo tpl_checkbox('others_view', Post::val('others_view', $proj->prefs['others_view']), 'othersview'); ?>
       </li>
 
       <li>
