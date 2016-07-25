@@ -644,8 +644,10 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 function tpl_select($select=array()){
 
 	$attrjoin='';
-	foreach($select['attr'] as $key=>$val){
-		$attrjoin.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+	if(isset($select['attr'])){
+		foreach($select['attr'] as $key=>$val){
+			$attrjoin.=' '.$key.'="'.htmlspecialchars($val, ENT_QUOTES, 'utf-8').'"';
+		}
 	}
 	$html='<select name="'.$select['name'].'"'.$attrjoin.'>';
 	$html.=tpl_selectoptions($select['options']);
