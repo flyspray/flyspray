@@ -40,7 +40,7 @@ endif; ?>
 	<input id="pmmenu" type="checkbox">
 	<label id="labelpmmenu" for="pmmenu"></label>
 	<ul id="pm-menu-list"><?php
-	if ( count($fs->projects) && $user->can_view_project($proj->id) ) {
+	if ( count($fs->projects) && $user->can_select_project($proj->id) ) {
 	?><li class="first">
 		<a id="toplevellink"
 		<?php if($do == 'toplevel'): ?> class="active" <?php endif; ?>
