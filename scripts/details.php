@@ -110,7 +110,7 @@ if (!$user->can_view_task($task_details)) {
 				foreach($cats as $cat){
 					$catopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
 				}
-				$catsel['options'][]=$catopts;
+				$catsel['options']=$catopts;
 			}
 		}
 
