@@ -143,6 +143,7 @@ foreach ($projects as $project): ?>
   </tr>
   <?php } ?>
   <?php } ?>
+<?php if($projprefs[$project['project_id']]['others_view']==1): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('feeds')); ?></th>
     <td>
@@ -159,6 +160,7 @@ foreach ($projects as $project): ?>
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;topic=clo&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('closed')); ?></a>
     </td>
   </tr>
+<?php endif; ?>
 </table>
 </div>
 <?php
