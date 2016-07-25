@@ -22,7 +22,6 @@
 <?php if (isset($sysrows) && count($sysrows)): ?>
 <?php
 $syscountlines=-1;    
-echo '<pre>';print_r($sysrows); echo '</pre>';
 foreach ($sysrows as $row):
 $syscountlines++;
 ?>  
