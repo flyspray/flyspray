@@ -44,15 +44,22 @@ $filename = md5(sprintf('%s-%s-%d-%d', $feed_type, $orderby, $proj->id, $max_ite
 $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 
 // Get the time when a task has been changed last
-$sql = $db->Query("SELECT  t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
-                     FROM  {tasks}    t
-               INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  $closed AND $sql_project AND t.mark_private <> '1'
-                           AND p.others_view = '1'
-                 ORDER BY  $orderby DESC", false, $max_items);
 $most_recent = 0;
-while ($row = $db->fetchRow($sql)) {
-    $most_recent = max($most_recent, $row['date_opened'], $row['date_closed'], $row['last_edited_time']);
+if($proj->prefs['others_view']){
+    $sql = $db->Query("SELECT t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
+        FROM {tasks} t
+        INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
+        WHERE $closed
+        AND $sql_project
+        AND t.mark_private <> '1'
+        AND p.others_view = '1'
+        ORDER BY  $orderby DESC",
+        false,
+        $max_items
+    );
+    while ($row = $db->fetchRow($sql)) {
+        $most_recent = max($most_recent, $row['date_opened'], $row['date_closed'], $row['last_edited_time']);
+    }
 }
 
 if ($fs->prefs['cache_feeds']) {
@@ -63,11 +70,14 @@ if ($fs->prefs['cache_feeds']) {
         }
     }
     else {
-        $sql = $db->Query("SELECT  content
-                             FROM  {cache} p
-                            WHERE  type = ? AND topic = ? AND $sql_project
-                                   AND max_items = ?  AND last_updated >= ?",
-                        array($feed_type, $topic, $max_items, $most_recent));
+        $sql = $db->Query("SELECT content FROM {cache} p
+            WHERE type = ?
+            AND topic = ?
+            AND $sql_project
+            AND max_items = ?
+            AND last_updated >= ?",
+            array($feed_type, $topic, $max_items, $most_recent)
+        );
         if ($content = $db->FetchOne($sql)) {
             echo $content;
             exit;
@@ -76,30 +86,42 @@ if ($fs->prefs['cache_feeds']) {
 }
 
 /* build a new feed if cache didn't work */
-$sql = $db->Query("SELECT  t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed,
-                           t.last_edited_time, t.opened_by, COALESCE(u.real_name, t.anon_email) AS real_name, COALESCE(u.email_address, t.anon_email) AS email_address
-                     FROM  {tasks}    t
-                LEFT JOIN  {users}    u ON t.opened_by = u.user_id
-               INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
-                    WHERE  $closed AND $sql_project AND t.mark_private <> '1'
-                           AND p.others_view = '1'
-                 ORDER BY  $orderby DESC", false, $max_items);
+if($proj->prefs['others_view']){
+    $sql = $db->Query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by, 
+        COALESCE(u.real_name, t.anon_email) AS real_name,
+        COALESCE(u.email_address, t.anon_email) AS email_address
+        FROM  {tasks}    t
+        LEFT JOIN  {users}    u ON t.opened_by = u.user_id
+        INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
+        WHERE $closed
+        AND $sql_project
+        AND t.mark_private <> '1'
+        AND p.others_view = '1'
+        ORDER BY $orderby DESC",
+        false,
+        $max_items
+    );
+    $task_details = $db->fetchAllArray($sql);
+} else{
+    $task_details = array();
+}
 
-$task_details     = $db->fetchAllArray($sql);
-$feed_description = $proj->prefs['feed_description'] ? $proj->prefs['feed_description'] : $fs->prefs['page_title'] . $proj->prefs['project_title'].': '.$title;
-$feed_image       = false;
-if ($proj->prefs['feed_img_url']
-        && !strncmp($proj->prefs['feed_img_url'], 'http://', 7))
-{
-    $feed_image   = $proj->prefs['feed_img_url'];
+if($proj->prefs['others_view'] || $proj->prefs['others_viewroadmap']){
+    $feed_description = $proj->prefs['feed_description'] ? $proj->prefs['feed_description'] : $fs->prefs['page_title'] . $proj->prefs['project_title'].': '.$title;
+} else{
+    $feed_description = $fs->prefs['page_title']; # do not show info about the project
+}
+
+$feed_image = false;
+if ($proj->prefs['feed_img_url'] && !strncmp($proj->prefs['feed_img_url'], 'http://', 7)) {
+    $feed_image = $proj->prefs['feed_img_url'];
 }
 
 $page->uses('most_recent', 'feed_description', 'feed_image', 'task_details');
 $content = $page->fetch('feed.'.$feed_type.'.tpl');
 
 // cache feed
-if ($fs->prefs['cache_feeds'])
-{
+if ($fs->prefs['cache_feeds']) {
     if ($fs->prefs['cache_feeds'] == '1') {
         // Remove old cached files
         if(!is_link($cachefile) && ($handle = @fopen($cachefile, 'w+b'))) {
