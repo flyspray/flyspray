@@ -1,4 +1,46 @@
 <p><?php echo Filters::noXSS(L('listnote')); ?></p>
+<?php if ($do=='pm'): ?>
+<h3><?php echo Filters::noXSS(L('categoriesglobal')); ?></h3>
+<table class="list" id="idtablesys">
+<colgroup>
+  <col class="cname" />
+  <col class="cowner" />
+  <col class="cshow" />
+  <col class="cdelete" />
+  <col class="cusage" />
+</colgroup>
+<thead>
+<tr>
+  <th><?php echo Filters::noXSS(L('name')); ?></th>
+  <th><?php echo Filters::noXSS(L('owner')); ?></th>
+  <th><?php echo Filters::noXSS(L('show')); ?></th>
+  <th>&nbsp;</th> 
+  <th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+</tr>   
+</thead>
+<tbody>
+<?php if (isset($sysrows) && count($sysrows)): ?>
+<?php
+$syscountlines=-1;    
+echo '<pre>';print_r($sysrows); echo '</pre>';
+foreach ($sysrows as $row):
+$syscountlines++;
+?>  
+<tr>
+  <td class="first"><?php echo str_repeat('&nbsp;',$row['depth']).Filters::noXSS($row['category_name']); ?></td>
+  <td><?php echo ($row['category_owner']==0)? '': Filters::noXSS($row['category_owner']); ?></td>
+  <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
+  <td>&nbsp;</td>
+  <td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
+</tr>
+<?php endforeach; ?>
+<?php else: ?>
+<tr><td colspan="5"><?php echo Filters::noXSS(L('novalues')); ?></td></tr>
+<?php endif; ?>
+</tbody>
+</table>
+<?php endif; ?> 
+<h3><?php echo $do=='pm' ? Filters::noXSS(L('categoriesproject')) : Filters::noXSS(L('categoriesglobal')); ?></h3>
 <?php
 $countlines = -1;
 $categories = $proj->listCategories($proj->id, false, false, false);
