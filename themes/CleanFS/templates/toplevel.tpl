@@ -41,6 +41,7 @@ foreach ($projects as $project): ?>
 <h2><a href="<?php echo Filters::noXSS(CreateUrl('project', $project['project_id'])); ?>"><?php echo Filters::noXSS($project['project_title']); ?></a></h2>
 
 <table class="toplevel">
+<?php if($user->can_view_project($project['project_id'])): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('viewtasks')); ?></th>
     <td>
@@ -76,6 +77,7 @@ foreach ($projects as $project): ?>
     </td>
     <?php endif; ?>
   </tr>
+<?php endif; ?>  
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
   	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
