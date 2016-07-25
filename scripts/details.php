@@ -76,6 +76,46 @@ if (!$user->can_view_task($task_details)) {
 		}
 		$page->assign('userlist', $userlist);
 
+		# Build the category select array, a movetask or normal taskedit
+		# then in the template just use tpl_select($catselect);
+		if(isset($move) && $move==1){
+			# listglobalcats
+			$gcats=$proj->listCategories(0);
+			if( count($gcats)>0){
+				foreach($gcats as $cat){
+					$gcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
+				}
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('globalcategories'), 'options'=>$gcatopts);
+			}
+			# listprojectcats
+			$pcats=$proj->listCategories($proj->id);
+			if( count($pcats)>0){
+				foreach($pcats as $cat){
+					$pcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
+				}
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('projectcategories'), 'options'=>$pcatopts);
+			}
+			# listtargetcats
+			$tcats=$toproject->listCategories($toproject->id);
+			if( count($tcats)>0){
+				foreach($tcats as $cat){
+					$tcatopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
+				}
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('targetcategories'), 'options'=>$tcatopts);
+			}
+		}else{
+			# just the normal merged global/projectcats
+			$cats=$proj->listCategories();
+			if( count($cats)>0){
+				foreach($cats as $cat){
+					$catopts[]=array('value'=>$cat['category_id'], 'label'=>$cat['category_name']);
+				}
+				$catsel['options'][]=$catopts;
+			}
+		}
+
+		$page->assign('catselect', $catsel);
+
 		# user tries to move a task to a different project:
 		if(isset($move) && $move==1){
 			$page->assign('move', 1);
