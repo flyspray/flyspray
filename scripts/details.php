@@ -113,7 +113,8 @@ if (!$user->can_view_task($task_details)) {
 				$catsel['options']=$catopts;
 			}
 		}
-
+		$catsel['name']='product_category';
+		$catsel['attr']['id']='category';
 		$page->assign('catselect', $catsel);
 
 		# user tries to move a task to a different project:
