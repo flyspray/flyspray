@@ -95,54 +95,47 @@ foreach ($projects as $project): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('progress')); ?></th>
     <td>
-        <?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>% <?php echo Filters::noXSS(L('done')); ?>
+      <?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>% <?php echo Filters::noXSS(L('done')); ?>
 
-        <?php $progressbar_value = $stats[$project['project_id']]['average_done']; ?>
+      <?php $progressbar_value = $stats[$project['project_id']]['average_done']; ?>
 
-        <div class="progress_bar_container">
-          <span><?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>%</span>
-          <div class="progress_bar" style="width:<?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>%"></div>
-        </div>        
+      <div class="progress_bar_container">
+        <span><?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>%</span>
+        <div class="progress_bar" style="width:<?php echo Filters::noXSS($stats[$project['project_id']]['average_done']); ?>%"></div>
+      </div>        
     </td>
   </tr>
   <?php
-        if ($projprefs[$project['project_id']]['use_effort_tracking']) {
-        $total_estimated = 0;
-        $actual_effort = 0;
+  if($projprefs[$project['project_id']]['use_effort_tracking']) :
+    $total_estimated = 0;
+    $actual_effort = 0;
 
-        foreach($stats[$project['project_id']]['tasks'] as $task) {
-            $total_estimated += $task['estimated_effort'];
-            $effort = new effort($task['task_id'],0);
-            $effort->populateDetails();
+    if(isset($stats[$project['project_id']]['tasks'])) :
+      foreach($stats[$project['project_id']]['tasks'] as $task) {
+        $total_estimated += $task['estimated_effort'];
+        $effort = new effort($task['task_id'],0);
+        $effort->populateDetails();
 
-            foreach($effort->details as $details) {
-                $actual_effort += $details['effort'];
-            }
-            $effort = null;
+        foreach($effort->details as $details) {
+          $actual_effort += $details['effort'];
         }
+        $effort = null;
+      }
+    endif;
 
-  ?>
-  <?php if ($user->perms('view_estimated_effort', $project['project_id'])) { ?>
+    if ($user->perms('view_estimated_effort', $project['project_id'])) : ?>
   <tr>
-      <th>
-          <?php echo Filters::noXSS(L('estimatedeffortopen')); ?>
-      </th>
-      <td>
-          <?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>
-      </td>
+    <th><?php echo Filters::noXSS(L('estimatedeffortopen')); ?></th>
+    <td><?php echo effort::SecondsToString($total_estimated, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?></td>
   </tr>
-  <?php } ?>
-  <?php if ($user->perms('view_current_effort_done', $project['project_id'])) { ?>
+  <?php endif; ?>
+  <?php if ($user->perms('view_current_effort_done', $project['project_id'])) : ?>
   <tr>
-      <th>
-          <?php echo Filters::noXSS(L('currenteffortdoneopen')); ?>
-      </th>
-      <td>
-          <?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>
-      </td>
+    <th><?php echo Filters::noXSS(L('currenteffortdoneopen')); ?></th>
+    <td><?php echo effort::SecondsToString($actual_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?></td>
   </tr>
-  <?php } ?>
-  <?php } ?>
+    <?php endif; ?>
+  <?php endif; ?>
 <?php if($projprefs[$project['project_id']]['others_view']==1): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('feeds')); ?></th>
