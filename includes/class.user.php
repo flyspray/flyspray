@@ -530,7 +530,7 @@ class User
         $days = $days->format('%a');
         $results = array();
 
-        for ($i = 0; $i < $days; $i++) {
+        for ($i = $days; $i > 0; $i--) {
             $event_date = (string) strtotime("-{$i} day", $date_end);
             $results[date('Y-m-d', $event_date)] = 0;
         }
