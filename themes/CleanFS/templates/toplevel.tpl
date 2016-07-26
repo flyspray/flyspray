@@ -78,6 +78,9 @@ foreach ($projects as $project): ?>
     <?php endif; ?>
   </tr>
 <?php endif; ?>  
+<?php
+# lets say if someone can view normal tasks of a project, then activity graphs are allowed.
+if($user->can_view_project($project['project_id']) ) : ?>
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
   	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
@@ -88,6 +91,8 @@ foreach ($projects as $project): ?>
   	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
   </tr>
   <?php endif; ?>
+<?php endif; ?>
+<?php if($projprefs[$project['project_id']]['others_viewroadmap'] || ($user->perms('view_roadmap', $project['project_id'])) ) : ?>
   <tr>
     <th><?php echo Filters::noXSS(L('stats')); ?></th>
     <td><?php echo Filters::noXSS($stats[$project['project_id']]['open']); ?> <?php echo Filters::noXSS(L('opentasks')); ?>, <?php echo Filters::noXSS($stats[$project['project_id']]['all']); ?> <?php echo Filters::noXSS(L('totaltasks')); ?>.</td>
@@ -105,7 +110,8 @@ foreach ($projects as $project): ?>
       </div>        
     </td>
   </tr>
-  <?php
+<?php endif; ?>
+<?php
   if($projprefs[$project['project_id']]['use_effort_tracking']) :
     $total_estimated = 0;
     $actual_effort = 0;
