@@ -82,7 +82,7 @@ class dokuwiki_TextFormatter
     	$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
         $rows = intval($rows);
         $cols = intval($cols);
-        $return = '<div id="dokuwiki_toolbar">'
+        $return = '<div class="dokuwiki_toolbar">'
         		. dokuwiki_TextFormatter::getDokuWikiToolbar( $attrs['id'] )
         		. '</div>';
         
