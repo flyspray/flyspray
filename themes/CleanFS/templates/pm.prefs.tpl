@@ -30,6 +30,10 @@
       </li>
 
       <li>
+          <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
+          <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
+      </li>
+      <li class="disp_introdep">
         <label class="labeltextarea"><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
           <?php
             $pages = array(
@@ -47,7 +51,7 @@
           ?>
       </li>
 
-      <li>
+      <li class="disp_introdep">
           <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
           <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
@@ -68,11 +72,6 @@
       <li>
           <label for="isactive"><?php echo Filters::noXSS(L('isactive')); ?></label>
           <?php echo tpl_checkbox('project_is_active', Post::val('project_is_active', $proj->prefs['project_is_active']), 'isactive'); ?>
-      </li>
-
-      <li>
-          <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
-          <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
       </li>
 
       <li>
