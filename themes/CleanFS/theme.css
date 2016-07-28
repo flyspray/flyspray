@@ -71,6 +71,16 @@ body a.button.positive, body button.positive,
 body a.button.positive, body button.positive {
 	color: #fff;
 }
+
+#disp_intro:not(:checked) ~ .disp_introdep{
+        background-color:#ddd;
+}
+#disp_intro:not(:checked) ~ .disp_introdep select,
+#disp_intro:not(:checked) ~ .disp_introdep textarea{
+        background-color:#eee;
+        color:#666;
+}
+
 /* end default Flyspray color scheme */
 
 body {
@@ -1140,6 +1150,8 @@ ul.slim .userSelectWidget select {width:100%;}
   min-width: 12em;
   width: auto;
 }
+
+#disp_intro + label{text-align:start;}
 
 /* list management */
 .list .cname {width:200px;}
