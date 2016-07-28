@@ -1076,6 +1076,10 @@ Regards,',
 'movecursordown'          => 'move cursor down',
 'taskdetails'             => 'Task Details',
 'taskediting'             => 'Task Editing',
-'savetask'                => 'save task'
+'savetask'                => 'save task',
+'editorbold'              => 'bold',
+'editoritalic'            => 'italic',
+'editorunderline'         => 'underline',
+'editorstrikethrough'     => 'strikethrough'
 );
 ?>
