@@ -28,36 +28,32 @@
             <?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
           </select>
       </li>
-
-      <li>
-          <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
-          <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
-      </li>
+      
+      <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
+      <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
       <li class="disp_introdep">
-        <label class="labeltextarea"><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
-          <?php
-            $pages = array(
-                'index' => L('tasklist'),
-                'toplevel' => L('toplevel'),
-                'newmultitasks' => L('addmultipletasks'),
-                'details' => L('details'),
-                'roadmap' => L('roadmap'),
-                'newtask' => L('newtask'),
-                'reports' => L('reports'),
-                'depends' => L('dependencygraph'),
-                'pm' => L('manageproject'));
-            $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
-            echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
-          ?>
-      </li>
-
-      <li class="disp_introdep">
-          <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+        <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
+        <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
           <div class="hide preview" id="preview"></div>
           <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
-          <?php endif; ?>
-          <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message'])); ?>
+        <?php endif; ?>
+        <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message'])); ?>
+
+        <label class="labeltextarea"><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+        <?php
+          $pages = array(
+            'index' => L('tasklist'),
+            'toplevel' => L('toplevel'),
+            'newmultitasks' => L('addmultipletasks'),
+            'details' => L('details'),
+            'roadmap' => L('roadmap'),
+            'newtask' => L('newtask'),
+            'reports' => L('reports'),
+            'depends' => L('dependencygraph'),
+            'pm' => L('manageproject'));
+          $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
+          echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
+        ?>
       </li>
 
       <li>
