@@ -1063,6 +1063,10 @@ $translation = array(
 'taskdetails'             => 'Aufgabendetails',
 'taskediting'             => 'Aufgabenbearbeitung',
 'savetask'                => 'speichere Aufgabe',
+'editorbold'              => 'fett',
+'editoritalic'            => 'kursiv',
+'editorunderline'         => 'unterstrichen',
+'editorstrikethrough'     => 'durchstreichen'
 );
 
 ?>
