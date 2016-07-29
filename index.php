@@ -196,6 +196,25 @@ if (!defined('NO_DO')) {
     # not nicest solution, NO_DO currently only used on register actions 
     $page->pushTpl('register.ok.tpl');
 }
+
+# 2016-07-29 peterdd: The following 2 optional install wide template assignments will make upgrading a Flyspray installation which needs to be integrated into an existing website a nobrainer in future.
+# Because the 2 variables are loaded from flyspray database, there is no need to change the default CleanFS template files and your own CSS style modifications is kept in your custom_*.css
+# You can keep stuff like a custom topbar that contains links to a sitewide wiki or CMS or whatever by storing it in flysprays database prefs table.
+# Project specific stuff like optional linking to a wiki for a project maybe be handled similiar by the project database table in future.
+
+# Open questions: Should we treat that as dokuwiki content (if dokuwiki is the 'syntax_plugin')?
+# Or even eval it as php-code, which can be dangerous, but gives the most freedom and creativity.
+# (For installs where all admin users are real admins of the hosting area, so they know what they are doing. Not intended for SaaS.)?
+if(isset($fs->prefs['general_integration'])){
+        # adds within the body before the footer div, but could appear as a whole or parts anywhere on the page by due custom CSS styling, for example as top linkbar.
+        $page->assign('general_integration', $fs->prefs['general_integration']);
+}
+if(isset($fs->prefs['footer_integration'])){
+        # goes within the footer div, but still could appear as a whole or parts anywhere on the page by due custom CSS styling, for example as top linkbar.
+        $page->assign('footer_integration', $fs->prefs['footer_integration']);
+}
+# 2016-07-29 end
+
 $page->pushTpl('footer.tpl');
 $page->setTheme($proj->prefs['theme_style']);
 $page->render();
