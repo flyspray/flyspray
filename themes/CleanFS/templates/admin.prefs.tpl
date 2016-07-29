@@ -453,7 +453,21 @@ function testEmail(){
             ?>
           </li>
 
-        </ul>
+	<?php if(isset($fs->prefs['general_integration'])): ?>
+	<li>
+	<label class="labeltextarea"><?php echo Filters::noXSS(L('generalintegration')); ?></label>
+	<?php echo TextFormatter::textarea('general_integration', 8, 70, array('id'=>'general_integration'), Post::val('general_integration', $fs->prefs['general_integration'])); ?>
+	</li>
+	<?php endif; ?>
+
+	<?php if(isset($fs->prefs['footer_integration'])): ?>
+	<li>
+	<label class="labeltextarea"><?php echo Filters::noXSS(L('footerintegration')); ?></label>
+	<?php echo TextFormatter::textarea('footer_integration', 8, 70, array('id'=>'footer_integration'), Post::val('footer_integration', $fs->prefs['footer_integration'])); ?>
+	</li>
+	<?php endif; ?>
+
+	</ul>
     </div>
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
