@@ -1196,7 +1196,7 @@ switch ($action = Req::val('action'))
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
-		'custom_style');
+		'custom_style', 'general_integration', 'footer_integration');
         if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
             unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
         	// if you think different, modify functions in class.user.php directing different regiser tpl
