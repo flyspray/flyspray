@@ -1063,10 +1063,18 @@ $translation = array(
 'taskdetails'             => 'Aufgabendetails',
 'taskediting'             => 'Aufgabenbearbeitung',
 'savetask'                => 'speichere Aufgabe',
-'editorbold'              => 'fett',
-'editoritalic'            => 'kursiv',
-'editorunderline'         => 'unterstrichen',
-'editorstrikethrough'     => 'durchstreichen'
+'generalintegration'      => 'Integration allgemein',
+'generalintegrationdesc'  => 'Der Inhalt wird innerhalb des "body"-Tags nach dem Hauptinhalt und vor dem Fußbereich eingesetzt. Wo dieser Inhalt dann wirklich auf dem Display zu sehen ist, ist durch CSS beeinflußbar. Sie können dafür eine custom_*.css nutzen.',
+'footerintegration'       => 'Integration Fußbereich',
+'footerintegrationdesc'   => 'Der Inhalt wird innerhalb des Fußbereiches eingesetzt. Wo dieser Inhalt dann wirklich auf dem Display zu sehen ist, ist durch CSS beeinflußbar. Sie können dafür eine custom_*.css nutzen.',
+'editorbold'              => 'f',
+'editorboldhint'          => 'fett',
+'editoritalic'            => 'k',
+'editoritalichint'        => 'kursiv',
+'editorunderline'         => 'u',
+'editorunderlinehint'     => 'unterstrichen',
+'editorstrikethrough'     => 'd',
+'editorstrikethroughhint' => 'durchgestrichen',
 );
 
 ?>
