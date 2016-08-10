@@ -44,7 +44,7 @@ class Doku_LexerParallelRegex {
      *                            for insensitive.
      *    @access public
      */
-    function Doku_LexerParallelRegex($case) {
+    function __construct($case) {
         $this->_case = $case;
         $this->_patterns = array();
         $this->_labels = array();
@@ -234,7 +234,7 @@ class Doku_LexerStateStack {
      *    @param string $start        Starting state name.
      *    @access public
      */
-    function Doku_LexerStateStack($start) {
+    function __construct($start) {
         $this->_stack = array($start);
     }
 
@@ -298,7 +298,7 @@ class Doku_Lexer {
      *    @param boolean $case            True for case sensitive.
      *    @access public
      */
-    function Doku_Lexer(&$parser, $start = "accept", $case = false) {
+    function __construct(&$parser, $start = "accept", $case = false) {
         $this->_case = $case;
         $this->_regexes = array();
         $this->_parser = &$parser;
