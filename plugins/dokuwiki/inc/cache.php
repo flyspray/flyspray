@@ -21,7 +21,7 @@ class cache {
 
   var $_event = '';       // event to be triggered during useCache
 
-  function cache($key,$ext) {
+  function __construct($key,$ext) {
     $this->key = $key;
     $this->ext = $ext;
     $this->cache = getCacheName($key,$ext);
@@ -167,12 +167,12 @@ class cache_parser extends cache {
 
   var $_event = 'PARSER_CACHE_USE';
 
-  function cache_parser($id, $file, $mode) {
+  function __construct($id, $file, $mode) {
     if ($id) $this->page = $id;
     $this->file = $file;
     $this->mode = $mode;
 
-    parent::cache($file.$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'],'.'.$mode);
+    parent::__construct($file.$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'],'.'.$mode);
   }
 
   function _useCache() {
@@ -276,8 +276,8 @@ class cache_renderer extends cache_parser {
 
 class cache_instructions extends cache_parser {
 
-  function cache_instructions($id, $file) {
-    parent::cache_parser($id, $file, 'i');
+  function __construct($id, $file) {
+    parent::__construct($id, $file, 'i');
   }
 
   function retrieveCache($clean=true) {
