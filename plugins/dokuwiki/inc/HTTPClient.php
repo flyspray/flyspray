@@ -24,11 +24,11 @@ class DokuHTTPClient extends HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function DokuHTTPClient(){
+    function __construct(){
         global $conf;
 
         // call parent constructor
-        $this->HTTPClient();
+        parent::__construct();
 
         // set some values from the config
         $this->proxy_host = $conf['proxy']['host'];
@@ -88,7 +88,7 @@ class HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function HTTPClient(){
+    function __construct(){
         $this->agent        = 'Mozilla/4.0 (compatible; DokuWiki HTTP Client; '.PHP_OS.')';
         $this->timeout      = 15;
         $this->cookies      = array();
