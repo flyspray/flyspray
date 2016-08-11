@@ -506,7 +506,11 @@ function p_xhtml_cached_geshi($code, $language) {
     $geshi->set_encoding('utf-8');
     $geshi->enable_classes();
     $geshi->set_header_type(GESHI_HEADER_PRE);
-    $geshi->set_overall_class("code $language");
+
+    #$geshi->set_overall_class("code $language");
+    # geshi 1.0.8.* now adds the language first
+    $geshi->set_overall_class("code");
+    
     $geshi->set_link_target($conf['target']['extern']);
 
     $highlighted_code = $geshi->parse_code();
