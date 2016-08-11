@@ -141,8 +141,8 @@ del { color:#666; }
 */
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
-/* only matches pre tags if there is a language set too e.g. '<pre class="code php">' */
-pre[class*="code "]::before {
+/* only matches pre tags if there is a language set too e.g. '<pre class="php code">' */
+pre[class*=" code"]::before {
     background: #eee none repeat scroll 0 0;
     content: attr(class);
     display: block;
