@@ -639,7 +639,9 @@ class Flyspray
         if (strtolower($pwcrypt) == 'sha1') {
             return sha1($password);
         } elseif (strtolower($pwcrypt) == 'md5') {
-            return md5($password);
+			return md5($password);
+		} elseif (strtolower($pwcrypt) == 'sha512'){
+			return hash("sha512", $password);
         } else {
             return crypt($password);
         }
@@ -686,9 +688,12 @@ class Flyspray
             case 40:
                 $password = sha1($password);
                 break;
-            case 32:
-                $password = md5($password);
-                break;
+			case 32:
+				$password = md5($password);
+				break;
+			case 128:
+				$password = hash('sha512',$password);
+				break;
             default:
                 $password = crypt($password, $auth_details['user_pass']); //using the salt from db
                 break;
