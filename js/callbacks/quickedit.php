@@ -66,9 +66,15 @@ switch(Post::val('name')){
 		$value = intval($value);
 		break;
 
-	case 'task_priority':
 	case 'task_severity':
 		if(!preg_match("/^[1-5]$/", $value)){
+			header(':', true, 403);
+			die(L('invalidvalue'));
+		}
+		break;
+
+	case 'task_priority':
+		if(!preg_match("/^[1-6]$/", $value)){
 			header(':', true, 403);
 			die(L('invalidvalue'));
 		}
