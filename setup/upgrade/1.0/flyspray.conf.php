@@ -13,7 +13,7 @@ cookiesalt = "f1s" ; Randomisation value for cookie encoding
 output_buffering = "on" ; Available options: "off", "on" and "gzip"
 address_rewriting = "0" ; Boolean. 0 = off, 1 = on.
 reminder_daemon = "0" ; Boolean. 0 = off, 1 = on.
-passwdcrypt = "" ; Available options: "" - chooses best default (currently "crypt"), "crypt", "md5", "sha1" Note: md5 and sha1 are considered insecure for hashing passwords.
+passwdcrypt = "" ; Available options: "" - chooses best default (currently "crypt"), "crypt", "md5", "sha1", "sha512" Note: md5 and sha1 are considered insecure for hashing passwords (statement date: 2016)
 doku_url = "http://en.wikipedia.org/wiki/" ; URL to your external wiki for [[dokulinks]] in FS
 syntax_plugin = "none" ; Plugin name for syntax format for task description and other textarea fields, "none" for the default ckeditor (or any nonexistent plugin folder name), popular alternative: "dokuwiki", see plugins/ directory
 update_check = "1" ; Boolean. 0 = off, 1 = on.
