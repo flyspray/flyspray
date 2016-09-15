@@ -46,7 +46,7 @@
     <field name="user_name" type="C" size="32">
       <NOTNULL/>
     </field>
-    <field name="user_pass" type="C" size="60"/>
+    <field name="user_pass" type="C" size="128"/>
     <field name="real_name" type="C" size="100">
       <NOTNULL/>
     </field>
