@@ -634,14 +634,14 @@ class Flyspray
     public static function cryptPassword($password)
     {
         global $conf;
-        $pwcrypt = $conf['general']['passwdcrypt'];
+        $pwcrypt = strtolower($conf['general']['passwdcrypt']);
 
-        if (strtolower($pwcrypt) == 'sha1') {
+        if ($pwcrypt == 'sha1') {
             return sha1($password);
-        } elseif (strtolower($pwcrypt) == 'md5') {
+        } elseif ($pwcrypt == 'md5') {
 			return md5($password);
-		} elseif (strtolower($pwcrypt) == 'sha512'){
-			return hash("sha512", $password);
+		} elseif ($pwcrypt == 'sha512') {
+			return hash('sha512', $password);
         } else {
             return crypt($password);
         }
