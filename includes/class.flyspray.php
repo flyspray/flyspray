@@ -631,21 +631,21 @@ class Flyspray
      * @return string
      * @version 1.0
      */
-    public static function cryptPassword($password)
-    {
-        global $conf;
-        $pwcrypt = strtolower($conf['general']['passwdcrypt']);
-
-        if ($pwcrypt == 'sha1') {
-            return sha1($password);
-        } elseif ($pwcrypt == 'md5') {
+	public static function cryptPassword($password)
+	{
+		global $conf;
+		$pwcrypt = strtolower($conf['general']['passwdcrypt']);
+		
+		if ($pwcrypt == 'sha1') {
+			return sha1($password);
+		} elseif ($pwcrypt == 'md5') {
 			return md5($password);
 		} elseif ($pwcrypt == 'sha512') {
 			return hash('sha512', $password);
-        } else {
-            return crypt($password);
-        }
-    } // }}}
+		} else {
+			return crypt($password);
+		}
+	} // }}}
     // {{{
     /**
      * Check if a user provided the right credentials
