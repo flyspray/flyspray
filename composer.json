@@ -9,7 +9,7 @@
         "swiftmailer/swiftmailer": "~5.0",
         "adodb/adodb-php": "~5.20",
         "jamiebicknell/Sparkline": "1.*",
-        "league/oauth2-client": "~1.0"
+        "league/oauth2-client": "~0.12"
     },
     "repositories": [
         {
