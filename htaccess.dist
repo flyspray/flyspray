@@ -50,6 +50,12 @@ php_flag always_populate_raw_post_data Off
 	Deny From All
 </LimitExcept>
 
+# Some hostings have autocorrection of minor misspelled URLs enabled.
+# We do not want that for Flyspray as it could lead to subtile unwanted behavior.
+<IfModule mod_speling.c>
+	CheckSpelling Off
+</IfModule>
+
 # probably mod_negotiation plays foul with mod_rewrite on this two rules:
 #     RewriteRule ^index$ index.php?do=index [L,QSA]
 #     RewriteRule ^index/proj([0-9]+)$ index.php?do=index&project=$1 [L,QSA]
