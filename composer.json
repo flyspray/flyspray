@@ -7,7 +7,7 @@
     "license": "LGPL-2.1",
     "require": {
         "swiftmailer/swiftmailer": "@stable",
-        "adodb/adodb-php": "5.*",
+        "adodb/adodb-php": ">=5.19",
         "jamiebicknell/Sparkline": "1.*",
         "league/oauth2-client": "@stable"
     },
