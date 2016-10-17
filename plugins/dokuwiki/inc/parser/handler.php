@@ -18,7 +18,7 @@ class Doku_Handler {
 
     var $rewriteBlocks = TRUE;
 
-    function Doku_Handler() {
+    __construct Doku_Handler() {
         $this->CallWriter = new Doku_Handler_CallWriter($this);
     }
 
@@ -700,7 +700,7 @@ class Doku_Handler_CallWriter {
 
     var $Handler;
 
-    function Doku_Handler_CallWriter(& $Handler) {
+    __construct Doku_Handler_CallWriter(& $Handler) {
         $this->Handler = & $Handler;
     }
 
@@ -739,7 +739,7 @@ class Doku_Handler_Nest {
      * @param  string     $close          closing instruction name, this is required to properly terminate the
      *                                    syntax mode if the document ends without a closing pattern
      */
-    function Doku_Handler_Nest(& $CallWriter, $close="nest_close") {
+    __construct Doku_Handler_Nest(& $CallWriter, $close="nest_close") {
         $this->CallWriter = & $CallWriter;
 
         $this->closingInstruction = $close;
@@ -775,7 +775,7 @@ class Doku_Handler_List {
     var $listCalls = array();
     var $listStack = array();
 
-    function Doku_Handler_List(& $CallWriter) {
+    __construct Doku_Handler_List(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
     }
 
@@ -970,7 +970,7 @@ class Doku_Handler_Preformatted {
 
 
 
-    function Doku_Handler_Preformatted(& $CallWriter) {
+    __construct Doku_Handler_Preformatted(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
     }
 
@@ -1022,7 +1022,7 @@ class Doku_Handler_Quote {
 
     var $quoteCalls = array();
 
-    function Doku_Handler_Quote(& $CallWriter) {
+    __construct Doku_Handler_Quote(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
     }
 
@@ -1118,7 +1118,7 @@ class Doku_Handler_Table {
     var $firstCell = FALSE;
     var $lastCellType = 'tablecell';
 
-    function Doku_Handler_Table(& $CallWriter) {
+    __construct Doku_Handler_Table(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
     }
 
@@ -1428,7 +1428,7 @@ class Doku_Handler_Block {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function Doku_Handler_Block(){
+    __construct Doku_Handler_Block(){
         global $DOKU_PLUGINS;
         //check if syntax plugins were loaded
         if(empty($DOKU_PLUGINS['syntax'])) return;
