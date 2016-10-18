@@ -1302,7 +1302,7 @@ div.denyform {
 	height:auto;
 	padding:5px 30px 5px 5px;
 }
-#notify_types {height: 10em;}
+/*#notify_types {height: 10em;}*/
 #rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
