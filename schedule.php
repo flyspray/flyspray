@@ -27,8 +27,8 @@ include_once BASEDIR . '/includes/class.notify.php';
 function send_reminders() {
   global $db, $fs, $proj;
 
-  $notify = & new Notifications;
-  $user = & new User(0);
+  $notify = new Notifications;
+  $user = new User(0);
   $now = time();
   $lang = $fs->prefs['lang_code'];
 
