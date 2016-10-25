@@ -183,8 +183,12 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
     $page->assign('admin_emails', array_map(create_function('$x', 'return str_replace("@", "#", $x);'), $db->fetchCol($sql)));
 }
 
-// default title
-$page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
+// title tag
+if( $user->can_select_project($proj->id)){
+	$page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
+} else{
+	$page->setTitle($fs->prefs['page_title'].' restricted');
+}
 
 $page->assign('do', $do);
 $page->assign('supertask_id', $supertask_id);
