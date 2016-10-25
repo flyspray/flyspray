@@ -1,4 +1,3 @@
-﻿// ** I18N
 Calendar._DN = new Array
 ("Κυριακή",
  "Δευτέρα",
@@ -18,6 +17,8 @@ Calendar._SDN = new Array
  "Πα",
  "Σα",
  "Κυ");
+
+Calendar._FD = 1;
 
 Calendar._MN = new Array
 ("Ιανουάριος",
