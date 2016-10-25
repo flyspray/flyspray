@@ -187,7 +187,7 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
 if( $user->can_select_project($proj->id)){
 	$page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
 } else{
-	$page->setTitle($fs->prefs['page_title'].' restricted');
+	$page->setTitle($fs->prefs['page_title']);
 }
 
 $page->assign('do', $do);
