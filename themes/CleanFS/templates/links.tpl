@@ -114,7 +114,9 @@ endif; ?>
 	endif; ?>
 	</ul>
 	<div id="pmcontrol">
-		<div id="projectselector">
+		<div id="projectselector"><?php
+                # $fs->projects is filtered with can_select_project() for the current user/guest in index.php
+                if(count($fs->projects)>0): ?>
 			<form id="projectselectorform" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 				<select name="project" onchange="document.getElementById('projectselectorform').submit()">
 				<?php echo tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id); ?>
@@ -133,12 +135,14 @@ endif; ?>
 					<?php endif;
 				endforeach; ?>
 			</form>
-		</div>
-		<div id="showtask">
+		<?php endif; ?></div>
+		<div id="showtask"><?php
+                # $fs->projects is filtered with can_select_project() for the current user/guest in index.php
+                if(count($fs->projects)>0): ?>
 			<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 				<noscript><button type="submit"><?php echo Filters::noXSS(L('showtask')); ?> #</button></noscript>
 				<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" placeholder="<?php echo Filters::noXSS(L('showtask')); ?> #" />
 			</form>
-		</div>
+		<?php endif; ?></div>
 	</div>
 </div>
