@@ -28,6 +28,9 @@ Calendar._SDN = new Array
  "Sob",
  "Ned");
 
+// first day of week, 0=sunday 1=monday
+Calendar._FD = 1;
+
 // full month names
 Calendar._MN = new Array
 ("JanuĂˇr",
@@ -88,6 +91,16 @@ Calendar._TT["DRAG_TO_MOVE"] = "PodrĹľanĂ­m tlaÄŤĂ­tka zmenĂ­te polohu
 Calendar._TT["PART_TODAY"] = " (dnes)";
 Calendar._TT["MON_FIRST"] = "ZobraziĹĄ pondelok ako prvĂ˝";
 Calendar._TT["SUN_FIRST"] = "ZobraziĹĄ nedeÄľu ako prvĂş";
+
+// the following is to inform that "%s" is to be the first day of week
+// %s will be replaced with the day name.
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent.  It specifies the week-end days, as an array
+// of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
 Calendar._TT["CLOSE"] = "ZavrieĹĄ";
 Calendar._TT["TODAY"] = "Dnes";
 Calendar._TT["TIME_PART"] = "(Shift-)klik/ĹĄahanie zmenĂ­ hodnotu";
