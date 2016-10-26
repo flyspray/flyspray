@@ -43,6 +43,9 @@ Calendar._SDN = new Array
  "Sa",
  "So");
 
+// First day of the week. 0 means Sunday, 1 means Monday
+Calendar._FD = 1;
+
 // full month names
 Calendar._MN = new Array
 ("Januar",
