@@ -38,7 +38,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 
     <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/prototype/prototype.js"></script>
     <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/script.aculo.us/scriptaculous.js"></script>
-    <?php if ('index' == $do || 'details' == $do): ?>
+    <?php if ('index' == $do || ('details' == $do && $user->can_view_project($proj->id)): ?>
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/<?php echo Filters::noXSS($do); ?>.js"></script>
     <?php endif; ?>
     <?php if ( $do == 'pm' || $do == 'admin'): ?>
