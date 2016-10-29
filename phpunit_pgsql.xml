@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="Tests/bootstrap.php" colors="true">
 <php>
-<var name="db_dsn" value="pgsql:dbname=flyspray_test;host=localhost"/>
-<var name="dbtype" value="pgsql"/>
-<var name="dbhost" value="localhost"/>
-<var name="dbname" value="flyspray_test"/>
-<var name="dbuser" value="postgres"/>
-<var name="dbpass" value=""/>
-<var name="dbprefix" value="flyspray_"/>
+  <var name="db_dsn" value="pgsql:dbname=flyspray_test;host=localhost"/>
+  <var name="dbtype" value="pgsql"/>
+  <var name="dbhost" value="localhost"/>
+  <var name="dbname" value="flyspray_test"/>
+  <var name="dbuser" value="postgres"/>
+  <var name="dbpass" value=""/>
+  <var name="dbprefix" value="flyspray_"/>
 </php>
 <testsuites>
-<testsuite name="Flyspray Test Suite">
-<directory>./Tests/</directory>
-</testsuite>
+  <testsuite name="Flyspray Test Suite">
+    <directory>./Tests/</directory>
+  </testsuite>
 </testsuites>
 <filter>
-<whitelist>
-<directory>./</directory>
-<exclude>
-<directory>./Tests</directory>
-</exclude>
-</whitelist>
+  <whitelist>
+    <directory>./</directory>
+    <exclude>
+      <directory>./Tests</directory>
+      <directory>./vendor</directory>
+    </exclude>
+  </whitelist>
 </filter>
 </phpunit>
