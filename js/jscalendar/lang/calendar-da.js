@@ -58,6 +58,8 @@ Calendar._MN = new Array
 "November",
 "December");
 
+Calendar._FD = 1;
+
 // short month names
 Calendar._SMN = new Array
 ("Jan",
