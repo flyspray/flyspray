@@ -2667,37 +2667,35 @@ switch ($action = Req::val('action'))
         }
 
         // check that supertask_id is not same as task_id
-        // preventint it from referring to it self
+        // preventing it from referring to itself
         if (Post::val('task_id') == Post::val('supertask_id')) {
             Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
         }
-        //Check that the supertask_id is a numeric value
-        if (!is_integer((int)Post::val('supertask_id')))
-        {
-            Flyspray::show_error(L('invalidsupertaskid'));
-            break;
-        }
+ 
+	// Check that the supertask_id looks like unsigned integer
+	if ( !preg_match("/^[1-9][0-9]{0,8}$/", Post::val('supertask_id')) ) {
+		Flyspray::show_error(L('invalidsupertaskid'));
+		break;
+	}
+	
+	$sql = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::val('supertask_id')) );
+	// check that supertask_id is a valid task id
+	$parent = $db->fetchRow($sql);
+	if (!$parent) {
+		Flyspray::show_error(L('invalidsupertaskid'));
+		break;
+	}
 
-        $sql = $db->Query('SELECT project_id FROM {tasks}
-                           WHERE  task_id = '.Post::val("supertask_id").';');
-
-        // check that supertask_id is a valid task id
-        $parent = $db->fetchRow($sql);
-        if (!$parent) {
-            Flyspray::show_error(L('invalidsupertaskid'));
-            break;
-        }
-
-        // if the user has not the permission to view all tasks, check if the task
-        // is in tasks allowed to see, otherwise tell that the task does not exist.
-        if (!$user->perms('view_tasks')) {
+	// if the user has not the permission to view all tasks, check if the task
+	// is in tasks allowed to see, otherwise tell that the task does not exist.
+	if (!$user->perms('view_tasks')) {
             $taskcheck = Flyspray::GetTaskDetails(Post::val('supertask_id'));
             if (!$user->can_view_task($taskcheck)) {
                 Flyspray::show_error(L('invalidsupertaskid'));
                 break;
             }
-        }
+	}
 
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $parent['project_id']) {
@@ -2705,13 +2703,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        //finally looks like all the checks are valid so update the supertask_id for the current task
+        // finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
                      WHERE  task_id = ?',
         array(Post::val('supertask_id'),Post::val('task_id')));
 
-        // If task already had a different parent, the log removal too
+        // If task already had a different parent, then log removal too
         if ($task['supertask_id']) {
             Flyspray::logEvent($task['supertask_id'], 33, Post::val('task_id'));
             Flyspray::logEvent(Post::val('task_id'), 35, $task['supertask_id']);
