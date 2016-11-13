@@ -11,6 +11,9 @@
         "jamiebicknell/Sparkline": "1.*",
         "league/oauth2-client": "@stable"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
     "repositories": [
         {
             "type": "vcs",
