@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="Tests/bootstrap.php" colors="true">
 <php>
+  <ini name="memory_limit" value="-1" />
   <var name="db_dsn" value="pgsql:dbname=flyspray_test;host=localhost"/>
   <var name="dbtype" value="pgsql"/>
   <var name="dbhost" value="localhost"/>
