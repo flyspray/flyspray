@@ -31,7 +31,7 @@
 
         <button class="submit" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');"><?php echo Filters::noXSS(L('deny')); ?></button>
         <div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
-            <?php echo tpl_form(Filters::noXSS(CreateUrl('denyuserreq'))); ?> 
+            <?php echo tpl_form(Filters::noXSS(CreateUrl('admin','userrequest'))); ?> 
             <div>
               <input type="hidden" name="action" value="denyuserreq" />
               <input type="hidden" name="req_id" value="<?php echo Filters::noXSS($req['request_id']); ?>" />
