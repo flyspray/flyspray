@@ -405,6 +405,15 @@ switch ($action = Req::val('action'))
 	$db->Query($sqlupdate, $sqlparam);
 */
 
+	$detailed_desc = Post::val('detailed_desc', $defaults['detailed_desc']);
+
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$detailed_desc = $purifier->purify($detailed_desc);
+	}
+		
 	$db->Query('UPDATE {tasks}
 		SET
 		project_id = ?,
@@ -429,7 +438,7 @@ switch ($action = Req::val('action'))
 			Post::val('project_id', $defaults['project_id']),
 			Post::val('task_type', $defaults['task_type']),
 			Post::val('item_summary', $defaults['item_summary']),
-			Post::val('detailed_desc', $defaults['detailed_desc']),
+			$detailed_desc,
 			Post::val('item_status', $defaults['item_status']),
 			intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
 			Post::val('product_category', $defaults['product_category']),
