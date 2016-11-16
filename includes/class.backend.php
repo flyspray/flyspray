@@ -1071,6 +1071,13 @@ abstract class Backend
             $sql_args['mark_private'] = intval($sql_args['mark_private'] == '1');
         }
 
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
+	}
+
         // split keys and values into two separate arrays
         $sql_keys   = array();
         $sql_values = array();
