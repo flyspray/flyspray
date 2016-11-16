@@ -439,7 +439,7 @@ abstract class Backend
 	    foreach($_POST[$source] as $text) {
 			$text = filter_var($text, FILTER_SANITIZE_URL);
 		
-			if( preg_match( '/^\s*(javascript:|data:)/', $url)){
+			if( preg_match( '/^\s*(javascript:|data:)/', $text)){
 				continue;
 			}
 		    
