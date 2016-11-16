@@ -309,6 +309,12 @@ abstract class Backend
             return false;
         }
 
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$comment_text = $purifier->purify($comment_text);
+	}
+	    
         if (!is_string($comment_text) || !strlen($comment_text)) {
             return false;
         }
