@@ -309,6 +309,12 @@ abstract class Backend
             return false;
         }
 
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$comment_text = $purifier->purify($comment_text);
+	}
+	    
         if (!is_string($comment_text) || !strlen($comment_text)) {
             return false;
         }
@@ -1064,6 +1070,13 @@ abstract class Backend
         if (isset($sql_args['mark_private'])) {
             $sql_args['mark_private'] = intval($sql_args['mark_private'] == '1');
         }
+
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
+	}
 
         // split keys and values into two separate arrays
         $sql_keys   = array();

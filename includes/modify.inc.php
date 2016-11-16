@@ -405,6 +405,15 @@ switch ($action = Req::val('action'))
 	$db->Query($sqlupdate, $sqlparam);
 */
 
+	$detailed_desc = Post::val('detailed_desc', $defaults['detailed_desc']);
+
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$detailed_desc = $purifier->purify($detailed_desc);
+	}
+		
 	$db->Query('UPDATE {tasks}
 		SET
 		project_id = ?,
@@ -429,7 +438,7 @@ switch ($action = Req::val('action'))
 			Post::val('project_id', $defaults['project_id']),
 			Post::val('task_type', $defaults['task_type']),
 			Post::val('item_summary', $defaults['item_summary']),
-			Post::val('detailed_desc', $defaults['detailed_desc']),
+			$detailed_desc,
 			Post::val('item_status', $defaults['item_status']),
 			intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
 			Post::val('product_category', $defaults['product_category']),
@@ -2151,11 +2160,20 @@ switch ($action = Req::val('action'))
 
         $where = '';
 
-        $params = array(Post::val('comment_text'), time(),
-                        Post::val('comment_id'), $task['task_id']);
+		$comment_text=Post::val('comment_text');
+		$previous_text=Post::val('previous_text');
+		
+		# dokuwiki syntax plugin filters on output
+		if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+			$purifierconfig = HTMLPurifier_Config::createDefault();
+			$purifier = new HTMLPurifier($purifierconfig);
+			$comment_text = $purifier->purify($comment_text);
+			$previous_text= $purifier->purify($comment_text);
+		}
 
+		$params = array($comment_text, time(), Post::val('comment_id'), $task['task_id']);
+ 
         if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
-
             $where = ' AND user_id = ?';
             array_push($params, $user->id);
         }
@@ -2165,8 +2183,7 @@ switch ($action = Req::val('action'))
                      WHERE  comment_id = ? AND task_id = ? $where", $params);
         $db->Query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
 
-        Flyspray::logEvent($task['task_id'], 5, Post::val('comment_text'),
-                Post::val('previous_text'), Post::val('comment_id'));
+        Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text), Post::val('comment_id'));
 
         Backend::upload_files($task['task_id'], Post::val('comment_id'));
         Backend::delete_files(Post::val('delete_att'));
