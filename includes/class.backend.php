@@ -437,11 +437,17 @@ abstract class Backend
 
 	    $res = false;
 	    foreach($_POST[$source] as $text) {
-		    if(empty($text)) {
-			    continue;
-		    }
+			$text = filter_var($text, FILTER_SANITIZE_URL);
+		
+			if( preg_match( '/^\s*(javascript:|data:)/', $url)){
+				continue;
+			}
+		    
+			if(empty($text)) {
+				continue;
+			}
 
-		    $res = true;
+			$res = true;
 
 		    // Insert into database
 		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
