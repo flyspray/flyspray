@@ -629,7 +629,7 @@ switch ($action = Req::val('action'))
         Flyspray::logEvent($task['task_id'], 32, Post::num('associate_subtask_id'));
         Flyspray::logEvent(Post::num('associate_subtask_id'), 34, $task['task_id']);
 
-        $_SESSION['SUCCESS'] = L('associatedsubtask').Post::num('associate_subtask_id');
+        $_SESSION['SUCCESS'] = sprintf( L('associatedsubtask'), Post::num('associate_subtask_id') );
         break;
 
 
