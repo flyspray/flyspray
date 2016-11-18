@@ -581,8 +581,12 @@ switch ($action = Req::val('action'))
         break;
 
     case 'details.associatesubtask':
-        $sql = $db->Query("SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?",
-            array(Post::val('associate_subtask_id')));
+	if ( $task['task_id'] == Post::num('associate_subtask_id')) {
+            Flyspray::show_error(L('selfsupertasknotallowed'));
+            break;
+        }	
+        $sql = $db->Query('SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?',
+            array(Post::num('associate_subtask_id')));
 
         $suptask = $db->FetchRow($sql);
 
@@ -595,7 +599,7 @@ switch ($action = Req::val('action'))
         // if the user has not the permission to view all tasks, check if the task
         // is in tasks allowed to see, otherwise tell that the task does not exist.
         if (!$user->perms('view_tasks')) {
-            $taskcheck = Flyspray::GetTaskDetails(Post::val('associate_subtask_id'));
+            $taskcheck = Flyspray::GetTaskDetails(Post::num('associate_subtask_id'));
             if (!$user->can_view_task($taskcheck)) {
                 Flyspray::show_error(L('subtasknotexist'));
                 break;
@@ -603,7 +607,7 @@ switch ($action = Req::val('action'))
         }
 
         // check to see if associated subtask is already the parent of this task
-        if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
+        if ($suptask['supertask_id'] == Post::num('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
@@ -621,11 +625,11 @@ switch ($action = Req::val('action'))
         }
 
         //associate the subtask
-        $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
-        Flyspray::logEvent($task['task_id'], 32, Post::val("associate_subtask_id"));
-        Flyspray::logEvent(Post::val("associate_subtask_id"), 34, $task['task_id']);
+        $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array( $task['task_id'], Post::num('associate_subtask_id')));
+        Flyspray::logEvent($task['task_id'], 32, Post::num('associate_subtask_id'));
+        Flyspray::logEvent(Post::num('associate_subtask_id'), 34, $task['task_id']);
 
-        $_SESSION['SUCCESS'] = L('associatedsubtask').Post::val('associate_subtask_id');
+        $_SESSION['SUCCESS'] = L('associatedsubtask').Post::num('associate_subtask_id');
         break;
 
 
