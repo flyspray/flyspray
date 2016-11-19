@@ -303,7 +303,7 @@ abstract class Backend
      */
     public static function add_comment($task, $comment_text, $time = null)
     {
-        global $db, $user, $notify, $proj;
+        global $conf, $db, $user, $notify, $proj;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
             return false;
