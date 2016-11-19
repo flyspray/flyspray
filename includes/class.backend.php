@@ -971,7 +971,7 @@ abstract class Backend
      */
     public static function create_task($args)
     {
-        global $db, $user, $proj;
+        global $conf, $db, $user, $proj;
 
         if (!isset($args)) return 0;
 
