@@ -18,7 +18,7 @@ if (!$user->can_select_project($proj->id)) {
     $proj = new Project(0);
 }
 
-$perpage = '250';
+$perpage = '50';
 if (isset($user->infos['tasks_perpage']) && $user->infos['tasks_perpage'] > 0) {
     $perpage = $user->infos['tasks_perpage'];
 }
