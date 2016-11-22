@@ -450,9 +450,13 @@ function tpl_date_formats($selected, $detailed = false)
 {
 	$time = time();
 
+	# TODO: rewrite using 'return tpl_select(...)' 
 	if (!$detailed) {
 		$dateFormats = array(
-			'%d.%m.%Y' => strftime('%d.%m.%Y', $time),
+			'%d.%m.%Y' => strftime('%d.%m.%Y', $time).' (DD.MM.YYYY)', # popular in many european countries
+			'%d/%m/%Y' => strftime('%d/%m/%Y', $time).' (DD/MM/YYYY)', # popular in Greek
+			'%m/%d/%Y' => strftime('%m/%d/%Y', $time).' (MM/DD/YYYY)', # popular in USA
+
 			'%d.%m.%y' => strftime('%d.%m.%y', $time),
 
 			'%Y.%m.%d' => strftime('%Y.%m.%d', $time),
@@ -461,7 +465,7 @@ function tpl_date_formats($selected, $detailed = false)
 			'%d-%m-%Y' => strftime('%d-%m-%Y', $time),
 			'%d-%m-%y' => strftime('%d-%m-%y', $time),
 
-			'%Y-%m-%d' => strftime('%Y-%m-%d', $time),
+			'%Y-%m-%d' => strftime('%Y-%m-%d', $time).' (YYYY-MM-DD, ISO 8601)',
 			'%y-%m-%d' => strftime('%y-%m-%d', $time),
 
 			'%d %b %Y' => strftime('%d %b %Y', $time),
@@ -472,6 +476,7 @@ function tpl_date_formats($selected, $detailed = false)
 		);
 	}
 	else {
+		# TODO: maybe use optgroups for tpl_select() to separate 24h and 12h (am/pm) formats
 		$dateFormats = array(
 			'%d.%m.%Y %H:%M' 	=> strftime('%d.%m.%Y %H:%M', $time),
 			'%d.%m.%y %H:%M' 	=> strftime('%d.%m.%y %H:%M', $time),
