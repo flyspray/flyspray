@@ -695,8 +695,8 @@ class Setup extends Flyspray
                'admin_username' => array('Administrator\'s username', 'string', true),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
-               'syntax_plugin' => array('Syntax', 'option', true), # required true while testing, for release could be false.
-		'reminder_daemon' => array('Reminder Daemon', 'option', false),
+               'syntax_plugin' => array('Syntax', 'option', false), 
+	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values')) {
                // Set a page heading in case of errors.
