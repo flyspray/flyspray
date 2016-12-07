@@ -726,7 +726,14 @@ class Setup extends Flyspray
    {
       // Extract the variables to local namespace
       extract($data);
-	if(!isset($syntax_plugin)){$syntax_plugin="";}
+
+	  if(!isset($db_password)) {
+		  $db_password = '';
+	  }
+
+	  if(!isset($syntax_plugin)) {
+		  $syntax_plugin = '';
+	  }
 
       $config_intro	=
       "; <?php die( 'Do not access this page directly.' ); ?>
