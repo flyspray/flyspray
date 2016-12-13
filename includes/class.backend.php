@@ -1381,10 +1381,10 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             $select .= ' (SELECT COUNT(vot.vote_id) FROM {votes} vot WHERE vot.task_id = t.task_id) AS num_votes, ';
         }
 
-        $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
+        $maxdatesql = ' GREATEST(COALESCE((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), 0), t.date_opened, t.date_closed, t.last_edited_time) ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if ($search_for_changes) {
-            $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
+            $select .= ' GREATEST(COALESCE((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), 0), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
             $cgroupbyarr[] = 't.task_id';
         }
 
