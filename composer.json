@@ -10,6 +10,7 @@
         "adodb/adodb-php": "~5.20",
         "jamiebicknell/Sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.8.0",
+        "dapphp/securimage": "~3.6.5",
         "league/oauth2-client": "~0.3|~0.12" 
     },
     "repositories": [
