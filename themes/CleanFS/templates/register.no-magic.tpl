@@ -48,6 +48,12 @@
 			<?php echo tpl_options($times, Req::val('time_zone', 0)); ?>
 			</select>
 		</li>
+		<?php if($fs->prefs['captcha_securimage']) : ?>
+		<li>
+			<label for="captcha_code"><?php echo Filters::noXSS(L('registercaptcha')); ?></label>
+			<?php echo $captcha_securimage_html; ?>
+		</li>
+		<?php endif; ?>
 	</ul>
 	<div>
 		<input type="hidden" name="action" value="register.sendcode" />
