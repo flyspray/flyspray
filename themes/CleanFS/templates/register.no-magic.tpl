@@ -56,7 +56,7 @@
                         .captchali .securimage {display:inline-block; width:300px;}
                         </style>
 			<label for="captcha_code"><?php echo Filters::noXSS(L('registercaptcha')); ?></label>
-			<?php echo $captcha_securimage_html; ?>
+			<div class="securimage"><?php echo $captcha_securimage_html; ?></div>
 		</li>
 		<?php endif; ?>
 	</ul>
