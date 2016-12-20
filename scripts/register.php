@@ -28,6 +28,15 @@ if ($user->can_register()) {
 
         $page->pushTpl('register.magic.tpl');
     } else {
+		if($fs->prefs['captcha_securimage']){
+			$captchaoptions = array(
+				'input_name' => 'captcha_code',
+				'disable_flash_fallback' => true
+			);
+			$captcha_securimage_html=Securimage::getCaptchaHtml($captchaoptions);
+			$page->assign('captcha_securimage_html', $captcha_securimage_html);
+		}
+
         $page->pushTpl('register.no-magic.tpl');
     }
 } elseif ($user->can_self_register()) {

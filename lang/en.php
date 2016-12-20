@@ -1089,5 +1089,8 @@ Regards,',
 'editorunderlinehint'     => 'underline',
 'editorstrikethrough'     => 'S',
 'editorstrikethroughhint' => 'strikethrough',
+'captchaerror'            => 'CAPTCHA not solved. Please try again.',
+'registercaptcha'         => 'Please solve the CAPTCHA.',
+'regcaptcha'              => 'Show a CAPTCHA for new user registration.',
 );
 ?>

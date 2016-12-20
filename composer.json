@@ -10,6 +10,7 @@
         "adodb/adodb-php": "~5.20",
         "jamiebicknell/Sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.8.0",
+        "dapphp/securimage": "3.6.5",
         "league/oauth2-client": "~0.3|~0.12" 
     },
     "repositories": [
@@ -18,6 +19,12 @@
             "url": "https://github.com/jamiebicknell/Sparkline"
         }
     ],
+    "scripts": {
+        "post-update-cmd": [
+                "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
+                "echo '<?php return array(\"session_name\"=>\"flyspray\"); ?>' > vendor/dapphp/securimage/config.inc.php"
+        ]
+    },
     "autoload": {
         "classmap": ["includes"],
         "files": ["includes/utf8.inc.php"],
