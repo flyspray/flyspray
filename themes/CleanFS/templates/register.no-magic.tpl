@@ -49,7 +49,12 @@
 			</select>
 		</li>
 		<?php if($fs->prefs['captcha_securimage']) : ?>
-		<li>
+		<li class="captchali">
+			<style>
+                        #captcha_code{width:100px;}
+                        .captchali .securimage label{width:auto;}
+                        .captchali .securimage {display:inline-block; width:300px;}
+                        </style>
 			<label for="captcha_code"><?php echo Filters::noXSS(L('registercaptcha')); ?></label>
 			<?php echo $captcha_securimage_html; ?>
 		</li>
