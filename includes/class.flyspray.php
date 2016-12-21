@@ -375,8 +375,10 @@ class Flyspray
         }
 
         if ($get_details = $db->FetchRow($get_details)) {
-            $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
-            $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
+            $get_details += array('severity_name' => ($get_details['task_severity']==0 || !isset($fs->severities[$get_details['task_severity']]))
+              ? '' : $fs->severities[$get_details['task_severity']]);
+            $get_details += array('priority_name' => ($get_details['task_priority']==0 || !isset($fs->priorities[$get_details['task_priority']]))
+              ? '' : $fs->priorities[$get_details['task_priority']]);
         }
 	
 	$get_details['tags'] = Flyspray::getTags($task_id);
