@@ -365,7 +365,7 @@ echo tpl_select(
 </thead>
 <tbody>
 <?php foreach ($tasks as $task):?>
-<tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  echo $task['is_closed'] ==1 ? ' closed': '';?>" onmouseover="Show(this,<?php echo $task['task_id']; ?>)" onmouseout="Hide(this, <?php echo $task['task_id']; ?>)">
+<tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  echo $task['is_closed'] ==1 ? ' closed': '';?>">
 	<td class="caret"></td>
 	<?php if (!$user->isAnon() && $proj->id !=0): ?>
 	<td class="ttcolumn"><input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="<?php echo $task['task_id']; ?>"/></td>
@@ -374,7 +374,9 @@ echo tpl_select(
 	foreach ($visible as $col):
 		if($col == 'progress'):?>
 	<td class="task_progress"><div class="progress_bar_container"><span><?php echo $task['percent_complete']; ?>%</span><div class="progress_bar" style="width:<?php echo $task['percent_complete']; ?>%"></div></div></td>
-		<?php else:
+		<?php elseif ($col == 'summary'):
+			echo tpl_draw_cell($task, $col, "<td class='%s' onmouseover=\"Show(this," . $task['task_id'] . ")\" onmouseout=\"Hide(this, " . $task['task_id'] . ")\">%s</td>");
+		else:
 		echo tpl_draw_cell($task, $col);
 		endif;
 	endforeach;
