@@ -41,8 +41,19 @@ if ($user->can_register()) {
         $page->pushTpl('register.no-magic.tpl');
     }
 } elseif ($user->can_self_register()) {
-    $page->pushTpl('common.newuser.tpl');
+	if($fs->prefs['captcha_securimage']){
+		$captchaoptions = array(
+			'input_name' => 'captcha_code',
+			'show_audio_button' => false,
+			'disable_flash_fallback' => true,
+			'image_attributes' =>array('style'=>'')
+		);
+		$captcha_securimage_html=Securimage::getCaptchaHtml($captchaoptions);
+		$page->assign('captcha_securimage_html', $captcha_securimage_html);
+	}
+
+	$page->pushTpl('common.newuser.tpl');
 } else {
-    Flyspray::show_error(22);
+	Flyspray::show_error(22);
 }
 ?>
