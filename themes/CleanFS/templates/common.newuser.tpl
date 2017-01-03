@@ -88,6 +88,19 @@ endif; ?>
 			</select>
 		</li>
 		<?php endif; ?>
+
+		<?php if($do=='register' && $fs->prefs['captcha_securimage']) : ?>
+		<li class="captchali">
+			<style>
+			#captcha_code{width:100px;}
+			.captchali .securimage label{width:auto;}
+			.captchali .securimage {display:inline-block; width:300px;}
+			</style>
+			<label for="captcha_code"><?php echo Filters::noXSS(L('registercaptcha')); ?></label>
+			<div class="securimage"><?php echo $captcha_securimage_html; ?></div>
+		</li>
+		<?php endif; ?>
+
 	</ul>
 	<p><button type="submit" id="buSubmit"><?php echo Filters::noXSS(L('registeraccount')); ?></button></p>
 </form>

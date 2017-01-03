@@ -951,6 +951,17 @@ switch ($action = Req::val('action'))
         if (!($user->perms('is_admin') || $user->can_self_register())) {
             break;
         }
+		
+		if(!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']){
+			$image = new Securimage(); 
+			if ($image->check($_POST['captcha_code']) == true) {
+				# ok  
+			} else {
+				# wrong code
+				Flyspray::show_error(L('captchaerror'));
+				break;
+			}
+		}
 
         if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
         {
