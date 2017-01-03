@@ -31,6 +31,7 @@ if ($user->can_register()) {
 		if($fs->prefs['captcha_securimage']){
 			$captchaoptions = array(
 				'input_name' => 'captcha_code',
+				'show_audio_button' => false,
 				'disable_flash_fallback' => true
 			);
 			$captcha_securimage_html=Securimage::getCaptchaHtml($captchaoptions);
