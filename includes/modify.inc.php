@@ -2328,6 +2328,20 @@ switch ($action = Req::val('action'))
 					array($user_id, Post::val('old_group'))
 				);
 			} else {
+				# special case: user exists in multiple global groups (shouldn't, but happened)
+				# avoids duplicate entry error
+				if($old_pr==0){
+					$sql = $db->Query('SELECT group_id FROM {users_in_groups} WHERE user_id = ? AND group_id = ?',
+						array($user_id, Post::val('switch_to_group'))
+					);
+					$uigexists = $db->FetchOne($sql);
+					if($uigexists > 0){
+						$db->Query('DELETE FROM {users_in_groups} WHERE user_id=? AND group_id=?',
+							array($user_id, Post::val('old_group'))
+						);
+					}
+				}
+
 				$db->Query('UPDATE {users_in_groups} SET group_id=? WHERE user_id=? AND group_id=?',
 					array(Post::val('switch_to_group'), $user_id, Post::val('old_group'))
 				);
