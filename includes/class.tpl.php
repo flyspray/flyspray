@@ -305,6 +305,18 @@ function tpl_userlink($uid)
 
 	return $cache[$uid];
 }
+
+/**
+* builds the HTML string for displaying a gravatar image or an uploaded user image.
+* The string for a user and a size is cached per request.
+*
+* class and style parameter should be avoided to make this function more effective for caching (less SQL queries)
+*
+* @param int uid the id of the user
+* @param int size in pixel for displaying. Should use global max_avatar_size pref setting by default.
+* @param string class optional, avoid calling with class parameter for better 'cacheability'
+* @param string style optional, avoid calling with style parameter for better 'cacheability'
+*/
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
 	global $db, $user, $baseurl, $fs;
