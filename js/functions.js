@@ -163,31 +163,6 @@ function addLinkField(id) {
       }
 }
 
-function adduserselect(url, user, selectid, error)
-{
-    var myAjax = new Ajax.Request(url, {method: 'post', parameters: 'id=' + user, onComplete:function(originalRequest)
-	{
-        if(originalRequest.responseText) {
-            var user_info = originalRequest.responseText.split('|');
-            // Check if user does not yet exist
-            for (i = 0; i < $('r' + selectid).options.length; i++) {
-                if ($('r' + selectid).options[i].value == user_info[1]) {
-                    return;
-                }
-            }
-
-            opt = new Option(user_info[0], user_info[1]);OB
-            try {
-                $('r' + selectid).options[$('r' + selectid).options.length]=opt;
-                updateDualSelectValue(selectid);
-            } catch(ex) {
-                return;
-            }
-        } else {
-            alert(error);
-        }
-	}});
-}
 function checkok(url, message, form) {
 
     var myAjax = new Ajax.Request(url, {method: 'get', onComplete:function(originalRequest)
@@ -198,6 +173,7 @@ function checkok(url, message, form) {
 	}});
     return false;
 }
+
 function removeUploadField(element, id) {
   if (!id) {
     id = 'uploadfilebox';
@@ -314,28 +290,7 @@ var Cookie = {
     document.cookie = name + '=;expires=' + date.toUTCString();
   }
 };
-function setUpSearchBox() {
-  if ($('advancedsearch')) {
-    var state = Cookie.getVar('advancedsearch');
-    if ('1' == state) {
-      var showState = $('advancedsearchstate');
-      showState.replaceChild(document.createTextNode('+'),showState.firstChild);
-      $('sc2').style.display = 'block';
-    }
-  }
-}
-function toggleSearchBox(themeurl) {
-  var state = Cookie.getVar('advancedsearch');
-  if ('1' == state) {
-      $('advancedsearchstateimg').src = themeurl + 'edit_add.png';
-      hidestuff('sc2');
-      Cookie.setVar('advancedsearch','0');
-  } else {
-      $('advancedsearchstateimg').src = themeurl + 'edit_remove.png';
-      showstuff('sc2');
-      Cookie.setVar('advancedsearch','1');
-  }
-}
+
 function deletesearch(id, url) {
     $('rs' + id).getElementsByTagName('i')[0].className='fa fa-spinner fa-spin fa-lg';
     url = url + 'js/callbacks/deletesearches.php';
