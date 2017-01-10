@@ -952,15 +952,14 @@ switch ($action = Req::val('action'))
             break;
         }
 		
-		if(!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']){
+		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
 			$image = new Securimage(); 
-			if ($image->check($_POST['captcha_code']) == true) {
-				# ok  
-			} else {
+			if (!$image->check(Post::val('captcha_code'))) {
 				# wrong code
 				Flyspray::show_error(L('captchaerror'));
 				break;
 			}
+			# captcha is OK
 		}
 
         if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
