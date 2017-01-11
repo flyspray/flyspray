@@ -68,6 +68,14 @@ if (Get::val('getfile')) {
 
         header('Pragma: public');
         header("Content-type: $file_type");
+
+		# image view/download difference
+		if(isset($_GET['dl'])){
+			header('Content-Disposition: attachment; filename="'.$orig_name.'"');
+		}else{
+			header('Content-Disposition: filename="'.$orig_name.'"');
+		}
+
         header('Content-Disposition: filename="'.$orig_name.'"');
         header('Content-transfer-encoding: binary');
         header('Content-length: ' . filesize($path));
