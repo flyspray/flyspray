@@ -205,8 +205,8 @@ Lightbox.prototype = {
         $$('select', 'object', 'embed').each(function(node){ node.style.visibility = 'hidden' });
 
         // stretch overlay to fill page and fade in
-        var arrayPageSize = this.getPageSize();
-        $('overlay').setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
+        //var arrayPageSize = this.getPageSize();
+        //$('overlay').setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
 
         new Effect.Appear(this.overlay, { duration: this.overlayDuration, from: 0.0, to: LightboxOptions.overlayOpacity });
 
@@ -345,8 +345,8 @@ Lightbox.prototype = {
                 duration: this.resizeDuration, 
                 afterFinish: (function() {
 	                // update overlay size and update nav
-	                var arrayPageSize = this.getPageSize();
-	                this.overlay.setStyle({ height: arrayPageSize[1] + 'px' });
+	                //var arrayPageSize = this.getPageSize();
+	                //this.overlay.setStyle({ height: arrayPageSize[1] + 'px' });
 	                this.updateNav();
                 }).bind(this)
             } 
