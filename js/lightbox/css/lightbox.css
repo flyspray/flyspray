@@ -4,6 +4,9 @@
 
 #outerImageContainer{ position: relative; display:inline-block; max-width:100%; background-color: #fff; /*width: 250px; height: 250px;*/ margin: 0 auto; }
 #imageContainer{ padding: 10px; }
+@media only screen and (max-width: 480px) and (orientation: portrait) {
+  #imageContainer{ padding: 2px; }
+}
 
 #loading{ position: absolute; top: 40%; left: 0%; height: 25%; width: 100%; text-align: center; line-height: 0; }
 #hoverNav{ position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
