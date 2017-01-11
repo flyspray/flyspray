@@ -35,14 +35,14 @@ http://flyspray.org/manual/install
 4. Make sure flyspray.conf.php is writeable by the webserver.
 5. Open http://yourflyspray/setup/ in your webbrowser. It detects the existing installation and you can follow the upgrade steps.
 
-6. Note: Do not forget to press F5 after the upgrade in web browser to reload also cached css-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
+6. Note: Do not forget to press F5 (or CTRL+F5, depending on cache policy) after the upgrade in web browser to reload also cached css-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
 
 ## Dependencies
 
 ### Install php
     Linux: Just use the package manager or one of its frontends of your Linux distribution.
     For instance for Debian based Linux distributions:
-    sudo apt-get install php
+    sudo apt-get install php5
     
     Windows:
     http://php.net/downloads
