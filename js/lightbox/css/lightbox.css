@@ -2,7 +2,7 @@
 #lightbox #imageContainer img{ width: auto; height: auto; max-width:100%;}
 #lightbox a img{ border: none; }
 
-#outerImageContainer{ position: relative; max-width:100%; background-color: #fff; /*width: 250px; height: 250px;*/ margin: 0 auto; }
+#outerImageContainer{ position: relative; display:inline-block; max-width:100%; background-color: #fff; /*width: 250px; height: 250px;*/ margin: 0 auto; }
 #imageContainer{ padding: 10px; }
 
 #loading{ position: absolute; top: 40%; left: 0%; height: 25%; width: 100%; text-align: center; line-height: 0; }
@@ -18,11 +18,11 @@
 
 #imageDataContainer{ font: 10px Verdana, Helvetica, sans-serif; margin: 0 auto; overflow: auto; width: 100%; min-width:250px;}
 
-#imageData{	padding:0 10px; color: #666; position:relative; display:inline-block;min-width:300px;background-color:#fff;}
+#imageData{	padding:0 10px; color: #666; position:relative; display:inline-block;min-width:300px;background-color:#fff;text-align:left;}
 #imageData #imageDetails{ display:inline-block; text-align: left; }	
 #imageData #caption{ font-weight: bold;	display:inline-block;max-width:230px;}
 #imageData #numberDisplay{ display: block; clear: left; padding-bottom: 1.0em;	}
-#imageData #bottomNav {right: 10px;position: absolute;}
-#imageData #bottomNavClose{ width: 66px; padding-bottom: 0.7em; outline: none;}	 	
+#imageData #bottomNav {right: 10px;top:4px; position: absolute;}
+#imageData #bottomNavClose{ display:inline-block; width: 66px; padding-bottom: 0.7em; outline: none;}	 	
 
 #overlay{ position: fixed; top: 0; left: 0; z-index: 90; width: 100%; height: 100%; background-color: #000; }
