@@ -20,7 +20,7 @@
 <tr>
     <?php if ($list_type == 'tag'): ?><th>ID</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('name')); ?></th>
-    <?php if ($list_type == 'tag'): ?><th>CSS Classes</th><?php endif; ?>
+    <?php if ($list_type == 'tag' || $list_type == 'tasktype'): ?><th>CSS Classes</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('order')); ?></th>
     <th><?php echo Filters::noXSS(L('show')); ?></th>
     <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
@@ -38,7 +38,7 @@ $syscountlines++;
 <tr>
     <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
     <td class="first"><?php echo Filters::noXSS($row[$list_type.'_name']); ?></td>
-    <?php if ($list_type == 'tag'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
+    <?php if ($list_type == 'tag' || $list_type == 'tasktype'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
     <td title="<?php echo Filters::noXSS(L('ordertip')); ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
     <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
     <?php if ($list_type == 'version'): ?><td title="<?php echo Filters::noXSS(L('listtensetip')); ?>"><?php echo $row[$list_type.'_tense']; ?></td><?php endif; ?>
@@ -69,7 +69,7 @@ $syscountlines++;
 <colgroup>
     <?php if ($list_type == 'tag'): ?><col class="ctag" /><?php endif; ?>
     <col class="cname" />
-    <?php if ($list_type == 'tag'): ?><col class="cclasses" /><?php endif; ?>
+    <?php if ($list_type == 'tag' || $list_type == 'tasktype'): ?><col class="cclasses" /><?php endif; ?>
     <col class="corder" />
     <col class="cshow" />
     <?php if ($list_type == 'version'): ?><col class="ctense" /><?php endif; ?>
@@ -80,7 +80,7 @@ $syscountlines++;
 <tr>
     <?php if ($list_type == 'tag'): ?><th>ID</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('name')); ?></th>
-    <?php if ($list_type == 'tag'): ?><th>CSS Classes</th><?php endif; ?>
+    <?php if ($list_type == 'tag' || $list_type == 'tasktype'): ?><th>CSS Classes</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('order')); ?></th>
     <th><?php echo Filters::noXSS(L('show')); ?></th>
     <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
@@ -100,7 +100,7 @@ $syscountlines++;
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
     </td>
-    <?php if ($list_type == 'tag'): ?>
+    <?php if ($list_type == 'tag' || $list_type == 'tasktype'): ?>
     <td>
         <input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row['class']); ?>" />
