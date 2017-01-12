@@ -1,5 +1,5 @@
 <div id="toolbox">
-<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('groupmanage')); ?></h2>
+<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('groupmanage')); ?></h3>
 <?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo CreateURL('admin', 'newuser', $proj->id); ?>"><i class="fa fa-user-plus fa-lg fa-fw"></i> <?php echo Filters::noXSS(L('newuser')); ?></a><?php endif; ?>
 <a class="button" href="<?php echo Filters::noXSS(CreateURL('pm', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a>
   

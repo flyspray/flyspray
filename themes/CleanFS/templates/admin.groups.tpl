@@ -1,4 +1,5 @@
 <div id="toolbox">
+  <h3><?php echo Filters::noXSS(L('usersandgroups')); ?></h3>
   <ul id="submenu">
    <li><a href="#users_tab"><?php echo Filters::noXSS(L('users')); ?></a></li>
    <li><a href="#groups_tab"><?php echo Filters::noXSS(L('globalgroups')); ?></a></li>
