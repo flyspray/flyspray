@@ -751,9 +751,7 @@ switch ($action = Req::val('action'))
 
 		if($fs->prefs['captcha_securimage']){
 			$image = new Securimage(); 
-			if ($image->check($_POST['captcha_code']) == true) {
-				# ok  
-			} else {
+			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				# wrong code
 				Flyspray::show_error(L('captchaerror'));
 				break;
@@ -954,7 +952,7 @@ switch ($action = Req::val('action'))
 		
 		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
 			$image = new Securimage(); 
-			if (!$image->check(Post::val('captcha_code'))) {
+			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				# wrong code
 				Flyspray::show_error(L('captchaerror'));
 				break;
