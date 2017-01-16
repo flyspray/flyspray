@@ -26,7 +26,7 @@ $page->setTitle($fs->prefs['page_title'] . L('roadmap'));
 // Get milestones
 $milestones = $db->Query('SELECT   version_id, version_name
                           FROM     {list_version}
-                          WHERE    project_id = ? AND version_tense = 3
+                          WHERE    (project_id = ? OR project_id=0) AND version_tense = 3
                           ORDER BY list_position ASC',
     array($proj->id));
 
