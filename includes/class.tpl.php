@@ -81,8 +81,9 @@ class Tpl
             return;
         }
 
-        // theming part
-        // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
+        // theme part
+        // To avoid "empty" theme please use the initial constructor of Tpl (FSTpl) by accessing the global variable
+		// $page = $GLOBALS['page']
         if (strlen($this->_theme) == 0) {
             $this->_theme = 'CleanFS/';
         }
@@ -421,15 +422,13 @@ function tpl_datepicker($name, $label = '', $value = 0) {
         // false is casted to 0 by the ZE
         $date = ($ts > 0 && checkdate($m, $d, $Y)) ? Req::val($name) : '';
     }
-
-
-    $subPage = new FSTpl;
-    $subPage->setTheme($page->getTheme());
-    $subPage->assign('name', $name);
-    $subPage->assign('date', $date);
-    $subPage->assign('label', $label);
-    $subPage->assign('dateformat', '%Y-%m-%d');
-    $subPage->display('common.datepicker.tpl');
+    
+    $page = $GLOBALS['page'];
+	$page->assign('name', $name);
+	$page->assign('date', $date);
+	$page->assign('label', $label);
+	$page->assign('dateformat', '%Y-%m-%d');
+	$page->display('common.datepicker.tpl');
 }
 // }}}
 // {{{ user selector
@@ -448,9 +447,8 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     if (!$value) {
         $value = '';
     }
-
-
-    $page = new FSTpl;
+	
+	$page = $GLOBALS['page'];
     $page->assign('name', $name);
     $page->assign('id', $id);
     $page->assign('value', $value);
@@ -751,22 +749,17 @@ function tpl_selectoptions($options=array(), $level=0){
 function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)
 {
     static $_id = 0;
-    static $tpl = null;
-
-    if (!$tpl) {
-        // poor man's cache
-        $tpl = new FSTpl();
-    }
-
-    settype($selected, 'array');
+	
+	settype($selected, 'array');
     settype($options, 'array');
+	
+	$page = $GLOBALS['page'];
+	$page->assign('id', '_task_id_'.($_id++));
+	$page->assign('name', $name);
+	$page->assign('selected', $selected);
+	$page->assign('updown', $updown);
 
-    $tpl->assign('id', '_task_id_'.($_id++));
-    $tpl->assign('name', $name);
-    $tpl->assign('selected', $selected);
-    $tpl->assign('updown', $updown);
-
-    $html = $tpl->fetch('common.dualselect.tpl');
+    $html = $page->fetch('common.dualselect.tpl');
 
     $selectedones = array();
 
