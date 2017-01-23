@@ -13,24 +13,25 @@ if (!$proj->id) {
 }
 
 if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $proj->prefs['others_viewroadmap'] !=1)) {
-	Flyspray::show_error(28);
-}
+	# better set redirect to false to avoid endless loops
+	Flyspray::show_error(28, false);
+} else{
 
-if($proj->prefs['use_effort_tracking']){
-    require_once(BASEDIR . '/includes/class.effort.php');
-}
+	if($proj->prefs['use_effort_tracking']){
+	    require_once(BASEDIR . '/includes/class.effort.php');
+	}
 
 
-$page->setTitle($fs->prefs['page_title'] . L('roadmap'));
+	$page->setTitle($fs->prefs['page_title'] . L('roadmap'));
 
-// Get milestones
-$milestones = $db->Query('SELECT   version_id, version_name
+	// Get milestones
+	$milestones = $db->Query('SELECT   version_id, version_name
                           FROM     {list_version}
                           WHERE    (project_id = ? OR project_id=0) AND version_tense = 3
-                          ORDER BY list_position ASC',
-    array($proj->id));
+                          ORDER BY list_position ASC', 
+		array($proj->id));
 
-$data = array();
+	$data = array();
 
 while ($row = $db->FetchRow($milestones)) {
     // Get all tasks related to a milestone
@@ -66,16 +67,18 @@ while ($row = $db->FetchRow($milestones)) {
 
     $data[] = array('id' => $row['version_id'], 'open_tasks' => $tasks, 'percent_complete' => $percent_complete,
         'all_tasks' => $all_tasks, 'name' => $row['version_name']);
-}
+} # end while
 
-if (Get::val('txt')) {
-    $page = new FSTpl;
-    header('Content-Type: text/plain; charset=UTF-8');
-    $page->uses('data', 'page');
-    $page->display('roadmap.text.tpl');
-    exit();
-} else {
-    $page->uses('data', 'page');
-    $page->pushTpl('roadmap.tpl');
-}
+	if (Get::val('txt')) {
+	    $page = new FSTpl;
+	    header('Content-Type: text/plain; charset=UTF-8');
+	    $page->uses('data', 'page');
+	    $page->display('roadmap.text.tpl');
+	    exit();
+	} else {
+	    $page->uses('data', 'page');
+	    $page->pushTpl('roadmap.tpl');
+	}
+
+} # end if allowed roadmap view
 ?>
