@@ -437,6 +437,9 @@ class Flyspray
         }
 
         sort($themes);
+		# always put the full default Flyspray theme first, [0] works as fallback in class Tpl->setTheme()
+		array_unshift($themes, 'CleanFS');
+		$themes = array_unique($themes);
         return $themes;
     } // }}}
     // List a project's group {{{
