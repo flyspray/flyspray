@@ -73,8 +73,8 @@ class Tpl
         ob_end_clean();
     }
 
-    public function display($_tpl, $_arg0 = null, $_arg1 = null)
-    {
+	public function display($_tpl, $_arg0 = null, $_arg1 = null)
+	{
         // if only plain text
         if (is_array($_tpl) && count($tpl)) {
             echo $_tpl[0];
@@ -92,14 +92,17 @@ class Tpl
 
         extract($this->_vars, EXTR_REFS|EXTR_SKIP);
 
-        if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
-            require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
-        } else {
-            // This is needed to catch times when there is no theme (for example setup pages)
-            require BASEDIR . "/templates/" . $_tpl;
-        }
+		if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
+			require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
+		} elseif (is_readable(BASEDIR . '/themes/CleanFS/templates/'.$_tpl)) {
+			# if a custom theme folder only contains a fraction of the .tpl files, use the template of the default full theme as fallback.
+			require BASEDIR . '/themes/CleanFS/templates/'.$_tpl;
+		} else {
+			# This is needed to catch times when there is no theme (for example setup pages, where BASEDIR is ../setup/  not ../)
+			require BASEDIR . "/templates/" . $_tpl;
+		}
 
-    } // }}}
+	} // }}}
 
     public function render()
     {
