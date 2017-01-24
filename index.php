@@ -76,7 +76,6 @@ if (Get::val('getfile')) {
 			header('Content-Disposition: filename="'.$orig_name.'"');
 		}
 
-        header('Content-Disposition: filename="'.$orig_name.'"');
         header('Content-transfer-encoding: binary');
         header('Content-length: ' . filesize($path));
 
