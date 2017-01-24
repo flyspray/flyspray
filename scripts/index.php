@@ -427,11 +427,13 @@ function export_task_list()
 
         usort($tasks, "do_cmp");
 
-        $outfile = str_replace(' ', '_', $proj->prefs['project_title']).'_'.date("Y-m-d").'.csv';
-
+        #$outfile = str_replace(' ', '_', $proj->prefs['project_title']).'_'.date("Y-m-d").'.csv';
+	$outfile = rawurlencode($proj->prefs['project_title'].'_'.date("Y-m-d").'.csv');
+	
         #header('Content-Type: application/csv');
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename='.$outfile);
+        #header('Content-Disposition: attachment; filename='.$outfile);
+	header('Content-Disposition: attachment; filename="'.$outfile.'"; filename*=utf-8\'\''.$outfile); # see RFC5987
         header('Content-Transfer-Encoding: text');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
