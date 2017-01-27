@@ -683,7 +683,12 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 }
 #taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
-
+#taskdetailsfull p,
+#taskdetailsfull li,
+.commenttext p,
+.commenttext li {
+max-width:40em;
+}
 .group.inactive{ background-color:#eee;}
 .tag {
     background: #ccc none repeat scroll 0 0;
