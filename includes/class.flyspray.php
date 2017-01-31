@@ -100,9 +100,9 @@ class Flyspray
             switch ($last) {
                 // The 'G' modifier is available since PHP 5.1.0
                 case 'g':
-                    $val *= 1024*1024*1024;
+                    $val *= 1024;
                 case 'm':
-                    $val *= 1024*1024;
+                    $val *= 1024;
                 case 'k':
                     $val *= 1024;
             }
