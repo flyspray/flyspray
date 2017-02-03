@@ -95,8 +95,8 @@ class Flyspray
                 continue;
             }
 
-            $val = trim($val);
             $last = strtolower($val{strlen($val)-1});
+            $val = trim($val, 'gGmMkK');
             switch ($last) {
                 // The 'G' modifier is available since PHP 5.1.0
                 case 'g':
