@@ -472,9 +472,14 @@ class Flyspray
     public static function listUsers()
     {
         global $db;
-        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name, email_address
-			FROM {users}
-			ORDER BY account_enabled DESC, UPPER(user_name) ASC');
+        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name,
+		email_address, jabber_id, oauth_provider, oauth_uid
+		notify_type, notify_own, notify_online,
+		tasks_perpage, lang_code, time_zone, date_format, date_format_extended,
+		register_date, login_attempts, lock_until,
+		profile_image, hide_my_email
+		FROM {users}
+		ORDER BY account_enabled DESC, UPPER(user_name) ASC');
         return $db->FetchAllArray($res);
     }
 
