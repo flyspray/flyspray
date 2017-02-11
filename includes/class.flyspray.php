@@ -475,7 +475,7 @@ class Flyspray
         $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name,
 		email_address, jabber_id, oauth_provider, oauth_uid
 		notify_type, notify_own, notify_online,
-		tasks_perpage, lang_code, time_zone, date_format, date_format_extended,
+		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
 		register_date, login_attempts, lock_until,
 		profile_image, hide_my_email
 		FROM {users}
