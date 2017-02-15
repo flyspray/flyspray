@@ -199,8 +199,10 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$tagclass=explode(',', $task['tagclass']);
 			$tgs='';
 			for($i=0;$i< count($tags); $i++){
-				$tgs.='<i class="tag t'.$tagids[$i]
-					.(isset($tagclass[$i]) ? ' ' . $tagclass[$i] : '').'" title="'.$tags[$i].'"></i>';
+				if(isset($tagids[$i])){
+					$tgs.='<i class="tag t'.$tagids[$i]
+						.(isset($tagclass[$i]) ? ' ' . $tagclass[$i] : '').'" title="'.$tags[$i].'"></i>';
+				}
 			}
                         $value.=$tgs;
 		}
