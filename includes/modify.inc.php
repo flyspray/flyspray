@@ -40,9 +40,9 @@ function resizeImage($file, $max_x, $max_y, $forcePng = false)
 	$newHeight = $height * $scale;
 
 	$img = imagecreatefromstring(file_get_contents($src));
-	$black = imagecolorallocate($img, 0, 0, 0);
+	$transparent = imagecolorallocate($img, 255, 0, 255);
 	$resizedImage = imageCreateTrueColor($newWidth, $newHeight);
-	imagecolortransparent($resizedImage, $black);
+	imagecolortransparent($resizedImage, $transparent);
 	imageCopyResampled($resizedImage, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 	imageDestroy($img);
 	unlink($src);
