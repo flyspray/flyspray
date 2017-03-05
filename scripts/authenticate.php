@@ -22,7 +22,13 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
     $password = Req::val('password');
 
     // Run the username and password through the login checker
-    if (($user_id = Flyspray::checkLogin($username, $password)) < 1) {
+    if(isset($conf['general']['ldap_auth']) && $conf['general']['ldap_auth']==1){
+        $user_id = Flyspray::checkLogin($username, $password, 'ldap');
+    } else{
+        $user_id = Flyspray::checkLogin($username, $password);
+    }
+
+    if($user_id < 1) {
         $_SESSION['failed_login'] = Req::val('user_name');
         if($user_id === -2) {
             Flyspray::show_error(L('usernotexist'));
