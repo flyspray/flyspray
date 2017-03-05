@@ -766,14 +766,22 @@ class Flyspray
 	*/
 	public static function checkForLDAPUser($username, $password)
 	{
+		global $conf;
+		
 		# TODO: add to admin settings area, maybe let user set the config at final installation step
-		$ldap_host = 'ldaphost';
-		$ldap_port = '389';
-		$ldap_version = '3';
-		$base_dn = 'OU=SBSUsers,OU=Users,OU=MyBusiness,DC=MyDomain,DC=local';
-		$ldap_search_user = 'ldapuser@mydomain.local';
-		$ldap_search_pass = "ldapuserpass";
-		$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
+		$ldap_host = isset($conf['ldap']['host']) ? $conf['ldap']['host'] : 'localhost';
+		$ldap_port = isset($conf['ldap']['port']) ? $conf['ldap']['port'] : 389;
+		$ldap_version = isset($conf['ldap']['version']) ? $conf['ldap']['version'] : '3';
+		#$base_dn = 'OU=SBSUsers,OU=Users,OU=MyBusiness,DC=MyDomain,DC=local';
+		$base_dn = $conf['ldap']['base_dn'];
+		#$ldap_search_user = 'ldapuser@mydomain.local';
+		#$ldap_search_pass = "ldapuserpass";
+		$ldap_search_user = $conf['ldap']['search_user']);
+		$ldap_search_pass = $conf['ldap']['search_pass'])
+		#$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
+		$filter=isset($conf['ldap']['filter']) ? $conf['ldap']['filter'] : ''; # empty string ok?
+
+		# ???
 		$username = $username;
 
 		if (strlen($password) == 0){ // LDAP will succeed binding with no password on AD (defaults to anon bind)
