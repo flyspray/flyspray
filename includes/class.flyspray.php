@@ -776,8 +776,8 @@ class Flyspray
 		$base_dn = $conf['ldap']['base_dn'];
 		#$ldap_search_user = 'ldapuser@mydomain.local';
 		#$ldap_search_pass = "ldapuserpass";
-		$ldap_search_user = $conf['ldap']['search_user']);
-		$ldap_search_pass = $conf['ldap']['search_pass'])
+		$ldap_search_user = isset($conf['ldap']['search_user']) ? $conf['ldap']['search_user'] : '';
+		$ldap_search_pass = isset($conf['ldap']['search_pass']) ? $conf['ldap']['search_pass'] : '';
 		#$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
 		$filter=isset($conf['ldap']['filter']) ? $conf['ldap']['filter'] : ''; # empty string ok?
 
