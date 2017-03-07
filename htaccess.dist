@@ -78,6 +78,11 @@ RewriteBase /
 # Depends on your server setup/webhosting if done in php.ini, .user.ini or somehow/somewhere else.
 # Ask your web hoster if you don't know.
 
+# restrict direct access to vendor/ directory, except secureimage_show.php
+RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/images/refresh.png
+RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/images/loading.png
+RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/securimage_show.php
+RewriteRule ^vendor/.*$ - [R=403,NC,L]
 
 # used for enabling url_rewriting check in admin prefs
 RewriteRule . - [E=HTTP_MOD_REWRITE:On]
