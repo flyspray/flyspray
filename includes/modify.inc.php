@@ -1219,6 +1219,8 @@ switch ($action = Req::val('action'))
             break;
         }
 
+		$errors=array();
+		
         /* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
@@ -1283,17 +1285,31 @@ switch ($action = Req::val('action'))
         $fs->prefs['visible_fields'] = $visfields;
 
         //save logo
-        if($_FILES["logo"]["error"] == 0 && exif_imagetype($_FILES["logo"]["tmp_name"]) ) {
+		if($_FILES['logo']['error'] == 0){
+			if( in_array(exif_imagetype($_FILES['logo']['tmp_name']), array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) {
+				$logoexplode = explode('.', $_FILES['logo']['name']);
+				$logoextension = strtolower(end($logoexplode));
+				$allowedextensions = array('gif', 'jpg', 'jpeg', 'png');
 
-            move_uploaded_file($_FILES["logo"]["tmp_name"], "./" . $_FILES["logo"]["name"]);
-            $sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
-            if(!$db->fetchOne($sql))
-                $db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
-            $db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES["logo"]["name"]);
-        }
-        //saved logo
+				if(in_array($logoextension, $allowedextensions)){
+					move_uploaded_file($_FILES['logo']['tmp_name'], './' . $_FILES['logo']['name']);
+					$sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
+					if(!$db->fetchOne($sql)){
+						$db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
+					}
+					$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES['logo']['name']);
+				} else{
+					$errors['invalidfileextension']=1;
+				}
+			}
+		}
+		//saved logo
 
         $_SESSION['SUCCESS'] = L('optionssaved');
+		if(count($errors)>0){
+			$_SESSION['ERRORS']=$errors;
+		}
+
         break;
 
         // ##################
