@@ -1284,20 +1284,21 @@ switch ($action = Req::val('action'))
         array($visfields));
         $fs->prefs['visible_fields'] = $visfields;
 
-        //save logo
+		//save logo
 		if($_FILES['logo']['error'] == 0){
 			if( in_array(exif_imagetype($_FILES['logo']['tmp_name']), array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) {
-				$logoexplode = explode('.', $_FILES['logo']['name']);
+				$logofilename=strtolower(basename($_FILES['logo']['name']));
+				$logoexplode = explode('.', $logofilename);
 				$logoextension = strtolower(end($logoexplode));
 				$allowedextensions = array('gif', 'jpg', 'jpeg', 'png');
 
 				if(in_array($logoextension, $allowedextensions)){
-					move_uploaded_file($_FILES['logo']['tmp_name'], './' . $_FILES['logo']['name']);
+					move_uploaded_file($_FILES['logo']['tmp_name'], './' . $logofilename);
 					$sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
 					if(!$db->fetchOne($sql)){
 						$db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
 					}
-					$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES['logo']['name']);
+					$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $logofilename);
 				} else{
 					$errors['invalidfileextension']=1;
 				}
