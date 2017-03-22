@@ -21,7 +21,9 @@ if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'
         if (!$webdir) {
             $webdir = dirname($_SERVER['SCRIPT_NAME']);
         }
-        if (substr($webdir, -9) == 'index.php') {
+        if(substr($webdir, -13) == '/js/callbacks'){
+            $webdir = dirname(dirname($webdir));
+        } elseif (substr($webdir, -9) == 'index.php') {
             $webdir = dirname($webdir);
         }
     }
