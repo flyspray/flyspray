@@ -49,8 +49,8 @@ function showTabById(tabid, noEval) { // {{{
       var links = submenu.getElementsByTagName('a');
       for (i=0; i<links.length; i++) {
         if (links[i].href.match('^.*#'+tabid+'$')) {
-          links[i].className += ' active';
-        } else { links[i].className = links[i].className.replace(/ active\b/, ''); }
+          links[i].className = links[i].className.replace(/ active\b/g, '') + ' active';
+        } else { links[i].className = links[i].className.replace(/ active\b/g, ''); }
       }
     }
   }
