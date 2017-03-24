@@ -710,9 +710,11 @@ abstract class Backend
             }
 
             // Notify the appropriate users
-            $notify->Create(NOTIFY_NEW_USER, null,
+			if ($fs->prefs['notify_registration']) {
+                $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $recipients, NOTIFY_EMAIL);
+			}
             // And also the new user
             $notify->Create(NOTIFY_OWN_REGISTRATION, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
