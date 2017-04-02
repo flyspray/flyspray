@@ -62,7 +62,12 @@
 	</ul>
 	<div>
 		<input type="hidden" name="action" value="register.sendcode" />
+		<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']): ?>
+		<noscript>Javascript is required for this Google reCAPTCHA.</noscript>
+		<button type="submit" name="buSubmit" id="buSubmit" class="g-recaptcha" data-sitekey="<?php Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>" data-callback="js/callbacks/recaptcha.php">><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		<?php else: ?>
 		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		<?php endif; ?>
 	</div>
 	<br />
 	<p><?php echo L('note'); ?></p>
