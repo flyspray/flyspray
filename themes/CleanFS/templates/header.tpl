@@ -62,6 +62,15 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
+<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']): ?>
+	<?php
+	if ( 
+		   ($do=='register')
+		|| ($do=='newtask' && $user->isAnon())
+	): ?>  
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<?php endif; ?>
+<?php endif; ?> 
 </head>
 <body onload="<?php
         if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])):
