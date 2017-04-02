@@ -1221,16 +1221,24 @@ switch ($action = Req::val('action'))
 
 		$errors=array();
 		
-        /* The following code has been modified to accomodate a default_message for "all project" */
-        $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
+		$settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'captcha_securimage', 'default_project', 'dateformat', 'jabber_ssl',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
 		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
 		'custom_style', 'general_integration', 'footer_integration');
+
+		# candid for a plugin, so separate them for the future.
+		$settings[]='captcha_securimage';
+
+		# candid for a plugin
+		$settings[]='captcha_recaptcha';
+		$settings[]='captcha_recaptcha_sitekey';
+		$settings[]='captcha_recaptcha_secret';
+
         if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
             unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
         	// if you think different, modify functions in class.user.php directing different regiser tpl
