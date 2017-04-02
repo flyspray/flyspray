@@ -1233,11 +1233,17 @@ switch ($action = Req::val('action'))
 
 		# candid for a plugin, so separate them for the future.
 		$settings[]='captcha_securimage';
+		if(!isset($fs->prefs['captcha_securimage'])){
+			$db->Query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('captcha_securimage',0)");
+		}
 
 		# candid for a plugin
 		$settings[]='captcha_recaptcha';
 		$settings[]='captcha_recaptcha_sitekey';
 		$settings[]='captcha_recaptcha_secret';
+		if(!isset($fs->prefs['captcha_recaptcha'])){
+			$db->Query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('captcha_recaptcha',0),('captcha_recaptcha_sitekey',''),('captcha_recaptcha_secret','')");
+		}
 
         if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
             unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
