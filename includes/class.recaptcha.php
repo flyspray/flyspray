@@ -17,7 +17,8 @@ class recaptcha
 		$options = array(
 			'http' => array (
 				'method' => 'POST',
-				'header' => 'Content-type: application/x-www-form-urlencoded', /* for php5.3, default enctype for http_build_query() was added with php5.4, http://php.net/manual/en/function.http$
+				/* for php5.3, default enctype for http_build_query() was added with php5.4, http://php.net/manual/en/function.http-build-query.php */
+				'header' => 'Content-type: application/x-www-form-urlencoded',
 				'content' => http_build_query($data)
 			)
 		);
