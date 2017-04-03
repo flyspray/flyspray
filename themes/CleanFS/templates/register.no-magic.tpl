@@ -63,8 +63,18 @@
 	<div>
 		<input type="hidden" name="action" value="register.sendcode" />
 		<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']): ?>
-		<noscript>Javascript is required for this Google reCAPTCHA.</noscript>
-		<button type="submit" name="buSubmit" id="buSubmit" class="g-recaptcha" data-sitekey="<?php Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>" data-callback="js/callbacks/recaptcha.php"><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		<noscript>Javascript is required for Google reCAPTCHA.</noscript>
+		<script>
+		function submitWithRecaptcha(token) {
+			document.getElementById('registernewuser').submit();
+		}
+		</script>
+		<button type="submit" name="buSubmit" id="buSubmit"
+		class="g-recaptcha"
+		data-badge="inline"
+		data-callback="submitWithRecaptcha"
+		data-sitekey="<?php Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"
+		data-callback="js/callbacks/recaptcha.php"><?php echo Filters::noXSS(L('sendcode')); ?></button>
 		<?php else: ?>
 		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>
 		<?php endif; ?>
