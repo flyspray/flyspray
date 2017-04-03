@@ -749,15 +749,35 @@ switch ($action = Req::val('action'))
             break;
         }
 
+		$captchaerrors=0;
 		if($fs->prefs['captcha_securimage']){
 			$image = new Securimage(); 
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				# wrong code
-				Flyspray::show_error(L('captchaerror'));
-				break;
+				$captchaerrors++;
+				# TODO add securimagespecific error notice to errors
+				#Flyspray::show_error(L('captchaerror'));
+				#break;
+			}
+		}
+		
+		if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']){
+			require_once('class.recaptcha.php');
+			if( !recaptcha::verify()) {
+				# probably wrong code
+				$captchaerrors++;
+				# TODO add recaptchaspecific error notice to errors vars
+				#Flyspray::show_error(L('captchaerror'));
+				#break;
 			}
 		}
 
+		# if both captchatypes are configured, maybe show the user which one or both failed.
+		if($captchaerrors>0){
+			Flyspray::show_error(L('captchaerror'));
+			break;
+		}
+		
         if (!Post::val('user_name') || !Post::val('real_name')
             || !Post::val('email_address'))
         {
