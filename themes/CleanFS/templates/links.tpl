@@ -16,12 +16,12 @@ else: ?><li>
 	</li><?php
 	if ($user->perms('is_admin')):
 	?><li>
-		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" title="<?php echo Filters::noXSS(L('admintoolbox')); ?>"><i class="fa fa-gears fa-lg"></i></a>
+		<a id="optionslink"<?php if ($do=='admin'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(CreateURL('admin', 'prefs')); ?>" title="<?php echo Filters::noXSS(L('admintoolbox')); ?>"><i class="fa fa-gears fa-lg"><?php echo Filters::noXSS(L('admintoolbox')); ?></i></a>
 	</li><?php
 	endif;
 	?><li>
 		<a id="logoutlink" href="<?php echo Filters::noXSS(CreateURL('logout', null)); ?>"
-		accesskey="l" title="<?php echo Filters::noXSS(L('logout')); ?>"><i class="fa fa-power-off fa-lg"></i></a>
+		accesskey="l" title="<?php echo Filters::noXSS(L('logout')); ?>"><i class="fa fa-power-off fa-lg"><?php echo Filters::noXSS(L('logout')); ?></i></a>
 	</li><?php
 	if (isset($_SESSION['was_locked'])):
 	?><li>
