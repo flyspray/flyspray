@@ -78,7 +78,7 @@ class User
     }
 
     public function perms($name, $project = null) {
-        if (is_null($project)) {
+        if (is_null($project) || is_array($project)) {
             global $proj;
             $project = $proj->id;
         }
