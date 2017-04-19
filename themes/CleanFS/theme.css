@@ -151,6 +151,15 @@ pre.code {
     background-color: #fff;
     border: 1px solid #ddd;
     overflow:auto;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
 }
 
 li ul, li ol { margin: 0; }
