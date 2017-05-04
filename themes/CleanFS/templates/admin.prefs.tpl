@@ -53,6 +53,9 @@ function ShowHidePassword(id) {
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
+<!-- BEGIN LAE -->
+   <li><a href="#exporting"><?php echo Filters::noXSS(L('exporting')); ?></a></li>
+<!-- END LAE -->
   </ul>
 
    <div id="general" class="tab">
@@ -213,18 +216,13 @@ function ShowHidePassword(id) {
           <label for="needapproval"><?php echo Filters::noXSS(L('regapprovedbyadmin')); ?></label>
           <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change(true, "needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
         </li>
-	
+
         <li>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
           <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, ($fs->prefs['need_approval'] || $fs->prefs['only_oauth_reg'] ) ? array('disabled' => 'true') : ''); ?>
         </li>
-	
-	<li>
-		<label for="captcha_securimage"><?php echo Filters::noXSS(L('regcaptcha')); ?></label>
-		<?php echo tpl_checkbox('captcha_securimage', $fs->prefs['captcha_securimage'], 'captcha_securimage'); ?>
-	</li>
-        
-	<li>
+
+        <li>
           <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
           <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
         </li>
@@ -474,6 +472,64 @@ function testEmail(){
 
 	</ul>
     </div>
+    
+<!-- BEGIN LAE -->
+
+    <div id="exporting" class="tab">
+
+      <ul class="form_elements">
+        <li>
+          <label for="globaltheme">{L('globaltheme')}</label>
+          <select id="globaltheme" name="global_theme">
+            {!tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true)}
+          </select>
+        </li>
+
+          <li>
+            <label>{L('visiblecolumns')}</label>
+            <?php // Set the selectable column names
+            $columnnames = array(
+    'id', 
+    'project', 
+    'tasktype', 
+    'category', 
+    'severity', 
+    'priority', 
+    'summary', 
+    'details', 
+    'status', 
+    'progress', 
+    'dateopened', 
+    'openedby', 
+    'assignedto', 
+    'reportedin', 
+    'duedate', 
+    'dueversion', 
+    'effort', 
+    'dateclosed', 
+    'resolution', 
+    'closecomment', 
+    'private', 
+    'parent', 
+    'lastedit', 
+    'lasteditedby',
+    'comments', 
+    'attachments', 
+    'os', 
+    'votes', 
+    ); 
+
+    $selectedcolumns = explode(" ", $fs->prefs['exported_columns']);
+            ?>
+            {!tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true)}
+          </li>
+
+  </ul>
+
+   </div>
+
+<!-- END LAE -->
+
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
       <button type="submit" class="positive"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
