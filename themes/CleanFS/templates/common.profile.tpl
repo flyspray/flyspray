@@ -85,6 +85,64 @@
                 ?>
             </select>
         </li>
+
+<!--- LAE BEGIN -->
+      <li>
+        <hr />
+      </li>
+
+<li>
+
+    <div id="exporting" class="tab" data-role="collapsible">
+
+      <ul class="form_elements">
+
+            <?php // Set the selectable column names
+            $columnnames = array(
+    'id', 
+    'project', 
+    'tasktype', 
+    'category', 
+    'severity', 
+    'priority', 
+    'summary', 
+    'details', 
+    'status', 
+    'progress', 
+    'dateopened', 
+    'openedby', 
+    'assignedto', 
+    'reportedin', 
+    'duedate', 
+    'dueversion', 
+    'effort', 
+    'dateclosed', 
+    'resolution', 
+    'closecomment', 
+    'private', 
+    'parent', 
+    'lastedit', 
+    'lasteditedby',
+    'comments', 
+    'attachments', 
+    'os', 
+    'votes', 
+    ); 
+
+    $selectedcolumns = explode(" ", $fs->prefs['exported_columns']);
+            ?>
+          <li>
+            <label class="labeltextarea"><?php echo Filters::noXSS(L('exportedcolumns')); ?></label>
+            <?php echo tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true); ?>
+          </li>
+
+  </ul>
+
+   </div>
+</li>
+
+<!-- LAE END -->
+
       <li>
         <hr />
       </li>
