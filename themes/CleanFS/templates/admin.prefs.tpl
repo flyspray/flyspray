@@ -478,15 +478,7 @@ function testEmail(){
     <div id="exporting" class="tab">
 
       <ul class="form_elements">
-        <li>
-          <label for="globaltheme">{L('globaltheme')}</label>
-          <select id="globaltheme" name="global_theme">
-            {!tpl_options(Flyspray::listThemes(), $fs->prefs['global_theme'], true)}
-          </select>
-        </li>
 
-          <li>
-            <label>{L('visiblecolumns')}</label>
             <?php // Set the selectable column names
             $columnnames = array(
     'id', 
@@ -521,7 +513,9 @@ function testEmail(){
 
     $selectedcolumns = explode(" ", $fs->prefs['exported_columns']);
             ?>
-            {!tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true)}
+          <li>
+            <label class="labeltextarea"><?php echo Filters::noXSS(L('exportedcolumns')); ?></label>
+            <?php echo tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true); ?>
           </li>
 
   </ul>

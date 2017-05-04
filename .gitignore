@@ -12,3 +12,4 @@ composer.phar
 /avatars/*
 /lang/*.php.bak
 /lang/*.php.safe
+setup.leon
