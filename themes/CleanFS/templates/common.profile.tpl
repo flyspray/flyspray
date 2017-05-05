@@ -93,6 +93,15 @@
 
 <li>
 
+<div class="info-wrapper">
+ <input type="checkbox" id="showhide">
+ <label for="showhide">
+  <div class="more">Show More</div>
+  <div>Show Less</div>
+</label>
+
+<div class="info">
+
     <div id="exporting" class="tab" data-role="collapsible">
 
       <ul class="form_elements">
@@ -139,6 +148,9 @@
   </ul>
 
    </div>
+
+</div>
+
 </li>
 
 <!-- LAE END -->

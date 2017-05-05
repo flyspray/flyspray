@@ -475,6 +475,7 @@ function testEmail(){
     
 <!-- BEGIN LAE -->
 
+<!--
     <div id="exporting" class="tab">
 
       <ul class="form_elements">
@@ -521,6 +522,7 @@ function testEmail(){
   </ul>
 
    </div>
+-->
 
 <!-- END LAE -->
 
