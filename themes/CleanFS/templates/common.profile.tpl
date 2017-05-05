@@ -93,16 +93,12 @@
 
 <li>
 
-<div class="info-wrapper">
- <input type="checkbox" id="showhide">
- <label for="showhide">
-  <div class="more">Show More</div>
-  <div>Show Less</div>
-</label>
+<input class="toggle-box" id="identifier-1" type="checkbox" >
+<label for="identifier-1">Click here to select exportable columns</label>
 
-<div class="info">
+<div>
 
-    <div id="exporting" class="tab" data-role="collapsible">
+    <div id="exporting" class="tab">
 
       <ul class="form_elements">
 
@@ -148,8 +144,6 @@
   </ul>
 
    </div>
-
-</div>
 
 </li>
 
