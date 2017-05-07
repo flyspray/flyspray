@@ -134,7 +134,7 @@
     'votes', 
     ); 
 
-    $selectedcolumns = explode(" ", $fs->prefs['exported_columns']);
+    $selectedcolumns = explode(" ", $theuser->infos['exported_columns']);
             ?>
           <li>
             <label class="labeltextarea"><?php echo Filters::noXSS(L('exportedcolumns')); ?></label>
