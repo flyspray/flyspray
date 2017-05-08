@@ -603,23 +603,25 @@ function export_task_list() {
 
  // see if per user settings exist ?
 
- if ($proj->id) {
-  $visible = trim($proj->prefs['exported_columns']);
- }
+// if ($proj->id) {
+  $visible = trim($user->infos['exported_columns']);
+$cols=$visible;
+
+ //}
  
  // if no valid settings then just get the global settings instead
 
- if ($visible == '') {
-  $visible=trim($fs->prefs['exported_columns']);
- }
+// if ($visible == '') {
+//  $visible=trim($fs->prefs['exported_columns']);
+// }
 
  $visible = explode(' ', $visible);
 
  // check visible columns valid
 
- if (!is_array($visible) || !count($visible) || !$visible[0]) {
-    $visible = array('id');
- }
+// if (!is_array($visible) || !count($visible) || !$visible[0]) {
+//    $visible = array('id');
+// }
 
  // go get the entire task list. Note we do a reget because normally it's
  // just the items displayed on the current page that are exported. I actually
@@ -656,9 +658,13 @@ function export_task_list() {
 
  // create column headings line for inserting into file
 
+  $result .= "cols: " . $cols . "\r\n";
+
  unset($headings);
 
  foreach($visible as $heading) {
+$result .= "Headings: '" . $heading . "=" . $fields[$heading] . "'\r\n";
+
   $headings[]=  $fields[$heading];
 //  $headings[]= '"' . $fields[$heading] . '"';
  }
