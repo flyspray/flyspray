@@ -349,6 +349,7 @@
     </field>
     <field name="exported_columns" type="C" size="255">
       <NOTNULL/>
+      <DEFAULT value="id">
     </field>
     <field name="others_view" type="I" size="1">
       <NOTNULL/>

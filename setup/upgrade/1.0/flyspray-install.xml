@@ -1200,6 +1200,7 @@
       <col>user_name</col>
     </index>
     <field name="exported_columns" type="C" size="255">
+      <NOTNULL/>
       <DEFAULT value="id"/>
     </field>
   </table>
