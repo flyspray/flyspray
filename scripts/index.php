@@ -6,6 +6,8 @@
 	 But now there can be a different pagetype set up as frontpage in Flyspray.
 */
 
+define(QT, "\"");
+define(EOL, "\r\n");
 
 if (!defined('IN_FS')) {
 		die('Do not access this file directly.');
@@ -44,10 +46,10 @@ if (in_array('effort', $visible) && !$user->perms('view_current_effort_done')) {
 }
 
 # for csv export no paging limits
-if (Get::has('export_list')) {
-				$offset = -1;
-				$perpage = -1;
-}
+//if (Get::has('export_list')) {
+//				$offset = -1;
+//				$perpage = -1;
+//}
 
 list($tasks, $id_list, $totalcount, $forbiddencount) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
@@ -493,8 +495,8 @@ function export_task_list_old()
 *
 **********************************************
 */
+
 function quoteStr($str) {
-//define(QT, "\"");
 		return "\"" . $str . "\"";
 }
 
@@ -507,290 +509,285 @@ function quoteStr($str) {
 
 function export_task_list() {
 
-		global $tasks, $fs, $sort, $orderby;
-		global $proj, $user;
+	global $tasks, $fs, $sort, $orderby;
+	global $proj, $user;
 
-		$qt = "\"";    // quote char
-		$eol = "\r\n"; // end-of-line 
+	// do we want all the tasks or just the ones for the current page ?
 
-		// do we want all the tasks or just the ones for the current page ?
+//		$wantAll = Get::has('wantAllTasks');
 
-		$wantAll = Get::has('wantAllTasks');
+	// don't want this option to persist accross refreshes
 
-		// don't want this option to persist accross refreshes
+	unset($_GET['export_list']);
+//		unset($_GET['wantAllTasks']);
 
-		unset($_GET['export_list']);
-		unset($_GET['wantAllTasks']);
+	// have we got a valid task list ?
 
-		// have we got a valid task list ?
+	if (!is_array($tasks))
+			return;
 
-		if (!is_array($tasks))
-				return;
+	// map column names -> database field names
 
-		// map column names -> database field names
+	$indexes = array (
 
-		$indexes = array (
+					'id'         => 'task_id',
+					'project'    => 'project_title',
+					'tasktype'   => 'task_type',
+					'category'   => 'category_name',
+					'severity'   => 'task_severity',
+					'priority'   => 'task_priority',
+					'summary'    => 'item_summary',
+					'dateopened' => 'date_opened',
+					'status'     => 'status_name',
+					'openedby'   => 'opened_by_name',
+					'assignedto' => 'assigned_to_name',
+					'lastedit'   => 'max_date',
+					'reportedin' => 'product_version',
+					'dueversion' => 'closedby_version',
+					'duedate'    => 'due_date',
+					'comments'   => 'num_comments',
+					'votes'      => 'num_votes',
+					'attachments'=> 'num_attachments',
+					'dateclosed' => 'date_closed',
+					'progress'   => 'percent_complete',
+					'os'         => 'os_name',
+					'private'    => 'mark_private',
+	
+					'details'  => 'detailed_desc',
+					'resolution'  => 'resolution_reason',
+					'effort'  => 'estimated_effort',
+					'closecomment'  => 'closure_comment',
+					'lasteditedby'  => 'last_edited_by',
+					'hyperlink' => 'hyperlink',
+					
+			);
 
-						'id'         => 'task_id',
-						'project'    => 'project_title',
-						'tasktype'   => 'task_type',
-						'category'   => 'category_name',
-						'severity'   => 'task_severity',
-						'priority'   => 'task_priority',
-						'summary'    => 'item_summary',
-						'dateopened' => 'date_opened',
-						'status'     => 'status_name',
-						'openedby'   => 'opened_by_name',
-						'assignedto' => 'assigned_to_name',
-						'lastedit'   => 'max_date',
-						'reportedin' => 'product_version',
-						'dueversion' => 'closedby_version',
-						'duedate'    => 'due_date',
-						'comments'   => 'num_comments',
-						'votes'      => 'num_votes',
-						'attachments'=> 'num_attachments',
-						'dateclosed' => 'date_closed',
-						'progress'   => 'percent_complete',
-						'os'         => 'os_name',
-						'private'    => 'mark_private',
-		
-						'details'  => 'detailed_desc',
-						'resolution'  => 'resolution_reason',
-						'effort'  => 'estimated_effort',
-						'closecomment'  => 'closure_comment',
-						'lasteditedby'  => 'last_edited_by',
-						'hyperlink' => 'hyperlink',
-						
-				);
+	// map column names -> friendly csv column heading names
 
-		// map column names -> friendly csv column heading names
+	$fields = array (
 
-		$fields = array (
+					'id'         => 'id',
+					'project'    => 'project',
+					'tasktype'   => 'tracker',
+					'category'   => 'category',
+					'severity'   => 'severity',
+					'priority'   => 'priority',
+					'summary'    => 'subject',
+					'details'  => 'description',
+					'dateopened' => 'date_started',
+					'openedby'   => 'opened_by',
+					'assignedto' => 'assigned_to',
+					'status'     => 'status',
+					'lastedit'   => 'last_edited',
+					'lasteditedby'  => 'last_edited_by',
+					'reportedin' => 'version_reported_in',
+					'dueversion' => 'version_target',
+					'duedate'    => 'date_due',
+					'comments'   => 'num_comments',
+					'votes'      => 'num_votes',
+					'attachments'=> 'num_attachments',
+					'dateclosed' => 'date_closed',
+					'closecomment'  => 'close_comment',
+					'resolution'  => 'resolution',
+					'progress'   => 'percent_complete',
+					'effort'  => 'estimated_effort',
+					'os'         => 'os_name',
+					'private'    => 'private',
+					'hyperlink' => 'hyperlink', 
+	
+			);
 
-						'id'         => 'id',
-						'project'    => 'project',
-						'tasktype'   => 'tracker',
-						'category'   => 'category',
-						'severity'   => 'severity',
-						'priority'   => 'priority',
-						'summary'    => 'subject',
-						'details'  => 'description',
-						'dateopened' => 'date_started',
-						'openedby'   => 'opened_by',
-						'assignedto' => 'assigned_to',
-						'status'     => 'status',
-						'lastedit'   => 'last_edited',
-						'lasteditedby'  => 'last_edited_by',
-						'reportedin' => 'version_reported_in',
-						'dueversion' => 'version_target',
-						'duedate'    => 'date_due',
-						'comments'   => 'num_comments',
-						'votes'      => 'num_votes',
-						'attachments'=> 'num_attachments',
-						'dateclosed' => 'date_closed',
-						'closecomment'  => 'close_comment',
-						'resolution'  => 'resolution',
-						'progress'   => 'percent_complete',
-						'effort'  => 'estimated_effort',
-						'os'         => 'os_name',
-						'private'    => 'private',
-						'hyperlink' => 'hyperlink', 
-		
-				);
+	// Get list of the exported columns and it's these column headings that will
+	// be exported to the .csv file
+	// NOTE This code pinched from earlier on in this file
 
-		// Get list of the exported columns and it's these column headings that will
-		// be exported to the .csv file
-		// NOTE This code pinched from earlier on in this file
+	$visible = '';
 
-		$visible = '';
+	// get curren user's ettings
 
-		// get curren user's ettings
+	$visible = explode(' ', trim($user->infos['exported_columns']));
 
-		$visible = explode(' ', trim($user->infos['exported_columns']));
+	// check visible columns valid
 
-		// check visible columns valid
+	if (!is_array($visible) || !count($visible) || !$visible[0]) {
+			$visible = array('id');
+	}
 
-		if (!is_array($visible) || !count($visible) || !$visible[0]) {
-				$visible = array('id');
-		}
+	// go get the entire task list. Note we do a reget because normally it's
+	// just the items displayed on the current page that are exported. I actually
+	// want all of them including the ones on the other (yet to shown) pages
 
-		// go get the entire task list. Note we do a reget because normally it's
-		// just the items displayed on the current page that are exported. I actually
-		// want all of them including the ones on the other (yet to shown) pages
+//		if ($wantAll) {
+//				list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, 0, 100000 );
+//		}
 
-		if ($wantAll) {
-				list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, 0, 100000 );
-		}
+	// have we got a valid task list ?
 
-		// have we got a valid task list ?
+	if (!is_array($tasks))
+			return;
 
-		if (!is_array($tasks))
-				return;
+	// start creating the output file
 
-		// start creating the output file
+	$outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
 
-		$outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
+	// create http neader for content to be sent to client browser
 
-		// create http neader for content to be sent to client browser
+	#header('Content-Type: application/csv');
+	header('Content-Type: text/csv');
+	header('Content-Disposition: attachment; filename='.$outfile);
+	header('Content-Transfer-Encoding: text');
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate');
+	#header('Pragma: public');
+	#header('Content-Length: '.strlen($result)); # unknown at this time..
+	ob_clean();
+	flush();
 
-		#header('Content-Type: application/csv');
-		header('Content-Type: text/csv');
-		header('Content-Disposition: attachment; filename='.$outfile);
-		header('Content-Transfer-Encoding: text');
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate');
-		#header('Pragma: public');
-		#header('Content-Length: '.strlen($result)); # unknown at this time..
-		ob_clean();
-		flush();
+	// create destination file for csv info
 
-		// create destination file for csv info
+	$output = fopen('php://output', 'w');
 
-		$output = fopen('php://output', 'w');
+	// first line of .csv will be project name
 
-		// first line of .csv will be project name
-
-		$result = "Project: " . $tasks[0]['project_title'] . " - " . 
-				count($tasks) . " tasks - " . date("H:i:s d-m-Y") . 
-				$eol;
+	$result = "Project: " . $tasks[0]['project_title'] . " - " . 
+			count($tasks) . " tasks - " . date("H:i:s d-m-Y") . EOL;
 
 //		fputs($output, $result . $eol);
 
-		// create column headings line for inserting into file
+	// create column headings line for inserting into file
 
-		unset($headings);
+	unset($headings);
 
-		foreach($visible as $heading) {
-				$headings[]=  quoteStr($fields[$heading]);
-		}
+	foreach($visible as $heading) {
+			$headings[]=  quoteStr($fields[$heading]);
+	}
 
-		// insert header line
+	// insert header line
 
-		// $result .= implode(',', $headings) . "\r\n";
-		fputs($output, implode(',', $headings) . $eol);
+	// $result .= implode(',', $headings) . "\r\n";
+	fputs($output, implode(',', $headings) . EOL);
 
-		// sort the tasks into the order selected by the user. Set
-		// global vars for use by sort comparison function
+	// sort the tasks into the order selected by the user. Set
+	// global vars for use by sort comparison function
 
-		$sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
-		$field = Get::safe('order', 'id');
+	$sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
+	$field = Get::safe('order', 'id');
 
-		if ($field == '') $field = 'id';
-		$orderby = $indexes[ $field ];
+	if ($field == '') $field = 'id';
+	$orderby = $indexes[ $field ];
 
-		usort($tasks, "do_cmp");   // sort the items
+	usort($tasks, "do_cmp");   // sort the items
 
-		// for each task create a line showing values
-		// get the items
+	// for each task create a line showing values
+	// get the items
 
-		foreach ($tasks as $task) {
+	foreach ($tasks as $task) {
 
-				// clear array at start
+			// clear array at start
 
-				unset($row);
+			unset($row);
 
-				// get data listed in the visible columns to be inserted into the
-				// file. The visible fields are those fields visible on the overview
-				// page
+			// get data listed in the visible columns to be inserted into the
+			// file. The visible fields are those fields visible on the overview
+			// page
 
-				foreach ($visible as $col_name) {
+			foreach ($visible as $col_name) {
 
-						$col_id = $indexes[$col_name];
+					$col_id = $indexes[$col_name];
 
-						if ($col_id == '')
-								continue;
+					if ($col_id == '')
+							continue;
 
-						// process each column formatting the data as we go along
+					// process each column formatting the data as we go along
 
-						switch($col_id) {
+					switch($col_id) {
 
-						// timestamp fields
+					// timestamp fields
 
-						case 'due_date':
-						case 'max_date':
-								$start_date = $task['date_opened'];
-								$date1 = $task[$col_id];
+					case 'due_date':
+					case 'max_date':
+							$start_date = $task['date_opened'];
+							$date1 = $task[$col_id];
 
-								// if due date is undefined or invalid then use start date instead
+							// if due date is undefined or invalid then use start date instead
 
-								if ($date1 < $start_date) 
-										$date1 = $start_date + 60 * 60 * 24;
+							if ($date1 < $start_date) 
+									$date1 = $start_date + 60 * 60 * 24;
 
-								// format the date stamp
+							// format the date stamp
 
-								$str = date(DATE_ISO8601, $date1);
-								break;
+							$str = date(DATE_ISO8601, $date1);
+							break;
 
-						case 'date_opened':
-						case 'date_closed':
-								$str = date(DATE_ISO8601, $task[$col_id]);
-								break;
+					case 'date_opened':
+					case 'date_closed':
+							$str = date(DATE_ISO8601, $task[$col_id]);
+							break;
 
-						// lookup fields
+					// lookup fields
 
-						case 'task_severity':
-								$str = $fs->severities[ $task[$col_id] ];
-								break;
+					case 'task_severity':
+							$str = $fs->severities[ $task[$col_id] ];
+							break;
 
-						// number fields
+					// number fields
 
-						case 'task_id':
-						case 'num_comments':
-						case 'num_votes':
-						case 'num_attachments':
-						case 'progress':
-						case 'supertask_id':
-								$str = $task[$col_id];
-								break;
+					case 'task_id':
+					case 'num_comments':
+					case 'num_votes':
+					case 'num_attachments':
+					case 'progress':
+					case 'supertask_id':
+							$str = $task[$col_id];
+							break;
 
-						// create an excel compatible hyperlink
+					// create an excel compatible hyperlink
 
-						case 'hyperlink':
+					case 'hyperlink':
 
-								// create a hyperlink to issue. Targeted a Excel users
+							// create a hyperlink to issue. Targeted a Excel users
 
-								$url = CreateURL('details', $task['task_id']) . 
-										'&project=' . $proj->id;
+							$url = CreateURL('details', $task['task_id']) . 
+									'&project=' . $proj->id;
 
-								// Excel hyperlink. Create in format "=HYPERLINK(""URL"",""friendly name"")"
-								$str = "=HYPERLINK(" . $qt .$qt . $url . $qt . $qt . 
-										"," . $qt . $qt . "Task #" . $task['task_id'] . 
-										$qt . $qt . ")";
+							// Excel hyperlink. Create in format "=HYPERLINK(""URL"",""friendly name"")"
+							$str = "=HYPERLINK(" . QT .QT . $url . QT . QT . 
+									"," . QT . QT . "Task #" . $task['task_id'] . 
+									QT . QT . ")";
 
-								// NOTE DON'T WANT THE DOUBLE QUOTES TO BE REPLACED BY SINGLE QUOTES. SO INSERT THE ITEM INTO THE ARRAY MANUALLY!!
+							// NOTE DON'T WANT THE DOUBLE QUOTES TO BE REPLACED BY SINGLE QUOTES. SO INSERT THE ITEM INTO THE ARRAY MANUALLY!!
 
-								$row[] = quoteStr($str);
-								continue;
+							$row[] = quoteStr($str);
+							continue;
 
-						// hopefully just leaves string fields which should be quoted
+					// hopefully just leaves string fields which should be quoted
 
-						default:    
-								$str = $task[$col_id];
-								break;
-						}
+					default:    
+							$str = $task[$col_id];
+							break;
+					}
 
-						// replace any embedded quote chars with single quotes
+					// replace any embedded quote chars with single quotes
 
-						$str = str_replace($qt, "'", $str);
+					$str = str_replace(QT, "'", $str);
 
-						// finally add the quoted wrapped item to the list of fields
+					// finally add the quoted wrapped item to the list of fields
 
-						$row[] = quoteStr($str);
-						 //$row[] = $str;
-				}
+					$row[] = quoteStr($str);
+			}
 
-				// create comma seperated values from array and append it to $result
+			// create comma seperated values from array and append it to $result
 
-				//  $result .= implode(',', $row) . "\r\n";
-				fputs($output, implode(',', $row) . $eol);
-		}
+			//  $result .= implode(',', $row) . "\r\n";
+			fputs($output, implode(',', $row) . EOL);
+	}
 
-		// create .ods output file
+	// create .ods output file
 
-		// $output = fopen('php://output', 'w');
-		//fwrite($output, $result);
-		fclose($output);
-		exit();
+	// $output = fopen('php://output', 'w');
+	//fwrite($output, $result);
+	fclose($output);
+	exit();
 
 // // now send data to user to download to their machine. First create
 // // HTML header
