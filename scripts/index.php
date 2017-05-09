@@ -6,8 +6,8 @@
 	 But now there can be a different pagetype set up as frontpage in Flyspray.
 */
 
-define(QT, "\"");
-define(EOL, "\r\n");
+define("QT", "\"");
+define("EOL", "\r\n");
 
 if (!defined('IN_FS')) {
 		die('Do not access this file directly.');
