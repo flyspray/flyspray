@@ -84,68 +84,77 @@
                 echo tpl_options( Flyspray::listLangs(), Req::val('lang_code', $theuser->infos['lang_code']), true);
                 ?>
             </select>
-        </li>
+      </li>
 
 <!--- LAE BEGIN -->
+
       <li>
         <hr />
       </li>
 
-<li>
+      <li>
 
-<input class="toggle-box" id="identifier-1" type="checkbox" >
-<label for="identifier-1">Click here to select exportable columns</label>
+        <input class="toggle-box" id="identifier-1" type="checkbox" >
+        <label for="identifier-1">Click here to select exportable columns</label>
 
-<div>
+        <?php 
 
-    <div id="exporting" class="tab">
+          // Set the selectable column names
 
-      <ul class="form_elements">
+          $columnnames = array(
+            'id', 
+            'project', 
+            'tasktype', 
+            'category', 
+            'severity', 
+            'priority', 
+            'summary', 
+            'details', 
+            'status', 
+            'progress', 
+            'dateopened', 
+            'openedby', 
+            'assignedto', 
+            'reportedin', 
+            'duedate', 
+            'dueversion', 
+            'effort', 
+            'dateclosed', 
+            'resolution', 
+            'closecomment', 
+            'private', 
+            'parent', 
+            'lastedit', 
+            'lasteditedby',
+            'comments', 
+            'attachments', 
+            'os', 
+            'votes', 
+            ); 
 
-            <?php // Set the selectable column names
-            $columnnames = array(
-    'id', 
-    'project', 
-    'tasktype', 
-    'category', 
-    'severity', 
-    'priority', 
-    'summary', 
-    'details', 
-    'status', 
-    'progress', 
-    'dateopened', 
-    'openedby', 
-    'assignedto', 
-    'reportedin', 
-    'duedate', 
-    'dueversion', 
-    'effort', 
-    'dateclosed', 
-    'resolution', 
-    'closecomment', 
-    'private', 
-    'parent', 
-    'lastedit', 
-    'lasteditedby',
-    'comments', 
-    'attachments', 
-    'os', 
-    'votes', 
-    ); 
+          // get current user settings
+          
+          $selectedcolumns = explode(" ", $theuser->infos['exported_columns']);
+        ?>
 
-    $selectedcolumns = explode(" ", $theuser->infos['exported_columns']);
-            ?>
-          <li>
-            <label class="labeltextarea"><?php echo Filters::noXSS(L('exportedcolumns')); ?></label>
-            <?php echo tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true); ?>
-          </li>
+        <div>
 
-  </ul>
+          <div id="exporting" class="tab">
 
-   </div>
+            <ul class="form_elements">
 
-</li>
+                <li>
+                  <label class="labeltextarea">
+                    <?php echo Filters::noXSS(L('exportedcolumns')); ?>              
+                  </label>
+                  <?php echo tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true); ?>
+                </li>
+
+            </ul>
+
+         </div>
+
+      </li>
 
 <!-- LAE END -->
 

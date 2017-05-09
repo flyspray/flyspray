@@ -1201,7 +1201,7 @@
     </index>
     <field name="exported_columns" type="C" size="255">
       <NOTNULL/>
-      <DEFAULT value="id"/>
+      <DEFAULT value="id tasktype severity summary details status progress duedate dueversion"/>
     </field>
   </table>
   <table name="users_in_groups">
@@ -1331,7 +1331,8 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'global_theme', 'CleanFS');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_columns', 'id category tasktype priority severity summary status progress');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'visible_fields', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'exported_columns', 'id category tasktype priority severity summary description status progress');</query>
+    
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'exported_columns', 'id tasktype severity summary details status progress duedate dueversion');</query>
 
     <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_server', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'smtp_user', '');</query>
