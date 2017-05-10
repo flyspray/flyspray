@@ -5,9 +5,9 @@
 	 It is for historical reason called index.php, because it was also the frontpage.
 	 But now there can be a different pagetype set up as frontpage in Flyspray.
 */
-
 define("QT", "\"");
 define("EOL", "\r\n");
+
 
 if (!defined('IN_FS')) {
 		die('Do not access this file directly.');
@@ -497,7 +497,7 @@ function export_task_list_old()
 */
 
 function quoteStr($str) {
-		return "\"" . $str . "\"";
+		return QT . $str . QT;
 }
 
 /*********************************************
@@ -562,40 +562,68 @@ function export_task_list() {
 					
 			);
 
-	// map column names -> friendly csv column heading names
+	// map column names -> database names and friendly csv column heading names
 
 	$fields = array (
 
-					'id'         => 'id',
-					'project'    => 'project',
-					'tasktype'   => 'tracker',
-					'category'   => 'category',
-					'severity'   => 'severity',
-					'priority'   => 'priority',
-					'summary'    => 'subject',
-					'details'  => 'description',
-					'dateopened' => 'date_started',
-					'openedby'   => 'opened_by',
-					'assignedto' => 'assigned_to',
-					'status'     => 'status',
-					'lastedit'   => 'last_edited',
-					'lasteditedby'  => 'last_edited_by',
-					'reportedin' => 'version_reported_in',
-					'dueversion' => 'version_target',
-					'duedate'    => 'date_due',
-					'comments'   => 'num_comments',
-					'votes'      => 'num_votes',
-					'attachments'=> 'num_attachments',
-					'dateclosed' => 'date_closed',
-					'closecomment'  => 'close_comment',
-					'resolution'  => 'resolution',
-					'progress'   => 'percent_complete',
-					'effort'  => 'estimated_effort',
-					'os'         => 'os_name',
-					'private'    => 'private',
-					'hyperlink' => 'hyperlink', 
-	
-			);
+		'id'         => array('dbField' => 'task_id', 'csvField' => 'id'),
+		'project'    => array('dbField' => 'project_title', 'csvField' => 'project'),
+		'tasktype'   => array('dbField' => 'task_type', 'csvField' => 'tracker'),
+		'category'   => array('dbField' => 'category_name', 'csvField' => 'category'),
+		'severity'   => array('dbField' => 'task_severity', 'csvField' => 'severity'),
+		'priority'   => array('dbField' => 'task_priority', 'csvField' => 'priority'),
+		'summary'    => array('dbField' => 'item_summary', 'csvField' => 'subject'),
+		'details'  => array('dbField' => 'detailed_desc', 'csvField' => 'description'),
+		'dateopened' => array('dbField' => 'date_opened', 'csvField' => 'date_started'),
+		'openedby'   => array('dbField' => 'opened_by_name', 'csvField' => 'opend_by'),
+		'assignedto' => array('dbField' => 'assigned_to_name', 'csvField' => 'assigned_to'),
+		'status'     => array('dbField' => 'status_name', 'csvField' => 'status'),
+		'lastedit'   => array('dbField' => 'max_date', 'csvField' => 'last_edited'),
+		'lasteditedby'  => array('dbField' => 'last_edited_by', 'csvField' => 'last_edited_by'),
+		'reportedin' => array('dbField' => 'product_version', 'csvField' => 'version_reported_in'),
+		'dueversion' => array('dbField' => 'closedby_version', 'csvField' => 'version_target'),
+		'duedate'    => array('dbField' => 'due_date', 'csvField' => 'duedate'),
+		'comments'   => array('dbField' => 'num_comments', 'csvField' => 'num_comments'),
+		'votes'      => array('dbField' => 'num_votes', 'csvField' => 'num_votes'),
+		'attachments'=> array('dbField' => 'num_attachments', 'csvField' => 'num_attachments'),
+		'dateclosed' => array('dbField' => 'date_closed', 'csvField' => 'date_closed'),
+		'closecomment'  => array('dbField' => 'closure_comment', 'csvField' => 'close_comment'),
+		'resolution'  => array('dbField' => 'resolution_reason', 'csvField' => 'resolution'),
+		'progress'   => array('dbField' => 'percent_complete', 'csvField' => 'percent_complete'),
+		'effort'  => array('dbField' => 'estimated_effort', 'csvField' => 'estimated_effort'),
+		'os'         => array('dbField' => 'os_name', 'csvField' => 'os_name'),
+		'private'    => array('dbField' => 'mark_private', 'csvField' => 'private'),
+		'hyperlink' => array('dbField' => 'hyperlink', 'csvField' => 'hyperlink'),
+
+		// 'id'         => 'id',
+		// 'project'    => 'project',
+		// 'tasktype'   => 'tracker',
+		// 'category'   => 'category',
+		// 'severity'   => 'severity',
+		// 'priority'   => 'priority',
+		// 'summary'    => 'subject',
+		// 'details'  => 'description',
+		// 'dateopened' => 'date_started',
+		// 'openedby'   => 'opened_by',
+		// 'assignedto' => 'assigned_to',
+		// 'status'     => 'status',
+		// 'lastedit'   => 'last_edited',
+		// 'lasteditedby'  => 'last_edited_by',
+		// 'reportedin' => 'version_reported_in',
+		// 'dueversion' => 'version_target',
+		// 'duedate'    => 'date_due',
+		// 'comments'   => 'num_comments',
+		// 'votes'      => 'num_votes',
+		// 'attachments'=> 'num_attachments',
+		// 'dateclosed' => 'date_closed',
+		// 'closecomment'  => 'close_comment',
+		// 'resolution'  => 'resolution',
+		// 'progress'   => 'percent_complete',
+		// 'effort'  => 'estimated_effort',
+		// 'os'         => 'os_name',
+		// 'private'    => 'private',
+		// 'hyperlink' => 'hyperlink', 
+	);
 
 	// Get list of the exported columns and it's these column headings that will
 	// be exported to the .csv file
@@ -659,7 +687,7 @@ function export_task_list() {
 	unset($headings);
 
 	foreach($visible as $heading) {
-			$headings[]=  quoteStr($fields[$heading]);
+			$headings[]=  quoteStr($fields[$heading]['csvField']);
 	}
 
 	// insert header line
@@ -674,7 +702,7 @@ function export_task_list() {
 	$field = Get::safe('order', 'id');
 
 	if ($field == '') $field = 'id';
-	$orderby = $indexes[ $field ];
+	$orderby = $fields[ $field ]['dbField'];
 
 	usort($tasks, "do_cmp");   // sort the items
 
@@ -693,7 +721,9 @@ function export_task_list() {
 
 			foreach ($visible as $col_name) {
 
-					$col_id = $indexes[$col_name];
+					$col_id = $fields[$col_name]['dbField'];
+//					$col_id = $indexes[$col_name];
+
 
 					if ($col_id == '')
 							continue;
