@@ -46,10 +46,10 @@ if (in_array('effort', $visible) && !$user->perms('view_current_effort_done')) {
 }
 
 # for csv export no paging limits
-//if (Get::has('export_list')) {
-//				$offset = -1;
-//				$perpage = -1;
-//}
+if (Get::has('export_list')) {
+				$offset = -1;
+				$perpage = -1;
+}
 
 list($tasks, $id_list, $totalcount, $forbiddencount) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
@@ -369,126 +369,6 @@ function do_cmp($a, $b)
 	 return ($a[ $orderby ] > $b[ $orderby ]) ? -1 : 1;
 }
 
-
-/*********************************************
-*
-* Export the task list as a .csv file
-*
-*********************************************
-*/
-// ORIGINAL
-
-function export_task_list_old()
-{
-	global $tasks, $fs, $user, $sort, $orderby, $proj;
-
-	if (!is_array($tasks)){
-		return;
-	}
-
-	# TODO enforcing user permissions on allowed fields
-	# TODO Flyspray 1.1 or later: selected fields by user request, saved user settings, tasklist settings or project defined list which fields should appear in an export
-	# TODO Flyspray 1.1 or later: export in .ods open document spreadsheet, .xml ....
-	$indexes = array (
-						'id'         => 'task_id',
-						'project'    => 'project_title',
-						'tasktype'   => 'task_type',
-						'category'   => 'category_name',
-						'severity'   => 'task_severity',
-						'priority'   => 'task_priority',
-						'summary'    => 'item_summary',
-						'dateopened' => 'date_opened',
-						'status'     => 'status_name',
-						'openedby'   => 'opened_by_name',
-						'assignedto' => 'assigned_to_name',
-						'lastedit'   => 'max_date',
-						'reportedin' => 'product_version',
-						'dueversion' => 'closedby_version',
-						'duedate'    => 'due_date',
-						'comments'   => 'num_comments',
-						'votes'      => 'num_votes',
-						'attachments'=> 'num_attachments',
-						'dateclosed' => 'date_closed',
-						'progress'   => 'percent_complete',
-						'os'         => 'os_name',
-						'private'    => 'mark_private',
-						'supertask'  => 'supertask_id',
-						'detailed_desc'=>'detailed_desc',
-				);
-
-
-				# we can put this info also in the filename ...
-				#$projectinfo = array('Project ', $tasks[0]['project_title'], date("H:i:s d-m-Y") );
-
-				// sort the tasks into the order selected by the user. Set
-				// global vars for use by sort comparison function
-
-				$sort = Get::safe('sort','desc') == 'desc' ? 'desc' : 'asc';
-				$field = Get::safe('order', 'id');
-
-				if ($field == '') $field = 'id';
-				$orderby = $indexes[ $field ];
-
-				usort($tasks, "do_cmp");
-
-				$outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
-
-				#header('Content-Type: application/csv');
-				header('Content-Type: text/csv');
-				header('Content-Disposition: attachment; filename='.$outfile);
-				header('Content-Transfer-Encoding: text');
-				header('Expires: 0');
-				header('Cache-Control: must-revalidate');
-				#header('Pragma: public');
-				#header('Content-Length: '.strlen($result)); # unknown at this time..
-				ob_clean();
-				flush();
-
-	$output = fopen('php://output', 'w');
-	#fputcsv($output, $projectinfo)
-	$headings= array(
-		'ID',
-		'Category',
-		'Task Type',
-		'Severity',
-		'Summary',
-		'Status',
-		'Progress',
-		'date_opened',
-		'date_closed',
-		'due_date',
-		'supertask_id',
-		$user->perms('view_estimated_effort') ?'Estimated Effort':'',
-		// $user->perms('view_current_effort_done') ?'Done Effort':'',
-		'Description',
-	);
-
-				# TODO maybe if user just want localized headings for nonenglish speaking audience..
-				#$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
-				fputcsv($output, $headings);
-				foreach ($tasks as $task) {
-								$row = array(
-												$task['task_id'],
-												$task['category_name'],
-												$task['task_type'],
-												$fs->severities[ $task['task_severity'] ],
-												$task['item_summary'],
-												$task['status_name'],
-												$task['percent_complete'],
-												$task['date_opened'],
-												$task['date_closed'],
-												$task['due_date'],
-												$task['supertask_id'],
-												($user->perms('view_estimated_effort') && $proj->prefs['use_effort_tracking']) ? $task['estimated_effort'] : '',
-												// ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
-												$task['detailed_desc']
-								);
-								fputcsv($output, $row);
-				}
-				fclose($output);
-				exit();
-}
-
 /*********************************************
 *
 * Tiny helper function
@@ -502,7 +382,7 @@ function quoteStr($str) {
 
 /*********************************************
 *
-* Main export tasklist -> csv function
+* Export the task list as a .csv file
 *
 **********************************************
 */
@@ -512,55 +392,14 @@ function export_task_list() {
 	global $tasks, $fs, $sort, $orderby;
 	global $proj, $user;
 
-	// do we want all the tasks or just the ones for the current page ?
-
-//		$wantAll = Get::has('wantAllTasks');
-
 	// don't want this option to persist accross refreshes
 
 	unset($_GET['export_list']);
-//		unset($_GET['wantAllTasks']);
 
 	// have we got a valid task list ?
 
 	if (!is_array($tasks))
 			return;
-
-	// map column names -> database field names
-
-	$indexes = array (
-
-					'id'         => 'task_id',
-					'project'    => 'project_title',
-					'tasktype'   => 'task_type',
-					'category'   => 'category_name',
-					'severity'   => 'task_severity',
-					'priority'   => 'task_priority',
-					'summary'    => 'item_summary',
-					'dateopened' => 'date_opened',
-					'status'     => 'status_name',
-					'openedby'   => 'opened_by_name',
-					'assignedto' => 'assigned_to_name',
-					'lastedit'   => 'max_date',
-					'reportedin' => 'product_version',
-					'dueversion' => 'closedby_version',
-					'duedate'    => 'due_date',
-					'comments'   => 'num_comments',
-					'votes'      => 'num_votes',
-					'attachments'=> 'num_attachments',
-					'dateclosed' => 'date_closed',
-					'progress'   => 'percent_complete',
-					'os'         => 'os_name',
-					'private'    => 'mark_private',
-	
-					'details'  => 'detailed_desc',
-					'resolution'  => 'resolution_reason',
-					'effort'  => 'estimated_effort',
-					'closecomment'  => 'closure_comment',
-					'lasteditedby'  => 'last_edited_by',
-					'hyperlink' => 'hyperlink',
-					
-			);
 
 	// map column names -> database names and friendly csv column heading names
 
@@ -568,86 +407,57 @@ function export_task_list() {
 
 		'id'         => array('dbField' => 'task_id', 'csvField' => 'id'),
 		'project'    => array('dbField' => 'project_title', 'csvField' => 'project'),
-		'tasktype'   => array('dbField' => 'task_type', 'csvField' => 'tracker'),
+		'tasktype'   => array('dbField' => 'tasktype_name', 'csvField' => 'tracker'),
 		'category'   => array('dbField' => 'category_name', 'csvField' => 'category'),
 		'severity'   => array('dbField' => 'task_severity', 'csvField' => 'severity'),
 		'priority'   => array('dbField' => 'task_priority', 'csvField' => 'priority'),
 		'summary'    => array('dbField' => 'item_summary', 'csvField' => 'subject'),
 		'details'  => array('dbField' => 'detailed_desc', 'csvField' => 'description'),
 		'dateopened' => array('dbField' => 'date_opened', 'csvField' => 'date_started'),
-		'openedby'   => array('dbField' => 'opened_by_name', 'csvField' => 'opend_by'),
+		'openedby'   => array('dbField' => 'opened_by', 'csvField' => 'opend_by'),
 		'assignedto' => array('dbField' => 'assigned_to_name', 'csvField' => 'assigned_to'),
 		'status'     => array('dbField' => 'status_name', 'csvField' => 'status'),
 		'lastedit'   => array('dbField' => 'max_date', 'csvField' => 'last_edited'),
 		'lasteditedby'  => array('dbField' => 'last_edited_by', 'csvField' => 'last_edited_by'),
 		'reportedin' => array('dbField' => 'product_version', 'csvField' => 'version_reported_in'),
-		'dueversion' => array('dbField' => 'closedby_version', 'csvField' => 'version_target'),
+		'dueversion' => array('dbField' => 'closedby_version_name', 'csvField' => 'version_target'),
 		'duedate'    => array('dbField' => 'due_date', 'csvField' => 'duedate'),
 		'comments'   => array('dbField' => 'num_comments', 'csvField' => 'num_comments'),
 		'votes'      => array('dbField' => 'num_votes', 'csvField' => 'num_votes'),
 		'attachments'=> array('dbField' => 'num_attachments', 'csvField' => 'num_attachments'),
 		'dateclosed' => array('dbField' => 'date_closed', 'csvField' => 'date_closed'),
 		'closecomment'  => array('dbField' => 'closure_comment', 'csvField' => 'close_comment'),
-		'resolution'  => array('dbField' => 'resolution_reason', 'csvField' => 'resolution'),
+		'resolution'  => array('dbField' => 'resolution_name', 'csvField' => 'resolution'),
 		'progress'   => array('dbField' => 'percent_complete', 'csvField' => 'percent_complete'),
 		'effort'  => array('dbField' => 'estimated_effort', 'csvField' => 'estimated_effort'),
 		'os'         => array('dbField' => 'os_name', 'csvField' => 'os_name'),
 		'private'    => array('dbField' => 'mark_private', 'csvField' => 'private'),
 		'hyperlink' => array('dbField' => 'hyperlink', 'csvField' => 'hyperlink'),
+		'parent'     => array('dbField' => 'supertask_id', 'csvField' => 'parent'),
 
-		// 'id'         => 'id',
-		// 'project'    => 'project',
-		// 'tasktype'   => 'tracker',
-		// 'category'   => 'category',
-		// 'severity'   => 'severity',
-		// 'priority'   => 'priority',
-		// 'summary'    => 'subject',
-		// 'details'  => 'description',
-		// 'dateopened' => 'date_started',
-		// 'openedby'   => 'opened_by',
-		// 'assignedto' => 'assigned_to',
-		// 'status'     => 'status',
-		// 'lastedit'   => 'last_edited',
-		// 'lasteditedby'  => 'last_edited_by',
-		// 'reportedin' => 'version_reported_in',
-		// 'dueversion' => 'version_target',
-		// 'duedate'    => 'date_due',
-		// 'comments'   => 'num_comments',
-		// 'votes'      => 'num_votes',
-		// 'attachments'=> 'num_attachments',
-		// 'dateclosed' => 'date_closed',
-		// 'closecomment'  => 'close_comment',
-		// 'resolution'  => 'resolution',
-		// 'progress'   => 'percent_complete',
-		// 'effort'  => 'estimated_effort',
-		// 'os'         => 'os_name',
-		// 'private'    => 'private',
-		// 'hyperlink' => 'hyperlink', 
 	);
 
 	// Get list of the exported columns and it's these column headings that will
 	// be exported to the .csv file
-	// NOTE This code pinched from earlier on in this file
 
-	$visible = '';
+	$exportCols = '';
 
 	// get curren user's ettings
 
-	$visible = explode(' ', trim($user->infos['exported_columns']));
+	$exportCols = explode(' ', trim($user->infos['exported_columns']));
 
-	// check visible columns valid
+	// check exported columns names array is valid
 
-	if (!is_array($visible) || !count($visible) || !$visible[0]) {
-			$visible = array('id');
+	if (!is_array($exportCols) || !count($exportCols) || !$exportCols[0]) {
+			$exportCols = array('id');
 	}
 
-	// go get the entire task list. Note we do a reget because normally it's
-	// just the items displayed on the current page that are exported. I actually
-	// want all of them including the ones on the other (yet to shown) pages
+	// If the columns we want to export is not the same as the currently 
+	// displayed columns then go get the entire task list again.
 
-//		if ($wantAll) {
-//				list($tasks, $id_list) = Backend::get_task_list($_GET, $visible, 0, 100000 );
-//		}
+	if ($exportCols != $visible) {
+		list($tasks, $id_list) = Backend::get_task_list($_GET, $exportCols, -1, -1);
+	}
 
 	// have we got a valid task list ?
 
@@ -675,24 +485,16 @@ function export_task_list() {
 
 	$output = fopen('php://output', 'w');
 
-	// first line of .csv will be project name
-
-	$result = "Project: " . $tasks[0]['project_title'] . " - " . 
-			count($tasks) . " tasks - " . date("H:i:s d-m-Y") . EOL;
-
-//		fputs($output, $result . $eol);
-
 	// create column headings line for inserting into file
 
 	unset($headings);
 
-	foreach($visible as $heading) {
+	foreach($exportCols as $heading) {
 			$headings[]=  quoteStr($fields[$heading]['csvField']);
 	}
 
 	// insert header line
 
-	// $result .= implode(',', $headings) . "\r\n";
 	fputs($output, implode(',', $headings) . EOL);
 
 	// sort the tasks into the order selected by the user. Set
@@ -719,11 +521,9 @@ function export_task_list() {
 			// file. The visible fields are those fields visible on the overview
 			// page
 
-			foreach ($visible as $col_name) {
+			foreach ($exportCols as $col_name) {
 
 					$col_id = $fields[$col_name]['dbField'];
-//					$col_id = $indexes[$col_name];
-
 
 					if ($col_id == '')
 							continue;
@@ -740,6 +540,8 @@ function export_task_list() {
 							$date1 = $task[$col_id];
 
 							// if due date is undefined or invalid then use start date instead
+							// NOTE if due_date is before the start date then set it to start_date
+							// + 1 day. This just makes and invalid due date valid!!!
 
 							if ($date1 < $start_date) 
 									$date1 = $start_date + 60 * 60 * 24;
@@ -785,7 +587,8 @@ function export_task_list() {
 									"," . QT . QT . "Task #" . $task['task_id'] . 
 									QT . QT . ")";
 
-							// NOTE DON'T WANT THE DOUBLE QUOTES TO BE REPLACED BY SINGLE QUOTES. SO INSERT THE ITEM INTO THE ARRAY MANUALLY!!
+							// NOTE DON'T WANT THE DOUBLE QUOTES TO BE REPLACED BY SINGLE QUOTES. 
+							// SO INSERT THE ITEM INTO THE ARRAY MANUALLY!!
 
 							$row[] = quoteStr($str);
 							continue;
@@ -808,37 +611,14 @@ function export_task_list() {
 
 			// create comma seperated values from array and append it to $result
 
-			//  $result .= implode(',', $row) . "\r\n";
 			fputs($output, implode(',', $row) . EOL);
 	}
 
-	// create .ods output file
+	// create output file
 
-	// $output = fopen('php://output', 'w');
-	//fwrite($output, $result);
 	fclose($output);
 	exit();
-
-// // now send data to user to download to their machine. First create
-// // HTML header
-
-// $outfile = "tasklist_" . date("Y-m-d") . ".csv";   // name user sees to save file as
-
-// header('Content-Type: application/csv');
-// header('Content-Disposition: attachment; filename=' . $outfile);
-// header('Content-Transfer-Encoding: text');
-// header('Expires: 0');
-// header('Cache-Control: must-revalidate');
-// header('Pragma: public');
-// header('Content-Length: ' . strlen($result)); 
-
-// // finally send out our data
-
-// ob_clean();
-// flush();
-// printf ("%s", $result);
 }
-
 // } }}
 
 

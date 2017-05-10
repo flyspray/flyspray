@@ -53,9 +53,6 @@ function ShowHidePassword(id) {
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
-<!-- BEGIN LAE -->
-   <li><a href="#exporting"><?php echo Filters::noXSS(L('exporting')); ?></a></li>
-<!-- END LAE -->
   </ul>
 
    <div id="general" class="tab">
@@ -472,60 +469,6 @@ function testEmail(){
 
 	</ul>
     </div>
-    
-<!-- BEGIN LAE -->
-
-<!--
-    <div id="exporting" class="tab">
-
-      <ul class="form_elements">
-
-            <?php // Set the selectable column names
-            $columnnames = array(
-    'id', 
-    'project', 
-    'tasktype', 
-    'category', 
-    'severity', 
-    'priority', 
-    'summary', 
-    'details', 
-    'status', 
-    'progress', 
-    'dateopened', 
-    'openedby', 
-    'assignedto', 
-    'reportedin', 
-    'duedate', 
-    'dueversion', 
-    'effort', 
-    'dateclosed', 
-    'resolution', 
-    'closecomment', 
-    'private', 
-    'parent', 
-    'lastedit', 
-    'lasteditedby',
-    'comments', 
-    'attachments', 
-    'os', 
-    'votes', 
-    ); 
-
-    $selectedcolumns = explode(" ", $fs->prefs['exported_columns']);
-            ?>
-          <li>
-            <label class="labeltextarea"><?php echo Filters::noXSS(L('exportedcolumns')); ?></label>
-            <?php echo tpl_double_select('exported_columns', $columnnames, $selectedcolumns, true); ?>
-          </li>
-
-  </ul>
-
-   </div>
--->
-
-<!-- END LAE -->
-
     <div class="tbuttons">
       <input type="hidden" name="action" value="globaloptions" />
       <button type="submit" class="positive"><?php echo Filters::noXSS(L('saveoptions')); ?></button>
