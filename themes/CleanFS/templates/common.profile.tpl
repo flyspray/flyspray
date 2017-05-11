@@ -94,12 +94,12 @@
 
       <li>
 
-        <input class="toggle-box" id="identifier-1" type="checkbox" >
-        <label for="identifier-1">Click here to select exportable columns</label>
-
         <?php 
 
-          // Set the selectable column names
+          // Set the selectable column names. Could be created by a function that
+          // will create a permissions based set of items if need be. However, if this
+          // is done will need to update the export_task_list() function to also check
+          // that a column name is permited for export by the current user!!
 
           $columnnames = array(
             'id', 
@@ -136,6 +136,9 @@
           
           $selectedcolumns = explode(" ", $theuser->infos['exported_columns']);
         ?>
+
+        <input class="toggle-box" id="identifier-1" type="checkbox" >
+        <label for="identifier-1">Select exportable columns</label>
 
         <div>
 

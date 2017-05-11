@@ -541,7 +541,7 @@ function export_task_list() {
 
 							// if due date is undefined or invalid then use start date instead
 							// NOTE if due_date is before the start date then set it to start_date
-							// + 1 day. This just makes and invalid due date valid!!!
+							// + 1 day. This just makes sure that an invalid due_date is made valid!!!
 
 							if ($date1 < $start_date) 
 									$date1 = $start_date + 60 * 60 * 24;
@@ -551,6 +551,8 @@ function export_task_list() {
 							$str = date(DATE_ISO8601, $date1);
 							break;
 
+					// format dates in DATE_ISO8601 format for consistency
+							
 					case 'date_opened':
 					case 'date_closed':
 							$str = date(DATE_ISO8601, $task[$col_id]);
