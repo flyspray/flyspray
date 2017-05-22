@@ -1359,7 +1359,7 @@ LEFT JOIN ({groups} pg
         
         // Otherwise, only join tables which are really necessary to speed up the db-query
         if (array_get($args, 'type') || in_array('tasktype', $visible)) {
-            $select .= ' lt.tasktype_name, ';
+            $select .= ' lt.tasktype_name, lt.class, ';
             $from .= '
 LEFT JOIN {list_tasktype} lt ON t.task_type = lt.tasktype_id ';
             $groupby .= ' lt.tasktype_id, ';

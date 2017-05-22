@@ -786,6 +786,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="class" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
     <index name="project_id_tt">
       <UNIQUE/>
       <col>project_id</col>

@@ -1757,7 +1757,7 @@ switch ($action = Req::val('action'))
         $listposition = Post::val('list_position');
         $listshow     = Post::val('show_in_list');
         $listdelete   = Post::val('delete');
-        if($lt=='tag'){
+        if($lt=='tag' || $lt == 'tasktype'){
                 $listclass = Post::val('list_class');
         }
 	foreach ($listnames as $id => $listname) {
@@ -1780,7 +1780,7 @@ switch ($action = Req::val('action'))
 				return;
 			}
 
-			if($lt=='tag'){
+			if($lt=='tag' || $lt == 'tasktype'){
 				$update = $db->Query("UPDATE $list_table_name
 					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
 					WHERE $list_id=? AND project_id=?",

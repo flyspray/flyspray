@@ -591,6 +591,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="class" type="C" size="100">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
     <index name="project_id_tt">
       <UNIQUE/>
       <col>project_id</col>
@@ -1297,8 +1301,8 @@
     <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Duplicate', 6, 1, 0);</query>
     <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Fixed', 7, 1, 0);</query>
     <query>INSERT INTO list_resolution VALUES (DEFAULT, 'Implemented', 8, 1, 0);</query>
-    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Bug Report', 1, 1, 0);</query>
-    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Feature Request', 2, 1, 0);</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Bug Report', 1, 1, 0, '');</query>
+    <query>INSERT INTO list_tasktype VALUES (DEFAULT, 'Feature Request', 2, 1, 0, '');</query>
     <query>INSERT INTO list_version VALUES (DEFAULT, 1, 'Development', 1, 1, 2);</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('Unconfirmed', 1, 1, 0)</query>
     <query>INSERT INTO list_status (status_name, list_position, show_in_list, project_id) VALUES ('New', 2, 1, 0)</query>
