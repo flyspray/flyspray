@@ -1,0 +1,9 @@
+/*
+used for pure html/css3 switches (with ~ sibling) for older webkit based browsers
+(android ~4.3, safari ~5.1, chrome ?, TODO: exact (webkit)versions for the useragent filter)
+see https://css-tricks.com/webkit-sibling-bug/
+Hack may increase cpuusage due the infinite animation loop, see also https://codepen.io/simeydotme/post/hot-pockets
+So load this file only if really necessary (check useragent) (or find a better pure css workaround)
+*/
+body { -webkit-animation: webkitfix infinite 1s; }
+@-webkit-keyframes webkitfix { from { display: block } to { display: block } }
