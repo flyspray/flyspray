@@ -128,6 +128,10 @@
       <UNIQUE/>
       <col>user_name</col>
     </index>
+    <field name="exported_columns" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="id tasktype severity summary details status progress duedate dueversion"/>
+    </field>
   </table>
   <table name="user_emails">
 	  <field name="id" type="I" size="5"></field>

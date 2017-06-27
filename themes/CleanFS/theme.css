@@ -1,6 +1,7 @@
 /* ------------------ IMPORTS -------------------- */
 @import url("../../js/jscalendar/calendar-system.css");
 @import url("geshi.css");
+@import url("effects.css");
 /*@import url("./fonts/octicons/octicons.css");*/
 /*@import url("calendar.css");*/
 /* reset.css - Resets default browser CSS.
@@ -1513,3 +1514,4 @@ div.comment_container {margin:0;}
 div.comment_container .commenttext{padding:2px;}
 div.comment_container .comment {margin:0;width:auto;}
 }
+

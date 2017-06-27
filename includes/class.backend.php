@@ -629,10 +629,10 @@ abstract class Backend
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone, dateformat,
-                               dateformat_extended, oauth_uid, oauth_provider, lang_code)
-                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?, ?)",
+                               dateformat_extended, oauth_uid, oauth_provider, lang_code, exported_columns)
+                     VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, 25, ?, ?, ?, ?, ?, ?, ?, ?)",
             array($user_name, Flyspray::cryptPassword($password), $real_name, strtolower($jabber_id),
-                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']));
+                $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']),$exported_columns);
 
         // Get this user's id for the record
         $uid = Flyspray::UserNameToId($user_name);
