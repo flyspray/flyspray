@@ -7,8 +7,6 @@ header('Content-type: text/html; charset=utf-8');
 require_once('../../header.php');
 global $proj, $fs;
 
-$baseurl = dirname(dirname($baseurl)) .'/' ;
-
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
   $user = new User(Cookie::val('flyspray_userid'));
   $user->check_account_ok();
