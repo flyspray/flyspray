@@ -84,11 +84,22 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
-            #Flyspray::show_error(L('summaryanddetails'));
-            Flyspray::show_error(L('summaryrequired'));
-            break;
-        }
+
+		$newtaskerrors=array();
+
+		if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') { // description not required anymore
+			$newtaskerrors['summaryrequired']=1;
+		}
+
+		if ($user->isAnon() && !filter_var(Post::val('anon_email'), FILTER_VALIDATE_EMAIL)) {
+			$newtaskerrors['invalidemail']=1;
+		}
+
+		if (count($newtaskerrors)>0){
+			$_SESSION['ERRORS']=$newtaskerrors;
+			$_SESSION['ERROR']=L('invalidnewtask');
+			break;
+		}
 
         list($task_id, $token) = Backend::create_task($_POST);
         // Status and redirect
