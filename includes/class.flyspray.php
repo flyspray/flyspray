@@ -642,19 +642,9 @@ class Flyspray
   public static function cryptPassword($password)
   {
 	global $conf;
-	$pwcrypt = strtolower($conf['general']['passwdcrypt']);
 
-	# sha1, md5, sha512 are unsalted, hashing methods, not suited for storing passwords anymore.
-	# Use crypt(), that adds random salt, customizable rounds and customizable hashing algorithms.
-	if ($pwcrypt == 'sha1') {
-		return sha1($password);
-	} elseif ($pwcrypt == 'md5') {
-		return md5($password);
-	} elseif ($pwcrypt == 'sha512') {
-		return hash('sha512', $password);
-	} else {
-		return crypt($password);
-	}
+	$pwcrypt = password_hash( $password, PASSWORD_DEFAULT );
+	return $pwcrypt;
   } // }}}
 
     // {{{
@@ -693,25 +683,6 @@ class Flyspray
             return 0;
         }
 
-	if( $method != 'ldap' ){
-		// encrypt the password with the method used in the db
-		switch (strlen($auth_details['user_pass'])) {
-		# detecting passwords stored with old unsalted hashing methods: sha1,md5,sha512
-		case 40:
-			$pwhash = sha1($password);
-			break;
-		case 32:
-			$pwhash = md5($password);
-			break;
-		case 128:
-			$pwhash = hash('sha512', $password);
-			break;
-		default:
-			$pwhash = crypt($password, $auth_details['user_pass']); // user_pass contains algorithm, rounds, salt
-			break;
-		}
-	}
-
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
             $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
                            WHERE user_id = ?', array($auth_details['user_id']));
@@ -726,11 +697,7 @@ class Flyspray
 		$pwOk = Flyspray::checkForLDAPUser($username, $password);
 	} else{
 		// Compare the crypted password to the one in the database
-		if( function_exists('hash_equals') ){
-			$pwOk = hash_equals($pwhash, $auth_details['user_pass']);
-		} else{
-			$pwOk = ($pwhash == $auth_details['user_pass']);
-		}
+		$pwOk = password_verify( $password, $auth_details['user_pass'] );
 	}
 
         // Admin users cannot be disabled
