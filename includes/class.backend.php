@@ -1606,14 +1606,22 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
         $sql_params[] = $user->id;
         $sql_params[] = $user->id;
 	}
-        /// process search-conditions {{{
-        $submits = array('type' => 'task_type', 'sev' => 'task_severity',
-            'due' => 'closedby_version', 'reported' => 'product_version',
-            'cat' => 'product_category', 'status' => 'item_status',
-            'percent' => 'percent_complete', 'pri' => 'task_priority',
-            'dev' => array('ass.user_id', 'u.user_name', 'u.real_name'),
-            'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
-            'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'));
+
+	/// process search-conditions {{{
+		$submits = array(
+		'type' => 'task_type',
+		'sev' => 'task_severity',
+		'due' => 'closedby_version',
+		'reported' => 'product_version',
+		'cat' => 'product_category',
+		'status' => 'item_status',
+		'percent' => 'percent_complete',
+		'pri' => 'task_priority',
+		'dev' => array('ass.user_id', 'u.user_name', 'u.real_name'),
+		'opened' => array('opened_by', 'uo.user_name', 'uo.real_name'),
+		'closed' => array('closed_by', 'uc.user_name', 'uc.real_name'),
+		'tag'=>array('tt.tag_id')
+	);
         foreach ($submits as $key => $db_key) {
             $type = array_get($args, $key, ($key == 'status') ? 'open' : '');
             settype($type, 'array');
