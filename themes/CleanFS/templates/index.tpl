@@ -197,6 +197,18 @@
                             <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', '')); ?>
                         </select>
                     </div>
+	<!-- Tags -->
+	<?php if ($proj->id>0) { ?>
+		<div class="search_select">
+		<label class="default multisel" for="tag"><?php echo eL('tags'); ?></label>
+		<select name="tag[]" id="tag" multiple="multiple" size="8">
+		<?php
+			#echo tpl_options(array('' => eL('anytag')) + $proj->listTags(false,'tag_name'), Get::val('tag', ''));
+			echo tpl_options(array('' => eL('anytag')) + $proj->listTags(), Get::val('tag', ''));
+		?>
+		</select>
+		</div>
+	<?php } ?>
 
             <!-- Status -->
 		    <?php if (!$filter || in_array('status', $fields)) { ?>
