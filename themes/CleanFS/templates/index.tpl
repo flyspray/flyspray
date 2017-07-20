@@ -203,8 +203,8 @@
 		<label class="default multisel" for="tag"><?php echo eL('tags'); ?></label>
 		<select name="tag[]" id="tag" multiple="multiple" size="8">
 		<?php
-			#echo tpl_options(array('' => eL('anytag')) + $proj->listTags(false,'tag_name'), Get::val('tag', ''));
-			echo tpl_options(array('' => eL('anytag')) + $proj->listTags(), Get::val('tag', ''));
+			echo tpl_options(array('' => L('anytag')) + $proj->listTags(false,'tag_name'), Get::val('tag', ''));
+			#echo tpl_options(array('' => L('anytag')) + $proj->listTags(), Get::val('tag', ''));
 		?>
 		</select>
 		</div>
