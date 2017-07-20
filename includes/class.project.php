@@ -336,12 +336,40 @@ class Project
                 return $tags;
         }
 	*/
-	/* rewrite of tags feature, FS1.0beta1 */ 
-	
-	function listTags($pm = false)
+
+	/**
+	 * list tags of a project
+	 *
+	 * When called (true), only tags of projects are fetched.
+	 * When called without a param or (false), both project tags and global tags are fetched (cached)
+	 * When called as (false|true, 'tag_name'), then both are fetched, sort global tags by tag_name, then project tags by tag_name for the dropdown filter
+	 * rewrite of tags feature since FS1.0beta1
+	 *
+	 * @param bool $pm optional, initially only used for detection if we are in a admin or pm manager setting page.
+	 * @param string $orderby optional, used for tasklist filter dropdown alphabetic sorting
+	 * @return array
+	 * @since version 1.0beta1 (rewrite)
+	 * @todo rewrite/rethink for cleaner params, maybe just write different functions for the different purposes.
+	 */
+	function listTags($pm = false, $orderby='list_position')
 	{
 		global $db;
-		if ($pm) {
+		# a bit messy, to get the tasklist tag filter dropdown select alphabetic ordering
+		if($orderby=='tag_name') {
+			$result= $db->Query('SELECT tg.tag_id, tg.tag_name, tg.list_position, tg.show_in_list, COUNT(tt.task_id) AS used_in_tasks
+				FROM {list_tag} tg
+				LEFT JOIN {task_tag} tt ON tt.tag_id=tg.tag_id
+				LEFT JOIN {tasks} t ON t.task_id=tt.task_id
+				WHERE tg.project_id=0 OR tg.project_id=?
+				GROUP BY tg.tag_id
+				ORDER BY tg.project_id ASC, tg.tag_name ASC', array($this->id));
+				/*ORDER BY tg.list_position', array($this->id));*/
+			$tags=array();
+			while ($row = $db->FetchRow($result)) {
+				$tags[]=$row;
+			}
+			return $tags;
+		}elseif ($pm) {
 			$result= $db->Query('SELECT tg.*, COUNT(tt.task_id) AS used_in_tasks
 				FROM {list_tag} tg
 				LEFT JOIN {task_tag} tt ON tt.tag_id=tg.tag_id
