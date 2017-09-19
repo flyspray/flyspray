@@ -23,6 +23,20 @@ if(is_readable(BASEDIR . '/vendor/autoload.php')){
         exit;
 }
 
+# TODO: API for HTTP-Header and Content-Security-Policy(CSP), so extensions to Flyspray can add exceptions.
+if(Get::val('getfile')) {
+        # deny everything for user uploads
+        header("Content-Security-Policy: default-src 'none';");
+} else{
+        # well, better then nothing in a first step ..
+        if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
+                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
+        } else{
+                # just because of flyspray's version of ckeditor :-/
+                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
+        }
+}
+
 // If it is empty, take the user to the setup page
 if (!$conf) {
     Flyspray::Redirect('setup/index.php');
