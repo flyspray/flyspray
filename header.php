@@ -30,9 +30,10 @@ if(Get::val('getfile')) {
 } else{
         # well, better then nothing in a first step ..
         if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
-                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
+                # unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
+                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
         } else{
-                # just because of flyspray's version of ckeditor :-/
+                # unsafe-eval for tabs.js and flyspray's version of ckeditor :-/
                 header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
         }
 }
