@@ -1,8 +1,4 @@
-<!---
-[![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray) Flyspray/peterdd
-
-[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray
--->
+[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray [![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray) Flyspray/peterdd
 
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
 
