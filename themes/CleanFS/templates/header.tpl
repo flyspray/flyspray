@@ -18,7 +18,7 @@
     <?php foreach ($fs->projects as $project): ?>
     <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
     <?php endforeach; ?>
-    <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
+    <link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
 <?php
 # css hack to fix css3only state switches with ~ in older android browser <4.3 TODO: find webkit version when that issue was fixed.
 if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 4\.[012]/' , $_SERVER['HTTP_USER_AGENT'])):?>
