@@ -818,7 +818,7 @@ class Setup extends Flyspray
 		ini_set( 'mysqli.default_socket', $dbsocket );
 	}
 
-      $this->mDbConnection =& NewADOConnection(strtolower($db_type));
+      $this->mDbConnection = ADONewConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
       $this->mDbConnection->SetCharSet('utf8');
 
@@ -887,7 +887,7 @@ class Setup extends Flyspray
 	}
 
       // Setting the database type for the ADODB connection
-      $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+      $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
       if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
          $_SESSION['page_heading'] = 'Database Processing';
@@ -910,7 +910,7 @@ class Setup extends Flyspray
 
             case '-25':
             // Database does not exist, try to create one
-            $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+            $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
             #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
@@ -953,7 +953,7 @@ class Setup extends Flyspray
       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
       $this->mDbConnection->SetCharSet('utf8');
         //creating the datadict object for further operations
-       $this->mDataDict = & NewDataDictionary($this->mDbConnection);
+       $this->mDataDict = NewDataDictionary($this->mDbConnection);
 
        include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
 
