@@ -10,7 +10,6 @@
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
-// For translation updates contact - info@bnit.it
 $translation = array(
 'edituser'                => 'Modifica utente',
 'accountenabled'          => 'Utenza abilitata',
@@ -255,7 +254,7 @@ $translation = array(
 'attachedtoproject'       => 'Allegato al progetto',
 'reminders'               => 'Promemoria',
 'system'                  => 'Sistema',
-'systemvalues'            => 'Elenco valordi per tutto il Sistema',
+'systemvalues'            => 'Elenco valori per tutto il Sistema',
 'projectvalues'           => 'Elenco valori per il progetto specifico',
 'remindthisuser'          => 'Manda un promemoria a questo utente',
 'thisoften'               => 'Quanto spesso',
