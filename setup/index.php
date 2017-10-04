@@ -916,10 +916,6 @@ class Setup extends Flyspray
 
 		# if possible set correct default character set for mysql.
 		# MySQL below 5.5.3 only supports 1,2,3 byte chars of utf8. But some language's chars or emojis(argh) are defined as 4byte chars
-		# FIXME RESEARCH MySQL 5.5.3 below mysql 5.7.7 has some limitations on index key sizes for utf8mb4. Is Flyspray's dbschema efffected by this
-		# so we must take care?
-		# FIXME RESEARCH How is MariaDB effected by this problem? If yes, what are the relevant version numbers?
-		# collation *_unicode_ci is preferred over *_general_ci : better search accuracy for a big range of spoken languages.
 		$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci'; # default for mysql for compat
 		if( $data['db_type']=='mysqli' || $data['db_type']=='mysql' ) {
 			$dbinfo=$this->mDbConnection->ServerInfo(); # provides 'description' and 'version'
