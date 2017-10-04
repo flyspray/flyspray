@@ -913,9 +913,27 @@ class Setup extends Flyspray
             $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
-            #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
-            # if possible set correct default character set for mysql.
-            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci') );
+
+		# if possible set correct default character set for mysql.
+		# MySQL below 5.5.3 only supports 1,2,3 byte chars of utf8. But some language's chars or emojis(argh) are defined as 4byte chars
+		$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci'; # default for mysql for compat
+		if( $data['db_type']=='mysqli' || $data['db_type']=='mysql' ) {
+			$dbinfo=$this->mDbConnection->ServerInfo(); # provides 'description' and 'version'
+			if( version_compare($dbinfo['version'], '5.5.3') >=0 ){
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+				$this->mDbConnection->SetCharSet('utf8mb4');
+			}else{
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+				$this->mDbConnection->SetCharSet('utf8');
+				$_SESSION['page_message'][]='Your MySQL server '.$dbinfo['version'].' < 5.5.3, so database has limited utf8 support (no unicode emojis for instance). Upgrading your MySQL server to 5.5.3 or newer is suggested.';
+			}
+		}else{
+			# postgresql
+			$this->mDbConnection->SetCharSet('utf8');
+		}
+
+		$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>$mysqldbcharset) );
+
             if (!$dict->ExecuteSQLArray($sqlarray)) {
                 $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
                 $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
