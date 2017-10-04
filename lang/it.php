@@ -10,7 +10,6 @@
 // Furthermore, nothing else than the language array is saved
 // when using the langedit.php editor!
 //
-// For translation updates contact - info@bnit.it
 $translation = array(
 'edituser'                => 'Modifica utente',
 'accountenabled'          => 'Utenza abilitata',
@@ -32,7 +31,7 @@ $translation = array(
 'newuser'                 => 'Registra un nuovo Utente',
 'newuserbulk'             => 'Registra Nuovi Utenti',
 'bulkuserstoadd'          => 'Elenco dei Nuovi Utenti',
-'optionsforallusers'      => 'Opzioni per tutti gli Utenti',
+'optionsforallusers'      => 'Opzioni per tutti i Nuovi Utenti',
 'newgroup'                => 'Crea un nuovo Gruppo',
 'yes'                     => 'Si',
 'no'                      => 'No',
@@ -69,7 +68,7 @@ $translation = array(
 'baseurl'                 => 'URL base per questa installazione',
 'replyaddress'            => 'Indirizzo e-mail di risposta per le notifiche',
 'themestyle'              => 'Tema / Stile',
-'language'                => 'Linguaggio',
+'language'                => 'Lingua',
 'anonview'                => 'Consenti agli utenti anonimi di visualizzare i task',
 'allowanon'               => 'Consenti agli utenti anonimi di creare nuovi task',
 'never'                   => 'Mai',
@@ -255,7 +254,7 @@ $translation = array(
 'attachedtoproject'       => 'Allegato al progetto',
 'reminders'               => 'Promemoria',
 'system'                  => 'Sistema',
-'systemvalues'            => 'Elenco valordi per tutto il Sistema',
+'systemvalues'            => 'Elenco valori per tutto il Sistema',
 'projectvalues'           => 'Elenco valori per il progetto specifico',
 'remindthisuser'          => 'Manda un promemoria a questo utente',
 'thisoften'               => 'Quanto spesso',
@@ -827,7 +826,7 @@ $translation = array(
 'error23'                 => 'Utente o Gruppo non abilitato.',
 'error24'                 => 'Un eseguibile di Dot o un server pubblico Dot non sono stati configurati.',
 'error25'                 => 'La Roadmap è disponibile solo per un Progetto specifico.',
-'error26'                 => 'Provider oauth non supportato.',
+'error26'                 => 'Provider OAuth non supportato.',
 'error27'                 => 'Impossibile collegarsi. Autorizzaci a visualizzare il tuo indirizzo email.',
 'error28'                 => 'Non si hanno i permessi per accedere a questa area.',
 'done'                    => 'completato',
@@ -966,8 +965,8 @@ $translation = array(
 'categoryitemexists'      => 'L\'elemento %s già esiste nella categoria %s nel database.',
 'pageswelcomemsg'         => 'Pagine dove mostrare il messaggio introduttivo principale',
 'pagesintromsg'           => 'Pagine dove mostrare il messaggio introduttivo',
-'activeoauths'            => 'Providere Oauth attivi',
-'onlyoauthreg'            => 'Permetti solo registrazioni tramite Oauth',
+'activeoauths'            => 'Provider OAuth attivi',
+'onlyoauthreg'            => 'Permetti solo registrazioni tramite OAuth',
 'estimatedeffortformat'   => 'Formato di visualizzazione Impegno stimato',
 'currenteffortdoneformat' => 'Formato di visualizzazione Impegno attuale',
 'minute'                  => 'minuto',
