@@ -929,6 +929,7 @@ class Setup extends Flyspray
 			}else{
 				$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
 				$this->mDbConnection->SetCharSet('utf8');
+				$_SESSION['page_message'][]='Your MySQL server '.$dbinfo['version'].' < 5.5.3, so database has limited utf8 support (no unicode emojis for instance). Upgrading your MySQL server to 5.5.3 or newer is suggested.';
 			}
 		}else{
 			# postgresql
