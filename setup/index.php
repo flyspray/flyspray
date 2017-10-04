@@ -695,8 +695,8 @@ class Setup extends Flyspray
                'admin_username' => array('Administrator\'s username', 'string', true),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
-               'syntax_plugin' => array('Syntax', 'option', true), # required true while testing, for release could be false.
-		'reminder_daemon' => array('Reminder Daemon', 'option', false),
+               'syntax_plugin' => array('Syntax', 'option', false), 
+	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values')) {
                // Set a page heading in case of errors.
@@ -726,7 +726,14 @@ class Setup extends Flyspray
    {
       // Extract the variables to local namespace
       extract($data);
-	if(!isset($syntax_plugin)){$syntax_plugin="";}
+
+	  if(!isset($db_password)) {
+		  $db_password = '';
+	  }
+
+	  if(!isset($syntax_plugin)) {
+		  $syntax_plugin = '';
+	  }
 
       $config_intro	=
       "; <?php die( 'Do not access this page directly.' ); ?>
@@ -811,7 +818,7 @@ class Setup extends Flyspray
 		ini_set( 'mysqli.default_socket', $dbsocket );
 	}
 
-      $this->mDbConnection =& NewADOConnection(strtolower($db_type));
+      $this->mDbConnection = ADONewConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
       $this->mDbConnection->SetCharSet('utf8');
 
@@ -880,7 +887,7 @@ class Setup extends Flyspray
 	}
 
       // Setting the database type for the ADODB connection
-      $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+      $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
       if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
          $_SESSION['page_heading'] = 'Database Processing';
@@ -903,7 +910,7 @@ class Setup extends Flyspray
 
             case '-25':
             // Database does not exist, try to create one
-            $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+            $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
 
@@ -967,7 +974,7 @@ class Setup extends Flyspray
       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
       $this->mDbConnection->SetCharSet('utf8');
         //creating the datadict object for further operations
-       $this->mDataDict = & NewDataDictionary($this->mDbConnection);
+       $this->mDataDict = NewDataDictionary($this->mDbConnection);
 
        include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
 

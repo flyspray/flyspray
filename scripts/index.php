@@ -18,7 +18,7 @@ if (!$user->can_select_project($proj->id)) {
     $proj = new Project(0);
 }
 
-$perpage = '250';
+$perpage = '50';
 if (isset($user->infos['tasks_perpage']) && $user->infos['tasks_perpage'] > 0) {
     $perpage = $user->infos['tasks_perpage'];
 }
@@ -199,15 +199,17 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$tagclass=explode(',', $task['tagclass']);
 			$tgs='';
 			for($i=0;$i< count($tags); $i++){
-				$tgs.='<i class="tag t'.$tagids[$i]
-					.(isset($tagclass[$i]) ? ' ' . $tagclass[$i] : '').'" title="'.$tags[$i].'"></i>';
+				if(isset($tagids[$i])){
+					$tgs.='<i class="tag t'.$tagids[$i]
+					.(isset($tagclass[$i]) ? ' ' .htmlspecialchars($tagclass[$i], ENT_QUOTES, 'utf-8') : '').'" title="'.htmlspecialchars($tags[$i], ENT_QUOTES, 'utf-8').'"></i>';
+				}	
 			}
                         $value.=$tgs;
 		}
             break;
 
         case 'tasktype':
-            $value = $task['tasktype_name'];
+            $value = htmlspecialchars($task['tasktype_name'], ENT_QUOTES, 'utf-8');
             $class.=' typ'.$task['task_type'];
             break;
 
@@ -427,7 +429,7 @@ function export_task_list()
 
         usort($tasks, "do_cmp");
 
-        $outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
+        $outfile = str_replace(' ', '_', $proj->prefs['project_title']).'_'.date("Y-m-d").'.csv';
 
         #header('Content-Type: application/csv');
         header('Content-Type: text/csv');

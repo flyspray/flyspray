@@ -27,7 +27,7 @@ class Flyspray
      * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
      * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
      */
-	public $version = '1.0-rc2 dev';
+	public $version = '1.0-rc5 dev';
 
     /**
      * Flyspray preferences
@@ -95,8 +95,8 @@ class Flyspray
                 continue;
             }
 
-            $val = trim($val);
             $last = strtolower($val{strlen($val)-1});
+            $val = trim($val, 'gGmMkK');
             switch ($last) {
                 // The 'G' modifier is available since PHP 5.1.0
                 case 'g':
@@ -429,7 +429,9 @@ class Flyspray
         $dirname = dirname(dirname(__FILE__));
         if ($handle = opendir($dirname . '/themes/')) {
             while (false !== ($file = readdir($handle))) {
-                if (substr($file,0,1) != '.' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
+                if (substr($file,0,1) != '.' && is_dir("$dirname/themes/$file")
+		    && (is_file("$dirname/themes/$file/theme.css") || is_dir("$dirname/themes/$file/templates"))
+		   ) {
                     $themes[] = $file;
                 }
             }
@@ -437,6 +439,9 @@ class Flyspray
         }
 
         sort($themes);
+		# always put the full default Flyspray theme first, [0] works as fallback in class Tpl->setTheme()
+		array_unshift($themes, 'CleanFS');
+		$themes = array_unique($themes);
         return $themes;
     } // }}}
     // List a project's group {{{
@@ -469,9 +474,14 @@ class Flyspray
     public static function listUsers()
     {
         global $db;
-        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name, email_address
-			FROM {users}
-			ORDER BY account_enabled DESC, UPPER(user_name) ASC');
+        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name,
+		email_address, jabber_id, oauth_provider, oauth_uid,
+		notify_type, notify_own, notify_online,
+		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
+		register_date, login_attempts, lock_until,
+		profile_image, hide_my_email
+		FROM {users}
+		ORDER BY account_enabled DESC, UPPER(user_name) ASC');
         return $db->FetchAllArray($res);
     }
 
@@ -624,26 +634,31 @@ class Flyspray
         return $db->FetchRow($sql);
     } // }}}
     //  {{{
-    /**
-     * Crypt a password with the method set in the configfile
-     * @param string $password
-     * @access public static
-     * @return string
-     * @version 1.0
-     */
-    public static function cryptPassword($password)
-    {
-        global $conf;
-        $pwcrypt = $conf['general']['passwdcrypt'];
+  /**
+   * Crypt a password with the method set in the configfile
+   * @param string $password
+   * @access public static
+   * @return string
+   * @version 1.0
+   */
+  public static function cryptPassword($password)
+  {
+	global $conf;
+	$pwcrypt = strtolower($conf['general']['passwdcrypt']);
 
-        if (strtolower($pwcrypt) == 'sha1') {
-            return sha1($password);
-        } elseif (strtolower($pwcrypt) == 'md5') {
-            return md5($password);
-        } else {
-            return crypt($password);
-        }
-    } // }}}
+	# sha1, md5, sha512 are unsalted, hashing methods, not suited for storing passwords anymore.
+	# Use crypt(), that adds random salt, customizable rounds and customizable hashing algorithms.
+	if ($pwcrypt == 'sha1') {
+		return sha1($password);
+	} elseif ($pwcrypt == 'md5') {
+		return md5($password);
+	} elseif ($pwcrypt == 'sha512') {
+		return hash('sha512', $password);
+	} else {
+		return crypt($password);
+	}
+  } // }}}
+
     // {{{
     /**
      * Check if a user provided the right credentials
@@ -680,20 +695,25 @@ class Flyspray
             return 0;
         }
 
-        if( $method != 'ldap' ){
-        //encrypt the password with the method used in the db
-        switch (strlen($auth_details['user_pass'])) {
-            case 40:
-                $password = sha1($password);
-                break;
-            case 32:
-                $password = md5($password);
-                break;
-            default:
-                $password = crypt($password, $auth_details['user_pass']); //using the salt from db
-                break;
-        }
-        }
+	if( $method != 'ldap' ){
+		// encrypt the password with the method used in the db
+		switch (strlen($auth_details['user_pass'])) {
+		# detecting passwords stored with old unsalted hashing methods: sha1,md5,sha512
+		case 40:
+			$pwhash = sha1($password);
+			break;
+		case 32:
+			$pwhash = md5($password);
+			break;
+		case 128:
+			$pwhash = hash('sha512', $password);
+			break;
+		default:
+			$pwhash = crypt($password, $auth_details['user_pass']); // user_pass contains algorithm, rounds, salt
+			break;
+		}
+	}
+
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
             $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
                            WHERE user_id = ?', array($auth_details['user_id']));
@@ -701,15 +721,19 @@ class Flyspray
             $_SESSION['was_locked'] = true;
         }
 
-        // skip password check if the user is using oauth
-        if($method == 'oauth'){
-            $pwOk = true;
-        } elseif( $method == 'ldap'){
-            $pwOk = Flyspray::checkForLDAPUser($username, $password);
-        }else{
-            // Compare the crypted password to the one in the database
-            $pwOk = ($password == $auth_details['user_pass']);
-        }
+	// skip password check if the user is using oauth
+	if($method == 'oauth'){
+		$pwOk = true;
+	} elseif( $method == 'ldap'){
+		$pwOk = Flyspray::checkForLDAPUser($username, $password);
+	} else{
+		// Compare the crypted password to the one in the database
+		if( function_exists('hash_equals') ){
+			$pwOk = hash_equals($pwhash, $auth_details['user_pass']);
+		} else{
+			$pwOk = ($pwhash == $auth_details['user_pass']);
+		}
+	}
 
         // Admin users cannot be disabled
         if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {

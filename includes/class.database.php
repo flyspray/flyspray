@@ -63,8 +63,8 @@ class Database
      * @param string $dbuser username to connect to the database
      * @param string $dbpass password to connect to the database
      * @param string $dbname
-     * @param string $dbtype database driver to use, currently :
-     *  "mysql", "mysqli","pdo_mysql" "pgsql", "pdo_pgsql" should work correctly.
+     * @param string $dbtype database driver to use, currently : "mysql", "mysqli", "pgsql"
+     * "pdo_mysql" and "pdo_pgsql" experimental
      * @param string $dbprefix database prefix.
      */
     public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
@@ -76,14 +76,26 @@ class Database
     
         # 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
         # For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
-        if( $dbtype=='mysqli' && 'localhost:/'==substr($dbhost,0,11) ){
+        if( ($dbtype=='mysqli' || $dbtype='pdo_mysql') && 'localhost:/'==substr($dbhost,0,11) ){
             $dbsocket=substr($dbhost,10);
             $dbhost='localhost';
-            ini_set( 'mysqli.default_socket', $dbsocket );
+            if($dbtype=='mysqli'){
+                 ini_set('mysqli.default_socket', $dbsocket );
+            }else{
+                 ini_set('pdo_mysql.default_socket',$dbsocket);
+            }
         }
-
-        $this->dblink = NewADOConnection($this->dbtype);
-        $this->dblink->Connect($dbhost, $dbuser, $dbpass, $dbname);
+        
+        # adodb for pdo is a bit different then the others at the moment (adodb 5.20.4)
+        # see http://adodb.org/dokuwiki/doku.php?id=v5:database:pdo
+        if($this->dbtype=='pdo_mysql'){
+                $this->dblink = ADOnewConnection('pdo');
+                $dsnString= 'host='.$dbhost.';dbname='.$dbname.';charset=utf8mb4';
+                $this->dblink->Connect('mysql:' . $dsnString, $dbuser, $dbpass);
+        }else{
+                $this->dblink = ADOnewConnection($this->dbtype);
+                $this->dblink->Connect($dbhost, $dbuser, $dbpass, $dbname);
+        }
 
         if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
 

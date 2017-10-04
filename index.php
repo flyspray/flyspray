@@ -68,7 +68,14 @@ if (Get::val('getfile')) {
 
         header('Pragma: public');
         header("Content-type: $file_type");
-        header('Content-Disposition: filename="'.$orig_name.'"');
+
+		# image view/download difference
+		if(isset($_GET['dl'])){
+			header('Content-Disposition: attachment; filename="'.$orig_name.'"');
+		}else{
+			header('Content-Disposition: filename="'.$orig_name.'"');
+		}
+
         header('Content-transfer-encoding: binary');
         header('Content-length: ' . filesize($path));
 
@@ -105,8 +112,9 @@ $page = new FSTpl();
 
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
 if (Req::has('project') && Req::val('project') != 0 && !$user->can_select_project(Req::val('project'))) {
-    Flyspray::show_error( L('nopermission') );
-    exit;
+	Flyspray::show_error( L('nopermission') );
+	Flyspray::Redirect($baseurl);
+	exit;
 }
 
 if ($show_task = Get::val('show_task')) {
@@ -182,8 +190,12 @@ if ($user->isAnon() && !$fs->prefs['user_notify']) {
     $page->assign('admin_emails', array_map(create_function('$x', 'return str_replace("@", "#", $x);'), $db->fetchCol($sql)));
 }
 
-// default title
-$page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
+// title tag
+if( $user->can_select_project($proj->id)){
+	$page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title']);
+} else{
+	$page->setTitle($fs->prefs['page_title']);
+}
 
 $page->assign('do', $do);
 $page->assign('supertask_id', $supertask_id);

@@ -20,6 +20,7 @@ if ($do == 'admin'): ?>
 	<input type="hidden" name="do" value="admin" />
 	<input type="hidden" name="area" value="editallusers" />
 <?php endif; ?>
+<style>.bulkedituser td.inactive{color:#999;}</style>
 <table class="bulkedituser">
 	<thead>
 	<tr class="account_header">
@@ -27,6 +28,12 @@ if ($do == 'admin'): ?>
 		<th><?php echo Filters::noXSS(L('realname')); ?></th>
 		<th><?php echo Filters::noXSS(L('username')); ?></th>
 		<th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
+		<th><?php echo Filters::noXSS(L('jabberid')); ?></th>
+                <th><?php echo Filters::noXSS(L('regdate')); ?></th>
+                <th><?php echo Filters::noXSS(L('language')); ?></th>
+                <th><?php echo Filters::noXSS(L('timezone')); ?></th>
+                <th><?php echo Filters::noXSS(L('dateformat')); ?></th>
+                <th><?php echo Filters::noXSS(L('dateformat_extended')); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -38,9 +45,15 @@ if ($do == 'admin'): ?>
 			echo '<tr class="account_disabled" onclick="toggleCheckbox('.$usr['user_id'].')">';
 		} ?>
 		<td><input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
-		<td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo $usr['real_name']; ?></a></td>
+		<td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo Filters::noXSS($usr['real_name']); ?></a></td>
 		<td><?php echo $usr['user_name']; ?></td>
-		<td><?php echo $usr['email_address']; ?></td>
+		<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
+		<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
+                <td><?php echo formatDate($usr['register_date']); ?></td>
+                <td><?php echo Filters::noXSS($usr['lang_code']); ?></td>
+                <td><?php echo Filters::noXSS($usr['time_zone']); ?></td>
+                <td><?php echo Filters::noXSS($usr['dateformat']); ?></td>
+                <td><?php echo Filters::noXSS($usr['dateformat_extended']); ?></td>
 	</tr>
 	<?php } ?>
 	</tbody>

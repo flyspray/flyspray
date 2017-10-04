@@ -73,18 +73,12 @@ class Tpl
         ob_end_clean();
     }
 
-    public function display($_tpl, $_arg0 = null, $_arg1 = null)
-    {
+	public function display($_tpl, $_arg0 = null, $_arg1 = null)
+	{
         // if only plain text
         if (is_array($_tpl) && count($tpl)) {
             echo $_tpl[0];
             return;
-        }
-
-        // theming part
-        // FIXME: Shouldn't have to do this but there is a bug somewhere cause theme to sometimes come in as empty
-        if (strlen($this->_theme) == 0) {
-            $this->_theme = 'CleanFS/';
         }
 
         // variables part
@@ -98,14 +92,17 @@ class Tpl
 
         extract($this->_vars, EXTR_REFS|EXTR_SKIP);
 
-        if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
-            require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
-        } else {
-            // This is needed to catch times when there is no theme (for example setup pages)
-            require BASEDIR . "/templates/" . $_tpl;
-        }
+		if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
+			require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
+		} elseif (is_readable(BASEDIR . '/themes/CleanFS/templates/'.$_tpl)) {
+			# if a custom theme folder only contains a fraction of the .tpl files, use the template of the default full theme as fallback.
+			require BASEDIR . '/themes/CleanFS/templates/'.$_tpl;
+		} else {
+			# This is needed to catch times when there is no theme (for example setup pages, where BASEDIR is ../setup/  not ../)
+			require BASEDIR . "/templates/" . $_tpl;
+		}
 
-    } // }}}
+	} // }}}
 
     public function render()
     {
@@ -305,42 +302,60 @@ function tpl_userlink($uid)
 
 	return $cache[$uid];
 }
+
+/**
+* builds the HTML string for displaying a gravatar image or an uploaded user image.
+* The string for a user and a size is cached per request.
+*
+* class and style parameter should be avoided to make this function more effective for caching (less SQL queries)
+*
+* @param int uid the id of the user
+* @param int size in pixel for displaying. Should use global max_avatar_size pref setting by default.
+* @param string class optional, avoid calling with class parameter for better 'cacheability'
+* @param string style optional, avoid calling with style parameter for better 'cacheability'
+*/
 function tpl_userlinkavatar($uid, $size, $class='', $style='')
 {
 	global $db, $user, $baseurl, $fs;
 
 	static $avacache=array();
 
-	if($uid>0 && empty($avacache[$uid])){
-		$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
-		if ($sql && $db->countRows($sql)) {
-			list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
-		} else {
-			return;
+	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
+		if (!isset($avacache[$uid]['uname'])) {
+			$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+			if ($sql && $db->countRows($sql)) {
+				list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
+			} else {
+				return;
+			}
+			$avacache[$uid]['profile_image'] = $profile_image;
+			$avacache[$uid]['uname'] = $uname;
+			$avacache[$uid]['rname'] = $rname;
+			$avacache[$uid]['email'] = $email;
 		}
 
-		if (is_file(BASEDIR.'/avatars/'.$profile_image)) {
-			$image = '<img src="'.$baseurl.'avatars/'.$profile_image.'" width="'.$size.'" height="'.$size.'"/>';
+		if (is_file(BASEDIR.'/avatars/'.$avacache[$uid]['profile_image'])) {
+			$image = '<img src="'.$baseurl.'avatars/'.$avacache[$uid]['profile_image'].'"/>';
 		} else {
 			if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
-				$email = md5(strtolower(trim($email)));
+				$email = md5(strtolower(trim($avacache[$uid]['email'])));
 				$default = 'mm';
 				$imgurl = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
-				$image = '<img src="'.$imgurl.'" width="'.$size.'" height="'.$size.'"/>';
+				$image = '<img src="'.$imgurl.'"/>';
 			} else {
 				$image = '<i class="fa fa-user" style="font-size:'.$size.'px"></i>';
 			}
 		}
-		if (isset($uname)) {
+		if (isset($avacache[$uid]['uname'])) {
 			#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
 			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 			$url = CreateURL('user', $uid);
-			$avacache[$uid] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$rname.'">'.$image.'</a>';
+			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.Filters::noXSS($avacache[$uid]['rname']).'">'.$image.'</a>';
 		}
 	}
-	return $avacache[$uid];
+	return $avacache[$uid][$size];
 }
 
 function tpl_fast_tasklink($arr)
@@ -416,7 +431,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
 // }}}
 // {{{ user selector
 function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
-    global $db, $user;
+    global $db, $user, $proj;
 
     if (!$id) {
         $id = $name;
@@ -433,6 +448,7 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
 
 
     $page = new FSTpl;
+    $page->setTheme($proj->prefs['theme_style']);
     $page->assign('name', $name);
     $page->assign('id', $id);
     $page->assign('value', $value);
@@ -450,9 +466,13 @@ function tpl_date_formats($selected, $detailed = false)
 {
 	$time = time();
 
+	# TODO: rewrite using 'return tpl_select(...)' 
 	if (!$detailed) {
 		$dateFormats = array(
-			'%d.%m.%Y' => strftime('%d.%m.%Y', $time),
+			'%d.%m.%Y' => strftime('%d.%m.%Y', $time).' (DD.MM.YYYY)', # popular in many european countries
+			'%d/%m/%Y' => strftime('%d/%m/%Y', $time).' (DD/MM/YYYY)', # popular in Greek
+			'%m/%d/%Y' => strftime('%m/%d/%Y', $time).' (MM/DD/YYYY)', # popular in USA
+
 			'%d.%m.%y' => strftime('%d.%m.%y', $time),
 
 			'%Y.%m.%d' => strftime('%Y.%m.%d', $time),
@@ -461,7 +481,7 @@ function tpl_date_formats($selected, $detailed = false)
 			'%d-%m-%Y' => strftime('%d-%m-%Y', $time),
 			'%d-%m-%y' => strftime('%d-%m-%y', $time),
 
-			'%Y-%m-%d' => strftime('%Y-%m-%d', $time),
+			'%Y-%m-%d' => strftime('%Y-%m-%d', $time).' (YYYY-MM-DD, ISO 8601)',
 			'%y-%m-%d' => strftime('%y-%m-%d', $time),
 
 			'%d %b %Y' => strftime('%d %b %Y', $time),
@@ -472,6 +492,7 @@ function tpl_date_formats($selected, $detailed = false)
 		);
 	}
 	else {
+		# TODO: maybe use optgroups for tpl_select() to separate 24h and 12h (am/pm) formats
 		$dateFormats = array(
 			'%d.%m.%Y %H:%M' 	=> strftime('%d.%m.%Y %H:%M', $time),
 			'%d.%m.%y %H:%M' 	=> strftime('%d.%m.%y %H:%M', $time),
@@ -731,8 +752,11 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
     static $tpl = null;
 
     if (!$tpl) {
+    	global $proj;
+
         // poor man's cache
         $tpl = new FSTpl();
+        $tpl->setTheme($proj->prefs['theme_style']);
     }
 
     settype($selected, 'array');

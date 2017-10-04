@@ -141,8 +141,8 @@ del { color:#666; }
 */
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
-/* only matches pre tags if there is a language set too e.g. '<pre class="code php">' */
-pre[class*="code "]::before {
+/* only matches pre tags if there is a language set too e.g. '<pre class="php code">' */
+pre[class*=" code"]::before {
     background: #eee none repeat scroll 0 0;
     content: attr(class);
     display: block;
@@ -683,7 +683,12 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 }
 #taskdetails #navigation {float: right;padding:6px;}
 #taskdetails h2 {color: #555;display:inline-block;}
-
+#taskdetailsfull p,
+#taskdetailsfull li,
+.commenttext p,
+.commenttext li {
+max-width:40em;
+}
 .group.inactive{ background-color:#eee;}
 .tag {
     background: #ccc none repeat scroll 0 0;
@@ -794,6 +799,7 @@ div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
 * html .tab div.clear {clear: none;height: 14em;}
 div.comment_container {margin: 5px;}
 div.comment_container .comment_avatar {	min-width: 50px;display: inline-block;}
+div.comment_container .comment_avatar .av_comment img { width: 50px; height: 50px }
 div.comment_container .comment {
 	position: relative;
 	display: inline-block;
@@ -1302,7 +1308,7 @@ div.denyform {
 	height:auto;
 	padding:5px 30px 5px 5px;
 }
-#notify_types {height: 10em;}
+/*#notify_types {height: 10em;}*/
 #rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
@@ -1358,7 +1364,7 @@ table.assignedto td {
 	padding-right: 5px;
 	vertical-align: middle;
 }
-table.assignedto img {padding-top: 2px;}
+table.assignedto img {padding-top: 2px;width: 25px;height:25px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}
@@ -1386,12 +1392,12 @@ a.tooltip span{
 /* for float box in ticket list */
 .descbox {
 	display:none;
-	border: 3px solid #e1e1e1;
+	border: 1px solid #e1e1e1;
 	border-radius: 3px;
 	background-image: none;
     	margin: 10px 0;
     	padding: 10px;
-	height: 144px;
+	max-height: 144px;
 	width: 400px;
 	position: absolute;
 	z-index: 1000;

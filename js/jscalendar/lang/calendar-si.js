@@ -23,6 +23,9 @@ Calendar._DN = new Array
  "Pet",
  "Sob",
  "Ned");
+
+Calendar._FD = 1;
+
 // short month names
 Calendar._SMN = new Array
 ("Jan",

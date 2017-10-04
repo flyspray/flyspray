@@ -303,12 +303,18 @@ abstract class Backend
      */
     public static function add_comment($task, $comment_text, $time = null)
     {
-        global $db, $user, $notify, $proj;
+        global $conf, $db, $user, $notify, $proj;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
             return false;
         }
 
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$comment_text = $purifier->purify($comment_text);
+	}
+	    
         if (!is_string($comment_text) || !strlen($comment_text)) {
             return false;
         }
@@ -431,11 +437,17 @@ abstract class Backend
 
 	    $res = false;
 	    foreach($_POST[$source] as $text) {
-		    if(empty($text)) {
-			    continue;
-		    }
+			$text = filter_var($text, FILTER_SANITIZE_URL);
+		
+			if( preg_match( '/^\s*(javascript:|data:)/', $text)){
+				continue;
+			}
+		    
+			if(empty($text)) {
+				continue;
+			}
 
-		    $res = true;
+			$res = true;
 
 		    // Insert into database
 		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
@@ -698,9 +710,11 @@ abstract class Backend
             }
 
             // Notify the appropriate users
-            $notify->Create(NOTIFY_NEW_USER, null,
+			if ($fs->prefs['notify_registration']) {
+                $notify->Create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $recipients, NOTIFY_EMAIL);
+			}
             // And also the new user
             $notify->Create(NOTIFY_OWN_REGISTRATION, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
@@ -959,7 +973,7 @@ abstract class Backend
      */
     public static function create_task($args)
     {
-        global $db, $user, $proj;
+        global $conf, $db, $user, $proj;
 
         if (!isset($args)) return 0;
 
@@ -1064,6 +1078,13 @@ abstract class Backend
         if (isset($sql_args['mark_private'])) {
             $sql_args['mark_private'] = intval($sql_args['mark_private'] == '1');
         }
+
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
+	}
 
         // split keys and values into two separate arrays
         $sql_keys   = array();
@@ -1362,10 +1383,10 @@ LEFT JOIN {list_category} lc ON t.product_category = lc.category_id ';
             $select .= ' (SELECT COUNT(vot.vote_id) FROM {votes} vot WHERE vot.task_id = t.task_id) AS num_votes, ';
         }
 
-        $maxdatesql = ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) ';
+        $maxdatesql = ' GREATEST(COALESCE((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), 0), t.date_opened, t.date_closed, t.last_edited_time) ';
         $search_for_changes = in_array('lastedit', $visible) || array_get($args, 'changedto') || array_get($args, 'changedfrom');
         if ($search_for_changes) {
-            $select .= ' GREATEST((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
+            $select .= ' GREATEST(COALESCE((SELECT max(c.date_added) FROM {comments} c WHERE c.task_id = t.task_id), 0), t.date_opened, t.date_closed, t.last_edited_time) AS max_date, ';
             $cgroupbyarr[] = 't.task_id';
         }
 

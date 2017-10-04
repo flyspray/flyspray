@@ -18,8 +18,13 @@
     <?php foreach ($fs->projects as $project): ?>
     <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
     <?php endforeach; ?>
-    <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme.css" rel="stylesheet" type="text/css" />
-    <link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
+    <link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
+<?php
+# css hack to fix css3only state switches with ~ in older android browser <4.3 TODO: find webkit version when that issue was fixed.
+if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 4\.[012]/' , $_SERVER['HTTP_USER_AGENT'])):?>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>oldwebkitsiblingfix.css'; ?>" />
+<?php endif; ?>
+<link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
@@ -70,7 +75,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
 	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" /><?php } ?>
-	<span><?php echo Filters::noXSS($proj->prefs['project_title']); ?></span>
+	<span><?php if($user->can_select_project($proj->id)){ echo Filters::noXSS($proj->prefs['project_title']); } ?></span>
     </a></h1>
     <?php $this->display('links.tpl'); ?>
 

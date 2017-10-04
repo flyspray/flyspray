@@ -26,7 +26,7 @@ class Doku_Event {
   /**
    * event constructor
    */
-  function Doku_Event($name, &$data) {
+  function __construct($name, &$data) {
 
     $this->name = $name;
     $this->data =& $data;
@@ -126,7 +126,7 @@ class Doku_Event_Handler {
    * constructor, loads all action plugins and calls their register() method giving them
    * an opportunity to register any hooks they require
    */
-  function Doku_Event_Handler() {
+  function __construct() {
 
     // load action plugins
     $plugin = NULL;

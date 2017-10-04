@@ -36,11 +36,11 @@
       </li>
       <li>
         <label for="othersview"><?php echo Filters::noXSS(L('othersview')); ?></label>
-        <?php echo tpl_checkbox('others_view', Req::val('others_view', Req::val('action') != 'admin.newproject'), 'othersview'); ?>
+        <?php echo tpl_checkbox('others_view', Req::val('others_view', 0), 'othersview'); ?>
       </li>
       <li>
         <label for="othersviewroadmap"><?php echo Filters::noXSS(L('othersviewroadmap')); ?></label>
-        <?php echo tpl_checkbox('others_viewroadmap', Req::val('others_viewroadmap', Req::val('action') != 'admin.newproject'), 'othersviewroadmap'); ?>
+        <?php echo tpl_checkbox('others_viewroadmap', Req::val('others_viewroadmap', 0), 'othersviewroadmap'); ?>
       </li>      
       <li>
         <label for="anonopen"><?php echo Filters::noXSS(L('allowanonopentask')); ?></label>

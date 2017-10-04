@@ -27,10 +27,9 @@ include_once BASEDIR . '/includes/class.notify.php';
 function send_reminders() {
   global $db, $fs, $proj;
 
-  $notify = & new Notifications;
-  $user = & new User(0);
+  $notify = new Notifications;
+  $user = new User(0);
   $now = time();
-  $lang = $fs->prefs['lang_code'];
 
   $get_reminders = $db->Query("SELECT r.*, t.*, u.*
               FROM {reminders} r
@@ -40,7 +39,7 @@ function send_reminders() {
               WHERE t.is_closed = '0'
               AND r.start_time < ?
               AND r.last_sent + r.how_often < ?
-              ORDER BY r.reminder_id", array(time(), time())
+              ORDER BY r.reminder_id", array($now, $now)
   );
 
   while ($row = $db->FetchRow($get_reminders)) {

@@ -10,7 +10,7 @@
     <td><a href="mailto:<?php echo Filters::noXSS($theuser->infos['email_address']); ?>"><?php echo Filters::noXSS($theuser->infos['email_address']); ?></a></td>
   </tr>
   <?php endif; ?>
-  <?php if (!empty($fs->prefs['jabber_server'])): ?>
+  <?php if (!empty($fs->prefs['jabber_server']) && (( !$user->isAnon() && !$fs->prefs['hide_emails'] && !$theuser->infos['hide_my_email']) || $user->perms('is_admin')) ): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('jabberid')); ?></th>
     <td><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></td>

@@ -34,6 +34,12 @@ switch (Req::val('topic')) {
                 $title   = 'Recently edited tasks';
     break;
 
+    case 'open':
+                $orderby = 'date_opened'; $closed = 't.is_closed = 0 ';
+                $topic = 4;
+                $title   = 'Latest open tasks';
+    break;
+
     default:    $orderby = 'date_opened'; $closed = '1=1';
                 $topic = 3;
                 $title   = 'Recently opened tasks';
@@ -88,7 +94,7 @@ if ($fs->prefs['cache_feeds']) {
 /* build a new feed if cache didn't work */
 if($proj->prefs['others_view']){
     $sql = $db->Query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by, 
-        COALESCE(u.real_name, t.anon_email) AS real_name,
+        COALESCE(u.real_name, 'anonymous') AS real_name,
         COALESCE(u.email_address, t.anon_email) AS email_address
         FROM  {tasks}    t
         LEFT JOIN  {users}    u ON t.opened_by = u.user_id

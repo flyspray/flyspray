@@ -84,11 +84,22 @@ switch ($action = Req::val('action'))
     // Adding a new task
     // ##################
     case 'newtask.newtask':
-        if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') {//description not required
-            #Flyspray::show_error(L('summaryanddetails'));
-            Flyspray::show_error(L('summaryrequired'));
-            break;
-        }
+
+		$newtaskerrors=array();
+
+		if (!Post::val('item_summary') || trim(Post::val('item_summary')) == '') { // description not required anymore
+			$newtaskerrors['summaryrequired']=1;
+		}
+
+		if ($user->isAnon() && !filter_var(Post::val('anon_email'), FILTER_VALIDATE_EMAIL)) {
+			$newtaskerrors['invalidemail']=1;
+		}
+
+		if (count($newtaskerrors)>0){
+			$_SESSION['ERRORS']=$newtaskerrors;
+			$_SESSION['ERROR']=L('invalidnewtask');
+			break;
+		}
 
         list($task_id, $token) = Backend::create_task($_POST);
         // Status and redirect
@@ -405,6 +416,15 @@ switch ($action = Req::val('action'))
 	$db->Query($sqlupdate, $sqlparam);
 */
 
+	$detailed_desc = Post::val('detailed_desc', $defaults['detailed_desc']);
+
+	# dokuwiki syntax plugin filters on output
+	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		$purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifier = new HTMLPurifier($purifierconfig);
+		$detailed_desc = $purifier->purify($detailed_desc);
+	}
+		
 	$db->Query('UPDATE {tasks}
 		SET
 		project_id = ?,
@@ -429,7 +449,7 @@ switch ($action = Req::val('action'))
 			Post::val('project_id', $defaults['project_id']),
 			Post::val('task_type', $defaults['task_type']),
 			Post::val('item_summary', $defaults['item_summary']),
-			Post::val('detailed_desc', $defaults['detailed_desc']),
+			$detailed_desc,
 			Post::val('item_status', $defaults['item_status']),
 			intval($user->can_change_private($task) && Post::val('mark_private', $defaults['mark_private'])),
 			Post::val('product_category', $defaults['product_category']),
@@ -572,8 +592,12 @@ switch ($action = Req::val('action'))
         break;
 
     case 'details.associatesubtask':
-        $sql = $db->Query("SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?",
-            array(Post::val('associate_subtask_id')));
+	if ( $task['task_id'] == Post::num('associate_subtask_id')) {
+            Flyspray::show_error(L('selfsupertasknotallowed'));
+            break;
+        }	
+        $sql = $db->Query('SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?',
+            array(Post::num('associate_subtask_id')));
 
         $suptask = $db->FetchRow($sql);
 
@@ -586,7 +610,7 @@ switch ($action = Req::val('action'))
         // if the user has not the permission to view all tasks, check if the task
         // is in tasks allowed to see, otherwise tell that the task does not exist.
         if (!$user->perms('view_tasks')) {
-            $taskcheck = Flyspray::GetTaskDetails(Post::val('associate_subtask_id'));
+            $taskcheck = Flyspray::GetTaskDetails(Post::num('associate_subtask_id'));
             if (!$user->can_view_task($taskcheck)) {
                 Flyspray::show_error(L('subtasknotexist'));
                 break;
@@ -594,7 +618,7 @@ switch ($action = Req::val('action'))
         }
 
         // check to see if associated subtask is already the parent of this task
-        if ($suptask['supertask_id'] == Post::val('associate_subtask_id')) {
+        if ($suptask['supertask_id'] == Post::num('associate_subtask_id')) {
             Flyspray::show_error(L('subtaskisparent'));
             break;
         }
@@ -612,11 +636,11 @@ switch ($action = Req::val('action'))
         }
 
         //associate the subtask
-        $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array(Post::val("task_id"),Post::val("associate_subtask_id")));
-        Flyspray::logEvent($task['task_id'], 32, Post::val("associate_subtask_id"));
-        Flyspray::logEvent(Post::val("associate_subtask_id"), 34, $task['task_id']);
+        $db->query('UPDATE {tasks} SET supertask_id=? WHERE task_id=?',array( $task['task_id'], Post::num('associate_subtask_id')));
+        Flyspray::logEvent($task['task_id'], 32, Post::num('associate_subtask_id'));
+        Flyspray::logEvent(Post::num('associate_subtask_id'), 34, $task['task_id']);
 
-        $_SESSION['SUCCESS'] = L('associatedsubtask').Post::val('associate_subtask_id');
+        $_SESSION['SUCCESS'] = sprintf( L('associatedsubtask'), Post::num('associate_subtask_id') );
         break;
 
 
@@ -735,6 +759,15 @@ switch ($action = Req::val('action'))
         if (!$user->can_register()) {
             break;
         }
+
+		if($fs->prefs['captcha_securimage']){
+			$image = new Securimage(); 
+			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
+				# wrong code
+				Flyspray::show_error(L('captchaerror'));
+				break;
+			}
+		}
 
         if (!Post::val('user_name') || !Post::val('real_name')
             || !Post::val('email_address'))
@@ -927,6 +960,16 @@ switch ($action = Req::val('action'))
         if (!($user->perms('is_admin') || $user->can_self_register())) {
             break;
         }
+		
+		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
+			$image = new Securimage(); 
+			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
+				# wrong code
+				Flyspray::show_error(L('captchaerror'));
+				break;
+			}
+			# captcha is OK
+		}
 
         if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
         {
@@ -1187,10 +1230,12 @@ switch ($action = Req::val('action'))
             break;
         }
 
+		$errors=array();
+		
         /* The following code has been modified to accomodate a default_message for "all project" */
         $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'captcha_securimage', 'default_project', 'dateformat', 'jabber_ssl',
 		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
@@ -1250,18 +1295,33 @@ switch ($action = Req::val('action'))
         array($visfields));
         $fs->prefs['visible_fields'] = $visfields;
 
-        //save logo
-        if($_FILES["logo"]["error"] == 0 && exif_imagetype($_FILES["logo"]["tmp_name"]) ) {
+		//save logo
+		if($_FILES['logo']['error'] == 0){
+			if( in_array(exif_imagetype($_FILES['logo']['tmp_name']), array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) {
+				$logofilename=strtolower(basename($_FILES['logo']['name']));
+				$logoexplode = explode('.', $logofilename);
+				$logoextension = strtolower(end($logoexplode));
+				$allowedextensions = array('gif', 'jpg', 'jpeg', 'png');
 
-            move_uploaded_file($_FILES["logo"]["tmp_name"], "./" . $_FILES["logo"]["name"]);
-            $sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
-            if(!$db->fetchOne($sql))
-                $db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
-            $db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $_FILES["logo"]["name"]);
-        }
-        //saved logo
+				if(in_array($logoextension, $allowedextensions)){
+					move_uploaded_file($_FILES['logo']['tmp_name'], './' . $logofilename);
+					$sql = $db->Query("SELECT * FROM {prefs} WHERE pref_name='logo'");
+					if(!$db->fetchOne($sql)){
+						$db->Query("INSERT INTO {prefs} (pref_name) VALUES('logo')");
+					}
+					$db->Query("UPDATE {prefs} SET pref_value = ? WHERE pref_name='logo'", $logofilename);
+				} else{
+					$errors['invalidfileextension']=1;
+				}
+			}
+		}
+		//saved logo
 
         $_SESSION['SUCCESS'] = L('optionssaved');
+		if(count($errors)>0){
+			$_SESSION['ERRORS']=$errors;
+		}
+
         break;
 
         // ##################
@@ -2151,11 +2211,20 @@ switch ($action = Req::val('action'))
 
         $where = '';
 
-        $params = array(Post::val('comment_text'), time(),
-                        Post::val('comment_id'), $task['task_id']);
+		$comment_text=Post::val('comment_text');
+		$previous_text=Post::val('previous_text');
+		
+		# dokuwiki syntax plugin filters on output
+		if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+			$purifierconfig = HTMLPurifier_Config::createDefault();
+			$purifier = new HTMLPurifier($purifierconfig);
+			$comment_text = $purifier->purify($comment_text);
+			$previous_text= $purifier->purify($comment_text);
+		}
 
+		$params = array($comment_text, time(), Post::val('comment_id'), $task['task_id']);
+ 
         if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
-
             $where = ' AND user_id = ?';
             array_push($params, $user->id);
         }
@@ -2165,8 +2234,7 @@ switch ($action = Req::val('action'))
                      WHERE  comment_id = ? AND task_id = ? $where", $params);
         $db->Query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
 
-        Flyspray::logEvent($task['task_id'], 5, Post::val('comment_text'),
-                Post::val('previous_text'), Post::val('comment_id'));
+        Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text, Post::val('comment_id'));
 
         Backend::upload_files($task['task_id'], Post::val('comment_id'));
         Backend::delete_files(Post::val('delete_att'));
@@ -2285,6 +2353,20 @@ switch ($action = Req::val('action'))
 					array($user_id, Post::val('old_group'))
 				);
 			} else {
+				# special case: user exists in multiple global groups (shouldn't, but happened)
+				# avoids duplicate entry error
+				if($old_pr==0){
+					$sql = $db->Query('SELECT group_id FROM {users_in_groups} WHERE user_id = ? AND group_id = ?',
+						array($user_id, Post::val('switch_to_group'))
+					);
+					$uigexists = $db->FetchOne($sql);
+					if($uigexists > 0){
+						$db->Query('DELETE FROM {users_in_groups} WHERE user_id=? AND group_id=?',
+							array($user_id, Post::val('old_group'))
+						);
+					}
+				}
+
 				$db->Query('UPDATE {users_in_groups} SET group_id=? WHERE user_id=? AND group_id=?',
 					array(Post::val('switch_to_group'), $user_id, Post::val('old_group'))
 				);
@@ -2667,37 +2749,35 @@ switch ($action = Req::val('action'))
         }
 
         // check that supertask_id is not same as task_id
-        // preventint it from referring to it self
+        // preventing it from referring to itself
         if (Post::val('task_id') == Post::val('supertask_id')) {
             Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
         }
-        //Check that the supertask_id is a numeric value
-        if (!is_integer((int)Post::val('supertask_id')))
-        {
-            Flyspray::show_error(L('invalidsupertaskid'));
-            break;
-        }
+ 
+	// Check that the supertask_id looks like unsigned integer
+	if ( !preg_match("/^[1-9][0-9]{0,8}$/", Post::val('supertask_id')) ) {
+		Flyspray::show_error(L('invalidsupertaskid'));
+		break;
+	}
+	
+	$sql = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::val('supertask_id')) );
+	// check that supertask_id is a valid task id
+	$parent = $db->fetchRow($sql);
+	if (!$parent) {
+		Flyspray::show_error(L('invalidsupertaskid'));
+		break;
+	}
 
-        $sql = $db->Query('SELECT project_id FROM {tasks}
-                           WHERE  task_id = '.Post::val("supertask_id").';');
-
-        // check that supertask_id is a valid task id
-        $parent = $db->fetchRow($sql);
-        if (!$parent) {
-            Flyspray::show_error(L('invalidsupertaskid'));
-            break;
-        }
-
-        // if the user has not the permission to view all tasks, check if the task
-        // is in tasks allowed to see, otherwise tell that the task does not exist.
-        if (!$user->perms('view_tasks')) {
+	// if the user has not the permission to view all tasks, check if the task
+	// is in tasks allowed to see, otherwise tell that the task does not exist.
+	if (!$user->perms('view_tasks')) {
             $taskcheck = Flyspray::GetTaskDetails(Post::val('supertask_id'));
             if (!$user->can_view_task($taskcheck)) {
                 Flyspray::show_error(L('invalidsupertaskid'));
                 break;
             }
-        }
+	}
 
         // check to see that both tasks belong to the same project
         if ($task['project_id'] != $parent['project_id']) {
@@ -2705,13 +2785,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        //finally looks like all the checks are valid so update the supertask_id for the current task
+        // finally looks like all the checks are valid so update the supertask_id for the current task
         $db->Query('UPDATE  {tasks}
                        SET  supertask_id = ?
                      WHERE  task_id = ?',
         array(Post::val('supertask_id'),Post::val('task_id')));
 
-        // If task already had a different parent, the log removal too
+        // If task already had a different parent, then log removal too
         if ($task['supertask_id']) {
             Flyspray::logEvent($task['supertask_id'], 33, Post::val('task_id'));
             Flyspray::logEvent(Post::val('task_id'), 35, $task['supertask_id']);

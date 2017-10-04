@@ -32,7 +32,7 @@
      <?php if(isset($_GET['area']) and $_GET['area'] == 'newproject') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'newproject')); ?>"><?php echo Filters::noXSS(L('newproject')); ?></a>
   <a id="userrequestlink"
-     <?php if(isset($_GET['area']) and $_GET['area'] == 'userreqeust') echo $activeclass; ?>
+     <?php if(isset($_GET['area']) and $_GET['area'] == 'userrequest') echo $activeclass; ?>
      href="<?php echo Filters::noXSS(CreateURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS(L('pendingnewuserrequest')); ?></a>
   <a id="translationslink"
      <?php if(isset($_GET['area']) and $_GET['area'] == 'translations') echo $activeclass; ?>

@@ -174,7 +174,7 @@ if($working_copy) {
   echo "Your changes are stored in <code>.$lang.php.work</code> until you press 'Confirm all changes'<br>";
 }
 // Search
-echo '<input type="text" name="search_for" value="'.$search.'"><input type="submit" name="search" value="Search">';
+echo '<input type="text" name="search_for" value="'.Filters::noXSS($search).'"><input type="submit" name="search" value="Search">';
 // List empty
 if($lang != 'en') {
   echo '<input type="submit" name="empty" value="Show missing" title="Show all texts that have no translation">';

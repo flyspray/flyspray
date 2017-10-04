@@ -40,7 +40,7 @@
     # So you cannot just choose 'Save as..' context menu option.
     # When the javascript based features of Flyspray (a big task, planned ~FS1.1) moved complete to (probably) jquery (used also by dokuwiki so prefered) and a jquery based lightbox/fancybox is used, this can be removed.
     if(file_exists(BASEDIR . '/attachments/' . $attachment['file_name']) && substr($attachment['file_type'], 0, 5) == 'image' ): ?>
-    <a class="fa fa-download" title="Download <?php echo Filters::noXSS($attachment['orig_name']); ?>" href="?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>"></a>
+    <a class="fa fa-download" title="Download <?php echo Filters::noXSS($attachment['orig_name']); ?>" href="?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>&amp;dl"></a>
     <?php endif; ?>
     <br />
   <?php endforeach; ?>
