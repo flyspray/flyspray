@@ -369,6 +369,25 @@ function do_cmp($a, $b)
    return ($a[ $orderby ] > $b[ $orderby ]) ? -1 : 1;
 }
 
+function my_fputcsv($handle, $fields)
+{
+  $out = array();
+
+  foreach ($fields as $field) {
+    if (empty($field)) {
+      $out[] = '';
+    }
+    elseif (preg_match('/^\d+(\.\d+)?$/', $field)) {
+      $out[] = $field;
+    }
+    else {
+      $out[] = '"' . preg_replace('/"/', '""', $field) . '"';
+    }
+  }
+
+  return fwrite($handle, implode(',', $out) . "\n");
+}
+
 
 /*********************************************
 *
@@ -481,7 +500,7 @@ function export_task_list()
                         // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
                         $task['detailed_desc']
                 );
-                fputcsv($output, $row);
+                my_fputcsv($output, $row);
         }
         fclose($output);
         exit();
