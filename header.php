@@ -28,30 +28,6 @@ $csp= new ContentSecurityPolicy();
 # deny everything first, then whitelist what is required.
 $csp->add('default-src', "'none'");
 
-# TODO: maybe move to index.php (schedule.php and feed.php maybe do not need this)
-if(Get::val('getfile')) {
-	# nothing
-} else{
-	# well, better then nothing in a first step ..
-	$csp->add('img-src', "'self'");
-	$csp->add('font-src', "'self'");
-	$csp->add('style-src', "'self'");
-	$csp->add('style-src', "'unsafe-inline'");
-	$csp->add('script-src', "'self'");
-	$csp->add('script-src', "'unsafe-inline'");
-	$csp->add('connect-src', "'self'");
-	
-	if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
-		# unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
-		$csp->add('script-src', "'unsafe-eval'");
-		#header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
-	} else{
-		# unsafe-eval for tabs.js and flyspray's current version of ckeditor :-/
-		$csp->add('script-src', "'unsafe-eval'");
-		#header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
-	}
-}
-
 // If it is empty, take the user to the setup page
 if (!$conf) {
     Flyspray::Redirect('setup/index.php');
