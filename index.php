@@ -43,7 +43,18 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(0, $proj);
 }
 
+# maybe a future 'beforehttpheader' event position for extension/plugins to add their own exceptions/modifications
+if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1){
+        $csp->add('img-src', 'www.gravatar.com');
+}
 
+# TODO: $needcaptcha - calculated per page and tells if the page response will have one or more forms that require captcha to reduce automated registration spam and other spam.
+if(isset($needcaptcha) && $needcaptcha && isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']==1){
+        $csp->add('script-src', 'https://www.google.com/recaptcha/');
+        $csp->add('script-src', 'https://www.gstatic.com/recaptcha/');
+        $csp->add('frame-src', 'https://www.google.com/recaptcha/');
+        $csp->add('style-src', 'unsafe-inline'); # well, currently redundant, but handled ok by ContentSecurityPolicy::get() method.
+}
 
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
@@ -99,6 +110,10 @@ load_translations();
 // see http://www.w3.org/TR/html401/present/styles.html#h-14.2.1
 header('Content-Style-Type: text/css');
 header('Content-type: text/html; charset=utf-8');
+
+$csp->emit();
+#echo $csp->get(); # debug
+#print_r($csp); # debug
 
 if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 {
