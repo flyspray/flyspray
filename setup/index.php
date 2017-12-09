@@ -790,7 +790,7 @@ class Setup extends Flyspray
       $config[] = 'facebook_id = ""';
       $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
       $config[] = 'microsoft_secret = ""';
-      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_id = ""';
       $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
