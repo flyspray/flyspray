@@ -110,8 +110,11 @@ class Flyspray
             $sizes[] = $val;
         }
         clearstatcache();
-        $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
-        $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
+	$this->max_file_size = (
+                (bool) ini_get('file_uploads')
+                && is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
+                && is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
+                ) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
 
     protected function setDefaultTimezone()

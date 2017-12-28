@@ -73,7 +73,24 @@ switch ($area = Req::val('area', 'prefs')) {
         require_once(BASEDIR.'/scripts/langdiff.php');
         break;
 
+	case 'checks':
+		$sinfo=$db->dblink->ServerInfo();
+		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
+			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
+				# Test if database(optional) and flyspray tables have default charset utf8mb4
+				# Test if $database version has default charset utf8mb4:
+				$db->Query("SELECT default_character_set_name, default_collation_name
+					FROM INFORMATION_SCHEMA.SCHEMATA
+					WHERE schema_name=?", array($db->dblink->database));
 
+				$page->assign('utf8mb4upgradable', "Your mysql supports full utf-8 since 5.5.3. You are using ".$sinfo['version']." and flyspray tables could be upgraded.");
+			} else{
+				$page->assign('oldmysqlversion', "Your mysql version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your Mysql server version.");
+			}
+		}
+		$page->assign('adodbversion', $db->dblink->Version());
+		$page->pushTpl('admin.'.$area.'.tpl');
+		break;
     default:
         Flyspray::show_error(6);
 }

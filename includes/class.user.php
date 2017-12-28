@@ -106,13 +106,15 @@ class User
 
         $this->perms = array(0 => array());
         // Get project settings which are important for permissions
-        $sql = $db->Query('SELECT project_id, others_view, project_is_active, anon_open, comment_closed
-                             FROM {projects}');
+		# php7.2 compatible variant without create_function(), instead use a SQL UNION to fill a fake global-project with project_id=0
+		$sql = $db->Query('
+			SELECT project_id, others_view, project_is_active, anon_open, comment_closed
+			FROM {projects}
+			UNION
+			SELECT 0,1,1,1,1');
         while ($row = $db->FetchRow($sql)) {
             $this->perms[$row['project_id']] = $row;
         }
-        // Fill permissions for global project
-        $this->perms[0] = array_map(create_function('$x', 'return 1;'), end($this->perms));
 
         if (!$this->isAnon()) {
             // Get the global group permissions for the current user
