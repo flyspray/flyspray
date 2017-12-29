@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
 require_once BASEDIR . '/includes/class.tpl.php';
+require_once BASEDIR . '/includes/class.csp.php';
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
@@ -23,20 +24,9 @@ if(is_readable(BASEDIR . '/vendor/autoload.php')){
         exit;
 }
 
-# TODO: API for HTTP-Header and Content-Security-Policy(CSP), so extensions to Flyspray can add exceptions.
-if(Get::val('getfile')) {
-        # deny everything for user uploads
-        header("Content-Security-Policy: default-src 'none';");
-} else{
-        # well, better then nothing in a first step ..
-        if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
-                # unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
-                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
-        } else{
-                # unsafe-eval for tabs.js and flyspray's version of ckeditor :-/
-                header("Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';");
-        }
-}
+$csp= new ContentSecurityPolicy();
+# deny everything first, then whitelist what is required.
+$csp->add('default-src', "'none'");
 
 // If it is empty, take the user to the setup page
 if (!$conf) {
