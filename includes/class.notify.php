@@ -412,14 +412,6 @@ class Notifications {
             $swiftconn = Swift_MailTransport::newInstance();
         }
 
-        if(defined( 'FS_MAIL_LOGFILE')) {
-            // FIXME: Swift_LogContainer exists no more???
-            // See http://swiftmailer.org/docs/plugins.html#logger-plugin
-            // for the new implementation.
-            // $log = Swift_LogContainer::getLog();
-            // $log->setLogLevel(SWIFT_LOG_EVERYTHING);
-        }
-
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
         $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
         $htmlbody = str_replace("\n","<br>", $htmlbody);
@@ -433,6 +425,11 @@ class Notifications {
         
         $swift = Swift_Mailer::newInstance($swiftconn);
 
+		if(defined('FS_MAIL_LOGFILE')) {
+			$logger = new Swift_Plugins_Loggers_ArrayLogger();
+			$swift->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+		}
+		
         $message = new Swift_Message($subject);
         if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
            $message->setBody($plainbody, 'text/plain');
@@ -464,17 +461,15 @@ class Notifications {
         $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
         $swift->send($message);
 
-        /* FIXME: Swift_LogContainer exists no more???
         if(defined('FS_MAIL_LOGFILE')) {
             if(is_writable(dirname(FS_MAIL_LOGFILE))) {
                 if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                    fwrite($fh, $log->dump(true));
+                    fwrite($fh, $logger->dump());
                     fwrite($fh, php_uname());
                     fclose($fh);
                 }
             }
         }
-        */
 
         return true;
     } //}}}
