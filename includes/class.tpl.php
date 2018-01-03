@@ -352,7 +352,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 			$url = CreateURL('user', $uid);
-			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.$avacache[$uid]['rname'].'">'.$image.'</a>';
+			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.Filters::noXSS($avacache[$uid]['rname']).'">'.$image.'</a>';
 		}
 	}
 	return $avacache[$uid][$size];

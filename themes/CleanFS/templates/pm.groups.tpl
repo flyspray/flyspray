@@ -59,11 +59,13 @@ foreach ($merge as $group){
 	$cols.='<col class="group g'.$group['group_id'].($group['project_id']==0?' globalgroup':'').($group['project_id']==0 && $group['group_open']==0?' inactive':'').'"></col>';
 	$gmembers.='<td>'.$group['users'].'</td>';
 	if($group['project_id']!=0) {
-		$gnames.='<td><a class="button" title="'.eL('editgroup').'" href="'.(CreateURL('editgroup', $group['group_id'], 'pm')).'">'.$group['group_name'].'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
+		$gnames.='<td><a class="button" title="'.eL('editgroup').'" href="'.(CreateURL('editgroup', $group['group_id'], 'pm')).'">'
+		.Filters::noXSS($group['group_name'])
+		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
 	} else {
-		$gnames.='<th title="'.eL('globalgroup').'">'.$group['group_name'].'</th>';
+		$gnames.='<th title="'.eL('globalgroup').'">'.Filters::noXSS($group['group_name']).'</th>';
 	}
-	$gdesc.='<td>'.$group['group_desc'].'</td>';
+	$gdesc.='<td>'.Filters::noXSS($group['group_desc']).'</td>';
 	foreach ($group as $key => $val) {
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
 			$perms[$key][]=$val;

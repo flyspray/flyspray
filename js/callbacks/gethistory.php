@@ -10,7 +10,6 @@ header('Content-type: text/html; charset=utf-8');
 
 require_once('../../header.php');
 require_once('../../includes/events.inc.php');
-$baseurl = dirname(dirname($baseurl)) .'/' ;
 
 // Initialise user
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {

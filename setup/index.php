@@ -790,7 +790,7 @@ class Setup extends Flyspray
       $config[] = 'facebook_id = ""';
       $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
       $config[] = 'microsoft_secret = ""';
-      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_id = ""';
       $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
@@ -818,7 +818,7 @@ class Setup extends Flyspray
 		ini_set( 'mysqli.default_socket', $dbsocket );
 	}
 
-      $this->mDbConnection =& NewADOConnection(strtolower($db_type));
+      $this->mDbConnection = ADONewConnection(strtolower($db_type));
       $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
       $this->mDbConnection->SetCharSet('utf8');
 
@@ -887,7 +887,7 @@ class Setup extends Flyspray
 	}
 
       // Setting the database type for the ADODB connection
-      $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+      $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
       if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
          $_SESSION['page_heading'] = 'Database Processing';
@@ -910,12 +910,30 @@ class Setup extends Flyspray
 
             case '-25':
             // Database does not exist, try to create one
-            $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
+            $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
             $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
-            #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
-            # if possible set correct default character set for mysql.
-            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci') );
+
+		# if possible set correct default character set for mysql.
+		# MySQL below 5.5.3 only supports 1,2,3 byte chars of utf8. But some language's chars or emojis(argh) are defined as 4byte chars
+		$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci'; # default for mysql for compat
+		if( $data['db_type']=='mysqli' || $data['db_type']=='mysql' ) {
+			$dbinfo=$this->mDbConnection->ServerInfo(); # provides 'description' and 'version'
+			if( version_compare($dbinfo['version'], '5.5.3') >=0 ){
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+				$this->mDbConnection->SetCharSet('utf8mb4');
+			}else{
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+				$this->mDbConnection->SetCharSet('utf8');
+				$_SESSION['page_message'][]='Your MySQL server '.$dbinfo['version'].' < 5.5.3, so database has limited utf8 support (no unicode emojis for instance). Upgrading your MySQL server to 5.5.3 or newer is suggested.';
+			}
+		}else{
+			# postgresql
+			$this->mDbConnection->SetCharSet('utf8');
+		}
+
+		$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>$mysqldbcharset) );
+
             if (!$dict->ExecuteSQLArray($sqlarray)) {
                 $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
                 $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
@@ -953,7 +971,7 @@ class Setup extends Flyspray
       $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
       $this->mDbConnection->SetCharSet('utf8');
         //creating the datadict object for further operations
-       $this->mDataDict = & NewDataDictionary($this->mDbConnection);
+       $this->mDataDict = NewDataDictionary($this->mDbConnection);
 
        include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
 

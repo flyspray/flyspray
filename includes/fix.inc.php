@@ -12,8 +12,13 @@ ini_set('display_errors', 1);
 ini_set('html_errors', 0);
 
 //error_reporting(E_ALL);
-error_reporting(E_ALL & ~E_STRICT);
-
+if(version_compare(PHP_VERSION, '7.2.0') >= 0) {
+	# temporary for php7.2+ (2017-11-30)
+	# not all parts of Flyspray and 3rd party libs like ADODB 5.20.9 not yet 'since-php7.2-deprecated'-ready
+	error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
+}else{
+	error_reporting(E_ALL & ~E_STRICT);
+}
 // our default charset
 
 ini_set('default_charset','utf-8');

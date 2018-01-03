@@ -44,7 +44,6 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 }
 
 
-
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
     $result = $db->Query("SELECT  t.project_id,
@@ -99,6 +98,44 @@ load_translations();
 // see http://www.w3.org/TR/html401/present/styles.html#h-14.2.1
 header('Content-Style-Type: text/css');
 header('Content-type: text/html; charset=utf-8');
+
+$csp->add('img-src', "'self'");
+# a bit unsure if * is ok (data: http: https:)
+#$csp->add('img-src', "*");
+$csp->add('font-src', "'self'");
+$csp->add('style-src', "'self'");
+$csp->add('style-src', "'unsafe-inline'");
+$csp->add('script-src', "'self'");
+$csp->add('script-src', "'unsafe-inline'");
+$csp->add('connect-src', "'self'");
+	
+if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
+	# unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
+	$csp->add('script-src', "'unsafe-eval'");
+} else{
+	# unsafe-eval for tabs.js and flyspray's version of ckeditor :-/
+	$csp->add('script-src', "'unsafe-eval'");
+}
+
+# maybe a future 'beforehttpheader' event position for extension/plugins to add their own exceptions/modifications
+if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1){
+        $csp->add('img-src', 'www.gravatar.com');
+}
+
+# example calculation ..
+if($user->isAnon()){
+        $needcaptcha=1;
+}
+if(isset($needcaptcha) && $needcaptcha && isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']==1){
+        $csp->add('script-src', 'https://www.google.com/recaptcha/');
+        $csp->add('script-src', 'https://www.gstatic.com/recaptcha/');
+        $csp->add('frame-src', 'https://www.google.com/recaptcha/');
+        $csp->add('style-src', 'unsafe-inline'); # currently redundant, but handled ok by ContentSecurityPolicy::get() method.
+}
+
+$csp->emit();
+#echo $csp->get(); # debug
+#print_r($csp); # debug
 
 if ($conf['general']['output_buffering'] == 'gzip' && extension_loaded('zlib'))
 {

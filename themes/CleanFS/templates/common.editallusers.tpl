@@ -45,9 +45,9 @@ if ($do == 'admin'): ?>
 			echo '<tr class="account_disabled" onclick="toggleCheckbox('.$usr['user_id'].')">';
 		} ?>
 		<td><input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
-		<td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo $usr['real_name']; ?></a></td>
+		<td><a href="<?php echo CreateURL('edituser', $usr['user_id'] ); ?>"><?php echo Filters::noXSS($usr['real_name']); ?></a></td>
 		<td><?php echo $usr['user_name']; ?></td>
-		<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo $usr['email_address']; ?></td>
+		<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
 		<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
                 <td><?php echo formatDate($usr['register_date']); ?></td>
                 <td><?php echo Filters::noXSS($usr['lang_code']); ?></td>
