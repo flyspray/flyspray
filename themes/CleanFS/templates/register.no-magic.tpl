@@ -62,19 +62,15 @@
 	</ul>
 	<div>
 		<input type="hidden" name="action" value="register.sendcode" />
-		<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']): ?>
+		<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']
+		&& isset($fs->prefs['captcha_recaptcha_sitekey']) && $fs->prefs['captcha_recaptcha_sitekey']
+		&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']
+		): ?>
 		<noscript>Javascript is required for Google reCAPTCHA.</noscript>
-		<script>
-		function submitWithRecaptcha(token) {
-			document.getElementById('registernewuser').submit();
-		}
-		</script>
 		<button type="submit" name="buSubmit" id="buSubmit"
 		class="g-recaptcha"
 		data-badge="inline"
-		data-callback="submitWithRecaptcha"
-		data-sitekey="<?php Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"
-		data-callback="js/callbacks/recaptcha.php"><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		data-sitekey="<?php echo Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"><?php echo Filters::noXSS(L('sendcode')); ?></button>
 		<?php else: ?>
 		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>
 		<?php endif; ?>
