@@ -67,7 +67,10 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
     <?php foreach(TextFormatter::get_javascript() as $file): ?>
         <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
     <?php endforeach; ?>
-<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']): ?>
+<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']
+	&& isset($fs->prefs['captcha_recaptcha_sitekey']) && $fs->prefs['captcha_recaptcha_sitekey']!=''
+	&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']!=''
+): ?>
 	<?php
 	if ( 
 		   ($do=='register')
