@@ -92,7 +92,7 @@ if( is_array(Req::val('events')) ){
 
 	if ( Req::val('fromdate') || Req::val('todate')) {
 		$where .= ' AND ';
-		$fromdate = Req::val('fromdate')
+		$fromdate = Req::val('fromdate');
 		$todate = Req::val('todate');
 
 		if ($fromdate) {
