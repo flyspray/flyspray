@@ -130,7 +130,7 @@ if(isset($needcaptcha) && $needcaptcha && isset($fs->prefs['captcha_recaptcha'])
         $csp->add('script-src', 'https://www.google.com/recaptcha/');
         $csp->add('script-src', 'https://www.gstatic.com/recaptcha/');
         $csp->add('frame-src', 'https://www.google.com/recaptcha/');
-        $csp->add('style-src', 'unsafe-inline'); # currently redundant, but handled ok by ContentSecurityPolicy::get() method.
+        $csp->add('style-src', "'unsafe-inline'"); # currently redundant, but handled ok by ContentSecurityPolicy::get() method.
 }
 
 $csp->emit();

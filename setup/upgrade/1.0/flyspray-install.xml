@@ -692,7 +692,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="pref_name" type="C" size="20">
+    <field name="pref_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="pref_value" type="X" />
