@@ -1204,7 +1204,7 @@ function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
     }
 
     $url = new Url($return);
-    if (count($arg3)) {
+    if( !is_null($arg3) && count($arg3) ) {
         $url->addvars($arg3);
     }
     return $url->get();

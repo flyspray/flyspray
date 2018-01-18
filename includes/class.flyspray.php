@@ -1135,6 +1135,10 @@ class Flyspray
     {
         global $db;
 
+	if(!is_string($name)){
+		return 0;
+	}
+
         $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
 
         return intval($db->FetchOne($sql));
