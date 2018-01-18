@@ -221,6 +221,16 @@ function ShowHidePassword(id) {
         </li>
 	
 	<li>
+          <label for="repeat_password"><?php echo Filters::noXSS(L('repeatpassword')); ?></label>
+          <?php echo tpl_checkbox('repeat_password', $fs->prefs['repeat_password'], 'repeat_password'); ?>
+        </li>
+	
+	<li>
+          <label for="repeat_emailaddress"><?php echo Filters::noXSS(L('repeatemailaddress')); ?></label>
+          <?php echo tpl_checkbox('repeat_emailaddress', $fs->prefs['repeat_emailaddress'], 'repeat_emailaddress'); ?>
+        </li>
+	
+	<li>
           <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
           <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
         </li>
