@@ -26,7 +26,7 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'users':
         $id = Flyspray::UserNameToId(Req::val('user_name'));
         if (!$id) {
-            $id = Req::val('user_id');
+            $id = is_numeric(Req::val('user_id')) ? Req::val('user_id') : 0;
         }
         $theuser = new User($id, $proj);
         if ($theuser->isAnon()) {
