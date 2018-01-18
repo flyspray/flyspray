@@ -911,7 +911,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if ( $fs->prefs['repeatpassword'] && Post::val('user_pass') != Post::val('user_pass2')) {
+        if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
         }
@@ -1020,7 +1020,7 @@ switch ($action = Req::val('action'))
             break;
         }
 		
-        if ( $fs->prefs['repeatemailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
+        if ( $fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
         {
             Flyspray::show_error(L('emailverificationwrong'));
             break;
@@ -1031,7 +1031,7 @@ switch ($action = Req::val('action'))
             break;
         }
 		
-	if ( $fs->prefs['repeatpassword'] && Post::val('user_pass') != Post::val('user_pass2')) {
+	if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
         }
@@ -1276,7 +1276,7 @@ switch ($action = Req::val('action'))
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
 		'custom_style', 'general_integration', 'footer_integration',
-		'repeatpassword','repeatemailaddress');
+		'repeat_password','repeat_emailaddress');
 
 		# candid for a plugin, so separate them for the future.
 		$settings[]='captcha_securimage';
