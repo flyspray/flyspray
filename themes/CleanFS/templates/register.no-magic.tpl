@@ -66,14 +66,10 @@
 		&& isset($fs->prefs['captcha_recaptcha_sitekey']) && $fs->prefs['captcha_recaptcha_sitekey']
 		&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']
 		): ?>
-		<noscript>Javascript is required for Google reCAPTCHA.</noscript>
-		<button type="submit" name="buSubmit" id="buSubmit"
-		class="g-recaptcha"
-		data-badge="inline"
-		data-sitekey="<?php echo Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"><?php echo Filters::noXSS(L('sendcode')); ?></button>
-		<?php else: ?>
-		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		<div class="g-recaptcha" data-sitekey="<?php echo Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"></div>
+                <noscript>Javascript is required for this Google reCAPTCHA.</noscript>
 		<?php endif; ?>
+		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>	
 	</div>
 	<br />
 	<p><?php echo L('note'); ?></p>
