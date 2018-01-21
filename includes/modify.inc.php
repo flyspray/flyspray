@@ -797,7 +797,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('email_address') != Post::val('verify_email_address'))
+        if ($fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
         {
             Flyspray::show_error(L('emailverificationwrong'));
             break;
