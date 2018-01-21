@@ -15,11 +15,12 @@
       <label for="user_pass"><?php echo Filters::noXSS(L('password')); ?></label>
       <input id="user_pass" class="password" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" /> <em><?php echo Filters::noXSS(L('minpwsize')); ?></em>
     </li>
-
+    <?php if($fs->prefs['repeat_password']): ?>
     <li>
       <label for="user_pass2"><?php echo Filters::noXSS(L('confirmpass')); ?></label>
       <input id="user_pass2" class="password" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" />
     </li>
+    <?php endif;?>
   </ul>
   <div>
     <input type="hidden" name="action" value="register.registeruser" />
