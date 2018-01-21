@@ -1585,8 +1585,8 @@ switch ($action = Req::val('action'))
                     break;
                 }
 
-                if (Post::val('changepass') || Post::val('confirmpass')) {
-                    if (Post::val('changepass') != Post::val('confirmpass')) {
+                if (Post::val('changepass')) {
+                    if ($fs->prefs['repeat_password'] && Post::val('changepass') != Post::val('confirmpass')) {
                         Flyspray::show_error(L('passnomatch'));
                         break;
                     }
@@ -2700,7 +2700,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('pass1') != Post::val('pass2')) {
+        if ($fs->prefs['repeat_password'] && Post::val('pass1') != Post::val('pass2')) {
             Flyspray::show_error(L('passnomatch'));
             break;
         }
