@@ -906,13 +906,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('user_pass') != Post::val('user_pass2')) {
-            Flyspray::show_error(L('nomatchpass'));
+	if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
+            Flyspray::show_error(L('passwordtoosmall'));
             break;
         }
 
-        if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
-            Flyspray::show_error(L('passwordtoosmall'));
+        if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+            Flyspray::show_error(L('nomatchpass'));
             break;
         }
 
@@ -985,10 +985,25 @@ switch ($action = Req::val('action'))
 			$image = new Securimage(); 
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				# wrong code
-				Flyspray::show_error(L('captchaerror'));
-				break;
+				$captchaerrors++;
 			}
-			# captcha is OK
+		}
+		
+		if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']){
+			require_once('class.recaptcha.php');
+			if( !recaptcha::verify()) {
+				# probably wrong code
+				$captchaerrors++;
+				# TODO add recaptchaspecific error notice to errors vars
+				#Flyspray::show_error(L('captchaerror'));
+				#break;
+			}
+		}
+		
+		# if both captchatypes are configured, maybe show the user which one or both failed.
+		if($captchaerrors>0){
+			Flyspray::show_error(L('captchaerror'));
+			break;
 		}
 
         if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
@@ -998,26 +1013,26 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('email_address') != Post::val('verify_email_address'))
-        {
-            Flyspray::show_error(L('emailverificationwrong'));
-            break;
-        }
-
-        // Check email format
+	// Check email format
         if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
         {
             Flyspray::show_error(L('novalidemail'));
             break;
         }
-
-        if (Post::val('user_pass') != Post::val('user_pass2')) {
-            Flyspray::show_error(L('nomatchpass'));
+		
+        if ( $fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
+        {
+            Flyspray::show_error(L('emailverificationwrong'));
             break;
         }
 
         if (strlen(Post::val('user_pass')) && (strlen(Post::val('user_pass')) < MIN_PW_LENGTH)) {
             Flyspray::show_error(L('passwordtoosmall'));
+            break;
+        }
+		
+	if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+            Flyspray::show_error(L('nomatchpass'));
             break;
         }
 
@@ -1260,7 +1275,8 @@ switch ($action = Req::val('action'))
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
-		'custom_style', 'general_integration', 'footer_integration');
+		'custom_style', 'general_integration', 'footer_integration',
+		'repeat_password','repeat_emailaddress');
 
 		# candid for a plugin, so separate them for the future.
 		$settings[]='captcha_securimage';

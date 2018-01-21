@@ -19,7 +19,7 @@ class recaptcha
 				'method' => 'POST',
 				/* for php5.3, default enctype for http_build_query() was added with php5.4, http://php.net/manual/en/function.http-build-query.php */
 				'header' => 'Content-type: application/x-www-form-urlencoded',
-				'content' => http_build_query($data)
+				'content' => http_build_query($data, '', '&')
 			)
 		);
 

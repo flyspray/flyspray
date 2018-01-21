@@ -16,11 +16,12 @@
 			<label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label>
 			<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" class="required text" type="text" size="20" maxlength="100" /> <?php echo Filters::noXSS(L('validemail')); ?>
 		</li>
-
+		<?php if ($fs->prefs['repeat_emailaddress']): ?>
 		<li>
 			<label for="verifyemailaddress"><?php echo Filters::noXSS(L('verifyemailaddress')); ?></label>
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" class="required text" type="text" size="20" maxlength="100" />
 		</li>
+		<?php endif ?>
 
 		<?php if (!empty($fs->prefs['jabber_server'])): ?>
 		<li>

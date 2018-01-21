@@ -26,7 +26,7 @@ endif; ?>
 			<input id="userpass" class="password" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" /> <em><?php echo Filters::noXSS(L('minpwsize')); ?></em>
 			<span class="note"><?php echo Filters::noXSS(L('leaveemptyauto')); ?></span>
 		</li>
-		<?php if( $do==='register' && isset($fs->prefs['repeatpassword']) && $fs->prefs['repeatpassword'] ): ?>
+		<?php if( $do==='register' && $fs->prefs['repeat_password'] ): ?>
 		<li>
 			<label for="userpass2"><?php echo Filters::noXSS(L('confirmpass')); ?></label>
 			<input id="userpass2" class="password" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" /><br />
@@ -45,7 +45,7 @@ endif; ?>
 			<!-- <em><?php echo Filters::noXSS(L('validemail')); ?></em> -->
 		</li>
 
-	<?php if( $do==='register' && isset($fs->prefs['repeatemailaddress']) && $fs->prefs['repeatemailaddress'] ): ?>
+	<?php if( $do==='register' && $fs->prefs['repeat_emailaddress'] ): ?>
 		<li>
 			<label for="verifyemailaddress"><?php echo Filters::noXSS(L('verifyemailaddress')); ?></label>
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" class="required text" type="text" size="20" maxlength="100" />
