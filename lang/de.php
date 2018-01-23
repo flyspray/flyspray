@@ -1093,6 +1093,7 @@ Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung fall
 'recaptchaenable'         => 'Google reCAPTCHA aktivieren',
 'adminchecks'             => 'Checks',
 'adminchecksinfo'         => 'Info and checks for your current installation',
+'repeatpassword'          => 'Passwort wiederholen',
+'repeatemailaddress'      => 'E-Mail-Adresse wiederholen',
 );
-
 ?>
