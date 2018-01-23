@@ -911,10 +911,14 @@ class TextFormatter
         }
         $return .= '</textarea>';
 
-        //Activate CkEditor on TextAreas.
-        $return .= "<script>
-                        CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
-                    </script>";
+	# Activate CkEditor on textareas
+	if($conf['general']['syntax_plugin']=='html'){
+		$return .= "
+<script>
+	CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
+</script>";
+	}
+	    
         return $return;
     }
 }
