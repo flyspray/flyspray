@@ -1105,5 +1105,7 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'recaptchaenable'         => 'Enable Google reCAPTCHA',
 'adminchecks'             => 'Checks',
 'adminchecksinfo'         => 'Info and checks for your current installation',
+'repeatpassword'          => 'repeat password',
+'repeatemailaddress'      => 'repeat email address',
 );
 ?>
