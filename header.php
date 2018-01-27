@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
 require_once BASEDIR . '/includes/class.tpl.php';
+require_once BASEDIR . '/includes/class.csp.php';
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
@@ -22,6 +23,10 @@ if(is_readable(BASEDIR . '/vendor/autoload.php')){
         Flyspray::Redirect('setup/composertest.php');
         exit;
 }
+
+$csp= new ContentSecurityPolicy();
+# deny everything first, then whitelist what is required.
+$csp->add('default-src', "'none'");
 
 // If it is empty, take the user to the setup page
 if (!$conf) {

@@ -27,7 +27,7 @@ class Flyspray
      * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
      * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
      */
-	public $version = '1.0-rc5 dev';
+	public $version = '1.0-rc7 dev';
 
     /**
      * Flyspray preferences
@@ -110,8 +110,11 @@ class Flyspray
             $sizes[] = $val;
         }
         clearstatcache();
-        $func = create_function('$x', 'return @is_file($x . "/index.html") && is_writable($x);');
-        $this->max_file_size = ((bool) ini_get('file_uploads') && $func(BASEDIR . '/attachments')) ? round((min($sizes)/1024/1024), 1) : 0;
+	$this->max_file_size = (
+                (bool) ini_get('file_uploads')
+                && is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
+                && is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
+                ) ? round((min($sizes)/1024/1024), 1) : 0;
     } // }}}
 
     protected function setDefaultTimezone()
@@ -429,7 +432,9 @@ class Flyspray
         $dirname = dirname(dirname(__FILE__));
         if ($handle = opendir($dirname . '/themes/')) {
             while (false !== ($file = readdir($handle))) {
-                if (substr($file,0,1) != '.' && is_dir("$dirname/themes/$file") && is_file("$dirname/themes/$file/theme.css")) {
+                if (substr($file,0,1) != '.' && is_dir("$dirname/themes/$file")
+		    && (is_file("$dirname/themes/$file/theme.css") || is_dir("$dirname/themes/$file/templates"))
+		   ) {
                     $themes[] = $file;
                 }
             }
@@ -1129,6 +1134,10 @@ class Flyspray
     public static function UserNameToId($name)
     {
         global $db;
+
+	if(!is_string($name)){
+		return 0;
+	}
 
         $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
 

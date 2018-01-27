@@ -16,11 +16,12 @@
 			<label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label>
 			<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" class="required text" type="text" size="20" maxlength="100" /> <?php echo Filters::noXSS(L('validemail')); ?>
 		</li>
-
+		<?php if ($fs->prefs['repeat_emailaddress']): ?>
 		<li>
 			<label for="verifyemailaddress"><?php echo Filters::noXSS(L('verifyemailaddress')); ?></label>
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" class="required text" type="text" size="20" maxlength="100" />
 		</li>
+		<?php endif ?>
 
 		<?php if (!empty($fs->prefs['jabber_server'])): ?>
 		<li>
@@ -62,7 +63,14 @@
 	</ul>
 	<div>
 		<input type="hidden" name="action" value="register.sendcode" />
-		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>
+		<?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']
+		&& isset($fs->prefs['captcha_recaptcha_sitekey']) && $fs->prefs['captcha_recaptcha_sitekey']
+		&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']
+		): ?>
+		<div class="g-recaptcha" data-sitekey="<?php echo Filters::noXSS($fs->prefs['captcha_recaptcha_sitekey']); ?>"></div>
+                <noscript>Javascript is required for this Google reCAPTCHA.</noscript>
+		<?php endif; ?>
+		<button type="submit" name="buSubmit" id="buSubmit"><?php echo Filters::noXSS(L('sendcode')); ?></button>	
 	</div>
 	<br />
 	<p><?php echo L('note'); ?></p>

@@ -133,10 +133,12 @@
         <label for="changepass"><?php echo Filters::noXSS(L('changepass')); ?></label>
         <input id="changepass" class="password" type="password" name="changepass" value="<?php echo Filters::noXSS(Req::val('changepass')); ?>" maxlength="100" />
       </li>
+        <?php if ($fs->prefs['repeat_password']): ?>
       <li>
         <label for="confirmpass"><?php echo Filters::noXSS(L('confirmpass')); ?></label>
         <input id="confirmpass" class="password" type="password" name="confirmpass" value="<?php echo Filters::noXSS(Req::val('confirmpass')); ?>" maxlength="100" />
       </li>
+        <?php endif; ?>
       <?php endif; ?>
       <?php endif; ?>
       <?php endif; ?>

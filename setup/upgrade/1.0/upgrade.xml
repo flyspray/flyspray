@@ -356,6 +356,17 @@
       <col>project_id</col>
     </index>
   </table>
+  <table name="prefs">
+    <descr>global settings of Flyspray</descr>
+    <field name="pref_id" type="I" size="1">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="pref_name" type="C" size="40">
+      <NOTNULL/>
+    </field>
+    <field name="pref_value" type="X" />
+  </table>
   <table name="projects">
     <field name="project_id" type="I" size="3">
       <KEY/>

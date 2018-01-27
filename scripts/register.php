@@ -31,6 +31,8 @@ if ($user->can_register()) {
 		if($fs->prefs['captcha_securimage']){
 			$captchaoptions = array(
 				'input_name' => 'captcha_code',
+				'show_image_url' => 'securimage.php',
+				'show_refresh_button' => false,
 				'show_audio_button' => false,
 				'disable_flash_fallback' => true
 			);
@@ -44,6 +46,8 @@ if ($user->can_register()) {
 	if($fs->prefs['captcha_securimage']){
 		$captchaoptions = array(
 			'input_name' => 'captcha_code',
+			'show_image_url' => 'securimage.php',
+			'show_refresh_button' => false,
 			'show_audio_button' => false,
 			'disable_flash_fallback' => true,
 			'image_attributes' =>array('style'=>'')

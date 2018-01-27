@@ -1092,5 +1092,20 @@ Regards,',
 'captchaerror'            => 'CAPTCHA not solved. Please try again.',
 'registercaptcha'         => 'Please solve the CAPTCHA.',
 'regcaptcha'              => 'Show a CAPTCHA for new user registration.',
+'invalidsecurimage'       => 'Invalid CAPTCHA',
+'invalidrecaptcha'        => 'Invalid Google reCAPTCHA',
+'antispam'                => 'Spam Prevention',
+'antispamprefsinfo'       => 'Settings for countermeasures against spambots. Currently Securimage and Google reCAPTCHA are used for new user registration.',
+'securimageprefsinfo'     => 'A classic CAPTCHA riddle where users must recognize a text sequence to prove to be human.',
+'securimageenable'        => 'Enable Securimage',
+'recaptchaprefsinfo'      => 'Google reCAPTCHA is an alternative to a classic CAPTCHA.
+Google decides on collected data and user behavior and maybe additional image recognition riddles if you are human or bot.
+To use this you need an Google Account and configure reCAPTCHA for your domain at https://www.google.com/recaptcha and insert "sitekey" and "secret" of that configuration.
+Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCHA" - you maybe must inform your potential users about "Data protection".',
+'recaptchaenable'         => 'Enable Google reCAPTCHA',
+'adminchecks'             => 'Checks',
+'adminchecksinfo'         => 'Info and checks for your current installation',
+'repeatpassword'          => 'repeat password',
+'repeatemailaddress'      => 'repeat email address',
 );
 ?>

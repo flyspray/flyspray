@@ -16,10 +16,11 @@ if (!Req::has('magic_url') && $user->isAnon()) {
     $page->pushTpl('lostpw.step1.tpl');
 }
 elseif (Req::has('magic_url') && $user->isAnon()) {
-    // Step Two: user enters new password
-
+    # Step Two: user enters new password
+    # First as link from email (GET), form could be repeated as POST
+    # when user misrepeats the new password. so GET and POST possible here!
     $check_magic = $db->Query('SELECT * FROM {users} WHERE magic_url = ?',
-            array(Get::val('magic_url')));
+            array(Req::val('magic_url')));
 
     if (!$db->CountRows($check_magic)) {
         Flyspray::show_error(12);

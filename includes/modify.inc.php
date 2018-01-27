@@ -760,13 +760,25 @@ switch ($action = Req::val('action'))
             break;
         }
 
+		$captchaerrors=array();
 		if($fs->prefs['captcha_securimage']){
 			$image = new Securimage(); 
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
-				# wrong code
-				Flyspray::show_error(L('captchaerror'));
-				break;
+				$captchaerrors['invalidsecurimage']=1;
 			}
+		}
+
+		if($fs->prefs['captcha_recaptcha']){
+			require_once('class.recaptcha.php');
+			if( !recaptcha::verify()) {
+				$captchaerrors['invalidrecaptcha']=1;
+			}
+		}
+
+		if(count($captchaerrors)){
+			$_SESSION['ERRORS']=$captchaerrors;
+			Flyspray::show_error(L('captchaerror'));
+			break;
 		}
 
         if (!Post::val('user_name') || !Post::val('real_name')
@@ -777,7 +789,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('email_address') != Post::val('verify_email_address'))
+        if ($fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
         {
             Flyspray::show_error(L('emailverificationwrong'));
             break;
@@ -886,13 +898,13 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('user_pass') != Post::val('user_pass2')) {
-            Flyspray::show_error(L('nomatchpass'));
+	if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
+            Flyspray::show_error(L('passwordtoosmall'));
             break;
         }
 
-        if (strlen(Post::val('user_pass')) < MIN_PW_LENGTH) {
-            Flyspray::show_error(L('passwordtoosmall'));
+        if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+            Flyspray::show_error(L('nomatchpass'));
             break;
         }
 
@@ -960,15 +972,27 @@ switch ($action = Req::val('action'))
         if (!($user->perms('is_admin') || $user->can_self_register())) {
             break;
         }
-		
+
+		$captchaerrors=array();
 		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
 			$image = new Securimage(); 
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
-				# wrong code
-				Flyspray::show_error(L('captchaerror'));
-				break;
+				$captchaerrors['invalidsecurimage']=1;
 			}
-			# captcha is OK
+		}
+		
+		if($fs->prefs['captcha_recaptcha']){
+			require_once('class.recaptcha.php');
+			if( !recaptcha::verify()) {
+				$captchaerrors['invalidrecaptcha']=1;
+			}
+		}
+		
+		# if both captchatypes are configured, maybe show the user which one or both failed.
+		if(count($captchaerrors)){
+			$_SESSION['ERRORS']=$captchaerrors;
+			Flyspray::show_error(L('captchaerror'));
+			break;
 		}
 
         if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
@@ -978,26 +1002,26 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('email_address') != Post::val('verify_email_address'))
-        {
-            Flyspray::show_error(L('emailverificationwrong'));
-            break;
-        }
-
-        // Check email format
+	// Check email format
         if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
         {
             Flyspray::show_error(L('novalidemail'));
             break;
         }
-
-        if (Post::val('user_pass') != Post::val('user_pass2')) {
-            Flyspray::show_error(L('nomatchpass'));
+		
+        if ( $fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
+        {
+            Flyspray::show_error(L('emailverificationwrong'));
             break;
         }
 
         if (strlen(Post::val('user_pass')) && (strlen(Post::val('user_pass')) < MIN_PW_LENGTH)) {
             Flyspray::show_error(L('passwordtoosmall'));
+            break;
+        }
+		
+	if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+            Flyspray::show_error(L('nomatchpass'));
             break;
         }
 
@@ -1232,16 +1256,31 @@ switch ($action = Req::val('action'))
 
 		$errors=array();
 		
-        /* The following code has been modified to accomodate a default_message for "all project" */
-        $settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
+		$settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'captcha_securimage', 'default_project', 'dateformat', 'jabber_ssl',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
 		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
-		'custom_style', 'general_integration', 'footer_integration');
+		'custom_style', 'general_integration', 'footer_integration',
+		'repeat_password','repeat_emailaddress');
+
+		# candid for a plugin, so separate them for the future.
+		$settings[]='captcha_securimage';
+		if(!isset($fs->prefs['captcha_securimage'])){
+			$db->Query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('captcha_securimage',0)");
+		}
+
+		# candid for a plugin
+		$settings[]='captcha_recaptcha';
+		$settings[]='captcha_recaptcha_sitekey';
+		$settings[]='captcha_recaptcha_secret';
+		if(!isset($fs->prefs['captcha_recaptcha'])){
+			$db->Query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('captcha_recaptcha',0),('captcha_recaptcha_sitekey',''),('captcha_recaptcha_secret','')");
+		}
+
         if(Post::val('need_approval') == '1' && Post::val('spam_proof')){
             unset($_POST['spam_proof']); // if self register request admin to approve, disable spam_proof
         	// if you think different, modify functions in class.user.php directing different regiser tpl
@@ -1535,8 +1574,8 @@ switch ($action = Req::val('action'))
                     break;
                 }
 
-                if (Post::val('changepass') || Post::val('confirmpass')) {
-                    if (Post::val('changepass') != Post::val('confirmpass')) {
+                if (Post::val('changepass')) {
+                    if ($fs->prefs['repeat_password'] && Post::val('changepass') != Post::val('confirmpass')) {
                         Flyspray::show_error(L('passnomatch'));
                         break;
                     }
@@ -2650,7 +2689,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (Post::val('pass1') != Post::val('pass2')) {
+        if ($fs->prefs['repeat_password'] && Post::val('pass1') != Post::val('pass2')) {
             Flyspray::show_error(L('passnomatch'));
             break;
         }
