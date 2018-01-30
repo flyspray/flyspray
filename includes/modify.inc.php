@@ -1258,8 +1258,9 @@ switch ($action = Req::val('action'))
 		
 		$settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
-		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'dateformat', 'jabber_ssl',
-		'dateformat_extended', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
+		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'default_entry',
+		'dateformat','dateformat_extended',
+		'jabber_ssl', 'anon_reg', 'global_theme', 'smtp_server', 'page_title',
 		'smtp_user', 'smtp_pass', 'funky_urls', 'reminder_daemon','cache_feeds', 'intro_message',
 		'disable_lostpw','disable_changepw','days_before_alert', 'emailNoHTML', 'need_approval', 'pages_welcome_msg',
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
