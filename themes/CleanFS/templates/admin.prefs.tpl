@@ -413,7 +413,7 @@ function testEmail(){
 	<li>
 	<label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
 	<select id="default_entry" name="default_entry">
-	<?php echo tpl_options(array('index' => L('tasklist'),'toplevel' => L('toplevel'), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
+	<?php echo tpl_options(array('index' => L('tasklist'),'toplevel' => L('toplevel')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
 	</select>
 	</li>
 
