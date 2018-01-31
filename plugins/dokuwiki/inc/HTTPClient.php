@@ -13,33 +13,6 @@ define('HTTP_NL',"\r\n");
 
 
 /**
- * Adds DokuWiki specific configs to the HTTP client
- *
- * @author Andreas Goetz <cpuidle@gmx.de>
- */
-class DokuHTTPClient extends HTTPClient {
-
-    /**
-     * Constructor.
-     *
-     * @author Andreas Gohr <andi@splitbrain.org>
-     */
-    function __construct(){
-        global $conf;
-
-        // call parent constructor
-        parent::__construct();
-
-        // set some values from the config
-        $this->proxy_host = $conf['proxy']['host'];
-        $this->proxy_port = $conf['proxy']['port'];
-        $this->proxy_user = $conf['proxy']['user'];
-        $this->proxy_pass = $conf['proxy']['pass'];
-        $this->proxy_ssl  = $conf['proxy']['ssl'];
-    }
-}
-
-/**
  * This class implements a basic HTTP client
  *
  * It supports POST and GET, Proxy usage, basic authentication,
@@ -429,6 +402,34 @@ class HTTPClient {
             $url .= $key.'='.urlencode($val);
         }
         return $url;
+    }
+}
+
+
+/**
+ * Adds DokuWiki specific configs to the HTTP client
+ *
+ * @author Andreas Goetz <cpuidle@gmx.de>
+ */
+class DokuHTTPClient extends HTTPClient {
+
+    /**
+     * Constructor.
+     *
+     * @author Andreas Gohr <andi@splitbrain.org>
+     */
+    function __construct(){
+        global $conf;
+
+        // call parent constructor
+        parent::__construct();
+
+        // set some values from the config
+        $this->proxy_host = $conf['proxy']['host'];
+        $this->proxy_port = $conf['proxy']['port'];
+        $this->proxy_user = $conf['proxy']['user'];
+        $this->proxy_pass = $conf['proxy']['pass'];
+        $this->proxy_ssl  = $conf['proxy']['ssl'];
     }
 }
 

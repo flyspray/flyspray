@@ -391,8 +391,8 @@ function testEmail(){
       </fieldset>
     </div>
 
-    <div id="lookandfeel" class="tab">
-      <ul class="form_elements">
+<div id="lookandfeel" class="tab">
+	<ul class="form_elements">
 			<li>
 			<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
 			<select id="globaltheme" name="global_theme">
@@ -409,7 +409,13 @@ function testEmail(){
 			echo tpl_options($customs, $proj->prefs['custom_style']);
 			?>
 			</select>
-      </li>
+	</li>
+	<li>
+	<label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
+	<select id="default_entry" name="default_entry">
+	<?php echo tpl_options(array('index' => L('tasklist'),'toplevel' => L('toplevel')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
+	</select>
+	</li>
 
         <?php // Set the selectable column names
             // Do NOT use real database column name here and in the next list,

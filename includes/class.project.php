@@ -57,6 +57,7 @@ class Project
 		$this->prefs['project_title'] = L('allprojects');
         $this->prefs['feed_description']  = L('feedforall');
         $this->prefs['theme_style']   = $fs->prefs['global_theme'];
+		$this->prefs['default_entry'] = $fs->prefs['default_entry'];
         $this->prefs['lang_code']   = $fs->prefs['lang_code'];
         $this->prefs['project_is_active'] = 1;
         $this->prefs['others_view'] = 1;
@@ -64,7 +65,6 @@ class Project
         $this->prefs['intro_message'] = '';
         $this->prefs['anon_open'] = 0;
         $this->prefs['feed_img_url'] = '';
-        $this->prefs['default_entry'] = 'index';
         $this->prefs['notify_reply'] = '';
         $this->prefs['default_due_version'] = 'Undecided';
         $this->prefs['disable_lostpw'] = 0;

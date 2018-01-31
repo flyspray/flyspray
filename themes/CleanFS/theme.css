@@ -517,6 +517,7 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
+#tasklist_table thead tr th {line-height:1;}
 #tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
