@@ -1321,6 +1321,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'need_approval', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'default_entry', 'index');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
