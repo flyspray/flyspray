@@ -1069,6 +1069,7 @@ $translation = array(
 'securimageenable'        => 'Attiva Securimage.',
 'recaptchaprefsinfo'      => "Google reCAPTCHA è un'alternativa al classico CAPTCHA.\nIn base ai dati registrati, al comportamento e altre tipologie di domande basate su immagini, Google decide se sei un umano o un bot.\nPer usarlo hai bisogno di un account Google e di configurare reCAPTCHA per il tuo dominio all'indirizzo https://www.google.com/recaptcha\ndopodiché inserire \"sitekey\" e \"secret\".\nIn base alla configurazione su Google (\"reCAPTCHA V2\" oppure \"Invisible reCAPTCHA\") potresti dover informare i tuoi utenti sulle policy di protezione dati.",
 'recaptchaenable'         => 'Abilita Google reCAPTCHA',
+'tooltipshorttasktitle'   => 'Scrivi una sintesi che renda comprensibile il task a colpo d\'occhio',
 );
 
 ?>
