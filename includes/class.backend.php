@@ -591,7 +591,8 @@ abstract class Backend
         $user_name = Backend::clean_username($user_name);
 
     	// TODO Handle this whole create_user better concerning return false. Why did it fail?
-    	if (empty($user_name)) {
+		# 'notassigned' and '-1' are possible filtervalues for advanced task search
+    	if( empty($user_name) || ctype_digit($user_name) || $username == '-1' || $username=='notassigned' ) {
     		return false;
     	}
 
@@ -600,6 +601,11 @@ abstract class Backend
         // Remove doubled up spaces and control chars
         $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
 
+		# 'notassigned' and '-1' are possible filtervalues for advanced task search, lets avoid them
+    	if( ctype_digit($real_name) || $real_name == '-1' || $real_name=='notassigned' ) {
+    		return false;
+    	}
+		
         // Check to see if the username is available
         $sql = $db->Query('SELECT COUNT(*) FROM {users} WHERE user_name = ?', array($user_name));
 
