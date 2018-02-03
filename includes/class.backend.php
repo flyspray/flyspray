@@ -1636,14 +1636,14 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' ass.user_id is NULL OR';
+                        $temp .= ' ass.user_id is NULL  OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
-                            if (is_numeric($val)) {
-                                $temp .= ' ' . $singleDBKey . ' = ? OR';
+                            if(ctype_digit($val) && strpos($singleDBKey, '_name') === false) {
+                                $temp .= ' ' . $singleDBKey . ' = ?  OR';
                                 $sql_params[] = $val;
-                            } elseif (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
+                            } elseif (!ctype_digit($val) && strpos($singleDBKey, '_name') !== false) {
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ?  OR";
                                 $sql_params[] = '%' . $val . '%';
                             }
                         }
@@ -1668,7 +1668,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
 
             if ($temp) {
-                $where[] = '(' . substr($temp, 0, -3) . ')';
+                $where[] = '(' . substr($temp, 0, -3) . ')'; # strip last ' OR' and 'AND'
             }
         }
 /// }}}
