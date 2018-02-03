@@ -1639,12 +1639,12 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
                         $temp .= ' ass.user_id is NULL OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
-                            if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
-                                $sql_params[] = '%' . $val . '%';
-                            } elseif (is_numeric($val)) {
+                            if (is_numeric($val)) {
                                 $temp .= ' ' . $singleDBKey . ' = ? OR';
                                 $sql_params[] = $val;
+                            } elseif (strpos($singleDBKey, '_name') !== false) {
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
+                                $sql_params[] = '%' . $val . '%';
                             }
                         }
                     }
