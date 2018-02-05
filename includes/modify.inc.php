@@ -974,14 +974,14 @@ switch ($action = Req::val('action'))
         }
 
 		$captchaerrors=array();
-		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
+		if( !($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
 			$image = new Securimage(); 
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				$captchaerrors['invalidsecurimage']=1;
 			}
 		}
 		
-		if($fs->prefs['captcha_recaptcha']){
+		if( !($user->perms('is_admin')) && $fs->prefs['captcha_recaptcha']){
 			require_once('class.recaptcha.php');
 			if( !recaptcha::verify()) {
 				$captchaerrors['invalidrecaptcha']=1;

@@ -1095,5 +1095,6 @@ Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung fall
 'adminchecksinfo'         => 'Info and checks for your current installation',
 'repeatpassword'          => 'Passwort wiederholen',
 'repeatemailaddress'      => 'E-Mail-Adresse wiederholen',
+'tooltipshorttasktitle'   => 'Bitte eine kurze, knackige Zusammenfassung der Aufgabe angeben.',
 );
 ?>

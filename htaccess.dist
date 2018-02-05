@@ -83,12 +83,6 @@ RewriteBase /
 # Depends on your server setup/webhosting if done in php.ini, .user.ini or somehow/somewhere else.
 # Ask your web hoster if you don't know.
 
-# restrict direct access to vendor/ directory, except secureimage_show.php
-RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/images/refresh.png
-RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/images/loading.png
-RewriteCond %{REQUEST_URI} !vendor/dapphp/securimage/securimage_show.php
-RewriteRule ^vendor/.*$ - [R=403,NC,L]
-
 # used for enabling url_rewriting check in admin prefs
 RewriteRule . - [E=HTTP_MOD_REWRITE:On]
 
@@ -118,7 +112,12 @@ RewriteRule ^pm/editgroup/([0-9]+)$ index.php?do=pm&area=editgroup&id=$1 [L,QSA]
 RewriteRule ^edituser/([0-9]+)$ index.php?do=admin&area=users&user_id=$1 [L,QSA]
 RewriteRule ^register$ index.php?do=register [L,QSA]
 RewriteRule ^lostpw$ index.php?do=lostpw [L,QSA]
+
+# gantt and team are experimental pagetypes not within FS1.0 
 RewriteRule ^gantt/proj([0-9]+)$ index.php?do=gantt&project=$1 [L,QSA]
+RewriteRule ^team$ index.php?do=team [L,QSA]
+RewriteRule ^team/proj([0-9]+)$ index.php?do=team&project=$1 [L,QSA]
+
 RewriteRule ^roadmap$ index.php?do=roadmap [L,QSA]
 RewriteRule ^roadmap/proj([0-9]+)$ index.php?do=roadmap&project=$1 [L,QSA]
 RewriteRule ^toplevel$ index.php?do=toplevel [L,QSA]

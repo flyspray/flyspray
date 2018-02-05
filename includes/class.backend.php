@@ -591,7 +591,8 @@ abstract class Backend
         $user_name = Backend::clean_username($user_name);
 
     	// TODO Handle this whole create_user better concerning return false. Why did it fail?
-    	if (empty($user_name)) {
+		# 'notassigned' and '-1' are possible filtervalues for advanced task search
+    	if( empty($user_name) || ctype_digit($user_name) || $username == '-1' || $username=='notassigned' ) {
     		return false;
     	}
 
@@ -600,6 +601,11 @@ abstract class Backend
         // Remove doubled up spaces and control chars
         $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
 
+		# 'notassigned' and '-1' are possible filtervalues for advanced task search, lets avoid them
+    	if( ctype_digit($real_name) || $real_name == '-1' || $real_name=='notassigned' ) {
+    		return false;
+    	}
+		
         // Check to see if the username is available
         $sql = $db->Query('SELECT COUNT(*) FROM {users} WHERE user_name = ?', array($user_name));
 
@@ -1636,15 +1642,15 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
                     $sql_params[] = $val;
                 } elseif (is_array($db_key)) {
                     if ($key == 'dev' && ($val == 'notassigned' || $val == '0' || $val == '-1')) {
-                        $temp .= ' ass.user_id is NULL OR';
+                        $temp .= ' ass.user_id is NULL  OR';
                     } else {
                         foreach ($db_key as $singleDBKey) {
-                            if (strpos($singleDBKey, '_name') !== false) {
-                                $temp .= ' ' . $singleDBKey . " $LIKEOP ? OR";
-                                $sql_params[] = '%' . $val . '%';
-                            } elseif (is_numeric($val)) {
-                                $temp .= ' ' . $singleDBKey . ' = ? OR';
+                            if(ctype_digit($val) && strpos($singleDBKey, '_name') === false) {
+                                $temp .= ' ' . $singleDBKey . ' = ?  OR';
                                 $sql_params[] = $val;
+                            } elseif (!ctype_digit($val) && strpos($singleDBKey, '_name') !== false) {
+                                $temp .= ' ' . $singleDBKey . " $LIKEOP ?  OR";
+                                $sql_params[] = '%' . $val . '%';
                             }
                         }
                     }
@@ -1668,7 +1674,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
 
             if ($temp) {
-                $where[] = '(' . substr($temp, 0, -3) . ')';
+                $where[] = '(' . substr($temp, 0, -3) . ')'; # strip last ' OR' and 'AND'
             }
         }
 /// }}}
