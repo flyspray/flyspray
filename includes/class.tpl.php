@@ -873,10 +873,12 @@ class TextFormatter
                                   $text, $type, $id, $instructions);
         } else {
             $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
-            if ($conf['general']['syntax_plugin'] && $conf['general']['syntax_plugin'] != 'none') {
-                $text='Missing output plugin '.$conf['general']['syntax_plugin'].'!'
+            if (   $conf['general']['syntax_plugin']
+				&& $conf['general']['syntax_plugin'] != 'none'
+				&& $conf['general']['syntax_plugin'] != 'html') {
+                $text='Unsupported output plugin '.$conf['general']['syntax_plugin'].'!'
                 .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
-                .'<br/>Temporarily handled like it is HTML until fixed<br/>'
+                .'<br/>Temporarily handled like it is HTML until fixed.<br/>'
                 .$text;
             }
 
