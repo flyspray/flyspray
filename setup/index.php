@@ -695,7 +695,7 @@ class Setup extends Flyspray
                'admin_username' => array('Administrator\'s username', 'string', true),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
-               'syntax_plugin' => array('Syntax', 'option', false), 
+               'syntax_plugin' => array('Syntax', 'option', true), 
 	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
             if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values')) {
@@ -771,7 +771,7 @@ class Setup extends Flyspray
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
-      $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; Plugin name for Flyspray\'s syntax (use any non-existing plugin name for default syntax)';
+      $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; dokuwiki, none, or html';
       $config[] = "update_check = \"1\"                               ; Boolean. 0 = off, 1 = on.";
       $config[] = "\n";
       $config[] = "[attachments]";
