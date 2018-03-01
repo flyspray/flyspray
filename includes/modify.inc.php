@@ -486,11 +486,15 @@ switch ($action = Req::val('action'))
 	# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
 	#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
 	# update tags
-        $tagList = explode(';', Post::val('tags'));  
-        $tagList = array_map('strip_tags', $tagList);
-        $tagList = array_map('trim', $tagList);
-        $tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
-        $tags_changed = count(array_diff($task['tags'], $tagList)) + count(array_diff($tagList, $task['tags']));
+	$tagList = explode(';', Post::val('tags'));  
+	$tagList = array_map('strip_tags', $tagList);
+	$tagList = array_map('trim', $tagList);
+	$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+	$storedtags=array();
+	foreach($task['tags'] as $temptag){
+		$storedtags[]=$temptag['tag'];
+	}
+	$tags_changed = count(array_diff($storedtags, $tagList)) + count(array_diff($tagList, $storedtags));
 
 	if($tags_changed){
 		// Delete the current assigned tags for this task

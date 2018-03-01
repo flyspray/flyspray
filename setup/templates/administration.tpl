@@ -40,7 +40,8 @@ function ShowHidePassword(id) {
 		<td>
 			<select name="syntax_plugin">
 			<option value="dokuwiki">Text/Dokuwiki</option>
-			<option value="">HTML/CKEditor</option>
+			<option value="none">HTML/none</option>
+			<option value="html">HTML/CKEditor</option>
 			</select>
 		</td>
 	</tr>

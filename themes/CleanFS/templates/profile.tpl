@@ -48,12 +48,12 @@
   </tr>
   <?php endif; ?>
   <tr>
-    <th><a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?opened=<?php echo Filters::noXSS($theuser->id); ?>&amp;status[]="><?php echo Filters::noXSS(L('tasksopened')); ?></a></th>
-    <td><?php echo Filters::noXSS($tasks); ?></td>
+    <th><a href="<?php echo CreateURL('tasklist', 0, null, array('opened'=>$theuser->id, 'status[]'=>'')); ?>"><?php echo Filters::noXSS(L('tasksopened')); ?></a></th>
+    <td><a href="<?php echo CreateURL('tasklist', 0, null, array('opened'=>$theuser->id, 'status[]'=>'')); ?>"><?php echo Filters::noXSS($tasks); ?></a></td>
   </tr>
   <tr>
-    <th><a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?dev=<?php echo Filters::noXSS($theuser->id); ?>"><?php echo Filters::noXSS(L('assignedto')); ?></a></th>
-    <td><?php echo Filters::noXSS($assigned); ?></td>
+    <th><a href="<?php echo CreateURL('tasklist', 0, null, array('dev'=>$theuser->id)); ?>"><?php echo Filters::noXSS(L('assignedto')); ?></a></th>
+    <td><a href="<?php echo CreateURL('tasklist', 0, null, array('dev'=>$theuser->id)); ?>"><?php echo Filters::noXSS($assigned); ?></a></td>
   </tr>
   <tr>
     <th><?php echo Filters::noXSS(L('comments')); ?></th>
