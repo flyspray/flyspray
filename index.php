@@ -61,13 +61,11 @@ if (Get::val('getfile')) {
         exit();
     }
 
-    if ($user->can_view_task($task))
-    {
-        $path = BASEDIR . "/attachments/$file_name";
+	if($user->can_view_task($task)){
+		$path = BASEDIR . "/attachments/$file_name";
+		$csp->emit(); # only default-src 'none'
 
-        header('Pragma: public');
-        header("Content-type: $file_type");
-
+		header("Content-type: $file_type");
 		# image view/download difference
 		if(isset($_GET['dl'])){
 			header('Content-Disposition: attachment; filename="'.$orig_name.'"');
@@ -75,16 +73,15 @@ if (Get::val('getfile')) {
 			header('Content-Disposition: filename="'.$orig_name.'"');
 		}
 
-        header('Content-transfer-encoding: binary');
-        header('Content-length: ' . filesize($path));
+		header('Content-transfer-encoding: binary');
+		header('Content-length: ' . filesize($path));
 
-        readfile($path);
-        exit();
-    }
-    else {
-        Flyspray::show_error(1);
-    }
-    exit;
+		readfile($path);
+		exit();
+	}else{
+		Flyspray::show_error(1);
+	}
+	exit;
 }
 
 // Load translations
