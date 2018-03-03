@@ -369,6 +369,9 @@ function do_cmp($a, $b)
    return ($a[ $orderby ] > $b[ $orderby ]) ? -1 : 1;
 }
 
+/**
+* workaround fputcsv() bug https://bugs.php.net/bug.php?id=43225
+*/
 function my_fputcsv($handle, $fields)
 {
   $out = array();
@@ -462,7 +465,6 @@ function export_task_list()
         flush();
 
 	$output = fopen('php://output', 'w');
-	#fputcsv($output, $projectinfo)
 	$headings= array(
 		'ID',
 		'Category',
@@ -480,9 +482,8 @@ function export_task_list()
 		'Description',
 	);
 
-        # TODO maybe if user just want localized headings for nonenglish speaking audience..
-        #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
-        fputcsv($output, $headings);
+        #fputcsv($output, $headings);
+	my_fputcsv($output, $headings); # fixes 'SYLK' FS#2123 Excel problem
         foreach ($tasks as $task) {
                 $row = array(
                         $task['task_id'],
@@ -500,7 +501,7 @@ function export_task_list()
                         // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
                         $task['detailed_desc']
                 );
-                my_fputcsv($output, $row);
+                my_fputcsv($output, $row); # fputcsv() is buggy
         }
         fclose($output);
         exit();
