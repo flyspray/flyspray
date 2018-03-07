@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray [![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray) Flyspray/peterdd
+[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray
 
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
 
@@ -8,14 +8,9 @@ www.flyspray.org
 
 Flyspray is an uncomplicated, web-based bug and task tracking system.
 
-If you already know all about Flyspray, why wait? Download it now!
-
-If Flyspray is helping your business, please consider helping us by donating a couple of dollars.
-Be added to our generous donators page today!
-
 Have you spotted Flyspray in the wild? Does your company or project use Flyspray?
 You can send a note to the Mailing List including your project or company name, Flyspray URL (if public),
-homepage, and a nice testimonial if you are in the mood and we'll have it added to the list of who is Using Flyspray!
+homepage, and a nice testimonial if you are in the mood and we'll have it added to the list of who is using Flyspray.
 
 ## Installation
 http://flyspray.org/manual/install
