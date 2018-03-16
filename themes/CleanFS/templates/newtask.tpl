@@ -127,7 +127,7 @@
           <?php } ?>
             <label for="priority"><?php echo Filters::noXSS(L('priority')); ?></label>
             <select id="priority" name="task_priority" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
-              <?php echo tpl_options($fs->priorities, Req::val('task_priority', 4)); ?>
+              <?php echo tpl_options($fs->priorities, Req::val('task_priority', 3)); ?>
             </select>
           </li>
 
