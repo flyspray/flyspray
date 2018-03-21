@@ -1085,11 +1085,11 @@ $translation = array(
 'securimageprefsinfo'     => 'Securimage ist ein klassisches CAPTCHA bei dem Nutzer eine Textfolge erkennen und eingeben müssen um ihr Menschsein zu "beweisen".',
 'securimageenable'        => 'Securimage aktivieren',
 'recaptchaprefsinfo'      => 'Google reCAPTCHA ist eine Alternative zum klassischen CAPTCHA.
-Google entscheided anhand von gesammelten Daten und Nutzerverhalten ob es sich um einen menschlichen Nutzer handelt.
-Um reCAPTCHA für Flyspray zu nutzen wird ein Google Account und ein für die Domain konfiguriertes reCAPTCHA ( https://www.google.com/recaptcha ) benötigt.
+Google entscheidet anhand von gesammelten Daten und Nutzerverhalten, ob es sich um einen menschlichen Nutzer handelt.
+Um reCAPTCHA für Flyspray zu nutzen, wird ein Google Account und ein für die Domain konfiguriertes reCAPTCHA ( https://www.google.com/recaptcha ) benötigt.
 Die zwei Werte "sitekey" and "secret" müssen hier dann eingetragen werden.
 Abhängig von der Konfiguration bei Google - "reCAPTCHA V2" oder "Invisible reCAPTCHA" - müssen Ihre Nutzer eventuell darüber bei der Nutzerregistrierung und/oder in der Datenschutzerklärung informiert werden.
-Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung falls konfiguriert.',
+Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung, falls konfiguriert.',
 'recaptchaenable'         => 'Google reCAPTCHA aktivieren',
 'adminchecks'             => 'Checks',
 'adminchecksinfo'         => 'Info and checks for your current installation',
