@@ -592,7 +592,7 @@ abstract class Backend
 
     	// TODO Handle this whole create_user better concerning return false. Why did it fail?
 		# 'notassigned' and '-1' are possible filtervalues for advanced task search
-    	if( empty($user_name) || ctype_digit($user_name) || $username == '-1' || $username=='notassigned' ) {
+    	if( empty($user_name) || ctype_digit($user_name) || $user_name == '-1' || $user_name=='notassigned' ) {
     		return false;
     	}
 
