@@ -1165,14 +1165,31 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $users = Post::val('checkedUsers');
+	$userids = Post::val('checkedUsers');
 
-        if (count($users) == 0)
-        {
+	if(!is_array($userids)){
+		break;
+	}
+
+	$users=array();
+
+	foreach ($userids as $uid) {
+		if( ctype_digit($uid) ) {
+			if( $user->id == $uid ){
+				Flyspray::show_error(L('nosuicide'));
+			} else{
+				$users[]=$uid;
+			}
+		} else{
+			Flyspray::show_error(L('invalidinput'));
+			break 2;
+		}
+	}
+
+  	if (count($users) == 0){
             Flyspray::show_error(L('nouserselected'));
             break;
         }
-
 
         // Make array of users to modify
         $ids = "(" . $users[0];
