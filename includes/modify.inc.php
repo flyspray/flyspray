@@ -553,7 +553,7 @@ switch ($action = Req::val('action'))
                 $new_assignees = array_diff($task['assigned_to'], $assignees);
                 // Remove current user from notification list
                 if (!$user->infos['notify_own']) {
-                    $new_assignees = array_filter($new_assignees, create_function('$u', 'global $user; return $user->id != $u;'));
+                    $new_assignees = array_filter($new_assignees, function($u) use($user) { return $user->id != $u; } );
                 }
                 if(count($new_assignees)) {
                     $notify->Create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->SpecificAddresses($new_assignees), NOTIFY_BOTH, $proj->prefs['lang_code']);
