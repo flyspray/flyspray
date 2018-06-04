@@ -248,7 +248,7 @@ class Setup extends Flyspray
        }
 
       // Grab the posted data and trim it.
-      $data = array_filter($_POST, array(&$this, "TrimArgs"));
+      $data = array_filter($_POST, array(&$this, "trimArgs"));
 
 
       // Loop through the required values and check data
@@ -331,7 +331,7 @@ class Setup extends Flyspray
    public function displayCompletion()
    {
       // Trim the empty values in the $_POST array
-      $data = array_filter($_POST, array($this, "TrimArgs"));
+      $data = array_filter($_POST, array($this, "trimArgs"));
 
       $templates =
       array(
@@ -372,7 +372,7 @@ class Setup extends Flyspray
    {
 
       // Trim the empty values in the $_POST array
-      $data = array_filter($_POST, array($this, "TrimArgs"));
+      $data = array_filter($_POST, array($this, "trimArgs"));
       $this->checkDatabaseSupport();
 
       // Make sure that the user can't choose a DB which is not supported
