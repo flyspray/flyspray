@@ -52,7 +52,7 @@ $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 // Get the time when a task has been changed last
 $most_recent = 0;
 if($proj->prefs['others_view']){
-    $sql = $db->Query("SELECT t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
+    $sql = $db->query("SELECT t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
         FROM {tasks} t
         INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
         WHERE $closed
@@ -76,7 +76,7 @@ if ($fs->prefs['cache_feeds']) {
         }
     }
     else {
-        $sql = $db->Query("SELECT content FROM {cache} p
+        $sql = $db->query("SELECT content FROM {cache} p
             WHERE type = ?
             AND topic = ?
             AND $sql_project
@@ -84,7 +84,7 @@ if ($fs->prefs['cache_feeds']) {
             AND last_updated >= ?",
             array($feed_type, $topic, $max_items, $most_recent)
         );
-        if ($content = $db->FetchOne($sql)) {
+        if ($content = $db->fetchOne($sql)) {
             echo $content;
             exit;
         }
@@ -93,7 +93,7 @@ if ($fs->prefs['cache_feeds']) {
 
 /* build a new feed if cache didn't work */
 if($proj->prefs['others_view']){
-    $sql = $db->Query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by, 
+    $sql = $db->query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by, 
         COALESCE(u.real_name, 'anonymous') AS real_name,
         COALESCE(u.email_address, t.anon_email) AS email_address
         FROM  {tasks}    t
@@ -152,7 +152,7 @@ if ($fs->prefs['cache_feeds']) {
 
         $keys = array('type','topic','project_id','max_items');
 
-        $db->Replace('{cache}', $fields, $keys) or die ('error updating the database cache');
+        $db->replace('{cache}', $fields, $keys) or die ('error updating the database cache');
     }
 }
 
