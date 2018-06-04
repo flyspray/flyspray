@@ -78,7 +78,7 @@ class Jabber
     * @param string $$name
      * @access public
      */
-    public function SetResource($name)
+    public function setResource($name)
     {
         $this->resource = $name;
     }
