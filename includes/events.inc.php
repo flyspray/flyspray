@@ -7,7 +7,7 @@
 function get_events($task_id, $where = '')
 {
     global $db;
-    return $db->Query("SELECT h.*,
+    return $db->query("SELECT h.*,
                       tt1.tasktype_name AS task_type1,
                       tt2.tasktype_name AS task_type2,
                       los1.os_name AS operating_system1,
@@ -153,8 +153,8 @@ function event_description($history) {
                     break;
                 case 'estimated_effort':
                     $field = eL($translate[$field]);
-                    $old_value = effort::SecondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-                    $new_value = effort::SecondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
+                    $old_value = effort::secondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                    $new_value = effort::secondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
                     break;
             }
             $return .= eL('fieldchanged').": {$field}";
