@@ -77,9 +77,9 @@ class Flyspray
 
         $this->startSession();
 
-        $res = $db->Query('SELECT pref_name, pref_value FROM {prefs}');
+        $res = $db->query('SELECT pref_name, pref_value FROM {prefs}');
 
-        while ($row = $db->FetchRow($res)) {
+        while ($row = $db->fetchRow($res)) {
             $this->prefs[$row['pref_name']] = $row['pref_value'];
         }
 
@@ -155,7 +155,7 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    public static function Redirect($url, $exit = true, $rfc2616 = true)
+    public static function redirect($url, $exit = true, $rfc2616 = true)
     {
 
         @ob_clean();
@@ -332,7 +332,7 @@ class Flyspray
      * @return mixed an array with all taskdetails or false on failure
      * @version 1.0
      */
-   public static  function GetTaskDetails($task_id, $cache_enabled = false)
+   public static  function getTaskDetails($task_id, $cache_enabled = false)
     {
         global $db, $fs;
 
@@ -348,7 +348,7 @@ class Flyspray
             return false;
         }
 
-        $get_details = $db->Query('SELECT t.*, p.*,
+        $get_details = $db->query('SELECT t.*, p.*,
                                           c.category_name, c.category_owner, c.lft, c.rgt, c.project_id as cproj,
                                           o.os_name,
                                           r.resolution_name,
@@ -373,11 +373,11 @@ class Flyspray
                                LEFT JOIN  {users}              uc ON t.closed_by = uc.user_id
                                    WHERE  t.task_id = ?', array($task_id));
 
-        if (!$db->CountRows($get_details)) {
+        if (!$db->countRows($get_details)) {
             return false;
         }
 
-        if ($get_details = $db->FetchRow($get_details)) {
+        if ($get_details = $db->fetchRow($get_details)) {
             $get_details += array('severity_name' => $get_details['task_severity']==0 ? '' : $fs->severities[$get_details['task_severity']]);
             $get_details += array('priority_name' => $get_details['task_priority']==0 ? '' : $fs->priorities[$get_details['task_priority']]);
         }
@@ -385,7 +385,7 @@ class Flyspray
 	$get_details['tags'] = Flyspray::getTags($task_id);
 
         $get_details['assigned_to'] = $get_details['assigned_to_name'] = array();
-        if ($assignees = Flyspray::GetAssignees($task_id, true)) {
+        if ($assignees = Flyspray::getAssignees($task_id, true)) {
             $get_details['assigned_to'] = $assignees[0];
             $get_details['assigned_to_name'] = $assignees[1];
         }
@@ -415,7 +415,7 @@ class Flyspray
 
 		$query .= ' ORDER BY project_is_active DESC, project_id DESC'; # active first, latest projects first for option groups and new projects are probably the most used.
 
-		$sql = $db->Query($query);
+		$sql = $db->query($query);
 		return $db->fetchAllArray($sql);
 	} // }}}
     
@@ -458,13 +458,13 @@ class Flyspray
     public static function listGroups($proj_id = 0)
     {
 	global $db;
-	$res = $db->Query('SELECT g.*, COUNT(uig.user_id) AS users
+	$res = $db->query('SELECT g.*, COUNT(uig.user_id) AS users
 		FROM {groups} g
 		LEFT JOIN {users_in_groups} uig ON uig.group_id=g.group_id
 		WHERE project_id = ?
 		GROUP BY g.group_id
 		ORDER BY g.group_id ASC', array($proj_id));
-        return $db->FetchAllArray($res);
+        return $db->fetchAllArray($res);
     } // }}}
 
     // Get info on all users {{{
@@ -485,7 +485,7 @@ class Flyspray
 		profile_image, hide_my_email
 		FROM {users}
 		ORDER BY account_enabled DESC, UPPER(user_name) ASC');
-        return $db->FetchAllArray($res);
+        return $db->fetchAllArray($res);
     }
 
     // }}}
@@ -560,7 +560,7 @@ class Flyspray
                              ((!is_numeric($time)) ? time() : $time),
                               $type, $field, $oldvalue, $newvalue);
 
-        if($db->Query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed,
+        if($db->query('INSERT INTO {history} (task_id, user_id, event_date, event_type, field_changed,
                        old_value, new_value) VALUES (?, ?, ?, ?, ?, ?, ?)', $query_params)) {
 
                            return true;
@@ -580,10 +580,10 @@ class Flyspray
      * @return void
      * @version 1.0
      */
-    public static function AdminRequest($type, $project_id, $task_id, $submitter, $reason)
+    public static function adminRequest($type, $project_id, $task_id, $submitter, $reason)
     {
         global $db;
-        $db->Query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
+        $db->query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
                          VALUES (?, ?, ?, ?, ?, ?, ?)',
                     array($project_id, $task_id, $submitter, $type, $reason, time(), ''));
     } // }}}
@@ -596,15 +596,15 @@ class Flyspray
      * @return bool
      * @version 1.0
      */
-    public static function AdminRequestCheck($type, $task_id)
+    public static function adminRequestCheck($type, $task_id)
     {
         global $db;
 
-        $check = $db->Query("SELECT *
+        $check = $db->query("SELECT *
                                FROM {admin_requests}
                               WHERE request_type = ? AND task_id = ? AND resolved_by = 0",
                             array($type, $task_id));
-        return (bool)($db->CountRows($check));
+        return (bool)($db->countRows($check));
     } // }}}
     // Get the current user's details {{{
     /**
@@ -619,8 +619,8 @@ class Flyspray
         global $db;
 
         // Get current user details.  We need this to see if their account is enabled or disabled
-        $result = $db->Query('SELECT * FROM {users} WHERE user_id = ?', array(intval($user_id)));
-        return $db->FetchRow($result);
+        $result = $db->query('SELECT * FROM {users} WHERE user_id = ?', array(intval($user_id)));
+        return $db->fetchRow($result);
     } // }}}
     // Get group details {{{
     /**
@@ -633,8 +633,8 @@ class Flyspray
     public static function getGroupDetails($group_id)
     {
         global $db;
-        $sql = $db->Query('SELECT * FROM {groups} WHERE group_id = ?', array($group_id));
-        return $db->FetchRow($sql);
+        $sql = $db->query('SELECT * FROM {groups} WHERE group_id = ?', array($group_id));
+        return $db->fetchRow($sql);
     } // }}}
     //  {{{
   /**
@@ -677,11 +677,11 @@ class Flyspray
         global $db;
 
 	$email_address = $username;  //handle multiple email addresses
-        $temp = $db->Query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
-	$user_id = $db->FetchRow($temp);
+        $temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
+	$user_id = $db->fetchRow($temp);
 	$user_id = $user_id["id"];
 
-	$result = $db->Query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
+	$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
@@ -689,7 +689,7 @@ class Flyspray
                                WHERE  u.user_id = ? OR u.user_name = ? AND g.project_id = ?
                             ORDER BY  g.group_id ASC", array($user_id, $username, 0));
 
-        $auth_details = $db->FetchRow($result);
+        $auth_details = $db->fetchRow($result);
 
         if($auth_details === false) {
             return -2;
@@ -718,7 +718,7 @@ class Flyspray
 	}
 
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
-            $db->Query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
+            $db->query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
                            WHERE user_id = ?', array($auth_details['user_id']));
             $auth_details['account_enabled'] = 1;
             $_SESSION['was_locked'] = true;
@@ -757,7 +757,7 @@ class Flyspray
             return false;
         }
 
-        $sql = $db->Query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
+        $sql = $db->query("SELECT id FROM {user_emails} WHERE oauth_uid = ? AND oauth_provider = ?",array($uid, $provider));
 
         if ($db->fetchOne($sql)) {
             return true;
@@ -984,11 +984,11 @@ class Flyspray
                 # pre FS1.0beta
                 #$sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
                 # since FS1.0beta
-                $sql = $db->Query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
+                $sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
                         JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
                         WHERE task_id = ?
                         ORDER BY list_position', array($task_id));
-                return $db->FetchAllArray($sql);
+                return $db->fetchAllArray($sql);
 	} /// }}}
 
     // {{{
@@ -1000,17 +1000,17 @@ class Flyspray
      * @return array
      * @version 1.0
      */
-    public static function GetAssignees($task_id, $name = false)
+    public static function getAssignees($task_id, $name = false)
     {
         global $db;
 
-        $sql = $db->Query('SELECT u.real_name, u.user_id
+        $sql = $db->query('SELECT u.real_name, u.user_id
                              FROM {users} u, {assigned} a
                             WHERE task_id = ? AND u.user_id = a.user_id',
                               array($task_id));
 
         $assignees = array();
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             if ($name) {
                 $assignees[0][] = $row['user_id'];
                 $assignees[1][] = $row['real_name'];
@@ -1103,7 +1103,7 @@ class Flyspray
                 $_SESSION['ERROR'] .= ' ' . $advanced_info;
             }
             if ($die) {
-                Flyspray::Redirect( (is_null($url) ? $baseurl : $url) );
+                Flyspray::redirect( (is_null($url) ? $baseurl : $url) );
             }
         }
     }
@@ -1119,9 +1119,9 @@ class Flyspray
     {
         global $db;
 
-        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_id = ?', array(intval($id)));
+        $sql = $db->query('SELECT user_id FROM {users} WHERE user_id = ?', array(intval($id)));
 
-        return intval($db->FetchOne($sql));
+        return intval($db->fetchOne($sql));
     }
 
     /**
@@ -1131,7 +1131,7 @@ class Flyspray
      * @return integer 0 if the user does not exist
      * @version 1.0
      */
-    public static function UserNameToId($name)
+    public static function usernameToId($name)
     {
         global $db;
 
@@ -1139,9 +1139,9 @@ class Flyspray
 		return 0;
 	}
 
-        $sql = $db->Query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
+        $sql = $db->query('SELECT user_id FROM {users} WHERE user_name = ?', array($name));
 
-        return intval($db->FetchOne($sql));
+        return intval($db->fetchOne($sql));
     }
 
     /**
@@ -1326,7 +1326,7 @@ class Flyspray
      * @access public
      * @return array
      */
-    public function GetNotificationOptions($noneAllowed = true)
+    public function getNotificationOptions($noneAllowed = true)
     {
         switch ($this->prefs['user_notify'])
         {
