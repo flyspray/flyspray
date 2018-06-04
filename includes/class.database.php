@@ -102,29 +102,23 @@ class Database
             die('Flyspray was unable to connect to the database. '
                .'Check your settings in flyspray.conf.php');
         }
-            $this->dblink->setFetchMode(ADODB_FETCH_BOTH);
+        $this->dblink->setFetchMode(ADODB_FETCH_BOTH);
 
-            /*
-             * this will work only in the following systems/PHP versions
-             *
-             * PHP4 and 5 with postgresql
-             * PHP5 with "mysqli" or "pdo_mysql" driver (not "mysql" driver)
-             * using mysql 4.1.11 or later and mysql 5.0.6 or later.
-             *
-             * in the rest of the world, it will silently return FALSE.
-             */
-
+        if($dbtype=='mysqli'){
+            $this->dblink->setCharSet('utf8mb4');
+        }else{
             $this->dblink->setCharSet('utf8');
+        }
 
-            //enable debug if constact DEBUG_SQL is defined.
-            !defined('DEBUG_SQL') || $this->dblink->debug = true;
+        // enable debug if constant DEBUG_SQL is defined.
+        !defined('DEBUG_SQL') || $this->dblink->debug = true;
             
-            if($dbtype === 'mysql' || $dbtype === 'mysqli') {
-                $dbinfo = $this->dblink->serverInfo();
-                if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
-                    $this->dblink->execute("SET SESSION SQL_MODE='TRADITIONAL'");
-                }
+        if($dbtype === 'mysql' || $dbtype === 'mysqli') {
+            $dbinfo = $this->dblink->serverInfo();
+            if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
+                $this->dblink->execute("SET SESSION SQL_MODE='TRADITIONAL'");
             }
+        }
     }
 
     /**
