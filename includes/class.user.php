@@ -15,7 +15,7 @@ class User
         global $db;
 
         if ($uid > 0) {
-            $sql = $db->Query('SELECT *, g.group_id AS global_group, uig.record_id AS global_record_id
+            $sql = $db->query('SELECT *, g.group_id AS global_group, uig.record_id AS global_record_id
                                  FROM {users} u, {users_in_groups} uig, {groups} g
                                 WHERE u.user_id = ? AND uig.user_id = ? AND g.project_id = 0
                                       AND uig.group_id = g.group_id',
@@ -23,7 +23,7 @@ class User
         }
 
         if ($uid > 0 && $db->countRows($sql) == 1) {
-            $this->infos = $db->FetchRow($sql);
+            $this->infos = $db->fetchRow($sql);
             $this->id = intval($uid);
         } else {
             $this->infos['real_name'] = L('anonuser');
@@ -69,12 +69,12 @@ class User
         			'name'=> Post::val('search_name')
         		);
         		$keys = array('name','user_id');
-        		$db->Replace('{searches}', $fields, $keys);
+        		$db->replace('{searches}', $fields, $keys);
         	}
         }
 
-        $sql = $db->Query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY name ASC', array($this->id));
-        $this->searches = $db->FetchAllArray($sql);
+        $sql = $db->query('SELECT * FROM {searches} WHERE user_id = ? ORDER BY name ASC', array($this->id));
+        $this->searches = $db->fetchAllArray($sql);
     }
 
     public function perms($name, $project = null) {
@@ -107,18 +107,18 @@ class User
         $this->perms = array(0 => array());
         // Get project settings which are important for permissions
 		# php7.2 compatible variant without create_function(), instead use a SQL UNION to fill a fake global-project with project_id=0
-		$sql = $db->Query('
+		$sql = $db->query('
 			SELECT project_id, others_view, project_is_active, anon_open, comment_closed
 			FROM {projects}
 			UNION
 			SELECT 0,1,1,1,1');
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             $this->perms[$row['project_id']] = $row;
         }
 
         if (!$this->isAnon()) {
             // Get the global group permissions for the current user
-            $sql = $db->Query("SELECT  ".join(', ', $fields).", g.project_id, uig.record_id,
+            $sql = $db->query("SELECT  ".join(', ', $fields).", g.project_id, uig.record_id,
                                        g.group_open, g.group_id AS project_group
                                  FROM  {groups} g
                             LEFT JOIN  {users_in_groups} uig ON g.group_id = uig.group_id
@@ -127,10 +127,10 @@ class User
                              ORDER BY  g.project_id, g.group_id ASC",
                                 array($this->id));
 
-            while ($row = $db->FetchRow($sql)) {
+            while ($row = $db->fetchRow($sql)) {
                 if (!isset($this->perms[$row['project_id']])) {
                     // should not happen, so clean up the DB
-                    $db->Query('DELETE FROM {users_in_groups} WHERE record_id = ?', array($row['record_id']));
+                    $db->query('DELETE FROM {users_in_groups} WHERE record_id = ?', array($row['record_id']));
                     continue;
                 }
 
@@ -171,7 +171,7 @@ class User
                 || !$this->perms('group_open', 0))
         {
             $this->logout();
-            Flyspray::Redirect($baseurl);
+            Flyspray::redirect($baseurl);
         }
     }
 
@@ -263,7 +263,7 @@ class User
                 if ($task['opened_by'] == $this->id) {
                     return true;
                 }
-                if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+                if (in_array($this->id, Flyspray::getAssignees($task['task_id']))) {
                     return true;
                 }
                 // No use to continue further.
@@ -278,7 +278,7 @@ class User
                     return true;
                 }
                 // Fetch only once, could be needed three times.
-                $assignees = Flyspray::GetAssignees($task['task_id']);
+                $assignees = Flyspray::getAssignees($task['task_id']);
                 if (in_array($this->id, $assignees)) {
                     return true;
                 }
@@ -328,7 +328,7 @@ class User
             if ($task['opened_by'] == $this->id) {
                 return true;
             }
-            if (in_array($this->id, Flyspray::GetAssignees($task['task_id']))) {
+            if (in_array($this->id, Flyspray::getAssignees($task['task_id']))) {
                 return true;
             }
             // No use to continue further.
@@ -344,13 +344,13 @@ class User
         return !$task['is_closed'] && (
                $this->perms('modify_all_tasks', $task['project_id']) ||
                ($this->id == $task['opened_by'] && $this->perms('modify_own_tasks', $task['project_id'])) ||
-               in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+               in_array($this->id, Flyspray::getAssignees($task['task_id']))
                );
     }
 
     public function can_take_ownership($task)
     {
-        $assignees = Flyspray::GetAssignees($task['task_id']);
+        $assignees = Flyspray::getAssignees($task['task_id']);
 
         return ($this->perms('assign_to_self', $task['project_id']) && empty($assignees))
                || ($this->perms('assign_others_to_self', $task['project_id']) && !in_array($this->id, $assignees));
@@ -358,7 +358,7 @@ class User
 
     public function can_add_to_assignees($task)
     {
-        return ($this->perms('add_to_assignees', $task['project_id']) && !in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
+        return ($this->perms('add_to_assignees', $task['project_id']) && !in_array($this->id, Flyspray::getAssignees($task['task_id'])));
     }
 
     public function can_close_task($task)
@@ -371,7 +371,7 @@ class User
     {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
-                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+                in_array($this->id, Flyspray::getAssignees($task['task_id']))
             );
     }
 
@@ -379,7 +379,7 @@ class User
     {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
-                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+                in_array($this->id, Flyspray::getAssignees($task['task_id']))
             );
     }
 
@@ -387,7 +387,7 @@ class User
     {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
-                in_array($this->id, Flyspray::GetAssignees($task['task_id']))
+                in_array($this->id, Flyspray::getAssignees($task['task_id']))
             );
     }
 
@@ -422,7 +422,7 @@ class User
 
     public function can_change_private($task)
     {
-        return !$task['is_closed'] && ($this->perms('manage_project', $task['project_id']) || in_array($this->id, Flyspray::GetAssignees($task['task_id'])));
+        return !$task['is_closed'] && ($this->perms('manage_project', $task['project_id']) || in_array($this->id, Flyspray::getAssignees($task['task_id'])));
     }
 
     public function can_vote($task)
@@ -434,27 +434,27 @@ class User
         }
 
         // Check that the user hasn't already voted this task
-        $check = $db->Query('SELECT vote_id
+        $check = $db->query('SELECT vote_id
                                FROM {votes}
                               WHERE user_id = ? AND task_id = ?',
                              array($this->id, $task['task_id']));
-        if ($db->CountRows($check)) {
+        if ($db->countRows($check)) {
             return -2;
         }
 
 	/* FS 1.0alpha daily vote limit
         // Check that the user hasn't voted more than allowed today
-        $check = $db->Query('SELECT vote_id
+        $check = $db->query('SELECT vote_id
                                FROM {votes}
                               WHERE user_id = ? AND date_time > ?',
                              array($this->id, time() - 86400));
-        if ($db->CountRows($check) >= $fs->prefs['max_vote_per_day']) {
+        if ($db->countRows($check) >= $fs->prefs['max_vote_per_day']) {
             return -3;
         }
 	*/
 	
 	/* FS 1.0beta2 max votes per user per project limit */
-	$check = $db->Query('
+	$check = $db->query('
 		SELECT COUNT(v.vote_id)
 		FROM {votes} v
 		JOIN {tasks} t ON t.task_id=v.task_id
@@ -463,7 +463,7 @@ class User
 		AND t.is_closed <>1',
 		array($this->id, $task['project_id'])
 	);
-	if ($db->CountRows($check) >= $fs->prefs['votes_per_project']) {
+	if ($db->countRows($check) >= $fs->prefs['votes_per_project']) {
 		return -4;
 	}
 	
@@ -499,7 +499,7 @@ class User
      */
     static function getActivityUserCount($startdate, $enddate, $project_id, $userid) {
         global $db;
-        $result = $db->Query('SELECT count(event_date) as val
+        $result = $db->query('SELECT count(event_date) as val
                                 FROM {history} h left join {tasks} t on t.task_id = h.task_id
                                WHERE t.project_id = ? AND h.user_id = ? AND event_date BETWEEN ? AND ?',
                             array($project_id, $userid, $startdate, $enddate));
@@ -520,7 +520,7 @@ class User
         //NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
 
-        $result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
+        $result = $db->query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
                                 FROM {history} h left join {tasks} t on t.task_id = h.task_id
                                WHERE t.project_id = ? AND h.user_id = ? AND event_date BETWEEN ? AND ?
                             GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
