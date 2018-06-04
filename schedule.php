@@ -31,7 +31,7 @@ function send_reminders() {
   $user = new User(0);
   $now = time();
 
-  $get_reminders = $db->Query("SELECT r.*, t.*, u.*
+  $get_reminders = $db->query("SELECT r.*, t.*, u.*
               FROM {reminders} r
               INNER JOIN {users}    u ON u.user_id = r.to_user_id
               INNER JOIN {tasks}    t ON r.task_id = t.task_id
@@ -42,7 +42,7 @@ function send_reminders() {
               ORDER BY r.reminder_id", array($now, $now)
   );
 
-  while ($row = $db->FetchRow($get_reminders)) {
+  while ($row = $db->fetchRow($get_reminders)) {
     // So that the sender in emails will is the right project, not 'Default project'
     // and also to get the projects default language, if needed.
     $proj = new Project($row['project_id']);
@@ -69,17 +69,17 @@ function send_reminders() {
     $message = $row['reminder_message'];
 
     // Pass the recipients and message onto the notification function
-    $notify->SendEmail($email_users, $subject, $message);
-    $notify->StoreJabber($jabber_users, $subject, $message);
+    $notify->sendEmail($email_users, $subject, $message);
+    $notify->storeJabber($jabber_users, $subject, $message);
 
     // Update the database with the time sent
-    $update_db = $db->Query("UPDATE {reminders}
+    $update_db = $db->query("UPDATE {reminders}
       SET last_sent = ?
       WHERE reminder_id = ?", array(time(), $row['reminder_id']));
   }
 
   // send those stored notifications
-  $notify->SendJabber();
+  $notify->sendJabber();
   unset($notify, $user);
 }
 

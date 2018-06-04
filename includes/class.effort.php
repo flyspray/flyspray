@@ -45,7 +45,7 @@ class effort
         global $db;
 
         # note: third parameter seem useless, not used by EditStringToSeconds().., maybe drop it..
-        $effort = self::EditStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+        $effort = self::editStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
         if ($effort === FALSE) {
             Flyspray::show_error(L('invalideffort'));
             return false;
@@ -56,7 +56,7 @@ class effort
             Flyspray::show_error(L('zeroeffort'));
             return false;
         } else{
-            $db->Query('INSERT INTO {effort}
+            $db->query('INSERT INTO {effort}
                 (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
                 VALUES  ( ?, ?, ?, ?,?,? )',
                 array($this->_task_id, time(), $this->_userId,time(),time(),$effort)
@@ -76,13 +76,13 @@ class effort
 
         //check if the user is already tracking time against this task.
         $result = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
-        if($db->CountRows($result)>0)
+        if($db->countRows($result)>0)
         {
             return false;
         }
         else
         {
-                $db->Query('INSERT INTO  {effort}
+                $db->query('INSERT INTO  {effort}
                                          (task_id, date_added, user_id,start_timestamp)
                                  VALUES  ( ?, ?, ?, ? )',
                                  array   ($this->_task_id, time(), $this->_userId,time()));
@@ -103,15 +103,15 @@ class effort
         $time = time();
 
 
-        $sql = $db->Query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
-        $result = $db->FetchRow($sql);
+        $sql = $db->query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
+        $result = $db->fetchRow($sql);
         $start_time = $result[0];
         $seconds = $time - $start_time;
         
         // Round to full minutes upwards.
         $effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
  
-        $sql = $db->Query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_task_id." AND end_timestamp IS NULL;");
+        $sql = $db->query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_task_id." AND end_timestamp IS NULL;");
     }
 
     /**
@@ -122,7 +122,7 @@ class effort
         global $db;
     
         # 2016-07-04: also remove invalid finished 0 effort entries that were accidently possible up to Flyspray 1.0-rc
-        $db->Query('DELETE FROM {effort}
+        $db->query('DELETE FROM {effort}
             WHERE user_id='.$this->_userId.'
             AND task_id='.$this->_task_id.'
             AND (
@@ -136,10 +136,10 @@ class effort
     {
         global $db;
 
-        $this->details = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
+        $this->details = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
     }
     
-    public static function SecondsToString($seconds, $factor, $format) {
+    public static function secondsToString($seconds, $factor, $format) {
         if ($seconds == 0) {
             return '';
         }
@@ -231,7 +231,7 @@ class effort
         }
     }
 
-    public static function SecondsToEditString($seconds, $factor, $format) {
+    public static function secondsToEditString($seconds, $factor, $format) {
         $factor = ($factor == 0 ? 86400 : $factor);
 
         // Adjust seconds to be evenly dividable by 60, so
@@ -272,7 +272,7 @@ class effort
         }
     }
 
-    public static function EditStringToSeconds($string, $factor, $format) {
+    public static function editStringToSeconds($string, $factor, $format) {
         if (!isset($string) || empty($string)) {
             return 0;
         }

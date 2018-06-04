@@ -46,12 +46,12 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
 
 if (Get::val('getfile')) {
     // If a file was requested, deliver it
-    $result = $db->Query("SELECT  t.project_id,
+    $result = $db->query("SELECT  t.project_id,
                                   a.orig_name, a.file_name, a.file_type, t.*
                             FROM  {attachments} a
                       INNER JOIN  {tasks}       t ON a.task_id = t.task_id
                            WHERE  attachment_id = ?", array(Get::val('getfile')));
-    $task = $db->FetchRow($result);
+    $task = $db->fetchRow($result);
     list($proj_id, $orig_name, $file_name, $file_type) = $task;
 
     // Check if file exists, and user permission to access it!
@@ -147,16 +147,16 @@ $page = new FSTpl();
 // make sure people are not attempting to manually fiddle with projects they are not allowed to play with
 if (Req::has('project') && Req::val('project') != 0 && !$user->can_select_project(Req::val('project'))) {
 	Flyspray::show_error( L('nopermission') );
-	Flyspray::Redirect($baseurl);
+	Flyspray::redirect($baseurl);
 	exit;
 }
 
 if ($show_task = Get::val('show_task')) {
     // If someone used the 'show task' form, redirect them
     if (is_numeric($show_task)) {
-        Flyspray::Redirect( CreateURL('details', $show_task) );
+        Flyspray::redirect( createURL('details', $show_task) );
     } else {
-        Flyspray::Redirect( $baseurl . '?string=' .  $show_task);
+        Flyspray::redirect( $baseurl . '?string=' .  $show_task);
     }
 }
 
@@ -183,7 +183,7 @@ if (Req::has('action')) {
 
 if ($proj->id && $user->perms('manage_project')) {
     // Find out if there are any PM requests wanting attention
-    $sql = $db->Query(
+    $sql = $db->query(
             'SELECT COUNT(*) FROM {admin_requests} WHERE project_id = ? AND resolved_by = 0',
             array($proj->id));
     list($count) = $db->fetchRow($sql);
@@ -191,7 +191,7 @@ if ($proj->id && $user->perms('manage_project')) {
     $page->assign('pm_pendingreq_num', $count);
 }
 if ($user->perms('is_admin')) {
-    $sql = $db->Query(
+    $sql = $db->query(
     	    'SELECT COUNT(*) FROM {admin_requests} WHERE request_type = 3 AND project_id = 0 AND resolved_by = 0');
     list($count) = $db->fetchRow($sql);
     $page->assign('admin_pendingreq_num', $count);
@@ -200,7 +200,7 @@ if ($user->perms('is_admin')) {
 # a bit hacky: First 3 MUST be project_id, project_title, project_is_active in this order!
 # This first 3 indexes are used by tpl_options currently..
 # removed upper(project_title) for sorting, should be handled by database collation (utf8_general_ci)
-$sql = $db->Query('
+$sql = $db->query('
 	SELECT project_id, project_title, project_is_active, others_view, default_entry
 	FROM {projects}
 	ORDER BY project_is_active DESC, project_title'
@@ -208,7 +208,7 @@ $sql = $db->Query('
 
 # new: project_id as index for easier access, needs testing and maybe simplification 
 # similiar situation also includes/class.flyspray.php function listProjects()
-$sres=$db->FetchAllArray($sql);
+$sres=$db->fetchAllArray($sql);
 foreach($sres as $p){
 	$prs[$p['project_id']]=$p;
 }
@@ -217,7 +217,7 @@ $fs->projects = array_filter($prs, array($user, 'can_select_project'));
 
 // Get e-mail addresses of the admins
 if ($user->isAnon() && !$fs->prefs['user_notify']) {
-    $sql = $db->Query('SELECT email_address
+    $sql = $db->query('SELECT email_address
                          FROM {users} u
                     LEFT JOIN {users_in_groups} g ON u.user_id = g.user_id
                         WHERE g.group_id = 1');

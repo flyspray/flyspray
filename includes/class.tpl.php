@@ -174,7 +174,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 
     if (!is_array($task) || !isset($task['status_name'])) {
         $td_id = (is_array($task) && isset($task['task_id'])) ? $task['task_id'] : $task;
-        $task = Flyspray::GetTaskDetails($td_id, true);
+        $task = Flyspray::getTaskDetails($td_id, true);
     }
 
     if ($strict === true && (!is_object($user) || !$user->can_view_task($task))) {
@@ -236,7 +236,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
             case 'category':
                 if ($task['product_category']) {
                     if (!isset($task['category_name'])) {
-                        $task = Flyspray::GetTaskDetails($task['task_id'], true);
+                        $task = Flyspray::getTaskDetails($task['task_id'], true);
                     }
                     $title_text[] = $task['category_name'];
                 }
@@ -263,7 +263,7 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
 		unset($params['project']);
 	}
 
-    $url = htmlspecialchars(CreateURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
+    $url = htmlspecialchars(createURL('details', $task['task_id'],  null, $params), ENT_QUOTES, 'utf-8');
     $title_text = htmlspecialchars($title_text, ENT_QUOTES, 'utf-8');
     $link  = sprintf('<a href="%s" title="%s" %s>%s</a>',$url, $title_text, join_attrs($attrs), $text);
 
@@ -282,7 +282,7 @@ function tpl_userlink($uid)
     if (is_array($uid)) {
         list($uid, $uname, $rname) = $uid;
     } elseif (empty($cache[$uid])) {
-        $sql = $db->Query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
+        $sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
                            array(intval($uid)));
         if ($sql && $db->countRows($sql)) {
             list($uname, $rname) = $db->fetchRow($sql);
@@ -294,7 +294,7 @@ function tpl_userlink($uid)
 		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
-		$url = CreateURL('user', $uid);
+		$url = createURL('user', $uid);
 		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
 	} elseif (empty($cache[$uid])) {
 		$cache[$uid] = eL('anonymous');
@@ -322,7 +322,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 
 	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
 		if (!isset($avacache[$uid]['uname'])) {
-			$sql = $db->Query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
+			$sql = $db->query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
 			if ($sql && $db->countRows($sql)) {
 				list($uname, $rname, $email, $profile_image) = $db->fetchRow($sql);
 			} else {
@@ -351,7 +351,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
-			$url = CreateURL('user', $uid);
+			$url = createURL('user', $uid);
 			$avacache[$uid][$size] = '<a'.($class!='' ? ' class="'.$class.'"':'').($style!='' ? ' style="'.$style.'"':'').' href="'.$url.'" title="'.Filters::noXSS($avacache[$uid]['rname']).'">'.$image.'</a>';
 		}
 	}
@@ -438,8 +438,8 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     }
 
     if ($value && ctype_digit($value)) {
-        $sql = $db->Query('SELECT user_name FROM {users} WHERE user_id = ?', array($value));
-        $value = $db->FetchOne($sql);
+        $sql = $db->query('SELECT user_name FROM {users} WHERE user_id = ?', array($value));
+        $value = $db->fetchOne($sql);
     }
 
     if (!$value) {
@@ -1067,7 +1067,7 @@ function tpl_disableif ($if)
 
 // {{{ Url handling
 // Create an URL based upon address-rewriting preferences {{{
-function CreateURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
+function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
     global $baseurl, $conf, $fs;
 
@@ -1244,11 +1244,11 @@ function pagenums($pagenum, $perpage, $totalcount)
         $finish = min($start + 4, $pages);
 
         if ($start > 1) {
-            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
+            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
             $output .= sprintf('<a href="%s">&lt;&lt;%s </a>', $url, eL('first'));
         }
         if ($pagenum > 1) {
-            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
+            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
             $output .= sprintf('<a id="previous" accesskey="p" href="%s">&lt; %s</a> - ', $url, eL('previous'));
         }
 
@@ -1260,17 +1260,17 @@ function pagenums($pagenum, $perpage, $totalcount)
             if ($pagelink == $pagenum) {
                 $output .= sprintf('<strong>%d</strong>', $pagelink);
             } else {
-                $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
+                $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
                 $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
             }
         }
 
         if ($pagenum < $pages) {
-            $url =  Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
+            $url =  Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
             $output .= sprintf(' - <a id="next" accesskey="n" href="%s">%s &gt;</a>', $url, eL('next'));
         }
         if ($finish < $pages) {
-            $url = Filters::noXSS(CreateURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
+            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
             $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last'));
         }
         $output .= '</span>';
