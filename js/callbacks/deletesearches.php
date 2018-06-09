@@ -22,8 +22,8 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     }
 
     if (!$user->isAnon()) {
-        $db->Query('DELETE FROM {searches} WHERE id = ? AND user_id = ?', array(Post::num('id'), $user->id));
-        echo $db->AffectedRows();
+        $db->query('DELETE FROM {searches} WHERE id = ? AND user_id = ?', array(Post::num('id'), $user->id));
+        echo $db->affectedRows();
     }
 }
 
