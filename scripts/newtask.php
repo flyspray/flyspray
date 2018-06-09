@@ -15,7 +15,7 @@ if (!$user->can_open_task($proj)) {
 
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('newtask'));
 
-$result = $db->Query('
+$result = $db->query('
   SELECT u.user_id, u.user_name, u.real_name, g.group_id, g.group_name, g.project_id
   FROM {users} u
   JOIN {users_in_groups} uig ON u.user_id = uig.user_id
@@ -26,7 +26,7 @@ $result = $db->Query('
 
 $userlist = array();
 $userids=array();
-while ($row = $db->FetchRow($result)) {
+while ($row = $db->fetchRow($result)) {
   if (!in_array($row['user_id'], $userids)){
     $userlist[$row['group_id']][] = array(
       0 => $row['user_id'],
