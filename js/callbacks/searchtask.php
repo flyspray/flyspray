@@ -31,7 +31,7 @@ $params = array(
   'details' => "%" . trim(Post::val('detail')) . "%"
 );
 
-$sql = $db->Query('SELECT count(*) 
+$sql = $db->query('SELECT count(*) 
 		   FROM {tasks} t
 		   WHERE t.project_id = ? 
 		   	AND t.item_summary like ? 
