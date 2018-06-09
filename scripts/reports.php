@@ -10,7 +10,7 @@ if (!defined('IN_FS')) {
 }
 
 if (!$user->perms('view_reports')) {
-    Flyspray::Redirect($baseurl);
+    Flyspray::redirect($baseurl);
 }
 
 require_once(BASEDIR . '/includes/events.inc.php');
@@ -108,12 +108,12 @@ if( is_array(Req::val('events')) ){
 		}
 	}
 
-	$histories = $db->Query("SELECT h.*
+	$histories = $db->query("SELECT h.*
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
                      ORDER BY $orderby", $params, Req::num('event_number', -1));
-	$histories = $db->FetchAllArray($histories);
+	$histories = $db->fetchAllArray($histories);
 }
 
 $page->uses('histories', 'sort');
