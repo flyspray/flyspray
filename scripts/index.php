@@ -68,7 +68,7 @@ $page->assign('forbiddencount', $forbiddencount);
 
 // Send user variables to the template
 
-$result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
+$result = $db->query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
                             FROM {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
@@ -76,7 +76,7 @@ $result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.gro
                                  AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
                         ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id || -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
 $userlist = array();
-while ($row = $db->FetchRow($result)) {
+while ($row = $db->fetchRow($result)) {
     $userlist[$row['group_name']][] = array(0 => $row['user_id'],
                                             1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']));
 }
@@ -307,7 +307,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_estimated_effort')) {
 		if ($task['estimated_effort'] > 0){
-                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                    $value = effort::secondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
 		}
             }
             break;
@@ -316,7 +316,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_current_effort_done')) {
 		if ($task['effort'] > 0){
-                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
+                    $value = effort::secondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
                 }
             }
             break;
@@ -524,7 +524,7 @@ if(Get::has('hideupdatemsg')) {
 		$latest = Flyspray::remote_request('http://www.flyspray.org/version.txt', GET_CONTENTS);
 		# if for some silly reason we get an empty response, we use the actual version
  		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ;
- 		$db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
+ 		$db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
 	}
 }
 if (isset($_SESSION['latest_version']) && version_compare($fs->version, $_SESSION['latest_version'] , '<') ) {

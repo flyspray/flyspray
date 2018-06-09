@@ -31,8 +31,8 @@ $votes=$db->query('
 $votes=$db->fetchAllArray($votes);
 
 $page->assign('votes', $votes);
-$page->assign('groups', Flyspray::ListGroups());
-$page->assign('project_groups', Flyspray::ListGroups($proj->id));
+$page->assign('groups', Flyspray::listGroups());
+$page->assign('project_groups', Flyspray::listGroups($proj->id));
 $page->assign('theuser', $user);
 
 $page->setTitle($fs->prefs['page_title'] . L('editmydetails'));

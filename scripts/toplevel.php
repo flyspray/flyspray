@@ -33,7 +33,7 @@ if(count($projects)>0){
   foreach ($projects as $project) {
     # means 'can view tasks' ..
     if($user->can_view_project($project['project_id'])){
-      $sql = $db->Query('SELECT v.task_id, count(*) AS num_votes
+      $sql = $db->query('SELECT v.task_id, count(*) AS num_votes
         FROM {votes} v
         LEFT JOIN {tasks} t ON v.task_id = t.task_id AND t.project_id = ?
         WHERE t.is_closed = 0
@@ -42,21 +42,21 @@ if(count($projects)>0){
         array($project['project_id']), 5
       );
 
-      if ($db->CountRows($sql)) {
-        $most_wanted[$project['project_id']] = $db->FetchAllArray($sql);
+      if ($db->countRows($sql)) {
+        $most_wanted[$project['project_id']] = $db->fetchAllArray($sql);
       }
     }
   }
 
   # Project stats
   foreach ($projects as $project) {
-    $sql = $db->Query('SELECT count(*) FROM {tasks} WHERE project_id = ?', array($project['project_id']));
+    $sql = $db->query('SELECT count(*) FROM {tasks} WHERE project_id = ?', array($project['project_id']));
     $stats[$project['project_id']]['all'] = $db->fetchOne($sql);
 
-    $sql = $db->Query('SELECT count(*) FROM {tasks} WHERE project_id = ? AND is_closed = 0', array($project['project_id']));
+    $sql = $db->query('SELECT count(*) FROM {tasks} WHERE project_id = ? AND is_closed = 0', array($project['project_id']));
     $stats[$project['project_id']]['open'] = $db->fetchOne($sql);
 
-    $sql = $db->Query('SELECT avg(percent_complete) FROM {tasks} WHERE project_id = ? AND is_closed = 0', array($project['project_id']));
+    $sql = $db->query('SELECT avg(percent_complete) FROM {tasks} WHERE project_id = ? AND is_closed = 0', array($project['project_id']));
     $stats[$project['project_id']]['average_done'] = round($db->fetchOne($sql), 0);
 
     if ($proj->id) {
@@ -70,28 +70,28 @@ if(count($projects)>0){
   
     if($user->perms('view_estimated_effort', $project['project_id']) ){
       if ($prefs['use_effort_tracking']) {
-        $sql = $db->Query('
+        $sql = $db->query('
           SELECT t.task_id, t.estimated_effort
           FROM {tasks} t
           WHERE project_id = ? AND is_closed = 0',
           array($project['project_id'])
         );
-        $stats[$project['project_id']]['tasks'] = $db->FetchAllArray($sql);
+        $stats[$project['project_id']]['tasks'] = $db->fetchAllArray($sql);
       }
     }
   }
 
   # Assigned to myself
   foreach ($projects as $project) {
-    $sql = $db->Query('
+    $sql = $db->query('
       SELECT a.task_id
       FROM {assigned} a
       LEFT JOIN {tasks} t ON a.task_id = t.task_id AND t.project_id = ?
       WHERE t.is_closed = 0 and a.user_id = ?',
       array($project['project_id'], $user->id), 5
     );
-    if ($db->CountRows($sql)) {
-      $assigned_to_myself[$project['project_id']] = $db->FetchAllArray($sql);
+    if ($db->countRows($sql)) {
+      $assigned_to_myself[$project['project_id']] = $db->fetchAllArray($sql);
     }
   }
   $page->uses('most_wanted', 'stats', 'projects', 'assigned_to_myself', 'projprefs');

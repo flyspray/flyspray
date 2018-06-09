@@ -24,7 +24,7 @@ $page->pushTpl('admin.menu.tpl');
 
 switch ($area = Req::val('area', 'prefs')) {
     case 'users':
-        $id = Flyspray::UserNameToId(Req::val('user_name'));
+        $id = Flyspray::usernameToId(Req::val('user_name'));
         if (!$id) {
             $id = is_numeric(Req::val('user_id')) ? Req::val('user_id') : 0;
         }
@@ -40,7 +40,7 @@ switch ($area = Req::val('area', 'prefs')) {
             $group_details = Flyspray::getGroupDetails(Req::num('id'));
             if (!$group_details || $group_details['project_id'] != $proj->id) {
                 Flyspray::show_error(L('groupnotexist'));
-                Flyspray::Redirect(CreateURL('pm', 'groups', $proj->id));
+                Flyspray::redirect(createURL('pm', 'groups', $proj->id));
             }
             $page->uses('group_details');
         }
@@ -48,9 +48,9 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'newuser':
     case 'newuserbulk':
     case 'editallusers':
-        $page->assign('groups', Flyspray::ListGroups());
+        $page->assign('groups', Flyspray::listGroups());
     case 'userrequest':
-	$sql = $db->Query("SELECT  *
+	$sql = $db->query("SELECT  *
                              FROM  {admin_requests}
                             WHERE  request_type = 3 AND project_id = 0 AND resolved_by = 0
                          ORDER BY  time_submitted ASC");
@@ -74,12 +74,12 @@ switch ($area = Req::val('area', 'prefs')) {
         break;
 
 	case 'checks':
-		$sinfo=$db->dblink->ServerInfo();
+		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
 			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
 				# Test if database(optional) and flyspray tables have default charset utf8mb4
 				# Test if $database version has default charset utf8mb4:
-				$db->Query("SELECT default_character_set_name, default_collation_name
+				$db->query("SELECT default_character_set_name, default_collation_name
 					FROM INFORMATION_SCHEMA.SCHEMATA
 					WHERE schema_name=?", array($db->dblink->database));
 
@@ -88,7 +88,7 @@ switch ($area = Req::val('area', 'prefs')) {
 				$page->assign('oldmysqlversion', "Your mysql version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your Mysql server version.");
 			}
 		}
-		$page->assign('adodbversion', $db->dblink->Version());
+		$page->assign('adodbversion', $db->dblink->version());
 		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
     default:

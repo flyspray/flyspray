@@ -13,7 +13,7 @@ if (!defined('IN_FS')) {
     die('Do not access this file directly.');
 }
 
-if ( !($task_details = Flyspray::GetTaskDetails(Req::num('task_id')))
+if ( !($task_details = Flyspray::getTaskDetails(Req::num('task_id')))
         || !$user->can_view_task($task_details))
 {
     Flyspray::show_error(9);
@@ -23,7 +23,7 @@ $id = Req::num('task_id');
 $page->assign('task_id', $id);
 
 $prunemode = Req::num('prune', 0);
-$selfurl   = CreateURL('depends', $id);
+$selfurl   = createURL('depends', $id);
 $pmodes    = array(L('none'), L('pruneclosedlinks'), L('pruneclosedtasks'));
 
 foreach ($pmodes as $mode => $desc) {
@@ -63,12 +63,12 @@ $sql= 'SELECT t1.task_id AS id1, t1.item_summary AS sum1,
       WHERE  t1.project_id= ?
    ORDER BY  d.task_id, d.dep_task_id';
 
-$get_edges = $db->Query($sql, array($proj->id));
+$get_edges = $db->query($sql, array($proj->id));
 
 $edge_list = array();
 $rvrs_list = array();
 $node_list = array();
-while ($row = $db->FetchRow($get_edges)) {
+while ($row = $db->fetchRow($get_edges)) {
     extract($row, EXTR_REFS);
     $edge_list[$id1][] = $id2;
     $rvrs_list[$id2][] = $id1;
@@ -95,7 +95,7 @@ while ($row = $db->FetchRow($get_edges)) {
 $connected  = array();
 $levelsdown = 0;
 $levelsup   = 0;
-function ConnectsTo($id, $down, $up) {
+function connectsTo($id, $down, $up) {
     global $connected, $edge_list, $rvrs_list, $levelsdown, $levelsup;
     global $prunemode, $node_list;
     if (!isset($connected[$id])) { $connected[$id]=1; }
@@ -121,7 +121,7 @@ echo '<code></pre>';
             if (!isset($connected[$neighbor]) &&
                     !($prunemode==1 && $selfclosed && $neighborclosed) &&
                     !($prunemode==2 && $neighborclosed)) {
-                ConnectsTo($neighbor, $down, $up+1);
+                connectsTo($neighbor, $down, $up+1);
             }
         }
     }
@@ -131,13 +131,13 @@ echo '<code></pre>';
             if (!isset($connected[$neighbor]) &&
                     !($prunemode==1 && $selfclosed && $neighborclosed) &&
                     !($prunemode==2 && $neighborclosed)) {
-                ConnectsTo($neighbor, $down+1, $up);
+                connectsTo($neighbor, $down+1, $up);
             }
         }
     }
 }
 
-ConnectsTo($id, 0, 0);
+connectsTo($id, 0, 0);
 $connected_nodes = array_keys($connected);
 sort($connected_nodes);
 

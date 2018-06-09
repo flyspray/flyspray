@@ -25,7 +25,7 @@ if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $
 	$page->setTitle($fs->prefs['page_title'] . L('roadmap'));
 
 	// Get milestones
-	$milestones = $db->Query('SELECT   version_id, version_name
+	$milestones = $db->query('SELECT   version_id, version_name
                           FROM     {list_version}
                           WHERE    (project_id = ? OR project_id=0) AND version_tense = 3
                           ORDER BY list_position ASC', 
@@ -33,9 +33,9 @@ if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $
 
 	$data = array();
 
-while ($row = $db->FetchRow($milestones)) {
+while ($row = $db->fetchRow($milestones)) {
     // Get all tasks related to a milestone
-    $all_tasks = $db->Query('SELECT  percent_complete, is_closed
+    $all_tasks = $db->query('SELECT  percent_complete, is_closed
                              FROM    {tasks}
                              WHERE   closedby_version = ? AND project_id = ?',
         array($row['version_id'], $proj->id));
@@ -51,7 +51,7 @@ while ($row = $db->FetchRow($milestones)) {
     }
     $percent_complete = round($percent_complete/max(count($all_tasks), 1));
 
-    $tasks = $db->Query('SELECT task_id, item_summary, detailed_desc, item_status, task_severity, task_priority, task_type, mark_private, opened_by, content, task_token, t.project_id,estimated_effort
+    $tasks = $db->query('SELECT task_id, item_summary, detailed_desc, item_status, task_severity, task_priority, task_type, mark_private, opened_by, content, task_token, t.project_id,estimated_effort
                            FROM {tasks} t
                       LEFT JOIN {cache} ca ON (t.task_id = ca.topic AND ca.type = \'rota\' AND t.last_edited_time <= ca.last_updated)
                           WHERE closedby_version = ? AND t.project_id = ? AND is_closed = 0',

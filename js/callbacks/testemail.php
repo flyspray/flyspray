@@ -35,7 +35,7 @@ if (!$user->perms('is_admin')){
 }
 
 $notify = new Notifications;
-$result=$notify->SendEmail($user->infos['email_address'],'test','testcontent',1);
+$result=$notify->sendEmail($user->infos['email_address'],'test','testcontent',1);
 
 if($result !=1){
   header(':', true, 406); # 'not acceptable'

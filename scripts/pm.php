@@ -18,7 +18,7 @@ if (!$user->perms('manage_project') || !$proj->id) {
 
 switch ($area = Req::val('area', 'prefs')) {
     case 'pendingreq':
-        $sql = $db->Query("SELECT  *
+        $sql = $db->query("SELECT  *
                              FROM  {admin_requests} ar
                         LEFT JOIN  {tasks} t ON ar.task_id = t.task_id
                         LEFT JOIN  {users} u ON ar.submitted_by = u.user_id
@@ -29,15 +29,15 @@ switch ($area = Req::val('area', 'prefs')) {
 
     case 'prefs':
     case 'groups':
-      $page->assign('globalgroups', Flyspray::ListGroups(0)); # global user groups
-      $page->assign('groups', Flyspray::ListGroups($proj->id)); # project specific user groups
+      $page->assign('globalgroups', Flyspray::listGroups(0)); # global user groups
+      $page->assign('groups', Flyspray::listGroups($proj->id)); # project specific user groups
     case 'editgroup':
         // yeah, utterly stupid, is changed in 1.0 already
         if (Req::val('area') == 'editgroup') {
             $group_details = Flyspray::getGroupDetails(Req::num('id'));
             if (!$group_details || $group_details['project_id'] != $proj->id) {
                 Flyspray::show_error(L('groupnotexist'));
-                Flyspray::Redirect(CreateURL('pm', 'groups', $proj->id));
+                Flyspray::redirect(createURL('pm', 'groups', $proj->id));
             }
             $page->uses('group_details');
         }

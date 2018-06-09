@@ -7,7 +7,7 @@ define('IN_FS', true);
 
 require_once('../../header.php');
 
-$sql = $db->Query('SELECT  project_id
+$sql = $db->query('SELECT  project_id
                          FROM  {tasks}
                         WHERE  task_id = ?',
                   array(Get::val('related_task')));

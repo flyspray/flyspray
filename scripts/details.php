@@ -40,7 +40,7 @@ if (!$user->can_view_task($task_details)) {
 	$page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['item_summary']));
 
 	if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS']))) && $user->can_edit_task($task_details)) {
-		$result = $db->Query('
+		$result = $db->query('
 			SELECT g.project_id, u.user_id, u.user_name, u.real_name, g.group_id, g.group_name
 			FROM {users} u
 			JOIN {users_in_groups} uig ON u.user_id = uig.user_id
@@ -54,7 +54,7 @@ if (!$user->can_view_task($task_details)) {
 
 		$userlist = array();
 		$userids = array();
-		while ($row = $db->FetchRow($result)) {
+		while ($row = $db->fetchRow($result)) {
 			if( !in_array($row['user_id'], $userids) ){
 				$userlist[$row['group_id']][] = array(
 					0 => $row['user_id'],
@@ -71,8 +71,8 @@ if (!$user->can_view_task($task_details)) {
 		if (is_array(Post::val('rassigned_to'))) {
 			$page->assign('assignees', Post::val('rassigned_to'));
 		} else {
-			$assignees = $db->Query('SELECT user_id FROM {assigned} WHERE task_id = ?', $task_details['task_id']);
-			$page->assign('assignees', $db->FetchCol($assignees));
+			$assignees = $db->query('SELECT user_id FROM {assigned} WHERE task_id = ?', $task_details['task_id']);
+			$page->assign('assignees', $db->fetchCol($assignees));
 		}
 		$page->assign('userlist', $userlist);
 
@@ -148,7 +148,7 @@ if (!$user->can_view_task($task_details)) {
 		}
 
 		// Sub-Tasks
-		$subtasks = $db->Query('SELECT t.*, p.project_title 
+		$subtasks = $db->query('SELECT t.*, p.project_title 
                                  FROM {tasks} t
 			    LEFT JOIN {projects} p ON t.project_id = p.project_id
                                 WHERE t.supertask_id = ?', 
@@ -156,13 +156,13 @@ if (!$user->can_view_task($task_details)) {
 		$subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
     
 		// Parent categories
-		$parent = $db->Query('SELECT *
+		$parent = $db->query('SELECT *
                             FROM {list_category}
                            WHERE lft < ? AND rgt > ? AND project_id  = ? AND lft != 1
                         ORDER BY lft ASC',
                         array($task_details['lft'], $task_details['rgt'], $task_details['cproj']));
 		// Check for task dependencies that block closing this task
-		$check_deps   = $db->Query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
+		$check_deps   = $db->query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM {dependencies} d
                              LEFT JOIN {tasks} t on d.dep_task_id = t.task_id
                              LEFT JOIN {list_status} s ON t.item_status = s.status_id
@@ -172,7 +172,7 @@ if (!$user->can_view_task($task_details)) {
 		$check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
 		// Check for tasks that this task blocks
-		$check_blocks = $db->Query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
+		$check_blocks = $db->query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM {dependencies} d
                              LEFT JOIN {tasks} t on d.task_id = t.task_id
                              LEFT JOIN {list_status} s ON t.item_status = s.status_id
@@ -182,37 +182,37 @@ if (!$user->can_view_task($task_details)) {
 		$check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
 
 		// Check for pending PM requests
-		$get_pending = $db->Query("SELECT *
+		$get_pending = $db->query("SELECT *
                                   FROM {admin_requests}
                                  WHERE task_id = ?  AND resolved_by = 0",
                                  array($task_id));
 
 		// Get info on the dependencies again
-		$open_deps = $db->Query('SELECT COUNT(*) - SUM(is_closed)
+		$open_deps = $db->query('SELECT COUNT(*) - SUM(is_closed)
                                   FROM {dependencies} d
                              LEFT JOIN {tasks} t on d.dep_task_id = t.task_id
                                  WHERE d.task_id = ?', array($task_id));
 
-		$watching = $db->Query('SELECT COUNT(*)
+		$watching = $db->query('SELECT COUNT(*)
                                    FROM {notifications}
                                   WHERE task_id = ? AND user_id = ?',
                                   array($task_id, $user->id));
 
 		// Check if task has been reopened some time
-		$reopened = $db->Query('SELECT COUNT(*)
+		$reopened = $db->query('SELECT COUNT(*)
                                    FROM {history}
                                   WHERE task_id = ? AND event_type = 13',
                                   array($task_id));
 
 		// Check for cached version
-		$cached = $db->Query("SELECT content, last_updated
+		$cached = $db->query("SELECT content, last_updated
                             FROM {cache}
                            WHERE topic = ? AND type = 'task'",
                            array($task_details['task_id']));
-		$cached = $db->FetchRow($cached);
+		$cached = $db->fetchRow($cached);
 
 		// List of votes
-		$get_votes = $db->Query('SELECT u.user_id, u.user_name, u.real_name, v.date_time
+		$get_votes = $db->query('SELECT u.user_id, u.user_name, u.real_name, v.date_time
                                FROM {votes} v
                           LEFT JOIN {users} u ON v.user_id = u.user_id
                                WHERE v.task_id = ?
@@ -243,7 +243,7 @@ if (!$user->can_view_task($task_details)) {
 		// tabbed area
 
 		// Comments + cache
-		$sql = $db->Query('SELECT * FROM {comments} c
+		$sql = $db->query('SELECT * FROM {comments} c
                       LEFT JOIN {cache} ca ON (c.comment_id = ca.topic AND ca.type = ?)
                           WHERE task_id = ?
                        ORDER BY date_added ASC',
@@ -253,35 +253,35 @@ if (!$user->can_view_task($task_details)) {
 		// Comment events
 		$sql = get_events($task_id, ' AND (event_type = 3 OR event_type = 14)');
 		$comment_changes = array();
-		while ($row = $db->FetchRow($sql)) {
+		while ($row = $db->fetchRow($sql)) {
 			$comment_changes[$row['event_date']][] = $row;
 		}
 		$page->assign('comment_changes', $comment_changes);
 
 		// Comment attachments
 		$attachments = array();
-		$sql = $db->Query('SELECT *
+		$sql = $db->query('SELECT *
                          FROM {attachments} a, {comments} c
                         WHERE c.task_id = ? AND a.comment_id = c.comment_id',
                        array($task_id));
-		while ($row = $db->FetchRow($sql)) {
+		while ($row = $db->fetchRow($sql)) {
 			$attachments[$row['comment_id']][] = $row;
 		}
 		$page->assign('comment_attachments', $attachments);
 
 		// Comment links
 		$links = array();
-		$sql = $db->Query('SELECT *
+		$sql = $db->query('SELECT *
 	                 FROM {links} l, {comments} c
 			WHERE c.task_id = ? AND l.comment_id = c.comment_id',
 	               array($task_id));
-		while ($row = $db->FetchRow($sql)) {
+		while ($row = $db->fetchRow($sql)) {
 			$links[$row['comment_id']][] = $row;
 		}
 		$page->assign('comment_links', $links);
 
 		// Relations, notifications and reminders
-		$sql = $db->Query('SELECT t.*, r.*, s.status_name, res.resolution_name
+		$sql = $db->query('SELECT t.*, r.*, s.status_name, res.resolution_name
                          FROM {related} r
                     LEFT JOIN {tasks} t ON (r.related_task = t.task_id AND r.this_task = ? OR r.this_task = t.task_id AND r.related_task = ?)
                     LEFT JOIN {list_status} s ON t.item_status = s.status_id
@@ -292,7 +292,7 @@ if (!$user->can_view_task($task_details)) {
 		$related_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
 		$page->assign('related', $related_cleaned);
 
-		$sql = $db->Query('SELECT t.*, r.*, s.status_name, res.resolution_name
+		$sql = $db->query('SELECT t.*, r.*, s.status_name, res.resolution_name
                          FROM {related} r
                     LEFT JOIN {tasks} t ON r.this_task = t.task_id
                     LEFT JOIN {list_status} s ON t.item_status = s.status_id
@@ -303,13 +303,13 @@ if (!$user->can_view_task($task_details)) {
 		$duplicates_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($sql));
     		$page->assign('duplicates', $duplicates_cleaned);
 
-		$sql = $db->Query('SELECT *
+		$sql = $db->query('SELECT *
                          FROM {notifications} n
                     LEFT JOIN {users} u ON n.user_id = u.user_id
                         WHERE n.task_id = ?', array($task_id));
 		$page->assign('notifications', $db->fetchAllArray($sql));
 
-		$sql = $db->Query('SELECT *
+		$sql = $db->query('SELECT *
                          FROM {reminders} r
                     LEFT JOIN {users} u ON r.to_user_id = u.user_id
                         WHERE task_id = ?
