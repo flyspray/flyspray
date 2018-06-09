@@ -30,7 +30,7 @@ if( !Post::has('csrftoken') ){
         die('wrongtoken');
 }
 
-$task = Flyspray::GetTaskDetails(Post::val('task_id'));
+$task = Flyspray::getTaskDetails(Post::val('task_id'));
 if (!$user->can_edit_task($task)){
     header(':', true, 403); # 'Forbidden'
     #Flyspray::show_error(L('nopermission'));
@@ -60,7 +60,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'estimated_effort':
-		$value = effort::EditStringToSeconds(Post::val('value'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+		$value = effort::editStringToSeconds(Post::val('value'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
 		$value = intval($value);
 		break;
 
@@ -86,7 +86,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'item_status':
-		$res=$db->Query('SELECT * FROM {list_status} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND status_id=?', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_status} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND status_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -94,7 +94,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'task_type':
-		$res=$db->Query('SELECT * FROM {list_tasktype} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND tasktype_id=?', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_tasktype} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND tasktype_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -102,7 +102,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'operating_system':
-		$res=$db->Query('SELECT * FROM {list_os} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND os_id=?', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_os} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND os_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -110,7 +110,7 @@ switch(Post::val('name')){
 		break;
 
 	case 'product_category':
-		$res=$db->Query('SELECT * FROM {list_category} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND category_id=?', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_category} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND category_id=?', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -118,14 +118,14 @@ switch(Post::val('name')){
 		break;
 
 	case 'product_version':
-		$res=$db->Query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=2', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=2', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
 		}
 		break;
 	case 'closedby_version':
-		$res=$db->Query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=3', array($task['project_id'], $value) );
+		$res=$db->query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=3', array($task['project_id'], $value) );
 		if($db->countRows($res)<1){
 			header(':', true, 403);
 			die(L('invalidvalue'));
@@ -140,7 +140,7 @@ switch(Post::val('name')){
 $oldvalue = $task[Post::val('name')];
 
 $time=time();
-$sql = $db->Query("UPDATE {tasks} SET ".Post::val('name')." = ?,last_edited_time = ? WHERE task_id = ?", array($value, $time, Post::val('task_id')));
+$sql = $db->query("UPDATE {tasks} SET ".Post::val('name')." = ?,last_edited_time = ? WHERE task_id = ?", array($value, $time, Post::val('task_id')));
 
 # load $proj again of task with correct project_id for getting active notification types in notification class
 $proj= new Project($task['project_id']);
@@ -149,11 +149,11 @@ $proj= new Project($task['project_id']);
 Flyspray::logEvent($task['task_id'], 3, $value, $oldvalue, Post::val('name'), $time);
 
 // Get the details of the task we just updated to generate the changed-task message
-$new_details_full = Flyspray::GetTaskDetails($task['task_id']);
+$new_details_full = Flyspray::getTaskDetails($task['task_id']);
 $changes = Flyspray::compare_tasks($task, $new_details_full);
 if (count($changes) > 0) {
     $notify = new Notifications;
-    $notify->Create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+    $notify->create(NOTIFY_TASK_CHANGED, $task['task_id'], $changes, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 }
 
 ?>
