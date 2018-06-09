@@ -29,7 +29,7 @@ if (Req::has('name')) {
 }
 
 // Get the list of users from the global groups above
-$get_users = $db->Query('
+$get_users = $db->query('
     SELECT count(u.user_name) AS anz_u_user, count(r.user_name) AS anz_r_user 
     FROM {users} u
     LEFT JOIN {registrations} r ON u.user_name = r.user_name
@@ -39,7 +39,7 @@ $get_users = $db->Query('
 
 load_translations();
 
-while ($row = $db->FetchRow($get_users)){
+while ($row = $db->fetchRow($get_users)){
     if ($row['anz_u_user'] > '0' || $row['anz_r_user'] > '0') {
         $html = 'false|' . eL('usernametaken');
     } else {
