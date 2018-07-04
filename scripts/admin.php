@@ -74,6 +74,42 @@ switch ($area = Req::val('area', 'prefs')) {
         break;
 
 	case 'checks':
+		$hashtypes=$db->query('
+			SELECT COUNT(*) c, LENGTH(user_pass) l,
+			CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)="$" THEN 1 ELSE 0 END AS s,
+			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)="$2" AND SUBSTRING(user_pass FROM 3 FOR 1)="$" ) THEN 1 ELSE 0 END) cr,
+			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)="$2" AND SUBSTRING(user_pass FROM 3 FOR 1) IN("a","x","y") ) THEN 1 ELSE 0 END) bcr,
+			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 3)="$1$" THEN 1 ELSE 0 END) md5crypt,
+			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 8)="$argon2i" THEN 1 ELSE 0 END) argon2i
+			FROM {users}
+			GROUP BY LENGTH(user_pass), CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)="$" THEN 1 ELSE 0 END
+			ORDER BY l,s ASC');
+			$hashlengths='<table><thead><tr><th>strlen</th><th>count</th><th>salted?</th><th>options</th><th>hash algo</th></tr></thead><tbody>';
+			$warnhash=0;
+			$warnhash2=0;
+			while ($r = $db->fetchRow($hashtypes)){
+				$alert='';
+				if(    $r['l']==32 && $r['s']==0){  $maybe='md5';     $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
+				elseif($r['l']==40 && $r['s']==0){  $maybe='sha1';    $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
+				elseif($r['l']==128 && $r['s']==0){ $maybe='sha512';  $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
+				elseif($r['l']==34 && $r['s']==1){  $maybe='md5crypt';$warnhash2+=$r['c'];$alert=' style="background-color:#ff9"';}
+				elseif($r['l']==60){$maybe='bcrypt';}
+				elseif($r['s']==1){
+					$maybe='other pw hashes';
+					if($r['argon2i']>0){$maybe.=': '.$r['argon2i'].' argon2i'; }
+				}else{$maybe='not detected';}
+				$hashlengths.='<tr'.$alert.'><td>'.$r['l'].'</td><td> '.$r['c'].'</td><td>'.$r['s'].'</td><td>'.$r['bcr'].' '.$r['cr'].' '.$r['md5crypt'].' '.$r['argon2i'].'</td><td>'.$maybe.'</td></tr>';
+			}
+			$hashlengths.='</tbody></table>';
+			if($warnhash>0){
+				$hashlengths.='<div class="error">'.$warnhash." users with unsalted password hashes.</div>";
+			}
+			if($warnhash2>0){
+				$hashlengths.='<div class="error">'.$warnhash2." users with md5crypt salted password hashes.</div>";
+			}
+			$page->assign('passwdcrypt', $conf['general']['passwdcrypt']);
+			$page->assign('hashlengths', $hashlengths);
+		
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
 			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
@@ -89,6 +125,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			}
 		}
 		$page->assign('adodbversion', $db->dblink->version());
+		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
 		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
     default:
