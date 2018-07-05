@@ -168,7 +168,7 @@ class Flyspray
             die('Headers are already sent, this should not have happened. Please inform Flyspray developers.');
         }
 
-        $url = FlySpray::absoluteURI($url);
+        $url = Flyspray::absoluteURI($url);
 
 	if($_SERVER['REQUEST_METHOD']=='POST' && version_compare(PHP_VERSION, '5.4.0')>=0 ) {
 		http_response_code(303);
@@ -650,15 +650,19 @@ class Flyspray
 	$pwcrypt = strtolower($conf['general']['passwdcrypt']);
 
 	# sha1, md5, sha512 are unsalted, hashing methods, not suited for storing passwords anymore.
-	# Use crypt(), that adds random salt, customizable rounds and customizable hashing algorithms.
+	# Use password_hash(), that adds random salt, customizable rounds and customizable hashing algorithms.
 	if ($pwcrypt == 'sha1') {
 		return sha1($password);
 	} elseif ($pwcrypt == 'md5') {
 		return md5($password);
 	} elseif ($pwcrypt == 'sha512') {
 		return hash('sha512', $password);
+	} elseif ($pwcrypt =='argon2i' && version_compare(PHP_VERSION,'7.2.0')>=0){
+		# php7.2+
+		return password_hash($password, PASSWORD_ARGON2I);
 	} else {
-		return crypt($password);
+		$bcryptoptions=array('cost'=>14);
+		return password_hash($password, PASSWORD_BCRYPT, $bcryptoptions);
 	}
   } // }}}
 
@@ -676,12 +680,12 @@ class Flyspray
     {
         global $db;
 
-	$email_address = $username;  //handle multiple email addresses
-        $temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
-	$user_id = $db->fetchRow($temp);
-	$user_id = $user_id["id"];
+		$email_address = $username;  //handle multiple email addresses
+		$temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
+		$user_id = $db->fetchRow($temp);
+		$user_id = $user_id["id"];
 
-	$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
+		$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
                                         lock_until, login_attempts
                                 FROM  {users_in_groups} uig
                            LEFT JOIN  {groups} g ON uig.group_id = g.group_id
@@ -689,33 +693,14 @@ class Flyspray
                                WHERE  u.user_id = ? OR u.user_name = ? AND g.project_id = ?
                             ORDER BY  g.group_id ASC", array($user_id, $username, 0));
 
-        $auth_details = $db->fetchRow($result);
+		$auth_details = $db->fetchRow($result);
 
-        if($auth_details === false) {
-            return -2;
-        }
-        if(!$result || !count($auth_details)) {
-            return 0;
-        }
-
-	if( $method != 'ldap' ){
-		// encrypt the password with the method used in the db
-		switch (strlen($auth_details['user_pass'])) {
-		# detecting passwords stored with old unsalted hashing methods: sha1,md5,sha512
-		case 40:
-			$pwhash = sha1($password);
-			break;
-		case 32:
-			$pwhash = md5($password);
-			break;
-		case 128:
-			$pwhash = hash('sha512', $password);
-			break;
-		default:
-			$pwhash = crypt($password, $auth_details['user_pass']); // user_pass contains algorithm, rounds, salt
-			break;
+		if($auth_details === false) {
+			return -2;
 		}
-	}
+		if(!$result || !count($auth_details)) {
+			return 0;
+		}
 
         if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
             $db->query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
@@ -724,29 +709,50 @@ class Flyspray
             $_SESSION['was_locked'] = true;
         }
 
-	// skip password check if the user is using oauth
-	if($method == 'oauth'){
-		$pwOk = true;
-	} elseif( $method == 'ldap'){
-		$pwOk = Flyspray::checkForLDAPUser($username, $password);
-	} else{
-		// Compare the crypted password to the one in the database
-		if( function_exists('hash_equals') ){
-			$pwOk = hash_equals($pwhash, $auth_details['user_pass']);
+		// skip password check if the user is using oauth
+		if($method == 'oauth'){
+			$pwOk = true;
+		} elseif( $method == 'ldap'){
+			$pwOk = Flyspray::checkForLDAPUser($username, $password);
 		} else{
-			$pwOk = ($pwhash == $auth_details['user_pass']);
+			// encrypt the password with the method used in the db
+			if(substr($auth_details['user_pass'],0,1)!='$' && (
+			           strlen($auth_details['user_pass'])==32
+			        || strlen($auth_details['user_pass'])==40
+			        || strlen($auth_details['user_pass'])==128
+				)){
+				# detecting (old) passwords stored with old unsalted hashing methods: md5,sha1,sha512
+				switch(strlen($auth_details['user_pass'])){
+				case 32:
+					$pwhash = md5($password);
+					break;
+				case 40:
+					$pwhash = sha1($password);
+					break;
+				case 128:
+					$pwhash = hash('sha512', $password);
+					break;
+				}
+				if( function_exists('hash_equals') ){
+					$pwOk = hash_equals($pwhash, $auth_details['user_pass']);
+				} else{
+					$pwOk = ($pwhash == $auth_details['user_pass']);
+				}
+			}else{
+				#$pwhash = crypt($password, $auth_details['user_pass']); // user_pass contains algorithm, rounds, salt
+				$pwOk=password_verify($password, $auth_details['user_pass']);
+			}
 		}
-	}
 
-        // Admin users cannot be disabled
-        if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
-            return $auth_details['user_id'];
-        }
-        if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
-            return $auth_details['user_id'];
-        }
+		// Admin users cannot be disabled
+		if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
+			return $auth_details['user_id'];
+		}
+		if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
+			return $auth_details['user_id'];
+		}
 
-        return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
+		return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
     } // }}}
 
     static public function checkForOauthUser($uid, $provider)
@@ -875,44 +881,6 @@ class Flyspray
         if (defined('IN_FEED') || php_sapi_name() === 'cli') {
             return;
         }
-        /*
-        # commented out IMHO weired obfuscating session names
-        $names = array( 'GetFirefox',
-                        'UseLinux',
-                        'NoMicrosoft',
-                        'ThinkB4Replying',
-                        'FreeSoftware',
-                        'ReadTheFAQ',
-                        'RTFM',
-                        'VisitAU',
-                        'SubliminalAdvertising',
-                      );
-
-        foreach ($names as $val)
-        {
-            session_name($val);
-            session_start();
-
-            if (isset($_SESSION['SESSNAME']))
-            {
-                $sessname = $_SESSION['SESSNAME'];
-                break;
-            }
-
-            $_SESSION = array();
-            session_destroy();
-            setcookie(session_name(), '', time()-60, '/');
-        }
-
-        if (empty($sessname))
-        {
-            $rand_key = array_rand($names);
-            $sessname = $names[$rand_key];
-            session_name($sessname);
-            session_start();
-            $_SESSION['SESSNAME'] = $sessname;
-        }
-        */
 
         $url = parse_url($GLOBALS['baseurl']);
         session_name('flyspray');
