@@ -837,7 +837,7 @@ class Setup extends Flyspray
          $this->mAdminPassword = $row['user_pass'];
       }
 
-     $md5_password	= md5($admin_password);
+     $pwhash= Flyspray::cryptPassword($admin_password);
      $update_user	= "
      UPDATE
         $users_table
@@ -848,7 +848,7 @@ class Setup extends Flyspray
      WHERE
      user_id = '1'";
 
-     $update_params = array($admin_username, $md5_password, $admin_email);
+     $update_params = array($admin_username, $pwhash, $admin_email);
 
      $result = $this->mDbConnection->execute($update_user, $update_params);
 
