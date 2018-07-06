@@ -646,8 +646,14 @@ class Flyspray
    */
   public static function cryptPassword($password)
   {
-	global $conf;
-	$pwcrypt = strtolower($conf['general']['passwdcrypt']);
+		global $conf;
+
+		# during install e.g. not set
+		if(isset($conf['general']['passwdcrypt'])){
+			$pwcrypt = strtolower($conf['general']['passwdcrypt']);
+		}else{
+			$pwcrypt='';
+		}
 
 	# sha1, md5, sha512 are unsalted, hashing methods, not suited for storing passwords anymore.
 	# Use crypt(), that adds random salt, customizable rounds and customizable hashing algorithms.
