@@ -747,7 +747,7 @@ class Flyspray
 		}
 
 		// Admin users cannot be disabled
-		if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
+		if ($auth_details['group_id'] == 1 /* admin */ && $pwok) {
 			return $auth_details['user_id'];
 		}
 		if ($pwok && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
