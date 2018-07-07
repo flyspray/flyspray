@@ -54,13 +54,17 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
 
         $user = new User($user_id);
 
-      # check if user still has an outdated password hash and upgrade it
+			# check if user still has an outdated password hash and upgrade it
 			if(    $conf['general']['passwdcrypt']!='md5'
 			    && $conf['general']['passwdcrypt']!='sha1'
 			    && $conf['general']['passwdcrypt']!='sha512'
-				&& version_compare(PHP_VERSION,'5.5.0')>=0){
+			){
 				if( substr($user->infos['user_pass'],0,1)!='$'
-				    && (strlen($user->infos['user_pass'])==32 || strlen($user->infos['user_pass'])==128 )){
+				    && ( strlen($user->infos['user_pass'])==32
+				      || strlen($user->infos['user_pass'])==40
+				      || strlen($user->infos['user_pass'])==128
+				       )
+				){
  						# upgrade from unsalted md5 or unsalted sha1 or unsalted sha512 to better
 						if($conf['general']['passwdcrypt']=='argon2i'){
 							$newhash=password_hash($password, PASSWORD_ARGON2I);
