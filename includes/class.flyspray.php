@@ -717,9 +717,9 @@ class Flyspray
 
 		// skip password check if the user is using oauth
 		if($method == 'oauth'){
-			$pwOk = true;
+			$pwok = true;
 		} elseif( $method == 'ldap'){
-			$pwOk = Flyspray::checkForLDAPUser($username, $password);
+			$pwok = Flyspray::checkForLDAPUser($username, $password);
 		} else{
 			// encrypt the password with the method used in the db
 			if(substr($auth_details['user_pass'],0,1)!='$' && (
@@ -727,7 +727,7 @@ class Flyspray
 			        || strlen($auth_details['user_pass'])==40
 			        || strlen($auth_details['user_pass'])==128
 				)){
-				# detecting (old) passwords stored with old unsalted hashing methods: md5,sha1,sha512
+				# detecting (old) password stored with old unsalted hashing methods: md5,sha1,sha512
 				switch(strlen($auth_details['user_pass'])){
 				case 32:
 					$pwhash = md5($password);
@@ -739,14 +739,10 @@ class Flyspray
 					$pwhash = hash('sha512', $password);
 					break;
 				}
-				if( function_exists('hash_equals') ){
-					$pwOk = hash_equals($pwhash, $auth_details['user_pass']);
-				} else{
-					$pwOk = ($pwhash == $auth_details['user_pass']);
-				}
+				$pwok = hash_equals($auth_details['user_pass'], $pwhash);
 			}else{
 				#$pwhash = crypt($password, $auth_details['user_pass']); // user_pass contains algorithm, rounds, salt
-				$pwOk=password_verify($password, $auth_details['user_pass']);
+				$pwok = password_verify($password, $auth_details['user_pass']);
 			}
 		}
 
@@ -754,7 +750,7 @@ class Flyspray
 		if ($auth_details['group_id'] == 1 /* admin */ && $pwOk) {
 			return $auth_details['user_id'];
 		}
-		if ($pwOk && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
+		if ($pwok && $auth_details['account_enabled'] == '1' && $auth_details['group_open'] == '1'){
 			return $auth_details['user_id'];
 		}
 
