@@ -15,10 +15,12 @@ function toggleCheckbox(id)
      	$showstats=(isset($_GET['showfields']) && in_array('stats',$_GET['showfields'])) ? 1 : 0;
         $showltf=  (isset($_GET['showfields']) && in_array('ltf',  $_GET['showfields'])) ? 1 : 0;
  ?>
-<form method="get">
+<form action="<?php echo Filters::noXSS(createURL($do, 'editallusers'));?>" method="get">
+<input type="hidden" name="do" value="admin" />
+<input type="hidden" name="area" value="editallusers" />
 <select name="showfields[]" multiple="multiple" size="3">
 <option value="-">---basic---</option>
-<option value="stats"<?php echo $showstats? 'selected="selected"':'';?>>statistics</option>
+<option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
 <option value="ltf"<?php echo $showltf? 'selected="selected"':'';?>>language, timezone, dateformat</option>
 </select>
 <button type="submit">Show selected fields</button>
@@ -68,7 +70,8 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 	<td><?php echo $usr['user_name']; ?></td>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
-<?php if ($showstats): ?>
+	<td><?php echo formatDate($usr['register_date']); ?></td>
+<?php if($showstats): ?>
 	<td><?php echo $usr['countopen']>0 ? $usr['countopen']:''; ?></td>
 	<td><?php echo $usr['countclose']>0 ? $usr['countclose']:''; ?></td>
 	<td><?php echo $usr['countlastedit']>0 ? $usr['countlastedit']:''; ?></td>
@@ -76,7 +79,6 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 	<td><?php echo $usr['countcomments']>0 ? $usr['countcomments']:''; ?></td>
 <?php endif; ?>
 <?php if($showltf): ?>
-	<td><?php echo formatDate($usr['register_date']); ?></td>
 	<td><?php echo Filters::noXSS($usr['lang_code']); ?></td>
 	<td><?php echo Filters::noXSS($usr['time_zone']); ?></td>
 	<td><?php echo Filters::noXSS($usr['dateformat']); ?></td>
