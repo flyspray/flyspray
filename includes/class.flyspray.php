@@ -491,13 +491,37 @@ class Flyspray
 		ORDER BY account_enabled DESC, user_name ASC');
 
 		}else{
-			# works with mysql, postgresql should be ok since postgresql 9.1+ 
 			# Well, this is a big query, but the solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
 			$res = $db->query('
-SELECT usr.*, 
-SUM(countopen) countopen,    SUM(countclose) countclose, SUM(countlastedit) countlastedit,
-SUM(comments) countcomments, SUM(assigned) countassign,  SUM(watching) countwatching
+SELECT
+MIN(u.account_enabled) AS account_enabled,
+MIN(u.user_id) AS user_id,
+MIN(u.user_name) AS user_name,
+MIN(u.real_name) AS real_name,
+MIN(u.email_address) AS email_address,
+MIN(u.jabber_id) AS jabber_id,
+MIN(u.oauth_provider) AS oauth_provider,
+MIN(u.oauth_uid) AS oauth_uid,
+MIN(u.notify_type) AS notify_type,
+MIN(u.notify_own) AS notify_own,
+MIN(u.notify_online) AS notify_online,
+MIN(u.tasks_perpage) AS tasks_perpage,
+MIN(u.lang_code) AS lang_code,
+MIN(u.time_zone) AS time_zone,
+MIN(u.dateformat) AS dateformat,
+MIN(u.dateformat_extended) AS dateforma_extended,
+MIN(u.register_date) AS register_date,
+MIN(u.login_attempts) AS login_attempts,
+MIN(u.lock_until) AS lock_until,
+MIN(u.profile_image) AS profile_image,
+MIN(u.hide_my_email) AS hide_my_email,
+SUM(countopen) AS countopen,
+SUM(countclose) AS countclose,
+SUM(countlastedit) AS countlastedit,
+SUM(comments) AS countcomments,
+SUM(assigned) AS countassign,
+SUM(watching) AS countwatching
 FROM
 (	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
         u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
@@ -505,7 +529,7 @@ FROM
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        COUNT(topen.opened_by) countopen, 0 countclose, 0 countlastedit, 0 comments, 0 assigned, 0 watching
+        COUNT(topen.opened_by) AS countopen, 0 AS countclose, 0 AS countlastedit, 0 AS comments, 0 AS assigned, 0 AS watching
         FROM {users} u
         LEFT JOIN {tasks} topen ON topen.opened_by=u.user_id
         GROUP BY u.user_id
@@ -516,7 +540,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, COUNT(tclose.closed_by) countclose, 0, 0, 0, 0
+        0, COUNT(tclose.closed_by) AS countclose, 0, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tclose ON tclose.closed_by=u.user_id
         GROUP BY u.user_id
@@ -527,7 +551,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, COUNT(tlast.last_edited_by) countlastedit, 0, 0, 0
+        0, 0, COUNT(tlast.last_edited_by) AS countlastedit, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tlast ON tlast.last_edited_by=u.user_id
         GROUP BY u.user_id
@@ -538,7 +562,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, COUNT(c.user_id) comments, 0, 0
+        0, 0, 0, COUNT(c.user_id) AS comments, 0, 0
         FROM {users} u
         LEFT JOIN {comments} c ON c.user_id=u.user_id
         GROUP BY u.user_id
@@ -549,7 +573,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, 0, COUNT(a.user_id) assigned, 0
+        0, 0, 0, 0, COUNT(a.user_id) AS assigned, 0
         FROM {users} u
         LEFT JOIN {assigned} a ON a.user_id=u.user_id
         GROUP BY u.user_id
@@ -560,13 +584,13 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, 0, 0, COUNT(n.user_id) watching
+        0, 0, 0, 0, 0, COUNT(n.user_id) AS watching
         FROM {users} u
         LEFT JOIN {notifications} n ON n.user_id=u.user_id
         GROUP BY u.user_id
-) usr
-GROUP BY usr.user_id
-ORDER BY usr.account_enabled DESC, usr.user_name ASC'); 
+) u
+GROUP BY u.user_id
+ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC'); 
 		}
 
 		return $db->fetchAllArray($res);
