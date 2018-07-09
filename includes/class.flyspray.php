@@ -471,22 +471,130 @@ class Flyspray
     /**
      * Returns a list of a all users
      * @access public static
+     * @param array $opts optional filter which fields (or group of fields) are needed, more may be added later (sorting, where ..)
      * @return array
      * @version 1.0
      */
-    public static function listUsers()
-    {
-        global $db;
-        $res = $db->Query('SELECT account_enabled, user_id, user_name, real_name,
+	public static function listUsers($opts=array())
+	{
+		global $db;
+
+		if( empty($opts) || !isset($opts['stats']) ){
+
+			$res = $db->query('SELECT account_enabled, user_id, user_name, real_name,
 		email_address, jabber_id, oauth_provider, oauth_uid,
 		notify_type, notify_own, notify_online,
 		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
 		register_date, login_attempts, lock_until,
 		profile_image, hide_my_email
 		FROM {users}
-		ORDER BY account_enabled DESC, UPPER(user_name) ASC');
-        return $db->fetchAllArray($res);
-    }
+		ORDER BY account_enabled DESC, user_name ASC');
+
+		}else{
+			# Well, this is a big query, but the solution I found.
+			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
+			$res = $db->query('
+SELECT
+MIN(u.account_enabled) AS account_enabled,
+MIN(u.user_id) AS user_id,
+MIN(u.user_name) AS user_name,
+MIN(u.real_name) AS real_name,
+MIN(u.email_address) AS email_address,
+MIN(u.jabber_id) AS jabber_id,
+MIN(u.oauth_provider) AS oauth_provider,
+MIN(u.oauth_uid) AS oauth_uid,
+MIN(u.notify_type) AS notify_type,
+MIN(u.notify_own) AS notify_own,
+MIN(u.notify_online) AS notify_online,
+MIN(u.tasks_perpage) AS tasks_perpage,
+MIN(u.lang_code) AS lang_code,
+MIN(u.time_zone) AS time_zone,
+MIN(u.dateformat) AS dateformat,
+MIN(u.dateformat_extended) AS dateformat_extended,
+MIN(u.register_date) AS register_date,
+MIN(u.login_attempts) AS login_attempts,
+MIN(u.lock_until) AS lock_until,
+MIN(u.profile_image) AS profile_image,
+MIN(u.hide_my_email) AS hide_my_email,
+SUM(countopen) AS countopen,
+SUM(countclose) AS countclose,
+SUM(countlastedit) AS countlastedit,
+SUM(comments) AS countcomments,
+SUM(assigned) AS countassign,
+SUM(watching) AS countwatching
+FROM
+(	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        COUNT(topen.opened_by) AS countopen, 0 AS countclose, 0 AS countlastedit, 0 AS comments, 0 AS assigned, 0 AS watching
+        FROM {users} u
+        LEFT JOIN {tasks} topen ON topen.opened_by=u.user_id
+        GROUP BY u.user_id
+UNION
+       	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, COUNT(tclose.closed_by) AS countclose, 0, 0, 0, 0
+        FROM {users} u
+        LEFT JOIN {tasks} tclose ON tclose.closed_by=u.user_id
+        GROUP BY u.user_id
+UNION
+        SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, 0, COUNT(tlast.last_edited_by) AS countlastedit, 0, 0, 0
+        FROM {users} u
+        LEFT JOIN {tasks} tlast ON tlast.last_edited_by=u.user_id
+        GROUP BY u.user_id
+UNION
+     	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, 0, 0, COUNT(c.user_id) AS comments, 0, 0
+        FROM {users} u
+        LEFT JOIN {comments} c ON c.user_id=u.user_id
+        GROUP BY u.user_id
+ UNION
+     	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, 0, 0, 0, COUNT(a.user_id) AS assigned, 0
+        FROM {users} u
+        LEFT JOIN {assigned} a ON a.user_id=u.user_id
+        GROUP BY u.user_id
+UNION
+     	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, 0, 0, 0, 0, COUNT(n.user_id) AS watching
+        FROM {users} u
+        LEFT JOIN {notifications} n ON n.user_id=u.user_id
+        GROUP BY u.user_id
+) u
+GROUP BY u.user_id
+ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC'); 
+		}
+
+		return $db->fetchAllArray($res);
+	}
 
     // }}}
     // List languages {{{
