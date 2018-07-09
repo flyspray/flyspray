@@ -76,14 +76,14 @@ switch ($area = Req::val('area', 'prefs')) {
 	case 'checks':
 		$hashtypes=$db->query('
 			SELECT COUNT(*) c, LENGTH(user_pass) l,
-			CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)="$" THEN 1 ELSE 0 END AS s,
-			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)="$2" AND SUBSTRING(user_pass FROM 3 FOR 1)="$" ) THEN 1 ELSE 0 END) cr,
-			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)="$2" AND SUBSTRING(user_pass FROM 3 FOR 1) IN("a","x","y") ) THEN 1 ELSE 0 END) bcr,
-			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 3)="$1$" THEN 1 ELSE 0 END) md5crypt,
-			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 8)="$argon2i" THEN 1 ELSE 0 END) argon2i
+			CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)=\'$\' THEN 1 ELSE 0 END AS s,
+			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)=\'$2\' AND SUBSTRING(user_pass FROM 3 FOR 1)=\'$\' ) THEN 1 ELSE 0 END) cr,
+			SUM(CASE WHEN (SUBSTRING(user_pass FROM 1 FOR 2)=\'$2\' AND SUBSTRING(user_pass FROM 3 FOR 1) IN( \'a\', \'x\', \'y\' ) ) THEN 1 ELSE 0 END) bcr,
+			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 3)=\'$1$\' THEN 1 ELSE 0 END) md5crypt,
+			SUM(CASE WHEN SUBSTRING(user_pass FROM 1 FOR 8)=\'$argon2i\' THEN 1 ELSE 0 END) argon2i
 			FROM {users}
-			GROUP BY LENGTH(user_pass), CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)="$" THEN 1 ELSE 0 END
-			ORDER BY l,s ASC');
+			GROUP BY LENGTH(user_pass), CASE WHEN SUBSTRING(user_pass FROM 1 FOR 1)=\'$\' THEN 1 ELSE 0 END
+			ORDER BY l ASC, s ASC');
 			$hashlengths='<table><thead><tr><th>strlen</th><th>count</th><th>salted?</th><th>options</th><th>hash algo</th></tr></thead><tbody>';
 			$warnhash=0;
 			$warnhash2=0;
