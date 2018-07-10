@@ -522,7 +522,7 @@ SUM(countlastedit) AS countlastedit,
 SUM(comments) AS countcomments,
 SUM(assigned) AS countassign,
 SUM(watching) AS countwatching,
-SUM(votes) AS votes
+SUM(votes) AS countvotes
 FROM
 (	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
         u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
