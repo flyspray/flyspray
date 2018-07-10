@@ -50,6 +50,7 @@ if ($do == 'admin'): ?>
 		<th>last_edited_by</th>
 		<th>assigned</th>
 		<th>comments</th>
+		<th>votes</th>
 <?php endif; ?>
 <?php if($showltf): ?>
 		<th><?php echo Filters::noXSS(L('language')); ?></th>
@@ -77,6 +78,7 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 	<td><?php echo $usr['countlastedit']>0 ? $usr['countlastedit']:''; ?></td>
 	<td><?php echo $usr['countassign']>0 ? $usr['countassign']:''; ?></td>
 	<td><?php echo $usr['countcomments']>0 ? $usr['countcomments']:''; ?></td>
+	<td><?php echo $usr['countvotes']>0 ? $usr['countvotes']:''; ?></td>
 <?php endif; ?>
 <?php if($showltf): ?>
 	<td><?php echo Filters::noXSS($usr['lang_code']); ?></td>
