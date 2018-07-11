@@ -65,7 +65,7 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
         if ($user->infos['login_attempts'] > 0) {
             $_SESSION['login_attempts'] = $user->infos['login_attempts'];
         }
-        $db->query('UPDATE {users} SET login_attempts = 0 WHERE user_id = ?', array($user->id));
+        $db->query('UPDATE {users} SET login_attempts = 0, last_login = ? WHERE user_id = ?', array(time(), $user->id));
 
         $_SESSION['SUCCESS'] = L('loginsuccessful');
     }
