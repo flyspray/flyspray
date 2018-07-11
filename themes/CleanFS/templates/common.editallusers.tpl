@@ -18,6 +18,7 @@ function toggleCheckbox(id)
 <form action="<?php echo Filters::noXSS(createURL($do, 'editallusers'));?>" method="get">
 <input type="hidden" name="do" value="admin" />
 <input type="hidden" name="area" value="editallusers" />
+<div style="background-color:#ff9">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
 <select name="showfields[]" multiple="multiple" size="3">
 <option value="-">---basic---</option>
 <option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
@@ -44,6 +45,7 @@ if ($do == 'admin'): ?>
 		<th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
 		<th><?php echo Filters::noXSS(L('jabberid')); ?></th>
                 <th><?php echo Filters::noXSS(L('regdate')); ?></th>
+		<th><?php echo Filters::noXSS(L('lastlogin')); ?></th>
 <?php if($showstats): ?>
 		<th>opened_by</th>
 		<th>closed_by</th>
@@ -72,6 +74,7 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
 	<td><?php echo formatDate($usr['register_date']); ?></td>
+	<td><?php echo formatDate($usr['last_login']); ?></td>
 <?php if($showstats): ?>
 	<td><?php echo $usr['countopen']>0 ? $usr['countopen']:''; ?></td>
 	<td><?php echo $usr['countclose']>0 ? $usr['countclose']:''; ?></td>
