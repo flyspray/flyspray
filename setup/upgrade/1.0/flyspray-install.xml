@@ -1195,6 +1195,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="last_login" type="I" size="11">
+      <descr>last login of a user</descr>    
+      <NULL/>
+    </field>  
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>
