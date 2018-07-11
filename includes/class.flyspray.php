@@ -486,12 +486,12 @@ class Flyspray
 		notify_type, notify_own, notify_online,
 		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
 		register_date, login_attempts, lock_until,
-		profile_image, hide_my_email
+		profile_image, hide_my_email, last_login
 		FROM {users}
 		ORDER BY account_enabled DESC, user_name ASC');
 
 		}else{
-			# Well, this is a big query, but the solution I found.
+			# Well, this is a big and slow query, but the current solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
 			$res = $db->query('
 SELECT
@@ -516,6 +516,7 @@ MIN(u.login_attempts) AS login_attempts,
 MIN(u.lock_until) AS lock_until,
 MIN(u.profile_image) AS profile_image,
 MIN(u.hide_my_email) AS hide_my_email,
+MIN(u.last_login) AS last_login,
 SUM(countopen) AS countopen,
 SUM(countclose) AS countclose,
 SUM(countlastedit) AS countlastedit,
@@ -529,7 +530,7 @@ FROM
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         COUNT(topen.opened_by) AS countopen, 0 AS countclose, 0 AS countlastedit, 0 AS comments, 0 AS assigned, 0 AS watching, 0 AS votes
         FROM {users} u
         LEFT JOIN {tasks} topen ON topen.opened_by=u.user_id
@@ -540,7 +541,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, COUNT(tclose.closed_by) AS countclose, 0, 0, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tclose ON tclose.closed_by=u.user_id
@@ -551,7 +552,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, 0, COUNT(tlast.last_edited_by) AS countlastedit, 0, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tlast ON tlast.last_edited_by=u.user_id
@@ -562,7 +563,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, 0, 0, COUNT(c.user_id) AS comments, 0, 0, 0
         FROM {users} u
         LEFT JOIN {comments} c ON c.user_id=u.user_id
@@ -573,7 +574,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, 0, 0, 0, COUNT(a.user_id) AS assigned, 0, 0
         FROM {users} u
         LEFT JOIN {assigned} a ON a.user_id=u.user_id
@@ -584,7 +585,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, 0, 0, 0, 0, COUNT(n.user_id) AS watching, 0
         FROM {users} u
         LEFT JOIN {notifications} n ON n.user_id=u.user_id
@@ -595,7 +596,7 @@ UNION
         u.notify_type, u.notify_own, u.notify_online,
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
-        u.profile_image, u.hide_my_email,
+        u.profile_image, u.hide_my_email, u.last_login,
         0, 0, 0, 0, 0, 0, COUNT(v.user_id) AS votes
         FROM {users} u
         LEFT JOIN {votes} v ON v.user_id=u.user_id
