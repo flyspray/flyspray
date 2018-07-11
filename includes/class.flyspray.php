@@ -521,7 +521,8 @@ SUM(countclose) AS countclose,
 SUM(countlastedit) AS countlastedit,
 SUM(comments) AS countcomments,
 SUM(assigned) AS countassign,
-SUM(watching) AS countwatching
+SUM(watching) AS countwatching,
+SUM(votes) AS countvotes
 FROM
 (	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
         u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
@@ -529,7 +530,7 @@ FROM
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        COUNT(topen.opened_by) AS countopen, 0 AS countclose, 0 AS countlastedit, 0 AS comments, 0 AS assigned, 0 AS watching
+        COUNT(topen.opened_by) AS countopen, 0 AS countclose, 0 AS countlastedit, 0 AS comments, 0 AS assigned, 0 AS watching, 0 AS votes
         FROM {users} u
         LEFT JOIN {tasks} topen ON topen.opened_by=u.user_id
         GROUP BY u.user_id
@@ -540,7 +541,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, COUNT(tclose.closed_by) AS countclose, 0, 0, 0, 0
+        0, COUNT(tclose.closed_by) AS countclose, 0, 0, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tclose ON tclose.closed_by=u.user_id
         GROUP BY u.user_id
@@ -551,7 +552,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, COUNT(tlast.last_edited_by) AS countlastedit, 0, 0, 0
+        0, 0, COUNT(tlast.last_edited_by) AS countlastedit, 0, 0, 0, 0
         FROM {users} u
         LEFT JOIN {tasks} tlast ON tlast.last_edited_by=u.user_id
         GROUP BY u.user_id
@@ -562,7 +563,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, COUNT(c.user_id) AS comments, 0, 0
+        0, 0, 0, COUNT(c.user_id) AS comments, 0, 0, 0
         FROM {users} u
         LEFT JOIN {comments} c ON c.user_id=u.user_id
         GROUP BY u.user_id
@@ -573,7 +574,7 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, 0, COUNT(a.user_id) AS assigned, 0
+        0, 0, 0, 0, COUNT(a.user_id) AS assigned, 0, 0
         FROM {users} u
         LEFT JOIN {assigned} a ON a.user_id=u.user_id
         GROUP BY u.user_id
@@ -584,9 +585,20 @@ UNION
         u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
         u.register_date, u.login_attempts, u.lock_until,
         u.profile_image, u.hide_my_email,
-        0, 0, 0, 0, 0, COUNT(n.user_id) AS watching
+        0, 0, 0, 0, 0, COUNT(n.user_id) AS watching, 0
         FROM {users} u
         LEFT JOIN {notifications} n ON n.user_id=u.user_id
+        GROUP BY u.user_id
+UNION
+     	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
+        u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
+        u.notify_type, u.notify_own, u.notify_online,
+        u.tasks_perpage, u.lang_code, u.time_zone, u.dateformat, u.dateformat_extended,
+        u.register_date, u.login_attempts, u.lock_until,
+        u.profile_image, u.hide_my_email,
+        0, 0, 0, 0, 0, 0, COUNT(v.user_id) AS votes
+        FROM {users} u
+        LEFT JOIN {votes} v ON v.user_id=u.user_id
         GROUP BY u.user_id
 ) u
 GROUP BY u.user_id
