@@ -90,10 +90,11 @@ switch ($area = Req::val('area', 'prefs')) {
 			while ($r = $db->fetchRow($hashtypes)){
 				$alert='';
 				if(    $r['l']==32 && $r['s']==0){  $maybe='md5';     $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
+				elseif($r['l']==13 && $r['s']==0){  $maybe='CRYPT_STD_DES';  $r['s']=2; $warnhash2+=$r['c']; $alert=' style="background-color:#fc9"';}
 				elseif($r['l']==40 && $r['s']==0){  $maybe='sha1';    $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
 				elseif($r['l']==128 && $r['s']==0){ $maybe='sha512';  $warnhash+=$r['c']; $alert=' style="background-color:#f99"';}
-				elseif($r['l']==34 && $r['s']==1){  $maybe='md5crypt';$warnhash2+=$r['c'];$alert=' style="background-color:#ff9"';}
-				elseif($r['l']==60){$maybe='bcrypt';}
+				elseif($r['l']==34 && $r['s']==1){  $maybe='CRYPT_MD5';$warnhash2+=$r['c'];$alert=' style="background-color:#fc9"';}
+				elseif($r['l']==60){$maybe='CRYPT_BLOWFISH';}
 				elseif($r['s']==1){
 					$maybe='other pw hashes';
 					if($r['argon2i']>0){$maybe.=': '.$r['argon2i'].' argon2i'; }
@@ -105,7 +106,7 @@ switch ($area = Req::val('area', 'prefs')) {
 				$hashlengths.='<div class="error">'.$warnhash." users with unsalted password hashes.</div>";
 			}
 			if($warnhash2>0){
-				$hashlengths.='<div class="error">'.$warnhash2." users with md5crypt salted password hashes.</div>";
+				$hashlengths.='<div class="error">'.$warnhash2." users with salted password hashes, but considered bad algorithms for password hashing.</div>";
 			}
 			$page->assign('passwdcrypt', $conf['general']['passwdcrypt']);
 			$page->assign('hashlengths', $hashlengths);

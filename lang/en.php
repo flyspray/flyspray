@@ -1108,5 +1108,6 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'repeatpassword'          => 'repeat password',
 'repeatemailaddress'      => 'repeat email address',
 'tooltipshorttasktitle'   => 'Write a title that summarizes the problem and makes it understandable at a glance',
+'lastlogin'               => 'Last Login',
 );
 ?>

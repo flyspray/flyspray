@@ -192,6 +192,7 @@ $passweirded = crypt($user->infos['user_pass'], $conf['general']['cookiesalt']);
 Flyspray::setCookie('flyspray_userid', $user->id, 0,null,null,null,true);
 Flyspray::setCookie('flyspray_passhash', $passweirded, 0,null,null,null,true);
 $_SESSION['SUCCESS'] = L('loginsuccessful');
+$db->query("UPDATE {users} SET last_login = ? WHERE user_id=?", array(time(), $user->id));
 
 $return_to = $_SESSION['return_to'];
 unset($_SESSION['return_to']);
