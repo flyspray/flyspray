@@ -1601,26 +1601,26 @@ switch ($action = Req::val('action'))
                         Flyspray::show_error(L('passnomatch'));
                         break;
                     }
-                    if (Post::val('oldpass')) {
-                        $sql = $db->query('SELECT user_pass FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
-                        $oldpass =  $db->fetchRow($sql);
+					if (Post::val('oldpass')) {
+						$sql = $db->query('SELECT user_pass FROM {users} WHERE user_id = ?', array(Post::val('user_id')));
+						$oldpass =  $db->fetchRow($sql);
 
-                        switch(strlen($oldpass['user_pass'])) {
-                            case '40':
-                                $cryptPass = sha1(Post::val('oldpass'));
-                            case '32':
-                                $cryptPass = md5(Post::val('oldpass'));
-                                break;
-                            default:
-                                $cryptPass = crypt(Post::val('oldpass'), $oldpass['user_pass']);
-                                break;
-                        }
+						$pwtest=false;
+						if(strlen($oldpass['user_pass'])==32){
+							$pwtest=hash_equals($oldpass['user_pass'], md5(Post::val('oldpass')));
+						}elseif(strlen($oldpass['user_pass'])==40){
+							$pwtest=hash_equals($oldpass['user_pass'], sha1(Post::val('oldpass')));
+						}elseif(strlen($oldpass['user_pass'])==128){
+							$pwtest=hash_equals($oldpass['user_pass'], hash('sha512',Post::val('oldpass')));
+						}else{
+							$pwtest=password_verify(Post::val('oldpass'), $oldpass['user_pass']);
+						}
 
-                        if ($cryptPass != $oldpass['user_pass']){
-                            Flyspray::show_error(L('oldpasswrong'));
-                            break;
-                        }
-                    }
+						if (!$pwtest){
+							Flyspray::show_error(L('oldpasswrong'));
+							break;
+						}
+					}
                     $new_hash = Flyspray::cryptPassword(Post::val('changepass'));
                     $db->query('UPDATE {users} SET user_pass = ? WHERE user_id = ?',
                             array($new_hash, Post::val('user_id')));
