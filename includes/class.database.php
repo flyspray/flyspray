@@ -105,7 +105,12 @@ class Database
         $this->dblink->setFetchMode(ADODB_FETCH_BOTH);
 
         if($dbtype=='mysqli'){
-            $this->dblink->setCharSet('utf8mb4');
+            $sinfo=$this->dblink->serverInfo();
+            if(version_compare($sinfo['version'], '5.5.3')>=0 ){
+                $this->dblink->setCharSet('utf8mb4');
+            }else{
+                $this->dblink->setCharSet('utf8');
+            }
         }else{
             $this->dblink->setCharSet('utf8');
         }
