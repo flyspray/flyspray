@@ -647,7 +647,7 @@ $translation = array(
 'feeddescription'         => '聚合订阅',
 'feedimgurl'              => '聚合图像链接 (没有请不要填)',
 'notifysubject'           => '通知主题',
-'notifysubjectinfo'       => '(%p =项目标题, %s = 任务标题, %t = 任务ID, %a = 操作)',
+'notifysubjectinfo'       => '(%p =项目标题, %s = 任务标题, %t = 任务ID, %a = 操作, %u = 用户名)',
 'priority6'               => '必须马上解决',
 'priority5'               => '尽快解决',
 'priority4'               => '紧急',
