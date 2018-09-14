@@ -605,7 +605,7 @@ $translation = array(
 'feeddescription'         => 'Descripción del RSS',
 'feedimgurl'              => 'Imagen del RSS (dejar en blanco para ninguna)',
 'notifysubject'           => 'Asunto para las notificaciones',
-'notifysubjectinfo'       => '(%p = título del proyecto, %s = sumario de la tarea, %t = id de la tarea, %a = acción)',
+'notifysubjectinfo'       => '(%p = título del proyecto, %s = sumario de la tarea, %t = id de la tarea, %a = acción, %u = nombre de usuario)',
 'priority6'               => 'Al instante',
 'priority5'               => 'Inmediata',
 'priority4'               => 'Urgente',
