@@ -638,7 +638,7 @@ $translation = array(
 'feeddescription'         => 'Description du flux',
 'feedimgurl'              => 'URL de l\'image du flux (sinon laisser blanc)',
 'notifysubject'           => 'Sujet des notifications',
-'notifysubjectinfo'       => '(%p = nom du projet, %s = titre de la tâche, %t = ID de la tâche, %a = action)',
+'notifysubjectinfo'       => '(%p = nom du projet, %s = titre de la tâche, %t = ID de la tâche, %a = action, %u = nom d\'utilisateur)',
 'priority6'               => 'Très haute',
 'priority5'               => 'Haute',
 'priority4'               => 'Moyenne',
