@@ -604,7 +604,7 @@ $translation = array(
 'feeddescription'         => 'Feed omschrijving',
 'feedimgurl'              => 'Feedafbeelding URL (laat leeg voor geen afbeeldingen)',
 'notifysubject'           => 'Onderwerp voor notificaties',
-'notifysubjectinfo'       => '(%p = projectnaam, %s = taaksamenvatting, %t = taak-ID)',
+'notifysubjectinfo'       => '(%p = projectnaam, %s = taaksamenvatting, %t = taak-ID, %a = actie, %u = gebruikersnaam)',
 'priority6'               => 'Kritiek',
 'priority5'               => 'Onmiddelijk',
 'priority4'               => 'Dringend',
