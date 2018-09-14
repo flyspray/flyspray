@@ -634,7 +634,7 @@ $translation = array(
 'feeddescription'         => '動態訊息訂閲',
 'feedimgurl'              => '動態訊息圖片連結 (沒有請不要填)',
 'notifysubject'           => '通知主題',
-'notifysubjectinfo'       => '(%p =專案標題, %s = 任務摘要, %t = 任務ID, %a = 操作)',
+'notifysubjectinfo'       => '(%p =專案標題, %s = 任務摘要, %t = 任務ID, %a = 操作, %u = 使用者)',
 'priority6'               => '必須馬上解決',
 'priority5'               => '儘快解決',
 'priority4'               => '緊急',

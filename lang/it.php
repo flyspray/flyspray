@@ -647,7 +647,7 @@ $translation = array(
 'feeddescription'         => 'Descrizione Feed',
 'feedimgurl'              => 'Indirizzo dell\'immagine per il Feed (lasciare vuoto per selezionare nessuna immagine)',
 'notifysubject'           => 'Oggetto delle notifiche',
-'notifysubjectinfo'       => '(%p = titolo del Progetto, %s = riassunto del Task, %t = id del Task, %a = azione)',
+'notifysubjectinfo'       => '(%p = titolo del Progetto, %s = riassunto del Task, %t = id del Task, %a = azione, %u = nome utente)',
 'priority6'               => 'Molto Alta',
 'priority5'               => 'Alta',
 'priority4'               => 'Media',
