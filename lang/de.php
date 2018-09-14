@@ -647,7 +647,7 @@ $translation = array(
 'feeddescription'         => 'Newsfeed Beschreibung',
 'feedimgurl'              => 'Newsfeed Bild URL (leer zeigt kein Bild an)',
 'notifysubject'           => 'Betreff',
-'notifysubjectinfo'       => '(%p = Projektname, %s = Zusammenfassung, %t = Aufgaben-ID, %a = Aktion)',
+'notifysubjectinfo'       => '(%p = Projektname, %s = Zusammenfassung, %t = Aufgaben-ID, %a = Aktion, %u = Benutzer)',
 'priority6'               => 'sofort',
 'priority5'               => 'eilig',
 'priority4'               => 'hoch',
