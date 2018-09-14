@@ -632,7 +632,7 @@ $translation = array(
 'feeddescription'         => 'Feed beskrivelse',
 'feedimgurl'              => 'Feed bilde URL (la stå tom for ingen bilde)',
 'notifysubject'           => 'Varslingsnavn',
-'notifysubjectinfo'       => "(% p = prosjekttittel,% s = oppgave Oppsummert% t = oppgave id,% a = action,% u = user)\n",
+'notifysubjectinfo'       => '(%p = prosjekttittel, %s = oppgave Oppsummert, %t = oppgave id, %a = action, %u = user)',
 'priority6'               => 'Veldig høy',
 'priority5'               => 'Høy',
 'priority4'               => 'Medium',
