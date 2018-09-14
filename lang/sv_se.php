@@ -613,7 +613,7 @@ $translation = array(
 'feeddescription'         => 'Beskrivning av feed',
 'feedimgurl'              => 'Bild URL för feed (lämna tom för ingen bild)',
 'notifysubject'           => 'Ärende för aviseringar',
-'notifysubjectinfo'       => '(%p = projektnamn, %s = ärendesummering, %t = ärendenummer, %a = action)',
+'notifysubjectinfo'       => '(%p = projektnamn, %s = ärendesummering, %t = ärendenummer, %a = action, %u = användarnamn)',
 'priority6'               => 'Blixtsnabbt',
 'priority5'               => 'Omedelbar',
 'priority4'               => 'Brådskande',
