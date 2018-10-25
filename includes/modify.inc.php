@@ -1287,8 +1287,12 @@ switch ($action = Req::val('action'))
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
 		'custom_style', 'general_integration', 'footer_integration',
-		'repeat_password','repeat_emailaddress');
+		'repeat_password', 'repeat_emailaddress', 'massops');
 
+		if(!isset($fs->prefs['massops'])){
+			$db->query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('massops',0)");
+                }
+		
 		# candid for a plugin, so separate them for the future.
 		$settings[]='captcha_securimage';
 		if(!isset($fs->prefs['captcha_securimage'])){
@@ -2901,8 +2905,8 @@ switch ($action = Req::val('action'))
         # TODO check if the user has the right to do each action on each task id he send with the form!
         # TODO check if tasks have open subtasks before closing
         # TODO SQL Transactions with rollback function if something went wrong in the middle of bulk action
-        $massopsenabled=0; # 20150305 disabled for 1.0 release until proper checks are done
-        if($massopsenabled==1){
+        # disabled by default and if currently allowed only for admins until proper checks are done
+        if(isset($fs->prefs['massops']) && $fs->prefs['massops']==1 && $user->perms('is_admin')){
 
         // TODO: Log events in a later version.
 
