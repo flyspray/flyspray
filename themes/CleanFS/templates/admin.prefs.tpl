@@ -107,7 +107,10 @@ function ShowHidePassword(id) {
           <label for="logo_input">&nbsp;</label>
           <input id="logo_input" name="logo" type="file" accept="image/*" value="<?php echo Filters::noXSS($fs->prefs['logo']); ?>" />
         </li>
-
+	<li>
+		<label for="massops"><?php echo Filters::noXSS(L('massopsenable')); ?></label>
+		<?php echo tpl_checkbox('massops', $fs->prefs['massops'], 'massops'); ?>
+	</li>
         <li>
           <label for="enable_avatars"><?php echo Filters::noXSS(L('enableavatars')); ?></label>
           <?php echo tpl_checkbox('enable_avatars', $fs->prefs['enable_avatars'], 'enable_avatars', 1, array('onclick'=>'check_change(false, "enable_avatars", "gravatars", "max_avatar_size")')); ?>
