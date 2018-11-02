@@ -120,6 +120,11 @@ a { text-decoration: none; }
   color:#000;
 }
 
+.formblock td {
+  vertical-align:top;
+  padding-top:1.5em;
+}
+
 .button {
   display: block;
   font-size: 3em;
