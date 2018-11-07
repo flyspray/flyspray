@@ -33,18 +33,18 @@ abstract class Backend
 
         settype($tasks, 'array');
 
-        $user_id = Flyspray::ValidUserId($user_id);
+        $user_id = Flyspray::validUserId($user_id);
 
         if (!$user_id || !count($tasks)) {
             return false;
         }
 
-        $sql = $db->Query(' SELECT *
+        $sql = $db->query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
                           $tasks);
 
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             // -> user adds himself
             if ($user->id == $user_id) {
                 if (!$user->can_view_task($row) && !$do) {
@@ -57,19 +57,19 @@ abstract class Backend
                 }
             }
 
-            $notif = $db->Query('SELECT notify_id
+            $notif = $db->query('SELECT notify_id
                                    FROM {notifications}
                                   WHERE task_id = ? and user_id = ?',
                               array($row['task_id'], $user_id));
 
-            if (!$db->CountRows($notif)) {
-                $db->Query('INSERT INTO {notifications} (task_id, user_id)
+            if (!$db->countRows($notif)) {
+                $db->query('INSERT INTO {notifications} (task_id, user_id)
                                  VALUES  (?,?)', array($row['task_id'], $user_id));
                 Flyspray::logEvent($row['task_id'], 9, $user_id);
             }
         }
 
-        return (bool) $db->CountRows($sql);
+        return (bool) $db->countRows($sql);
     }
 
 
@@ -92,12 +92,12 @@ abstract class Backend
             return;
         }
 
-        $sql = $db->Query(' SELECT *
+        $sql = $db->query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
                           $tasks);
 
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             // -> user removes himself
             if ($user->id == $user_id) {
                 if (!$user->can_view_task($row)) {
@@ -110,7 +110,7 @@ abstract class Backend
                 }
             }
 
-            $db->Query('DELETE FROM  {notifications}
+            $db->query('DELETE FROM  {notifications}
                               WHERE  task_id = ? AND user_id = ?',
                         array($row['task_id'], $user_id));
             if ($db->affectedRows()) {
@@ -142,33 +142,33 @@ abstract class Backend
             return;
         }
 
-        $sql = $db->Query(' SELECT *
+        $sql = $db->query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
                           $tasks);
 
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             if (!$user->can_take_ownership($row)) {
                 continue;
             }
 
-            $db->Query('DELETE FROM {assigned}
+            $db->query('DELETE FROM {assigned}
                               WHERE task_id = ?',
                         array($row['task_id']));
 
-            $db->Query('INSERT INTO {assigned}
+            $db->query('INSERT INTO {assigned}
                                     (task_id, user_id)
                              VALUES (?,?)',
                         array($row['task_id'], $user->id));
 
             if ($db->affectedRows()) {
                 $current_proj = new Project($row['project_id']);
-                Flyspray::logEvent($row['task_id'], 19, $user->id, implode(' ', Flyspray::GetAssignees($row['task_id'])));
-                $notify->Create(NOTIFY_OWNERSHIP, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
+                Flyspray::logEvent($row['task_id'], 19, $user->id, implode(' ', Flyspray::getAssignees($row['task_id'])));
+                $notify->create(NOTIFY_OWNERSHIP, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
             }
 
             if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
-                $db->Query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
+                $db->query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
                 Flyspray::logEvent($row['task_id'], 3, 3, 1, 'item_status');
             }
         }
@@ -199,26 +199,26 @@ abstract class Backend
             return;
         }
 
-        $sql = $db->Query(' SELECT *
+        $sql = $db->query(' SELECT *
                               FROM {tasks}
                              WHERE ' . substr(str_repeat(' task_id = ? OR ', count($tasks)), 0, -3),
                              $tasks);
 
-        while ($row = $db->FetchRow($sql)) {
+        while ($row = $db->fetchRow($sql)) {
             if (!$user->can_add_to_assignees($row) && !$do) {
                 continue;
             }
 
-            $db->Replace('{assigned}', array('user_id'=> $user->id, 'task_id'=> $row['task_id']), array('user_id','task_id'));
+            $db->replace('{assigned}', array('user_id'=> $user->id, 'task_id'=> $row['task_id']), array('user_id','task_id'));
 
             if ($db->affectedRows()) {
                 $current_proj = new Project($row['project_id']);
-                Flyspray::logEvent($row['task_id'], 29, $user->id, implode(' ', Flyspray::GetAssignees($row['task_id'])));
-                $notify->Create(NOTIFY_ADDED_ASSIGNEES, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
+                Flyspray::logEvent($row['task_id'], 29, $user->id, implode(' ', Flyspray::getAssignees($row['task_id'])));
+                $notify->create(NOTIFY_ADDED_ASSIGNEES, $row['task_id'], null, null, NOTIFY_BOTH, $current_proj->prefs['lang_code']);
             }
 
             if ($row['item_status'] == STATUS_UNCONFIRMED || $row['item_status'] == STATUS_NEW) {
-                $db->Query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
+                $db->query('UPDATE {tasks} SET item_status = 3 WHERE task_id = ?', array($row['task_id']));
                 Flyspray::logEvent($row['task_id'], 3, 3, 1, 'item_status');
             }
         }
@@ -241,7 +241,7 @@ abstract class Backend
             $user = new User($user_id);
         }
 
-        $task = Flyspray::GetTaskDetails($task_id);
+        $task = Flyspray::getTaskDetails($task_id);
 
         if (!$task) {
             return false;
@@ -249,7 +249,7 @@ abstract class Backend
 
         if ($user->can_vote($task) > 0) {
 
-            if($db->Query("INSERT INTO {votes} (user_id, task_id, date_time)
+            if($db->query("INSERT INTO {votes} (user_id, task_id, date_time)
                            VALUES (?,?,?)", array($user->id, $task_id, time()))) {
                 // TODO: Log event in a later version.
                 return true;
@@ -275,7 +275,7 @@ abstract class Backend
             $user = new User($user_id);
         }
 
-        $task = Flyspray::GetTaskDetails($task_id);
+        $task = Flyspray::getTaskDetails($task_id);
 
         if (!$task) {
             return false;
@@ -283,7 +283,7 @@ abstract class Backend
 
         if ($user->can_vote($task) == -2) {
 
-            if($db->Query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
+            if($db->query("DELETE FROM {votes} WHERE user_id = ? and task_id = ?",
                             array($user->id, $task_id))) {
                 // TODO: Log event in a later version.
                return true;
@@ -321,7 +321,7 @@ abstract class Backend
 
         $time =  !is_numeric($time) ? time() : $time ;
 
-        $db->Query('INSERT INTO {comments}
+        $db->query('INSERT INTO {comments}
                                 (task_id, date_added, last_edited_time, user_id, comment_text)
                          VALUES ( ?, ?, ?, ?, ? )',
                     array($task['task_id'], $time, $time, $user->id, $comment_text));
@@ -330,9 +330,9 @@ abstract class Backend
         Flyspray::logEvent($task['task_id'], 4, $cid);
 
         if (Backend::upload_files($task['task_id'], $cid)) {
-            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->create(NOTIFY_COMMENT_ADDED, $task['task_id'], 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         } else {
-            $notify->Create(NOTIFY_COMMENT_ADDED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->create(NOTIFY_COMMENT_ADDED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 	
 
@@ -352,7 +352,7 @@ abstract class Backend
     {
         global $db, $notify, $conf, $user;
 
-        $task = Flyspray::GetTaskDetails($task_id);
+        $task = Flyspray::getTaskDetails($task_id);
 
         if (!$user->perms('create_attachments', $task['project_id'])) {
             return false;
@@ -394,7 +394,7 @@ abstract class Backend
              $_FILES[$source]['type'][$key] = $type;
             }// we can try even more, however, far too much code is needed.
 
-            $db->Query("INSERT INTO  {attachments}
+            $db->query("INSERT INTO  {attachments}
                                      ( task_id, comment_id, file_name,
                                        file_type, file_size, orig_name,
                                        added_by, date_added)
@@ -404,17 +404,7 @@ abstract class Backend
                         $_FILES[$source]['size'][$key],
                         $_FILES[$source]['name'][$key],
                         $user->id, time()));
-
-            // Fetch the attachment id for the history log
-            /*
-            $result = $db->Query('SELECT  attachment_id
-                                    FROM  {attachments}
-                                   WHERE  task_id = ?
-                                ORDER BY  attachment_id DESC',
-                    array($task_id), 1);
-            Flyspray::logEvent($task_id, 7, $db->fetchOne($result), $_FILES[$source]['name'][$key]);
-            */
-            $attid = $db->Insert_ID();
+            $attid = $db->insert_ID();
             Flyspray::logEvent($task_id, 7, $attid, $_FILES[$source]['name'][$key]);
         }
 
@@ -425,7 +415,7 @@ abstract class Backend
     {
 	    global $db, $user;
 
-	    $task = Flyspray::GetTaskDetails($task_id);
+	    $task = Flyspray::getTaskDetails($task_id);
 
 	    if (!$user->perms('create_attachments', $task['project_id'])) {
 		    return false;
@@ -450,7 +440,7 @@ abstract class Backend
 			$res = true;
 
 		    // Insert into database
-		    $db->Query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
+		    $db->query("INSERT INTO {links} (task_id, comment_id, url, added_by, date_added) VALUES (?, ?, ?, ?, ?)",
 			    array($task_id, $comment_id, $text, $user->id, time()));
                     // TODO: Log event in a later version.
 	    }
@@ -474,18 +464,18 @@ abstract class Backend
             return;
         }
 
-        $sql = $db->Query(' SELECT t.*, a.*
+        $sql = $db->query(' SELECT t.*, a.*
                               FROM {attachments} a
                          LEFT JOIN {tasks} t ON t.task_id = a.task_id
                              WHERE ' . substr(str_repeat(' attachment_id = ? OR ', count($attachments)), 0, -3),
                           $attachments);
 
-        while ($task = $db->FetchRow($sql)) {
+        while ($task = $db->fetchRow($sql)) {
             if (!$user->perms('delete_attachments', $task['project_id'])) {
                 continue;
             }
 
-            $db->Query('DELETE FROM {attachments} WHERE attachment_id = ?',
+            $db->query('DELETE FROM {attachments} WHERE attachment_id = ?',
                        array($task['attachment_id']));
             @unlink(BASEDIR . '/attachments/' . $task['file_name']);
             Flyspray::logEvent($task['task_id'], 8, $task['orig_name']);
@@ -502,15 +492,15 @@ abstract class Backend
 		    return;
 	    }
 
-	    $sql = $db->Query('SELECT t.*, l.* FROM {links} l LEFT JOIN {tasks} t ON t.task_id = l.task_id WHERE '.substr(str_repeat('link_id = ? OR ', count($links)), 0, -3), $links);
+	    $sql = $db->query('SELECT t.*, l.* FROM {links} l LEFT JOIN {tasks} t ON t.task_id = l.task_id WHERE '.substr(str_repeat('link_id = ? OR ', count($links)), 0, -3), $links);
 
 	    //Delete from database
-	    while($task = $db->FetchRow($sql)) {
+	    while($task = $db->fetchRow($sql)) {
 		    if (!$user->perms('delete_attachments', $task['project_id'])) {
 			    continue;
 		    }
 
-		    $db->Query('DELETE FROM {links} WHERE link_id = ?', array($task['link_id']));
+		    $db->query('DELETE FROM {links} WHERE link_id = ?', array($task['link_id']));
                     // TODO: Log event in a later version.
 	    }
     }
@@ -538,14 +528,14 @@ abstract class Backend
         $jabbers = array();
         $onlines = array();
         
-        $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+        $sql = $db->query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
                                   u.notify_online, u.notify_type, u.notify_own, u.lang_code
                              FROM {users} u
                              JOIN {users_in_groups} ug ON u.user_id = ug.user_id
                              JOIN {groups} g ON g.group_id = ug.group_id
                              WHERE g.is_admin = 1 AND u.account_enabled = 1');
  
-	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
+	Notifications::assignRecipients($db->fetchAllArray($sql), $emails, $jabbers, $onlines);
         
         return array($emails, $jabbers, $onlines);
     }
@@ -557,7 +547,7 @@ abstract class Backend
         $jabbers = array();
         $onlines = array();
         
-        $sql = $db->Query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
+        $sql = $db->query('SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
                                   u.notify_online, u.notify_type, u.notify_own, u.lang_code
                              FROM {users} u
                              JOIN {users_in_groups} ug ON u.user_id = ug.user_id
@@ -565,7 +555,7 @@ abstract class Backend
                              WHERE g.manage_project = 1 AND g.project_id = ? AND u.account_enabled = 1',
                 array($project_id));
 
-	Notifications::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines);
+	Notifications::assignRecipients($db->fetchAllArray($sql), $emails, $jabbers, $onlines);
         
         return array($emails, $jabbers, $onlines);
     }
@@ -607,7 +597,7 @@ abstract class Backend
     	}
 		
         // Check to see if the username is available
-        $sql = $db->Query('SELECT COUNT(*) FROM {users} WHERE user_name = ?', array($user_name));
+        $sql = $db->query('SELECT COUNT(*) FROM {users} WHERE user_name = ?', array($user_name));
 
         if ($db->fetchOne($sql)) {
             return false;
@@ -623,7 +613,7 @@ abstract class Backend
         // Check the emails before inserting anything to database.
         $emailList = explode(';',$email);
         foreach ($emailList as $mail) {	//Still need to do: check email
-            $count = $db->Query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
+            $count = $db->query("SELECT COUNT(*) FROM {user_emails} WHERE email_address = ?",array($mail));
             $count = $db->fetchOne($count);
             if ($count > 0) {
                 Flyspray::show_error("Email address has alredy been taken");
@@ -631,7 +621,7 @@ abstract class Backend
             }
         }
         
-        $db->Query("INSERT INTO  {users}
+        $db->query("INSERT INTO  {users}
                              ( user_name, user_pass, real_name, jabber_id, profile_image, magic_url,
                                email_address, notify_type, account_enabled,
                                tasks_perpage, register_date, time_zone, dateformat,
@@ -641,17 +631,17 @@ abstract class Backend
                 $profile_image, '', strtolower($email), $notify_type, $enabled, time(), $time_zone, '', '', $oauth_uid, $oauth_provider, $fs->prefs['lang_code']));
 
         // Get this user's id for the record
-        $uid = Flyspray::UserNameToId($user_name);
+        $uid = Flyspray::userNameToId($user_name);
 
         foreach ($emailList as $mail) {
             if ($mail != '') {
-                $db->Query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
+                $db->query("INSERT INTO {user_emails}(id,email_address,oauth_uid,oauth_provider) VALUES (?,?,?,?)",
                         array($uid,strtolower($mail),$oauth_uid, $oauth_provider));
             }
         }
 
         // Now, create a new record in the users_in_groups table
-        $db->Query('INSERT INTO  {users_in_groups} (user_id, group_id)
+        $db->query('INSERT INTO  {users_in_groups} (user_id, group_id)
                          VALUES  (?, ?)', array($uid, $group_in));
 
         Flyspray::logEvent(0, 30, serialize(Flyspray::getUserDetails($uid)));
@@ -687,24 +677,24 @@ abstract class Backend
                 }
 
         // Now give him his default searches
-        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+        $db->query('INSERT INTO {searches} (user_id, name, search_string, time)
                          VALUES (?, ?, ?, ?)',
                     array($uid, L('taskswatched'), serialize($iwatch), time()));
-        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+        $db->query('INSERT INTO {searches} (user_id, name, search_string, time)
                          VALUES (?, ?, ?, ?)',
                     array($uid, L('assignedtome'), serialize($atome), time()));
-        $db->Query('INSERT INTO {searches} (user_id, name, search_string, time)
+        $db->query('INSERT INTO {searches} (user_id, name, search_string, time)
                          VALUES (?, ?, ?, ?)',
                     array($uid, L('tasksireported'), serialize($iopened), time()));
 
         if ($jabber_id) {
-            Notifications::JabberRequestAuth($jabber_id);
+            Notifications::jabberRequestAuth($jabber_id);
         }
 
         // Send a user his details (his username might be altered, password auto-generated)
         // dont send notifications if the user logged in using oauth
         if (!$oauth_provider) {
-            $recipients = self::GetAdminAddresses();
+            $recipients = self::getAdminAddresses();
             $newuser = array();
             
             // Add the right message here depending on $enabled.
@@ -717,12 +707,12 @@ abstract class Backend
 
             // Notify the appropriate users
 			if ($fs->prefs['notify_registration']) {
-                $notify->Create(NOTIFY_NEW_USER, null,
+                $notify->create(NOTIFY_NEW_USER, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $recipients, NOTIFY_EMAIL);
 			}
             // And also the new user
-            $notify->Create(NOTIFY_OWN_REGISTRATION, null,
+            $notify->create(NOTIFY_OWN_REGISTRATION, null,
                             array($baseurl, $user_name, $real_name, $email, $jabber_id, $password, $auto),
                             $newuser, NOTIFY_EMAIL);
         }
@@ -733,7 +723,7 @@ abstract class Backend
         // work-around: there's no field for email, so we use reason_given
         // for that purpose.
         if ($enabled === 0) {
-            Flyspray::AdminRequest(3, 0, 0, $uid, $email);
+            Flyspray::adminRequest(3, 0, 0, $uid, $email);
         }
 
         return true;
@@ -766,7 +756,7 @@ abstract class Backend
 		# The better solution is to just deactivate the user, but maybe there are cases a user MUSt be deleted from the database.
 		# Move that effort to an 'anonymous users' effort if the effort(s) was legal and should be measured for project(s)?
 		foreach ($tables as $table) {
-			if (!$db->Query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
+			if (!$db->query('DELETE FROM ' .'{' . $table .'}' . ' WHERE user_id = ?', array($uid))) {
 				return false;
 			}
 		}
@@ -775,18 +765,18 @@ abstract class Backend
 			unlink(BASEDIR.'/avatars/'.$userDetails['profile_image']);
 		}
 
-		$db->Query('DELETE FROM {registrations} WHERE email_address = ?',
+		$db->query('DELETE FROM {registrations} WHERE email_address = ?',
                         array($userDetails['email_address']));
                 
-		$db->Query('DELETE FROM {user_emails} WHERE id = ?',
+		$db->query('DELETE FROM {user_emails} WHERE id = ?',
                         array($uid));
 		
-                $db->Query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
+                $db->query('DELETE FROM {reminders} WHERE to_user_id = ? OR from_user_id = ?',
                         array($uid, $uid));
 
 		// for the unusual situuation that a user ID is re-used, make sure that the new user doesn't
 		// get permissions for a task automatically
-		$db->Query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
+		$db->query('UPDATE {tasks} SET opened_by = 0 WHERE opened_by = ?', array($uid));
 
 		Flyspray::logEvent(0, 31, serialize($userDetails));
 
@@ -812,8 +802,8 @@ abstract class Backend
 
         // Delete all project's tasks related information
         if (!$move_to) {
-            $task_ids = $db->Query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
-            $task_ids = $db->FetchCol($task_ids);
+            $task_ids = $db->query('SELECT task_id FROM {tasks} WHERE project_id = ' . intval($pid));
+            $task_ids = $db->fetchCol($task_ids);
             // What was supposed to be in tables field_values, notification_threads
             // and redundant, they do not exist in database?
             $tables = array('admin_requests', 'assigned', 'attachments', 'comments',
@@ -827,14 +817,14 @@ abstract class Backend
                     $stmt = $db->dblink->prepare('DELETE FROM ' . $db->dbprefix . $table . ' WHERE task_id = ?');
                 }
                 foreach ($task_ids as $id) {
-                    $db->dblink->Execute($stmt, ($table == 'related') ? array($id, $id) : array($id));
+                    $db->dblink->execute($stmt, ($table == 'related') ? array($id, $id) : array($id));
                 }
             }
         }
 
         // unset category of tasks because we don't move categories
         if ($move_to) {
-            $db->Query('UPDATE {tasks} SET product_category = 0 WHERE project_id = ?', array($pid));
+            $db->query('UPDATE {tasks} SET product_category = 0 WHERE project_id = ?', array($pid));
         }
 
         $tables = array('list_category', 'list_os', 'list_resolution', 'list_tasktype',
@@ -852,17 +842,17 @@ abstract class Backend
                 // for that purpose too, if possible.
                 if (strpos($table, 'list_') === 0) {
                     list($type, $name) = explode('_', $table);
-                    $sql = $db->Query('SELECT ' . $name . '_id, ' . $name . '_name
+                    $sql = $db->query('SELECT ' . $name . '_id, ' . $name . '_name
                                          FROM {' . $table . '}
                                         WHERE project_id = ?',
                             array($pid));
-                    $rows = $db->FetchAllArray($sql);
+                    $rows = $db->fetchAllArray($sql);
                     foreach ($rows as $row) {
-                        $sql = $db->Query('SELECT ' . $name . '_id
+                        $sql = $db->query('SELECT ' . $name . '_id
                                              FROM {' . $table . '}
                                             WHERE project_id = ? AND '. $name . '_name = ?', 
                                 array($move_to, $row[$name .'_name']));
-                        $new_id = $db->FetchOne($sql);
+                        $new_id = $db->fetchOne($sql);
                         if ($new_id) {
                             switch ($name) {
                                 case 'os';
@@ -885,11 +875,11 @@ abstract class Backend
                                     break;
                             }
                             if (isset($column)) {
-                                $db->Query('UPDATE {tasks}
+                                $db->query('UPDATE {tasks}
                                                SET ' . $column . ' = ?
                                              WHERE ' . $column . ' = ?',
                                         array($new_id, $row[$name . '_id']));
-                                $db->Query('DELETE FROM {' . $table . '}
+                                $db->query('DELETE FROM {' . $table . '}
                                              WHERE '  . $name . '_id = ?',
                                         array($row[$name . '_id']));
                             }
@@ -903,7 +893,7 @@ abstract class Backend
                 $sql_params = array($pid);
             }
 
-            if (!$db->Query($base_sql . ' WHERE project_id = ?', $sql_params)) {
+            if (!$db->query($base_sql . ' WHERE project_id = ?', $sql_params)) {
                 return false;
             }
         }
@@ -911,11 +901,11 @@ abstract class Backend
         // groups are only deleted, not moved (it is likely
         // that the destination project already has all kinds
         // of groups which are also used by the old project)
-        $sql = $db->Query('SELECT group_id FROM {groups} WHERE project_id = ?', array($pid));
-        while ($row = $db->FetchRow($sql)) {
-            $db->Query('DELETE FROM {users_in_groups} WHERE group_id = ?', array($row['group_id']));
+        $sql = $db->query('SELECT group_id FROM {groups} WHERE project_id = ?', array($pid));
+        while ($row = $db->fetchRow($sql)) {
+            $db->query('DELETE FROM {users_in_groups} WHERE group_id = ?', array($row['group_id']));
         }
-        $sql = $db->Query('DELETE FROM {groups} WHERE project_id = ?', array($pid));
+        $sql = $db->query('DELETE FROM {groups} WHERE project_id = ?', array($pid));
 
         //we have enough reasons ..  the process is OK.
         return true;
@@ -935,7 +925,7 @@ abstract class Backend
     public static function add_reminder($task_id, $message, $how_often, $start_time, $user_id = null)
     {
         global $user, $db;
-        $task = Flyspray::GetTaskDetails($task_id);
+        $task = Flyspray::getTaskDetails($task_id);
 
         if (!$user->perms('manage_project', $task['project_id'])) {
             return false;
@@ -943,16 +933,16 @@ abstract class Backend
 
         if (is_null($user_id)) {
             // Get all users assigned to a task
-            $user_id = Flyspray::GetAssignees($task_id);
+            $user_id = Flyspray::getAssignees($task_id);
         } else {
-            $user_id = array(Flyspray::ValidUserId($user_id));
+            $user_id = array(Flyspray::validUserId($user_id));
             if (!reset($user_id)) {
                 return false;
             }
         }
 
         foreach ($user_id as $id) {
-            $sql = $db->Replace('{reminders}',
+            $sql = $db->replace('{reminders}',
                                 array('task_id'=> $task_id, 'to_user_id'=> $id,
                                      'from_user_id' => $user->id, 'start_time' => $start_time,
                                      'how_often' => $how_often, 'reminder_message' => $message),
@@ -1057,7 +1047,7 @@ abstract class Backend
         // Process estimated effort
         $estimated_effort = 0;
         if ($proj->prefs['use_effort_tracking'] && isset($sql_args['estimated_effort'])) {
-            if (($estimated_effort = effort::EditStringToSeconds($sql_args['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
+            if (($estimated_effort = effort::editStringToSeconds($sql_args['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])) === FALSE) {
                 Flyspray::show_error(L('invalideffort'));
                 $estimated_effort = 0;
             }
@@ -1117,10 +1107,10 @@ abstract class Backend
         $sql_keys_string = join(', ', $sql_keys);
         $sql_placeholder = $db->fill_placeholders($sql_values);
 
-        $result = $db->Query("INSERT INTO {tasks}
+        $result = $db->query("INSERT INTO {tasks}
                                 ($sql_keys_string)
                          VALUES ($sql_placeholder)", $sql_values);
-	$task_id=$db->Insert_ID();
+	$task_id=$db->insert_ID();
 	
 	Backend::upload_links($task_id);
 	
@@ -1139,19 +1129,19 @@ abstract class Backend
 			#$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
 			
 			# new tag feature. let's do it in 2 steps, it is getting too complicated to make it cross database compatible, drawback is possible (rare) race condition (use transaction?)
-			$res=$db->Query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
-			if($t=$db->FetchRow($res)){   
+			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+			if($t=$db->fetchRow($res)){   
 				$tag_id=$t['tag_id'];
 			} else{ 
 				if( $proj->prefs['freetagging']==1){
 					# add to taglist of the project
-					$db->Query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
-					$tag_id=$db->Insert_ID();
+					$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+					$tag_id=$db->insert_ID();
 				} else{
 					continue;
 				}
 			};
-			$db->Query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
+			$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
 		}
 	}
 
@@ -1161,23 +1151,23 @@ abstract class Backend
             // Convert assigned_to and store them in the 'assigned' table
             foreach ($args['rassigned_to'] as $val)
             {
-                $db->Replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task_id), array('user_id','task_id'));
+                $db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task_id), array('user_id','task_id'));
             }
             // Log to task history
             Flyspray::logEvent($task_id, 14, implode(' ', $args['rassigned_to']));
 
             // Notify the new assignees what happened.  This obviously won't happen if the task is now assigned to no-one.
-            $notify->Create(NOTIFY_NEW_ASSIGNEE, $task_id, null, $notify->SpecificAddresses($args['rassigned_to']), NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->create(NOTIFY_NEW_ASSIGNEE, $task_id, null, $notify->specificAddresses($args['rassigned_to']), NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         // Log that the task was opened
         Flyspray::logEvent($task_id, 1);
 
-        $result = $db->Query('SELECT  *
+        $result = $db->query('SELECT  *
                                 FROM  {list_category}
                                WHERE  category_id = ?',
                                array($args['product_category']));
-        $cat_details = $db->FetchRow($result);
+        $cat_details = $db->fetchRow($result);
 
         // We need to figure out who is the category owner for this task
         if (!empty($cat_details['category_owner'])) {
@@ -1185,12 +1175,12 @@ abstract class Backend
         }
         else {
             // check parent categories
-            $result = $db->Query('SELECT  *
+            $result = $db->query('SELECT  *
                                     FROM  {list_category}
                                    WHERE  lft < ? AND rgt > ? AND project_id  = ?
                                 ORDER BY  lft DESC',
                                    array($cat_details['lft'], $cat_details['rgt'], $cat_details['project_id']));
-            while ($row = $db->FetchRow($result)) {
+            while ($row = $db->fetchRow($result)) {
                 // If there's a parent category owner, send to them
                 if (!empty($row['category_owner'])) {
                     $owner = $row['category_owner'];
@@ -1212,14 +1202,14 @@ abstract class Backend
 
         // Reminder for due_date field
         if (!empty($sql_args['due_date'])) {
-            Backend::add_reminder($task_id, L('defaultreminder') . "\n\n" . CreateURL('details', $task_id), 2*24*60*60, time());
+            Backend::add_reminder($task_id, L('defaultreminder') . "\n\n" . createURL('details', $task_id), 2*24*60*60, time());
         }
 
         // Create the Notification
         if (Backend::upload_files($task_id)) {
-            $notify->Create(NOTIFY_TASK_OPENED, $task_id, 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->create(NOTIFY_TASK_OPENED, $task_id, 'files', null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         } else {
-            $notify->Create(NOTIFY_TASK_OPENED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+            $notify->create(NOTIFY_TASK_OPENED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         }
 
         // If the reporter wanted to be added to the notification list
@@ -1231,7 +1221,7 @@ abstract class Backend
             $anonuser = array();
             $anonuser[$email] = array('recipient' => $args['anon_email'], 'lang' => $fs->prefs['lang_code']);
             $recipients = array($anonuser);
-            $notify->Create(NOTIFY_ANON_TASK, $task_id, $token,
+            $notify->create(NOTIFY_ANON_TASK, $task_id, $token,
                             $recipients, NOTIFY_EMAIL, $proj->prefs['lang_code']);
         }
 
@@ -1251,7 +1241,7 @@ abstract class Backend
     public static function close_task($task_id, $reason, $comment, $mark100 = true)
     {
         global $db, $notify, $user, $proj;
-        $task = Flyspray::GetTaskDetails($task_id);
+        $task = Flyspray::getTaskDetails($task_id);
 
         if (!$user->can_close_task($task)) {
             return false;
@@ -1261,7 +1251,7 @@ abstract class Backend
             return false;
         }
 
-        $db->Query('UPDATE  {tasks}
+        $db->query('UPDATE  {tasks}
                        SET  date_closed = ?, closed_by = ?, closure_comment = ?,
                             is_closed = 1, resolution_reason = ?, last_edited_time = ?,
                             last_edited_by = ?
@@ -1269,17 +1259,17 @@ abstract class Backend
                     array(time(), $user->id, $comment, $reason, time(), $user->id, $task_id));
 
         if ($mark100) {
-            $db->Query('UPDATE {tasks} SET percent_complete = 100 WHERE task_id = ?',
+            $db->query('UPDATE {tasks} SET percent_complete = 100 WHERE task_id = ?',
                        array($task_id));
 
             Flyspray::logEvent($task_id, 3, 100, $task['percent_complete'], 'percent_complete');
         }
 
-        $notify->Create(NOTIFY_TASK_CLOSED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+        $notify->create(NOTIFY_TASK_CLOSED, $task_id, null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
         Flyspray::logEvent($task_id, 2, $reason, $comment);
 
         // If there's an admin request related to this, close it
-        $db->Query('UPDATE  {admin_requests}
+        $db->query('UPDATE  {admin_requests}
                        SET  resolved_by = ?, time_resolved = ?
                      WHERE  task_id = ? AND request_type = ?',
                     array($user->id, time(), $task_id, 1));
@@ -1288,11 +1278,11 @@ abstract class Backend
         if ($reason == 6) {
             preg_match("/\b(?:FS#|bug )(\d+)\b/", $comment, $dupe_of);
             if (count($dupe_of) >= 2) {
-                $existing = $db->Query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
+                $existing = $db->query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
                                         array($task_id, $dupe_of[1]));
 
-                if ($existing && $db->CountRows($existing) == 0) {
-                    $db->Query('INSERT INTO {related} (this_task, related_task, is_duplicate) VALUES(?, ?, 1)',
+                if ($existing && $db->countRows($existing) == 0) {
+                    $db->query('INSERT INTO {related} (this_task, related_task, is_duplicate) VALUES(?, ?, 1)',
                                 array($task_id, $dupe_of[1]));
                 }
                 Backend::add_vote($task['opened_by'], $dupe_of[1]);
@@ -1658,15 +1648,15 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 
                 // Add the subcategories to the query
                 if ($key == 'cat') {
-                    $result = $db->Query('SELECT *
+                    $result = $db->query('SELECT *
                                             FROM {list_category}
                                            WHERE category_id = ?', array($val));
-                    $cat_details = $db->FetchRow($result);
+                    $cat_details = $db->fetchRow($result);
 
-                    $result = $db->Query('SELECT *
+                    $result = $db->query('SELECT *
                                             FROM {list_category}
                                            WHERE lft > ? AND rgt < ? AND project_id  = ?', array($cat_details['lft'], $cat_details['rgt'], $cat_details['project_id']));
-                    while ($row = $db->FetchRow($result)) {
+                    while ($row = $db->fetchRow($result)) {
                         $temp .= ' product_category = ?  OR';
                         $sql_params[] = $row['category_id'];
                     }
@@ -1798,7 +1788,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             // 1 column from task table should be enough, after
             // already grouping by task_id, there's no possibility
             // to have anything more in that table to group by.
-            $groupby .= $db->GetColumnNames('{tasks}', 't.task_id', 't.');
+            $groupby .= $db->getColumnNames('{tasks}', 't.task_id', 't.');
         } else {
             $groupby = 't.task_id';
         }
@@ -1844,12 +1834,12 @@ t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 // echo '<pre>'.print_r($sql_params, true).'</pre>'; # for debugging 
 // echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
 // echo '<pre>'.$sqltext.'</pre>'; # for debugging 
-        $sql = $db->Query($sqlcount, $sql_params);
-        $totalcount = $db->FetchOne($sql);
+        $sql = $db->query($sqlcount, $sql_params);
+        $totalcount = $db->fetchOne($sql);
 
 # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
 
-        $sql = $db->Query($sqltext, $sql_params, $perpage, $offset);
+        $sql = $db->query($sqltext, $sql_params, $perpage, $offset);
         // $sql = $db->Query($sqlexperiment, $sql_params);
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
