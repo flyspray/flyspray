@@ -572,6 +572,7 @@ $translation = array(
 'taskmadepublicmsg'       => 'Questo Task è stato reso pubblico',
 'realandnotify'           => 'Devi riempire il campo Nome Reale, ed uno tra i campi Indirizzo Email o Jabber ID.',
 'pmreqdeniedmsg'          => 'Richiesta all\'Amministratore del Progetto rifiutata',
+'massopsenable'           => 'Abilita la possibilità di modificare più task con una singola operazione.',
 'massopsuccess'           => 'Operazione globale terminata con successo - ove consentito dalle autorizzazioni',
 'usernotexist'            => 'l\'Utente non esiste in questa installazione di Flyspray',
 'commentattachperms'      => 'Non puoi cancellare il commento - non hai l\'autorizzazione per cancellare gli allegati',
@@ -1002,7 +1003,7 @@ $translation = array(
 'applyfirstline'          => 'Applica la prima linea',
 'addmorerows'             => 'Aggiungi più righe',
 'addtasks'                => 'Aggiungi Task',
-'massopsdisabled'         => "Spiacenti ma la modifica multipla è attualmente disabilitata.\nAbbiamo pianificato l'implementazione in una versione successiva.\nPuoi abilitarle nuovamente nel codice sorgente a tuo rischio. Si consiglia di leggere i commenti nel codice prima di farlo.",
+'massopsdisabled'         => 'Spiacenti ma la modifica multipla è attualmente disabilitata, abbiamo pianificato l\'implementazione in una versione successiva ma nel frattempo puoi abilitarla dal codice sorgente a tuo rischio. Ti consigliamo comunque di leggere i commenti nel codice prima di farlo.',
 'viewroadmap'             => 'Può visualizzare la roadmap',
 'nosuicide'               => "Gentile utente, il programma non permette di disabilitare il tuo account o il tuo gruppo.\nIl fratello empatico di HAL9000.",
 'movingtodifferentproject'=> 'Non è permesso spostare task che hanno un task padre o sotto-task in un altro progetto. E\' necessario slegarli dai relativi task nel progetto originario.',
@@ -1091,6 +1092,7 @@ $translation = array(
 'repeatpassword'          => 'Ripeti Password',
 'repeatemailaddress'      => 'Ripeti Indirizzo Email',
 'tooltipshorttasktitle'   => 'Scrivi una sintesi che renda comprensibile il task a colpo d\'occhio',
+'lastlogin'               => 'Ultimo accesso',
 );
 
 ?>
