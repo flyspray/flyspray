@@ -521,7 +521,7 @@ abstract class Backend
         return utf8_keepalphanum($user_name);
     }
 
-    public static function GetAdminAddresses() {
+    public static function getAdminAddresses() {
         global $db;
 
         $emails = array();
@@ -540,7 +540,7 @@ abstract class Backend
         return array($emails, $jabbers, $onlines);
     }
 
-    public static function GetProjectManagerAddresses($project_id) {
+    public static function getProjectManagerAddresses($project_id) {
         global $db;
  
         $emails = array();
@@ -1076,7 +1076,7 @@ abstract class Backend
         }
 
 	# dokuwiki syntax plugin filters on output
-	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+	if($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc']) ){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
 		$purifier = new HTMLPurifier($purifierconfig);
 		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
@@ -1095,9 +1095,9 @@ abstract class Backend
          * out of sync with reality. Must be fixed in upgrade process. Check
          * what's the situation with MySQL. (It's fine, it updates the value even
          * if the column was manually adjusted. Remove this whole block later.)
-        $result = $db->Query('SELECT  MAX(task_id)+1
+        $result = $db->query('SELECT  MAX(task_id)+1
                                 FROM  {tasks}');
-        $task_id = $db->FetchOne($result);
+        $task_id = $db->fetchOne($result);
         $task_id = $task_id ? $task_id : 1;
 	*/
         //now, $task_id is always the first element of $sql_values
