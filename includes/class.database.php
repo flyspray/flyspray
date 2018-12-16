@@ -283,7 +283,7 @@ class Database
     public function fetchOne($result)
     {
         $row = $this->fetchRow($result);
-        return (count($row) ? $row[0] : '');
+        return (isset($row[0]) ? $row[0] : '');
     }
 
     /**
