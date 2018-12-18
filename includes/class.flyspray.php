@@ -1073,7 +1073,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         {
                 global $db;
                 # pre FS1.0beta
-                #$sql = $db->Query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
+                #$sql = $db->query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
                 # since FS1.0beta
                 $sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
                         JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
