@@ -365,7 +365,7 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
    public function displayDatabaseSetup()
@@ -459,7 +459,7 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
    public function getDatabaseOutput()
@@ -511,7 +511,7 @@ class Setup extends Flyspray
 
         if (isset($_SESSION['page_message'])) {
             // Get an html formated list
-            $message .= '<div class="box"><div class="shade">' . $this->OutputHtmlList($_SESSION['page_message'],'ul') . '</div></div>';
+            $message .= '<div class="box"><div class="shade">' . $this->outputHtmlList($_SESSION['page_message'],'ul') . '</div></div>';
         }
 
 
@@ -567,7 +567,7 @@ class Setup extends Flyspray
 
       foreach ($test_settings as $recommended)
       {
-      $actual_setting = $this->GetIniSetting($recommended[1]);
+      $actual_setting = $this->getIniSetting($recommended[1]);
 
       $result = ($actual_setting == $recommended[2] )
          ?  '<span class="green"><strong>' . $recommended[2] . '</strong></span>'
@@ -832,7 +832,7 @@ class Setup extends Flyspray
       if ($result)
       {
          // If the record exists, we update it.
-         $row = $result->FetchRow();
+         $row = $result->fetchRow();
          $this->mAdminUsername = $row['user_name'];
          $this->mAdminPassword = $row['user_pass'];
       }
