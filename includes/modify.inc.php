@@ -413,7 +413,7 @@ switch ($action = Req::val('action'))
 	$sqlupdate='UPDATE {tasks} SET '.$sqlup.' WHERE task_id = ?';
 
 	echo '<pre>';print_r($sqlupdate);print_r($sqlparam);die();
-	$db->Query($sqlupdate, $sqlparam);
+	$db->query($sqlupdate, $sqlparam);
 */
 
 	$detailed_desc = Post::val('detailed_desc', $defaults['detailed_desc']);
@@ -1210,7 +1210,7 @@ switch ($action = Req::val('action'))
         }
         else if (isset($_POST['delete']))
         {
-            //$sql = $db->Query("DELETE FROM {users} WHERE user_id IN $ids");
+            //$sql = $db->query("DELETE FROM {users} WHERE user_id IN $ids");
             foreach ($users as $uid) {
                 Backend::delete_user($uid);
             }
@@ -1423,7 +1423,7 @@ switch ($action = Req::val('action'))
         Post::num('disp_intro')
     ));
 
-        // $sql = $db->Query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
+        // $sql = $db->query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         // $pid = $db->fetchOne($sql);
         $pid = $db->insert_ID();
 
@@ -1712,7 +1712,7 @@ switch ($action = Req::val('action'))
             $db->query('DELETE FROM {users_in_groups} WHERE group_id = ? AND user_id = ?',
                          array(Post::val('old_group_id'), Post::val('user_id')));
             if (Post::val('project_group_in')) {
-                $db->Query('INSERT INTO {users_in_groups} (group_id, user_id) VALUES(?, ?)',
+                $db->query('INSERT INTO {users_in_groups} (group_id, user_id) VALUES(?, ?)',
                            array(Post::val('project_group_in'), Post::val('user_id')));
             }
         }
@@ -1775,7 +1775,7 @@ switch ($action = Req::val('action'))
                                     WHERE g.group_id = uig.group_id AND uig.user_id = ? AND project_id = ?',
                 array($uid, $proj->id));
                 if ($db->countRows($sql)) {
-                    $oldid = $db->FetchOne($sql);
+                    $oldid = $db->fetchOne($sql);
                     $db->query('UPDATE {users_in_groups} SET group_id = ? WHERE user_id = ? AND group_id = ?',
                                 array(Post::val('group_id'), $uid, $oldid));
                 } else {
@@ -2010,7 +2010,7 @@ switch ($action = Req::val('action'))
             return;
         }
 
-        $db->Query("INSERT INTO  $list_table_name
+        $db->query("INSERT INTO  $list_table_name
                                 (project_id, $list_column_name, list_position, show_in_list, version_tense)
                         VALUES  (?, ?, ?, ?, ?)",
         array($proj->id, Post::val('list_name'),
@@ -2985,7 +2985,7 @@ switch ($action = Req::val('action'))
                 $valuesAndTasks = array_merge_recursive($values,$task_ids);
 
                 //execute the database update on all selected queries
-                $update = $db->Query("UPDATE  {tasks}
+                $update = $db->query("UPDATE  {tasks}
                                      SET  ".join('=?, ', $columns)."=?
                                    WHERE". substr(str_repeat(' task_id = ? OR ', count(Post::val('ids'))), 0, -3), $valuesAndTasks);
             }
