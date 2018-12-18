@@ -132,7 +132,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	unset($params['project']);
 	unset($params['switch']);
 	$html = sprintf('<a title="%s" href="%s">%s</a>',
-		eL('sortthiscolumn'), Filters::noXSS(CreateURL('tasklist', $proj->id, null, $params )), $html);
+		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html);
 
 	return sprintf($format, ' class="'.$class.'"', $html);
 }
