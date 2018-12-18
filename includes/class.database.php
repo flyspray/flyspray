@@ -136,7 +136,7 @@ class Database
     }
 
     /**
-     * Insert_ID
+     * insert_ID
      * 
      * @access public
      */
@@ -146,7 +146,7 @@ class Database
     }
 
     /**
-     * CountRows
+     * countRows
      * Returns the number of rows in a result
      * @param object $result
      * @access public
@@ -158,7 +158,7 @@ class Database
     }
 
     /**
-     * AffectedRows
+     * affectedRows
      *
      * @access public
      * @return int
@@ -169,7 +169,7 @@ class Database
     }
 
     /**
-     * FetchRow
+     * fetchRow
      *
      * @param $result
      * @access public
@@ -200,7 +200,7 @@ class Database
     }
 
     /**
-     * Query
+     * query
      *
      * @param mixed $sql
      * @param mixed $inputarr
@@ -274,7 +274,7 @@ class Database
     }
 
     /**
-     * FetchOne
+     * fetchOne
      *
      * @param $result
      * @access public
@@ -287,7 +287,7 @@ class Database
     }
 
     /**
-     * FetchAllArray
+     * fetchAllArray
      *
      * @param $result
      * @access public
@@ -299,7 +299,7 @@ class Database
     }
 
     /**
-     * GroupBy
+     * groupBy
      *
      * This groups a result by a single column the way
      * MySQL would do it. Postgre doesn't like the queries MySQL needs.
@@ -319,7 +319,7 @@ class Database
     }
 
     /**
-     * GetColumnNames
+     * getColumnNames
      *
      * @param mixed $table
      * @param mixed $alt
@@ -352,7 +352,7 @@ class Database
     }
 
     /**
-     * Replace
+     * replace
      *
      * Try to update a record,
      * and if the record is not found,
