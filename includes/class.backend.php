@@ -1126,7 +1126,7 @@ abstract class Backend
 			}
 			
 			# old tag feature
-			#$result2 = $db->Query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
+			#$result2 = $db->query("INSERT INTO {tags} (task_id, tag) VALUES (?,?)",array($task_id,$tag));
 			
 			# new tag feature. let's do it in 2 steps, it is getting too complicated to make it cross database compatible, drawback is possible (rare) race condition (use transaction?)
 			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
@@ -1840,7 +1840,7 @@ t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 # 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
 
         $sql = $db->query($sqltext, $sql_params, $perpage, $offset);
-        // $sql = $db->Query($sqlexperiment, $sql_params);
+        // $sql = $db->query($sqlexperiment, $sql_params);
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
         $limit = array_get($args, 'limit', -1);
