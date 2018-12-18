@@ -376,7 +376,7 @@ switch ($action = Req::val('action'))
 		# pro and contra http 303 redirect here:
                 # - good: browser back button works, browser history.
                 # -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
-                #Flyspray::Redirect(CreateURL('edittask', $task['task_id']));
+                #Flyspray::redirect(createURL('edittask', $task['task_id']));
 		break;
 	}
 
@@ -592,7 +592,7 @@ switch ($action = Req::val('action'))
 
         $_SESSION['SUCCESS'] = L('taskclosedmsg');
         # FIXME there are several pages using this form, details and pendingreq at least
-        #Flyspray::Redirect(CreateURL('details', $task['task_id']));
+        #Flyspray::redirect(createURL('details', $task['task_id']));
         break;
 
     case 'details.associatesubtask':
@@ -696,7 +696,7 @@ switch ($action = Req::val('action'))
 
         $_SESSION['SUCCESS'] = L('taskreopenedmsg');
 	# FIXME there are several pages using this form, details and pendingreq at least
-	#Flyspray::Redirect(CreateURL('details', $task['task_id']));
+	#Flyspray::redirect(createURL('details', $task['task_id']));
         break;
 
         // ##################
