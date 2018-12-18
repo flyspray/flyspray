@@ -75,7 +75,7 @@ class effort
         global $db;
 
         //check if the user is already tracking time against this task.
-        $result = $db->Query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
+        $result = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
         if($db->countRows($result)>0)
         {
             return false;
