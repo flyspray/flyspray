@@ -67,7 +67,7 @@ define('CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . DOMAIN_HASH)
 
 // Get installed version
 $sql = $db->Query('SELECT pref_value FROM {prefs} WHERE pref_name = ?', array('fs_ver'));
-$installed_version = $db->FetchOne($sql);
+$installed_version = $db->fetchOne($sql);
 
 $page = new Tpl;
 $page->assign('title', 'Upgrade ');
