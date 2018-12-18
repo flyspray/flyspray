@@ -290,7 +290,7 @@ function tpl_userlink($uid)
     }
 
 	if (isset($uname)) {
-		#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+		#$url = createURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
 		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
@@ -347,7 +347,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 			}
 		}
 		if (isset($avacache[$uid]['uname'])) {
-			#$url = CreateURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
+			#$url = createURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
 			# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
 			# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
 			# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
