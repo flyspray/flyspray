@@ -131,10 +131,10 @@ class Notifications {
 
 	// grab notification id
         /*
-	$result = $db->Query("SELECT message_id FROM {notification_messages}
+	$result = $db->query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC", array($date), 1);
 
-	$row = $db->FetchRow($result);
+	$row = $db->fetchRow($result);
 	$message_id = $row['message_id'];
         */
         $message_id = $db->insert_ID();
