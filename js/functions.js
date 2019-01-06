@@ -367,14 +367,15 @@ function showPreview(textfield, baseurl, field)
     }
 }
 function checkname(value){
-    // FIXME: If username contains anything that is not a number or a digit, then show an error and don't let them register
     var re=/^[A-Za-z0-9_\.\-]*$/;
 
     if (re.test(value)==false)
     {
         $('username').style.color ='red';
         $('buSubmit').style.visibility = 'hidden';
-        $('errormessage').innerHTML = booler.substring(6,booler.length);
+	// TODO an available translation array 
+	// maybe provided by something like js/translations.php?lang=de
+        $('errormessage').innerHTML = 'invalid username';
     }
     // Otherwise check if username already exists
     else
@@ -386,6 +387,7 @@ function allow(booler){
     if(booler.indexOf('false') > -1) {
         $('username').style.color ='red';
         $('buSubmit').style.visibility = 'hidden';
+	// text after 'false|'
         $('errormessage').innerHTML = booler.substring(6,booler.length);
     }
     else {
