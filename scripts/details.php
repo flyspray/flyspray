@@ -156,10 +156,11 @@ if (!$user->can_view_task($task_details)) {
 		$subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
 
 		for($i=0;$i<count($subtasks_cleaned);$i++){
-			if ($assignees = Flyspray::getAssignees($subtasks_cleaned[$i]["task_id"], true)) {
-				$subtasks_cleaned[$i]['assigned_to'] = $subtasks_cleaned[$i]['assigned_to_name'] = array();
-				$subtasks_cleaned[$i]['assigned_to'] = $assignees[0];
-				$subtasks_cleaned[$i]['assigned_to_name'] = $assignees[1];
+			$subtasks_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($subtasks_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$subtasks_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
 			}
 		}
     
@@ -179,11 +180,13 @@ if (!$user->can_view_task($task_details)) {
                                  WHERE d.task_id = ?', array($task_id));
 		$check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
+		
 		for($i=0;$i<count($check_deps_cleaned);$i++){
-			if ($assignees = Flyspray::getAssignees($check_deps_cleaned[$i]["task_id"], true)) {
-				$check_deps_cleaned[$i]['assigned_to'] = $check_deps_cleaned[$i]['assigned_to_name'] = array();
-				$check_deps_cleaned[$i]['assigned_to'] = $assignees[0];
-				$check_deps_cleaned[$i]['assigned_to_name'] = $assignees[1];
+			$check_deps_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($check_deps_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$check_deps_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
 			}
 		}
    
@@ -196,11 +199,14 @@ if (!$user->can_view_task($task_details)) {
 			     LEFT JOIN {projects} p ON t.project_id = p.project_id
                                  WHERE d.dep_task_id = ?', array($task_id));
 		$check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
+
+				
 		for($i=0;$i<count($check_blocks_cleaned);$i++){
-			if ($assignees = Flyspray::getAssignees($check_blocks_cleaned[$i]["task_id"], true)) {
-				$check_blocks_cleaned[$i]['assigned_to'] = $check_blocks_cleaned[$i]['assigned_to_name'] = array();
-				$check_blocks_cleaned[$i]['assigned_to'] = $assignees[0];
-				$check_blocks_cleaned[$i]['assigned_to_name'] = $assignees[1];
+			$check_blocks_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($check_blocks_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$check_blocks_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
 			}
 		}
 

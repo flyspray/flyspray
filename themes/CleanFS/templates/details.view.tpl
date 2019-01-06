@@ -725,7 +725,7 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
                 </td>
-                <td> <?php if(count($dependency['assigned_to_name']) > 0)echo implode(", ",$dependency['assigned_to_name']);?></td>
+                <td> <?php  for ($i=0;$i<count($dependency['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $dependency['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
@@ -776,7 +776,7 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
                 </td>
-                <td> <?php if(count($dependency['assigned_to_name']) > 0)echo implode(", ",$dependency['assigned_to_name']);?></td>
+                <td> <?php  for ($i=0;$i<count($dependency['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $dependency['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
@@ -835,7 +835,7 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>"><?php echo $fs->severities[$subtask['task_severity']]
                     ?>
                 </td>
-                <td> <?php if(count($dependency['assigned_to_name']) > 0)echo implode(", ",$dependency['assigned_to_name']);?></td>
+               <td> <?php  for ($i=0;$i<count($subtaskOrgin['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $subtaskOrgin['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($subtask['percent_complete']); ?>%</span>
