@@ -402,16 +402,22 @@ class User
     {
     }
 
+    /**
+    * tests if current configuration allows a guest user to register - without email verification code
+    */
     public function can_self_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
+        return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && !$fs->prefs['spam_proof'] ;
     }
 
+    /**
+    * tests if current configuration allows a guest user to register - with email verification code
+    */
     public function can_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
+        return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && $fs->prefs['spam_proof'] && !$fs->prefs['need_approval'] ;
     }
 
     public function can_open_task($proj)
