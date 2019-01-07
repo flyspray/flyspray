@@ -154,6 +154,15 @@ if (!$user->can_view_task($task_details)) {
                                 WHERE t.supertask_id = ?', 
                                 array($task_id));
 		$subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
+
+		for($i=0;$i<count($subtasks_cleaned);$i++){
+			$subtasks_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($subtasks_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$subtasks_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
+			}
+		}
     
 		// Parent categories
 		$parent = $db->query('SELECT *
@@ -171,6 +180,16 @@ if (!$user->can_view_task($task_details)) {
                                  WHERE d.task_id = ?', array($task_id));
 		$check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
+		
+		for($i=0;$i<count($check_deps_cleaned);$i++){
+			$check_deps_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($check_deps_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$check_deps_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
+			}
+		}
+   
 		// Check for tasks that this task blocks
 		$check_blocks = $db->query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM {dependencies} d
@@ -180,6 +199,16 @@ if (!$user->can_view_task($task_details)) {
 			     LEFT JOIN {projects} p ON t.project_id = p.project_id
                                  WHERE d.dep_task_id = ?', array($task_id));
 		$check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
+
+				
+		for($i=0;$i<count($check_blocks_cleaned);$i++){
+			$check_blocks_cleaned[$i]['assigned_to']=array();
+			if ($assignees = Flyspray::getAssignees($check_blocks_cleaned[$i]["task_id"], false)) {
+				for($j=0;$j<count($assignees);$j++){
+					$check_blocks_cleaned[$i]['assigned_to'][$j] = tpl_userlink($assignees[$j]);
+				}
+			}
+		}
 
 		// Check for pending PM requests
 		$get_pending = $db->query("SELECT *
