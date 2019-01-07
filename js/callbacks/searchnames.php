@@ -19,13 +19,17 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(0, $proj);
 }
 
-// don't allow anonymous users to access this page at all
 if ($user->isAnon()) {
-    die();
+    # at least allow for guests when user registration is enabled, fix FS#2528
+    if( !($user->can_register() or $user->can_self_register()) ){
+        die();
+    }
 }
 
 if (Req::has('name')) {
     $searchterm = strtolower(Req::val('name'));
+} else {
+    die();
 }
 
 // Get the list of users from the global groups above
