@@ -1,7 +1,7 @@
 <div id="related" class="tab">
   
   <div class="related">
-    <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#related');?>
+    <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])).'#related');?>
       <table id="tasks_related" class="userlist">
         <thead>
           <tr>
@@ -53,7 +53,7 @@
   </div>
 
   <?php if ($user->can_edit_task($task_details) && !$task_details['is_closed']): ?>
-  <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#related',null,null,null,'class="clear" id="formaddrelatedtask"'); ?>
+  <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])).'#related',null,null,null,'class="clear" id="formaddrelatedtask"'); ?>
     <div>
       <input type="hidden" name="action" value="details.add_related" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
