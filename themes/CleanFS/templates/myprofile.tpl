@@ -15,8 +15,8 @@
 <?php foreach($votes as $vote): ?>
 <tr<?php echo $vote['is_closed'] ? ' class="closed"':''; ?>>
 <td><?php echo $vote['project_title']; ?></td>
-<td><?php echo $vote['item_summary']; ?></td> 
-<td><?php echo tpl_form(Filters::noXSS(CreateURL('myprofile', $vote['task_id'])));?>
+<td><?php echo tpl_tasklink($vote); ?></td> 
+<td><?php echo tpl_form(Filters::noXSS(createURL('myprofile', $vote['task_id'])));?>
 <input type="hidden" name="action" value="removevote" />
 <input type="hidden" name="task_id" value="<?php echo $vote['task_id']?>" />
 <button type="submit" title="<?php echo eL('removevote'); ?>"><span class="fa fa-trash"></span></button>
