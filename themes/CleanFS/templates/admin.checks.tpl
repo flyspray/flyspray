@@ -29,4 +29,67 @@
 </tbody>
 </table>
 
+<?php if(isset($fstables)): ?>
+<style>
+.dbtable{ background-color:#ccc;}
+.dbtable td {border-bottom:1px solid #999;}
+.dbfield{ background-color:#eee;}
+#togglefields { display:none; }
+#togglefields ~ label:after { content:'Hide Fields'; }
+#togglefields:checked ~ label:after { content:'Show Fields'; }
+#togglefields:checked ~ #dbtables .dbfield { display:none; }
+</style>
+<input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
+<label for="togglefields" class="button"></label>
+<table id="dbtables">
+<thead>
+<tr class="dbtable">
+<th>TABLE_NAME</th>
+<th>ENGINE</th>
+<th></th>
+<th>DEFAULT COLLATION</th>
+<th>COMMENT</th>
+</tr>
+<tr class="dbfield">
+<th>COLUMN_NAME</th>
+<th>COLUMN_TYPE</th>
+<th>CHARACTER_SET_NAME</th>
+<th>COLLATION_NAME</th>
+<th>COMMENT</th>
+</tr>
+</thead>
+<tbody>
+<?php
+$lasttable='';
+$ti=-1; # $fstables index
+foreach($fsfields as $f):
+	# Show table info row if not yet for that field
+	# This logic fails if there exists a table within $fstables without fields in $fsfields
+	# But for our usecase this should be ok.
+	if ($lasttable != $f['TABLE_NAME']): 
+		$ti++;
+	?>
+	<tr class="dbtable">
+	<td><?= Filters::noXSS($fstables[$ti]['TABLE_NAME']) ?></td>
+	<td><?= $fstables[$ti]['ENGINE'] ?></td>
+	<td></td>
+	<td><?= $fstables[$ti]['TABLE_COLLATION'] ?></td>
+	<td><?= Filters::noXSS($fstables[$ti]['TABLE_COMMENT']) ?></td>
+	</tr>
+	<?php endif; ?>
+<tr class="dbfield">
+<td><?= Filters::noXSS($f['COLUMN_NAME']) ?></td>
+<td><?= $f['COLUMN_TYPE'] ?></td>
+<td><?= $f['CHARACTER_SET_NAME'] ?></td>
+<td><?= $f['COLLATION_NAME'] ?></td>
+<td><?= Filters::noXSS($f['COLUMN_COMMENT']) ?></td>
+</tr>
+<?php
+$lasttable=$f['TABLE_NAME'];
+endforeach;
+?>
+</tbody>
+</table>
+<?php endif; ?>
+
 </div>
