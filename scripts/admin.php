@@ -124,17 +124,40 @@ switch ($area = Req::val('area', 'prefs')) {
 		
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
-			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
-				# Test if database(optional) and flyspray tables have default charset utf8mb4
-				# Test if $database version has default charset utf8mb4:
-				$db->query("SELECT default_character_set_name, default_collation_name
-					FROM INFORMATION_SCHEMA.SCHEMATA
-					WHERE schema_name=?", array($db->dblink->database));
+			$fsdb=$db->query("SELECT default_character_set_name, default_collation_name
+				FROM INFORMATION_SCHEMA.SCHEMATA
+				WHERE SCHEMA_NAME=?", array($db->dblink->database)
+			);
+			$page->assign('fsdb', $db->fetchRow($fsdb));
 
-				$page->assign('utf8mb4upgradable', "Your mysql supports full utf-8 since 5.5.3. You are using ".$sinfo['version']." and flyspray tables could be upgraded.");
+			# TODO Test if Flyspray tables really have default charset utf8mb4 and default collation utf8mb4_unicode_ci.
+			# TODO Test if the TEXT/CHAR/VARCHAR fields that should have utf8mb_unicode_ci really have it.
+			# TODO Test if the TEXT/CHAR/VARCHAR fields that should have other collations really have that other collation.
+			# utf8mb4_unicode_ci may be not optimal for every TEXT/CHAR/VARCHAR field of Flyspray.
+			# Must be defined explicit for fields that differs from the default in the xmlschemas in the setup/upgrade/* files.
+			# At the moment (in 2019) the current ADODB 5.20.14 release does not handle that stuff yet.
+
+			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
+				$page->assign('utf8mb4upgradable', "Your MySQL supports full utf-8 since 5.5.3. You are using ".$sinfo['version']." and Flyspray tables could be upgraded.");
 			} else{
-				$page->assign('oldmysqlversion', "Your mysql version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your Mysql server version.");
+				$page->assign('oldmysqlversion', "Your MySQL version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your MySQL server version.");
 			}
+			
+			$fstables=$db->query("SELECT TABLE_NAME, TABLE_COLLATION, ENGINE, CREATE_OPTIONS, TABLE_COMMENT
+				FROM INFORMATION_SCHEMA.TABLES
+				WHERE TABLE_SCHEMA=? AND TABLE_NAME LIKE '".$db->dbprefix."%'
+				ORDER BY TABLE_NAME ASC", array($db->dblink->database)
+			);
+			$page->assign('fstables', $db->fetchAllArray($fstables));
+
+			$fsfields=$db->query("
+				SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, DATA_TYPE, CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, COLUMN_COMMENT
+				FROM INFORMATION_SCHEMA.COLUMNS
+				WHERE TABLE_SCHEMA=? AND TABLE_NAME LIKE '".$db->dbprefix."%'
+				ORDER BY TABLE_NAME ASC, ORDINAL_POSITION ASC", array($db->dblink->database)
+			);
+			$page->assign('fsfields', $db->fetchAllArray($fsfields));
+			
 		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
