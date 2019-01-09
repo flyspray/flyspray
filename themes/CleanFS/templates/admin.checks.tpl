@@ -3,7 +3,7 @@
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
 <div>ADOdb version: <?php if(isset($adodbversion)) { echo Filters::noXSS($adodbversion); } ?></div>
-<div>HTMLPurifier version:<?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
+<div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
 <div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
 
@@ -39,6 +39,10 @@
 #togglefields:checked ~ label:after { content:'Show Fields'; }
 #togglefields:checked ~ #dbtables .dbfield { display:none; }
 </style>
+<div>
+<div>DEFAULT_CHARACTER_SET_NAME: <?=$fsdb['default_character_set_name'] ?></div>
+<div>DEFAULT_COLLATION_NAME: <?=$fsdb['default_collation_name'] ?></div>
+</div>
 <input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
 <label for="togglefields" class="button"></label>
 <table id="dbtables">
