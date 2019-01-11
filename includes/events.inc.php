@@ -261,16 +261,16 @@ function event_description($history) {
             $return .= eL('reopenrequestmade') . ' - ' . $new_value;
             break;
     case '22': // Dependency added
-            $return .= eL('depadded') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depadded') . ': ' . tpl_tasklink($new_value);
             break;
     case '23': // Dependency added to other task
-            $return .= eL('depaddedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depaddedother') . ': ' . tpl_tasklink($new_value);
             break;
     case '24': // Dependency removed
-            $return .= eL('depremoved') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremoved') . ': ' . tpl_tasklink($new_value);
             break;
     case '25': // Dependency removed from other task
-            $return .= eL('depremovedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremovedother') . ': ' . tpl_tasklink($new_value);
             break;
     // 26 and 27 replaced by 0 (mark_private)
     case '28': // PM request denied
