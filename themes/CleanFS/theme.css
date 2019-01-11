@@ -81,6 +81,19 @@ body a.button.positive, body button.positive {
         color:#666;
 }
 
+/*
+ highlight advanced search fields that have input 
+ no pure CSS styling of options of multiselects possible (it was back in time in some web browsers, a shame!)
+*/
+#search #searchtext:not(:placeholder-shown),
+#search #duedatefrom:not(:placeholder-shown), #search #duedateto:not(:placeholder-shown),
+#search #changedfrom:not(:placeholder-shown), #search #changedto:not(:placeholder-shown),
+#search #openedfrom:not(:placeholder-shown), #search #openedto:not(:placeholder-shown),
+#search #closedfrom:not(:placeholder-shown), #search #closedto:not(:placeholder-shown),
+#search input.users:not(:placeholder-shown) {
+    background-color: #ff9;
+}
+
 /* end default Flyspray color scheme */
 
 body {

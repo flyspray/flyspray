@@ -70,7 +70,7 @@
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
   <button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
-  <input class="text" id="searchtext" name="string" type="text" size="20"
+  <input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
   <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
   <input type="hidden" name="do" value="index"/>
@@ -268,13 +268,13 @@ echo tpl_select(
                 <fieldset class="advsearch_users">
                     <legend><?php echo Filters::noXSS(L('users')); ?></legend>
                     <label class="default multisel" for="opened"><?php echo Filters::noXSS(L('openedby')); ?></label>
-                    <?php echo tpl_userselect('opened', Get::val('opened'), 'opened'); ?>
+                    <?php echo tpl_userselect('opened', Get::val('opened'), 'opened', array('placeholder'=>' ')); ?>
 
-		    <?php if (!$filter || in_array('assignedto', $fields)) { ?>
+		<?php if (!$filter || in_array('assignedto', $fields)) { ?>
                     <label class="default multisel" for="dev"><?php echo Filters::noXSS(L('assignedto')); ?></label>
-                    <?php echo tpl_userselect('dev', Get::val('dev'), 'dev'); } ?>
+                    <?php echo tpl_userselect('dev', Get::val('dev'), 'dev', array('placeholder'=>' ')); } ?>
                     <label class="default multisel" for="closed"><?php echo Filters::noXSS(L('closedby')); ?></label>
-                    <?php echo tpl_userselect('closed', Get::val('closed'), 'closed'); ?>
+                    <?php echo tpl_userselect('closed', Get::val('closed'), 'closed', array('placeholder'=>' ')); ?>
                 </fieldset>
 
                 <fieldset class="advsearch_dates">
