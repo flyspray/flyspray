@@ -1741,45 +1741,51 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
         }
 
-        if (array_get($args, 'string')) {
-            $words = explode(' ', strtr(array_get($args, 'string'), '()', '  '));
-            $comments = '';
-            $where_temp = array();
+		if (array_get($args, 'string')) {
+			$words = explode(' ', strtr(array_get($args, 'string'), '()', '  '));
+			$comments = '';
+			$where_temp = array();
 
-            if (array_get($args, 'search_in_comments')) {
-                $comments .= " OR c.comment_text $LIKEOP ?";
-            }
-            if (array_get($args, 'search_in_details')) {
-                $comments .= " OR t.detailed_desc $LIKEOP ?";
-            }
+			if (array_get($args, 'search_in_comments')) {
+				$comments .= " OR c.comment_text $LIKEOP ?";
+			}
+			if (array_get($args, 'search_in_details')) {
+				$comments .= " OR t.detailed_desc $LIKEOP ?";
+			}
 
-            foreach ($words as $word) {
-                $likeWord = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
-                array_push($sql_params, $likeWord, intval($word));
-                if (array_get($args, 'search_in_comments')) {
-                    array_push($sql_params, $likeWord);
-                }
-                if (array_get($args, 'search_in_details')) {
-                    array_push($sql_params, $likeWord);
-                }
-            }
+			foreach ($words as $word) {
+				$word=trim($word);
+				if($word==''){
+					continue;
+				}
+				$likeWord = '%' . str_replace('+', ' ', $word) . '%';
+				$where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
+				array_push($sql_params, $likeWord, intval($word));
+				if (array_get($args, 'search_in_comments')) {
+					array_push($sql_params, $likeWord);
+				}
+				if (array_get($args, 'search_in_details')) {
+					array_push($sql_params, $likeWord);
+				}
+			}
 
-            $where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
-        }
-
-	if ($user->isAnon()) {
-		$where[] = 't.mark_private = 0 AND p.others_view = 1';
-		if(array_key_exists('status', $args)){
-			if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
-				$where[] = 't.is_closed = 1';
-			} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
-				$where[] = 't.is_closed = 0';
+			if(count($where_temp)>0){
+				$where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
 			}
 		}
-	}
 
-        $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
+		if ($user->isAnon()) {
+			$where[] = 't.mark_private = 0 AND p.others_view = 1';
+			if(array_key_exists('status', $args)){
+				if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
+					$where[] = 't.is_closed = 1';
+				} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
+					$where[] = 't.is_closed = 0';
+				}
+			}
+		}
+
+		$where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {
