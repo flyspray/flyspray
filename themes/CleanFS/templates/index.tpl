@@ -70,7 +70,7 @@
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
   <button id="searchthisproject" type="submit"><?php echo Filters::noXSS(L('searchthisproject')); ?></button>
-  <input class="text" id="searchtext" name="string" type="text" size="20"
+  <input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
    maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
   <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
   <input type="hidden" name="do" value="index"/>
