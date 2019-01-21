@@ -270,8 +270,6 @@ a:hover {color: #6699cc;}
 #menu-list a:hover {
   background: #000;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
 }
 #s_loginbox, #s_quickactions { display: none;}
 #loginbox, #actionsform { display: none;}
@@ -280,13 +278,9 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
   /*background: $inverse_link; */
   color: #fff;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
 }
 #s_loginbox:checked ~ #show_loginbox{border-radius: 3px 3px 0 0;}
 #menu-list a#lastsearchlink.active {
-      -moz-border-radius: 3px 3px 0px 0px;
-      -webkit-border-radius: 3px 3px 0px 0px;
       border-radius: 3px 3px 0px 0px;
 }
 #menu-list li {
@@ -300,8 +294,6 @@ tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickac
 #menu-list #locked { margin-left: 7px; color: red; }
 div#mysearches {
   border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border: solid 3px #5f9729;
   overflow: auto;
   min-width:240px;
@@ -381,8 +373,6 @@ div#mysearches td {vertical-align: middle;}
   /* Links */
   border: 1px solid #bbb;
   border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   -moz-box-shadow: 0px 1px 1px #ddd;
   -webkit-box-shadow: 0px 1px 1px #ddd;
   box-shadow: 0px 1px 1px #ddd;
@@ -486,8 +476,6 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
   height: 15px;
   position: relative;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   display: -moz-inline-stack; /* optional */
   display: inline-block;
   zoom: 1; /* triggers hasLayout for IE */
@@ -593,11 +581,7 @@ td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_as
   background: #e5e5e5;
   color: #3c4041;
   border-top-left-radius: 5px;
-  -moz-border-top-left-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  -moz-border-bottom-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
 }
 #toolboxmenu a:hover {background-color: #d6d8d9; /*color: $inverse_link;*/ }
 #toolboxmenu a.active {
@@ -1018,8 +1002,6 @@ fieldset {
   padding: 2px 9px;
   border: solid 1px #e1e1e1;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 */
 #content > h3 {margin-top: 1em;}
@@ -1195,8 +1177,6 @@ ul.slim .userSelectWidget select {width:100%;}
 /* closing task form */
 div#closeform {
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   -moz-box-shadow: 0px 1px 1px #dddddd;
   -webkit-box-shadow: 0px 1px 1px #dddddd;
   box-shadow: 0px 1px 1px #dddddd;
@@ -1210,8 +1190,6 @@ div#closeform {
 }
 #actionsform {
     border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     -moz-box-shadow: 0px 1px 1px #dddddd;
     -webkit-box-shadow: 0px 1px 1px #dddddd;
     box-shadow: 0px 1px 1px #dddddd;
@@ -1302,15 +1280,11 @@ input[type=text], input[type=password]{
     width: 120px;
 }
 input[type=text], input[type=submit], button {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
 }
 #show_loginbox {
 	cursor:pointer;
 	background: #494D4E;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 #login_button {display: block;margin: 6px auto;vertical-align: baseline;}
@@ -1399,8 +1373,6 @@ a.tooltip:hover span{
 /*CSS3 extras*/
 a.tooltip span{
     border-radius:2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     -moz-box-shadow: 0px 0px 8px 4px #666;
     -webkit-box-shadow: 0px 0px 8px 4px #666;
     box-shadow: 0px 0px 8px 4px #666;
