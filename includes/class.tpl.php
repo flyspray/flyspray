@@ -320,6 +320,10 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 
 	static $avacache=array();
 
+	if( !($uid>0) ){
+                return '<i class="fa fa-user"></i>';
+        }
+	
 	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
 		if (!isset($avacache[$uid]['uname'])) {
 			$sql = $db->query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
