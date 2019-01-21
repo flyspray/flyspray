@@ -380,6 +380,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="autoadd_newuser" type="I" size="1">
+      <descr>if new users are added automatically to user group</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="group_name">
       <UNIQUE/>
       <col>group_name</col>
