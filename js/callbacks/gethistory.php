@@ -51,7 +51,7 @@ if ($details = Get::num('details')) {
     $details = null;
 }
 
-$sql = get_events($task_id), $details);
+$sql = get_events($task_id, $details);
 $histories = $db->fetchAllArray($sql);
 
 $page = new FSTpl;
