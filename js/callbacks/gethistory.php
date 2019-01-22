@@ -11,6 +11,8 @@ header('Content-type: text/html; charset=utf-8');
 require_once('../../header.php');
 require_once('../../includes/events.inc.php');
 
+$csp->emit();
+
 if( !isset($_GET['task_id']) or !is_numeric($_GET['task_id'])){
 	die();
 } else {
