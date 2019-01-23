@@ -191,8 +191,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		if (utf8_strlen($task['item_summary']) > 55) {
 			$value .= '...';
 		}
-		# <i> instead of <span> in future for smaller size
-		# we need also some bytes for classes like <i class="tag t123">tagname</i>
+
 		if($task['tags']!=''){
 			$tags=explode(',', $task['tags']);
 			$tagids=explode(',', $task['tagids']);
@@ -200,9 +199,12 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$tgs='';
 			for($i=0;$i< count($tags); $i++){
 				if(isset($tagids[$i])){
+					$tgs.=tpl_tag($tags[$i], $tagids[$i], isset($tagclass[$i]) ? $tagclass[$i]: null);
+					/*
 					$tgs.='<i class="tag t'.$tagids[$i]
 					.(isset($tagclass[$i]) ? ' ' .htmlspecialchars($tagclass[$i], ENT_QUOTES, 'utf-8') : '').'" title="'.htmlspecialchars($tags[$i], ENT_QUOTES, 'utf-8').'"></i>';
-				}	
+					*/
+				}
 			}
                         $value.=$tgs;
 		}
