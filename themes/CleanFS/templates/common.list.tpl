@@ -36,7 +36,7 @@ foreach ($sysrows as $row):
 $syscountlines++;
 ?>
 <tr>
-    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
     <td class="first"><?php echo Filters::noXSS($row[$list_type.'_name']); ?></td>
     <?php if ($list_type == 'tag'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
     <td title="<?php echo Filters::noXSS(L('ordertip')); ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
@@ -95,14 +95,14 @@ $syscountlines++;
     $countlines++;
 ?>
 <tr>
-    <?php if ($list_type == 'tag'): ?><td><i class="tag t<?php echo $row[$list_type.'_id']; ?><?php echo isset($row['class']) ? ' '.Filters::noXSS($row['class']) : ''; ?>"><?php echo $row[$list_type.'_id']; ?></i></td><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
     <td>
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
     </td>
     <?php if ($list_type == 'tag'): ?>
     <td>
-        <input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
+        <input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row['tag_id']); ?>]"
           value="<?php echo Filters::noXSS($row['class']); ?>" />
     </td>
     <?php endif; ?>
