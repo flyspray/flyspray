@@ -80,7 +80,7 @@ $syscountlines++;
 <tr>
     <?php if ($list_type == 'tag'): ?><th>ID</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('name')); ?></th>
-    <?php if ($list_type == 'tag'): ?><th>CSS Classes</th><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><th title="CSS Classes or a #rgb or #rrggbb color. For instance #c00 for a red background">CSS Classes or #rgb</th><?php endif; ?>
     <th><?php echo Filters::noXSS(L('order')); ?></th>
     <th><?php echo Filters::noXSS(L('show')); ?></th>
     <?php if ($list_type == 'version'): ?><th><?php echo Filters::noXSS(L('tense')); ?></th><?php endif; ?>
