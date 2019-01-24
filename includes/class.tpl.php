@@ -393,24 +393,82 @@ function tpl_fast_tasklink($arr)
 }
 
 /**
- * Formats a tag for HTML output.
+ * Formats a task tag for HTML output based on a global $alltags array
  *
- * @param string tagname text of the tag
- * @param int tagid from {list_tag} db table
- * @param string css CSS class or a simple #rgb or #rrggbb background-color
- *
- * @todo auto set color:#fff when background-color is set too dark for better contrast
+ * @param int id tag_id of {list_tag} db table
+ * @param bool showid set true if the tag_id is shown instead of the tag_name
+ * 
  * @return string ready for output
  */
-function tpl_tag($tagname, $tagid, $css) {
-	$out='<i class="tag t'.$tagid;
-	if( isset($css) && preg_match('/^#([0-9a-h]{3}){1,2}$/i', $css) ) {
-		$out.= '" style="background-color:'.$css.'"';
-	} else {
-		$out.= (isset($css) ? ' '.htmlspecialchars($css, ENT_QUOTES, 'utf-8') : '').'"';
+function tpl_tag($id, $showid=false) {
+	global $alltags;
+
+	if(!is_array($alltags)) {
+		$alltags=Flyspray::getAllTags();
 	}
-	$out.=' title="'.htmlspecialchars($tagname, ENT_QUOTES, 'utf-8').'"></i>';
-	return $out;
+
+	if(isset($alltags[$id])){
+		$out='<i class="tag t'.$id;
+		if( isset($alltags[$id]['class']) && preg_match('/^#([0-9a-f]{3}){1,2}$/i', $alltags[$id]['class']) ) {
+			$out.= '" style="background-color:'.$alltags[$id]['class'];
+			# max only calc once per tag per request
+			# assumes theme css of default tag font color is #000
+			if(!isset($alltags[$id]['fcolor'])){
+				$bg = hex2RGB($alltags[$id]['class']);
+				# from https://www.w3.org/TR/AERT/#color-contrast
+				$brightness=(299*$bg['r'] + 587*$bg['g'] + 114*$bg['b']) / 1000;
+				if($brightness<126){
+					$out.=';color:#fff';
+					$alltags[$id]['fcolor']='#fff';
+				}else{
+					$alltags[$id]['fcolor']='';
+				}
+			} else if( $alltags[$id]['fcolor']==='#fff'){
+				$out.=';color:#fff';
+			}
+			$out.='"';
+		} else {
+			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
+		}
+		if($showid){
+			$out.='>'.$id;
+		} else{
+			$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'">';
+		}
+
+		$out.='</i>';
+		return $out;
+	}
+}
+
+/**
+* Convert a hexa decimal color code to its RGB equivalent
+* 
+* used by tpl_tag()
+*
+* @param string $hexstr (hexadecimal color value)
+* @param boolean $returnasstring (if set true, returns the value separated by the separator character. Otherwise returns associative array)
+* @param string $seperator (to separate RGB values. Applicable only if second parameter is true.)
+* @return array or string (depending on second parameter. Returns False if invalid hex color value)
+*
+* function is adapted from an exmaple on http://php.net/manual/de/function.hexdec.php
+*/
+function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
+    $hexstr = preg_replace("/[^0-9A-Fa-f]/", '', $hexstr); // Gets a proper hex string
+    $rgb = array();
+    if (strlen($hexstr) == 6) { // if a proper hex code, convert using bitwise operation. No overhead... faster
+        $colorval = hexdec($hexStr);
+        $rgb['r'] = 0xFF & ($colorVal >> 0x10);
+        $rgb['g'] = 0xFF & ($colorVal >> 0x8);
+        $rgb['b'] = 0xFF & $colorVal;
+    } elseif (strlen($hexstr) == 3) { // if shorthand notation, need some string manipulations
+        $rgb['r'] = hexdec(str_repeat(substr($hexstr, 0, 1), 2));
+        $rgb['g'] = hexdec(str_repeat(substr($hexstr, 1, 1), 2));
+        $rgb['b'] = hexdec(str_repeat(substr($hexstr, 2, 1), 2));
+    } else {
+	return false; // invalid hex color code
+    }
+    return $returnasstring ? implode($seperator, $rgb) : $rgb; // returns the rgb string or the associative array
 }
 
 /**
