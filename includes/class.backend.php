@@ -1479,19 +1479,19 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         
 	# not every db system has this feature out of box, it is not standard sql
 	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
-		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
+		#$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
-		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+		#$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
 	} elseif($conf['database']['dbtype']=='pgsql'){
-		$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
+		#$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
 		$select .= " array_to_string(array_agg(CAST(tg.tag_id as text) ORDER BY tg.list_position), ',') AS tagids, ";
-		$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
+		#$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
 	} else{
 		# unsupported groupconcat or we just do not know how write it for the other databasetypes in this section 
-		$select .= ' MIN(tg.tag_name) AS tags, ';
+		#$select .= ' MIN(tg.tag_name) AS tags, ';
 		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
 		$select .= ' MIN(tg.tag_id) AS tagids, ';
-		$select .= " '' AS tagclass, ";
+		#$select .= " '' AS tagclass, ";
 	}
 	// task_tag join table is now always included in join
 	$from .= '
