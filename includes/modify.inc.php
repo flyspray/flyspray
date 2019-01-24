@@ -503,6 +503,12 @@ switch ($action = Req::val('action'))
 			if ($tag == ''){
 				continue;
 			}
+			# size of {list_tag}.tag_name, see flyspray-install.xml
+			if(mb_strlen($tag) > 40){
+				# report that softerror
+				$errors['tagtoolong']=1;
+				continue;
+			}
 
 			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
 			if($t=$db->fetchRow($res)){  
@@ -567,9 +573,13 @@ switch ($action = Req::val('action'))
         Backend::delete_links(Post::val('delete_link'));
         Backend::upload_links($task['task_id'], '0', 'userlink');
 
-        $_SESSION['SUCCESS'] = L('taskupdated');
-        Flyspray::redirect(createURL('details', $task['task_id']));
-        break;
+		$_SESSION['SUCCESS'] = L('taskupdated');
+		# report minor/soft errors too that does not hindered saving task
+		if(count($errors)>0){
+			$_SESSION['ERRORS']=$errors;
+		}
+		Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
 
         // ##################
         // closing a task
