@@ -64,7 +64,6 @@ class Flyspray
      */
     public $priorities = array();
 
-    // Application-wide preferences {{{
     /**
      * Constructor, starts session, loads settings
      * @access private
@@ -115,7 +114,7 @@ class Flyspray
                 && is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
                 && is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
                 ) ? round((min($sizes)/1024/1024), 1) : 0;
-    } // }}}
+    }
 
     protected function setDefaultTimezone()
     {
@@ -142,8 +141,6 @@ class Flyspray
         return $cfile;
     }
 
-
-    // {{{ Redirect to $url
     /**
      * Redirects the browser to the page in $url
      * This function is based on PEAR HTTP class
@@ -185,7 +182,7 @@ class Flyspray
         }
 
         return true;
-    } // }}}
+    }
 
     /**
      * Absolute URI (This function is part of PEAR::HTTP licensed under the BSD) {{{
@@ -288,9 +285,8 @@ class Flyspray
         }
 
         return $server . $path . $url;
-    } // }}}
+    }
 
-    // Duplicate submission check {{{
     /**
      * Test to see if user resubmitted a form.
      * Checks only newtask and addcomment actions.
@@ -322,8 +318,8 @@ class Flyspray
         }
       }
         return false;
-    } // }}}
-    // Retrieve task details {{{
+    }
+
     /**
      * Gets all information about a task (and caches information if wanted)
      * @param integer $task_id
@@ -392,9 +388,8 @@ class Flyspray
         $cache[$task_id] = $get_details;
 
         return $get_details;
-    } // }}}
+    }
 
-	// List projects {{{
 	/**
 	* Returns a list of all projects
 	* @param bool $active_only show only active projects
@@ -417,9 +412,8 @@ class Flyspray
 
 		$sql = $db->query($query);
 		return $db->fetchAllArray($sql);
-	} // }}}
+	}
     
-    // List themes {{{
     /**
      * Returns a list of all themes
      * @access public static
@@ -446,8 +440,8 @@ class Flyspray
 		array_unshift($themes, 'CleanFS');
 		$themes = array_unique($themes);
         return $themes;
-    } // }}}
-    // List a project's group {{{
+    }
+
     /**
      * Returns a list of global groups or a project's groups
      * @param integer $proj_id
@@ -465,9 +459,8 @@ class Flyspray
 		GROUP BY g.group_id
 		ORDER BY g.group_id ASC', array($proj_id));
         return $db->fetchAllArray($res);
-    } // }}}
+    }
 
-    // Get info on all users {{{
     /**
      * Returns a list of a all users
      * @access public static
@@ -490,7 +483,7 @@ class Flyspray
 		FROM {users}
 		ORDER BY account_enabled DESC, user_name ASC');
 
-		}else{
+		} else {
 			# Well, this is a big and slow query, but the current solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
 			$res = $db->query('
@@ -609,8 +602,6 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		return $db->fetchAllArray($res);
 	}
 
-    // }}}
-    // List languages {{{
     /**
      * Returns a list of installed languages
      * @access public static
@@ -621,10 +612,10 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
     {
         return str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/lang/[a-zA-Z]*.php")));
 
-    } // }}}
-    // Log events to the history table {{{
+    }
+
     /**
-     * Saves an event to the database
+     * Saves an event to the {history} db table
      * @param integer $task_id
      * @param integer $type
      * @param string $newvalue
@@ -688,10 +679,10 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
          }
 
         return false;
-    } // }}}
-    // Log a request for an admin/project manager to do something {{{
+    }
+
     /**
-     * Adds an admin request to the database
+     * Adds an admin or project manager request to the database
      * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
      * @param integer $project_id
      * @param integer $task_id
@@ -707,8 +698,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         $db->query('INSERT INTO {admin_requests} (project_id, task_id, submitted_by, request_type, reason_given, time_submitted, deny_reason)
                          VALUES (?, ?, ?, ?, ?, ?, ?)',
                     array($project_id, $task_id, $submitter, $type, $reason, time(), ''));
-    } // }}}
-    // Check for an existing admin request for a task and event type {{{;
+    }
+
     /**
      * Checks whether or not there is an admin request for a task
      * @param integer $type 1: Task close, 2: Task re-open, 3: Pending user registration
@@ -726,8 +717,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
                               WHERE request_type = ? AND task_id = ? AND resolved_by = 0",
                             array($type, $task_id));
         return (bool)($db->countRows($check));
-    } // }}}
-    // Get the current user's details {{{
+    }
+
     /**
      * Gets all user details of a user
      * @param integer $user_id
@@ -742,8 +733,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         // Get current user details.  We need this to see if their account is enabled or disabled
         $result = $db->query('SELECT * FROM {users} WHERE user_id = ?', array(intval($user_id)));
         return $db->fetchRow($result);
-    } // }}}
-    // Get group details {{{
+    }
+
     /**
      * Gets all information about a group
      * @param integer $group_id
@@ -756,8 +747,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         global $db;
         $sql = $db->query('SELECT * FROM {groups} WHERE group_id = ?', array($group_id));
         return $db->fetchRow($sql);
-    } // }}}
-    //  {{{
+    }
+
   /**
    * Crypt a password with the method set in the configfile
    * @param string $password
@@ -791,9 +782,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		$bcryptoptions=array('cost'=>14);
 		return password_hash($password, PASSWORD_BCRYPT, $bcryptoptions);
 	}
-  } // }}}
+  }
 
-    // {{{
     /**
      * Check if a user provided the right credentials
      * @param string $username
@@ -876,7 +866,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		}
 
 		return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
-    } // }}}
+    }
 
     static public function checkForOauthUser($uid, $provider)
     {
@@ -947,8 +937,6 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		}
 	}
 
-
-    // Set cookie {{{
     /**
      * Sets a cookie, automatically setting the URL
      * Now same params as PHP's builtin setcookie()
@@ -989,8 +977,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         }
 
         return setcookie($name, $val, $time, $url['path'],$domain,$secure,$httponly);
-    } // }}}
-            // Start the session {{{
+    }
+
     /**
      * Starts the session
      * @access public static
@@ -1012,9 +1000,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         if(!isset($_SESSION['csrftoken'])){
                 $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
         }
-    }  // }}}
+    }
 
-    // Compare tasks {{{
     /**
      * Compares two tasks and returns an array of differences
      * @param array $old
@@ -1060,9 +1047,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         }
 
         return $changes;
-    } // }}}
+    }
 
-	// {{{
         /**
         * Get all tags of a task
         * @access public static
@@ -1080,9 +1066,35 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
                         WHERE task_id = ?
                         ORDER BY list_position', array($task_id));
                 return $db->fetchAllArray($sql);
-	} /// }}}
+	}
 
-    // {{{
+	/**
+	* load all task tags into array
+	*
+	* Compared to listTags() of class project, this loads all tags in Flyspray database into a global array.
+	* Ideally called only once per http request, then using the array index for getting tag info.
+	*
+	* Used mainly for tasklist view to simplify get_task_list() sql query.
+	*
+	* @return array
+	*/
+	public static function getAllTags()
+	{
+		global $db;
+		$at=array();
+		$res = $db->query('SELECT tag_id, project_id, list_position, tag_name, class, show_in_list FROM {list_tag}');
+		while ($t = $db->fetchRow($res)){
+			$at[$t['tag_id']]=array(
+				'project_id'=>$t['project_id'],
+				'list_position'=>$t['list_position'],
+				'tag_name'=>$t['tag_name'],
+				'class'=>$t['class'],
+				'show_in_list'=>$t['show_in_list']
+			);
+		}
+		return $at;
+	}
+
     /**
      * Get a list of assignees for a task
      * @param integer $task_id
@@ -1111,9 +1123,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         }
 
         return $assignees;
-    } /// }}}
+    }
 
-    // {{{
     /**
      * Explode string to the array of integers
      * @param string $separator
@@ -1132,7 +1143,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
             }
     	}
     	return $ret;
-    } /// }} }
+    }
 
     /**
      * Checks if a function is disabled
