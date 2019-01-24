@@ -192,19 +192,13 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			$value .= '...';
 		}
 
-		if($task['tags']!=''){
-			$tags=explode(',', $task['tags']);
+		if($task['tagids']!=''){
+			#$tags=explode(',', $task['tags']);
 			$tagids=explode(',', $task['tagids']);
-			$tagclass=explode(',', $task['tagclass']);
+			#$tagclass=explode(',', $task['tagclass']);
 			$tgs='';
-			for($i=0;$i< count($tags); $i++){
-				if(isset($tagids[$i])){
-					$tgs.=tpl_tag($tags[$i], $tagids[$i], isset($tagclass[$i]) ? $tagclass[$i]: null);
-					/*
-					$tgs.='<i class="tag t'.$tagids[$i]
-					.(isset($tagclass[$i]) ? ' ' .htmlspecialchars($tagclass[$i], ENT_QUOTES, 'utf-8') : '').'" title="'.htmlspecialchars($tags[$i], ENT_QUOTES, 'utf-8').'"></i>';
-					*/
-				}
+			for($i=0;$i< count($tagids); $i++){
+				$tgs.=tpl_tag($tagids[$i]);
 			}
                         $value.=$tgs;
 		}
