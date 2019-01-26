@@ -6,91 +6,90 @@ if (!defined('IN_FS')) {
 
 class Tpl
 {
-    public $_uses  = array();
-    public $_vars  = array();
-    public $_theme = '';
-    public $_tpls  = array();
-    public $_title = "";
+	public $_uses  = array();
+	public $_vars  = array();
+	public $_theme = '';
+	public $_tpls  = array();
+	public $_title = "";
 
-    public function uses()
-    {
-        $args = func_get_args();
-        $this->_uses = array_merge($this->_uses, $args);
-    }
+	public function uses()
+	{
+		$args = func_get_args();
+		$this->_uses = array_merge($this->_uses, $args);
+	}
 
-    public function assign($arg0 = null, $arg1 = null)
-    {
-        if (is_string($arg0)) {
-            $this->_vars[$arg0] = $arg1;
-        }elseif (is_array($arg0)) {
-            $this->_vars += $arg0;
-        }elseif (is_object($arg0)) {
-            $this->_vars += get_object_vars($arg0);
-        }
-    }
+	public function assign($arg0 = null, $arg1 = null)
+	{
+		if (is_string($arg0)) {
+			$this->_vars[$arg0] = $arg1;
+		}elseif (is_array($arg0)) {
+			$this->_vars += $arg0;
+		}elseif (is_object($arg0)) {
+			$this->_vars += get_object_vars($arg0);
+		}
+	}
 
-    public function getTheme()
-    {
-        return $this->_theme;
-    }
+	public function getTheme()
+	{
+		return $this->_theme;
+	}
 
-    public function setTheme($theme)
-    {
-        // Check available themes
-        $theme = trim($theme, '/');
-        $themes = Flyspray::listThemes();
-        if (in_array($theme, $themes)) {
-            $this->_theme = $theme.'/';
-        } else {
-            $this->_theme = $themes[0].'/';
-        }
-    }
+	public function setTheme($theme)
+	{
+		// Check available themes
+		$theme = trim($theme, '/');
+		$themes = Flyspray::listThemes();
+		if (in_array($theme, $themes)) {
+			$this->_theme = $theme.'/';
+		} else {
+			$this->_theme = $themes[0].'/';
+		}
+	}
 
-    public function setTitle($title)
-    {
-        $this->_title = $title;
-    }
+	public function setTitle($title)
+	{
+		$this->_title = $title;
+	}
 
-    public function themeUrl()
-    {
-        return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
-    }
+	public function themeUrl()
+	{
+		return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
+	}
 
-    // {{{ Display page
-    public function pushTpl($_tpl)
-    {
-        $this->_tpls[] = $_tpl;
-    }
+	public function pushTpl($_tpl)
+	{
+		$this->_tpls[] = $_tpl;
+	}
 
-    public function catch_start()
-    {
-        ob_start();
-    }
+	public function catch_start()
+	{
+		ob_start();
+	}
 
-    public function catch_end()
-    {
-        $this->_tpls[] = array(ob_get_contents());
-        ob_end_clean();
-    }
+	public function catch_end()
+	{
+		$this->_tpls[] = array(ob_get_contents());
+		ob_end_clean();
+	}
 
 	public function display($_tpl, $_arg0 = null, $_arg1 = null)
 	{
-        // if only plain text
-        if (is_array($_tpl) && count($tpl)) {
-            echo $_tpl[0];
-            return;
-        }
+		// if only plain text
+		if (is_array($_tpl) && count($tpl)) {
+			echo $_tpl[0];
+			return;
+		}
 
-        // variables part
-        if (!is_null($_arg0)) {
-            $this->assign($_arg0, $_arg1);
-        }
+		// variables part
+		if (!is_null($_arg0)) {
+			$this->assign($_arg0, $_arg1);
+		}
 
-        foreach ($this->_uses as $_var) {
-            global $$_var;
-        }
+		foreach ($this->_uses as $_var) {
+			global $$_var;
+		}
 
-        extract($this->_vars, EXTR_REFS|EXTR_SKIP);
+		extract($this->_vars, EXTR_REFS|EXTR_SKIP);
 
 		if (is_readable(BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl)) {
 			require BASEDIR . '/themes/' . $this->_theme.'templates/'.$_tpl;
@@ -99,25 +98,23 @@ class Tpl
 			require BASEDIR . '/themes/CleanFS/templates/'.$_tpl;
 		} else {
 			# This is needed to catch times when there is no theme (for example setup pages, where BASEDIR is ../setup/  not ../)
-			require BASEDIR . "/templates/" . $_tpl;
+			require BASEDIR . "/templates/".$_tpl;
 		}
+	}
 
-	} // }}}
+	public function render()
+	{
+		while (count($this->_tpls)) {
+			$this->display(array_shift($this->_tpls));
+		}
+	}
 
-    public function render()
-    {
-        while (count($this->_tpls)) {
-            $this->display(array_shift($this->_tpls));
-        }
-
-    }
-
-    public function fetch($tpl, $arg0 = null, $arg1 = null)
-    {
-        ob_start();
-        $this->display($tpl, $arg0, $arg1);
-        return ob_get_clean();
-    }
+	public function fetch($tpl, $arg0 = null, $arg1 = null)
+	{
+		ob_start();
+		$this->display($tpl, $arg0, $arg1);
+		return ob_get_clean();
+	}
 }
 
 class FSTpl extends Tpl
@@ -145,10 +142,22 @@ class FSTpl extends Tpl
     }
 
 }
-# draws the form start tag and the important anticsrftoken on 'post'-forms
+
+/**
+ * Draws the form start tag and the important anticsrftoken on 'post'-forms
+ *
+ * @param string action
+ * @param string name optional attribute of form tag
+ * @param string method optional request method, default 'post'
+ * @param string enctype optional enctype, default 'multipart/form-data'
+ * @param string attr optional attributes for the form tag, example: 'id="myformid" class="myextracssclass"'
+ *
+ * @return string
+ */
 function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
 {
         global $baseurl;
+
         if (null === $method) {
                 $method='post';
         }
@@ -164,8 +173,17 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
                 ( $method=='post' ? '<input type="hidden" name="csrftoken" value="'.$_SESSION['csrftoken'].'" />':'');
 }
 
-// {{{ costful templating functions, TODO: optimize them
-
+/**
+ * Creates a link to a task
+ * 
+ * @param array task with properties of a task. It also accepts a task_id, but that requires extra queries executed by this function.
+ * @param string text optional, by default the FS# + summary of task is used.
+ * @param bool strict check task permissions by the function too. Extra SQL queries if set true. default false.
+ * @param array attr extra attributes 
+ * @param array title informations shown when hover over the link (title attribute of the HTML a-tag)
+ *
+ * @return string ready for html output
+ */
 function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $title = array('status','summary','percent_complete'))
 {
     global $user;
@@ -273,6 +291,13 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     return $link;
 }
 
+/*
+ * Creates a textlink to a user profile.
+ *
+ * For a link with user icon use tpl_userlinkavatar().
+ *
+ * @param int uid user_id from {users} db table
+ */
 function tpl_userlink($uid)
 {
     global $db, $user;
@@ -304,10 +329,10 @@ function tpl_userlink($uid)
 }
 
 /**
-* builds the HTML string for displaying a gravatar image or an uploaded user image.
+* Builds the HTML string for displaying a gravatar image or an uploaded user image.
 * The string for a user and a size is cached per request.
 *
-* class and style parameter should be avoided to make this function more effective for caching (less SQL queries)
+* Class and style parameter should be avoided to make this function more effective for caching (less SQL queries)
 *
 * @param int uid the id of the user
 * @param int size in pixel for displaying. Should use global max_avatar_size pref setting by default.
@@ -367,9 +392,92 @@ function tpl_fast_tasklink($arr)
     return tpl_tasklink($arr[1], $arr[0]);
 }
 
-// }}}
-// {{{ some useful plugins
+/**
+ * Formats a task tag for HTML output based on a global $alltags array
+ *
+ * @param int id tag_id of {list_tag} db table
+ * @param bool showid set true if the tag_id is shown instead of the tag_name
+ * 
+ * @return string ready for output
+ */
+function tpl_tag($id, $showid=false) {
+	global $alltags;
 
+	if(!is_array($alltags)) {
+		$alltags=Flyspray::getAllTags();
+	}
+
+	if(isset($alltags[$id])){
+		$out='<i class="tag t'.$id;
+		if( isset($alltags[$id]['class']) && preg_match('/^#([0-9a-f]{3}){1,2}$/i', $alltags[$id]['class']) ) {
+			$out.= '" style="background-color:'.$alltags[$id]['class'];
+			# max only calc once per tag per request
+			# assumes theme css of default tag font color is #000
+			if(!isset($alltags[$id]['fcolor'])){
+				$bg = hex2RGB($alltags[$id]['class']);
+				# from https://www.w3.org/TR/AERT/#color-contrast
+				$brightness=(299*$bg['r'] + 587*$bg['g'] + 114*$bg['b']) / 1000;
+				if($brightness<126){
+					$out.=';color:#fff';
+					$alltags[$id]['fcolor']='#fff';
+				}else{
+					$alltags[$id]['fcolor']='';
+				}
+			} else if( $alltags[$id]['fcolor']==='#fff'){
+				$out.=';color:#fff';
+			}
+			$out.='"';
+		} else {
+			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
+		}
+		if($showid){
+			$out.='>'.$id;
+		} else{
+			$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'">';
+		}
+
+		$out.='</i>';
+		return $out;
+	}
+}
+
+/**
+* Convert a hexa decimal color code to its RGB equivalent
+* 
+* used by tpl_tag()
+*
+* @param string $hexstr (hexadecimal color value)
+* @param boolean $returnasstring (if set true, returns the value separated by the separator character. Otherwise returns associative array)
+* @param string $seperator (to separate RGB values. Applicable only if second parameter is true.)
+* @return array or string (depending on second parameter. Returns False if invalid hex color value)
+*
+* function is adapted from an exmaple on http://php.net/manual/de/function.hexdec.php
+*/
+function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
+    $hexstr = preg_replace("/[^0-9A-Fa-f]/", '', $hexstr); // Gets a proper hex string
+    $rgb = array();
+    if (strlen($hexstr) == 6) { // if a proper hex code, convert using bitwise operation. No overhead... faster
+        $colorval = hexdec($hexstr);
+        $rgb['r'] = 0xFF & ($colorval >> 0x10);
+        $rgb['g'] = 0xFF & ($colorval >> 0x8);
+        $rgb['b'] = 0xFF & $colorval;
+    } elseif (strlen($hexstr) == 3) { // if shorthand notation, need some string manipulations
+        $rgb['r'] = hexdec(str_repeat(substr($hexstr, 0, 1), 2));
+        $rgb['g'] = hexdec(str_repeat(substr($hexstr, 1, 1), 2));
+        $rgb['b'] = hexdec(str_repeat(substr($hexstr, 2, 1), 2));
+    } else {
+	return false; // invalid hex color code
+    }
+    return $returnasstring ? implode($seperator, $rgb) : $rgb; // returns the rgb string or the associative array
+}
+
+/**
+ * joins an array of tag attributes together for output in a HTML tag.
+ *
+ * @param array attr 
+ *
+ * @return string
+ */
 function join_attrs($attr = null) {
     if (is_array($attr) && count($attr)) {
         $arr = array();
@@ -380,7 +488,10 @@ function join_attrs($attr = null) {
     }
     return '';
 }
-// {{{ Datepicker
+
+/**
+ * Datepicker
+ */
 function tpl_datepicker($name, $label = '', $value = 0) {
     global $user, $page;
 
@@ -432,8 +543,10 @@ function tpl_datepicker($name, $label = '', $value = 0) {
     $subPage->assign('dateformat', '%Y-%m-%d');
     $subPage->display('common.datepicker.tpl');
 }
-// }}}
-// {{{ user selector
+
+/** 
+ * user selector
+ */
 function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     global $db, $user, $proj;
 
@@ -459,10 +572,10 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     $page->assign('attrs', $attrs);
     $page->display('common.userselect.tpl');
 }
-// }}}
 
 /**
  * Creates the options for a date format select
+ *
  * @selected The format that should by selected by default
  * @return html formatted options for a select tag
 **/
@@ -539,8 +652,10 @@ function tpl_date_formats($selected, $detailed = false)
 	return tpl_options($dateFormats, $selected);
 }
 
-// {{{ Options for a <select>
+
 /**
+ * Options for a <select>
+ *
  * FIXME peterdd: This function is currently often called by templates with just 
  * results from sqltablequeries like  select * from tablex, 
  * so data[0] and data[1] of each row works only by table structure convention as wished.
@@ -609,14 +724,13 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 	}
 
 	return $html;
-} // }}}
+}
 
 
-// {{{ tpl_select()
 /**
- * builds a complete HTML-select with select options
+ * Builds a complete HTML-select with select options.
  *
- * supports free choosable attributes for select, options and optgroup tags. optgroups can also be nested.
+ * Supports free choosable attributes for select, options and optgroup tags. optgroups can also be nested.
  *
  * @author peterdd 
  *
@@ -684,12 +798,10 @@ function tpl_select($select=array()){
 	$html.=tpl_selectoptions($select['options']);
 	$html.="\n".'</select>';
 	return $html;
-} // }}}
+}
 
-
-// {{{ tpl_selectoptions()
 /**
- * tpl_selectoptions()  
+ * called by tpl_select() 
  *
  * @author peterdd 
  *
@@ -699,7 +811,6 @@ function tpl_select($select=array()){
  * 
  * @since 1.0.0-beta3
  * 
- * called by tpl_select()
  * called recursively by itself 
  * Can also be called alone from template if the templates writes the wrapping select-tags.
  *
@@ -746,11 +857,21 @@ function tpl_selectoptions($options=array(), $level=0){
 	}
 		
 	return $html;
-} // }}}
+}
 
 
-// {{{ Double <select>
-function tpl_double_select($name, $options, $selected = null, $labelIsValue = false, $updown = true)
+/**
+ * Creates a double select.
+ *
+ * Elements of arrays $options and $selected can be moved between eachother. The $selected list can also be sorted.
+ *
+ * @param string name
+ * @param array options
+ * @param array selected
+ * @param bool labelisvalue
+ * @param bool updown
+ */
+function tpl_double_select($name, $options, $selected = null, $labelisvalue = false, $updown = true)
 {
     static $_id = 0;
     static $tpl = null;
@@ -781,7 +902,7 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
             $value = $label[0];
             $label = $label[1];
         }
-        if ($labelIsValue) {
+        if ($labelisvalue) {
             $value = $label;
         }
         if (in_array($value, $selected)) {
@@ -806,23 +927,37 @@ function tpl_double_select($name, $options, $selected = null, $labelIsValue = fa
     }
 
     return sprintf($html, $opt1, $opt2);
-} // }}}
-// {{{ Checkboxes
+}
+
+/**
+ * Creates a HTML checkbox
+ *
+ * @param string name
+ * @param bool checked
+ * @param string id id attribute of the checkbox HTML element
+ * @param string value
+ * @param array attr tag attributes
+ * 
+ * @return string for ready for HTML output
+ */
 function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = null)
 {
-    $name  = htmlspecialchars($name,  ENT_QUOTES, 'utf-8');
-    $value = htmlspecialchars($value, ENT_QUOTES, 'utf-8');
-    $html  = sprintf('<input type="checkbox" name="%s" value="%s" ', $name, $value);
-    if (is_string($id)) {
-        $html .= sprintf('id="%s" ', Filters::noXSS($id));
-    }
-    if ($checked == true) {
-        $html .= 'checked="checked" ';
-    }
-    // do not call join_attrs if $attr is null or nothing..
-    return ($attr ? $html. join_attrs($attr) : $html) . '/>';
-} // }}}
-// {{{ Image display
+	$name  = htmlspecialchars($name,  ENT_QUOTES, 'utf-8');
+	$value = htmlspecialchars($value, ENT_QUOTES, 'utf-8');
+	$html  = sprintf('<input type="checkbox" name="%s" value="%s" ', $name, $value);
+	if (is_string($id)) {
+		$html .= sprintf('id="%s" ', Filters::noXSS($id));
+	}
+	if ($checked == true) {
+		$html .= 'checked="checked" ';
+	}
+	// do not call join_attrs if $attr is null or nothing..
+	return ($attr ? $html. join_attrs($attr) : $html) . '/>';
+}
+
+/**
+ * Image display
+ */
 function tpl_img($src, $alt = '')
 {
     global $baseurl;
@@ -830,8 +965,9 @@ function tpl_img($src, $alt = '')
         return sprintf('<img src="%s%s" alt="%s" />', $baseurl, Filters::noXSS($src), Filters::noXSS($alt));
     }
     return Filters::noXSS($alt);
-} // }}}
-// {{{ Text formatting
+}
+
+// Text formatting
 //format has been already checked in constants.inc.php
 if(isset($conf['general']['syntax_plugin'])) {
 
@@ -928,9 +1064,12 @@ class TextFormatter
         return $return;
     }
 }
-// }}}
-// Format Date {{{
-// Questionable if this function belongs in this class. Usages also elsewhere and not UI-related.
+
+/**
+ * Format Date
+ *
+ * Questionable if this function belongs in this class. Usages also elsewhere and not UI-related.
+ */
 function formatDate($timestamp, $extended = false, $default = '')
 {
     global $db, $conf, $user, $fs;
@@ -963,9 +1102,11 @@ function formatDate($timestamp, $extended = false, $default = '')
     $dateformat = str_replace('%GMT', $zone, $dateformat);
     //it returned utf-8 encoded by the system
     return strftime(Filters::noXSS($dateformat), (int) $timestamp);
-} /// }}}
+}
 
-// {{{ Draw permissions table
+/**
+ * Draw permissions table
+ */
 function tpl_draw_perms($perms)
 {
 	global $proj;
@@ -1031,7 +1172,7 @@ function tpl_draw_perms($perms)
     $html.='<style>.perms tr{height:30px;}</style>';
     # end 20150307
     return $html;
-} // }}}
+}
 
 /**
  * Highlights searchqueries in HTML code
@@ -1062,6 +1203,11 @@ function html_hilight_callback($m) {
   return $hlight;
 }
 
+/**
+ * XHTML compatible output of disabled attribute
+ *
+ * @param bool if something that PHP sees as true or false
+ */
 function tpl_disableif ($if)
 {
     if ($if) {
@@ -1069,8 +1215,12 @@ function tpl_disableif ($if)
     }
 }
 
-// {{{ Url handling
-// Create an URL based upon address-rewriting preferences {{{
+/**
+ * Generates links for Flyspray
+ *
+ * Create an URL based upon address-rewriting preferences
+ *
+ */
 function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
     global $baseurl, $conf, $fs;
@@ -1218,10 +1368,13 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
         $url->addvars($arg3);
     }
     return $url->get();
-} // }} }
+}
 
-// Page  numbering {{{
-// Thanks to Nathan Fritz for this.  http://www.netflint.net/
+/**
+ * Page  numbering
+ *
+ * Thanks to Nathan Fritz for this.  http://www.netflint.net/
+ */
 function pagenums($pagenum, $perpage, $totalcount)
 {
     global $proj;
@@ -1281,7 +1434,7 @@ function pagenums($pagenum, $perpage, $totalcount)
     }
 
     return $output;
-} // }}}
+}
 
 class Url {
     public $url = '';
@@ -1368,5 +1521,3 @@ class Url {
         return $return;
     }
 }
-// }}}
-// }}}
