@@ -457,10 +457,10 @@ function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
     $hexstr = preg_replace("/[^0-9A-Fa-f]/", '', $hexstr); // Gets a proper hex string
     $rgb = array();
     if (strlen($hexstr) == 6) { // if a proper hex code, convert using bitwise operation. No overhead... faster
-        $colorval = hexdec($hexStr);
-        $rgb['r'] = 0xFF & ($colorVal >> 0x10);
-        $rgb['g'] = 0xFF & ($colorVal >> 0x8);
-        $rgb['b'] = 0xFF & $colorVal;
+        $colorval = hexdec($hexstr);
+        $rgb['r'] = 0xFF & ($colorval >> 0x10);
+        $rgb['g'] = 0xFF & ($colorval >> 0x8);
+        $rgb['b'] = 0xFF & $colorval;
     } elseif (strlen($hexstr) == 3) { // if shorthand notation, need some string manipulations
         $rgb['r'] = hexdec(str_repeat(substr($hexstr, 0, 1), 2));
         $rgb['g'] = hexdec(str_repeat(substr($hexstr, 1, 1), 2));
