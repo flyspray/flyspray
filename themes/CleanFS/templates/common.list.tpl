@@ -34,10 +34,28 @@
 $syscountlines=-1;
 foreach ($sysrows as $row):
 $syscountlines++;
+$classtype=''; $class='';
+switch ($list_type){
+        case 'tag':
+                $classtype='tag';
+                $class='t';
+                break;
+        case 'tasktype':
+                $classtype='task_tasktype';
+                $class='typ'.$row[$list_type.'_id'];
+                break;
+        case 'status':
+                $classtype='task_status';
+                $class='sta'.$row[$list_type.'_id'];
+                break;
+        default:
+                $classtype='task_'.$list_type;
+                $class=substr($list_type, 0, 3).$row[$list_type.'_id'];
+}
 ?>
 <tr>
     <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
-    <td class="first"><?php echo Filters::noXSS($row[$list_type.'_name']); ?></td>
+    <td<?= ($list_type!='tag') ? ' class="'.$classtype.' '.$class.'"':'' ?>><?= ($list_type=='tag') ? tpl_tag($row['tag_id']) : Filters::noXSS($row[$list_type.'_name']); ?></td>
     <?php if ($list_type == 'tag'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
     <td title="<?php echo Filters::noXSS(L('ordertip')); ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
     <td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
