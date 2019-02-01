@@ -101,10 +101,9 @@ class Project
         #Flyspray::setCookie('flyspray_project', $this->id);
     }
 
-    /* cached list functions {{{ */
-
-    // helpers {{{
-
+	/**
+	* private method
+	*/
     function _pm_list_sql($type, $join)
     {
         global $db;
@@ -128,15 +127,14 @@ class Project
     }
 
     /**
-     * _list_sql
-     *
+	 * private method
+	 *
      * @param mixed $type
      * @param mixed $where
      * @access protected
      * @return string
      * @notes The $where parameter is dangerous, think twice what you pass there..
      */
-
     function _list_sql($type, $where = null)
     {
         // sanity check.
@@ -151,9 +149,6 @@ class Project
               ORDER BY  list_position";
     }
 
-    // }}}
-    // PM dependant functions {{{
-
     function listTaskTypes($pm = false)
     {
         global $db;
@@ -164,7 +159,7 @@ class Project
                     array($this->id));
         } else {
             return $db->cached_query(
-                    'task_types', $this->_list_sql('tasktype'), array($this->id));
+                    'task_types'.$this->id, $this->_list_sql('tasktype'), array($this->id));
         }
     }
 
@@ -177,7 +172,7 @@ class Project
                     $this->_pm_list_sql('os', array('operating_system')),
                     array($this->id));
         } else {
-            return $db->cached_query('os', $this->_list_sql('os'),
+            return $db->cached_query('os'.$this->id, $this->_list_sql('os'),
                     array($this->id));
         }
     }
@@ -291,7 +286,7 @@ class Project
                     $this->_pm_list_sql('resolution', array('resolution_reason')),
                     array($this->id));
         } else {
-            return $db->cached_query('resolution',
+            return $db->cached_query('resolution'.$this->id,
                     $this->_list_sql('resolution'), array($this->id));
         }
     }
@@ -305,7 +300,7 @@ class Project
                     $this->_pm_list_sql('status', array('item_status')),
                     array($this->id));
         } else {
-            return $db->cached_query('status',
+            return $db->cached_query('status'.$this->id,
                     $this->_list_sql('status'), array($this->id));
         }
     }
@@ -337,7 +332,6 @@ class Project
         }
 	*/
 	/* rewrite of tags feature, FS1.0beta1 */ 
-	
 	function listTags($pm = false)
 	{
 		global $db;
@@ -355,10 +349,9 @@ class Project
 			}
 			return $tags;
 		} else {
-			return $db->cached_query('tag', $this->_list_sql('tag'), array($this->id));
+			return $db->cached_query('tag'.$this->id, $this->_list_sql('tag'), array($this->id));
  		}
 	}
-    // }}}
 
     // This should really be moved to class Flyspray like some other ones too.
     // Something todo for 1.1.
@@ -367,12 +360,12 @@ class Project
         global $db;
         return $db->cached_query(
                 'users_in'.(is_null($group_id) ? $group_id : intval($group_id)),
-                "SELECT  u.*
-                   FROM  {users}           u
-             INNER JOIN  {users_in_groups} uig ON u.user_id = uig.user_id
-             INNER JOIN  {groups}          g   ON uig.group_id = g.group_id
-                  WHERE  g.group_id = ?
-               ORDER BY  u.user_name ASC",
+                "SELECT u.*
+                   FROM {users}           u
+             INNER JOIN {users_in_groups} uig ON u.user_id = uig.user_id
+             INNER JOIN {groups}          g   ON uig.group_id = g.group_id
+                  WHERE g.group_id = ?
+               ORDER BY u.user_name ASC",
                 array($group_id));
     }
 
@@ -381,10 +374,10 @@ class Project
         global $db;
         return $db->cached_query(
                 'attach_'.intval($cid),
-                "SELECT  *
-                   FROM  {attachments}
-                  WHERE  comment_id = ? AND task_id = ?
-               ORDER BY  attachment_id ASC",
+                "SELECT *
+                   FROM {attachments}
+                  WHERE comment_id = ? AND task_id = ?
+               ORDER BY attachment_id ASC",
                array($cid, $tid));
     }
 
@@ -404,25 +397,24 @@ class Project
     {
         global $db;
         return $db->cached_query(
-                'attach_'.intval($tid),
-                "SELECT  *
-                   FROM  {attachments}
-                  WHERE  task_id = ? AND comment_id = 0
-               ORDER BY  attachment_id ASC",
-               array($tid));
+        	'attach_'.intval($tid),
+			"SELECT * FROM {attachments}
+			WHERE task_id = ? AND comment_id = 0
+			ORDER BY  attachment_id ASC",
+			array($tid)
+		);
     }
 
-    function listTaskLinks($tid)
-    {
-        global $db;
-	return $db->cached_query(
-		'link_'.intval($tid),
-		"SELECT *
-		FROM {links}
-		WHERE task_id = ? AND comment_id = 0
-		ORDER BY link_id ASC",
-		array($tid));
-    }
+	function listTaskLinks($tid)
+	{
+		global $db;
+		return $db->cached_query(
+			'link_'.intval($tid),
+			"SELECT * FROM {links}
+			WHERE task_id = ? AND comment_id = 0
+			ORDER BY link_id ASC",
+			array($tid));
+	}
     
 	/**
      * Returns the activity by between dates for a project.
@@ -479,6 +471,4 @@ class Project
 
         return array_values($results);
     }
-
-    /* }}} */
 }
