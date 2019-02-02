@@ -6,11 +6,11 @@
 * Script for simulating Flyspray with many testdata like many projets, hundreds of users, thousands of tasks and thousands comments ..
 * 
 * TODO:
-# replace some hardcoded IDs by getting the approbriate ids from db instead (autoincrement values of user groups for example)
+# replace some hardcoded IDs by getting the appropriate ids from db instead (autoincrement values of user groups for example)
 # add some supertask_id to some tasks (use flyspray functions/api that should check if legal - no loops of any hop depth, permissions, cross project, existing task)
 # add some related task relations
 # add some dependencies to some tasks (flyspray should check legal - watch for logic deadlocks)
-# add some 'is duplicate of' to some tasks (only when closing?)
+# add some 'is duplicate of' to some tasks (only when closing)
 # Change: (simulate more daily managing work with tasks)
 # * status of some tasks
 # * progress of some tasks
@@ -33,9 +33,6 @@
 # * add some longer description texts with more dokuwiki elements
 # * add some code segments for GeShi - some languages are harder to parse than others!
 # tags:
-# * add some global tags (mmh.. useful?)
-# * add some project tags (mmh.. useful?)
-# * add some tags to tasks
 # * remove some tags from tasks
 
 * Maybe someday parts of it are moved to phpunit testing in future, so can automatic tested by travis-ci.
@@ -61,10 +58,13 @@ function createTestData(){
 	# an existing one, and never will.
 
 
-  ### Simulation Settings ###
+ ### Simulation Settings ###
 	# Set conservative data as default, setup bigger values for further performance tests.
 	# maybe setting moved out of this function to make performance graphs with multiple runs..
 
+	$years=10;
+	$timerange=3600*24*365*$years;
+	
 	$maxprojects = 3;
 	# ca 100 tasks/sec, 100 comments/sec on an old laptop with Flyspray 1.0-rc7 with mysqli setup in a virtual machine as thumb rule
 	$maxtasks = 1000; # absolute number, e.g. 1000
@@ -186,11 +186,19 @@ function createTestData(){
 		$user_name = "dev$i";
 		$real_name = "Developer $i";
 		$password = $user_name;
-		$time_zone = 0; // Assign different one!
+		$time_zone = 0;
 		$email = null; // $user_name . '@example.com';
 		$group = rand(7, 9);
 
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+		if($i==1){
+			$registered = time() - rand($timerange-3600, $timerange);
+		}else{
+			$registered = $prevuserreg + rand(0, 0.9*2*$timerange/$maxdevelopers); # 0.9 to be sure not in future
+                }
+		$uid=Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+		$db->query('UPDATE {users} SET register_date = ? WHERE user_id = ?',
+			array($registered, $uid));
+		$prevuserreg=$registered;
 	}
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxdevelopers." dev users created\n";
 
@@ -285,12 +293,11 @@ function createTestData(){
 	for ($i = 1; $i <= $maxcorporates; $i++) {
 		for ($j = 1; $j <= $maxprojects; $j++) {
 			if (rand(1, 20) == 1) {
-	            $projid = $j + 1;
-	            $db->query("INSERT INTO {groups} "
+				$projid = $j + 1;
+				$db->query("INSERT INTO {groups} "
 	                    . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,add_comments,create_attachments,group_open,view_comments) "
 	                    . "VALUES('Corporate $i', 'Corporate $i Users', $projid, 0, 0, 1, 1, 1, 1, 1,1,1)");
-	            $sql = $db->query('SELECT MAX(group_id) FROM {groups}');
-	            $group_id = $db->fetchOne($sql);
+				$group_id = $db->insert_ID();
 				for ($k = $i; $k <= $maxcorporateusers; $k += $maxcorporates) {
 					$username = "cu$k";
 					$sql = $db->query('SELECT user_id FROM {users} WHERE user_name = ?', array($username));
@@ -336,13 +343,20 @@ function createTestData(){
 
 	echo "Creating $maxtasks tasks: ";
 	for ($i = 1; $i <= $maxtasks; $i++) {
-		$project = rand(2, $maxprojects);
+		$project = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
+		if ($i==1) {
+			$opened = time() - rand($timerange-(30*24*3600), $timerange);
+		} else {
+			$opened = $prevtaskopened + rand(0, 0.9*2*$timerange/$maxtasks); # 0.9 to be sure not in future
+		}
 		// Find someone who is allowed to open a task, do not use global groups
-		$sql = $db->query("SELECT uig.user_id
-			FROM {users_in_groups} uig
+		$sql = $db->query("SELECT u.user_id
+			FROM {users} u
+			JOIN {users_in_groups} uig ON u.user_id=uig.user_id
 			JOIN {groups} g ON g.group_id = uig.group_id AND g.open_new_tasks = 1 AND (g.project_id = 0 OR g.project_id = ?)
-			WHERE g.group_id NOT IN (1, 2, 7, 8, 9)
-			ORDER BY $RANDOP LIMIT 1", array($project)
+			WHERE g.group_id NOT IN (1)
+			AND u.register_date < ? 
+			ORDER BY $RANDOP LIMIT 1", array($project, $opened)
 		);
 		$reporter = $db->fetchOne($sql);
 		$sql = $db->query("SELECT category_id FROM {list_category}
@@ -351,20 +365,20 @@ function createTestData(){
 			ORDER BY $RANDOP LIMIT 1",
 		array($project));
 		$category = $db->fetchOne($sql);
-		$opened = time() -  rand(1, 315360000);
 		$args = array();
 
 		$args['project_id'] = $project;
-		$args['date_opened'] = time() -  rand(1, 315360000);
+		$args['date_opened'] = $opened;
 		// 'last_edited_time' => time(),
 		$args['opened_by'] = $reporter;
 		$args['product_category'] = $category;
-		$args['task_severity'] = 1;
-		$args['task_priority'] = 1;
-		$args['task_type']=1;
-		// 'product_version',
-		// 'operating_system', , 'estimated_effort',
-		// 'supertask_id',
+		$args['task_severity'] = rand(1,5); # 5 fixed severities
+		$args['task_priority'] = rand(1,6); # 6 fixed priorities
+		$args['task_type'] = rand(1,2); # 2 global tasktypes after install
+		// 'product_version'
+		// 'operating_system'
+		// 'estimated_effort'
+		// 'supertask_id'
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
 		array($project));
 		$projectname = $db->fetchOne($sql);
@@ -388,7 +402,7 @@ function createTestData(){
                         	array($task_id, $tag_id)
                 	);
 		}
-
+		$prevtaskopened=$opened;
 	} # end for maxtasks
 
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxtasks." tasks created\n";
@@ -398,7 +412,7 @@ function createTestData(){
 		$task = Flyspray::getTaskDetails($taskid, true);
 		$project = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
-		$added = time() - rand(1, 315360000);
+		$added = time() - rand(1, $timerange);
 
 		// Find someone who is allowed to add comment, do not use global groups
 		$sqltext = "SELECT uig.user_id
@@ -420,9 +434,7 @@ function createTestData(){
 		}
 
 		$comment = 'Comment.';
-		Backend::add_comment($task, $comment);
-		$sql = $db->query('SELECT MAX(comment_id) FROM {comments}');
-		$comment_id = $db->fetchOne($sql);
+		$comment_id=Backend::add_comment($task, $comment);
 		$db->query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
 			array($reporter->id, $added, $comment_id));
 	} # end for maxcomments
