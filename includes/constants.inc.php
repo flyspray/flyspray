@@ -72,6 +72,9 @@ define('STATUS_ASSIGNED',         3);
 
 define('GET_CONTENTS', true);
 
+# resolution_id with special meaning and protection, always 6 (Flyspray history)
+define('RESOLUTION_DUPLICATE', 6);
+
 // Others
 define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
