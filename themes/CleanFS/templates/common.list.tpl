@@ -12,8 +12,8 @@ if($list_type == 'tag') {
 <div id="controlBox">
     <div class="grip"></div>
     <div class="inner">
-        <a href="#" onclick="TableControl.up('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
-        <a href="#" onclick="TableControl.down('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
+        <a style="display:block;" href="#" onclick="TableControl.up('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
+        <a style="display:block;" href="#" onclick="TableControl.down('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
     </div>
 </div>
 <?php endif; ?>
