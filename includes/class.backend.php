@@ -1275,7 +1275,7 @@ abstract class Backend
                     array($user->id, time(), $task_id, 1));
 
         // duplicate
-        if ($reason == 6) {
+        if ($reason == RESOLUTION_DUPLICATE) {
             preg_match("/\b(?:FS#|bug )(\d+)\b/", $comment, $dupe_of);
             if (count($dupe_of) >= 2) {
                 $existing = $db->query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
