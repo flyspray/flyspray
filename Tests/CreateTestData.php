@@ -69,10 +69,12 @@ function createTestData(){
 	# ca 100 tasks/sec, 100 comments/sec on an old laptop with Flyspray 1.0-rc7 with mysqli setup in a virtual machine as thumb rule
 	$maxtasks = 1000; # absolute number, e.g. 1000
 	$maxcomments = 1000; # absolute number, e.g. 10000
-	$maxversions = 3; # per project, e.g. 5
-	$maxcorporateusers = 20; # absolute number, e.g. 20
-	$maxcorporates = 3; # mmhh
 	$maxattachments = 500; # only emulated yet, e.g. 500
+	$maxversions = 3; # per project, e.g. 5
+	$maxcorporates = 3; # mmhh
+	
+	# spread some user with different permissions
+	$maxcorporateusers = 20; # absolute number, e.g. 20
 	$maxadmins = 2;
 	$maxmanagers = 2;
 	$maxdevelopers = 500; # a bit higher for due they have more rights, can have more relations with tasks
@@ -192,26 +194,48 @@ function createTestData(){
 	}
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxdevelopers." dev users created\n";
 
-	// We have been really active in the past years, AND have a lot of projects.
+	$tags=array(
+                array('name'=>'blue', 'color'=>'#00c'),
+                array('name'=>'red', 'color'=>'#c00'),
+                array('name'=>'green', 'color'=>'#090'),
+                array('name'=>'rosa', 'color'=>'#f9f'),
+                array('name'=>'lila', 'color'=>'#c0c'),
+                array('name'=>'black', 'color'=>'#000'),
+                array('name'=>'brown', 'color'=>'#c90'),
+                array('name'=>'darkred', 'color'=>'#600'),
+                array('name'=>'darkblue', 'color'=>'#006')
+        );
+	
+	// add some projects and some tag definitions
+	$tgcounter=0;
+	$project_id=0;
 	for ($i = 1; $i <= $maxprojects; $i++) {
 		$projname = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12)));
 		$projname = 'Product ' . preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
 
-		$db->query('INSERT INTO  {projects}
+		$db->query('INSERT INTO {projects}
 				( project_title, theme_style, intro_message,
 				others_view, anon_open, project_is_active,
 				visible_columns, visible_fields, lang_code,
 				notify_email, notify_jabber, disp_intro)
-			VALUES  (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
+			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
 			array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
 			'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
 			'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
 			'en', '', '', 1)
 		);
+		$project_id=$db->insert_Id();
+		add_project_data($project_id);
 
-		add_project_data();
+		for($t=0; $t<count($tags); $t++){
+			$db->query("INSERT INTO {list_tag} (project_id, tag_name, show_in_list, class) VALUES (?, ?, ?, ?)",
+				array($project_id, $tags[$t]['name'].$i, rand(0,1), $tags[$t]['color'])
+			);
+			$tgcounter++;
+		}
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxprojects." projects created\n";
+
+	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxprojects.' projects created, '.$tgcounter." tags created\n";
 
 	// Assign some developers to project manager or project developer groups
 	for ($i = 1; $i <= $maxprojects; $i++) {
@@ -310,7 +334,7 @@ function createTestData(){
 	// even first user in database can't create tasks.
 	$user = new User(1);
 
-	// And that's why we've got $maxtasks opened within the last 10 years
+	echo "Creating $maxtasks tasks: ";
 	for ($i = 1; $i <= $maxtasks; $i++) {
 		$project = rand(2, $maxprojects);
 		// Find someone who is allowed to open a task, do not use global groups
@@ -337,8 +361,8 @@ function createTestData(){
 		$args['product_category'] = $category;
 		$args['task_severity'] = 1;
 		$args['task_priority'] = 1;
-
-		// 'task_type', , 'product_version',
+		$args['task_type']=1;
+		// 'product_version',
 		// 'operating_system', , 'estimated_effort',
 		// 'supertask_id',
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
@@ -354,9 +378,15 @@ function createTestData(){
 		if ($ok === 0) {
 			echo "Failed to create task.\n";
 		} else {
-			list($id, $token) = $ok;
+			list($task_id, $token) = $ok;
 			$db->query('UPDATE {tasks} SET opened_by = ?, date_opened = ? WHERE task_id = ?',
-			array($reporter, $opened, $id));
+			array($reporter, $opened, $task_id));
+
+			$sql=$db->query("SELECT tag_id FROM {list_tag} WHERE project_id=? ORDER BY $RANDOP LIMIT 1", array($project));
+			$tag_id = $db->fetchOne($sql);
+			$db->query("INSERT INTO {task_tag} (task_id, tag_id) VALUES (?, ?)",
+                        	array($task_id, $tag_id)
+                	);
 		}
 
 	} # end for maxtasks
@@ -368,7 +398,7 @@ function createTestData(){
 		$task = Flyspray::getTaskDetails($taskid, true);
 		$project = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
-		$added = time() -  rand(1, 315360000);
+		$added = time() - rand(1, 315360000);
 
 		// Find someone who is allowed to add comment, do not use global groups
 		$sqltext = "SELECT uig.user_id
@@ -409,11 +439,11 @@ function createTestData(){
 		}
 
 		$origname = getAttachmentDescription() . " $i";
-		$db->query("INSERT INTO  {attachments}
-                                     ( task_id, comment_id, file_name,
-                                       file_type, file_size, orig_name,
-                                       added_by, date_added)
-                             VALUES  (?, ?, ?, ?, ?, ?, ?, ?)",
+		$db->query("INSERT INTO {attachments}
+			( task_id, comment_id, file_name,
+				file_type, file_size, orig_name,
+				added_by, date_added)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 			array($task_id, $comment_id, $fname,
 			'application/octet-stream', 1024,
 			$origname,
@@ -501,61 +531,84 @@ function getAttachmentDescription() {
     }
 }
 
-function add_project_data() {
-    global $db;
+function add_project_data($pid = 0) {
+	global $db;
 
-    $sql = $db->query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
-    $pid = $db->fetchOne($sql);
+	if(!$pid>0){
+		$sql = $db->query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
+		$pid = $db->fetchOne($sql);
+	}
 
-    $cols = array('manage_project', 'view_tasks', 'open_new_tasks',
-        'modify_own_tasks', 'modify_all_tasks', 'view_comments',
-        'add_comments', 'edit_comments', 'delete_comments', 'show_as_assignees',
-        'create_attachments', 'delete_attachments', 'view_history', 'add_votes',
-        'close_own_tasks', 'close_other_tasks', 'assign_to_self', 'edit_own_comments',
-        'assign_others_to_self', 'add_to_assignees', 'view_reports', 'group_open',
-        'view_estimated_effort', 'view_current_effort_done', 'track_effort',
-        'add_multiple_tasks', 'view_roadmap', 'view_own_tasks', 'view_groups_tasks',
-        'edit_assignments');
+	$cols = array(
+		'manage_project',
+		'view_tasks',
+		'open_new_tasks',
+		'modify_own_tasks',
+		'modify_all_tasks',
+		'view_comments',
+		'add_comments',
+		'edit_comments',
+		'delete_comments',
+		'show_as_assignees',
+		'create_attachments',
+		'delete_attachments',
+		'view_history',
+		'add_votes',
+		'close_own_tasks',
+		'close_other_tasks',
+		'assign_to_self',
+		'edit_own_comments',
+		'assign_others_to_self',
+		'add_to_assignees',
+		'view_reports',
+		'group_open',
+		'view_estimated_effort',
+		'view_current_effort_done',
+		'track_effort',
+		'add_multiple_tasks',
+		'view_roadmap',
+		'view_own_tasks',
+		'view_groups_tasks',
+		'edit_assignments'
+	);
 
-    $args = array_fill(0, count($cols), '1');
-    array_unshift($args, 'Project Managers', 'Permission to do anything related to this project.', intval($pid));
-    $db->query("INSERT INTO  {groups}
-                                 ( group_name, group_desc, project_id,
-                                   " . join(',', $cols) . ")
-                         VALUES  ( " . $db->fill_placeholders($cols, 3) . ")", $args);
+	$args = array_fill(0, count($cols), '1');
+	array_unshift($args, 'Project Managers', 'Permission to do anything related to this project.', intval($pid));
+	$db->query("INSERT INTO {groups}
+		( group_name, group_desc, project_id,
+		" . join(',', $cols) . ")
+		VALUES ( " . $db->fill_placeholders($cols, 3) . ")", $args);
 
-    // Add 1 project specific developer group too.
-    $args = array_fill(1, count($cols) - 1, '1');
-    array_unshift($args, 'Project Developers', 'Permission to do almost anything but not manage project.', intval($pid), 0);
-    $db->query("INSERT INTO  {groups}
-                                 ( group_name, group_desc, project_id,
-                                   " . join(',', $cols) . ")
-                         VALUES  ( " . $db->fill_placeholders($cols, 3) . ")", $args);
+	// Add 1 project specific developer group too.
+	$args = array_fill(1, count($cols) - 1, '1');
+	array_unshift($args, 'Project Developers', 'Permission to do almost anything but not manage project.', intval($pid), 0);
+	$db->query("INSERT INTO {groups}
+		( group_name, group_desc, project_id,
+		" . join(',', $cols) . ")
+		VALUES ( " . $db->fill_placeholders($cols, 3) . ")", $args);
 
-    $db->query("INSERT INTO  {list_category}
-                                 ( project_id, category_name,
-                                   show_in_list, category_owner, lft, rgt)
-                         VALUES  ( ?, ?, 1, 0, 1, 4)", array($pid, 'root'));
+	$db->query("INSERT INTO {list_category}
+		( project_id, category_name,
+		show_in_list, category_owner, lft, rgt)
+		VALUES ( ?, ?, 1, 0, 1, 4)", array($pid, 'root'));
 
-    $db->query("INSERT INTO  {list_category}
-                                 ( project_id, category_name,
-                                   show_in_list, category_owner, lft, rgt )
-                         VALUES  ( ?, ?, 1, 0, 2, 3)", array($pid, 'Backend / Core'));
+	$db->query("INSERT INTO {list_category}
+		( project_id, category_name,
+		show_in_list, category_owner, lft, rgt )
+		VALUES ( ?, ?, 1, 0, 2, 3)", array($pid, 'Backend / Core'));
 
-    // We develop software for a lot of operating systems.
-    // Add your favorite ones to the end so we get more data.
-    $os = 1;
-    $db->query("INSERT INTO  {list_os}
-                                 ( project_id, os_name, list_position, show_in_list )
-                         VALUES  (?, ?, ?, 1)", array($pid, 'All', $os++));
+	$os = 1;
+	$db->query("INSERT INTO {list_os}
+		( project_id, os_name, list_position, show_in_list )
+		VALUES  (?, ?, ?, 1)", array($pid, 'All', $os++));
 
 	$totalversions = rand(3, 10);
 	$present = rand(1, $totalversions);
 	for ($i = 1; $i <= $totalversions; $i++) {
 		$tense = ($i == $present ? 2 : ($i < $present ? 1 : 3));
-		$db->query("INSERT INTO  {list_version}
+		$db->query("INSERT INTO {list_version}
 			( project_id, version_name, list_position, show_in_list, version_tense )
-			VALUES  (?, ?, ?, 1, ?)",
+			VALUES (?, ?, ?, 1, ?)",
 			array($pid, sprintf('%d.0', $i), $i, $tense)
 		);
 	}
