@@ -195,9 +195,10 @@ function createTestData(){
 		}else{
 			$registered = $prevuserreg + rand(0, 0.9*2*$timerange/$maxdevelopers); # 0.9 to be sure not in future
                 }
-		$uid=Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
-		$db->query('UPDATE {users} SET register_date = ? WHERE user_id = ?',
-			array($registered, $uid));
+		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+		# a bit	weired,	but simple UPDATE {users} SET register_date = ? WHERE user_id = (SELECT MAX(user_id) FROM {users}) doesn't work	for mysql
+		$db->query('UPDATE {users} SET register_date = ? WHERE user_id = (SELECT user_id FROM (SELECT * FROM {users}) AS tempusers ORDER BY user_id DESC LIMIT 1)',
+                        array($registered) );
 		$prevuserreg=$registered;
 	}
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxdevelopers." dev users created\n";
