@@ -107,7 +107,7 @@ switch ($list_type){
     foreach ($rows as $row):
     $countlines++;
 ?>
-<tr>
+<tr<?= ($list_type == 'resolution' && $row[$list_type.'_id'] == RESOLUTION_DUPLICATE ) ? ' class="nodelete" title="fixed duplicate resolution status"':'' ?>>
     <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
     <td>
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
@@ -133,13 +133,13 @@ switch ($list_type){
         </select>
       </td>
       <?php endif; ?>
-      <td title="<?= eL('deletetip') ?>">
-        <input id="delete<?php echo Filters::noXSS($row[$list_type.'_id']); ?>" type="checkbox"
-        <?php if ($row['used_in_tasks'] || ($list_type == 'status' && $row[$list_type.'_id'] < 7) || ($list_type == 'resolution' && $row[$list_type.'_id'] == 6)): ?>
-        disabled="disabled"
-        <?php endif; ?>
-        name="delete[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="1" />
-      </td>
+
+      <?php if ($row['used_in_tasks'] || ($list_type == 'status' && $row[$list_type.'_id'] < 7) || ($list_type == 'resolution' && $row[$list_type.'_id'] == RESOLUTION_DUPLICATE ) ): ?>
+      <td title="<?= eL('nodeletetip') ?>"></td>
+      <?php else: ?>
+      <td title="<?= eL('deletetip') ?>"><input id="delete<?php echo Filters::noXSS($row[$list_type.'_id']); ?>" type="checkbox" name="delete[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="1" /></td>
+      <?php endif; ?>
+
       <td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
     </tr>
     <?php endforeach; ?>
