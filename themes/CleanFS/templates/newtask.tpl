@@ -196,7 +196,7 @@
       <div id="taskdetailsfull">
         <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-        <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+        <input id="itemsummary" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
             name="item_summary" maxlength="100" />
 	<div id="edit_tags">
         <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
@@ -211,7 +211,7 @@
 
       <p class="buttons">
           <?php if ($user->isAnon()): ?>
-          <label class="inline" for="anon_email"><?php echo Filters::noXSS(L('youremail')); ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30"  value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
+          <label class="inline" for="anon_email"><?= eL('youremail') ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30" required="required" value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
           <?php endif; ?>
           <?php if (!$user->perms('modify_all_tasks')): ?>
           <input type="hidden" name="item_status"   value="1" />
