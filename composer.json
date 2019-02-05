@@ -8,7 +8,7 @@
     "require": {
         "swiftmailer/swiftmailer": "~5.0",
         "adodb/adodb-php": "~5.20",
-        "jamiebicknell/Sparkline": "1.*",
+        "jamiebicknell/sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.8.0",
         "dapphp/securimage": "3.6.6",
         "league/oauth2-client": "~0.3|~0.12" 
