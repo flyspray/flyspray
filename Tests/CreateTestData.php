@@ -342,6 +342,16 @@ function createTestData(){
 	// even first user in database can't create tasks.
 	$user = new User(1);
 
+	# for generating pseudo task description
+	$vocals=array('e','e','a','i','o','u'); # e most freq vocal in western languages
+	$conso=array('s','sch','st','z','r','l','b','p','g','k','m','n','v','w','d','t','qu');
+	$wordlen=array(3,12);
+	$clauselen=array(3,8); # 3: words per sub clause
+	$commas=array(0,2); # 1: commas per sentence
+	$paralen=array(1,5); # sentences per paragraph
+	$parts=array(1,10); # parts per task description (paragraphs or lists or code..)
+	$codes=array('','php','xml','sql','html');
+	
 	echo "Creating $maxtasks tasks: ";
 	for ($i = 1; $i <= $maxtasks; $i++) {
 		$project = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
@@ -379,7 +389,8 @@ function createTestData(){
 		// 'product_version'
 		// 'operating_system'
 		// 'estimated_effort'
-		// 'supertask_id'
+		// 'supertask_id' - find existing task of project
+		
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
 		array($project));
 		$projectname = $db->fetchOne($sql);
@@ -387,7 +398,57 @@ function createTestData(){
 		$subject = sprintf($subject, $projectname);
 
 		$args['item_summary'] = "task $i ($subject)";
-		$args['detailed_desc'] = "task $i description texttest tessst text texxxt \n\n<code php>echo 'lol';</code>";
+
+		$dparts=rand($parts[0],$parts[1]);
+		$descr='';
+		for($p=0;$p<$dparts;$p++){
+			$para='';
+			$type=rand(0,2); # text, list, code
+			if($type==0){
+				$dsent=rand($paralen[0],$paralen[1]);
+				for($s=0;$s<$dsent;$s++){
+					$sent='';
+					$dcommas=rand($commas[0],$commas[1]);
+					for($c=0;$c<$dcommas;$c++){
+						$clausepart='';
+						$dwords=rand($clauselen[0],$clauselen[1]);
+						for($w=0;$w<$dwords;$w++){
+							$v=rand(0,1);
+							$wd='';
+							$dletters=rand($wordlen[0],$wordlen[1]);
+							for($l=0;$l<$dletters;$l++){
+								$wd.= ($v % 2) ? $vocals[rand(0,count($vocals)-1)] : $conso[rand(0,count($conso)-1)];
+								$v++;
+							}
+							if(rand(0,100)<1){
+								$wd='FS#'.rand(2,$i);
+							}
+							if(rand(0,100)<2){
+								$wd='//'.$wd.'//';
+							}
+							if(rand(0,100)<2){
+								$wd='**'.$wd.'**';
+							}
+							if(rand(0,100)<2){
+								$wd='__'.$wd.'__';
+							}
+							$clausepart.=$wd.' ';	
+						}
+						$sent.=$clausepart;
+						$sent.=($c+1 < $dcommas) ? ', ': '.';
+					}
+					$para.=$sent;
+				}
+			}elseif($type==1){
+				# dokuwiki list
+				$para.="  * listitem\n  * listitem\n  * listitem3";
+			}elseif($type==2) {
+				# dokuwiki code
+				$para.='<code '.$codes[rand(0, length($codes)-1)].'> some signs<<y<>>> """</code>';
+			}
+			$descr.=$para."\n\n";
+		}
+		$args['detailed_desc'] = $descr;
 
 		$ok = Backend::create_task($args);
 		if ($ok === 0) {
@@ -470,6 +531,7 @@ function createTestData(){
 
 function getAttachmentDescription() {
     $type = rand(1, 100);
+
     if ($type > 80 && $type <= 100) {
         return 'Information that might help solve the problem';
     }
