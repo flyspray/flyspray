@@ -444,7 +444,7 @@ function createTestData(){
 				$para.="  * listitem\n  * listitem\n  * listitem3";
 			}elseif($type==2) {
 				# dokuwiki code
-				$para.='<code '.$codes[rand(0, length($codes)-1)].'> some signs<<y<>>> """</code>';
+				$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
 			}
 			$descr.=$para."\n\n";
 		}
