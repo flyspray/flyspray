@@ -30,7 +30,6 @@
 # add some real attachments with uploaded files of different type (generated .docx,.odt,.tex,.ps,.pdf,.txt,.xml,.sql)
 # change some task descriptions:
 # * add some kyrilic, greek, arab, chinese, emoji task description and task summaries
-# * add some longer description texts with more dokuwiki elements
 # * add some code segments for GeShi - some languages are harder to parse than others!
 # tags:
 # * remove some tags from tasks
