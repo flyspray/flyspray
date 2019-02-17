@@ -40,26 +40,26 @@
 #togglefields:checked ~ #dbtables .dbfield { display:none; }
 </style>
 <div>
-<div>DEFAULT_CHARACTER_SET_NAME: <?=$fsdb['default_character_set_name'] ?></div>
-<div>DEFAULT_COLLATION_NAME: <?=$fsdb['default_collation_name'] ?></div>
+<div>default_character_set_name: <?=$fsdb['default_character_set_name'] ?></div>
+<div>default_collation_name: <?=$fsdb['default_collation_name'] ?></div>
 </div>
 <input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
 <label for="togglefields" class="button"></label>
 <table id="dbtables">
 <thead>
 <tr class="dbtable">
-<th>TABLE_NAME</th>
-<th>ENGINE</th>
+<th>tabl_name</th>
+<th>table_type</th>
 <th></th>
-<th>DEFAULT COLLATION</th>
-<th>COMMENT</th>
+<th>default collation</th>
+<th>comment</th>
 </tr>
 <tr class="dbfield">
-<th>COLUMN_NAME</th>
-<th>COLUMN_TYPE</th>
-<th>CHARACTER_SET_NAME</th>
-<th>COLLATION_NAME</th>
-<th>COMMENT</th>
+<th>column_name</th>
+<th>data_type</th>
+<th>character_set_name</th>
+<th>collation_name</th>
+<th>comment</th>
 </tr>
 </thead>
 <tbody>
@@ -70,26 +70,26 @@ foreach($fsfields as $f):
 	# Show table info row if not yet for that field
 	# This logic fails if there exists a table within $fstables without fields in $fsfields
 	# But for our usecase this should be ok.
-	if ($lasttable != $f['TABLE_NAME']): 
+	if ($lasttable != $f['table_name']): 
 		$ti++;
 	?>
 	<tr class="dbtable">
-	<td><?= Filters::noXSS($fstables[$ti]['TABLE_NAME']) ?></td>
-	<td><?= $fstables[$ti]['ENGINE'] ?></td>
+	<td><?= Filters::noXSS($fstables[$ti]['table_name']) ?></td>
+	<td><?= $fstables[$ti]['table_type'] ?></td>
 	<td></td>
-	<td><?= $fstables[$ti]['TABLE_COLLATION'] ?></td>
-	<td><?= Filters::noXSS($fstables[$ti]['TABLE_COMMENT']) ?></td>
+	<td><?= $fstables[$ti]['table_collation'] ?></td>
+	<td><?= Filters::noXSS($fstables[$ti]['table_comment']) ?></td>
 	</tr>
 	<?php endif; ?>
 <tr class="dbfield">
-<td><?= Filters::noXSS($f['COLUMN_NAME']) ?></td>
-<td><?= $f['COLUMN_TYPE'] ?></td>
-<td><?= $f['CHARACTER_SET_NAME'] ?></td>
-<td><?= $f['COLLATION_NAME'] ?></td>
-<td><?= Filters::noXSS($f['COLUMN_COMMENT']) ?></td>
+<td><?= Filters::noXSS($f['column_name']) ?></td>
+<td><?= $f['column_type'] ?></td>
+<td><?= $f['character_set_name'] ?></td>
+<td><?= $f['collation_name'] ?></td>
+<td><?= Filters::noXSS($f['column_comment']) ?></td>
 </tr>
 <?php
-$lasttable=$f['TABLE_NAME'];
+$lasttable=$f['table_name'];
 endforeach;
 ?>
 </tbody>
