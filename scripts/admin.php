@@ -143,21 +143,36 @@ switch ($area = Req::val('area', 'prefs')) {
 				$page->assign('oldmysqlversion', "Your MySQL version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your MySQL server version.");
 			}
 			
-			$fstables=$db->query("SELECT TABLE_NAME, TABLE_COLLATION, ENGINE, CREATE_OPTIONS, TABLE_COMMENT
-				FROM INFORMATION_SCHEMA.TABLES
-				WHERE TABLE_SCHEMA=? AND TABLE_NAME LIKE '".$db->dbprefix."%'
-				ORDER BY TABLE_NAME ASC", array($db->dblink->database)
+			$fstables=$db->query("SELECT table_name, table_collation, engine as table_type, create_options, table_comment
+				FROM INFORMATION_SCHEMA.tables
+				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC", array($db->dblink->database)
 			);
 			$page->assign('fstables', $db->fetchAllArray($fstables));
 
 			$fsfields=$db->query("
-				SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, DATA_TYPE, CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, COLUMN_COMMENT
-				FROM INFORMATION_SCHEMA.COLUMNS
-				WHERE TABLE_SCHEMA=? AND TABLE_NAME LIKE '".$db->dbprefix."%'
-				ORDER BY TABLE_NAME ASC, ORDINAL_POSITION ASC", array($db->dblink->database)
+				SELECT table_name, column_name, column_default, data_type, character_set_name, collation_name, column_type, column_comment
+				FROM INFORMATION_SCHEMA.columns
+				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
 			);
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
 			
+		} elseif($db->dbtype=='pgsql'){
+			$fstables=$db->query("SELECT table_name, '' AS table_collation, table_type, '' AS create_options, '-' AS table_comment
+				FROM INFORMATION_SCHEMA.tables
+				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC", array($db->dblink->database)
+			);
+			$page->assign('fstables', $db->fetchAllArray($fstables));
+
+			$fsfields=$db->query("
+				SELECT table_name, column_name, column_default, data_type as column_type, character_set_name, collation_name, '-' AS column_comment
+				FROM INFORMATION_SCHEMA.columns
+				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
+			);
+			$page->assign('fsfields', $db->fetchAllArray($fsfields));
 		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
