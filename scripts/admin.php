@@ -159,23 +159,21 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
 			
 		} elseif($db->dbtype=='pgsql'){
-                        $fstables=$db->query("SELECT table_name, '' AS table_collation, table_type as engine, '' AS create_options, '-' AS
-table_comment
-                                FROM INFORMATION_SCHEMA.tables
-                                WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
-                                ORDER BY table_name ASC", array($db->dblink->database)
-                        );
-                        $page->assign('fstables', $db->fetchAllArray($fstables));
+			$fstables=$db->query("SELECT table_name, '' AS table_collation, table_type, '' AS create_options, '-' AS table_comment
+				FROM INFORMATION_SCHEMA.tables
+				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC", array($db->dblink->database)
+			);
+			$page->assign('fstables', $db->fetchAllArray($fstables));
 
 			$fsfields=$db->query("
-                                SELECT table_name, column_name, column_default, data_type, character_set_name, collation_name, data_type, '-' as
-column_comment
-                                FROM INFORMATION_SCHEMA.columns
-                                WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
-                                ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
-                        );
-                        $page->assign('fsfields', $db->fetchAllArray($fsfields));
-                }
+				SELECT table_name, column_name, column_default, data_type as column_type, character_set_name, collation_name, '-' AS column_comment
+				FROM INFORMATION_SCHEMA.columns
+				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
+				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
+			);
+			$page->assign('fsfields', $db->fetchAllArray($fsfields));
+		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
 		$page->pushTpl('admin.'.$area.'.tpl');
