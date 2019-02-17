@@ -458,16 +458,19 @@ function createTestData(){
 			$db->query('UPDATE {tasks} SET opened_by = ?, date_opened = ? WHERE task_id = ?',
 			array($reporter, $opened, $task_id));
 
-			$sql=$db->query("SELECT tag_id FROM {list_tag} WHERE project_id=? ORDER BY $RANDOP LIMIT 1", array($project));
-			$tag_id = $db->fetchOne($sql);
-			$db->query("INSERT INTO {task_tag} (task_id, tag_id) VALUES (?, ?)",
-                        	array($task_id, $tag_id)
-                	);
+			$limit=rand(0,3);
+			$db->query("INSERT INTO {task_tag} (task_id, tag_id) 
+				SELECT $task_id, tag_id FROM {list_tag}
+				WHERE project_id=?
+				ORDER BY $RANDOP
+				LIMIT $limit",
+				array($project_id)
+			);
 		}
 		$prevtaskopened=$opened;
 	} # end for maxtasks
 
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxtasks." tasks created\n";
+	$last=$now;$now=microtime(true); echo round($now-$last,6).': '.$maxtasks." tasks created\n";
 
 	for ($i = 1; $i <= $maxcomments; $i++) {
 		$taskid = rand(2, $maxtasks + 1);
