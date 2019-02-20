@@ -236,7 +236,7 @@ function createTestData(){
 
 		for($t=0; $t<count($tags); $t++){
 			$db->query("INSERT INTO {list_tag} (project_id, tag_name, show_in_list, class) VALUES (?, ?, ?, ?)",
-				array($project_id, $tags[$t]['name'].$i, rand(0,1), $tags[$t]['color'])
+				array($project_id, $tags[$t]['name'].($i+1), rand(0,1), $tags[$t]['color'])
 			);
 			$tgcounter++;
 		}
