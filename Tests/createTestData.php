@@ -218,8 +218,7 @@ function createTestData(){
 	$tgcounter=0;
 	$project_id=0;
 	for ($i = 1; $i <= $maxprojects; $i++) {
-		$projname = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, mt_rand(8, 12)));
-		$projname = 'Product ' . preg_replace('/^(.{3})(.+)$/', '$1-$2', $projname);
+		$projname = 'Product '.($i+1);
 
 		$db->query('INSERT INTO {projects}
 				( project_title, theme_style, intro_message,
@@ -353,7 +352,7 @@ function createTestData(){
 	
 	echo "Creating $maxtasks tasks: ";
 	for ($i = 1; $i <= $maxtasks; $i++) {
-		$project = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
+		$project_id = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
 		if ($i==1) {
 			$opened = time() - rand($timerange-(30*24*3600), $timerange);
 		} else {
@@ -366,18 +365,18 @@ function createTestData(){
 			JOIN {groups} g ON g.group_id = uig.group_id AND g.open_new_tasks = 1 AND (g.project_id = 0 OR g.project_id = ?)
 			WHERE g.group_id NOT IN (1)
 			AND u.register_date < ? 
-			ORDER BY $RANDOP LIMIT 1", array($project, $opened)
+			ORDER BY $RANDOP LIMIT 1", array($project_id, $opened)
 		);
 		$reporter = $db->fetchOne($sql);
 		$sql = $db->query("SELECT category_id FROM {list_category}
 			WHERE project_id = ?
 			AND category_name <> 'root'
 			ORDER BY $RANDOP LIMIT 1",
-		array($project));
+		array($project_id));
 		$category = $db->fetchOne($sql);
 		$args = array();
 
-		$args['project_id'] = $project;
+		$args['project_id'] = $project_id;
 		$args['date_opened'] = $opened;
 		// 'last_edited_time' => time(),
 		$args['opened_by'] = $reporter;
@@ -391,7 +390,7 @@ function createTestData(){
 		// 'supertask_id' - find existing task of project
 		
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
-		array($project));
+		array($project_id));
 		$projectname = $db->fetchOne($sql);
 		$subject = $subjects[rand(0, count($subjects) - 1)];
 		$subject = sprintf($subject, $projectname);
@@ -474,7 +473,7 @@ function createTestData(){
 	for ($i = 1; $i <= $maxcomments; $i++) {
 		$taskid = rand(2, $maxtasks + 1);
 		$task = Flyspray::getTaskDetails($taskid, true);
-		$project = $task['project_id'];
+		$project_id = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
 		$added = time() - rand(1, $timerange);
 
@@ -485,7 +484,7 @@ function createTestData(){
                           AND (g.project_id = 0 OR g.project_id = ?)
                         WHERE g.group_id NOT IN (1, 2, 7, 8, 9)
                      ORDER BY $RANDOP ";
-		$sql = $db->query($sqltext, array($project));
+		$sql = $db->query($sqltext, array($project_id));
 		$row = $db->fetchRow($sql);
 		$reporter = new User($row['user_id']);
 
