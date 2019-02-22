@@ -195,7 +195,9 @@ if (!$user->can_view_task($task_details)) {
 				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('tasktypetarget'), 'options'=>$tttopts);
 			}
 
-
+			
+			# allow unset (0) value (field os_id currently defined with NOT NULL by flyspray-install.xml, so must use 0 instead null) 
+			$ossel['options'][]=array('value'=>0, 'label'=>L('undecided'));
 			# get global operating systems
 			$resgos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=0 ORDER BY list_position");
 			$goses=$db->fetchAllArray($resgos);
@@ -272,6 +274,7 @@ if (!$user->can_view_task($task_details)) {
 
 			# just the normal merged global/project osversions
 			$osses=$proj->listOs();
+			$osopts[]=array('value'=>0, 'label'=>L('undecided'));
 			if( count($osses)>0){
 				foreach($osses as $os){
 					$osopts[]=array('value'=>$os['os_id'], 'label'=>$os['os_name']);
