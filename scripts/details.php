@@ -130,7 +130,7 @@ if (!$user->can_view_task($task_details)) {
 						$gstopts[count($gstopts)-1]['selected']=1;
 					}
 				}
-				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('statusglobal'), 'options'=>$gstopts);
+				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gstopts);
 			}
 			# get current project task statuses
 			$rescst=$db->query("SELECT status_id, status_name, list_position, show_in_list FROM {list_status} WHERE project_id=? ORDER BY list_position", array($proj->id));
@@ -142,7 +142,7 @@ if (!$user->can_view_task($task_details)) {
 						$cstopts[count($cstopts)-1]['selected']=1;
 					}
 				}
-				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('statusproject'), 'options'=>$cstopts);
+				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cstopts);
 			}
 			# get target project task statuses
 			$restst=$db->query("SELECT status_id, status_name, list_position, show_in_list FROM {list_status} WHERE project_id=? ORDER BY list_position", array($toproject->id));
@@ -154,7 +154,7 @@ if (!$user->can_view_task($task_details)) {
 						$tstopts[count($tstopts)-1]['selected']=1;
 					}
 				}
-				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('statustarget'), 'options'=>$tstopts);
+				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tstopts);
 			}
 
 
@@ -168,7 +168,7 @@ if (!$user->can_view_task($task_details)) {
 						$gttopts[count($gttopts)-1]['selected']=1;
 					}
 				}
-				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('tasktypeglobal'), 'options'=>$gttopts);
+				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gttopts);
 			}
 			# get current project tasktypes
 			$resctt=$db->query("SELECT tasktype_id, tasktype_name, list_position, show_in_list FROM {list_tasktype} WHERE project_id=? ORDER BY list_position", array($proj->id));
@@ -180,7 +180,7 @@ if (!$user->can_view_task($task_details)) {
 						$cttopts[count($cttopts)-1]['selected']=1;
 					}
 				}
-				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('tasktypeproject'), 'options'=>$cttopts);
+				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cttopts);
 			}
 			# get target project tasktypes
 			$resttt=$db->query("SELECT tasktype_id, tasktype_name, list_position, show_in_list FROM {list_tasktype} WHERE project_id=? ORDER BY list_position", array($toproject->id));
@@ -192,7 +192,7 @@ if (!$user->can_view_task($task_details)) {
 						$tttopts[count($tttopts)-1]['selected']=1;
 					}
 				}
-				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('tasktypetarget'), 'options'=>$tttopts);
+				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tttopts);
 			}
 
 			
@@ -208,7 +208,7 @@ if (!$user->can_view_task($task_details)) {
 						$gosopts[count($gosopts)-1]['selected']=1;
 					}
 				}
-				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('globalos'), 'options'=>$gosopts);
+				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gosopts);
 			}
 			# get current project operating systems
 			$rescos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? ORDER BY list_position", array($proj->id));
@@ -220,7 +220,7 @@ if (!$user->can_view_task($task_details)) {
 						$cosopts[count($cosopts)-1]['selected']=1;
 					}
 				}
-				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('currentos'), 'options'=>$cosopts);
+				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cosopts);
 			}
 			# get target project operating systems
 			$restos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? ORDER BY list_position", array($toproject->id));
@@ -232,11 +232,11 @@ if (!$user->can_view_task($task_details)) {
 						$tosopts[count($tosopts)-1]['selected']=1;
 					}
 				}
-				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('targetos'), 'options'=>$tosopts);
+				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tosopts);
 			}
 
 		}else{
-			# just the normal merged global/projectcats
+			# just the normal merged global/project categories
 			$cats=$proj->listCategories();
 			if( count($cats)>0){
 				foreach($cats as $cat){
@@ -272,8 +272,9 @@ if (!$user->can_view_task($task_details)) {
 				$tasktypesel['options']=$ttopts;
 			}
 
-			# just the normal merged global/project osversions
+			# just the normal merged global/project os
 			$osses=$proj->listOs();
+			# also allow unsetting operating system entry
 			$osopts[]=array('value'=>0, 'label'=>L('undecided'));
 			if( count($osses)>0){
 				foreach($osses as $os){
