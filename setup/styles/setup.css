@@ -4,6 +4,8 @@ body {
   font-size:13px;
 }
 a { text-decoration: none; }
+input:required {border: 1px solid #f90;}
+
 #header {
   /*background-color:#47617B;*/
   background-color:#5e5e5e; /* matching grayscale brightness of title.png */
