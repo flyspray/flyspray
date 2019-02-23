@@ -20,35 +20,40 @@ function ShowHidePassword(id) {
 
 	<table class="formBlock">
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminemail')); ?></td>
-		<td align="center"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" size="30" /></td>
+		<td style="text-align:right;vertical-align:top"><?= eL('adminusername') ?></td>
+		<td style="text-align:left;vertical-align:top"><input class="inputbox" type="text" name="admin_username" value="<?php echo $admin_username; ?>" required="required" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminusername')); ?></td>
-		<td align="center"><input class="inputbox" type="text" name="admin_username" value="<?php echo $admin_username; ?>" size="30" /></td>
+		<td style="text-align:right;vertical-align:top"><?= eL('adminrealname') ?></td>
+		<td style="text-align:left;vertical-align:top"><input class="inputbox" type="text" name="admin_realname" value="<?php echo $admin_realname; ?>" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminpassword')); ?></td>
-		<td align="center"><input class="inputbox" type="password" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" size="30" /></td>
+		<td style="text-align:right;vertical-align:top"><?= eL('adminemail') ?></td>
+		<td style="text-align:left;vertical-align:top"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" required="required" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><label for="showpassword"><?php echo Filters::noXSS(L('showpassword')); ?></label></td>
-		<td align="center"><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
+		<td style="text-align:right;vertical-align:top"><?= eL('adminpassword') ?></td>
+		<td style="text-align:left;vertical-align:top"><input class="inputbox" type="password" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" required="required" size="30" /></td>
+		<td style="text-align:left;vertical-align:top"><label for="showpassword"><?= eL('showpassword') ?></label><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
 	</tr>
 	<tr>
-		<td><?php echo L('syntaxtext'); ?></td>
-		<td>
+		<td style="text-align:right;vertical-align:top"><?= eL('syntax') ?></td>
+		<td style="text-align:left;vertical-align:top">
 			<select name="syntax_plugin">
 			<option value="dokuwiki">Text/Dokuwiki</option>
 			<option value="none">HTML/none</option>
 			<option value="html">HTML/CKEditor</option>
 			</select>
 		</td>
+		<td style="text-align:left;vertical-align:top"><?= L('syntaxtext') ?></td>
 	</tr>
 	<?php if ($daemonise): ?>
 	<tr>
-		<td align="right" title="<?php echo Filters::noXSS(L('scheduletitle')); ?>"><?php echo Filters::noXSS(L('enablescheduling')); ?></td>
-		<td align="center"><?php echo $daemonise; ?></td>
+		<td style="text-align:right;vertical-align:top" title="<?= eL('scheduletitle') ?>"><?= eL('enablescheduling') ?></td>
+		<td style="text-align:center;vertical-align:top"><?php echo $daemonise; ?></td>
 	</tr>
 	<?php endif; ?>
 	</table>
@@ -60,9 +65,9 @@ function ShowHidePassword(id) {
 	<input type="hidden" name="db_name" value="<?php echo Filters::noXSS($db_name); ?>" />
 	<input type="hidden" name="db_prefix" value="<?php echo Filters::noXSS($db_prefix); ?>" />
 
-	<p><?php echo Filters::noXSS(L('proceedtofinalsetuptext')); ?></p>
+	<p><?= eL('proceedtofinalsetuptext') ?></p>
 	<input type="hidden" name="action" value="complete" />
-	<button class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" ><?php echo Filters::noXSS(L('proceedtofinalsetup')); ?></button>
+	<button class="button" type="submit" name="next" value="<?= eL('next') ?> >>" ><?= eL('proceedtofinalsetup') ?></button>
 		
 	</div>
 </form>
