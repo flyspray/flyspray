@@ -684,8 +684,10 @@ class Setup extends Flyspray
                'db_name' => array('Database name', 'string', true),
                'db_prefix' => array('Table prefix', 'string', false),
                'admin_username' => array('Administrator\'s username', 'string', true),
+               'admin_realname' => array('Administrator\'s realname', 'string', false),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
+               'admin_xmpp' => array('Administrator\'s jabber/xmpp address', 'xmpp address', false),
                'syntax_plugin' => array('Syntax', 'option', true), 
 	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
@@ -1161,6 +1163,7 @@ class Setup extends Flyspray
                 return is_numeric($value);
             break;
 
+            case 'xmpp address':
             case 'email address':
              return filter_var($value, FILTER_VALIDATE_EMAIL);
              break;
