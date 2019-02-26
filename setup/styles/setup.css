@@ -122,9 +122,10 @@ input:required {border: 1px solid #f90;}
   color:#000;
 }
 
-.formblock td {
+.formBlock td {
   vertical-align:top;
   padding-top:1.5em;
+  min-width:150px;
 }
 
 .button {
