@@ -587,19 +587,9 @@ class Setup extends Flyspray
 
     public function getReminderDaemonSelection($value)
     {
-        $selection	= '';
-
-        if ($value == 1) {
-
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> '.L('enable');
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" /> '.L('disable');
-        } else {
-
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" /> '.L('enable');
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> '.L('disable');
-        }
-            return $selection;
-
+	$selection = '<input type="radio" id="schedyes" name="reminder_daemon" value="1"'.($value==1 ? ' checked="checked"':'').' /> <label for="schedyes">'.L('enable').'</label>';
+	$selection .= '<input type="radio" id="schedno" name="reminder_daemon" value="0"'.($value==0 ? ' checked="checked"':'').' /> <label for="schedno">'.L('disable').'</label>';
+	return $selection;
     }
 
 
