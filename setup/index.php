@@ -260,7 +260,7 @@ class Setup extends Flyspray
          {
             if ($expectedFields[$key][2] == true)
             {
-               // Acumulate error messages
+               // accumulate error messages
                $_SESSION['page_message'][] = "<strong>{$expectedFields[$key][0]}</strong>  is required";
             }
          }
@@ -283,7 +283,7 @@ class Setup extends Flyspray
       }
    }
 
-   public function DisplayAdministration()
+   public function displayAdministration()
    {
       // Trim the empty values in the $_POST array
       $data = array_filter($_POST, array($this, "trimArgs"));
@@ -295,18 +295,20 @@ class Setup extends Flyspray
                         'template' => 'administration.tpl',
                         'vars' => array(
                                 'product_name' => $this->mProductName,
-                                'message' => $this->GetPageMessage(),
-                                'admin_email' => $this->GetParamValue($data, 'admin_email', ''),
-                                'pass_phrase' => $this->GetParamValue($data, 'pass_phrase', ''),
-                                'admin_username' => $this->GetParamValue($data, 'admin_username', ''),
-                                'admin_password' => $this->GetParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)),
-                                'db_type' => $this->GetParamValue($data, 'db_type', ''),
-                                'db_hostname' => $this->GetParamValue($data, 'db_hostname', ''),
-                                'db_username' => $this->GetParamValue($data, 'db_username', ''),
-                                'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                'db_name' => $this->GetParamValue($data, 'db_name', ''),
-                                'db_prefix' => $this->GetParamValue($data, 'db_prefix', ''),
-				'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '0')),
+                                'message' => $this->getPageMessage(),
+                                'admin_email' => $this->getParamValue($data, 'admin_email', ''),
+                                'pass_phrase' => $this->getParamValue($data, 'pass_phrase', ''),
+                                'admin_username' => $this->getParamValue($data, 'admin_username', ''),
+				'admin_realname' => $this->getParamValue($data, 'admin_realname', ''),
+				'admin_xmpp' => $this->getParamValue($data, 'admin_xmpp', ''),
+                                'admin_password' => $this->getParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)),
+                                'db_type' => $this->getParamValue($data, 'db_type', ''),
+                                'db_hostname' => $this->getParamValue($data, 'db_hostname', ''),
+                                'db_username' => $this->getParamValue($data, 'db_username', ''),
+                                'db_password' => $this->getParamValue($data, 'db_password', ''),
+                                'db_name' => $this->getParamValue($data, 'db_name', ''),
+                                'db_prefix' => $this->getParamValue($data, 'db_prefix', ''),
+				'daemonise' => $this->getReminderDaemonSelection($this->getParamValue($data, 'reminder_daemon', '0')),
                         ),
             ),
 
@@ -340,7 +342,7 @@ class Setup extends Flyspray
                         'template' => 'complete_install.tpl',
                         'vars' => array(
                                     'product_name' => $this->mProductName,
-                                    'message' => $this->GetPageMessage(),
+                                    'message' => $this->getPageMessage(),
                                     'config_writeable' => $this->mWriteStatus['flyspray.conf.php'],
                                     'config_text' => $this->mConfigText,
                                     'admin_username' => $this->mAdminUsername,
@@ -389,14 +391,14 @@ class Setup extends Flyspray
                               'template' => 'database.tpl',
                               'vars' => array(
                                           'product_name' => $this->mProductName,
-                                          'message' => $this->GetPageMessage(),
+                                          'message' => $this->getPageMessage(),
                                           'databases' => $this->mSupportedDatabases,
-                                          'db_type' => $this->GetParamValue($data, 'db_type', ''),
-                                          'db_hostname' => $this->GetParamValue($data, 'db_hostname', 'localhost'),
-                                          'db_username' => $this->GetParamValue($data, 'db_username', ''),
-                                          'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                          'db_name' => $this->GetParamValue($data, 'db_name', ''),
-                                          'db_prefix' => $this->GetParamValue($data, 'db_prefix', 'flyspray_'),
+                                          'db_type' => $this->getParamValue($data, 'db_type', ''),
+                                          'db_hostname' => $this->getParamValue($data, 'db_hostname', 'localhost'),
+                                          'db_username' => $this->getParamValue($data, 'db_username', ''),
+                                          'db_password' => $this->getParamValue($data, 'db_password', ''),
+                                          'db_name' => $this->getParamValue($data, 'db_name', ''),
+                                          'db_prefix' => $this->getParamValue($data, 'db_prefix', 'flyspray_'),
                                           'version' => $this->version,
                                        ),
                            ),
@@ -431,17 +433,17 @@ class Setup extends Flyspray
                         'vars' => array(
                                     'product_name' => $this->mProductName,
                                     'required_php' => $this->mPhpRequired,
-                                    'php_output' => $this->CheckPhpCompatibility(),
-                                    'database_output' => $this->GetDatabaseOutput(),
-                                    'config_output' => $this->CheckWriteability('flyspray.conf.php'),
-                                    'cache_output' => $this->CheckWriteability('cache'),
-                                    'att_output' => $this->CheckWriteability('attachments'),
+                                    'php_output' => $this->checkPhpCompatibility(),
+                                    'database_output' => $this->getDatabaseOutput(),
+                                    'config_output' => $this->checkWriteability('flyspray.conf.php'),
+                                    'cache_output' => $this->checkWriteability('cache'),
+                                    'att_output' => $this->checkWriteability('attachments'),
                                     'config_status' => $this->mWriteStatus['flyspray.conf.php'],
                                     'xmlStatus' => $this->xmlStatus,
                                     'sapiStatus' => $this->sapiStatus,
-                                    'php_settings' => $this->GetPhpSettings(),
-                                    'status' => $this->CheckPreStatus(),
-                                    'message' => $this->GetPageMessage(),
+                                    'php_settings' => $this->getPhpSettings(),
+                                    'status' => $this->checkPreStatus(),
+                                    'message' => $this->getPageMessage(),
                                  ),
                      ),
 
@@ -472,7 +474,7 @@ class Setup extends Flyspray
       <tr>
          <td> - $which support</td>
          <td align=\"left\"><strong>{$this->mAvailableDatabases[$which]['status_output']}</strong></td>
-         <td align=\"center\"><strong>". $this->ReturnStatus($this->mAvailableDatabases[$which]['supported'], $type = 'support')  . "</strong></td>
+         <td align=\"center\"><strong>". $this->returnStatus($this->mAvailableDatabases[$which]['supported'], $type = 'support')  . "</strong></td>
       </tr>";
 
       }
@@ -560,7 +562,7 @@ class Setup extends Flyspray
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo', L('on'));
+          $test_settings[] = array('CGI fix pathinfo','cgi.fix_pathinfo', L('on'));
       }
 
       $output = '';
@@ -684,8 +686,7 @@ class Setup extends Flyspray
 
          case 'complete':
             // Prepare the required data
-            $required_data =
-            array(
+            $required_data = array(
                'db_hostname' => array('Database hostname', 'string', true),
                'db_type' =>  array('Database type', 'string', true),
                'db_username' => array('Database username', 'string', true),
@@ -823,12 +824,12 @@ class Setup extends Flyspray
       $this->mDbConnection->setCharSet('utf8');
 
       // Get the users table name.
-      $users_table	= (isset($db_prefix) ? $db_prefix : '') . 'users';
+      $users_table = (isset($db_prefix) ? $db_prefix : '') . 'users';
 
-      $sql	= "SELECT * FROM $users_table WHERE user_id = '1'";
+      $sql = "SELECT * FROM $users_table WHERE user_id = '1'";
 
       // Check if we already have an Admin user.
-      $result = $this->mDbConnection->Execute($sql);
+      $result = $this->mDbConnection->execute($sql);
       if ($result)
       {
          // If the record exists, we update it.
@@ -844,11 +845,13 @@ class Setup extends Flyspray
      SET
         user_name = ?,
         user_pass = ?,
-        email_address = ?
+        email_address = ?,
+	jabber_id = ?,
+	real_name = ?
      WHERE
      user_id = '1'";
 
-     $update_params = array($admin_username, $pwhash, $admin_email);
+     $update_params = array($admin_username, $pwhash, $admin_email, $admin_xmpp, $admin_realname);
 
      $result = $this->mDbConnection->execute($update_user, $update_params);
 
