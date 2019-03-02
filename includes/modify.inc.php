@@ -200,10 +200,10 @@ switch ($action = Req::val('action'))
 	$move=0;
 	if($task['project_id'] != Post::val('project_id')) {
 		$toproject=new Project(Post::val('project_id'));
-		if($user->can_open_task($toproject)){
+		if($user->perms('modify_all_tasks', $toproject->id)){
 			$move=1;
 		} else{
-			$errors['movingtorestrictedproject']=1;
+			$errors['invalidtargetproject']=1;
 		}
 	}
 
@@ -309,9 +309,9 @@ switch ($action = Req::val('action'))
 	}
 
         # FIXME what if we move to different project and reportedver selection is deactivated/not shown in edit task page?
-        # FIXME what if we move to different project and reportedver is deactiveated/not shown in edit task page?
+        # FIXME what if we move to different project and reportedver is deactivated/not shown in edit task page?
         # FIXME what if we move to different project and closedby_version selection is deactivated/not shown in edit task page?
-        # FIXME what if we move to different project and closedby_version is deactiveated/not shown in edit task page?
+        # FIXME what if we move to different project and closedby_version is deactivated/not shown in edit task page?
 	if($move==1){
 		$versionarray=$toproject->listVersions();
 	} else{
