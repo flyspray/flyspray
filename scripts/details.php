@@ -39,7 +39,15 @@ if (!$user->can_view_task($task_details)) {
 
 	$page->setTitle(sprintf('FS#%d : %s', $task_details['task_id'], $task_details['item_summary']));
 
+
 	if ((Get::val('edit') || (Post::has('item_summary') && !isset($_SESSION['SUCCESS']))) && $user->can_edit_task($task_details)) {
+
+		if(isset($move) && $move==1){
+			if( !$user->perms('modify_all_tasks', $toproject->id)){
+				Flyspray::show_error('invalidtargetproject');
+			}
+		}
+
 		$result = $db->query('
 			SELECT g.project_id, u.user_id, u.user_name, u.real_name, g.group_id, g.group_name
 			FROM {users} u
@@ -84,6 +92,8 @@ if (!$user->can_view_task($task_details)) {
 		$osselected=Req::val('operating_system', $task_details['operating_system']);
 		$ttselected=Req::val('task_type', $task_details['task_type']);
 		$stselected=Req::val('item_status', $task_details['item_status']);
+		$repverselected=Req::val('reportedver', $task_details['product_version']);
+		$dueverselected=Req::val('closedby_version', $task_details['closedby_version']);
 		if(isset($move) && $move==1){
 			# get global categories
 			$gcats=$proj->listCategories(0);
@@ -94,7 +104,8 @@ if (!$user->can_view_task($task_details)) {
 						$gcatopts[count($gcatopts)-1]['selected']=1;
 					}
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesglobal'), 'options'=>$gcatopts);
+				#$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesglobal'), 'options'=>$gcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gcatopts);
 			}
 			# get project categories
 			$pcats=$proj->listCategories($proj->id);
@@ -105,7 +116,8 @@ if (!$user->can_view_task($task_details)) {
 						$pcatopts[count($pcatopts)-1]['selected']=1;
 					}
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesproject'), 'options'=>$pcatopts);
+				#$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriesproject').' '.$proj->prefs['project_title'], 'options'=>$pcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$pcatopts);
 			}
 			# get target categories
 			$tcats=$toproject->listCategories($toproject->id);
@@ -116,7 +128,8 @@ if (!$user->can_view_task($task_details)) {
 						$tcatopts[count($tcatopts)-1]['selected']=1;
 					}
 				}
-				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriestarget'), 'options'=>$tcatopts);
+				#$catsel['options'][]=array('optgroup'=>1, 'label'=>L('categoriestarget').' '.$toproject->prefs['project_title'], 'options'=>$tcatopts);
+				$catsel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tcatopts);
 			}
 
 
@@ -128,6 +141,9 @@ if (!$user->can_view_task($task_details)) {
 					$gstopts[]=array('value'=>$gst['status_id'], 'label'=>$gst['status_name']);
 					if($stselected==$gst['status_id']){
 						$gstopts[count($gstopts)-1]['selected']=1;
+					}
+					if($gst['show_in_list']==0){
+						$gstopts[count($gstopts)-1]['disabled']=1;
 					}
 				}
 				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gstopts);
@@ -141,8 +157,11 @@ if (!$user->can_view_task($task_details)) {
 					if($stselected==$cst['status_id']){
 						$cstopts[count($cstopts)-1]['selected']=1;
 					}
+					if($cst['show_in_list']==0){
+						$cstopts[count($cstopts)-1]['disabled']=1;
+					}
 				}
-				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cstopts);
+				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$cstopts);
 			}
 			# get target project task statuses
 			$restst=$db->query("SELECT status_id, status_name, list_position, show_in_list FROM {list_status} WHERE project_id=? ORDER BY list_position", array($toproject->id));
@@ -153,8 +172,11 @@ if (!$user->can_view_task($task_details)) {
 					if($stselected==$tst['status_id']){
 						$tstopts[count($tstopts)-1]['selected']=1;
 					}
+					if($tst['show_in_list']==0){
+						$tstopts[count($tstopts)-1]['disabled']=1;
+					}
 				}
-				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tstopts);
+				$statussel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tstopts);
 			}
 
 
@@ -180,7 +202,7 @@ if (!$user->can_view_task($task_details)) {
 						$cttopts[count($cttopts)-1]['selected']=1;
 					}
 				}
-				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cttopts);
+				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$cttopts);
 			}
 			# get target project tasktypes
 			$resttt=$db->query("SELECT tasktype_id, tasktype_name, list_position, show_in_list FROM {list_tasktype} WHERE project_id=? ORDER BY list_position", array($toproject->id));
@@ -192,48 +214,218 @@ if (!$user->can_view_task($task_details)) {
 						$tttopts[count($tttopts)-1]['selected']=1;
 					}
 				}
-				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tttopts);
+				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tttopts);
 			}
 
 			
 			# allow unset (0) value (field os_id currently defined with NOT NULL by flyspray-install.xml, so must use 0 instead null) 
+			$osfound=0;
 			$ossel['options'][]=array('value'=>0, 'label'=>L('undecided'));
 			# get global operating systems
-			$resgos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=0 ORDER BY list_position");
+			$resgos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=0 AND show_in_list=1 ORDER BY list_position");
 			$goses=$db->fetchAllArray($resgos);
 			if(count($goses)>0){
 				foreach($goses as $gos){
 					$gosopts[]=array('value'=>$gos['os_id'], 'label'=>$gos['os_name']);
 					if($osselected==$gos['os_id']){
 						$gosopts[count($gosopts)-1]['selected']=1;
+						$osfound=1;
 					}
 				}
 				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gosopts);
 			}
 			# get current project operating systems
-			$rescos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? ORDER BY list_position", array($proj->id));
+			$rescos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? AND show_in_list=1 ORDER BY list_position", array($proj->id));
 			$coses=$db->fetchAllArray($rescos);
 			if(count($coses)>0){
 				foreach($coses as $cos){
 					$cosopts[]=array('value'=>$cos['os_id'], 'label'=>$cos['os_name']);
 					if($osselected==$cos['os_id']){
 						$cosopts[count($cosopts)-1]['selected']=1;
+						$osfound=1;
 					}
 				}
-				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject'), 'options'=>$cosopts);
+				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$cosopts);
 			}
 			# get target project operating systems
-			$restos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? ORDER BY list_position", array($toproject->id));
+			$restos=$db->query("SELECT os_id, os_name, list_position, show_in_list FROM {list_os} WHERE project_id=? AND show_in_list=1 ORDER BY list_position", array($toproject->id));
 			$toses=$db->fetchAllArray($restos);
 			if(count($toses)>0){
 				foreach($toses as $tos){
 					$tosopts[]=array('value'=>$tos['os_id'], 'label'=>$tos['os_name']);
 					if($osselected==$tos['os_id']){
 						$tosopts[count($tosopts)-1]['selected']=1;
+						$osfound=1;
 					}
 				}
-				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject'), 'options'=>$tosopts);
+				$ossel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tosopts);
 			}
+			# keep existing operating_system entry choosable even if would not currently selectable by current settings
+			if($osfound==0 && $task_details['operating_system']>0){
+				# get operating_system of that existing old entry, even if show_in_list=0 or other project
+				$resexistos=$db->query("
+					SELECT os.os_id, os.os_name, os.list_position, os.show_in_list, os.project_id, p.project_id AS p_project_id FROM {list_os} os
+					LEFT JOIN {projects} p ON p.project_id=os.project_id
+					WHERE os.os_id=?", array($task_details['operating_system']));
+				$existos=$db->fetchRow($resexistos);
+				if($existos['project_id']==$proj->id){
+					$existosgrouplabel=$proj->prefs['project_title'].': existing reported version';
+				} elseif($existos['project_id']==$toproject->id){
+					$existosgrouplabel=$toproject->prefs['project_title'].': existing reported version';
+				} else{
+					# maybe version_id from other/hidden/forbidden/deleted project, so only show project_id as hint.
+					# if user has view permission of this other project, then showing project_title would be ok -> extra sql required
+					$existosgrouplabel='existing os of project '.($existos['p_project_id']->id);
+				}
+				$existosopts[]=array('value'=>$task_details['operating_system'], 'label'=>$existos['os_name']);
+				if($osselected==$task_details['operating_system']){
+					$existosopts[count($existosopts)-1]['selected']=1;
+				}
+
+				#$ossel['options'][]=array('optgroup'=>1, 'label'=>$existosgrouplabel, 'options'=>$existosopts);
+				# put existing at beginning
+				$ossel['options']=array_merge(array(array('optgroup'=>1, 'label'=>$existosgrouplabel, 'options'=>$existosopts)), $ossel['options']);
+			}
+
+			
+
+			# get list global reported versions
+			# FIXME/TODO: Should we use 'show_in_list' list setting here to filter them out here? Or distinguish between editor/projectmanager/admin roles?
+			# FIXME/TODO: All Flyspray version up to 1.0-rc8 only versions with tense=2 were shown for edit.
+			# But what if someone edits an old tasks (maybe reopened an old closed), and that old task is connected with an old reported version (tense=1)
+			# Or that {list_version} entry has now show_in_list=0 set ? 
+			# In both cases that version would not be selectable for editing the task, although it is the correct reported version.
+			$reportedversionfound=0;
+			$repversel['options'][]=array('value'=>0, 'label'=>L('undecided'));
+			$resgrepver=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=0
+				AND version_tense=2
+				AND show_in_list=1
+				ORDER BY list_position");
+			$grepvers=$db->fetchAllArray($resgrepver);
+			if(count($grepvers)>0){
+				foreach($grepvers as $grepver){
+					$grepveropts[]=array('value'=>$grepver['version_id'], 'label'=>$grepver['version_name']);
+					if($repverselected==$grepver['version_id']){
+						$grepveropts[count($grepveropts)-1]['selected']=1;
+						$reportedversionfound=1;
+					}
+				}
+				$repversel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$grepveropts);
+			}
+			# get current project reported versions
+			$rescrepver=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=?
+				AND version_tense=2
+				AND show_in_list=1
+				ORDER BY list_position", array($proj->id));
+			$crepvers=$db->fetchAllArray($rescrepver);
+			if(count($crepvers)>0){
+				foreach($crepvers as $crepver){
+					$crepveropts[]=array('value'=>$crepver['version_id'], 'label'=>$crepver['version_name']);
+					if($repverselected==$crepver['version_id']){
+						$crepveropts[count($crepveropts)-1]['selected']=1;
+						$reportedversionfound=1;
+					}
+				}
+				$repversel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$crepveropts);
+			}
+			# get target project reported versions
+			$restrepver=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=?
+				AND version_tense=2
+				AND show_in_list=1
+				ORDER BY list_position", array($toproject->id));
+			$trepvers=$db->fetchAllArray($restrepver);
+			if(count($trepvers)>0){
+				foreach($trepvers as $trepver){
+					$trepveropts[]=array('value'=>$trepver['version_id'], 'label'=>$trepver['version_name']);
+					if($repverselected==$trepver['version_id']){
+						$trepveropts[count($trepveropts)-1]['selected']=1;
+						$reportedversionfound=1;
+					}
+				}
+				$repversel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$trepveropts);
+			}
+			# keep existing reportedversion(product_version) choosable even if would not currently selectable by current settings
+			if($reportedversionfound==0 && $task_details['product_version']>0){
+				# get version_name of that existing old entry, even if tense is past or show_in_list=0 or other project
+				$resexistrepver=$db->query("
+					SELECT v.version_id, v.version_name, v.list_position, v.show_in_list, v.project_id, p.project_id AS p_project_id FROM {list_version} v
+					LEFT JOIN {projects} p ON p.project_id=v.project_id
+					WHERE v.version_id=?", array($task_details['product_version']));
+				$existrepver=$db->fetchRow($resexistrepver);
+				if($existrepver['project_id']==$proj->id){
+					$existgrouplabel=$proj->prefs['project_title'].': existing reported version';
+				} elseif($existrepver['project_id']==$toproject->id){
+					$existgrouplabel=$toproject->prefs['project_title'].': existing reported version';
+				} else{
+					# maybe version_id from other/hidden/forbidden/deleted project, so only show project_id as hint.
+					# if user has view permission of this other project, then showing project_title would be ok -> extra sql required
+					$existgrouplabel='existing reported version of project '.($existrepver['p_project_id']);
+				}
+				$existrepveropts[]=array('value'=>$task_details['product_version'], 'label'=>$existrepver['version_name']);
+				if($repverselected==$task_details['product_version']){
+					$existrepveropts[count($existrepveropts)-1]['selected']=1;
+				}
+
+				#$repversel['options'][]=array('optgroup'=>1, 'label'=>$existgrouplabel, 'options'=>$existrepveropts);
+				# put existing at beginning
+				$repversel['options']=array_merge(array(array('optgroup'=>1, 'label'=>$existgrouplabel, 'options'=>$existrepveropts)), $repversel['options']);
+			}
+
+
+			# get list global due versions
+			# FIXME/TODO: Should we use 'show_in_list' list setting here to filter them out here? Or distinguish between editor/projectmanager/admin roles?
+			$dueversel['options'][]=array('value'=>0, 'label'=>L('undecided'));
+			$resgduever=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=0
+				AND version_tense=3
+				AND show_in_list=1
+				ORDER BY list_position");
+			$gduevers=$db->fetchAllArray($resgduever);
+			if(count($gduevers)>0){
+				foreach($gduevers as $gduever){
+					$gdueveropts[]=array('value'=>$gduever['version_id'], 'label'=>$gduever['version_name']);
+					if($dueverselected==$gduever['version_id']){
+						$gdueveropts[count($gdueveropts)-1]['selected']=1;
+					}
+				}
+				$dueversel['options'][]=array('optgroup'=>1, 'label'=>L('globaloptions'), 'options'=>$gdueveropts);
+			}
+			# get current project due versions
+			$rescduever=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=?
+				AND version_tense=3
+				AND show_in_list=1
+				ORDER BY list_position", array($proj->id));
+			$cduevers=$db->fetchAllArray($rescduever);
+			if(count($cduevers)>0){
+				foreach($cduevers as $cduever){
+					$cdueveropts[]=array('value'=>$cduever['version_id'], 'label'=>$cduever['version_name']);
+					if($dueverselected==$cduever['version_id']){
+						$cdueveropts[count($cdueveropts)-1]['selected']=1;
+					}
+				}
+				$dueversel['options'][]=array('optgroup'=>1, 'label'=>L('currentproject').' '.$proj->prefs['project_title'], 'options'=>$cdueveropts);
+			}
+			# get target project due versions
+			$restduever=$db->query("SELECT version_id, version_name, list_position, show_in_list FROM {list_version}
+				WHERE project_id=?
+				AND version_tense=3
+				AND show_in_list=1
+				ORDER BY list_position", array($toproject->id));
+			$tduevers=$db->fetchAllArray($restduever);
+			if(count($tduevers)>0){
+				foreach($tduevers as $tduever){
+					$tdueveropts[]=array('value'=>$tduever['version_id'], 'label'=>$tduever['version_name']);
+					if($dueverselected==$tduever['version_id']){
+						$tdueveropts[count($tdueveropts)-1]['selected']=1;
+					}
+				}
+				$dueversel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tdueveropts);
+			}
+
 
 		}else{
 			# just the normal merged global/project categories
@@ -285,6 +477,34 @@ if (!$user->can_view_task($task_details)) {
 				}
 				$ossel['options']=$osopts;
 			}
+
+			# just the normal merged global/project reported version
+			$repversions=$proj->listVersions(false, 2, $task_details['product_version']);
+			# also allow unsetting dueversion system entry
+			$repveropts[]=array('value'=>0, 'label'=>L('undecided'));
+			if( count($repversions)>0){
+				foreach($repversions as $repver){
+					$repveropts[]=array('value'=>$repver['version_id'], 'label'=>$repver['version_name']);
+					if($repverselected==$repver['version_id']){
+						$repveropts[count($repveropts)-1]['selected']=1;
+					}
+				}
+				$repversel['options']=$repveropts;
+			}
+
+			# just the normal merged global/project dueversion
+			$dueversions=$proj->listVersions(false, 3); # future (tense=3) with 'shown_in_list' set
+			# also allow unsetting dueversion system entry
+			$dueveropts[]=array('value'=>0, 'label'=>L('undecided'));
+			if( count($dueversions)>0){
+				foreach($dueversions as $duever){
+					$dueveropts[]=array('value'=>$duever['version_id'], 'label'=>$duever['version_name']);
+					if($dueverselected==$duever['version_id']){
+						$dueveropts[count($dueveropts)-1]['selected']=1;
+					}
+				}
+				$dueversel['options']=$dueveropts;
+			}
 		}
 		$catsel['name']='product_category';
 		$catsel['attr']['id']='category';
@@ -301,6 +521,14 @@ if (!$user->can_view_task($task_details)) {
 		$ossel['name']='operating_system';
 		$ossel['attr']['id']='os';
 		$page->assign('osselect', $ossel);
+
+		$repversel['name']='reportedver';
+		$repversel['attr']['id']='reportedver';
+		$page->assign('reportedversionselect', $repversel);
+
+		$dueversel['name']='closedby_version';
+		$dueversel['attr']['id']='dueversion';
+		$page->assign('dueversionselect', $dueversel);
 
 		# user tries to move a task to a different project:
 		if(isset($move) && $move==1){
