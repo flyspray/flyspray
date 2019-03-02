@@ -1,4 +1,4 @@
-<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])),null,null,null,'id="taskeditform"'); ?>
+<?php echo tpl_form(Filters::noXSS(createUrl('details', $task_details['task_id'])),null,null,null,'id="taskeditform"'); ?>
 <!-- Grab fields wanted for this project so we can only show those we want -->
 <?php $fields = explode( ' ', $proj->prefs['visible_fields'] ); 
 # FIXME The template should respect the ordering of 'visible_fields', aren't they?
@@ -98,26 +98,15 @@ li.errorinput{background-color:#fc9;}
 		echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? ' class="errorinput"' : (in_array('reportedin', $fields) ? '' : ' style="display:none"'); ?>>
 		<?php echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? '<span class="errorinput" style="display:block;">'.eL('invalidreportedversion').'</span>' : ''; ?>
 		<label for="reportedver"><?= eL('reportedversion') ?></label>
-		<select id="reportedver" name="reportedver">
-			<?php
-			# TODO seperate also global option from current project option by optgroup or css classes
-			# we need better listVersions() / tpl_options() / tpl_select()
-			echo (isset($move) && $move==1)? '<optgroup label="'.L('currentproject').'">' :'';
-			echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
-			echo (isset($move) && $move==1)? '</optgroup>' :'';
-			<?php
-			if(isset($move) && $move==1) :
-				echo '<optgroup label="'.L('targetproject').'">'.tpl_options($toproject->listVersions(false, false, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])).'</optgroup>';
-			endif; ?>
-		</select>
+		<?php echo tpl_select($reportedversionselect); ?>
 	</li>
 	<!-- Due Version -->
-	<li<?php echo in_array('dueversion', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="dueversion"<?php echo isset($_SESSION['ERRORS']['invaliddueversion']) ? ' class="errorinput" title="'.eL('invaliddueversion').'"':''; ?>><?php echo Filters::noXSS(L('dueinversion')); ?></label>
-		<select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
-		<option value="0"><?= eL('undecided') ?></option>
-		<?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
-		</select>
+	<li<?php
+		# show the dueversion if invalid when moving tasks - even if not in the visible list.
+		echo isset($_SESSION['ERRORS']['invaliddueversion']) ? ' class="errorinput"' : (in_array('dueversion', $fields) ? '' : ' style="display:none"'); ?>>
+		<?php echo isset($_SESSION['ERRORS']['invaliddueversion']) ? '<span class="errorinput" style="display:block;">'.eL('invaliddueversion').'</span>' : ''; ?>
+		<label for="dueversion"><?= eL('dueinversion') ?></label>
+		<?php echo tpl_select($dueversionselect); ?>
 	</li>
 	<!-- Due Date -->
 	<li<?php echo (in_array('duedate', $fields) && $user->perms('modify_all_tasks')) ? '' : ' style="display:none"'; ?>>
@@ -156,11 +145,15 @@ li.errorinput{background-color:#fc9;}
 		$foo = array( $id, $title, 'project_id' => $id, 'project_title' => $title);
 		array_unshift( $fs->projects,  $foo);
 	}
+
 	?>
 
 	<!-- If there is only one choice of projects, then don't bother showing it -->
-	<li<?php echo (count($fs->projects) > 1) ? '' : ' style="display:none"'; ?>>
-		<label for="project_id"<?php echo isset($_SESSION['ERRORS']['movingtorestrictedproject']) ? ' class="errorinput" title="'.eL('movingtorestrictedproject').'"':''; ?>><?php echo Filters::noXSS(L('attachedtoproject')); ?></label>
+	<li<?php
+		# show the targetproject selector if invalid when moving tasks
+		echo isset($_SESSION['ERRORS']['invalidtargetproject']) ? ' class="errorinput"' : ''; ?>>
+		<?php echo isset($_SESSION['ERRORS']['invalidtargetproject']) ? '<span class="errorinput" style="display:block;">'.eL('invalidtargetproject').'</span>' : ''; ?>
+		<label for="project_id"><?= eL('attachedtoproject') ?></label>
 		<select name="project_id" id="project_id">
 		<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
 		</select>
