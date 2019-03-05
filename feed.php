@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/header.php');
 $page = new FSTpl();
 
 // Set up the basic XML head
-header ('Content-type: text/html; charset=utf-8');
+header('Content-Type: application/xml; charset=utf-8');
 
 $max_items  = (Req::num('num', 10) == 10) ? 10 : 20;
 $sql_project = ' 1=1 ';
@@ -156,6 +156,5 @@ if ($fs->prefs['cache_feeds']) {
     }
 }
 
-header('Content-Type: application/xml; charset=utf-8');
 echo $content;
 ?>
