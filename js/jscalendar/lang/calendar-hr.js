@@ -47,3 +47,7 @@ Calendar._TT["DEF_DATE_FORMAT"] = "dd-mm-y";
 Calendar._TT["TT_DATE_FORMAT"] = "DD, dd.mm.y";
 
 Calendar._TT["WK"] = "Tje";
+
+// First day of the week. 0 means display Sunday first, 1 means display
+// Monday first, etc.
+Calendar._FD = 1;
