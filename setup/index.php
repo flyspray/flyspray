@@ -720,13 +720,19 @@ class Setup extends Flyspray
       // Extract the variables to local namespace
       extract($data);
 
-	  if(!isset($db_password)) {
-		  $db_password = '';
-	  }
-
-	  if(!isset($syntax_plugin)) {
-		  $syntax_plugin = '';
-	  }
+		if(!isset($db_password)) {
+			$db_password = '';
+		}
+		if(!isset($admin_xmpp)) {
+			$admin_xmpp = '';
+		}
+		if(!isset($admin_realname)) {
+			$admin_realname = '';
+		}
+	   
+		if(!isset($syntax_plugin)) {
+			$syntax_plugin = '';
+		}
 
       $config_intro	=
       "; <?php die( 'Do not access this page directly.' ); ?>
@@ -765,7 +771,7 @@ class Setup extends Flyspray
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
       $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; dokuwiki, none, or html';
-      $config[] = "update_check = \"1\"                               ; Boolean. 0 = off, 1 = on.";
+      $config[] = "update_check = \"1\"                               ; Boolean. 0=off, 1=on";
       $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
