@@ -1,9 +1,9 @@
 // ** I18N
 
-// Calendar EN language
+// Calendar KO language
 // Author: Mihai Bazon, <mihai_bazon@yahoo.com>
 // Translation: Yourim Yi <yyi@yourim.net>
-// Encoding: EUC-KR
+// Encoding: UTF-8
 // lang : ko
 // Distributed under the same terms as the calendar itself.
 
@@ -12,7 +12,6 @@
 // include your contact information in the header, as can be seen above.
 
 // full day names
-
 Calendar._DN = new Array
 ("일요일",
  "월요일",
