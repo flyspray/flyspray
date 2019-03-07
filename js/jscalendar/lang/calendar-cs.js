@@ -1,7 +1,7 @@
 /* 
-	calendar-cs-win.js
+	calendar-cs.js
 	language: Czech
-	encoding: windows-1250
+	encoding: utf-8
 	author: Lubos Jerabek (xnet@seznam.cz)
 	        Jan Uhlir (espinosa@centrum.cz)
 */
@@ -63,3 +63,7 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "wk";
 Calendar._TT["TIME"] = "Čas:";
+
+// First day of the week. 0 means display Sunday first, 1 means display
+// Monday first, etc.
+Calendar._FD = 1;
