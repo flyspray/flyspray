@@ -319,7 +319,7 @@ function createTestData(){
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." i users created\n";
+	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." indi users created\n";
 
 
 	// That's why we need some more global groups with different viewing rights
@@ -333,7 +333,7 @@ function createTestData(){
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." i users created\n";
+	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." basic users created\n";
 
 
 	// Must recreate, so rights for new projects get loaded. Otherwise,
@@ -466,12 +466,17 @@ function createTestData(){
 			);
 		}
 		$prevtaskopened=$opened;
+		if($i%500==0){
+                        echo $i.' mem:'.memory_get_usage()."\n";
+                }
 	} # end for maxtasks
 
 	$last=$now;$now=microtime(true); echo round($now-$last,6).': '.$maxtasks." tasks created\n";
 
+	echo "Creating $maxcomments comments: \n";
+        $maxtask=$task_id;
 	for ($i = 1; $i <= $maxcomments; $i++) {
-		$taskid = rand(2, $maxtasks + 1);
+		$taskid = rand(2, $maxtask);
 		$task = Flyspray::getTaskDetails($taskid, true);
 		$project_id = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
@@ -500,6 +505,10 @@ function createTestData(){
 		$comment_id=Backend::add_comment($task, $comment);
 		$db->query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
 			array($reporter->id, $added, $comment_id));
+		
+		if($i%500==0){
+                        echo $i.' mem:'.memory_get_usage()."\n";
+                }
 	} # end for maxcomments
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxcomments." comments created\n";
 
