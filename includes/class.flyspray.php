@@ -328,7 +328,7 @@ class Flyspray
      * @return mixed an array with all taskdetails or false on failure
      * @version 1.0
      */
-   public static  function getTaskDetails($task_id, $cache_enabled = false)
+   public static function getTaskDetails($task_id, $cache_enabled = false)
     {
         global $db, $fs;
 
@@ -339,7 +339,7 @@ class Flyspray
         }
 
         //for some reason, task_id is not here
-        // run away inmediately..
+        // run away immediately..
         if(!is_numeric($task_id)) {
             return false;
         }
@@ -385,10 +385,17 @@ class Flyspray
             $get_details['assigned_to'] = $assignees[0];
             $get_details['assigned_to_name'] = $assignees[1];
         }
-        $cache[$task_id] = $get_details;
-
-        return $get_details;
-    }
+	
+		/**
+		 * prevent RAM growing array like creating 100000 tasks with Backend::create_task() in a loop (Tests)
+		 * Costs maybe some SQL queries if getTaskDetails is called first without $cache_enabled
+		 * and later with $cache_enabled within same request
+		 */
+		if($cache_enabled){
+			$cache[$task_id] = $get_details;
+		}
+		return $get_details;
+	}
 
 	/**
 	* Returns a list of all projects
@@ -1217,7 +1224,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
      * @return integer 0 if the user does not exist
      * @version 1.0
      */
-    public static function ValidUserId($id)
+    public static function validUserId($id)
     {
         global $db;
 
