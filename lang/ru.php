@@ -11,6 +11,7 @@
 // when using the .langedit.php editor!
 //
 $translation = array(
+'locale'                  => 'ru',
 'edituser'                => 'Редактировать пользователя',
 'accountenabled'          => 'Аккаунт включён',
 'editallusers'            => 'Все пользователи',
