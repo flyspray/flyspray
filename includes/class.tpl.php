@@ -795,7 +795,9 @@ function tpl_select($select=array()){
 		}
 	}
 	$html='<select'.$name.$attrjoin.'>';
-	$html.=tpl_selectoptions($select['options']);
+	if(isset($select['options'])){
+		$html.=tpl_selectoptions($select['options']);
+	}
 	$html.="\n".'</select>';
 	return $html;
 }
