@@ -456,8 +456,13 @@ class Notifications {
             $message->getHeaders()->addTextHeader('References', $inreplyto);
         }
 
-        // now accepts string , array or Swift_Address.
-        $message->setTo($to);
+	// accepts string, array, or Swift_Address
+	if( is_array($to) && count($to)>1 ){
+		$message->setTo($fs->prefs['admin_email']);
+        	$message->setBcc($to);
+	} else{
+		$message->setTo($to);
+	}
         $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
         $swift->send($message);
 
