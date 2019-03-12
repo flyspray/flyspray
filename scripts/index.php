@@ -83,8 +83,9 @@ while ($row = $db->fetchRow($result)) {
 
 $page->assign('userlist', $userlist);
 
-// tpl function that Displays a header cell for report list {{{
-
+/**
+ * tpl function that Displays a header cell for report list 
+ */
 function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
     global $proj, $page;
@@ -137,9 +138,10 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	return sprintf($format, ' class="'.$class.'"', $html);
 }
 
-// }}}
-// tpl function that  draws a cell {{{
 
+/**
+ * tpl function that  draws a cell
+ */
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 	global $fs, $db, $proj, $page, $user;
 
@@ -338,21 +340,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 	return sprintf($format, $class, $value);
 }
 
-// } }}
-
-// }}}
-// Added LAE 2/1/2014 - little function to export the tasklist into a .csv file and upload it to user browser {{{
-
 $sort;
 $orderby;
 
-/*********************************************
-*
-* comparison function used by export_task_list
-*
-**********************************************
-*/
-
+/**
+ *
+ * comparison function used by export_task_list
+ *
+ */
 function do_cmp($a, $b)
 {
  global $sort,$orderby;
@@ -388,12 +383,10 @@ function my_fputcsv($handle, $fields)
 }
 
 
-/*********************************************
-*
-* Export the task list as a .csv file
-*
-*********************************************
-*/
+/**
+ * Export the tasks as a .csv file
+ * Currently only a fixed list of task fields
+ */
 function export_task_list()
 {
 	global $tasks, $fs, $user, $sort, $orderby, $proj;
@@ -472,37 +465,41 @@ function export_task_list()
 		'date_opened',
 		'date_closed',
 		'due_date',
-		'supertask_id',
-		$user->perms('view_estimated_effort') ?'Estimated Effort':'',
-		// $user->perms('view_current_effort_done') ?'Done Effort':'',
-		'Description',
+		'supertask_id'
 	);
+	if($user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
+		$headings[]='Estimated Effort';
+	}
+	$headings[]='Description';
+	//if($user->perms('view_current_effort_done') && $proj->id>0 && $proj->prefs['use_effort_tracking']){ $headings[]='Done Effort'; }
 
         #fputcsv($output, $headings);
 	my_fputcsv($output, $headings); # fixes 'SYLK' FS#2123 Excel problem
-        foreach ($tasks as $task) {
-                $row = array(
-                        $task['task_id'],
-                        $task['category_name'],
-                        $task['task_type'],
-                        $fs->severities[ $task['task_severity'] ],
-                        $task['item_summary'],
-                        $task['status_name'],
-                        $task['percent_complete'],
-                        $task['date_opened'],
-                        $task['date_closed'],
-                        $task['due_date'],
-                        $task['supertask_id'],
-                        ($user->perms('view_estimated_effort') && $proj->prefs['use_effort_tracking']) ? $task['estimated_effort'] : '',
-                        // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
-                        $task['detailed_desc']
-                );
-                my_fputcsv($output, $row); # fputcsv() is buggy
-        }
-        fclose($output);
-        exit();
+	foreach ($tasks as $task) {
+		$row = array(
+			$task['task_id'],
+			$task['category_name'],
+			$task['task_type'],
+			$fs->severities[ $task['task_severity'] ],
+			$task['item_summary'],
+			$task['status_name'],
+			$task['percent_complete'],
+			$task['date_opened'],
+			$task['date_closed'],
+			$task['due_date'],
+			$task['supertask_id']
+		);
+		if( $user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
+			$row[]=$task['estimated_effort'];
+		}
+		$row[]=$task['detailed_desc'];
+		//if( $user->perms('view_current_effort_done') && $proj->id>0 && $proj->prefs['use_effort_tracking']){ $row=$task['effort']; }
+
+		my_fputcsv($output, $row); # fputcsv() is buggy
+	}
+	fclose($output);
+	exit();
 }
-// } }}
 
 // Javascript replacement
 if (Get::val('toggleadvanced')) {
@@ -510,7 +507,10 @@ if (Get::val('toggleadvanced')) {
     Flyspray::setCookie('advancedsearch', $advanced_search, time()+60*60*24*30);
     $_COOKIE['advancedsearch'] = $advanced_search;
 }
-// Update check {{{
+
+/**
+ * Update check
+ */
 if(Get::has('hideupdatemsg')) {
 	unset($_SESSION['latest_version']);
 } else if ($conf['general']['update_check'] 
@@ -526,7 +526,8 @@ if(Get::has('hideupdatemsg')) {
 if (isset($_SESSION['latest_version']) && version_compare($fs->version, $_SESSION['latest_version'] , '<') ) {
 	$page->assign('updatemsg', true);
 }
-// }}}
+
+
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('tasklist'));
 $page->pushTpl('index.tpl');
 
