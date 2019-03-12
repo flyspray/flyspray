@@ -477,7 +477,7 @@ function createTestData(){
         $maxtask=$task_id;
 	for ($i = 1; $i <= $maxcomments; $i++) {
 		$taskid = rand(2, $maxtask);
-		$task = Flyspray::getTaskDetails($taskid, true);
+		$task = Flyspray::getTaskDetails($taskid);
 		$project_id = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
 		$added = time() - rand(1, $timerange);
