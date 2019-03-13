@@ -37,17 +37,20 @@ header("Pragma: no-cache");
 		if (ini_get('safe_mode') == 1) {
 			$composerfile = file_get_contents('https://getcomposer.org/installer');
 			file_put_contents('composerinstaller', $composerfile);
-			echo 'Download done'.'<br>';
+
+			echo "\t\t<div class=\"success\" style=\" width: 30%;min-width:300px;margin-bottom: 1em\">\r\n\t\t\tSuccessfully downloaded Composer.\r\n";
+			echo "\r\n\t\t</div>\r\n";
+
 			$argv = array('--disable-tls'); # just for avoiding warnings
 			?>
 			<h3>Step 2: Trying to load composerinstaller into the running php script</h3>
-			<p>Wait a few seconds until composerinstaller put his output under the button. Once the output looks good, try installing the dependencies using the button.</p>
+			<p>Wait a few seconds until composerinstaller puts its output under the button. Once the output looks good, try installing the dependencies using the button.</p>
 			<a href="composerit2.php" class="button" style="padding:1em;font-size:1em">Install dependencies</a>
 			<pre>
 			<?php
 			require 'composerinstaller';
 			# Ok, composerinstaller exits itself, so no more code needed here, but it looks more complete :-)
-			echo '</pre>';
+			echo "</pre>\r\n";
 		} else {
 			$phpexe='php';
 			# TODO: autodetect the matching commandline php on the host matching the php version of the webserver
@@ -58,11 +61,14 @@ header("Pragma: no-cache");
 			}
 			shell_exec($phpexe.' -r "readfile(\'https://getcomposer.org/installer\');" | '.$phpexe);
 			if (!is_readable('composer.phar')) {
-				die('Composer installer download failed! Please consider downloading vendors directly from Flyspray support website');
+				echo "\t\t<div class=\"error\" style=\" width: 30%;min-width:300px;\">\r\n\t\t\t<strong>Composer installer download failed!</strong><br>
+				Please consider downloading vendors directly <a href=\"http://www.flyspray.org/docs/download/\" target=\"_blank\">from Flyspray support website</a>\r\n\t\t</div>\r\n";
+			} else {
+				echo "\t\t<div class=\"success\" style=\" width: 30%;min-width:300px;\">\r\n\t\t\tSuccessfully downloaded Composer.\r\n";
+				echo '<span style="margin-left: 1rem"><a href="composerit2.php" class="button" style="padding:1em;font-size:1em">Try to install dependencies</a></div>';
+				echo "\r\n\t\t</div>\r\n";
 			}
-			echo 'Successfully downloaded Composer.<br /><br />';
-			echo '<a href="composerit2.php" class="button" style="padding:1em;font-size:1em">Try to install dependencies</a>';
 		}
 ?>
-</body>
+	</body>
 </html>
