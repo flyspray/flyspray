@@ -22,7 +22,7 @@ function toggleCheckbox(id)
 <select name="showfields[]" multiple="multiple" size="3">
 <option value="-">---basic---</option>
 <option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
-<option value="ltf"<?php echo $showltf? 'selected="selected"':'';?>>language, timezone, dateformat</option>
+<option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
 </select>
 <button type="submit">Show selected fields</button>
 </form>
@@ -40,12 +40,12 @@ if ($do == 'admin'): ?>
 	<thead>
 	<tr class="account_header">
 		<th></th>
-		<th><?php echo Filters::noXSS(L('realname')); ?></th>
-		<th><?php echo Filters::noXSS(L('username')); ?></th>
-		<th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
-		<th><?php echo Filters::noXSS(L('jabberid')); ?></th>
-                <th><?php echo Filters::noXSS(L('regdate')); ?></th>
-		<th><?php echo Filters::noXSS(L('lastlogin')); ?></th>
+		<th><?= eL('realname') ?></th>
+		<th><?= eL('username') ?></th>
+		<th><?= eL('emailaddress') ?></th>
+		<th><?= eL('jabberid') ?></th>
+                <th><?= eL('regdate') ?></th>
+		<th><?= eL('lastlogin') ?></th>
 <?php if($showstats): ?>
 		<th>opened_by</th>
 		<th>closed_by</th>
@@ -55,10 +55,10 @@ if ($do == 'admin'): ?>
 		<th>votes</th>
 <?php endif; ?>
 <?php if($showltf): ?>
-		<th><?php echo Filters::noXSS(L('language')); ?></th>
-		<th><?php echo Filters::noXSS(L('timezone')); ?></th>
-		<th><?php echo Filters::noXSS(L('dateformat')); ?></th>
-		<th><?php echo Filters::noXSS(L('dateformat_extended')); ?></th>
+		<th><?= eL('language') ?></th>
+		<th><?= eL('timezone') ?></th>
+		<th><?= eL('dateformat') ?></th>
+		<th><?= eL('dateformat_extended') ?></th>
 <?php endif; ?>
 	</tr>
 	</thead>
@@ -94,21 +94,21 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 	</tbody>
 </table>
 
-<button type="submit" id="buSubmit" name="enable"><?php echo Filters::noXSS(L('enableaccounts')); ?></button>
-<button type="submit" id="buSubmit" name="disable"><?php echo Filters::noXSS(L('disableaccounts')); ?></button>
-<button type="submit" id="buSubmit" name="delete"><?php echo Filters::noXSS(L('deleteaccounts')); ?></button>
+<button type="submit" id="buSubmit" name="enable"><?= eL('enableaccounts') ?></button>
+<button type="submit" id="buSubmit" name="disable"><?= eL('disableaccounts') ?></button>
+<button type="submit" id="buSubmit" name="delete"><?= eL('deleteaccounts') ?></button>
 
 <!-- TODO Should still add these to bulk edit, but hasn't been done yet
 <ul class="form_elements">
 <li class="required">
-      <label for="notify_type"><?php echo Filters::noXSS(L('notifications')); ?></label>
+      <label for="notify_type"><?= eL('notifications') ?></label>
       <select id="notify_type" name="notify_type">
-        <?php echo tpl_options($fs->GetNotificationOptions(), Req::val('notify_type')); ?>
+        <?php echo tpl_options($fs->getNotificationOptions(), Req::val('notify_type')); ?>
 
       </select>
 </li>
 <li>
-      <label for="time_zone"><?php echo Filters::noXSS(L('timezone')); ?></label>
+      <label for="time_zone"><?= eL('timezone') ?></label>
       <select id="time_zone" name="time_zone">
         <?php
           $times = array();
@@ -123,7 +123,7 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
 
     <?php if (isset($groups)): ?>
     <li>
-      <label for="groupin"><?php echo Filters::noXSS(L('globalgroup')); ?></label>
+      <label for="groupin"><?= eL('globalgroup') ?></label>
       <select id="groupin" class="adminlist" name="group_in">
         <?php echo tpl_options($groups, Req::val('group_in')); ?>
 
@@ -132,6 +132,6 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
     <?php endif; ?>
 
   </ul>
-  <p><button type="submit" id="buSubmit"><?php echo Filters::noXSS(L('Update Accounts')); ?></button></p>
+  <p><button type="submit" id="buSubmit"><?= eL('updateaccounts') ?></button></p>
 -->
 </form>
