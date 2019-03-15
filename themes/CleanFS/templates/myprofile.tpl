@@ -1,4 +1,10 @@
 <div class="box"><h3><?= eL('editmydetails') ?></h3>
+<ul class="form_elements">
+<li title="<?= eL('usernamenotchangeable') ?>">
+<label><?= eL('username') ?></label>
+<input type="text" style="border:none;background:none;width:auto;" disabled="disabled" value="<?= $user->infos['user_name'] ?>" />
+</li>
+</ul>
 <?php $this->display('common.profile.tpl'); ?>
 </div>
 <div class="box"><h3><?= L('myvotes') ?></h3>
