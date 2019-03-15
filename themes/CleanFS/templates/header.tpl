@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo Filters::noXSS(L('locale')); ?>" xml:lang="<?php echo Filters::noXSS(L('locale')); ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?= eL('locale') ?>" xml:lang="<?= eL('locale') ?>">
 <head>
 <title><?php echo Filters::noXSS($this->_title); ?></title>
 <meta name="description" content="Flyspray, a Bug Tracking System written in PHP." />
@@ -51,7 +51,6 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
-<!--[if IE]><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/excanvas.js"></script><![endif]-->
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/jit.js"></script>
 <?php endif; ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tabs.js"></script>
@@ -62,9 +61,6 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
 <?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
 <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
-<!--[if IE]>
-<link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>ie.css" rel="stylesheet" type="text/css" />
-<![endif]-->
 <?php foreach(TextFormatter::get_javascript() as $file): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
 <?php endforeach; ?>
