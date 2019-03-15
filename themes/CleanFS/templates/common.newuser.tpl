@@ -15,7 +15,7 @@ endif; ?>
 			<?php else: ?>
 				<input type="hidden" name="action" value="register.newuser" />
 			<?php endif; ?>
-			<label for="username"><?= eL('username') ?>*</label>
+			<label for="username"><?= eL('username') ?></label>
 			<input id="username" name="user_name" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" required="required" type="text" size="20" maxlength="32" onblur="checkname(this.value);" />
 			<br /><span id="errormessage"></span>
 		</li>
@@ -35,19 +35,19 @@ endif; ?>
 	<?php endif; ?>
 
 		<li class="required">
-			<label for="realname"><?= eL('realname') ?>*</label>
+			<label for="realname"><?= eL('realname') ?></label>
 			<input id="realname" name="real_name" required="required" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" type="text" size="20" maxlength="100" />
 		</li>
 		
 		<li class="required">
-			<label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?>*</label>
+			<label for="emailaddress"><?= eL('emailaddress') ?></label>
 			<input id="emailaddress" name="email_address" required="required" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" />
 			<!-- <em><?= eL('validemail') ?></em> -->
 		</li>
 
 	<?php if( $do==='register' && $fs->prefs['repeat_emailaddress'] ): ?>
 		<li>
-			<label for="verifyemailaddress"><?php echo Filters::noXSS(L('verifyemailaddress')); ?></label>
+			<label for="verifyemailaddress"><?= eL('verifyemailaddress') ?></label>
 			<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" required="required" type="text" size="20" maxlength="100" />
 		</li>
 	<?php endif; ?>
