@@ -437,12 +437,18 @@ span.pagenums:before{ content:"--";padding-left:10px;padding-right:10px;}
   padding: 10px;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
+  position:relative;
 }
 #search fieldset {
     margin: 10px 0px 10px 0px;
     padding: 10px;
     border: solid 1px #e1e1e1;
     border-radius: 3px;
+}
+#search #exporttasklist {
+	position:absolute;
+	right:0;
+	top:0;
 }
 #intromessage {
   margin: 10px 0px 10px 0px;
