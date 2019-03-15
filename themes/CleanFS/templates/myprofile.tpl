@@ -1,14 +1,14 @@
-<div class="box"><h3><?php echo Filters::noXSS(L('editmydetails')); ?></h3>
+<div class="box"><h3><?= eL('editmydetails') ?></h3>
 <?php $this->display('common.profile.tpl'); ?>
 </div>
-<div class="box"><h3><?php echo L('myvotes'); ?></h3>
+<div class="box"><h3><?= L('myvotes') ?></h3>
 <?php if(count($votes)>0): ?>
 <table id="myvotes">
 <thead>
 <tr>
-<th><?php echo L('project'); ?></th>
-<th><?php echo L('task'); ?></th>
-<th><?php echo L('removevote'); ?></th>
+<th><?= eL('project') ?></th>
+<th><?= eL('task') ?></th>
+<th><?= eL('removevote') ?></th>
 </tr>   
 </thead>
 <tbody>
@@ -27,7 +27,7 @@
 </tbody>
 </table>
 <?php else:
-  echo L('novotes');
+  echo eL('novotes');
 endif; ?>
 </div>
 <div class="box"><h3><?php echo eL('permissionsforproject').' '.$proj->prefs['project_title']; ?></h3><?php echo tpl_draw_perms($user->perms); ?></div>
