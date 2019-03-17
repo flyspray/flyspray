@@ -432,6 +432,7 @@ class Setup extends Flyspray
                                     'config_output' => $this->checkWriteability('flyspray.conf.php'),
                                     'cache_output' => $this->checkWriteability('cache'),
                                     'att_output' => $this->checkWriteability('attachments'),
+				    'ava_output' => $this->checkWriteability('avatars'),
                                     'config_status' => $this->mWriteStatus['flyspray.conf.php'],
                                     'xmlStatus' => $this->xmlStatus,
                                     'sapiStatus' => $this->sapiStatus,
