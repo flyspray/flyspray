@@ -65,12 +65,6 @@ text-decoration: none;
 or delete flyspray.conf.php to run setup. You can *not* use the setup on an existing database.</div>');
 }
 
-$borked = str_replace('a', 'b', array( -1 => -1 ) );
-if(!isset($borked[-1])) {
-    die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
-        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
-}
-
 $conf['general']['syntax_plugin'] = '';
 
 // ---------------------------------------------------------------------
@@ -121,13 +115,13 @@ class Setup extends Flyspray
    public function __construct()
    {
       // Look for ADOdb
-      $this->mAdodbPath         = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
-      $this->mProductName       = 'Flyspray';
+      $this->mAdodbPath = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
+      $this->mProductName = 'Flyspray';
       $this->mMinPasswordLength	= 8;
 
       // Initialise flag for proceeding to next step.
       $this->mProceed = false;
-      $this->mPhpRequired = '5.3.3'; # composer minimum php version
+      $this->mPhpRequired = '5.4';
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
@@ -137,7 +131,7 @@ class Setup extends Flyspray
                                  'MySQL' => array(true, 'mysql_connect', 'mysql'),
                                  'Postgres' => array(true, 'pg_connect', 'pgsql'),
                               );
-      $this->mAvailableDatabases	= array();
+      $this->mAvailableDatabases = array();
 
       // Process the page actions
       $this->processActions();
