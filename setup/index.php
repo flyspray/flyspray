@@ -548,11 +548,11 @@ class Setup extends Flyspray
       // Array of the setting name, php ini name and the recommended value
       $test_settings =
       array(
-            array ('Safe Mode','safe_mode', L('off')),
+            //array ('Safe Mode','safe_mode', L('off')), # removed since PHP5.4
             array ('File Uploads','file_uploads', L('on')),
-            array ('Magic Quotes GPC','magic_quotes_gpc', L('off')),
-            array ('Register Globals','register_globals', L('off')),
-            //array ('Output Buffering','output_buffering','OFF'),
+            //array ('Magic Quotes GPC','magic_quotes_gpc', L('off')), # removed since PHP5.4
+            //array ('Register Globals','register_globals', L('off')), # removed since PHP5.4
+            //array ('Output Buffering','output_buffering', L('off')),
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
