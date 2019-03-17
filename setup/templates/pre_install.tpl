@@ -89,6 +89,11 @@
 			<td align="left"><b><?php echo $att_output; ?></b></td>
 			<td>&nbsp;</td>
 		</tr>
+		<tr>
+			<td valign="top">../avatars</td>
+			<td align="left"><b><?php echo $ava_output; ?></b></td>
+			<td>&nbsp;</td>
+		</tr>
 		</table>
 		
 		<?php if (!$config_status): ?>
