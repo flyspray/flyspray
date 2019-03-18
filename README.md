@@ -35,7 +35,7 @@ http://flyspray.org/manual/install
 ### Install php
     Linux: Just use the package manager or one of its frontends of your Linux distribution.
     For instance for Debian based Linux distributions:
-    sudo apt-get install php5
+    sudo apt-get install php
     
     Windows:
     http://php.net/downloads
