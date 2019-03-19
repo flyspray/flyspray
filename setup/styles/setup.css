@@ -14,11 +14,11 @@ input:required {border: 1px solid #f90;}
   border-bottom:4px solid #5f9729;
 }
 #logo {
-  background-image:url(../images/title.png);
+  background-image:url(../../flyspray_small.png);
   background-position: 10px 10px;
   background-repeat: no-repeat;
   background-attachment:scroll;
-  
+
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
   -o-filter: grayscale(100%);
@@ -79,7 +79,7 @@ input:required {border: 1px solid #f90;}
   width:0;
   height:0;
   top:0;
-  
+
   border-top:18px solid transparent;
   border-bottom:18px solid transparent;
   border-left:8px solid #ddd;
@@ -92,7 +92,7 @@ input:required {border: 1px solid #f90;}
   height: 0;
   width: 0;
   top: 0;
-  
+
   border-bottom: 18px solid #ddd;
   border-top: 18px solid #ddd;
   border-left: 8px solid transparent;
