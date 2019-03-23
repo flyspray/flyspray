@@ -1079,6 +1079,30 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'editorunderlinehint'     => 'souligné',
 'editorstrikethrough'     => 'B',
 'editorstrikethroughhint' => 'barré',
+'lastlogin'               => 'Dernière connexion'
+'categoriesglobal'        => 'Catégories Globales',
+'categoriesproject'       => 'Catégories Projets',
+'categoriestarget'        => 'Catégories Destination',
+  
+'captchaerror'            => 'CAPTCHA non résolu. Veuillez réessayer.',
+'registercaptcha'         => 'Veuillez résoudre le CAPTCHA.',
+'regcaptcha'              => 'Montrer un CAPTCHA à l\'enregistrement des nouveaux utilisateurs.',
+'invalidsecurimage'       => 'CAPTCHA invalide',
+'invalidrecaptcha'        => 'Google reCAPTCHA invalide',
+'antispam'                => 'Antispam',
+'antispamprefsinfo'       => 'Paramètres de l\'antispam. Actuellement, Securimage et Google reCAPTCHA sont utilisés pour l\'enregistrement des nouveaux utilisateurs',
+'securimageprefsinfo'     => 'Un test CAPTCHA classique où les utilisateurs doivent reconnaitre un texte pour prouver qu\'ils sont humains.',
+'securimageenable'        => 'Activer Securimage',
+'recaptchaprefsinfo'      => 'Google reCAPTCHA est une alternative au CAPTCHA classique.
+Google décide selon les informations collectées, le comportement de l\'utilisateur et potentiellement un test de reconnaissance d\'image si vous êtes un humain ou un robot.
+Pour utiliser ceci, vous avez besoin d\'un compte Google et de configuer reCAPTCHA pour votre domaine depuis https://www.google.com/recaptcha en insérent "sitekey" et "secret" de cette configuration.
+Selon votre configuration - "reCAPTCHA V2" ou "Invisible reCAPTCHA" - il est possible que vous deviez informer vos utilisateurs à propos de la protection des données.',
+'recaptchaenable'         => 'Activer Google reCAPTCHA',
+'adminchecks'             => 'Vérification',
+'adminchecksinfo'         => 'Information et vérification de l''installation actuelle',
+'repeatpassword'          => 'Répétez le mot de passe',
+'repeatemailaddress'      => 'Répétez l\'adresse email',
+'tooltipshorttasktitle'   => 'Ecrivez un titre résumant le problème et le rendant compréhensible d\'un coup d\'oeil',
 );
 
 ?>
