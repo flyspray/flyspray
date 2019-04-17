@@ -44,21 +44,19 @@ http://flyspray.org/manual/install
 
 #### Installing from prepackaged releases that include also needed 3rd party libraries
 
-Choose the matching download for your php version from http://www.flyspray.org/docs/download/
-    
-    unzip flyspray-1.0*.zip  (or tar xzf flyspray-1.0*.tgz if you prefer .tgz downloads)
+    tar xzf flyspray-1.0-rc8.tgz
 
-Point your webbrowser where use unzipped the download file and follow the configuration instructions. 
+Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Installing from source releases via command line
 
-    unzip flyspray-1.0*.zip  (or tar xzf flyspray-1.0*.tar.gz if you prefer the .tar.gz download)
-    cd flyspray-1.0*
+    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc8.tar.gz | tar xz
+    cd flyspray-1.0-rc8
     curl -sS https://getcomposer.org/installer | php
     php composer.phar install
     
-Point your webbrowser where use unzipped the download file and follow the configuration instructions.
-    
+Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+
 #### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.
 
@@ -66,4 +64,3 @@ Point your webbrowser where use unzipped the download file and follow the config
     Using command lines:
     - 'cd' to the main Flyspray directory
     - Type 'php composer.phar install' to automatically download the vendors
-    Users that have it integrated to shell can right click their Flyspray directory and choose "Composer->install" to automatically download the vendors
