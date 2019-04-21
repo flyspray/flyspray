@@ -1079,7 +1079,7 @@ Les Tags ne sont actuellement pas gérables et ne sont pas utilisés dans la rec
 'editorunderlinehint'     => 'souligné',
 'editorstrikethrough'     => 'B',
 'editorstrikethroughhint' => 'barré',
-'lastlogin'               => 'Dernière connexion'
+'lastlogin'               => 'Dernière connexion',
 'categoriesglobal'        => 'Catégories Globales',
 'categoriesproject'       => 'Catégories Projets',
 'categoriestarget'        => 'Catégories Destination',
