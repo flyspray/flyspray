@@ -53,7 +53,7 @@ Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want an
     curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc8.tar.gz | tar xz
     cd flyspray-1.0-rc8
     curl -sS https://getcomposer.org/installer | php
-    php composer.phar install
+    php composer.phar install --no-dev
     
 Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
