@@ -13,6 +13,9 @@
         "dapphp/securimage": "3.6.6",
         "league/oauth2-client": "~0.12" 
     },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
     "repositories": [
         {
             "type": "vcs",
