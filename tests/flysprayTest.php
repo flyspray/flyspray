@@ -16,7 +16,8 @@ class FlysprayTest extends TestCase{
     $this->db->dbOpen($GLOBALS['dbhost'], $GLOBALS['dbuser'], $GLOBALS['dbpass'], $GLOBALS['dbname'], $GLOBALS['dbtype'], $GLOBALS['dbprefix']);
     $this->db->query("CREATE TABLE {projects} (what VARCHAR(50) NOT NULL)");
   }
-  public function tearDown(){
+  public function tearDown(): void
+  {
     #$this->pdo->query("DROP TABLE hello");
     $this->db->query("DROP TABLE {projects}");
   }
