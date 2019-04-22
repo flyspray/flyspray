@@ -1,5 +1,8 @@
 <?php
-class FlysprayTest extends PHPUnit_Framework_TestCase{
+
+use PHPUnit\Framework\TestCase;
+
+class FlysprayTest extends TestCase{
   #private $pdo;
   private $db;
   
