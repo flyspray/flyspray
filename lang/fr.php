@@ -1099,7 +1099,7 @@ Pour utiliser ceci, vous avez besoin d\'un compte Google et de configuer reCAPTC
 Selon votre configuration - "reCAPTCHA V2" ou "Invisible reCAPTCHA" - il est possible que vous deviez informer vos utilisateurs à propos de la protection des données.',
 'recaptchaenable'         => 'Activer Google reCAPTCHA',
 'adminchecks'             => 'Vérification',
-'adminchecksinfo'         => 'Information et vérification de l''installation actuelle',
+'adminchecksinfo'         => 'Information et vérification de l\'installation actuelle',
 'repeatpassword'          => 'Répétez le mot de passe',
 'repeatemailaddress'      => 'Répétez l\'adresse email',
 'tooltipshorttasktitle'   => 'Ecrivez un titre résumant le problème et le rendant compréhensible d\'un coup d\'oeil',
