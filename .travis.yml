@@ -12,7 +12,7 @@ php:
 # no extensive travis testing before we have some real tests and project stable
 #  - 5.4
 #  - 5.5
-  - 5.6
+#  - 5.6
   - 7.2
 #  - hhvm
 

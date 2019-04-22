@@ -7,7 +7,8 @@ class FlysprayTest extends TestCase{
   private $db;
   
   # just taken as first test from github project travis-ci-examples/php
-  public function setUp(){
+  protected function setUp(): void
+  {
     #$this->pdo = new PDO($GLOBALS['db_dsn'], $GLOBALS['db_username'], $GLOBALS['db_password']);
     #$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     #$this->pdo->query("CREATE TABLE hello (what VARCHAR(50) NOT NULL)");
@@ -15,7 +16,8 @@ class FlysprayTest extends TestCase{
     $this->db->dbOpen($GLOBALS['dbhost'], $GLOBALS['dbuser'], $GLOBALS['dbpass'], $GLOBALS['dbname'], $GLOBALS['dbtype'], $GLOBALS['dbprefix']);
     $this->db->query("CREATE TABLE {projects} (what VARCHAR(50) NOT NULL)");
   }
-  public function tearDown(){
+  public function tearDown(): void
+  {
     #$this->pdo->query("DROP TABLE hello");
     $this->db->query("DROP TABLE {projects}");
   }
