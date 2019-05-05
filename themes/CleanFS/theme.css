@@ -693,6 +693,12 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 .commenttext li {
 max-width:40em;
 }
+.links a,
+#taskdetailsfull p,
+#taskdetailsfull h2,
+.commenttext p{
+	word-wrap:anywhere;
+}
 .group.inactive{ background-color:#eee;}
 .tag {
     background: #ccc none repeat scroll 0 0;
