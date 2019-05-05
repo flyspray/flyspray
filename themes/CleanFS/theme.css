@@ -697,7 +697,7 @@ max-width:40em;
 #taskdetailstext,
 #taskdetailsfull h2,
 .commenttext{
-	word-wrap:anywhere;
+	word-wrap:break-word;
 }
 .group.inactive{ background-color:#eee;}
 .tag {
