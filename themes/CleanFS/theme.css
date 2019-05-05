@@ -694,9 +694,9 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 max-width:40em;
 }
 .links a,
-#taskdetailsfull p,
+#taskdetailstext,
 #taskdetailsfull h2,
-.commenttext p{
+.commenttext{
 	word-wrap:anywhere;
 }
 .group.inactive{ background-color:#eee;}
