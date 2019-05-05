@@ -246,12 +246,12 @@
 
         <div id="addlinkbox">
     <span style="display: none">
-	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	 <input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
 	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
     </span>
     <noscript>
 	 <span>
-	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
 	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
 	 </span>
     </noscript>
