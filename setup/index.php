@@ -955,15 +955,16 @@ class Setup extends Flyspray
             break;
          }
       }
-      // Check that table prefix is OK, some DBs don't like it
-      $prefix = array_get($data, 'db_prefix');
-      if (strlen($prefix) > 0 && is_numeric($prefix[0])) {
-        $_SESSION['page_heading'] = 'Database Processing';
-        $_SESSION['page_message'][] = 'The table prefix may not start with a number.';
-        return false;
-      }
 
-       // Setting the Fetch mode of the database connection.
+		$prefix = array_get($data, 'db_prefix');
+		# ADODB 5.20.14 xmlschema03 setPrefix() currently accepts only at least 2 chars and max 10 (XMLS_PREFIX_MAXLEN) chars as db prefix.
+		if (strlen($prefix) > 0 && ( strlen($prefix) > 10 || preg_match('/[^a-zA-Z0-9_]/', $prefix) || preg_match('/^[^a-zA-Z][a-zA-Z0-9_]/', $prefix) )) {
+			$_SESSION['page_heading'] = 'Database Processing';
+			$_SESSION['page_message'][] = 'An optional prefix for database tables must start with a simple character <b>a-z</b>, has at least 2 up to 10 characters, and contain only <b>a-z</b>, <b>0-9</b> or <b>_</b> characters.';
+			return false;
+		}
+
+       // Setting the fetch mode of the database connection.
       $this->mDbConnection->setFetchMode(ADODB_FETCH_BOTH);
 
 		if( $data['db_type']=='mysqli') {
