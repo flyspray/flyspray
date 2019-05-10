@@ -73,19 +73,19 @@
 					<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
 					<div id="addlinkbox">
 						<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
-							<?php echo Filters::noXSS(L('addalink')); ?>
+							<?= eL('addalink') ?>
 						</button>
 						<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
-							<?php echo Filters::noXSS(L('addanotherlink')); ?>
+							<?= eL('addanotherlink') ?>
 						</button>
 						<span style="display: none">
-							<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
-							<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+							<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+							<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
 						</span>
 						<noscript>
 							<span>
-								<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
-								<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+								<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+								<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
 							</span>
 						</noscript>
 					</div>

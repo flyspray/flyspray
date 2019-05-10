@@ -693,15 +693,21 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
 .commenttext li {
 max-width:40em;
 }
+.links a,
+#taskdetailstext,
+#taskdetailsfull h2,
+.commenttext{
+	word-wrap:break-word;
+}
 .group.inactive{ background-color:#eee;}
 .tag {
     background: #ccc none repeat scroll 0 0;
     border-radius: 3px;
     margin-left: 3px;
-    padding: 3px;
+    padding: 1px 3px;
     font-style:normal;
     white-space: nowrap;
-    vertical-align:middle;
+    vertical-align:text-bottom;
 }
 .tag:before {font-family:fontawesome;padding-right:3px;}
 .tag:after {content:attr(title);}

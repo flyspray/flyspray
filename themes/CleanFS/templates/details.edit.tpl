@@ -194,16 +194,16 @@ li.errorinput{background-color:#fc9;}
 	$links = $proj->listTaskLinks($task_details['task_id']);
 	$this->display('common.editlinks.tpl', 'links', $links); ?>
 	<?php if ($user->perms('create_attachments')): ?>
-		<input id="link1" tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+		<input id="link1" tabindex="8" class="text" type="text" maxlength="150" name="userlink[]" />
 		<script>
 		// hide the fallback input field if javascript is enabled
 		document.getElementById("link1").style.display='none';
 		</script>
-		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
-		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?php echo Filters::noXSS(L('addalink')); ?></button>
+		<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addalink') ?></button>
+		<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addalink') ?></button>
 		<br />
 		<span style="display: none"><?php /* this span is shown/copied by javascript when adding links */ ?>
-			<input tabindex="8" class="text" type="text" maxlength="100" name="userlink[]" />
+			<input tabindex="8" class="text" type="text" maxlength="150" name="userlink[]" />
 			<a href="javascript://" tabindex="9" class="button fa fa-remove fa-lg" title="<?= eL('remove') ?>" onclick="removeLinkField(this, 'addlinkbox');"></a><br />
 		</span>
 	<?php endif; ?>
