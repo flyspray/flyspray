@@ -61,7 +61,7 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'prefs':
     case 'resolution':
     case 'tasktype':
-    case 'tag':	
+    case 'tag':
     case 'status':
     case 'version':
     case 'newgroup':
@@ -70,7 +70,7 @@ switch ($area = Req::val('area', 'prefs')) {
         break;
 
     case 'translations':
-        require_once(BASEDIR.'/scripts/langdiff.php');
+        require_once BASEDIR.'/scripts/langdiff.php';
         break;
 
 	case 'checks':
@@ -121,7 +121,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			ORDER BY reg_time ASC
 			LIMIT 50');
 		$page->assign('registrations', $db->fetchAllArray($registrations));
-		
+
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
 			$fsdb=$db->query("SELECT default_character_set_name, default_collation_name
@@ -142,7 +142,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			} else{
 				$page->assign('oldmysqlversion', "Your MySQL version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your MySQL server version.");
 			}
-			
+
 			$fstables=$db->query("SELECT table_name, table_collation, engine as table_type, create_options, table_comment
 				FROM INFORMATION_SCHEMA.tables
 				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
@@ -157,7 +157,7 @@ switch ($area = Req::val('area', 'prefs')) {
 				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
 			);
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
-			
+
 		} elseif($db->dbtype=='pgsql'){
 			$fstables=$db->query("SELECT table_name, '' AS table_collation, table_type, '' AS create_options, '-' AS table_comment
 				FROM INFORMATION_SCHEMA.tables

@@ -98,7 +98,7 @@ foreach ($groups as $group){
 .perms tbody span i:first-child {color: #090;}
 </style>
 <table class="perms">
-<colgroup> 
+<colgroup>
 <col></col>
 <?php echo $cols; ?>
 </colgroup>
@@ -107,7 +107,7 @@ foreach ($groups as $group){
 <th><?php echo L('groupmembers'); ?></th>
 <?php echo $gmembers; ?>
 </tr>
-<tr> 
+<tr>
 <th><?php echo L('group'); ?></th>
 <?php echo $gnames; ?>
 </tr>
@@ -121,7 +121,7 @@ foreach ($groups as $group){
 <tr>
 	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
 <?php
-require_once('permicons.tpl');
+require_once 'permicons.tpl';
 $i=0;
 # TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
 foreach($perms[$p] as $val){

@@ -8,8 +8,8 @@ define('IN_FS', true);
 
 header('Content-type: text/html; charset=utf-8');
 
-require_once('../../header.php');
-require_once('../../includes/events.inc.php');
+require_once '../../header.php';
+require_once '../../includes/events.inc.php';
 
 $csp->emit();
 

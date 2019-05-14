@@ -4,7 +4,7 @@ define('IN_FS', true);
 header('Content-type: text/html; charset=utf-8');
 
 $webdir = dirname(dirname(dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'))));
-require_once('../../header.php');
+require_once '../../header.php';
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));

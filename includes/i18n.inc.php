@@ -140,14 +140,14 @@ function load_translations(){
 	$lang_code = strtolower($lang_code);
 	$translation = BASEDIR.'/lang/'.$lang_code.'.php';
 	if ($lang_code != 'en' && is_readable($translation)) {
-		include_once($translation);
+		include_once $translation;
 		$language = is_array($translation) ? array_merge($language, $translation) : $language;
                 FlySprayI18N::init($lang_code, $language);
 	}elseif( 'en'!=substr($lang_code, 0, strpos($lang_code, '_')) && is_readable(BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php') ){
 		# fallback 'de_AT' to 'de', but not for 'en_US'
 		$translation=BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php';
-		include_once($translation);
-		$language = is_array($translation) ? array_merge($language, $translation) : $language;    
+		include_once $translation;
+		$language = is_array($translation) ? array_merge($language, $translation) : $language;
 	}
 
         FlySprayI18N::setDefault($language);

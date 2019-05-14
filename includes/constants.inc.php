@@ -36,7 +36,7 @@ if(isset($conf['general']['syntax_plugin']) && preg_match('/^[a-z0-9_]+$/iD', $c
 $path_to_plugin = sprintf('%s/plugins/%s/%s_constants.inc.php', BASEDIR, $conf['general']['syntax_plugin'], $conf['general']['syntax_plugin']);
 
     if (is_readable($path_to_plugin)) {
-        include($path_to_plugin);
+        include $path_to_plugin;
     }
 }
 
@@ -89,7 +89,7 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 // developers or advanced users only
 //define('DEBUG_SQL',true);
 
-# 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php. 
+# 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php.
 //define('JABBER_DEBUG', true);
 //define('JABBER_DEBUG_FILE', BASEDIR . '/logs/jabberlog.txt');
 
