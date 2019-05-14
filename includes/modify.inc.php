@@ -248,11 +248,11 @@ switch ($action = Req::val('action'))
 		$errors['summaryrequired']=L('summaryrequired');
         }
 
-	# ids of severity and priority are (probably!) intentional fixed in Flyspray. 
+	# ids of severity and priority are (probably!) intentional fixed in Flyspray.
 	if( isset($_POST['task_severity']) && (!is_numeric(Post::val('task_severity')) || Post::val('task_severity')>5 || Post::val('task_severity')<0 ) ){
 		$errors['invalidseverity']=1;
 	}
-	
+
 	# peterdd:temp fix to allow priority 6 again
 	# But I think about 1-5 valid (and 0 for unset) only in future to harmonize
 	# with other trackers/taskplaner software and for severity-priority graphs like
@@ -281,7 +281,7 @@ switch ($action = Req::val('action'))
 	# -option to create a new option based on current project value (if the user has the permission for the target project!)
 	# -option to set to default value in target project or unset value
 	# Also consider that not all list dropdown field may be shown to the user because of project settings (visible_fields)!
-	
+
 
 	# which $proj should we use here? $proj object is set in header.php by a request param before modify.inc.php is loaded, so it can differ from $task['project_id']!
 	if($move==1){
@@ -359,7 +359,7 @@ switch ($action = Req::val('action'))
 
         $result = $db->query('SELECT * from {tasks} WHERE task_id = ?', array($task['task_id']));
         $defaults = $db->fetchRow($result);
-        
+
 	if (!Post::has('due_date')) {
 		$due_date = $defaults['due_date'];
 	}
@@ -372,7 +372,7 @@ switch ($action = Req::val('action'))
 	if(count($errors)>0){
 		# some invalid input by the user. Do not save the input and in the details-edit-template show the user where in the form the invalid values are.
 		$_SESSION['ERRORS']=$errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
-		$_SESSION['ERROR']=L('invalidinput'); 
+		$_SESSION['ERROR']=L('invalidinput');
 		# pro and contra http 303 redirect here:
                 # - good: browser back button works, browser history.
                 # -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
@@ -424,7 +424,7 @@ switch ($action = Req::val('action'))
 		$purifier = new HTMLPurifier($purifierconfig);
 		$detailed_desc = $purifier->purify($detailed_desc);
 	}
-		
+
 	$db->query('UPDATE {tasks}
 		SET
 		project_id = ?,
@@ -486,7 +486,7 @@ switch ($action = Req::val('action'))
 	# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
 	#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
 	# update tags
-	$tagList = explode(';', Post::val('tags'));  
+	$tagList = explode(';', Post::val('tags'));
 	$tagList = array_map('strip_tags', $tagList);
 	$tagList = array_map('trim', $tagList);
 	$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
@@ -511,10 +511,10 @@ switch ($action = Req::val('action'))
 			}
 
 			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
-			if($t=$db->fetchRow($res)){  
+			if($t=$db->fetchRow($res)){
 				$tag_id=$t['tag_id'];
 			} else{
-				if( $proj->prefs['freetagging']==1){   
+				if( $proj->prefs['freetagging']==1){
 					# add to taglist of the project
 					$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
 					$tag_id=$db->insert_ID();
@@ -609,7 +609,7 @@ switch ($action = Req::val('action'))
 	if ( $task['task_id'] == Post::num('associate_subtask_id')) {
             Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
-        }	
+        }
         $sql = $db->query('SELECT supertask_id, project_id FROM {tasks} WHERE task_id = ?',
             array(Post::num('associate_subtask_id')));
 
@@ -762,7 +762,7 @@ switch ($action = Req::val('action'))
 			$_SESSION['SUCCESS'] = L('efforttrackingadded');
 		}
 	}
-        
+
         Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
         break;
 
@@ -776,14 +776,14 @@ switch ($action = Req::val('action'))
 
 		$captchaerrors=array();
 		if($fs->prefs['captcha_securimage']){
-			$image = new Securimage(); 
+			$image = new Securimage();
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				$captchaerrors['invalidsecurimage']=1;
 			}
 		}
 
 		if($fs->prefs['captcha_recaptcha']){
-			require_once('class.recaptcha.php');
+			require_once 'class.recaptcha.php';
 			if( !recaptcha::verify()) {
 				$captchaerrors['invalidrecaptcha']=1;
 			}
@@ -974,7 +974,7 @@ switch ($action = Req::val('action'))
         $_SESSION['SUCCESS'] = L('accountcreated');
         // If everything is ok, add here a notify to both administrators and the user.
         // Otherwise, explain what wen wrong.
-        
+
         define('NO_DO', true);
         break;
 
@@ -989,19 +989,19 @@ switch ($action = Req::val('action'))
 
 		$captchaerrors=array();
 		if( !($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
-			$image = new Securimage(); 
+			$image = new Securimage();
 			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				$captchaerrors['invalidsecurimage']=1;
 			}
 		}
-		
+
 		if( !($user->perms('is_admin')) && $fs->prefs['captcha_recaptcha']){
-			require_once('class.recaptcha.php');
+			require_once 'class.recaptcha.php';
 			if( !recaptcha::verify()) {
 				$captchaerrors['invalidrecaptcha']=1;
 			}
 		}
-		
+
 		# if both captchatypes are configured, maybe show the user which one or both failed.
 		if(count($captchaerrors)){
 			$_SESSION['ERRORS']=$captchaerrors;
@@ -1022,7 +1022,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('novalidemail'));
             break;
         }
-		
+
         if ( $fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
         {
             Flyspray::show_error(L('emailverificationwrong'));
@@ -1033,7 +1033,7 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('passwordtoosmall'));
             break;
         }
-		
+
 	if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
@@ -1286,7 +1286,7 @@ switch ($action = Req::val('action'))
         }
 
 		$errors=array();
-		
+
 		$settings = array('jabber_server', 'jabber_port', 'jabber_username', 'notify_registration',
 		'jabber_password', 'anon_group', 'user_notify', 'admin_email', 'email_ssl', 'email_tls',
 		'lang_code', 'gravatars', 'hide_emails', 'spam_proof', 'default_project', 'default_entry',
@@ -1302,7 +1302,7 @@ switch ($action = Req::val('action'))
 		if(!isset($fs->prefs['massops'])){
 			$db->query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('massops',0)");
                 }
-		
+
 		# candid for a plugin, so separate them for the future.
 		$settings[]='captcha_securimage';
 		if(!isset($fs->prefs['captcha_securimage'])){
@@ -1328,7 +1328,7 @@ switch ($action = Req::val('action'))
 		#	Flyspray::show_error(L('enablehtaccess'));
 		#	break;
 		#}
-		
+
 		# Make sure mod_rewrite is enabled by checking a env var defined as HTTP_MOD_REWRITE in the .htaccess .
 		# It is possible to be converted to REDIRECT_HTTP_MOD_REWRITE . It's sound weired, but that's the case here.
 		if ( !array_key_exists('HTTP_MOD_REWRITE', $_SERVER) && !array_key_exists('REDIRECT_HTTP_MOD_REWRITE' , $_SERVER) ) {
@@ -1348,8 +1348,8 @@ switch ($action = Req::val('action'))
 	} else{
 		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
 	}
-	
-	
+
+
         foreach ($settings as $setting) {
             $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',
                     array(Post::val($setting, 0), $setting));
@@ -2288,7 +2288,7 @@ switch ($action = Req::val('action'))
 
 		$comment_text=Post::val('comment_text');
 		$previous_text=Post::val('previous_text');
-		
+
 		# dokuwiki syntax plugin filters on output
 		if($conf['general']['syntax_plugin'] != 'dokuwiki'){
 			$purifierconfig = HTMLPurifier_Config::createDefault();
@@ -2298,7 +2298,7 @@ switch ($action = Req::val('action'))
 		}
 
 		$params = array($comment_text, time(), Post::val('comment_id'), $task['task_id']);
- 
+
         if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
             $where = ' AND user_id = ?';
             array_push($params, $user->id);
@@ -2448,7 +2448,7 @@ switch ($action = Req::val('action'))
 			}
 		} else {
 			Flyspray::show_error(L('nosuicide'));
-		}	
+		}
 	}
 
         // TODO: Log event in a later version.
@@ -2829,13 +2829,13 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('selfsupertasknotallowed'));
             break;
         }
- 
+
 	// Check that the supertask_id looks like unsigned integer
 	if ( !preg_match("/^[1-9][0-9]{0,8}$/", Post::val('supertask_id')) ) {
 		Flyspray::show_error(L('invalidsupertaskid'));
 		break;
 	}
-	
+
 	$sql = $db->query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::val('supertask_id')) );
 	// check that supertask_id is a valid task id
 	$parent = $db->fetchRow($sql);

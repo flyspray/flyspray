@@ -4,7 +4,7 @@ define('IN_FS', true);
 
 header('Content-type: text/html; charset=utf-8');
 
-require_once('../../header.php');
+require_once '../../header.php';
 global $proj, $fs;
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -22,10 +22,10 @@ load_translations();
 
 if( !Post::has('csrftoken') ){
 	http_response_code(428); # 'Precondition Required'
-        die('missingtoken'); 
+        die('missingtoken');
 } elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
         # ok
-} else{ 
+} else{
 	http_response_code(412); # 'Precondition Failed'
         die('wrongtoken');
 }

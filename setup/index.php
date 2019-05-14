@@ -683,7 +683,7 @@ class Setup extends Flyspray
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
                'admin_xmpp' => array('Administrator\'s jabber/xmpp address', 'xmpp address', false),
-               'syntax_plugin' => array('Syntax', 'option', true), 
+               'syntax_plugin' => array('Syntax', 'option', true),
 	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
             if ($data = $this->checkPostedData($required_data, $message = 'Missing config values')) {
@@ -724,7 +724,7 @@ class Setup extends Flyspray
 		if(!isset($admin_realname)) {
 			$admin_realname = '';
 		}
-	   
+
 		if(!isset($syntax_plugin)) {
 			$syntax_plugin = '';
 		}
@@ -803,7 +803,7 @@ class Setup extends Flyspray
 
 
       // Setting the database for the ADODB connection
-      require_once($this->mAdodbPath);
+      require_once $this->mAdodbPath;
 
 	# 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3 . For instance on german 1und1 managed linux servers ( e.g. $db_hostname ='localhost:/tmp/mysql5.sock' )
 	if( $db_type=='mysqli' && 'localhost:/'==substr($db_hostname,0,11) ){
@@ -867,7 +867,7 @@ class Setup extends Flyspray
 
    public function processDatabaseSetup($data)
    {
-      require_once($this->mAdodbPath);
+      require_once $this->mAdodbPath;
 
       // Perform a number of fatality checks, then die gracefully
       if (!defined('_ADODB_LAYER'))

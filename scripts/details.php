@@ -21,10 +21,10 @@ if (!$user->can_view_task($task_details)) {
     Flyspray::show_error( $user->isAnon() ? 102 : 101, false);
 } else{
 
-	require_once(BASEDIR . '/includes/events.inc.php');
+	require_once BASEDIR . '/includes/events.inc.php';
 
 	if($proj->prefs['use_effort_tracking']){
-		require_once(BASEDIR . '/includes/class.effort.php');
+		require_once BASEDIR . '/includes/class.effort.php';
 		$effort = new effort($task_id,$user->id);
 		$effort->populateDetails();
 		$page->assign('effort',$effort);
@@ -217,8 +217,8 @@ if (!$user->can_view_task($task_details)) {
 				$tasktypesel['options'][]=array('optgroup'=>1, 'label'=>L('targetproject').' '.$toproject->prefs['project_title'], 'options'=>$tttopts);
 			}
 
-			
-			# allow unset (0) value (field os_id currently defined with NOT NULL by flyspray-install.xml, so must use 0 instead null) 
+
+			# allow unset (0) value (field os_id currently defined with NOT NULL by flyspray-install.xml, so must use 0 instead null)
 			$osfound=0;
 			$ossel['options'][]=array('value'=>0, 'label'=>L('undecided'));
 			# get global operating systems
@@ -287,13 +287,13 @@ if (!$user->can_view_task($task_details)) {
 				$ossel['options']=array_merge(array(array('optgroup'=>1, 'label'=>$existosgrouplabel, 'options'=>$existosopts)), $ossel['options']);
 			}
 
-			
+
 
 			# get list global reported versions
 			# FIXME/TODO: Should we use 'show_in_list' list setting here to filter them out here? Or distinguish between editor/projectmanager/admin roles?
 			# FIXME/TODO: All Flyspray version up to 1.0-rc8 only versions with tense=2 were shown for edit.
 			# But what if someone edits an old tasks (maybe reopened an old closed), and that old task is connected with an old reported version (tense=1)
-			# Or that {list_version} entry has now show_in_list=0 set ? 
+			# Or that {list_version} entry has now show_in_list=0 set ?
 			# In both cases that version would not be selectable for editing the task, although it is the correct reported version.
 			$reportedversionfound=0;
 			$repversel['options'][]=array('value'=>0, 'label'=>L('undecided'));
@@ -517,7 +517,7 @@ if (!$user->can_view_task($task_details)) {
 		$tasktypesel['name']='task_type';
 		$tasktypesel['attr']['id']='tasktype';
 		$page->assign('tasktypeselect', $tasktypesel);
-		
+
 		$ossel['name']='operating_system';
 		$ossel['attr']['id']='os';
 		$page->assign('osselect', $ossel);
@@ -546,10 +546,10 @@ if (!$user->can_view_task($task_details)) {
 		}
 
 		// Sub-Tasks
-		$subtasks = $db->query('SELECT t.*, p.project_title 
+		$subtasks = $db->query('SELECT t.*, p.project_title
                                  FROM {tasks} t
 			    LEFT JOIN {projects} p ON t.project_id = p.project_id
-                                WHERE t.supertask_id = ?', 
+                                WHERE t.supertask_id = ?',
                                 array($task_id));
 		$subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
 
@@ -561,7 +561,7 @@ if (!$user->can_view_task($task_details)) {
 				}
 			}
 		}
-    
+
 		// Parent categories
 		$parent = $db->query('SELECT *
                             FROM {list_category}
@@ -578,7 +578,7 @@ if (!$user->can_view_task($task_details)) {
                                  WHERE d.task_id = ?', array($task_id));
 		$check_deps_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_deps));
 
-		
+
 		for($i=0;$i<count($check_deps_cleaned);$i++){
 			$check_deps_cleaned[$i]['assigned_to']=array();
 			if ($assignees = Flyspray::getAssignees($check_deps_cleaned[$i]["task_id"], false)) {
@@ -587,7 +587,7 @@ if (!$user->can_view_task($task_details)) {
 				}
 			}
 		}
-   
+
 		// Check for tasks that this task blocks
 		$check_blocks = $db->query('SELECT t.*, s.status_name, r.resolution_name, d.depend_id, p.project_title
                                   FROM {dependencies} d
@@ -598,7 +598,7 @@ if (!$user->can_view_task($task_details)) {
                                  WHERE d.dep_task_id = ?', array($task_id));
 		$check_blocks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($check_blocks));
 
-				
+
 		for($i=0;$i<count($check_blocks_cleaned);$i++){
 			$check_blocks_cleaned[$i]['assigned_to']=array();
 			if ($assignees = Flyspray::getAssignees($check_blocks_cleaned[$i]["task_id"], false)) {
@@ -759,9 +759,9 @@ if (!$user->can_view_task($task_details)) {
 		if ($proj->prefs['use_effort_tracking']) {
 			$page->pushTpl('details.tabs.efforttracking.tpl');
 		}
-	
+
 		$page->pushTpl('details.tabs.history.tpl');
-    
+
 	} # endif can_edit_task
 
 } # endif can_view_task

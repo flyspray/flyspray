@@ -175,11 +175,11 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
 
 /**
  * Creates a link to a task
- * 
+ *
  * @param array task with properties of a task. It also accepts a task_id, but that requires extra queries executed by this function.
  * @param string text optional, by default the FS# + summary of task is used.
  * @param bool strict check task permissions by the function too. Extra SQL queries if set true. default false.
- * @param array attr extra attributes 
+ * @param array attr extra attributes
  * @param array title informations shown when hover over the link (title attribute of the HTML a-tag)
  *
  * @return string ready for html output
@@ -348,7 +348,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 	if( !($uid>0) ){
                 return '<i class="fa fa-user"></i>';
         }
-	
+
 	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
 		if (!isset($avacache[$uid]['uname'])) {
 			$sql = $db->query('SELECT user_name, real_name, email_address, profile_image FROM {users} WHERE user_id = ?', array(intval($uid)));
@@ -397,7 +397,7 @@ function tpl_fast_tasklink($arr)
  *
  * @param int id tag_id of {list_tag} db table
  * @param bool showid set true if the tag_id is shown instead of the tag_name
- * 
+ *
  * @return string ready for output
  */
 function tpl_tag($id, $showid=false) {
@@ -443,7 +443,7 @@ function tpl_tag($id, $showid=false) {
 
 /**
 * Convert a hexa decimal color code to its RGB equivalent
-* 
+*
 * used by tpl_tag()
 *
 * @param string $hexstr (hexadecimal color value)
@@ -474,7 +474,7 @@ function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
 /**
  * joins an array of tag attributes together for output in a HTML tag.
  *
- * @param array attr 
+ * @param array attr
  *
  * @return string
  */
@@ -544,7 +544,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
     $subPage->display('common.datepicker.tpl');
 }
 
-/** 
+/**
  * user selector
  */
 function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
@@ -583,7 +583,7 @@ function tpl_date_formats($selected, $detailed = false)
 {
 	$time = time();
 
-	# TODO: rewrite using 'return tpl_select(...)' 
+	# TODO: rewrite using 'return tpl_select(...)'
 	if (!$detailed) {
 		$dateFormats = array(
 			'%d.%m.%Y' => strftime('%d.%m.%Y', $time).' (DD.MM.YYYY)', # popular in many european countries
@@ -656,12 +656,12 @@ function tpl_date_formats($selected, $detailed = false)
 /**
  * Options for a <select>
  *
- * FIXME peterdd: This function is currently often called by templates with just 
- * results from sqltablequeries like  select * from tablex, 
+ * FIXME peterdd: This function is currently often called by templates with just
+ * results from sqltablequeries like  select * from tablex,
  * so data[0] and data[1] of each row works only by table structure convention as wished.
  * not by names, lack of a generic optgroup feature, css-id, css-classes, disabled option.
  * Maybe rewrite a as tpl_select() ..
- * 
+ *
  * @options array of values
  * For optgroups, the values should be presorted by the optgroups
  * example:
@@ -714,11 +714,11 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
 		$html .= ($attr ? join_attrs($attr): '') . '>' . $label . '</option>';
 		$lastoptgroup=$optgroup;
 	}
-	
+
 	if ($ingroup) {
 	$html.='</optgroup>';
 	}
-	
+
 	if (!$html) {
 		$html .= '<option value="0">---</option>';
 	}
@@ -732,20 +732,20 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
  *
  * Supports free choosable attributes for select, options and optgroup tags. optgroups can also be nested.
  *
- * @author peterdd 
+ * @author peterdd
  *
  * @param array key-values pairs and can be nested
  *
  * @return string the complete html-select
- * 
+ *
  * @since 1.0.0-beta3
- * 
+ *
  * @example
  * example output of print_r($array) to see the structure of the param $array
  * Array
   (
     [name] => varname          // required if you want submit it with a form to the server
-    [attr] => Array            // optional 
+    [attr] => Array            // optional
         (
             [id] => selid   // optional
             [class] => selclass1  // optional
@@ -776,7 +776,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
                     [options] => Array
                         // ... nested options and optgroups can follow here....
                 )
-                // ... and so on          
+                // ... and so on
         )
   )
  */
@@ -784,7 +784,7 @@ function tpl_select($select=array()){
 
 	if(isset($select['name'])){
 		$name=' name="'.$select['name'].'"';
-	}else{ 
+	}else{
 		$name='';
 	}
 
@@ -803,17 +803,17 @@ function tpl_select($select=array()){
 }
 
 /**
- * called by tpl_select() 
+ * called by tpl_select()
  *
- * @author peterdd 
+ * @author peterdd
  *
  * @param array key-values pairs and can be nested
  *
  * @return string option- and optgroup-tags as one string
- * 
+ *
  * @since 1.0.0-beta3
- * 
- * called recursively by itself 
+ *
+ * called recursively by itself
  * Can also be called alone from template if the templates writes the wrapping select-tags.
  *
  * @example see [options]-array of example of tpl_select()
@@ -857,7 +857,7 @@ function tpl_selectoptions($options=array(), $level=0){
 			$html.='>'.htmlspecialchars($o['label'], ENT_QUOTES, 'utf-8').'</option>';
 		}
 	}
-		
+
 	return $html;
 }
 
@@ -939,7 +939,7 @@ function tpl_double_select($name, $options, $selected = null, $labelisvalue = fa
  * @param string id id attribute of the checkbox HTML element
  * @param string value
  * @param array attr tag attributes
- * 
+ *
  * @return string for ready for HTML output
  */
 function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = null)
@@ -976,7 +976,7 @@ if(isset($conf['general']['syntax_plugin'])) {
     $path_to_plugin = BASEDIR . '/plugins/' . $conf['general']['syntax_plugin'] . '/' . $conf['general']['syntax_plugin'] . '_formattext.inc.php';
 
     if (is_readable($path_to_plugin)) {
-        include($path_to_plugin);
+        include $path_to_plugin;
     }
 }
 
@@ -1029,7 +1029,7 @@ class TextFormatter
             //Have removed this as creating additional </br> lines even though <p> is already dealing with it
             //possibly an conversion from Dokuwiki syntax to html issue, left in in case anyone has issues and needs to comment out
             //$text = ' ' . nl2br($text) . ' ';
-            
+
             // Change FS#123 into hyperlinks to tasks
             return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
         }
@@ -1062,7 +1062,7 @@ class TextFormatter
 	CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
 </script>";
 	}
-	    
+
         return $return;
     }
 }
@@ -1254,15 +1254,15 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'project':
                 $return = $url . 'proj' . $arg1;
                 break;
-                
-            case 'reports':    
+
+            case 'reports':
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
             case 'index':
             	$return = $url.$type.'/proj'.$arg1;
             	break;
-            	
+
             case 'newtask':
             case 'newmultitasks':
                 $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
@@ -1278,7 +1278,7 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'register':
                 $return = $url . $type;
                 break;
-            
+
             case 'mytasks':
                 $return = $url.'proj'.$arg1.'/dev'.$arg2;
                 break;
