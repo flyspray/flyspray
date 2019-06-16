@@ -30,6 +30,7 @@
         $data = preg_replace('/&rsquo;/', '&#8217;', $data);
         $data = preg_replace('/&ldquo;/', '&#8220;', $data);
         $data = preg_replace('/&rdquo;/', '&#8221;', $data);
+        $data = preg_replace('/&nbsp;/', '&#160;', $data);
         echo $data;
     }
     else {
