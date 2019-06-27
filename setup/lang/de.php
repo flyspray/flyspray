@@ -17,6 +17,7 @@ $translation=array(
 'versioncompare'     => 'Deine derzeitige Flysprayversion ist %s und es kann auf Version %s aktualisiert werden.',
 'writeable'          => 'schreibbar',
 'writeaccessconf'    => 'Um Flyspray zu aktualisieren muß Lese- und Schreibrecht für flyspray.conf.php existieren.',
+'unwriteable'        => 'nicht schreibbar',
 'yes'                => 'ja',
 );
 ?>
