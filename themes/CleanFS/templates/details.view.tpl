@@ -125,6 +125,13 @@
               </form>
             </li>
             <?php endif; ?>
+	    
+	    <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+            <li>
+                <a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
+            </li>
+            <?php endif; ?>
+	    
             <li>
                 <a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
             </li>
@@ -137,12 +144,6 @@
               FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
               <button type="submit" name="submit"><?php echo Filters::noXSS(L('add')); ?></button>
               </form>
-            </li>
-            <?php endif; ?>
-
-            <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
-            <li>
-                <a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
             </li>
             <?php endif; ?>
 
