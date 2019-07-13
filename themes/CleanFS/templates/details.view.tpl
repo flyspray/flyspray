@@ -1,7 +1,7 @@
 <div id="actionbar">
 <?php if ($task_details['is_closed']): //if task is closed ?>
   <?php if ($user->can_close_task($task_details)):
-  echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+  echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
     <input type="hidden" name="action" value="reopen" />
     <button><?php echo L('reopenthistask'); ?></button>
   </form>
@@ -9,7 +9,7 @@
 
 <button class="submit main" onclick="showhidestuff('requestreopen');"><?php echo Filters::noXSS(L('reopenrequest')); ?></button>
 <div id="requestreopen" class="popup hide">
-        <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+        <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
             <input type="hidden" name="action" value="requestreopen" />
             <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
             <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
@@ -20,12 +20,12 @@
   <?php endif; ?>
 <?php else:  //if task is open  ?>
   <?php if ($user->can_close_task($task_details) && !$d_open): ?>
-    <a href="<?php echo Filters::noXSS(CreateURL('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))); ?>"
+    <a href="<?php echo Filters::noXSS(createURL('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))); ?>"
        id="closetask" class="button main" accesskey="y"
        onclick="showhidestuff('closeform');return false;"> <?php echo Filters::noXSS(L('closetask')); ?></a>
 
     <div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
-        <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
+        <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
         <input type="hidden" name="action" value="details.close"/>
         <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
         <select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
@@ -45,7 +45,7 @@
   <?php elseif (!$d_open && !$user->isAnon() && !Flyspray::AdminRequestCheck(1, $task_details['task_id'])): ?>
     <a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?php echo Filters::noXSS(L('requestclose')); ?></a>
     <div id="closeform" class="popup hide">
-    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+    <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
       <input type="hidden" name="action" value="requestclose"/>
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
       <label for="reason"><?php echo Filters::noXSS(L('reasonforreq')); ?></label>
@@ -73,11 +73,11 @@
 
   <?php if ($user->can_edit_task($task_details)): ?>
     <a id="edittask" class="button" accesskey="e"
-       href="<?php echo Filters::noXSS(CreateUrl('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
+       href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
   <?php endif; ?>
 
   <?php if ($user->can_take_ownership($task_details)): ?>
-    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
+    <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
       <input type="hidden" name="action" value="takeownership" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -86,7 +86,7 @@
   <?php endif; ?>
 
   <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
-    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
+    <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
       <input type="hidden" name="action" value="addtoassignees" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
       <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -99,13 +99,13 @@
         <ul>
             <?php if ($user->can_edit_task($task_details)): ?>
             <li>
-                <a accesskey="e" href="<?php echo Filters::noXSS(CreateURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
+                <a accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?php echo Filters::noXSS(L('edittask')); ?></a>
             </li>
             <?php endif; ?>
 
             <?php if ($user->can_set_task_parent($task_details)): ?>
             <li><input type="checkbox" id="s_parent" /><label for="s_parent"><?php echo Filters::noXSS(L('setparent')); ?></label>
-                <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
+                <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
                 <?php echo Filters::noXSS(L('parenttaskid')); ?>
                 <input type="hidden" name="action" value="details.setparent" />
                 <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -116,7 +116,7 @@
             <?php endif; ?>
             <?php if ($user->can_associate_task($task_details)): ?>
             <li><input type="checkbox" id="s_associate"/><label for="s_associate"><?php echo Filters::noXSS(L('associatesubtask')); ?></label>
-              <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
+              <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
               <?php echo Filters::noXSS(L('associatetaskid')); ?>
               <input type="hidden" name="action" value="details.associatesubtask"/>
               <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
@@ -125,12 +125,19 @@
               </form>
             </li>
             <?php endif; ?>
+	    
+	    <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
             <li>
-                <a href="<?php echo Filters::noXSS(CreateURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
+                <a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
+            </li>
+            <?php endif; ?>
+	    
+            <li>
+                <a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
             </li>
             <?php if ($user->can_add_task_dependency($task_details)): ?>
             <li><input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><?php echo Filters::noXSS(L('adddependenttask')); ?></label>
-              <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
+              <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
               <input type="hidden" name="action" value="details.newdep" />
               <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
               <label for="dep_task_id"><?php echo Filters::noXSS(L('newdependency')); ?></label>
@@ -140,14 +147,8 @@
             </li>
             <?php endif; ?>
 
-            <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
-            <li>
-                <a href="<?php echo Filters::noXSS(CreateURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
-            </li>
-            <?php endif; ?>
-
             <?php if ($user->can_take_ownership($task_details)): ?>
-            <li><?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+            <li><?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
               <input type="hidden" name="action" value="takeownership" />
               <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
               <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -158,7 +159,7 @@
 
             <?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
             <li>
-                <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+                <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
                 <input type="hidden" name="action" value="addtoassignees" />
                 <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -169,7 +170,7 @@
 
             <?php if ($user->can_vote($task_details) > 0): ?>
             <li>
-                <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+                <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
                 <input type="hidden" name="action" value="details.addvote" />
                 <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                 <button type="submit"><?php echo Filters::noXSS(L('voteforthistask')); ?></button>
@@ -179,7 +180,7 @@
 
 	<?php if (!$user->isAnon() && !$watched): ?>
 	<li>
-	<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+	<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 		<input type="hidden" name="action" value="details.add_notification" />
 		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>" />
@@ -190,7 +191,7 @@
 
 	<?php if ($user->can_change_private($task_details)): ?>
 	<li>
-	<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+	<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 		<?php if ($task_details['mark_private']): ?>
 		<input type="hidden" name="action" value="makepublic"/>
 		<button><?php echo eL('makepublic'); ?></button>
@@ -267,7 +268,7 @@ function quick_edit(elem, id)
 		if(isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'project'):
 			$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']);
 			?>
-        <a href="<?php echo Filters::noXSS(CreateURL('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
+        <a href="<?php echo Filters::noXSS(createURL('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?php echo Filters::noXSS(L('tasklist')); ?></a>
         <?php endif;
         if ($next_id): ?>
         <?php echo tpl_tasklink($next_id, L('nexttask'), false, array('id'=>'next', 'accesskey' => 'n')); ?>
@@ -557,7 +558,7 @@ function quick_edit(elem, id)
             <span class="label"><?php echo Filters::noXSS(L('estimatedeffort')); ?></span>
             <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
             <?php
-                $displayedeffort = effort::SecondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                $displayedeffort = effort::secondsToString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
                 if (empty($displayedeffort)) {
                     $displayedeffort = Filters::noXSS(L('undecided'));
                 }
@@ -584,7 +585,7 @@ function quick_edit(elem, id)
             $total_effort += $details['effort'];
             }
             ?>
-            <span class="value"><?php echo effort::SecondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?> </span>
+            <span class="value"><?php echo effort::secondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?> </span>
         </li>
         <?php }
         } ?>
@@ -604,7 +605,7 @@ function quick_edit(elem, id)
 					</div>
 				<?php endif; ?>
 				<?php if ($user->can_vote($task_details) > 0): ?>
-					<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
+					<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
 						<input type="hidden" name="action" value="details.addvote" />
 						<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 						<button class="fakelinkbutton" type="submit" title="<?php echo Filters::noXSS(L('addvote')); ?>">+1</button>
@@ -623,12 +624,12 @@ function quick_edit(elem, id)
 			<span class="label"><?php echo Filters::noXSS(L('private')); ?></span>
 			<span class="value">
 				<?php if ($user->can_change_private($task_details) && $task_details['mark_private']): ?>
-					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+					<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 						<input type="hidden" name="action" value="makepublic"/>
 						<button type="submit" class="fakelinkbutton"><?php echo ucfirst(eL('makepublic')); ?></button>
 					</form>
 				<?php elseif ($user->can_change_private($task_details) && !$task_details['mark_private']): ?>
-					<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id']))); ?>
+					<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 						<input type="hidden" name="action" value="makeprivate"/>
 						<button type="submit" class="fakelinkbutton"><?php echo ucfirst(eL('makeprivate')); ?></button>
 					</form>
@@ -642,7 +643,7 @@ function quick_edit(elem, id)
 		<li>
 			<span class="label"><?php echo Filters::noXSS(L('watching')); ?></span>
 			<span class="value">
-				<?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 					<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
 					<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>"/>
 					<?php if (!$watched): ?>
@@ -685,7 +686,10 @@ function quick_edit(elem, id)
 	<h2 class="summary severity<?php echo Filters::noXSS($task_details['task_severity']); ?>">
 	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
 	</h2>
-	<span class="tags"><?php foreach($tags as $tag): ?><span class="tag t<?php echo $tag['tag_id'].($tag['class']? ' '.$tag['class'] : ''); ?>" title="<?php echo Filters::noXSS($tag['tag']); ?>"></span><?php endforeach; ?></span>
+	<span class="tags"><?php
+	foreach($tags as $tag):
+		echo tpl_tag($tag['tag_id']);
+	endforeach; ?></span>
 	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 
         <?php $attachments = $proj->listTaskAttachments($task_details['task_id']);
@@ -697,10 +701,6 @@ function quick_edit(elem, id)
 
 <div id="taskinfo">
         <?php if(!count($deps)==0): ?>
-        <?php 
-        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
-        #$projects = $fs->listProjects();
-        ?>
         <table id="dependency_table" class="table" width="100%">
             <caption><?php echo (count($deps)==1) ? eL('taskdependsontask') : eL('taskdependsontasks'); ?></caption>
             <thead>
@@ -710,8 +710,8 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('summary')); ?></th>
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
+                <th><?php echo Filters::noXSS(L('assignedto')); ?></th> 
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -725,15 +725,15 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
                 </td>
+                <td> <?php  for ($i=0;$i<count($dependency['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $dependency['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <!-- <td>Assignees TODO</td> -->
                 <td>
-                    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id']))); ?>
+                    <?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
                     <input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
                     <input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                     <input type="hidden" name="action" value="removedep" />
@@ -748,10 +748,6 @@ function quick_edit(elem, id)
 
         <!-- This task blocks the following tasks: -->
         <?php if(!count($blocks)==0): ?>
-        <?php
-        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
-        #$projects = $fs->listProjects();
-        ?>
         <table id="blocking_table" class="table" width="100%">
             <caption><?php echo (count($blocks)==1) ? eL('taskblock') : eL('taskblocks'); ?></caption>
             <thead>
@@ -761,8 +757,8 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('summary')); ?></th>
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
+                <th><?php echo Filters::noXSS(L('assignedto')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
@@ -776,15 +772,15 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
                 </td>
+                <td> <?php  for ($i=0;$i<count($dependency['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $dependency['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <!-- <td>Assignees TODO</td> -->
                 <td>
-                    <?php echo tpl_form(Filters::noXSS(CreateURL('details', $dependency['task_id']))); ?>
+                    <?php echo tpl_form(Filters::noXSS(createURL('details', $dependency['task_id']))); ?>
                     <input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
                     <input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
                     <input type="hidden" name="action" value="removedep" />
@@ -799,17 +795,13 @@ function quick_edit(elem, id)
 
         <?php
             if (!$task_details['supertask_id'] == 0) {
-                $supertask = Flyspray::GetTaskDetails($task_details['supertask_id'], true);
+                $supertask = Flyspray::getTaskDetails($task_details['supertask_id'], true);
                 if ($user->can_view_task($supertask)) {
                     echo eL('taskissubtaskof').' '.tpl_tasklink($supertask);
                 }
             }
         ?>
         <?php if(!count($subtasks)==0): ?>
-        <?php
-        # 20151012 peterdd: seems to be unused code, deactivated the extra (sql) call
-        #$projects = $fs->listProjects();
-        ?>
         <table id="subtask_table" class="table" width="100%">
             <caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
             <thead>
@@ -819,14 +811,14 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('summary')); ?></th>
                 <th><?php echo Filters::noXSS(L('priority')); ?></th>
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
+				<th><?php echo Filters::noXSS(L('assignedto')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
-                <!-- <th><?php echo Filters::noXSS(L('assignedto')); ?></th> -->
                 <th></th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($subtasks as $subtaskOrgin): ?>
-            <?php $subtask = $fs->GetTaskDetails($subtaskOrgin['task_id']); ?>
+            <?php $subtask = $fs->getTaskDetails($subtaskOrgin['task_id']); ?>
             <tr id="task<?php echo $subtask['task_id']; ?>" class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>">
                 <td><?php echo $subtask['task_id'] ?></td>
                 <td><?php echo $subtask['project_title'] ?></td>
@@ -835,6 +827,7 @@ function quick_edit(elem, id)
                 <td class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>"><?php echo $fs->severities[$subtask['task_severity']]
                     ?>
                 </td>
+               <td> <?php  for ($i=0;$i<count($subtaskOrgin['assigned_to']);$i++){ if ($i>0) echo ", ";  echo $subtaskOrgin['assigned_to'][$i];} ?></td>
                 <td class="task_progress">
                     <div class="progress_bar_container">
                         <span><?php echo Filters::noXSS($subtask['percent_complete']); ?>%</span>
@@ -842,10 +835,9 @@ function quick_edit(elem, id)
                         <div class="progress_bar" style="width:<?php echo Filters::noXSS($subtask['percent_complete']); ?>%"></div>
                     </div>
                 </td>
-                <!-- <td>Assignees TODO</td> -->
                 <td>
                     <?php
-                        echo tpl_form(Filters::noXSS(CreateURL('details', $task_details['task_id'])));
+                        echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])));
                     ?>
                     <input type="hidden" name="subtaskid" value="<?php echo Filters::noXSS($subtask['task_id']); ?>" />
                     <input type="hidden" name="action" value="removesubtask" />
@@ -889,4 +881,3 @@ function quick_edit(elem, id)
 
 <div class="clear"></div>
 </div>
-

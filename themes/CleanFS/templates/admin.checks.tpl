@@ -1,0 +1,99 @@
+<div id="toolbox">
+<div>PHP version: <?php echo PHP_VERSION; ?></div>
+<?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
+<?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
+<div>ADOdb version: <?php if(isset($adodbversion)) { echo Filters::noXSS($adodbversion); } ?></div>
+<div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
+<div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
+<?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
+
+<?php if(isset($registrations)): ?>
+<h4><?= $regcount ?> unfinished registrations</h4>
+<table>
+<thead>
+<tr>
+<th>reg_time</th>
+<th>user_name</th>
+<th>email_address</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($registrations as $reg): ?>
+<tr>
+<td><?= formatDate($reg['reg_time']) ?></td>
+<td><?= Filters::noXSS($reg['user_name']) ?></td>
+<td><?= Filters::noXSS($reg['email_address']) ?></td>
+</tr>
+<?php endforeach; ?>
+<?php endif; ?>
+</tbody>
+</table>
+
+<?php if(isset($fstables)): ?>
+<style>
+.dbtable{ background-color:#ccc;}
+.dbtable td {border-bottom:1px solid #999;}
+.dbfield{ background-color:#eee;}
+#togglefields { display:none; }
+#togglefields ~ label:after { content:'Hide Fields'; }
+#togglefields:checked ~ label:after { content:'Show Fields'; }
+#togglefields:checked ~ #dbtables .dbfield { display:none; }
+</style>
+<div>
+<div>default_character_set_name: <?=$fsdb['default_character_set_name'] ?></div>
+<div>default_collation_name: <?=$fsdb['default_collation_name'] ?></div>
+</div>
+<input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
+<label for="togglefields" class="button"></label>
+<table id="dbtables">
+<thead>
+<tr class="dbtable">
+<th>tabl_name</th>
+<th>table_type</th>
+<th></th>
+<th>default collation</th>
+<th>comment</th>
+</tr>
+<tr class="dbfield">
+<th>column_name</th>
+<th>data_type</th>
+<th>character_set_name</th>
+<th>collation_name</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody>
+<?php
+$lasttable='';
+$ti=-1; # $fstables index
+foreach($fsfields as $f):
+	# Show table info row if not yet for that field
+	# This logic fails if there exists a table within $fstables without fields in $fsfields
+	# But for our usecase this should be ok.
+	if ($lasttable != $f['table_name']): 
+		$ti++;
+	?>
+	<tr class="dbtable">
+	<td><?= Filters::noXSS($fstables[$ti]['table_name']) ?></td>
+	<td><?= $fstables[$ti]['table_type'] ?></td>
+	<td></td>
+	<td><?= $fstables[$ti]['table_collation'] ?></td>
+	<td><?= Filters::noXSS($fstables[$ti]['table_comment']) ?></td>
+	</tr>
+	<?php endif; ?>
+<tr class="dbfield">
+<td><?= Filters::noXSS($f['column_name']) ?></td>
+<td><?= $f['column_type'] ?></td>
+<td><?= $f['character_set_name'] ?></td>
+<td><?= $f['collation_name'] ?></td>
+<td><?= Filters::noXSS($f['column_comment']) ?></td>
+</tr>
+<?php
+$lasttable=$f['table_name'];
+endforeach;
+?>
+</tbody>
+</table>
+<?php endif; ?>
+
+</div>

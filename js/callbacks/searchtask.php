@@ -1,6 +1,6 @@
 <?php
 define('IN_FS', true);
-require_once('../../header.php');
+require_once '../../header.php';
 
 
 // Require inputs
@@ -31,10 +31,10 @@ $params = array(
   'details' => "%" . trim(Post::val('detail')) . "%"
 );
 
-$sql = $db->Query('SELECT count(*) 
+$sql = $db->query('SELECT count(*)
 		   FROM {tasks} t
-		   WHERE t.project_id = ? 
-		   	AND t.item_summary like ? 
+		   WHERE t.project_id = ?
+		   	AND t.item_summary like ?
 		   	AND t.detailed_desc like ?',
 		   $params);
 $sametask = $db->fetchOne($sql);

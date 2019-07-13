@@ -6,7 +6,7 @@
 
 define('IN_FS', true);
 header('Content-type: text/html; charset=utf-8');
-require_once('../../header.php');
+require_once '../../header.php';
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(Cookie::val('flyspray_userid'));
@@ -26,14 +26,14 @@ if (is_array($first)) {
 $searchterm = '%' . $first . '%';
 
 // Get the list of users from the global groups above
-$get_users = $db->Query('SELECT real_name, user_name, profile_image
+$get_users = $db->query('SELECT real_name, user_name, profile_image
 	FROM {users} u
 	WHERE u.user_name LIKE ? OR u.real_name LIKE ?',
 	array($searchterm, $searchterm), 20);
 
 $html = '<ul class="autocomplete">';
 
-while ($row = $db->FetchRow($get_users)) {
+while ($row = $db->fetchRow($get_users)) {
    $data = array_map(array('Filters','noXSS'), $row);
    $html .= '<li title="' . $data['real_name'] . '">'.($data['profile_image']!='' ? '<img src="avatars/'.$data['profile_image'].'" />' : '<span class="noavatar"></span>' ). $data['user_name'] . '<span class="informal"> ' . $data['real_name'] . '</span></li>';
 }

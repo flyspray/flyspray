@@ -10,10 +10,10 @@ if (!defined('IN_FS')) {
 }
 
 if (!$user->perms('view_reports')) {
-    Flyspray::Redirect($baseurl);
+    Flyspray::redirect($baseurl);
 }
 
-require_once(BASEDIR . '/includes/events.inc.php');
+require_once BASEDIR . '/includes/events.inc.php';
 $page->setTitle($fs->prefs['page_title'] . L('reports'));
 
 /**********************\
@@ -53,7 +53,7 @@ $events = array(1 => L('opened'),
                 35 => L('supertaskremoved'),
     );
 
-// Should events 19, 20, 21, 29 be here instead? 
+// Should events 19, 20, 21, 29 be here instead?
 $user_events = array(30 => L('created'),
                      31 => L('deleted'));
 
@@ -78,42 +78,42 @@ switch (Req::val('order')) {
         $orderby = "h.event_date {$sort}, h.event_type {$sort}";
 }
 
-foreach (Req::val('events', array()) as $eventtype) {
-    $where[] = 'h.event_type = ?';
-    $params[] = $eventtype;
-}
-$where = '(' . implode(' OR ', $where) . ')';
+if( is_array(Req::val('events')) ){
+	foreach (Req::val('events') as $eventtype) {
+		$where[] = 'h.event_type = ?';
+		$params[] = $eventtype;
+	}
+	$where = '(' . implode(' OR ', $where) . ')';
 
-if ($proj->id) {
-    $where = $where . 'AND (t.project_id = ?  OR h.event_type IN(30, 31)) ';
-    $params[] = $proj->id;
-}
+	if ($proj->id) {
+		$where = $where . 'AND (t.project_id = ?  OR h.event_type IN(30, 31)) ';
+		$params[] = $proj->id;
+	}
 
-if ( ($fromdate = Req::val('fromdate')) || Req::val('todate')) {
-        $where .= ' AND ';
-        $todate = Req::val('todate');
+	if ( Req::val('fromdate') || Req::val('todate')) {
+		$where .= ' AND ';
+		$fromdate = Req::val('fromdate');
+		$todate = Req::val('todate');
 
-        if ($fromdate) {
-            $where .= ' h.event_date > ?';
-            $params[] = Flyspray::strtotime($fromdate) + 0;
-        }
-        if ($todate && $fromdate) {
-            $where .= ' AND h.event_date < ?';
-            $params[] = Flyspray::strtotime($todate) + 86400;
-        } else if ($todate) {
-            $where .= ' h.event_date < ?';
-            $params[] = Flyspray::strtotime($todate) + 86400;
-        }
-}
+		if ($fromdate) {
+			$where .= ' h.event_date > ?';
+			$params[] = Flyspray::strtotime($fromdate) + 0;
+		}
+		if ($todate && $fromdate) {
+			$where .= ' AND h.event_date < ?';
+			$params[] = Flyspray::strtotime($todate) + 86400;
+		} else if ($todate) {
+			$where .= ' h.event_date < ?';
+			$params[] = Flyspray::strtotime($todate) + 86400;
+		}
+	}
 
-if (count(Req::val('events'))) {
-    $histories = $db->Query("SELECT h.*
+	$histories = $db->query("SELECT h.*
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
                      ORDER BY $orderby", $params, Req::num('event_number', -1));
-
-    $histories = $db->FetchAllArray($histories);
+	$histories = $db->fetchAllArray($histories);
 }
 
 $page->uses('histories', 'sort');

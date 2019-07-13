@@ -10,7 +10,7 @@
     <td><a href="mailto:<?php echo Filters::noXSS($theuser->infos['email_address']); ?>"><?php echo Filters::noXSS($theuser->infos['email_address']); ?></a></td>
   </tr>
   <?php endif; ?>
-  <?php if (!empty($fs->prefs['jabber_server'])): ?>
+  <?php if (!empty($fs->prefs['jabber_server']) && (( !$user->isAnon() && !$fs->prefs['hide_emails'] && !$theuser->infos['hide_my_email']) || $user->perms('is_admin')) ): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('jabberid')); ?></th>
     <td><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></td>
@@ -48,12 +48,12 @@
   </tr>
   <?php endif; ?>
   <tr>
-    <th><a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?opened=<?php echo Filters::noXSS($theuser->id); ?>&amp;status[]="><?php echo Filters::noXSS(L('tasksopened')); ?></a></th>
-    <td><?php echo Filters::noXSS($tasks); ?></td>
+    <th><a href="<?php echo CreateURL('tasklist', 0, null, array('opened'=>$theuser->id, 'status[]'=>'')); ?>"><?php echo Filters::noXSS(L('tasksopened')); ?></a></th>
+    <td><a href="<?php echo CreateURL('tasklist', 0, null, array('opened'=>$theuser->id, 'status[]'=>'')); ?>"><?php echo Filters::noXSS($tasks); ?></a></td>
   </tr>
   <tr>
-    <th><a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?dev=<?php echo Filters::noXSS($theuser->id); ?>"><?php echo Filters::noXSS(L('assignedto')); ?></a></th>
-    <td><?php echo Filters::noXSS($assigned); ?></td>
+    <th><a href="<?php echo CreateURL('tasklist', 0, null, array('dev'=>$theuser->id)); ?>"><?php echo Filters::noXSS(L('assignedto')); ?></a></th>
+    <td><a href="<?php echo CreateURL('tasklist', 0, null, array('dev'=>$theuser->id)); ?>"><?php echo Filters::noXSS($assigned); ?></a></td>
   </tr>
   <tr>
     <th><?php echo Filters::noXSS(L('comments')); ?></th>

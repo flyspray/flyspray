@@ -11,7 +11,7 @@ if (!defined('IN_FS')) {
 
 if (Req::val('logout')) {
     $user->logout();
-    Flyspray::Redirect($baseurl);
+    Flyspray::redirect($baseurl);
 }
 
 if (Req::val('user_name') != '' && Req::val('password') != '') {
@@ -31,15 +31,15 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
         } else  /* $user_id == 0 */ {
             // just some extra check here so that never ever an account can get locked when it's already disabled
             // ... that would make it easy to get enabled
-            $db->Query('UPDATE {users} SET login_attempts = login_attempts+1 WHERE account_enabled = 1 AND user_name = ?',
+            $db->query('UPDATE {users} SET login_attempts = login_attempts+1 WHERE account_enabled = 1 AND user_name = ?',
                         array($username));
             // Lock account if failed too often for a limited amount of time
-            $db->Query('UPDATE {users} SET lock_until = ?, account_enabled = 0 WHERE login_attempts > ? AND user_name = ?',
+            $db->query('UPDATE {users} SET lock_until = ?, account_enabled = 0 WHERE login_attempts > ? AND user_name = ?',
                          array(time() + 60 * $fs->prefs['lock_for'], LOGIN_ATTEMPTS, $username));
 
-            if ($db->AffectedRows()) {
+            if ($db->affectedRows()) {
                 Flyspray::show_error(sprintf(L('error71'), $fs->prefs['lock_for']));
-                Flyspray::Redirect($baseurl);
+                Flyspray::redirect($baseurl);
             } else {
                 Flyspray::show_error(7);
             }
@@ -54,18 +54,43 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
 
         $user = new User($user_id);
 
+			# check if user still has an outdated password hash and upgrade it
+			if(    $conf['general']['passwdcrypt']!='md5'
+			    && $conf['general']['passwdcrypt']!='sha1'
+			    && $conf['general']['passwdcrypt']!='sha512'
+			){
+				if( substr($user->infos['user_pass'],0,1)!='$'
+				    && ( strlen($user->infos['user_pass'])==32
+				      || strlen($user->infos['user_pass'])==40
+				      || strlen($user->infos['user_pass'])==128
+				       )
+				){
+ 						# upgrade from unsalted md5 or unsalted sha1 or unsalted sha512 to better
+						if($conf['general']['passwdcrypt']=='argon2i'){
+							$newhash=password_hash($password, PASSWORD_ARGON2I);
+						}else{
+							$cryptoptions=array('cost'=>12);
+							$newhash=password_hash($password, PASSWORD_BCRYPT, $cryptoptions);
+						}
+						# save the new hash
+						$db->query("UPDATE {users} SET user_pass=? WHERE user_id=?", array($newhash, $user_id));
+						# reload the user with updated data
+						$user= new User($user_id);
+				}
+		}
+		
         // Set a couple of cookies
         $passweirded = crypt($user->infos['user_pass'], $conf['general']['cookiesalt']);
         Flyspray::setCookie('flyspray_userid', $user->id, $cookie_time,null,null,null,true);
         Flyspray::setCookie('flyspray_passhash', $passweirded, $cookie_time,null,null,null,true);
         // If the user had previously requested a password change, remove the magic url
-        $remove_magic = $db->Query("UPDATE {users} SET magic_url = '' WHERE user_id = ?",
+        $remove_magic = $db->query("UPDATE {users} SET magic_url = '' WHERE user_id = ?",
                                     array($user->id));
         // Save for displaying
         if ($user->infos['login_attempts'] > 0) {
             $_SESSION['login_attempts'] = $user->infos['login_attempts'];
         }
-        $db->Query('UPDATE {users} SET login_attempts = 0 WHERE user_id = ?', array($user->id));
+        $db->query('UPDATE {users} SET login_attempts = 0, last_login = ? WHERE user_id = ?', array(time(), $user->id));
 
         $_SESSION['SUCCESS'] = L('loginsuccessful');
     }
@@ -75,5 +100,5 @@ else {
     Flyspray::show_error(8);
 }
 
-Flyspray::Redirect(Req::val('return_to'));
+Flyspray::redirect(Req::val('return_to'));
 ?>

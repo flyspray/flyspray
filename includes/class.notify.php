@@ -18,11 +18,11 @@
 class Notifications {
 
    // {{{ Wrapper function for all others
-   function Create($type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH, $proj_lang = null) {
+   function create($type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH, $proj_lang = null) {
 	global $fs;
 	
         if (is_null($to)) {
-            $to = $this->Address($task_id, $type);
+            $to = $this->address($task_id, $type);
         }
 
         if (!is_array($to)) {
@@ -85,15 +85,15 @@ class Notifications {
 
 	$result = true;
         foreach ($languages as $lang) {
-            $msg = $this->GenerateMsg($type, $task_id, $info, $lang);
+            $msg = $this->generateMsg($type, $task_id, $info, $lang);
             if (isset($emails[$lang]) && ($ntype == NOTIFY_EMAIL || $ntype == NOTIFY_BOTH)) {
-                if (!$this->SendEmail($emails[$lang], $msg[0], $msg[1], $task_id)) {
+                if (!$this->sendEmail($emails[$lang], $msg[0], $msg[1], $task_id)) {
                     $result = false;
                 }
             }
             
             if (isset($jabbers[$lang]) && ($ntype == NOTIFY_JABBER || $ntype == NOTIFY_BOTH)) {
-                if (!$this->StoreJabber($jabbers[$lang], $msg[0], $msg[1])) {
+                if (!$this->storeJabber($jabbers[$lang], $msg[0], $msg[1])) {
                     $result = false;
                 }
             }
@@ -114,7 +114,7 @@ class Notifications {
         // End of Create() function
     }
 
-   function StoreOnline($to, $subject, $body, $online, $task_id = null) {
+   function storeOnline($to, $subject, $body, $online, $task_id = null) {
 	global $db, $fs;
 
 	if (!count($to)) {
@@ -124,20 +124,20 @@ class Notifications {
 	$date = time();
 
 	// store notification in table
-	$db->Query("INSERT INTO {notification_messages}
+	$db->query("INSERT INTO {notification_messages}
                   (message_subject, message_body, time_created)
                   VALUES (?, ?, ?)", array($online, '', $date)
 	);
 
 	// grab notification id
         /*
-	$result = $db->Query("SELECT message_id FROM {notification_messages}
+	$result = $db->query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC", array($date), 1);
 
-	$row = $db->FetchRow($result);
+	$row = $db->fetchRow($result);
 	$message_id = $row['message_id'];
         */
-        $message_id = $db->Insert_ID();
+        $message_id = $db->insert_ID();
 	// If message could not be inserted for whatever reason...
 	if (!$message_id) {
 	    return false;
@@ -149,7 +149,7 @@ class Notifications {
 
 	foreach ($to as $jid) {
 	    // store each recipient in table
-	    $db->Query("INSERT INTO {notification_recipients}
+	    $db->query("INSERT INTO {notification_recipients}
                      (notify_method, message_id, notify_address)
                      VALUES (?, ?, ?)", array('o', $message_id, $jid)
 	    );
@@ -158,15 +158,15 @@ class Notifications {
 	return true;
     }
 
-    static function GetUnreadNotifications() {
+    static function getUnreadNotifications() {
       global $db, $fs, $user;
 
-      $notifications = $db->Query('SELECT r.recipient_id, m.message_subject
+      $notifications = $db->query('SELECT r.recipient_id, m.message_subject
                                      FROM {notification_recipients} r
                                      JOIN {notification_messages} m ON r.message_id = m.message_id
                                     WHERE r.notify_method = ? AND notify_address = ?',
               array('o', $user['user_id']));
-      return $db->FetchAllArray($notifications);
+      return $db->fetchAllArray($notifications);
    }
 
 	static function NotificationsHaveBeenRead($ids) {
@@ -174,7 +174,7 @@ class Notifications {
 
 		$readones = join(",", array_map('intval', $ids));
 		if($readones !=''){	
-			$db->Query("
+			$db->query("
 				DELETE FROM {notification_recipients}
 				WHERE message_id IN ($readones)
 				AND notify_method = ?
@@ -186,7 +186,7 @@ class Notifications {
 	}
 
    // {{{ Store Jabber messages for sending later
-   function StoreJabber( $to, $subject, $body )
+   function storeJabber( $to, $subject, $body )
    {
       global $db, $fs;
 
@@ -204,7 +204,7 @@ class Notifications {
       $date = time();
 
       // store notification in table
-      $db->Query("INSERT INTO {notification_messages}
+      $db->query("INSERT INTO {notification_messages}
                   (message_subject, message_body, time_created)
                   VALUES (?, ?, ?)",
                   array($subject, $body, $date)
@@ -212,14 +212,14 @@ class Notifications {
 
       // grab notification id
       /*
-      $result = $db->Query("SELECT message_id FROM {notification_messages}
+      $result = $db->query("SELECT message_id FROM {notification_messages}
                             WHERE time_created = ? ORDER BY message_id DESC",
                             array($date), 1);
 
-      $row = $db->FetchRow($result);
+      $row = $db->fetchRow($result);
       $message_id = $row['message_id'];
       */
-      $message_id = $db->Insert_ID();
+      $message_id = $db->insert_ID();
       // If message could not be inserted for whatever reason...
       if (!$message_id) {
           return false;
@@ -235,7 +235,7 @@ class Notifications {
           }
           $duplicates[] = $jid;
           // store each recipient in table
-          $db->Query("INSERT INTO {notification_recipients}
+          $db->query("INSERT INTO {notification_recipients}
                      (notify_method, message_id, notify_address)
                      VALUES (?, ?, ?)",
                      array('j', $message_id, $jid)
@@ -246,7 +246,7 @@ class Notifications {
       return true;
    } // }}}
 
-   static function JabberRequestAuth($email)
+   static function jabberRequestAuth($email)
    {
         global $fs;
 
@@ -268,8 +268,8 @@ class Notifications {
         $JABBER->disconnect();
    }
 
-   // {{{ Send Jabber messages that were stored earlier
-   function SendJabber()
+   // {{{ send Jabber messages that were stored earlier
+   function sendJabber()
    {
       global $db, $fs;
 
@@ -283,11 +283,11 @@ class Notifications {
       }
 
 		// get listing of all pending jabber notifications
-		$result = $db->Query("SELECT DISTINCT message_id
+		$result = $db->query("SELECT DISTINCT message_id
                             FROM {notification_recipients}
                             WHERE notify_method='j'");
 
-		if (!$db->CountRows($result)) {
+		if (!$db->countRows($result)) {
 			return false;
 		}
 
@@ -303,7 +303,7 @@ class Notifications {
 
 		$ids = array();
 
-		while ( $row = $db->FetchRow($result) ) {
+		while ( $row = $db->fetchRow($result) ) {
 			$ids[] = $row['message_id'];
 		}
 
@@ -313,20 +313,20 @@ class Notifications {
 			// removed array usage as it's messing up the select
 			// I suspect this is due to the variable being comma separated
 			// Jamin W. Collins 20050328
-			$notifications = $db->Query("
+			$notifications = $db->query("
 				SELECT * FROM {notification_messages}
 				WHERE message_id IN ($desired)
 				ORDER BY time_created ASC"
 			);
-		$JABBER->log("number of notifications {" . $db->CountRows($notifications) . "}");
+		$JABBER->log("number of notifications {" . $db->countRows($notifications) . "}");
 
 		// loop through notifications
-		while ( $notification = $db->FetchRow($notifications) ) {
+		while ( $notification = $db->fetchRow($notifications) ) {
 			$subject = $notification['message_subject'];
 			$body    = $notification['message_body'];
 
 			$JABBER->log("Processing notification {" . $notification['message_id'] . "}");
-			$recipients = $db->Query("
+			$recipients = $db->query("
 				SELECT * FROM {notification_recipients}
 				WHERE message_id = ?
 				AND notify_method = 'j'",
@@ -334,14 +334,14 @@ class Notifications {
 			);
 
             // loop through recipients
-            while ($recipient = $db->FetchRow($recipients) ) {
+            while ($recipient = $db->fetchRow($recipients) ) {
                $jid = $recipient['notify_address'];
                $JABBER->log("- attempting send to {" . $jid . "}");
 
                // send notification
                if ($JABBER->send_message($jid, $body, $subject, 'normal')) {
                    // delete entry from notification_recipients
-                   $result = $db->Query("DELETE FROM {notification_recipients}
+                   $result = $db->query("DELETE FROM {notification_recipients}
                                          WHERE message_id = ?
                                          AND notify_method = 'j'
                                          AND notify_address = ?",
@@ -353,15 +353,15 @@ class Notifications {
                 }
             }
             // check to see if there are still recipients for this notification
-            $result = $db->Query("SELECT * FROM {notification_recipients}
+            $result = $db->query("SELECT * FROM {notification_recipients}
                                   WHERE message_id = ?",
                                   array($notification['message_id'])
                                 );
 
-            if ( $db->CountRows($result) == 0 ) {
+            if ( $db->countRows($result) == 0 ) {
                $JABBER->log("No further recipients for message id {" . $notification['message_id'] . "}");
                // remove notification no more recipients
-               $result = $db->Query("DELETE FROM {notification_messages}
+               $result = $db->query("DELETE FROM {notification_messages}
                                      WHERE message_id = ?",
                                      array($notification['message_id'])
                                    );
@@ -375,8 +375,8 @@ class Notifications {
 
       return true;
    } // }}}
-    // {{{ Send email
-    function SendEmail($to, $subject, $body, $task_id = null)
+    // {{{ send email
+    function sendEmail($to, $subject, $body, $task_id = null)
     {
         global $fs, $proj, $user;
 
@@ -412,14 +412,6 @@ class Notifications {
             $swiftconn = Swift_MailTransport::newInstance();
         }
 
-        if(defined( 'FS_MAIL_LOGFILE')) {
-            // FIXME: Swift_LogContainer exists no more???
-            // See http://swiftmailer.org/docs/plugins.html#logger-plugin
-            // for the new implementation.
-            // $log = Swift_LogContainer::getLog();
-            // $log->setLogLevel(SWIFT_LOG_EVERYTHING);
-        }
-
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
         $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
         $htmlbody = str_replace("\n","<br>", $htmlbody);
@@ -433,6 +425,11 @@ class Notifications {
         
         $swift = Swift_Mailer::newInstance($swiftconn);
 
+		if(defined('FS_MAIL_LOGFILE')) {
+			$logger = new Swift_Plugins_Loggers_ArrayLogger();
+			$swift->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+		}
+		
         $message = new Swift_Message($subject);
         if (isset($fs->prefs['emailNoHTML']) && $fs->prefs['emailNoHTML'] == '1'){
            $message->setBody($plainbody, 'text/plain');
@@ -459,27 +456,30 @@ class Notifications {
             $message->getHeaders()->addTextHeader('References', $inreplyto);
         }
 
-        // now accepts string , array or Swift_Address.
-        $message->setTo($to);
+	// accepts string, array, or Swift_Address
+	if( is_array($to) && count($to)>1 ){
+		$message->setTo($fs->prefs['admin_email']);
+        	$message->setBcc($to);
+	} else{
+		$message->setTo($to);
+	}
         $message->setFrom(array($fs->prefs['admin_email'] => $proj->prefs['project_title']));
         $swift->send($message);
 
-        /* FIXME: Swift_LogContainer exists no more???
         if(defined('FS_MAIL_LOGFILE')) {
             if(is_writable(dirname(FS_MAIL_LOGFILE))) {
                 if($fh = fopen(FS_MAIL_LOGFILE, 'ab')) {
-                    fwrite($fh, $log->dump(true));
+                    fwrite($fh, $logger->dump());
                     fwrite($fh, php_uname());
                     fclose($fh);
                 }
             }
         }
-        */
 
         return true;
     } //}}}
-    // {{{ Create a message for any occasion
-    function GenerateMsg($type, $task_id, $arg1 = '0', $lang) {
+    // {{{ create a message for any occasion
+    function generateMsg($type, $task_id, $arg1 = '0', $lang) {
         global $db, $fs, $user, $proj;
 
         // Get the task details
@@ -596,7 +596,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('newtaskopened', $lang) . ". ";
             $online .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . "). ";
@@ -642,7 +642,7 @@ class Notifications {
                 }
             }
             $body .= "\n" . tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
         } // }}}
         // {{{ Task closed
         if ($type == NOTIFY_TASK_CLOSED) {
@@ -656,7 +656,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('notify.taskclosed', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -668,7 +668,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('notify.taskreopened', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -681,10 +681,10 @@ class Notifications {
             $body .= tL('newdep', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= createURL('details', $task_id) . "\n\n\n";
             $body .= tL('newdepis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']);
+            $body .= createURL('details', $depend_task['task_id']);
 
             $online .= tL('newdep', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -697,10 +697,10 @@ class Notifications {
             $body .= tL('notify.depremoved', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= createURL('details', $task_id) . "\n\n\n";
             $body .= tL('removeddepis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']);
+            $body .= createURL('details', $depend_task['task_id']);
 
             $online .= tL('notify.depremoved', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -709,12 +709,12 @@ class Notifications {
         // {{{ Comment added
         if ($type == NOTIFY_COMMENT_ADDED) {
             // Get the comment information
-            $result = $db->Query("SELECT comment_id, comment_text
+            $result = $db->query("SELECT comment_id, comment_text
                                FROM {comments}
                                WHERE user_id = ?
                                AND task_id = ?
                                ORDER BY comment_id DESC", array($user->id, $task_id), '1');
-            $comment = $db->FetchRow($result);
+            $comment = $db->fetchRow($result);
 
             $body .= tL('notify.commentadded', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
@@ -729,7 +729,7 @@ class Notifications {
             }
 
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id) . '#comment' . $comment['comment_id'];
+            $body .= createURL('details', $task_id) . '#comment' . $comment['comment_id'];
 
             $online .= tL('notify.commentadded', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -741,7 +741,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('newattachment', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -754,10 +754,10 @@ class Notifications {
             $body .= tL('notify.relatedadded', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= createURL('details', $task_id) . "\n\n\n";
             $body .= tL('relatedis', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $related_task['task_id'] . ' - ' . $related_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $related_task['task_id']);
+            $body .= createURL('details', $related_task['task_id']);
 
             $online .= tL('notify.relatedadded', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -768,7 +768,7 @@ class Notifications {
             $body .= implode(', ', $task_details['assigned_to_name']) . ' ' . tL('takenownership', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= implode(', ', $task_details['assigned_to_name']) . ' ' . tL('takenownership', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ".";
@@ -790,7 +790,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho') . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('requiresaction', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -804,7 +804,7 @@ class Notifications {
             $body .= tL('denialreason', $lang) . ':' . "\n";
             $body .= $arg1 . "\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('pmdeny', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -816,7 +816,7 @@ class Notifications {
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n\n";
             $body .= tL('moreinfo', $lang) . "\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('assignedtoyou', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -829,10 +829,10 @@ class Notifications {
             $body .= tL('taskwatching', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= createURL('details', $task_id) . "\n\n\n";
             $body .= tL('isdepfor', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']);
+            $body .= createURL('details', $depend_task['task_id']);
 
             $online .= tL('taskwatching', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -845,10 +845,10 @@ class Notifications {
             $body .= tL('taskwatching', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id) . "\n\n\n";
+            $body .= createURL('details', $task_id) . "\n\n\n";
             $body .= tL('isnodepfor', $lang) . ':' . "\n\n";
             $body .= 'FS#' . $depend_task['task_id'] . ' - ' . $depend_task['item_summary'] . "\n";
-            $body .= CreateURL('details', $depend_task['task_id']);
+            $body .= createURL('details', $depend_task['task_id']);
 
             $online .= tL('taskwatching', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -859,7 +859,7 @@ class Notifications {
             $body .= tL('useraddedtoassignees', $lang) . "\n\n";
             $body .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . "\n";
             $body .= tL('userwho', $lang) . ' - ' . $user->infos['real_name'] . ' (' . $user->infos['user_name'] . ")\n";
-            $body .= CreateURL('details', $task_id);
+            $body .= createURL('details', $task_id);
 
             $online .= tL('useraddedtoassignees', $lang) . ". ";
             $online .= 'FS#' . $task_id . ' - ' . $task_details['item_summary'] . ". ";
@@ -868,7 +868,7 @@ class Notifications {
         // {{{ Anon-task has been opened
         if ($type == NOTIFY_ANON_TASK) {
             $body .= tL('thankyouforbug', $lang) . "\n\n";
-            $body .= CreateURL('details', $task_id, null, array('task_token' => $arg1)) . "\n\n";
+            $body .= createURL('details', $task_id, null, array('task_token' => $arg1)) . "\n\n";
 
             $online .= tL('thankyouforbug') . "";
         } // }}}
@@ -922,7 +922,7 @@ class Notifications {
 
 // }}}
 
-    public static function AssignRecipients($recipients, &$emails, &$jabbers, &$onlines, $ignoretype = false) {
+    public static function assignRecipients($recipients, &$emails, &$jabbers, &$onlines, $ignoretype = false) {
         global $db, $fs, $user;
 
         if (!is_array($recipients)) {
@@ -954,7 +954,7 @@ class Notifications {
     }
 
     // {{{ Create an address list for specific users
-   function SpecificAddresses($users, $ignoretype = false) {
+   function specificAddresses($users, $ignoretype = false) {
         global $db, $fs, $user;
 
         $emails = array();
@@ -969,12 +969,12 @@ class Notifications {
             return array();
         }
 
-        $sql = $db->Query('SELECT u.user_id, u.email_address, u.jabber_id,
+        $sql = $db->query('SELECT u.user_id, u.email_address, u.jabber_id,
                                   u.notify_online, u.notify_type, u.notify_own, u.lang_code
                              FROM {users} u
                             WHERE' . substr(str_repeat(' user_id = ? OR ', count($users)), 0, -3), array_values($users));
 
-        self::AssignRecipients($db->FetchAllArray($sql), $emails, $jabbers, $onlines, $ignoretype);
+        self::assignRecipients($db->fetchAllArray($sql), $emails, $jabbers, $onlines, $ignoretype);
         
         return array($emails, $jabbers, $onlines);
     }
@@ -982,7 +982,7 @@ class Notifications {
 // }}}
 
 	// {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
-	function Address($task_id, $type) {
+	function address($task_id, $type) {
 		global $db, $fs, $proj, $user;
 
 		$users = array();
@@ -990,25 +990,25 @@ class Notifications {
 		$jabbers = array();
 		$onlines = array();
 
-		$task_details = Flyspray::GetTaskDetails($task_id);
+		$task_details = Flyspray::getTaskDetails($task_id);
 
 		// Get list of users from the notification tab
-		$get_users = $db->Query('
+		$get_users = $db->query('
 			SELECT * FROM {notifications} n
 			LEFT JOIN {users} u ON n.user_id = u.user_id
 			WHERE n.task_id = ?',
 			array($task_id)
 		);
-        self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+        self::assignRecipients($db->fetchAllArray($get_users), $emails, $jabbers, $onlines);
 
 		// Get list of assignees
-		$get_users = $db->Query('
+		$get_users = $db->query('
 			SELECT * FROM {assigned} a
 			LEFT JOIN {users} u ON a.user_id = u.user_id
 			WHERE a.task_id = ?',
 			array($task_id)
 		);
-        self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+        self::assignRecipients($db->fetchAllArray($get_users), $emails, $jabbers, $onlines);
 
 		// Now, we add the project contact addresses...
 		// ...but only if the task is public
@@ -1022,26 +1022,26 @@ class Notifications {
 			$proj_emails = preg_split('/[\s,;]+/', $proj->prefs['notify_email'], -1, PREG_SPLIT_NO_EMPTY);
 			$desired = implode("','", $proj_emails);
 			if($desired !=''){
-				$get_users = $db->Query("
+				$get_users = $db->query("
 					SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
 					u.notify_online, u.notify_type, u.notify_own, u.lang_code
 					FROM {users} u
 					WHERE u.email_address IN ('$desired')"
 				);
 
-				self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+				self::assignRecipients($db->fetchAllArray($get_users), $emails, $jabbers, $onlines);
 			}
 			
 			$proj_jids = explode(',', $proj->prefs['notify_jabber']);
 			$desired = implode("','", $proj_jids);
 			if($desired!='') {
-				$get_users = $db->Query("
+				$get_users = $db->query("
 					SELECT DISTINCT u.user_id, u.email_address, u.jabber_id,
 					u.notify_online, u.notify_type, u.notify_own, u.lang_code
 					FROM {users} u
 					WHERE u.jabber_id IN ('$desired')"
 				);
-				self::AssignRecipients($db->FetchAllArray($get_users), $emails, $jabbers, $onlines);
+				self::assignRecipients($db->fetchAllArray($get_users), $emails, $jabbers, $onlines);
 			}
 
 			// Now, handle notification addresses that are not assigned to any user...

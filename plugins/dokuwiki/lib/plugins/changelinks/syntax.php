@@ -130,8 +130,15 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
             $link['more']   = '';
             $link['class']  = 'internallink';
             $link['url']    = DOKU_INTERNAL_LINK . $id;
-            $link['name']   = ($name) ? $name : $id;
-            $link['title']  = ($name) ? $name : $id;
+         
+            if(is_array($name)){
+               $link['name']   = (isset($name['title'])) ? hsc($name['title']) : hsc($id);
+               $link['title'] = $id;
+            } else{
+               $link['name']   = ($name) ? hsc($name) : hsc($id);
+               $link['title'] = ($name) ? $name : $id;
+            }
+
             //add search string
             if($search){
                 ($conf['userewrite']) ? $link['url'].='?s=' : $link['url'].='&amp;s=';

@@ -49,8 +49,8 @@ function showTabById(tabid, noEval) { // {{{
       var links = submenu.getElementsByTagName('a');
       for (i=0; i<links.length; i++) {
         if (links[i].href.match('^.*#'+tabid+'$')) {
-          links[i].className = 'active';
-        } else { links[i].className = ''; }
+          links[i].className = links[i].className.replace(/ active\b/g, '') + ' active';
+        } else { links[i].className = links[i].className.replace(/ active\b/g, ''); }
       }
     }
   }
@@ -81,7 +81,8 @@ function showTabByNumber(number) { // {{{
   var i;
 
   for (i=0; i<divs.length; i++) {
-    if (divs[i].className == 'tab') {
+    // tweak for displaying comments-tab 'tab active' also if javascript is disabled.
+    if (divs[i].className == 'tab' || divs[i].className == 'tab active') {
       targets[targets.length] = divs[i].id;             //array[array.length]= same as .push, but IE-compatible.
     }
   }

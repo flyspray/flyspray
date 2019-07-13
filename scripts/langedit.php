@@ -82,10 +82,10 @@ if($fail) {
 	die($fail."<b>Usage:</b> <a href='?do=langedit&lang='>&lt;lang code&gt;</a> where &lt;lang code&gt; should be replaced by your language, e.g. <b>de</b> for German.");
 }
 // Read english language file in array $language (assumed to be UTF-8 encoded)
-require('en.php');
+require 'en.php';
 if(!is_array(@$language)){
 	die("Invalid language file for english");
-}  
+}
 $count = count($language);
 
 // Read the translation file in array $translation (assumed to be UTF-8 encoded)
@@ -96,14 +96,14 @@ if(!file_exists($lang.'.php') && !file_exists('.'.$lang.'.php.work')) {
 	if($lang != 'en') {
 		if(file_exists('.'.$lang.'.php.work')) {
 			$working_copy = true;
-			include_once('.'.$lang.'.php.work'); // Read the translation array (work in progress)
+			include_once '.'.$lang.'.php.work'; // Read the translation array (work in progress)
 		} else{
-			include($lang.'.php'); // Read the original translation array - maybe again, no _once here!
+			include $lang.'.php'; // Read the original translation array - maybe again, no _once here!
 		}
 	} else if(file_exists('.en.php.work')){
 		$working_copy = true;
 		$tmp = $language;
-		include_once('.en.php.work'); // Read the language array (work in progress)
+		include_once '.en.php.work'; // Read the language array (work in progress)
 		$translation = $language;  // Edit the english language file
 		$language = $tmp;
 	} else{
@@ -169,12 +169,12 @@ for($p = 0; $p < $count; $p += $limit){
 <input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
 <input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''; ?> title="Confirm all changes and replace the original language file">
 <br>
-<?php 
+<?php
 if($working_copy) {
   echo "Your changes are stored in <code>.$lang.php.work</code> until you press 'Confirm all changes'<br>";
 }
 // Search
-echo '<input type="text" name="search_for" value="'.$search.'"><input type="submit" name="search" value="Search">';
+echo '<input type="text" name="search_for" value="'.Filters::noXSS($search).'"><input type="submit" name="search" value="Search">';
 // List empty
 if($lang != 'en') {
   echo '<input type="submit" name="empty" value="Show missing" title="Show all texts that have no translation">';
@@ -182,7 +182,7 @@ if($lang != 'en') {
 ?>
 </td></tr>
 <tr><th colspan=2>Key</th><th>English</th><th>Translation:<?php echo $lang; ?></th></tr>
-<?php 
+<?php
 $i = 0;  // Counter to find offset
 $j = 0;  // Counter for background shading
 foreach ($language as $key => $val){
@@ -300,7 +300,7 @@ function update_language($lang, &$strings, $edit) {
   } else {
     fprintf($file, "\$translation = array(\n");
   }
-  
+
   // The following characters will be escaped in multiline strings
   // in the following order:
   // \    => \\

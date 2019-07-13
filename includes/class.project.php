@@ -10,12 +10,12 @@ class Project
 		global $db, $fs;
 
 		if (is_numeric($id)) {
-			$sql = $db->Query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
+			$sql = $db->query("SELECT p.*, c.content AS pm_instructions, c.last_updated AS cache_update
 				FROM {projects} p
 				LEFT JOIN {cache} c ON c.topic = p.project_id AND c.type = 'msg'
 				WHERE p.project_id = ?", array($id));
 			if ($db->countRows($sql)) {
-				$this->prefs = $db->FetchRow($sql);
+				$this->prefs = $db->fetchRow($sql);
 				$this->id    = (int) $this->prefs['project_id'];
 				$sortrules=explode(',', $this->prefs['default_order_by']);
 				foreach($sortrules as $rule){
@@ -57,6 +57,7 @@ class Project
 		$this->prefs['project_title'] = L('allprojects');
         $this->prefs['feed_description']  = L('feedforall');
         $this->prefs['theme_style']   = $fs->prefs['global_theme'];
+		$this->prefs['default_entry'] = $fs->prefs['default_entry'];
         $this->prefs['lang_code']   = $fs->prefs['lang_code'];
         $this->prefs['project_is_active'] = 1;
         $this->prefs['others_view'] = 1;
@@ -64,7 +65,6 @@ class Project
         $this->prefs['intro_message'] = '';
         $this->prefs['anon_open'] = 0;
         $this->prefs['feed_img_url'] = '';
-        $this->prefs['default_entry'] = 'index';
         $this->prefs['notify_reply'] = '';
         $this->prefs['default_due_version'] = 'Undecided';
         $this->prefs['disable_lostpw'] = 0;
@@ -101,10 +101,9 @@ class Project
         #Flyspray::setCookie('flyspray_project', $this->id);
     }
 
-    /* cached list functions {{{ */
-
-    // helpers {{{
-
+	/**
+	* private method
+	*/
     function _pm_list_sql($type, $join)
     {
         global $db;
@@ -115,7 +114,7 @@ class Project
             return '';
         }
         // Get the column names of list tables for the group by statement
-        $groupby = $db->GetColumnNames('{list_' . $type . '}',  'l.' . $type . '_id', 'l.');
+        $groupby = $db->getColumnNames('{list_' . $type . '}',  'l.' . $type . '_id', 'l.');
 
         $join = 't.'.join(" = l.{$type}_id OR t.", $join)." = l.{$type}_id";
 
@@ -128,15 +127,14 @@ class Project
     }
 
     /**
-     * _list_sql
-     *
+	 * private method
+	 *
      * @param mixed $type
      * @param mixed $where
      * @access protected
      * @return string
      * @notes The $where parameter is dangerous, think twice what you pass there..
      */
-
     function _list_sql($type, $where = null)
     {
         // sanity check.
@@ -151,9 +149,6 @@ class Project
               ORDER BY  list_position";
     }
 
-    // }}}
-    // PM dependant functions {{{
-
     function listTaskTypes($pm = false)
     {
         global $db;
@@ -164,7 +159,7 @@ class Project
                     array($this->id));
         } else {
             return $db->cached_query(
-                    'task_types', $this->_list_sql('tasktype'), array($this->id));
+                    'task_types'.$this->id, $this->_list_sql('tasktype'), array($this->id));
         }
     }
 
@@ -177,7 +172,7 @@ class Project
                     $this->_pm_list_sql('os', array('operating_system')),
                     array($this->id));
         } else {
-            return $db->cached_query('os', $this->_list_sql('os'),
+            return $db->cached_query('os'.$this->id, $this->_list_sql('os'),
                     array($this->id));
         }
     }
@@ -233,16 +228,16 @@ class Project
         }
 
         // retrieve the left and right value of the root node
-        $result = $db->Query("SELECT lft, rgt
+        $result = $db->query("SELECT lft, rgt
                                 FROM {list_category}
                                WHERE category_name = 'root' AND lft = 1 AND project_id = ?",
                              array($project_id));
-        $row = $db->FetchRow($result);
+        $row = $db->fetchRow($result);
 
-        $groupby = $db->GetColumnNames('{list_category}', 'c.category_id', 'c.');
+        $groupby = $db->getColumnNames('{list_category}', 'c.category_id', 'c.');
 
         // now, retrieve all descendants of the root node
-        $result = $db->Query('SELECT c.category_id, c.category_name, c.*, count(t.task_id) AS used_in_tasks
+        $result = $db->query('SELECT c.category_id, c.category_name, c.*, count(t.task_id) AS used_in_tasks
                                 FROM {list_category} c
                            LEFT JOIN {tasks} t ON (t.product_category = c.category_id)
                                WHERE c.project_id = ? AND lft BETWEEN ? AND ?
@@ -250,7 +245,7 @@ class Project
                             ORDER BY lft ASC',
                              array($project_id, intval($row['lft']), intval($row['rgt'])));
 
-        while ($row = $db->FetchRow($result)) {
+        while ($row = $db->fetchRow($result)) {
             if ($hide_hidden && !$row['show_in_list'] && $row['lft'] != 1) {
                 continue;
             }
@@ -291,7 +286,7 @@ class Project
                     $this->_pm_list_sql('resolution', array('resolution_reason')),
                     array($this->id));
         } else {
-            return $db->cached_query('resolution',
+            return $db->cached_query('resolution'.$this->id,
                     $this->_list_sql('resolution'), array($this->id));
         }
     }
@@ -305,7 +300,7 @@ class Project
                     $this->_pm_list_sql('status', array('item_status')),
                     array($this->id));
         } else {
-            return $db->cached_query('status',
+            return $db->cached_query('status'.$this->id,
                     $this->_list_sql('status'), array($this->id));
         }
     }
@@ -316,33 +311,32 @@ class Project
         {
                 global $db;
                 if ($pm) {
-                        $result= $db->Query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
+                        $result= $db->query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
                                 FROM {tags} tg
                                 JOIN {tasks} t ON t.task_id=tg.task_id
                                 WHERE t.project_id=?
                                 GROUP BY tag
                                 ORDER BY tag', array($this->id));
                 } else {
-                        $result= $db->Query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
+                        $result= $db->query('SELECT tag AS tag_name, 1 AS list_position, 1 AS show_in_list, COUNT(*) AS used_in_tasks
                                 FROM {tags}
                                 GROUP BY tag
                                 ORDER BY tag');
                 }
 
                 $tags=array();
-                while ($row = $db->FetchRow($result)) {
+                while ($row = $db->fetchRow($result)) {
                         $tags[]=$row;
                 }
                 return $tags;
         }
 	*/
 	/* rewrite of tags feature, FS1.0beta1 */ 
-	
 	function listTags($pm = false)
 	{
 		global $db;
 		if ($pm) {
-			$result= $db->Query('SELECT tg.*, COUNT(tt.task_id) AS used_in_tasks
+			$result= $db->query('SELECT tg.*, COUNT(tt.task_id) AS used_in_tasks
 				FROM {list_tag} tg
 				LEFT JOIN {task_tag} tt ON tt.tag_id=tg.tag_id
 				LEFT JOIN {tasks} t ON t.task_id=tt.task_id
@@ -350,15 +344,14 @@ class Project
 				GROUP BY tg.tag_id
 				ORDER BY tg.list_position', array($this->id));
 			$tags=array();
-			while ($row = $db->FetchRow($result)) {
+			while ($row = $db->fetchRow($result)) {
 				$tags[]=$row;
 			}
 			return $tags;
 		} else {
-			return $db->cached_query('tag', $this->_list_sql('tag'), array($this->id));
+			return $db->cached_query('tag'.$this->id, $this->_list_sql('tag'), array($this->id));
  		}
 	}
-    // }}}
 
     // This should really be moved to class Flyspray like some other ones too.
     // Something todo for 1.1.
@@ -367,12 +360,12 @@ class Project
         global $db;
         return $db->cached_query(
                 'users_in'.(is_null($group_id) ? $group_id : intval($group_id)),
-                "SELECT  u.*
-                   FROM  {users}           u
-             INNER JOIN  {users_in_groups} uig ON u.user_id = uig.user_id
-             INNER JOIN  {groups}          g   ON uig.group_id = g.group_id
-                  WHERE  g.group_id = ?
-               ORDER BY  u.user_name ASC",
+                "SELECT u.*
+                   FROM {users}           u
+             INNER JOIN {users_in_groups} uig ON u.user_id = uig.user_id
+             INNER JOIN {groups}          g   ON uig.group_id = g.group_id
+                  WHERE g.group_id = ?
+               ORDER BY u.user_name ASC",
                 array($group_id));
     }
 
@@ -381,10 +374,10 @@ class Project
         global $db;
         return $db->cached_query(
                 'attach_'.intval($cid),
-                "SELECT  *
-                   FROM  {attachments}
-                  WHERE  comment_id = ? AND task_id = ?
-               ORDER BY  attachment_id ASC",
+                "SELECT *
+                   FROM {attachments}
+                  WHERE comment_id = ? AND task_id = ?
+               ORDER BY attachment_id ASC",
                array($cid, $tid));
     }
 
@@ -404,25 +397,24 @@ class Project
     {
         global $db;
         return $db->cached_query(
-                'attach_'.intval($tid),
-                "SELECT  *
-                   FROM  {attachments}
-                  WHERE  task_id = ? AND comment_id = 0
-               ORDER BY  attachment_id ASC",
-               array($tid));
+        	'attach_'.intval($tid),
+			"SELECT * FROM {attachments}
+			WHERE task_id = ? AND comment_id = 0
+			ORDER BY  attachment_id ASC",
+			array($tid)
+		);
     }
 
-    function listTaskLinks($tid)
-    {
-        global $db;
-	return $db->cached_query(
-		'link_'.intval($tid),
-		"SELECT *
-		FROM {links}
-		WHERE task_id = ? AND comment_id = 0
-		ORDER BY link_id ASC",
-		array($tid));
-    }
+	function listTaskLinks($tid)
+	{
+		global $db;
+		return $db->cached_query(
+			'link_'.intval($tid),
+			"SELECT * FROM {links}
+			WHERE task_id = ? AND comment_id = 0
+			ORDER BY link_id ASC",
+			array($tid));
+	}
     
 	/**
      * Returns the activity by between dates for a project.
@@ -434,7 +426,7 @@ class Project
      */
     static function getActivityProjectCount($startdate, $enddate, $project_id) {
         global $db;
-        $result = $db->Query('SELECT count(event_date) as val
+        $result = $db->query('SELECT count(event_date) as val
                                 FROM {history} h left join {tasks} t on t.task_id = h.task_id
                                WHERE t.project_id = ? AND event_date BETWEEN ? and ?',
                             array($project_id, $startdate, $enddate));
@@ -455,7 +447,7 @@ class Project
         //NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';
 
-        $result = $db->Query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
+        $result = $db->query("SELECT count(date({$func}(event_date))) as val, MIN(event_date) as event_date
                                 FROM {history} h left join {tasks} t on t.task_id = h.task_id
                                WHERE t.project_id = ? AND event_date BETWEEN ? and ?
                             GROUP BY date({$func}(event_date)) ORDER BY event_date DESC",
@@ -479,6 +471,4 @@ class Project
 
         return array_values($results);
     }
-
-    /* }}} */
 }

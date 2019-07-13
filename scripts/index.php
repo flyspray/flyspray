@@ -12,7 +12,7 @@ if (!defined('IN_FS')) {
 }
 
 // Need to get function ConvertSeconds
-require_once(BASEDIR . '/includes/class.effort.php');
+require_once BASEDIR . '/includes/class.effort.php';
 
 if (!$user->can_select_project($proj->id)) {
     $proj = new Project(0);
@@ -68,7 +68,7 @@ $page->assign('forbiddencount', $forbiddencount);
 
 // Send user variables to the template
 
-$result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
+$result = $db->query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.group_name, g.project_id
                             FROM {users} u
                        LEFT JOIN {users_in_groups} uig ON u.user_id = uig.user_id
                        LEFT JOIN {groups} g ON g.group_id = uig.group_id
@@ -76,15 +76,16 @@ $result = $db->Query('SELECT DISTINCT u.user_id, u.user_name, u.real_name, g.gro
                                  AND (g.project_id = 0 OR g.project_id = ?) AND u.account_enabled = 1
                         ORDER BY g.project_id ASC, g.group_name ASC, u.user_name ASC', ($proj->id || -1)); // FIXME: -1 is a hack. when $proj->id is 0 the query fails
 $userlist = array();
-while ($row = $db->FetchRow($result)) {
+while ($row = $db->fetchRow($result)) {
     $userlist[$row['group_name']][] = array(0 => $row['user_id'],
                                             1 => sprintf('%s (%s)', $row['user_name'], $row['real_name']));
 }
 
 $page->assign('userlist', $userlist);
 
-// tpl function that Displays a header cell for report list {{{
-
+/**
+ * tpl function that Displays a header cell for report list
+ */
 function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
     global $proj, $page;
@@ -132,14 +133,15 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	unset($params['project']);
 	unset($params['switch']);
 	$html = sprintf('<a title="%s" href="%s">%s</a>',
-		eL('sortthiscolumn'), Filters::noXSS(CreateURL('tasklist', $proj->id, null, $params )), $html);
+		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html);
 
 	return sprintf($format, ' class="'.$class.'"', $html);
 }
 
-// }}}
-// tpl function that  draws a cell {{{
 
+/**
+ * tpl function that  draws a cell
+ */
 function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 	global $fs, $db, $proj, $page, $user;
 
@@ -191,23 +193,21 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		if (utf8_strlen($task['item_summary']) > 55) {
 			$value .= '...';
 		}
-		# <i> instead of <span> in future for smaller size
-		# we need also some bytes for classes like <i class="tag t123">tagname</i>
-		if($task['tags']!=''){
-			$tags=explode(',', $task['tags']);
+
+		if($task['tagids']!=''){
+			#$tags=explode(',', $task['tags']);
 			$tagids=explode(',', $task['tagids']);
-			$tagclass=explode(',', $task['tagclass']);
+			#$tagclass=explode(',', $task['tagclass']);
 			$tgs='';
-			for($i=0;$i< count($tags); $i++){
-				$tgs.='<i class="tag t'.$tagids[$i]
-					.(isset($tagclass[$i]) ? ' ' . $tagclass[$i] : '').'" title="'.$tags[$i].'"></i>';
+			for($i=0;$i< count($tagids); $i++){
+				$tgs.=tpl_tag($tagids[$i]);
 			}
                         $value.=$tgs;
 		}
             break;
 
         case 'tasktype':
-            $value = $task['tasktype_name'];
+            $value = htmlspecialchars($task['tasktype_name'], ENT_QUOTES, 'utf-8');
             $class.=' typ'.$task['task_type'];
             break;
 
@@ -276,14 +276,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
-            
+
         case 'commentedby':
         case 'openedby':
         case 'editedby':
         case 'closedby':
                 $value = '';
                 # a bit expensive! tpl_userlinkavatar()  an additional sql query for each new user in the output table
-                # at least tpl_userlink() uses a $cache array so query for repeated users 
+                # at least tpl_userlink() uses a $cache array so query for repeated users
 		if ($task[$indexes[$colname]] > 0) {
 			# deactivated: avatars looks too ugly in the tasklist, user's name needs to be visible on a first look here, without needed mouse hovering..
 			#if ($fs->prefs['enable_avatars']==1){
@@ -293,7 +293,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			#}
 		}
                 break;
-                
+
         case 'parent':
             $value = '';
             if ($task['supertask_id'] > 0) {
@@ -305,7 +305,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_estimated_effort')) {
 		if ($task['estimated_effort'] > 0){
-                    $value = effort::SecondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                    $value = effort::secondsToString($task['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
 		}
             }
             break;
@@ -314,7 +314,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             $value = '';
             if ($user->perms('view_current_effort_done')) {
 		if ($task['effort'] > 0){
-                    $value = effort::SecondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
+                    $value = effort::secondsToString($task['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
                 }
             }
             break;
@@ -340,21 +340,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 	return sprintf($format, $class, $value);
 }
 
-// } }}
-
-// }}}
-// Added LAE 2/1/2014 - little function to export the tasklist into a .csv file and upload it to user browser {{{
-
 $sort;
 $orderby;
 
-/*********************************************
-*
-* comparison function used by export_task_list
-*
-**********************************************
-*/
-
+/**
+ *
+ * comparison function used by export_task_list
+ *
+ */
 function do_cmp($a, $b)
 {
  global $sort,$orderby;
@@ -367,13 +360,33 @@ function do_cmp($a, $b)
    return ($a[ $orderby ] > $b[ $orderby ]) ? -1 : 1;
 }
 
-
-/*********************************************
-*
-* Export the task list as a .csv file
-*
-*********************************************
+/**
+* workaround fputcsv() bug https://bugs.php.net/bug.php?id=43225
 */
+function my_fputcsv($handle, $fields)
+{
+  $out = array();
+
+  foreach ($fields as $field) {
+    if (empty($field)) {
+      $out[] = '';
+    }
+    elseif (preg_match('/^\d+(\.\d+)?$/', $field)) {
+      $out[] = $field;
+    }
+    else {
+      $out[] = '"' . preg_replace('/"/', '""', $field) . '"';
+    }
+  }
+
+  return fwrite($handle, implode(',', $out) . "\n");
+}
+
+
+/**
+ * Export the tasks as a .csv file
+ * Currently only a fixed list of task fields
+ */
 function export_task_list()
 {
 	global $tasks, $fs, $user, $sort, $orderby, $proj;
@@ -427,7 +440,7 @@ function export_task_list()
 
         usort($tasks, "do_cmp");
 
-        $outfile = str_replace(' ', '_', $tasks[0]['project_title']).'_'.date("Y-m-d").'.csv';
+        $outfile = str_replace(' ', '_', $proj->prefs['project_title']).'_'.date("Y-m-d").'.csv';
 
         #header('Content-Type: application/csv');
         header('Content-Type: text/csv');
@@ -441,7 +454,6 @@ function export_task_list()
         flush();
 
 	$output = fopen('php://output', 'w');
-	#fputcsv($output, $projectinfo)
 	$headings= array(
 		'ID',
 		'Category',
@@ -453,38 +465,41 @@ function export_task_list()
 		'date_opened',
 		'date_closed',
 		'due_date',
-		'supertask_id',
-		$user->perms('view_estimated_effort') ?'Estimated Effort':'',
-		// $user->perms('view_current_effort_done') ?'Done Effort':'',
-		'Description',
+		'supertask_id'
 	);
+	if($user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
+		$headings[]='Estimated Effort';
+	}
+	$headings[]='Description';
+	//if($user->perms('view_current_effort_done') && $proj->id>0 && $proj->prefs['use_effort_tracking']){ $headings[]='Done Effort'; }
 
-        # TODO maybe if user just want localized headings for nonenglish speaking audience..
-        #$headings= array('ID','Category','Task Type','Severity','Summary','Status','Progress');
-        fputcsv($output, $headings);
-        foreach ($tasks as $task) {
-                $row = array(
-                        $task['task_id'],
-                        $task['category_name'],
-                        $task['task_type'],
-                        $fs->severities[ $task['task_severity'] ],
-                        $task['item_summary'],
-                        $task['status_name'],
-                        $task['percent_complete'],
-                        $task['date_opened'],
-                        $task['date_closed'],
-                        $task['due_date'],
-                        $task['supertask_id'],
-                        ($user->perms('view_estimated_effort') && $proj->prefs['use_effort_tracking']) ? $task['estimated_effort'] : '',
-                        // ($user->perms('view_current_effort_done') && $proj->prefs['use_effort_tracking']) ? $task['effort'] : '',
-                        $task['detailed_desc']
-                );
-                fputcsv($output, $row);
-        }
-        fclose($output);
-        exit();
+        #fputcsv($output, $headings);
+	my_fputcsv($output, $headings); # fixes 'SYLK' FS#2123 Excel problem
+	foreach ($tasks as $task) {
+		$row = array(
+			$task['task_id'],
+			$task['category_name'],
+			$task['task_type'],
+			$fs->severities[ $task['task_severity'] ],
+			$task['item_summary'],
+			$task['status_name'],
+			$task['percent_complete'],
+			$task['date_opened'],
+			$task['date_closed'],
+			$task['due_date'],
+			$task['supertask_id']
+		);
+		if( $user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
+			$row[]=$task['estimated_effort'];
+		}
+		$row[]=$task['detailed_desc'];
+		//if( $user->perms('view_current_effort_done') && $proj->id>0 && $proj->prefs['use_effort_tracking']){ $row=$task['effort']; }
+
+		my_fputcsv($output, $row); # fputcsv() is buggy
+	}
+	fclose($output);
+	exit();
 }
-// } }}
 
 // Javascript replacement
 if (Get::val('toggleadvanced')) {
@@ -492,23 +507,27 @@ if (Get::val('toggleadvanced')) {
     Flyspray::setCookie('advancedsearch', $advanced_search, time()+60*60*24*30);
     $_COOKIE['advancedsearch'] = $advanced_search;
 }
-// Update check {{{
+
+/**
+ * Update check
+ */
 if(Get::has('hideupdatemsg')) {
 	unset($_SESSION['latest_version']);
-} else if ($conf['general']['update_check'] 
+} else if ($conf['general']['update_check']
 	&& $user->perms('is_admin')
 	&& $fs->prefs['last_update_check'] < time()-60*60*24*3) {
 	if (!isset($_SESSION['latest_version'])) {
 		$latest = Flyspray::remote_request('http://www.flyspray.org/version.txt', GET_CONTENTS);
 		# if for some silly reason we get an empty response, we use the actual version
  		$_SESSION['latest_version'] = empty($latest) ? $fs->version : $latest ;
- 		$db->Query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
+ 		$db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(time(), 'last_update_check'));
 	}
 }
 if (isset($_SESSION['latest_version']) && version_compare($fs->version, $_SESSION['latest_version'] , '<') ) {
 	$page->assign('updatemsg', true);
 }
-// }}}
+
+
 $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('tasklist'));
 $page->pushTpl('index.tpl');
 

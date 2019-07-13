@@ -4,7 +4,7 @@ Thanks for downloading version 1.x of Flyspray. For installation
 instructions, take a look at the INSTALL text file. To upgrade from a
 previous version, read the UPGRADING text file.
 
-Flyspray is primarily being developed on Linux (Ubuntu, Debian, OpenSUSE), using Apache 2 and PHP 5 (5.2-5.6)
+Flyspray is primarily being developed on Linux (Ubuntu, Debian, OpenSUSE), using Apache 2 and PHP 7
 To report bugs or request features, use the bug tracking system at
 http://bugs.flyspray.org/ 
 

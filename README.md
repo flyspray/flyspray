@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/peterdd/flyspray.svg?branch=master)](https://travis-ci.org/peterdd/flyspray) Flyspray/peterdd
-
-[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray) Flyspray/flyspray
+[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray)
 
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
 
@@ -10,14 +8,9 @@ www.flyspray.org
 
 Flyspray is an uncomplicated, web-based bug and task tracking system.
 
-If you already know all about Flyspray, why wait? Download it now!
-
-If Flyspray is helping your business, please consider helping us by donating a couple of dollars.
-Be added to our generous donators page today!
-
 Have you spotted Flyspray in the wild? Does your company or project use Flyspray?
 You can send a note to the Mailing List including your project or company name, Flyspray URL (if public),
-homepage, and a nice testimonial if you are in the mood and we'll have it added to the list of who is Using Flyspray!
+homepage, and a nice testimonial if you are in the mood and we'll have it added to the list of who is using Flyspray.
 
 ## Installation
 http://flyspray.org/manual/install
@@ -35,7 +28,7 @@ http://flyspray.org/manual/install
 4. Make sure flyspray.conf.php is writeable by the webserver.
 5. Open http://yourflyspray/setup/ in your webbrowser. It detects the existing installation and you can follow the upgrade steps.
 
-6. Note: Do not forget to press F5 after the upgrade in web browser to reload also cached css-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
+6. Note: Do not forget to press F5 (or CTRL+F5, depending on cache policy) after the upgrade in web browser to reload also cached css-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
 
 ## Dependencies
 
@@ -51,21 +44,19 @@ http://flyspray.org/manual/install
 
 #### Installing from prepackaged releases that include also needed 3rd party libraries
 
-Choose the matching download for your php version from http://www.flyspray.org/docs/download/
-    
-    unzip flyspray-1.0*.zip  (or tar xzf flyspray-1.0*.tgz if you prefer .tgz downloads)
+    tar xzf flyspray-1.0-rc8.tgz
 
-Point your webbrowser where use unzipped the download file and follow the configuration instructions. 
+Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Installing from source releases via command line
 
-    unzip flyspray-1.0*.zip  (or tar xzf flyspray-1.0*.tar.gz if you prefer the .tar.gz download)
-    cd flyspray-1.0*
+    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc8.tar.gz | tar xz
+    cd flyspray-1.0-rc8
     curl -sS https://getcomposer.org/installer | php
-    php composer.phar install
+    php composer.phar install --no-dev
     
-Point your webbrowser where use unzipped the download file and follow the configuration instructions.
-    
+Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+
 #### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.
 
@@ -73,4 +64,3 @@ Point your webbrowser where use unzipped the download file and follow the config
     Using command lines:
     - 'cd' to the main Flyspray directory
     - Type 'php composer.phar install' to automatically download the vendors
-    Users that have it integrated to shell can right click their Flyspray directory and choose "Composer->install" to automatically download the vendors

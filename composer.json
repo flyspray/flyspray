@@ -3,15 +3,18 @@
     "type": "application",
     "description": "The Flyspray bug tracking system.",
     "keywords": ["bug","bugs","tracker","issue","issues", "web"],
-    "homepage": "http://flyspray.org",
+    "homepage": "https://flyspray.org",
     "license": "LGPL-2.1",
     "require": {
         "swiftmailer/swiftmailer": "~5.0",
         "adodb/adodb-php": "~5.20",
-        "jamiebicknell/Sparkline": "1.*",
-        "ezyang/htmlpurifier": "~4.8.0",
-        "dapphp/securimage": "3.6.5",
-        "league/oauth2-client": "~0.3|~0.12" 
+        "jamiebicknell/sparkline": "1.*",
+        "ezyang/htmlpurifier": "~4.10.0",
+        "dapphp/securimage": "3.6.6",
+        "league/oauth2-client": "~0.12" 
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     },
     "repositories": [
         {
@@ -21,8 +24,10 @@
     ],
     "scripts": {
         "post-update-cmd": [
-                "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
-                "echo '<?php return array(\"session_name\"=>\"flyspray\"); ?>' > vendor/dapphp/securimage/config.inc.php"
+            "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
+            "rm -rf vendor/dapphp/securimage/audio/*",
+            "rm -rf vendor/dapphp/securimage/backgrounds/*",
+            "echo '<?php return array(\"session_name\"=>\"flyspray\"); ?>' > vendor/dapphp/securimage/config.inc.php"
         ]
     },
     "autoload": {

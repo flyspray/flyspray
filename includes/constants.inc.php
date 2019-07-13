@@ -21,7 +21,9 @@ if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'
         if (!$webdir) {
             $webdir = dirname($_SERVER['SCRIPT_NAME']);
         }
-        if (substr($webdir, -9) == 'index.php') {
+        if(substr($webdir, -13) == '/js/callbacks'){
+            $webdir = dirname(dirname($webdir));
+        } elseif (substr($webdir, -9) == 'index.php') {
             $webdir = dirname($webdir);
         }
     }
@@ -34,7 +36,7 @@ if(isset($conf['general']['syntax_plugin']) && preg_match('/^[a-z0-9_]+$/iD', $c
 $path_to_plugin = sprintf('%s/plugins/%s/%s_constants.inc.php', BASEDIR, $conf['general']['syntax_plugin'], $conf['general']['syntax_plugin']);
 
     if (is_readable($path_to_plugin)) {
-        include($path_to_plugin);
+        include $path_to_plugin;
     }
 }
 
@@ -70,6 +72,9 @@ define('STATUS_ASSIGNED',         3);
 
 define('GET_CONTENTS', true);
 
+# resolution_id with special meaning and protection, always 6 (Flyspray history)
+define('RESOLUTION_DUPLICATE', 6);
+
 // Others
 define('MIN_PW_LENGTH', 5);
 define('LOGIN_ATTEMPTS', 5);
@@ -84,7 +89,7 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 // developers or advanced users only
 //define('DEBUG_SQL',true);
 
-# 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php. 
+# 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php.
 //define('JABBER_DEBUG', true);
 //define('JABBER_DEBUG_FILE', BASEDIR . '/logs/jabberlog.txt');
 

@@ -40,14 +40,14 @@ if( preg_match('/[^a-zA-Z_]/', $lang)) {
 }
 
 # reload en.php if flyspray did it before!
-require('lang/en.php');
+require 'lang/en.php';
 // while the en.php and $lang.php both defines $language, the english one should be keept
 $orig_language = $language;
 
 $translationfile = 'lang/'."$lang.php";
 if ($lang != 'en' && file_exists($translationfile)) {
 	# reload that file if flyspray did it before!
-        include($translationfile);
+        include $translationfile;
 	if( isset($_GET['sort']) && $_GET['sort']=='key'){
 		ksort($orig_language);
 	}elseif( isset($_GET['sort']) && $_GET['sort']=='en'){
@@ -122,18 +122,18 @@ if ($lang != 'en' && file_exists($translationfile)) {
 	if ($handle = opendir('lang')) {
 		$languages=array();
 		while (false !== ($file = readdir($handle))) {
-			if ($file != "." 
-			 && $file != ".." 
-			 && $file!='.langdiff.php' 
-			 && $file!='.langedit.php' 
-			 && !(substr($file,-4)=='.bak') 
+			if ($file != "."
+			 && $file != ".."
+			 && $file!='.langdiff.php'
+			 && $file!='.langedit.php'
+			 && !(substr($file,-4)=='.bak')
 			 && !(substr($file,-5)=='.safe') ) {
 				# if a .$lang.php.work file but no $lang.php exists yet
-				if( substr($file,-5)=='.work'){ 
+				if( substr($file,-5)=='.work'){
 					if(!is_file('lang/'.substr($file,1,-5)) ){
 						$workfiles[]=$file;
 					}
-				} else{ 
+				} else{
 					$langfiles[]=$file;
 				}
 			}
@@ -145,7 +145,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		<tbody>';
 		foreach($langfiles as $lang){
 			unset($translation);
-			require('lang/'.$lang); # file $language variable
+			require 'lang/'.$lang; # file $language variable
 			$i=0; $empty=0;
 			foreach ($orig_language as $key => $val) {
 				if (!isset($translation[$key])) {

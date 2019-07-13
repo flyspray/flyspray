@@ -35,7 +35,7 @@ if (is_readable(APPLICATION_PATH . '/vendor/autoload.php')){
     // Use composer autoloader
     require APPLICATION_PATH . '/vendor/autoload.php';
 } else{
-        Flyspray::Redirect('composertest.php');
+        Flyspray::redirect('composertest.php');
         exit;
 }
 
@@ -63,12 +63,6 @@ padding: 8px 13px 8px 10px;
 text-decoration: none;
 ">Upgrader</a> to upgrade your Flyspray,
 or delete flyspray.conf.php to run setup. You can *not* use the setup on an existing database.</div>');
-}
-
-$borked = str_replace('a', 'b', array( -1 => -1 ) );
-if(!isset($borked[-1])) {
-    die("Flyspray cannot run here, sorry :-( PHP 4.4.x/5.0.x is buggy on your 64-bit system; you must upgrade to PHP 5.1.x\n" .
-        "or higher. ABORTING. (http://bugs.php.net/bug.php?id=34879 for details)\n");
 }
 
 $conf['general']['syntax_plugin'] = '';
@@ -121,13 +115,13 @@ class Setup extends Flyspray
    public function __construct()
    {
       // Look for ADOdb
-      $this->mAdodbPath         = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
-      $this->mProductName       = 'Flyspray';
+      $this->mAdodbPath = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
+      $this->mProductName = 'Flyspray';
       $this->mMinPasswordLength	= 8;
 
       // Initialise flag for proceeding to next step.
       $this->mProceed = false;
-      $this->mPhpRequired = '5.3.3'; # composer minimum php version
+      $this->mPhpRequired = '5.4';
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
@@ -137,10 +131,10 @@ class Setup extends Flyspray
                                  'MySQL' => array(true, 'mysql_connect', 'mysql'),
                                  'Postgres' => array(true, 'pg_connect', 'pgsql'),
                               );
-      $this->mAvailableDatabases	= array();
+      $this->mAvailableDatabases = array();
 
       // Process the page actions
-      $this->ProcessActions();
+      $this->processActions();
    }
 
    /**
@@ -148,7 +142,7 @@ class Setup extends Flyspray
    * @param void
    * @return string An html formatted boolean answer
    */
-   public function CheckWriteability($path)
+   public function checkWriteability($path)
    {
       // Get the full path to the file
       $file = APPLICATION_PATH .'/' . $path;
@@ -169,7 +163,7 @@ class Setup extends Flyspray
       $this->mWriteStatus[$path] = $this->IsWriteable($file);
 
       // Return an html formated writeable/un-writeable string
-      return $this->ReturnStatus($this->mWriteStatus[$path], $type = 'writeable');
+      return $this->returnStatus($this->mWriteStatus[$path], $type = 'writeable');
    }
 
    /**
@@ -177,7 +171,7 @@ class Setup extends Flyspray
    * @param void
    * @return void
    */
-   public function CheckDatabaseSupport()
+   public function checkDatabaseSupport()
    {
       $status = array();
 
@@ -196,7 +190,7 @@ class Setup extends Flyspray
 
       // Generating the output to be displayed
       $this->mAvailableDatabases[$which]['status_output'] =
-         $this->ReturnStatus($this->mAvailableDatabases[$which]['status'], $type = 'available');
+         $this->returnStatus($this->mAvailableDatabases[$which]['status'], $type = 'available');
       }
 
       // Check if any one database support exists.
@@ -211,7 +205,7 @@ class Setup extends Flyspray
     * @access public
     * @return bool
     */
-   public function CheckPreStatus()
+   public function checkPreStatus()
    {
       $this->mProceed = ($this->mDatabaseStatus && $this->mPhpVersionStatus && $this->xmlStatus);
 
@@ -225,13 +219,13 @@ class Setup extends Flyspray
    * @param void
    * @return string An html formatted boolean answer
    */
-   public function CheckPhpCompatibility()
+   public function checkPhpCompatibility()
    {
       // Check the PHP version.
       $this->mPhpVersionStatus = version_compare(PHP_VERSION, $this->mPhpRequired, '>=');
 
       // Return an html formated Yes/No string
-      return $this->ReturnStatus($this->mPhpVersionStatus, $type = 'yes');
+      return $this->returnStatus($this->mPhpVersionStatus, $type = 'yes');
    }
 
    /**
@@ -241,14 +235,14 @@ class Setup extends Flyspray
    * will accumulate error messages in the $_SESSION[PASS_PHRASE]['page_message'] array.
    * return boolean/array $data will be returned if successful
    */
-   public function CheckPostedData($expectedFields, $pageHeading)
+   public function checkPostedData($expectedFields, $pageHeading)
    {
        if(!is_array($expectedFields)){
            $expectedFields = array();
        }
 
       // Grab the posted data and trim it.
-      $data = array_filter($_POST, array(&$this, "TrimArgs"));
+      $data = array_filter($_POST, array(&$this, "trimArgs"));
 
 
       // Loop through the required values and check data
@@ -260,12 +254,12 @@ class Setup extends Flyspray
          {
             if ($expectedFields[$key][2] == true)
             {
-               // Acumulate error messages
+               // accumulate error messages
                $_SESSION['page_message'][] = "<strong>{$expectedFields[$key][0]}</strong>  is required";
             }
          }
          // Check for variable types
-         elseif (!$this->VerifyVariableTypes($expectedFields[$key][1], $data[$key]))
+         elseif (!$this->verifyVariableTypes($expectedFields[$key][1], $data[$key]))
          {
             $_SESSION['page_message'][] = "<strong>{$expectedFields[$key][0]}</strong> has to be a {$expectedFields[$key][1]}";
          }
@@ -283,10 +277,10 @@ class Setup extends Flyspray
       }
    }
 
-   public function DisplayAdministration()
+   public function displayAdministration()
    {
       // Trim the empty values in the $_POST array
-      $data = array_filter($_POST, array($this, "TrimArgs"));
+      $data = array_filter($_POST, array($this, "trimArgs"));
 
       $templates =
       array(
@@ -295,18 +289,20 @@ class Setup extends Flyspray
                         'template' => 'administration.tpl',
                         'vars' => array(
                                 'product_name' => $this->mProductName,
-                                'message' => $this->GetPageMessage(),
-                                'admin_email' => $this->GetParamValue($data, 'admin_email', ''),
-                                'pass_phrase' => $this->GetParamValue($data, 'pass_phrase', ''),
-                                'admin_username' => $this->GetParamValue($data, 'admin_username', ''),
-                                'admin_password' => $this->GetParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)),
-                                'db_type' => $this->GetParamValue($data, 'db_type', ''),
-                                'db_hostname' => $this->GetParamValue($data, 'db_hostname', ''),
-                                'db_username' => $this->GetParamValue($data, 'db_username', ''),
-                                'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                'db_name' => $this->GetParamValue($data, 'db_name', ''),
-                                'db_prefix' => $this->GetParamValue($data, 'db_prefix', ''),
-				'daemonise' => $this->GetReminderDaemonSelection($this->GetParamValue($data, 'reminder_daemon', '0')),
+                                'message' => $this->getPageMessage(),
+                                'admin_email' => $this->getParamValue($data, 'admin_email', ''),
+                                'pass_phrase' => $this->getParamValue($data, 'pass_phrase', ''),
+                                'admin_username' => $this->getParamValue($data, 'admin_username', ''),
+				'admin_realname' => $this->getParamValue($data, 'admin_realname', ''),
+				'admin_xmpp' => $this->getParamValue($data, 'admin_xmpp', ''),
+                                'admin_password' => $this->getParamValue($data, 'admin_password', substr(md5(mt_rand()), 0, $this->mMinPasswordLength)),
+                                'db_type' => $this->getParamValue($data, 'db_type', ''),
+                                'db_hostname' => $this->getParamValue($data, 'db_hostname', ''),
+                                'db_username' => $this->getParamValue($data, 'db_username', ''),
+                                'db_password' => $this->getParamValue($data, 'db_password', ''),
+                                'db_name' => $this->getParamValue($data, 'db_name', ''),
+                                'db_prefix' => $this->getParamValue($data, 'db_prefix', ''),
+				'daemonise' => $this->getReminderDaemonSelection($this->getParamValue($data, 'reminder_daemon', '0')),
                         ),
             ),
 
@@ -324,14 +320,14 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
 
-   public function DisplayCompletion()
+   public function displayCompletion()
    {
       // Trim the empty values in the $_POST array
-      $data = array_filter($_POST, array($this, "TrimArgs"));
+      $data = array_filter($_POST, array($this, "trimArgs"));
 
       $templates =
       array(
@@ -340,7 +336,7 @@ class Setup extends Flyspray
                         'template' => 'complete_install.tpl',
                         'vars' => array(
                                     'product_name' => $this->mProductName,
-                                    'message' => $this->GetPageMessage(),
+                                    'message' => $this->getPageMessage(),
                                     'config_writeable' => $this->mWriteStatus['flyspray.conf.php'],
                                     'config_text' => $this->mConfigText,
                                     'admin_username' => $this->mAdminUsername,
@@ -365,15 +361,15 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
-   public function DisplayDatabaseSetup()
+   public function displayDatabaseSetup()
    {
 
       // Trim the empty values in the $_POST array
-      $data = array_filter($_POST, array($this, "TrimArgs"));
-      $this->CheckDatabaseSupport();
+      $data = array_filter($_POST, array($this, "trimArgs"));
+      $this->checkDatabaseSupport();
 
       // Make sure that the user can't choose a DB which is not supported
       foreach ($this->mSupportedDatabases as $db => $arr) {
@@ -389,14 +385,14 @@ class Setup extends Flyspray
                               'template' => 'database.tpl',
                               'vars' => array(
                                           'product_name' => $this->mProductName,
-                                          'message' => $this->GetPageMessage(),
+                                          'message' => $this->getPageMessage(),
                                           'databases' => $this->mSupportedDatabases,
-                                          'db_type' => $this->GetParamValue($data, 'db_type', ''),
-                                          'db_hostname' => $this->GetParamValue($data, 'db_hostname', 'localhost'),
-                                          'db_username' => $this->GetParamValue($data, 'db_username', ''),
-                                          'db_password' => $this->GetParamValue($data, 'db_password', ''),
-                                          'db_name' => $this->GetParamValue($data, 'db_name', ''),
-                                          'db_prefix' => $this->GetParamValue($data, 'db_prefix', 'flyspray_'),
+                                          'db_type' => $this->getParamValue($data, 'db_type', ''),
+                                          'db_hostname' => $this->getParamValue($data, 'db_hostname', 'localhost'),
+                                          'db_username' => $this->getParamValue($data, 'db_username', ''),
+                                          'db_password' => $this->getParamValue($data, 'db_password', ''),
+                                          'db_name' => $this->getParamValue($data, 'db_name', ''),
+                                          'db_prefix' => $this->getParamValue($data, 'db_prefix', 'flyspray_'),
                                           'version' => $this->version,
                                        ),
                            ),
@@ -414,14 +410,14 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
 
-   public function DisplayPreInstall()
+   public function displayPreInstall()
    {
       // Check the Database support on the server.
-      $this->CheckDatabaseSupport();
+      $this->checkDatabaseSupport();
 
       $templates =
       array(
@@ -431,17 +427,18 @@ class Setup extends Flyspray
                         'vars' => array(
                                     'product_name' => $this->mProductName,
                                     'required_php' => $this->mPhpRequired,
-                                    'php_output' => $this->CheckPhpCompatibility(),
-                                    'database_output' => $this->GetDatabaseOutput(),
-                                    'config_output' => $this->CheckWriteability('flyspray.conf.php'),
-                                    'cache_output' => $this->CheckWriteability('cache'),
-                                    'att_output' => $this->CheckWriteability('attachments'),
+                                    'php_output' => $this->checkPhpCompatibility(),
+                                    'database_output' => $this->getDatabaseOutput(),
+                                    'config_output' => $this->checkWriteability('flyspray.conf.php'),
+                                    'cache_output' => $this->checkWriteability('cache'),
+                                    'att_output' => $this->checkWriteability('attachments'),
+				    'ava_output' => $this->checkWriteability('avatars'),
                                     'config_status' => $this->mWriteStatus['flyspray.conf.php'],
                                     'xmlStatus' => $this->xmlStatus,
                                     'sapiStatus' => $this->sapiStatus,
-                                    'php_settings' => $this->GetPhpSettings(),
-                                    'status' => $this->CheckPreStatus(),
-                                    'message' => $this->GetPageMessage(),
+                                    'php_settings' => $this->getPhpSettings(),
+                                    'status' => $this->checkPreStatus(),
+                                    'message' => $this->getPageMessage(),
                                  ),
                      ),
 
@@ -459,10 +456,10 @@ class Setup extends Flyspray
          );
 
       // Output the final template.
-      $this->OutputPage($templates);
+      $this->outputPage($templates);
    }
 
-   public function GetDatabaseOutput()
+   public function getDatabaseOutput()
    {
       $output = '';
       // Loop through the supported databases array
@@ -472,7 +469,7 @@ class Setup extends Flyspray
       <tr>
          <td> - $which support</td>
          <td align=\"left\"><strong>{$this->mAvailableDatabases[$which]['status_output']}</strong></td>
-         <td align=\"center\"><strong>". $this->ReturnStatus($this->mAvailableDatabases[$which]['supported'], $type = 'support')  . "</strong></td>
+         <td align=\"center\"><strong>". $this->returnStatus($this->mAvailableDatabases[$which]['supported'], $type = 'support')  . "</strong></td>
       </tr>";
 
       }
@@ -486,7 +483,7 @@ class Setup extends Flyspray
    * @param string $option The ini setting name to check the status for
    * @return string The status of the setting either "On" or "OFF"
    */
-   public function GetIniSetting($option)
+   public function getIniSetting($option)
    {
       return (ini_get($option) == '1' ? L('on') : L('off'));
    }
@@ -499,7 +496,7 @@ class Setup extends Flyspray
    *                  this array, then there will be no error message outputed.
    * @return string $message The message which needs outputting
    */
-   public function GetPageMessage()
+   public function getPageMessage()
    {
       // If there is an error
       if (isset($_SESSION['page_message']) || isset($_SESSION['page_heading']))
@@ -511,7 +508,7 @@ class Setup extends Flyspray
 
         if (isset($_SESSION['page_message'])) {
             // Get an html formated list
-            $message .= '<div class="box"><div class="shade">' . $this->OutputHtmlList($_SESSION['page_message'],'ul') . '</div></div>';
+            $message .= '<div class="box"><div class="shade">' . $this->outputHtmlList($_SESSION['page_message'],'ul') . '</div></div>';
         }
 
 
@@ -535,7 +532,7 @@ class Setup extends Flyspray
    * @param string $default The default value if the value is not set with the array
    * @return string $value The value to be returned
    */
-   public function GetParamValue(&$arr, $name, $default=null )
+   public function getParamValue(&$arr, $name, $default=null )
    {
       $value = isset($arr[$name]) ? $arr[$name] : $default;
       return $value;
@@ -547,27 +544,27 @@ class Setup extends Flyspray
    * @param void
    * @return string $output HTML formatted string.
    */
-   public function GetPhpSettings()
+   public function getPhpSettings()
    {
       // Array of the setting name, php ini name and the recommended value
       $test_settings =
       array(
-            array ('Safe Mode','safe_mode', L('off')),
+            //array ('Safe Mode','safe_mode', L('off')), # removed since PHP5.4
             array ('File Uploads','file_uploads', L('on')),
-            array ('Magic Quotes GPC','magic_quotes_gpc', L('off')),
-            array ('Register Globals','register_globals', L('off')),
-            //array ('Output Buffering','output_buffering','OFF'),
+            //array ('Magic Quotes GPC','magic_quotes_gpc', L('off')), # removed since PHP5.4
+            //array ('Register Globals','register_globals', L('off')), # removed since PHP5.4
+            //array ('Output Buffering','output_buffering', L('off')),
             );
 
       if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-          $test_settings[] = array ('CGI fix pathinfo','cgi.fix_pathinfo', L('on'));
+          $test_settings[] = array('CGI fix pathinfo','cgi.fix_pathinfo', L('on'));
       }
 
       $output = '';
 
       foreach ($test_settings as $recommended)
       {
-      $actual_setting = $this->GetIniSetting($recommended[1]);
+      $actual_setting = $this->getIniSetting($recommended[1]);
 
       $result = ($actual_setting == $recommended[2] )
          ?  '<span class="green"><strong>' . $recommended[2] . '</strong></span>'
@@ -583,21 +580,11 @@ class Setup extends Flyspray
       return $output;
    }
 
-    public function GetReminderDaemonSelection($value)
+    public function getReminderDaemonSelection($value)
     {
-        $selection	= '';
-
-        if ($value == 1) {
-
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" checked="checked" /> '.L('enable');
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" /> '.L('disable');
-        } else {
-
-                $selection .= '<input type="radio" name="reminder_daemon" value="1" /> '.L('enable');
-                $selection .= '<input type="radio" name="reminder_daemon" value="0" checked="checked" /> '.L('disable');
-        }
-            return $selection;
-
+	$selection = '<input type="radio" id="schedyes" name="reminder_daemon" value="1"'.($value==1 ? ' checked="checked"':'').' /> <label for="schedyes">'.L('enable').'</label>';
+	$selection .= '<input type="radio" id="schedno" name="reminder_daemon" value="0"'.($value==0 ? ' checked="checked"':'').' /> <label for="schedno">'.L('disable').'</label>';
+	return $selection;
     }
 
 
@@ -606,7 +593,7 @@ class Setup extends Flyspray
    * @param string $fileSystem Path to check
    * $return boolean true/false
    */
-   public function IsWriteable($fileSystem)
+   public function isWriteable($fileSystem)
    {
       // Clear the cache
       clearstatcache();
@@ -620,7 +607,7 @@ class Setup extends Flyspray
    * @param array() $list_array An array list of data to be made into a list.
    * @return string $list An HTML list
    */
-   public function OutputHtmlList($list_array = array(), $list_type = 'ul')
+   public function outputHtmlList($list_array = array(), $list_type = 'ul')
    {
       $list = "<$list_type>";
       foreach ($list_array as $list_item)
@@ -637,7 +624,7 @@ class Setup extends Flyspray
    * Function to act on all the actions during Flyspray Setup
    * The Post variables are extracted for deciding which function to call.
    */
-  public function ProcessActions()
+  public function processActions()
    {
       $action = 'index';
       $what = '';
@@ -647,7 +634,7 @@ class Setup extends Flyspray
       switch($action)
       {
          case 'database':
-            $this->DisplayDatabaseSetup();
+            $this->displayDatabaseSetup();
          break;
 
          case 'administration':
@@ -661,31 +648,30 @@ class Setup extends Flyspray
                   'db_name' => array('Database name', 'string', true),
                   'db_prefix' => array('Table prefix', 'string', false),
                );
-            if ($data = $this->CheckPostedData($required_data, $message = 'Configuration Error'))
+            if ($data = $this->checkPostedData($required_data, $message = 'Configuration Error'))
             {
                // Process the database checks and install tables
-               if ($this->ProcessDatabaseSetup($data))
+               if ($this->processDatabaseSetup($data))
                {
                   // Proceed to Administration part
-                  $this->DisplayAdministration();
+                  $this->displayAdministration();
                }
                else
                {
                   $_POST['action'] = 'database';
-                  $this->DisplayDatabaseSetup();
+                  $this->displayDatabaseSetup();
                }
             }
             else
             {
                $_POST['action'] = 'database';
-               $this->DisplayDatabaseSetup();
+               $this->displayDatabaseSetup();
             }
          break;
 
          case 'complete':
             // Prepare the required data
-            $required_data =
-            array(
+            $required_data = array(
                'db_hostname' => array('Database hostname', 'string', true),
                'db_type' =>  array('Database type', 'string', true),
                'db_username' => array('Database username', 'string', true),
@@ -693,47 +679,55 @@ class Setup extends Flyspray
                'db_name' => array('Database name', 'string', true),
                'db_prefix' => array('Table prefix', 'string', false),
                'admin_username' => array('Administrator\'s username', 'string', true),
+               'admin_realname' => array('Administrator\'s realname', 'string', false),
                'admin_password' => array("Administrator's Password must be minimum {$this->mMinPasswordLength} characters long and", 'password', true),
                'admin_email' => array('Administrator\'s email address', 'email address', true),
-               'syntax_plugin' => array('Syntax', 'option', false), 
+               'admin_xmpp' => array('Administrator\'s jabber/xmpp address', 'xmpp address', false),
+               'syntax_plugin' => array('Syntax', 'option', true),
 	       'reminder_daemon' => array('Reminder Daemon', 'option', false),
                );
-            if ($data = $this->CheckPostedData($required_data, $message = 'Missing config values')) {
+            if ($data = $this->checkPostedData($required_data, $message = 'Missing config values')) {
                // Set a page heading in case of errors.
                $_SESSION['page_heading'] = 'Administration Processing';
 
-               if ($this->ProcessAdminConfig($data)) {
-                  $this->DisplayCompletion($data);
+               if ($this->processAdminConfig($data)) {
+                  $this->displayCompletion($data);
                } else {
                   $_POST['action'] = 'administration';
-                  $this->DisplayAdministration();
+                  $this->displayAdministration();
                }
             } else {
                $_POST['action'] = 'administration';
-               $this->DisplayAdministration();
+               $this->displayAdministration();
             }
          break;
 
          default:
-            $this->DisplayPreInstall();
+            $this->displayPreInstall();
          break;
       }
    }
 
 
 
-   public function ProcessAdminConfig($data)
+   public function processAdminConfig($data)
    {
       // Extract the variables to local namespace
       extract($data);
 
-	  if(!isset($db_password)) {
-		  $db_password = '';
-	  }
+		if(!isset($db_password)) {
+			$db_password = '';
+		}
+		if(!isset($admin_xmpp)) {
+			$admin_xmpp = '';
+		}
+		if(!isset($admin_realname)) {
+			$admin_realname = '';
+		}
 
-	  if(!isset($syntax_plugin)) {
-		  $syntax_plugin = '';
-	  }
+		if(!isset($syntax_plugin)) {
+			$syntax_plugin = '';
+		}
 
       $config_intro	=
       "; <?php die( 'Do not access this page directly.' ); ?>
@@ -771,8 +765,8 @@ class Setup extends Flyspray
       $config[] = "dot_format = \"png\" ; \"png\" or \"svg\"";
       $config[] = "reminder_daemon = \"$daemonise\"		; Boolean. 0 = off, 1 = on (cron job), 2 = on (PHP).";
       $config[] = "doku_url = \"http://en.wikipedia.org/wiki/\"      ; URL to your external wiki for [[dokulinks]] in FS";
-      $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; Plugin name for Flyspray\'s syntax (use any non-existing plugin name for default syntax)';
-      $config[] = "update_check = \"1\"                               ; Boolean. 0 = off, 1 = on.";
+      $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; dokuwiki, none, or html';
+      $config[] = "update_check = \"1\"                               ; Boolean. 0=off, 1=on";
       $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
@@ -790,7 +784,7 @@ class Setup extends Flyspray
       $config[] = 'facebook_id = ""';
       $config[] = 'facebook_redirect = "YOURDOMAIN/index.php?do=oauth&provider=facebook"';
       $config[] = 'microsoft_secret = ""';
-      $config[] = 'microsot_id = ""';
+      $config[] = 'microsoft_id = ""';
       $config[] = 'microsoft_redirect = "YOURDOMAIN/index.php"';
 
       $config_text = $config_intro . implode( "\n", $config );
@@ -809,7 +803,7 @@ class Setup extends Flyspray
 
 
       // Setting the database for the ADODB connection
-      require_once($this->mAdodbPath);
+      require_once $this->mAdodbPath;
 
 	# 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3 . For instance on german 1und1 managed linux servers ( e.g. $db_hostname ='localhost:/tmp/mysql5.sock' )
 	if( $db_type=='mysqli' && 'localhost:/'==substr($db_hostname,0,11) ){
@@ -818,45 +812,47 @@ class Setup extends Flyspray
 		ini_set( 'mysqli.default_socket', $dbsocket );
 	}
 
-      $this->mDbConnection =& NewADOConnection(strtolower($db_type));
-      $this->mDbConnection->Connect($db_hostname, $db_username, $db_password, $db_name);
-      $this->mDbConnection->SetCharSet('utf8');
+      $this->mDbConnection = ADONewConnection(strtolower($db_type));
+      $this->mDbConnection->connect($db_hostname, $db_username, $db_password, $db_name);
+      $this->mDbConnection->setCharSet('utf8');
 
       // Get the users table name.
-      $users_table	= (isset($db_prefix) ? $db_prefix : '') . 'users';
+      $users_table = (isset($db_prefix) ? $db_prefix : '') . 'users';
 
-      $sql	= "SELECT * FROM $users_table WHERE user_id = '1'";
+      $sql = "SELECT * FROM $users_table WHERE user_id = '1'";
 
       // Check if we already have an Admin user.
-      $result = $this->mDbConnection->Execute($sql);
+      $result = $this->mDbConnection->execute($sql);
       if ($result)
       {
          // If the record exists, we update it.
-         $row = $result->FetchRow();
+         $row = $result->fetchRow();
          $this->mAdminUsername = $row['user_name'];
          $this->mAdminPassword = $row['user_pass'];
       }
 
-     $md5_password	= md5($admin_password);
+     $pwhash= Flyspray::cryptPassword($admin_password);
      $update_user	= "
      UPDATE
         $users_table
      SET
         user_name = ?,
         user_pass = ?,
-        email_address = ?
+        email_address = ?,
+	jabber_id = ?,
+	real_name = ?
      WHERE
      user_id = '1'";
 
-     $update_params = array($admin_username, $md5_password, $admin_email);
+     $update_params = array($admin_username, $pwhash, $admin_email, $admin_xmpp, $admin_realname);
 
-     $result = $this->mDbConnection->Execute($update_user, $update_params);
+     $result = $this->mDbConnection->execute($update_user, $update_params);
 
      if (!$result)
      {
-        $errorno = $this->mDbConnection->MetaError();
+        $errorno = $this->mDbConnection->metaError();
         $_SESSION['page_heading'] = 'Failed to update Admin users details.';
-        $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($errorno)) . ': '. $this->mDbConnection->ErrorMsg($errorno);
+        $_SESSION['page_message'][] = ucfirst($this->mDbConnection->metaErrorMsg($errorno)) . ': '. $this->mDbConnection->errorMsg($errorno);
         return false;
      }
      else
@@ -869,9 +865,9 @@ class Setup extends Flyspray
    }
 
 
-   public function ProcessDatabaseSetup($data)
+   public function processDatabaseSetup($data)
    {
-      require_once($this->mAdodbPath);
+      require_once $this->mAdodbPath;
 
       // Perform a number of fatality checks, then die gracefully
       if (!defined('_ADODB_LAYER'))
@@ -887,22 +883,22 @@ class Setup extends Flyspray
 	}
 
       // Setting the database type for the ADODB connection
-      $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
-      if (!$this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
+      $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
+      if (!$this->mDbConnection->connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'), array_get($data, 'db_name')))
       {
          $_SESSION['page_heading'] = 'Database Processing';
-         switch($error_number = $this->mDbConnection->MetaError())
+         switch($error_number = $this->mDbConnection->metaError())
          {
             case '-1':
             // We are using the unknown error code(-1) because ADOdb library may not have the error defined.
             // It could be totally some weird error.
-            $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg();
+            $_SESSION['page_message'][] = $this->mDbConnection->errorMsg();
             return false;
             break;
 
             case '-24':
             // Could not connect to database with the hostname provided
-            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
+            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->metaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
             $_SESSION['page_message'][] = 'Usually the database host name is "localhost". In some occassions, it maybe an internal ip-address or another host name to your webserver.';
             $_SESSION['page_message'][] = 'Double check with your hosting provider or System Administrator.';
             return false;
@@ -910,26 +906,44 @@ class Setup extends Flyspray
 
             case '-25':
             // Database does not exist, try to create one
-            $this->mDbConnection =& NewADOConnection(strtolower($data['db_type']));
-            $this->mDbConnection->Connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
+            $this->mDbConnection = ADONewConnection(strtolower($data['db_type']));
+            $this->mDbConnection->connect(array_get($data, 'db_hostname'), array_get($data, 'db_username'), array_get($data, 'db_password'));
             $dict = NewDataDictionary($this->mDbConnection);
-            #$sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'));
-            # if possible set correct default character set for mysql.
-            $sqlarray = $dict->CreateDatabase(array_get($data, 'db_name'), array('mysql'=>'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci') );
-            if (!$dict->ExecuteSQLArray($sqlarray)) {
-                $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
+
+		# if possible set correct default character set for mysql.
+		# MySQL below 5.5.3 only supports 1,2,3 byte chars of utf8. But some language's chars or emojis(argh) are defined as 4byte chars
+		$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci'; # default for mysql for compat
+		if( $data['db_type']=='mysqli' || $data['db_type']=='mysql' ) {
+			$dbinfo=$this->mDbConnection->serverInfo(); # provides 'description' and 'version'
+			if( version_compare($dbinfo['version'], '5.5.3') >=0 ){
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+				$this->mDbConnection->setCharSet('utf8mb4');
+			}else{
+				$mysqldbcharset='DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+				$this->mDbConnection->setCharSet('utf8');
+				$_SESSION['page_message'][]='Your MySQL server '.$dbinfo['version'].' < 5.5.3, so database has limited utf8 support (no unicode emojis for instance). Upgrading your MySQL server to 5.5.3 or newer is suggested.';
+			}
+		}else{
+			# postgresql
+			$this->mDbConnection->setCharSet('utf8');
+		}
+
+		$sqlarray = $dict->createDatabase(array_get($data, 'db_name'), array('mysql'=>$mysqldbcharset) );
+
+            if (!$dict->executeSQLArray($sqlarray)) {
+                $_SESSION['page_message'][] = ucfirst($this->mDbConnection->metaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
                 $_SESSION['page_message'][] = 'Your database does not exist and could not be created. Either create the database yourself, choose an existing database or
                                                use a database user with sufficient permissions to create a database.';
                 return false;
             } else {
-                $this->mDbConnection->SelectDB(array_get($data, 'db_name'));
+                $this->mDbConnection->selectDB(array_get($data, 'db_name'));
                 unset($_SESSION['page_heading']);
                 break;
             }
 
             case '-26':
             // Username passwords don't match for the hostname provided
-            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->MetaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
+            $_SESSION['page_message'][] = ucfirst($this->mDbConnection->metaErrorMsg($error_number)) . ': ' . ucfirst($this->mDbConnection->ErrorMsg($error_number));
             $_SESSION['page_message'][] = "Apparently you haven't set up the right permissions for the database hostname provided.";
             $_SESSION['page_message'][] = 'Double check the provided credentials or contact your System Administrator for further assistance.';
             return false;
@@ -941,26 +955,38 @@ class Setup extends Flyspray
             break;
          }
       }
-      // Check that table prefix is OK, some DBs don't like it
-      $prefix = array_get($data, 'db_prefix');
-      if (strlen($prefix) > 0 && is_numeric($prefix[0])) {
-        $_SESSION['page_heading'] = 'Database Processing';
-        $_SESSION['page_message'][] = 'The table prefix may not start with a number.';
-        return false;
-      }
 
-       // Setting the Fetch mode of the database connection.
-      $this->mDbConnection->SetFetchMode(ADODB_FETCH_BOTH);
-      $this->mDbConnection->SetCharSet('utf8');
+		$prefix = array_get($data, 'db_prefix');
+		# ADODB 5.20.14 xmlschema03 setPrefix() currently accepts only at least 2 chars and max 10 (XMLS_PREFIX_MAXLEN) chars as db prefix.
+		if (strlen($prefix) > 0 && ( strlen($prefix) > 10 || preg_match('/[^a-zA-Z0-9_]/', $prefix) || preg_match('/^[^a-zA-Z][a-zA-Z0-9_]/', $prefix) )) {
+			$_SESSION['page_heading'] = 'Database Processing';
+			$_SESSION['page_message'][] = 'An optional prefix for database tables must start with a simple character <b>a-z</b>, has at least 2 up to 10 characters, and contain only <b>a-z</b>, <b>0-9</b> or <b>_</b> characters.';
+			return false;
+		}
+
+       // Setting the fetch mode of the database connection.
+      $this->mDbConnection->setFetchMode(ADODB_FETCH_BOTH);
+
+		if( $data['db_type']=='mysqli') {
+			$dbinfo=$this->mDbConnection->serverInfo(); # provides 'description' and 'version'
+			if( version_compare($dbinfo['version'], '5.5.3') >=0 ){
+				$this->mDbConnection->setCharSet('utf8mb4');
+			}else{
+				$this->mDbConnection->setCharSet('utf8');
+			}
+		}else{
+			$this->mDbConnection->setCharSet('utf8');
+		}
+
         //creating the datadict object for further operations
-       $this->mDataDict = & NewDataDictionary($this->mDbConnection);
+       $this->mDataDict = NewDataDictionary($this->mDbConnection);
 
        include_once dirname($this->mAdodbPath) . '/adodb-xmlschema03.inc.php';
 
        $this->mXmlSchema =  new adoSchema($this->mDbConnection);
 
        // Populate the database with the new tables and return the result (boolean)
-       if (!$this->PopulateDb($data))
+       if (!$this->populateDb($data))
        {
           return false;
        }
@@ -974,7 +1000,7 @@ class Setup extends Flyspray
    * @return boolean
    */
 
-   public function PopulateDb($data)
+   public function populateDb($data)
    {
       // Check available upgrade scripts, use the script of very latest  version
       $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
@@ -1005,37 +1031,37 @@ class Setup extends Flyspray
 
         // Set the prefix for database objects ( before parsing)
       $this->mXmlSchema->setPrefix( (isset($db_prefix) ? $db_prefix : ''), false);
-      $this->mXmlSchema->ParseSchema($sql_file);
+      $this->mXmlSchema->parseSchema($sql_file);
 
-      $this->mXmlSchema->ExecuteSchema();
+      $this->mXmlSchema->executeSchema();
 
       // Last but not least global prefs update
         if (isset($upgradeInfo['fsprefs'])) {
-            $existing = $this->mDbConnection->GetCol("SELECT pref_name FROM {$db_prefix}prefs");
+            $existing = $this->mDbConnection->getCol("SELECT pref_name FROM {$db_prefix}prefs");
             // Add what is missing
             foreach ($upgradeInfo['fsprefs'] as $name => $value) {
                 if (!in_array($name, $existing)) {
-                    $this->mDbConnection->Execute("INSERT INTO {$db_prefix}prefs (pref_name, pref_value) VALUES (?, ?)", array($name, $value));
+                    $this->mDbConnection->execute("INSERT INTO {$db_prefix}prefs (pref_name, pref_value) VALUES (?, ?)", array($name, $value));
                 }
             }
             // Delete what is too much
             foreach ($existing as $name) {
                 if (!isset($upgradeInfo['fsprefs'][$name])) {
-                    $this->mDbConnection->Execute("DELETE FROM {$db_prefix}prefs WHERE pref_name = ?", array($name));
+                    $this->mDbConnection->execute("DELETE FROM {$db_prefix}prefs WHERE pref_name = ?", array($name));
                 }
             }
         }
 
-      $this->mDbConnection->Execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
+      $this->mDbConnection->execute("UPDATE {$db_prefix}prefs SET pref_value = ? WHERE pref_name = 'fs_ver'", array($this->version));
 
-      if (($error_no = $this->mDbConnection->MetaError()))
+      if (($error_no = $this->mDbConnection->metaError()))
       {
          $_SESSION['page_heading'] = 'Database Processing';
          switch ($error_no)
          {
             case '-5':
             // If there are tables with the same name
-            $_SESSION['page_message'][] = 'Table ' .$this->mDbConnection->MetaErrorMsg($this->mDbConnection->MetaError());
+            $_SESSION['page_message'][] = 'Table ' .$this->mDbConnection->metaErrorMsg($this->mDbConnection->metaError());
             $_SESSION['page_message'][] = 'There probably are tables in the database which have the same prefix you provided.';
             $_SESSION['page_message'][] = 'It is advised to change the prefix provided or you can drop the existing tables if you don\'t need them. Make a backup if you are not certain.';
             return false;
@@ -1043,12 +1069,12 @@ class Setup extends Flyspray
 
             case '-1':
             // We are using the unknown error code(-1) because ADOdb library may not have the error defined.
-            $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg();
+            $_SESSION['page_message'][] = $this->mDbConnection->errorMsg();
             return false;
             break;
 
             default:
-            $_SESSION['page_message'][] = $this->mDbConnection->ErrorMsg() . ': ' . $this->mDbConnection->ErrorNo();
+            $_SESSION['page_message'][] = $this->mDbConnection->errorMsg() . ': ' . $this->mDbConnection->errorNo();
             $_SESSION['page_message'][] = 'Unknown error, please notify Developer quoting the error number';
             return false;
             break;
@@ -1067,7 +1093,7 @@ class Setup extends Flyspray
    * @param string $type The type of html format to return
    * @return string Depending on the type of format to return
    */
-   public static function ReturnStatus($boolean, $type = 'yes')
+   public static function returnStatus($boolean, $type = 'yes')
    {
       // Do a switch on the type of status
       switch($type)
@@ -1121,12 +1147,12 @@ class Setup extends Flyspray
       *
       * @return The result of the check.
       */
-   public function TrimArgs($arg)
+   public function trimArgs($arg)
    {
       return strlen(trim($arg));
    }
 
-   public function VerifyVariableTypes($type, $value)
+   public function verifyVariableTypes($type, $value)
    {
       $message = '';
       switch($type)
@@ -1139,6 +1165,7 @@ class Setup extends Flyspray
                 return is_numeric($value);
             break;
 
+            case 'xmpp address':
             case 'email address':
              return filter_var($value, FILTER_VALIDATE_EMAIL);
              break;
@@ -1166,7 +1193,7 @@ class Setup extends Flyspray
    * @param array $templates The collection of templates with their associated variables
    *
    */
-   public function OutputPage($templates = array())
+   public function outputPage($templates = array())
    {
       if (sizeof($templates) == 0)
       {

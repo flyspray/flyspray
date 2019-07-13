@@ -66,7 +66,7 @@ endif; ?>
 		<?php if($do == 'newmultitasks'): ?> class="active"<?php endif; ?>><?php echo Filters::noXSS(L('addmultipletasks')); ?></a>
 	</li><?php
 	endif;
-	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open']): ?><li>
+	elseif ($proj->id && $user->isAnon() && $proj->prefs['anon_open'] && $proj->prefs['project_is_active']): ?><li>
 		<a id="anonopen"
 		<?php if($do == 'newtask'): ?> class="active" <?php endif; ?>
 		href="?do=newtask&amp;project=<?php echo Filters::noXSS($proj->id); ?>"><?php echo Filters::noXSS(L('opentaskanon')); ?></a>

@@ -53,6 +53,7 @@ function ShowHidePassword(id) {
    <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
    <li><a href="#userregistration"><?php echo Filters::noXSS(L('userregistration')); ?></a></li>
    <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
+   <li><a href="#antispam"><?php echo Filters::noXSS(L('antispam')); ?></a></li>
   </ul>
 
    <div id="general" class="tab">
@@ -106,7 +107,10 @@ function ShowHidePassword(id) {
           <label for="logo_input">&nbsp;</label>
           <input id="logo_input" name="logo" type="file" accept="image/*" value="<?php echo Filters::noXSS($fs->prefs['logo']); ?>" />
         </li>
-
+	<li>
+		<label for="massops"><?php echo Filters::noXSS(L('massopsenable')); ?></label>
+		<?php echo tpl_checkbox('massops', $fs->prefs['massops'], 'massops'); ?>
+	</li>
         <li>
           <label for="enable_avatars"><?php echo Filters::noXSS(L('enableavatars')); ?></label>
           <?php echo tpl_checkbox('enable_avatars', $fs->prefs['enable_avatars'], 'enable_avatars', 1, array('onclick'=>'check_change(false, "enable_avatars", "gravatars", "max_avatar_size")')); ?>
@@ -214,16 +218,21 @@ function ShowHidePassword(id) {
           <?php echo tpl_checkbox('need_approval', $fs->prefs['need_approval'], 'needapproval', 1, ($fs->prefs['only_oauth_reg']) ? array('disabled' => 'disabled', 'onclick' => 'check_change(true, "needapproval", "spamproof")') : array('onclick' => 'check_change("needapproval", "spamproof")')); ?>
         </li>
 	
-        <li>
+        <li><?php /* TODO rename misleading 'spamproof' pref to something like email_verify */ ?>
           <label for="spamproof"><?php echo Filters::noXSS(L('spamproof')); ?></label>
           <?php echo tpl_checkbox('spam_proof', $fs->prefs['spam_proof'], 'spamproof', 1, ($fs->prefs['need_approval'] || $fs->prefs['only_oauth_reg'] ) ? array('disabled' => 'true') : ''); ?>
         </li>
 	
 	<li>
-		<label for="captcha_securimage"><?php echo Filters::noXSS(L('regcaptcha')); ?></label>
-		<?php echo tpl_checkbox('captcha_securimage', $fs->prefs['captcha_securimage'], 'captcha_securimage'); ?>
-	</li>
-        
+          <label for="repeat_password"><?php echo Filters::noXSS(L('repeatpassword')); ?></label>
+          <?php echo tpl_checkbox('repeat_password', $fs->prefs['repeat_password'], 'repeat_password'); ?>
+        </li>
+	
+	<li>
+          <label for="repeat_emailaddress"><?php echo Filters::noXSS(L('repeatemailaddress')); ?></label>
+          <?php echo tpl_checkbox('repeat_emailaddress', $fs->prefs['repeat_emailaddress'], 'repeat_emailaddress'); ?>
+        </li>
+	
 	<li>
           <label for="notify_registration"><?php echo Filters::noXSS(L('notify_registration')); ?></label>
           <?php echo tpl_checkbox('notify_registration', $fs->prefs['notify_registration'], 'notify_registration'); ?>
@@ -247,6 +256,37 @@ function ShowHidePassword(id) {
 
       </ul>
     </div>
+    
+<div id="antispam" class="tab">
+	<h2><?php echo Filters::noXSS(L('antispam')); ?></h2>
+	<p><?php echo Filters::noXSS(L('antispamprefsinfo')); ?></p>
+
+	<h3>Securimage</h3>
+	<p><?php echo Filters::noXSS(L('securimageprefsinfo')); ?></p>
+	<ul class="form_elements">
+	<li>
+		<label for="captcha_securimage"><?php echo Filters::noXSS(L('securimageenable')); ?></label>
+		<?php echo tpl_checkbox('captcha_securimage', isset($fs->prefs['captcha_securimage'])?$fs->prefs['captcha_securimage']:false, 'captcha_securimage'); ?>
+	</li>
+	</ul>
+
+	<h3>Google reCaptcha</h3>
+	<p><?php echo Filters::noXSS(L('recaptchaprefsinfo')); ?></p>
+	<ul class="form_elements">
+	<li>
+		<label for="captcha_recaptcha"><?php echo Filters::noXSS(L('recaptchaenable')); ?></label>
+		<?php echo tpl_checkbox('captcha_recaptcha', isset($fs->prefs['captcha_recaptcha'])?$fs->prefs['captcha_recaptcha']:false, 'captcha_recaptcha'); ?>
+	</li>
+	<li class="recaptchaconf">
+		<label for="captcha_recaptcha_sitekey">sitekey</label>
+		<input id="captcha_recaptcha_sitekey" class="text" type="text" name="captcha_recaptcha_sitekey" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_sitekey']) ? $fs->prefs['captcha_recaptcha_sitekey']:''); ?>" />
+	</li>
+	<li class="recaptchaconf">
+		<label for="captcha_recaptcha_secret">secret</label>
+		<input id="captcha_recaptcha_secret" class="text" type="text" name="captcha_recaptcha_secret" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_secret']) ? $fs->prefs['captcha_recaptcha_secret']:''); ?>" />
+	</li>
+	</ul>
+</div>
 
     <div id="notifications" class="tab">
       <ul class="form_elements">
@@ -354,8 +394,8 @@ function testEmail(){
       </fieldset>
     </div>
 
-    <div id="lookandfeel" class="tab">
-      <ul class="form_elements">
+<div id="lookandfeel" class="tab">
+	<ul class="form_elements">
 			<li>
 			<label for="globaltheme"><?php echo Filters::noXSS(L('globaltheme')); ?></label>
 			<select id="globaltheme" name="global_theme">
@@ -372,7 +412,13 @@ function testEmail(){
 			echo tpl_options($customs, $proj->prefs['custom_style']);
 			?>
 			</select>
-      </li>
+	</li>
+	<li>
+	<label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
+	<select id="default_entry" name="default_entry">
+	<?php echo tpl_options(array('index' => L('tasklist'),'toplevel' => L('toplevel')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
+	</select>
+	</li>
 
         <?php // Set the selectable column names
             // Do NOT use real database column name here and in the next list,

@@ -77,9 +77,10 @@ $cols='';
 foreach ($groups as $group){
 	$cols.='<col class="group g'.$group['group_id'].($group['group_open']==0?' inactive':'').'"></col>';
 	$gmembers.='<td>'.$group['users'].'</td>';
-	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(CreateURL('editgroup', $group['group_id'], 'admin'))).'">'.$group['group_name']
+	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(CreateURL('editgroup', $group['group_id'], 'admin'))).'">'
+		.Filters::noXSS($group['group_name'])
 		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
-	$gdesc   .='<td>'.$group['group_desc'].'</td>';
+	$gdesc   .='<td>'.Filters::noXSS($group['group_desc']).'</td>';
 	foreach ($group as $key => $val) {
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
 			$perms[$key][]=$val;
@@ -97,7 +98,7 @@ foreach ($groups as $group){
 .perms tbody span i:first-child {color: #090;}
 </style>
 <table class="perms">
-<colgroup> 
+<colgroup>
 <col></col>
 <?php echo $cols; ?>
 </colgroup>
@@ -106,7 +107,7 @@ foreach ($groups as $group){
 <th><?php echo L('groupmembers'); ?></th>
 <?php echo $gmembers; ?>
 </tr>
-<tr> 
+<tr>
 <th><?php echo L('group'); ?></th>
 <?php echo $gnames; ?>
 </tr>
@@ -120,7 +121,7 @@ foreach ($groups as $group){
 <tr>
 	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
 <?php
-require_once('permicons.tpl');
+require_once 'permicons.tpl';
 $i=0;
 # TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
 foreach($perms[$p] as $val){

@@ -692,7 +692,7 @@
       <KEY/>
       <AUTOINCREMENT/>
     </field>
-    <field name="pref_name" type="C" size="20">
+    <field name="pref_name" type="C" size="40">
       <NOTNULL/>
     </field>
     <field name="pref_value" type="X" />
@@ -1195,6 +1195,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="last_login" type="I" size="11">
+      <descr>last login of a user</descr>    
+      <NULL/>
+    </field>  
     <index name="user_name">
       <UNIQUE/>
       <col>user_name</col>
@@ -1321,6 +1325,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'need_approval', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'default_entry', 'index');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
@@ -1353,10 +1358,16 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'custom_style', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'general_integration', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'footer_integration', '');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_securimage', '0');</query>	  
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id', 'DESC', '', 1 );</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_password', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_emailaddress', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'massops', '0');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_securimage', '0');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha', '0');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_sitekey', '');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_secret', '');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id desc', 'DESC', '', 1 );</query>
     <query>INSERT INTO tasks VALUES (DEFAULT, 1, 1, 1452600000, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
-    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Mr Super User', 'super@example.com', 'super@example.com', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0);</query>
+    <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Superuser', '', '', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0, NULL);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>
 </schema>

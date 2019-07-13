@@ -12,8 +12,13 @@ ini_set('display_errors', 1);
 ini_set('html_errors', 0);
 
 //error_reporting(E_ALL);
-error_reporting(E_ALL & ~E_STRICT);
-
+if(version_compare(PHP_VERSION, '7.2.0') >= 0) {
+	# temporary for php7.2+ (2017-11-30)
+	# not all parts of Flyspray and 3rd party libs like ADODB 5.20.9 not yet 'since-php7.2-deprecated'-ready
+	error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
+}else{
+	error_reporting(E_ALL & ~E_STRICT);
+}
 // our default charset
 
 ini_set('default_charset','utf-8');
@@ -52,6 +57,21 @@ ini_set('auto_detect_line_endings', 0);
 if(!function_exists('password_hash')){
 	require_once dirname(__FILE__).'/password_compat.php';
 }
+
+# for php < php.5.6
+if(!function_exists('hash_equals')) {
+	function hash_equals($str1, $str2) {
+		if(strlen($str1) != strlen($str2)) {
+			return false;
+		} else {
+			$res = $str1 ^ $str2;
+			$ret = 0;
+			for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+			return !$ret;
+		}
+	}
+}
+
 
 ini_set('include_path', join( PATH_SEPARATOR, array(
   dirname(__FILE__) . '/external' ,

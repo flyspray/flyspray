@@ -6,11 +6,11 @@
 define('IN_FS', true);
 define('IN_FEED', true);
 
-require_once(dirname(__FILE__).'/header.php');
+require_once dirname(__FILE__).'/header.php';
 $page = new FSTpl();
 
 // Set up the basic XML head
-header ('Content-type: text/html; charset=utf-8');
+header('Content-Type: application/xml; charset=utf-8');
 
 $max_items  = (Req::num('num', 10) == 10) ? 10 : 20;
 $sql_project = ' 1=1 ';
@@ -34,6 +34,12 @@ switch (Req::val('topic')) {
                 $title   = 'Recently edited tasks';
     break;
 
+    case 'open':
+                $orderby = 'date_opened'; $closed = 't.is_closed = 0 ';
+                $topic = 4;
+                $title   = 'Latest open tasks';
+    break;
+
     default:    $orderby = 'date_opened'; $closed = '1=1';
                 $topic = 3;
                 $title   = 'Recently opened tasks';
@@ -46,7 +52,7 @@ $cachefile = sprintf('%s/%s', FS_CACHE_DIR, $filename);
 // Get the time when a task has been changed last
 $most_recent = 0;
 if($proj->prefs['others_view']){
-    $sql = $db->Query("SELECT t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
+    $sql = $db->query("SELECT t.date_opened, t.date_closed, t.last_edited_time, t.item_summary
         FROM {tasks} t
         INNER JOIN  {projects} p ON t.project_id = p.project_id AND p.project_is_active = '1'
         WHERE $closed
@@ -70,7 +76,7 @@ if ($fs->prefs['cache_feeds']) {
         }
     }
     else {
-        $sql = $db->Query("SELECT content FROM {cache} p
+        $sql = $db->query("SELECT content FROM {cache} p
             WHERE type = ?
             AND topic = ?
             AND $sql_project
@@ -78,7 +84,7 @@ if ($fs->prefs['cache_feeds']) {
             AND last_updated >= ?",
             array($feed_type, $topic, $max_items, $most_recent)
         );
-        if ($content = $db->FetchOne($sql)) {
+        if ($content = $db->fetchOne($sql)) {
             echo $content;
             exit;
         }
@@ -87,8 +93,8 @@ if ($fs->prefs['cache_feeds']) {
 
 /* build a new feed if cache didn't work */
 if($proj->prefs['others_view']){
-    $sql = $db->Query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by, 
-        COALESCE(u.real_name, t.anon_email) AS real_name,
+    $sql = $db->query("SELECT t.task_id, t.item_summary, t.detailed_desc, t.date_opened, t.date_closed, t.last_edited_time, t.opened_by,
+        COALESCE(u.real_name, 'anonymous') AS real_name,
         COALESCE(u.email_address, t.anon_email) AS email_address
         FROM  {tasks}    t
         LEFT JOIN  {users}    u ON t.opened_by = u.user_id
@@ -146,10 +152,9 @@ if ($fs->prefs['cache_feeds']) {
 
         $keys = array('type','topic','project_id','max_items');
 
-        $db->Replace('{cache}', $fields, $keys) or die ('error updating the database cache');
+        $db->replace('{cache}', $fields, $keys) or die ('error updating the database cache');
     }
 }
 
-header('Content-Type: application/xml; charset=utf-8');
 echo $content;
 ?>

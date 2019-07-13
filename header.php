@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . '/includes/class.flyspray.php';
 require_once dirname(__FILE__) . '/includes/constants.inc.php';
 require_once BASEDIR . '/includes/i18n.inc.php';
 require_once BASEDIR . '/includes/class.tpl.php';
+require_once BASEDIR . '/includes/class.csp.php';
 
 // Get the translation for the wrapper page (this page)
 setlocale(LC_ALL, str_replace('-', '_', L('locale')) . '.utf8');
@@ -19,13 +20,17 @@ if(is_readable(BASEDIR . '/vendor/autoload.php')){
         // Use composer autoloader
         require 'vendor/autoload.php';
 }else{
-        Flyspray::Redirect('setup/composertest.php');
+        Flyspray::redirect('setup/composertest.php');
         exit;
 }
 
+$csp= new ContentSecurityPolicy();
+# deny everything first, then whitelist what is required.
+$csp->add('default-src', "'none'");
+
 // If it is empty, take the user to the setup page
 if (!$conf) {
-    Flyspray::Redirect('setup/index.php');
+    Flyspray::redirect('setup/index.php');
 }
 
 $db = new Database();
@@ -34,7 +39,7 @@ $fs = new Flyspray();
 
 // If version number of database and files do not match, run upgrader
 if (Flyspray::base_version($fs->version) != Flyspray::base_version($fs->prefs['fs_ver'])) {
-    Flyspray::Redirect('setup/upgrade.php');
+    Flyspray::redirect('setup/upgrade.php');
 }
 
 if (is_readable(BASEDIR . '/setup/index.php') && strpos($fs->version, 'dev') === false) {
@@ -78,21 +83,21 @@ text-decoration: none;
 
 # load the correct $proj early also for checks on quickedit.php taskediting calls
 if( (BASEDIR.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'callbacks'.DIRECTORY_SEPARATOR.'quickedit.php' == $_SERVER['SCRIPT_FILENAME']) && Post::num('task_id')){
-        $result = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::num('task_id')));
-        $project_id = $db->FetchOne($result);
+        $result = $db->query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Post::num('task_id')));
+        $project_id = $db->fetchOne($result);
 }
 # Any "do" mode that accepts a task_id field should be added here.
 elseif (in_array(Req::val('do'), array('details', 'depends', 'editcomment'))) {
     if (Req::num('task_id')) {
-        $result = $db->Query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Req::num('task_id')));
-        $project_id = $db->FetchOne($result);
+        $result = $db->query('SELECT project_id FROM {tasks} WHERE task_id = ?', array(Req::num('task_id')));
+        $project_id = $db->fetchOne($result);
     }
 }
 
 if (Req::val('do') =='pm' && Req::val('area')=='editgroup') {
     if (Req::num('id')) {
-        $result = $db->Query('SELECT project_id FROM {groups} WHERE group_id = ?', array(Req::num('id')));
-        $project_id = $db->FetchOne($result);
+        $result = $db->query('SELECT project_id FROM {groups} WHERE group_id = ?', array(Req::num('id')));
+        $project_id = $db->fetchOne($result);
     }
 }
 

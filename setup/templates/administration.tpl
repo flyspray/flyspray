@@ -1,8 +1,8 @@
 <div>
 <form action="index.php" method="post" name="database_form">
 	<?php echo $message; ?>
-	<h1><?php echo Filters::noXSS(L('administrationsetup')); ?></h1>
-	<h2><?php echo Filters::noXSS(L('setupapplicationvalue')); ?></h2>
+	<h1><?= eL('administrationsetup') ?></h1>
+	<h2><?= eL('setupapplicationvalue') ?></h2>
 	<div class="installBlock">
 <script type="text/javascript">
 function ShowHidePassword(id) {
@@ -14,40 +14,51 @@ function ShowHidePassword(id) {
 }
 </script>
 
-	<p><?php echo L('adminsetuptip1'); ?></p>
-	<p><?php echo L('adminsetuptip2'); ?></p>
-	<p><?php echo L('adminsetuptip3'); ?></p>
+	<p><?= L('adminsetuptip1') ?></p>
+	<p><?= L('adminsetuptip2') ?></p>
+	<p><?= L('adminsetuptip3') ?></p>
 
 	<table class="formBlock">
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminemail')); ?></td>
-		<td align="center"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" size="30" /></td>
+		<td style="text-align:right"><?= eL('adminusername') ?></td>
+		<td style="text-align:left"><input class="inputbox" type="text" name="admin_username" value="<?php echo $admin_username; ?>" required="required" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminusername')); ?></td>
-		<td align="center"><input class="inputbox" type="text" name="admin_username" value="<?php echo $admin_username; ?>" size="30" /></td>
+		<td style="text-align:right"><?= eL('adminrealname') ?></td>
+		<td style="text-align:left"><input class="inputbox" type="text" name="admin_realname" value="<?php echo $admin_realname; ?>" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><?php echo Filters::noXSS(L('adminpassword')); ?></td>
-		<td align="center"><input class="inputbox" type="password" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" size="30" /></td>
+		<td style="text-align:right"><?= eL('adminemail') ?></td>
+		<td style="text-align:left"><input class="inputbox" type="text" name="admin_email" value="<?php echo $admin_email; ?>" required="required" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td align="right"><label for="showpassword"><?php echo Filters::noXSS(L('showpassword')); ?></label></td>
-		<td align="center"><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
+		<td style="text-align:right"><?= eL('adminxmpp') ?></td>
+		<td style="text-align:left"><input class="inputbox" type="text" name="admin_xmpp" value="<?php echo $admin_xmpp; ?>" size="30" /></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td><?php echo L('syntaxtext'); ?></td>
-		<td>
+		<td style="text-align:right"><?= eL('adminpassword') ?></td>
+		<td style="text-align:left"><input class="inputbox" type="password" name="admin_password" id="admin_password" value="<?php echo $admin_password; ?>" required="required" size="30" /></td>
+		<td style="text-align:left"><label for="showpassword"><?= eL('showpassword') ?></label><input type="checkbox" onclick="ShowHidePassword('admin_password')" id="showpassword"></td>
+	</tr>
+	<tr>
+		<td style="text-align:right"><?= eL('syntax') ?></td>
+		<td style="text-align:left">
 			<select name="syntax_plugin">
 			<option value="dokuwiki">Text/Dokuwiki</option>
-			<option value="">HTML/CKEditor</option>
+			<option value="none">HTML/none</option>
+			<option value="html">HTML/CKEditor</option>
 			</select>
 		</td>
+		<td style="text-align:left"><?= L('syntaxtext') ?></td>
 	</tr>
 	<?php if ($daemonise): ?>
 	<tr>
-		<td align="right" title="<?php echo Filters::noXSS(L('scheduletitle')); ?>"><?php echo Filters::noXSS(L('enablescheduling')); ?></td>
-		<td align="center"><?php echo $daemonise; ?></td>
+		<td style="text-align:right" title="<?= eL('scheduletitle') ?>"><?= eL('enablescheduling') ?></td>
+		<td style="text-align:center"><?php echo $daemonise; ?></td>
 	</tr>
 	<?php endif; ?>
 	</table>
@@ -59,9 +70,9 @@ function ShowHidePassword(id) {
 	<input type="hidden" name="db_name" value="<?php echo Filters::noXSS($db_name); ?>" />
 	<input type="hidden" name="db_prefix" value="<?php echo Filters::noXSS($db_prefix); ?>" />
 
-	<p><?php echo Filters::noXSS(L('proceedtofinalsetuptext')); ?></p>
+	<p><?= eL('proceedtofinalsetuptext') ?></p>
 	<input type="hidden" name="action" value="complete" />
-	<button class="button" type="submit" name="next" value="<?php echo Filters::noXSS(L('next')); ?> >>" ><?php echo Filters::noXSS(L('proceedtofinalsetup')); ?></button>
+	<button class="button" type="submit" name="next" value="<?= eL('next') ?> >>" ><?= eL('proceedtofinalsetup') ?></button>
 		
 	</div>
 </form>

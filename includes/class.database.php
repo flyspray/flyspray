@@ -63,8 +63,8 @@ class Database
      * @param string $dbuser username to connect to the database
      * @param string $dbpass password to connect to the database
      * @param string $dbname
-     * @param string $dbtype database driver to use, currently :
-     *  "mysql", "mysqli","pdo_mysql" "pgsql", "pdo_pgsql" should work correctly.
+     * @param string $dbtype database driver to use, currently : "mysql", "mysqli", "pgsql"
+     * "pdo_mysql" and "pdo_pgsql" experimental
      * @param string $dbprefix database prefix.
      */
     public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
@@ -76,43 +76,54 @@ class Database
     
         # 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
         # For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
-        if( $dbtype=='mysqli' && 'localhost:/'==substr($dbhost,0,11) ){
+        if( ($dbtype=='mysqli' || $dbtype='pdo_mysql') && 'localhost:/'==substr($dbhost,0,11) ){
             $dbsocket=substr($dbhost,10);
             $dbhost='localhost';
-            ini_set( 'mysqli.default_socket', $dbsocket );
+            if($dbtype=='mysqli'){
+                 ini_set('mysqli.default_socket', $dbsocket );
+            }else{
+                 ini_set('pdo_mysql.default_socket',$dbsocket);
+            }
         }
-
-        $this->dblink = NewADOConnection($this->dbtype);
-        $this->dblink->Connect($dbhost, $dbuser, $dbpass, $dbname);
+        
+        # adodb for pdo is a bit different then the others at the moment (adodb 5.20.4)
+        # see http://adodb.org/dokuwiki/doku.php?id=v5:database:pdo
+        if($this->dbtype=='pdo_mysql'){
+                $this->dblink = ADOnewConnection('pdo');
+                $dsnString= 'host='.$dbhost.';dbname='.$dbname.';charset=utf8mb4';
+                $this->dblink->connect('mysql:' . $dsnString, $dbuser, $dbpass);
+        }else{
+                $this->dblink = ADOnewConnection($this->dbtype);
+                $this->dblink->connect($dbhost, $dbuser, $dbpass, $dbname);
+        }
 
         if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
 
             die('Flyspray was unable to connect to the database. '
                .'Check your settings in flyspray.conf.php');
         }
-            $this->dblink->SetFetchMode(ADODB_FETCH_BOTH);
+        $this->dblink->setFetchMode(ADODB_FETCH_BOTH);
 
-            /*
-             * this will work only in the following systems/PHP versions
-             *
-             * PHP4 and 5 with postgresql
-             * PHP5 with "mysqli" or "pdo_mysql" driver (not "mysql" driver)
-             * using mysql 4.1.11 or later and mysql 5.0.6 or later.
-             *
-             * in the rest of the world, it will silently return FALSE.
-             */
-
-            $this->dblink->SetCharSet('utf8');
-
-            //enable debug if constact DEBUG_SQL is defined.
-            !defined('DEBUG_SQL') || $this->dblink->debug = true;
-            
-            if($dbtype === 'mysql' || $dbtype === 'mysqli') {
-                $dbinfo = $this->dblink->ServerInfo();
-                if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
-                    $this->dblink->Execute("SET SESSION SQL_MODE='TRADITIONAL'");
-                }
+        if($dbtype=='mysqli'){
+            $sinfo=$this->dblink->serverInfo();
+            if(version_compare($sinfo['version'], '5.5.3')>=0 ){
+                $this->dblink->setCharSet('utf8mb4');
+            }else{
+                $this->dblink->setCharSet('utf8');
             }
+        }else{
+            $this->dblink->setCharSet('utf8');
+        }
+
+        // enable debug if constant DEBUG_SQL is defined.
+        !defined('DEBUG_SQL') || $this->dblink->debug = true;
+            
+        if($dbtype === 'mysql' || $dbtype === 'mysqli') {
+            $dbinfo = $this->dblink->serverInfo();
+            if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
+                $this->dblink->execute("SET SESSION SQL_MODE='TRADITIONAL'");
+            }
+        }
     }
 
     /**
@@ -121,53 +132,53 @@ class Database
      */
     public function dbClose()
     {
-        $this->dblink->Close();
+        $this->dblink->close();
     }
 
     /**
-     * Insert_ID
+     * insert_ID
      * 
      * @access public
      */
-    public function Insert_ID()
+    public function insert_ID()
     {
-        return $this->dblink->Insert_ID();
+        return $this->dblink->insert_ID();
     }
 
     /**
-     * CountRows
+     * countRows
      * Returns the number of rows in a result
      * @param object $result
      * @access public
      * @return int
      */
-    public function CountRows($result)
+    public function countRows($result)
     {
-        return (int) $result->RecordCount();
+        return (int) $result->recordCount();
     }
 
     /**
-     * AffectedRows
+     * affectedRows
      *
      * @access public
      * @return int
      */
-    public function AffectedRows()
+    public function affectedRows()
     {
-        return (int) $this->dblink->Affected_Rows();
+        return (int) $this->dblink->affected_Rows();
     }
 
     /**
-     * FetchRow
+     * fetchRow
      *
      * @param $result
      * @access public
      * @return void
      */
 
-    public function FetchRow($result)
+    public function fetchRow($result)
     {
-        return $result->FetchRow();
+        return $result->fetchRow();
     }
 
     /**
@@ -189,7 +200,7 @@ class Database
     }
 
     /**
-     * Query
+     * query
      *
      * @param mixed $sql
      * @param mixed $inputarr
@@ -199,7 +210,7 @@ class Database
      * @return void
      */
 
-    public function Query($sql, $inputarr = false, $numrows = -1, $offset = -1)
+    public function query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
@@ -214,14 +225,14 @@ class Database
         if (($numrows >= 0 ) or ($offset >= 0 )) {
             /* adodb drivers are inconsisent with the casting of $numrows and $offset so WE
              * cast to integer here anyway */
-            $result =  $this->dblink->SelectLimit($sql, (int) $numrows, (int) $offset, $inputarr);
+            $result =  $this->dblink->selectLimit($sql, (int) $numrows, (int) $offset, $inputarr);
         } else {
-           $result =  $this->dblink->Execute($sql, $inputarr);
+            $result =  $this->dblink->execute($sql, $inputarr);
         }
 
         if (!$result) {
 
-            if (function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
+            if(function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
                 var_dump(debug_backtrace());
                 echo "</pre>";
@@ -230,15 +241,13 @@ class Database
             $query_params = '';
 
             if(is_array($inputarr) && count($inputarr)) {
-
                 $query_params =  implode(',', array_map(array('Filters','noXSS'), $inputarr));
-
             }
 
-            die (sprintf("Query {%s} with params {%s} Failed! (%s)",
-                    Filters::noXSS($sql), $query_params, Filters::noXSS($this->dblink->ErrorMsg())));
-        }
+            die(sprintf("Query {%s} with params {%s} failed! (%s)",
+                Filters::noXSS($sql), $query_params, Filters::noXSS($this->dblink->errorMsg())));
 
+        }
 
         return $result;
     }
@@ -258,37 +267,37 @@ class Database
             return $this->cache[$idx];
         }
 
-        $sql = $this->Query($sql, $sqlargs);
+        $sql = $this->query($sql, $sqlargs);
         return ($this->cache[$idx] = $this->fetchAllArray($sql));
     }
 
     /**
-     * FetchOne
+     * fetchOne
      *
      * @param $result
      * @access public
      * @return array
      */
-    public function FetchOne($result)
+    public function fetchOne($result)
     {
-        $row = $this->FetchRow($result);
-        return (count($row) ? $row[0] : '');
+        $row = $this->fetchRow($result);
+        return (isset($row[0]) ? $row[0] : '');
     }
 
     /**
-     * FetchAllArray
+     * fetchAllArray
      *
      * @param $result
      * @access public
      * @return array
      */
-    public function FetchAllArray($result)
+    public function fetchAllArray($result)
     {
-        return $result->GetArray();
+        return $result->getArray();
     }
 
     /**
-     * GroupBy
+     * groupBy
      *
      * This groups a result by a single column the way
      * MySQL would do it. Postgre doesn't like the queries MySQL needs.
@@ -298,17 +307,17 @@ class Database
      * @access public
      * @return array process the returned array with foreach ($return as $row) {}
      */
-    public function GroupBy($result, $column)
+    public function groupBy($result, $column)
     {
         $rows = array();
-        while ($row = $this->FetchRow($result)) {
+        while ($row = $this->fetchRow($result)) {
             $rows[$row[$column]] = $row;
         }
         return array_values($rows);
     }
 
     /**
-     * GetColumnNames
+     * getColumnNames
      *
      * @param mixed $table
      * @param mixed $alt
@@ -317,7 +326,7 @@ class Database
      * @return void
      */
 
-    public function GetColumnNames($table, $alt, $prefix)
+    public function getColumnNames($table, $alt, $prefix)
     {
         global $conf;
 
@@ -326,9 +335,9 @@ class Database
         }
 
         $table = $this->_add_prefix($table);
-        $fetched_columns = $this->Query('SELECT column_name FROM information_schema.columns WHERE table_name = ?',
+        $fetched_columns = $this->query('SELECT column_name FROM information_schema.columns WHERE table_name = ?',
                                          array(str_replace('"', '', $table)));
-        $fetched_columns = $this->FetchAllArray($fetched_columns);
+        $fetched_columns = $this->fetchAllArray($fetched_columns);
 
         foreach ($fetched_columns as $key => $value)
         {
@@ -341,7 +350,7 @@ class Database
     }
 
     /**
-     * Replace
+     * replace
      *
      * Try to update a record,
      * and if the record is not found,
@@ -354,10 +363,10 @@ class Database
      * @access public
      * @return integer 0 on error, 1 on update. 2 on insert
      */
-    public function Replace($table, $field, $keys, $autoquote = true)
+    public function replace($table, $field, $keys, $autoquote = true)
     {
         $table = $this->_add_prefix($table);
-        return $this->dblink->Replace($table, $field, $keys, $autoquote);
+        return $this->dblink->replace($table, $field, $keys, $autoquote);
     }
 
     /**
@@ -369,7 +378,7 @@ class Database
      */
     private function _add_prefix($sql_data)
     {
-        return preg_replace('/{([\w\-]*?)}/', $this->QuoteIdentifier($this->dbprefix . '\1'), $sql_data);
+        return preg_replace('/{([\w\-]*?)}/', $this->quoteIdentifier($this->dbprefix . '\1'), $sql_data);
     }
 
     /**
@@ -380,7 +389,7 @@ class Database
      * @access public
      * @since 0.9.9
      */
-    public function QuoteIdentifier($ident)
+    public function quoteIdentifier($ident)
     {
         return (string) $this->dblink->nameQuote . $ident . $this->dblink->nameQuote ;
     }

@@ -1,4 +1,4 @@
-<!--<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> :: <?php echo Filters::noXSS(L('newtask')); ?></h3>-->
+<!--<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> :: <?= eL('newtask') ?></h3>-->
 <?php
     if (!isset($supertask_id)) {
         $supertask_id = 0;
@@ -7,7 +7,6 @@
   <script type="text/javascript">
 	function checkContent()
 	{
-		// thinking about changing javascript to jquery
 		var instance;
 		for(instance in CKEDITOR.instances){
 			CKEDITOR.instances[instance].updateElement();
@@ -33,7 +32,7 @@
 		return false;
 	}
   </script>
-<?php echo tpl_form(Filters::noXSS(CreateUrl('newtask', $proj->id, $supertask_id)), 'newtask', 'post', 'multipart/form-data', 'onsubmit="return checkContent()"'); ?>
+<?php echo tpl_form(Filters::noXSS(createUrl('newtask', $proj->id, $supertask_id)), 'newtask', 'post', 'multipart/form-data', 'onsubmit="return checkContent()"'); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <div id="actionbar"><div class="clear"></div></div>
   <?php 
@@ -49,7 +48,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="tasktype"><?php echo Filters::noXSS(L('tasktype')); ?></label>
+            <label for="tasktype"><?= eL('tasktype') ?></label>
             <select name="task_type" id="tasktype">
               <?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type')); ?>
             </select>
@@ -61,7 +60,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="category"><?php echo Filters::noXSS(L('category')); ?></label>
+            <label for="category"><?= eL('category') ?></label>
             <select class="adminlist" name="product_category" id="category">
               <?php echo tpl_options($proj->listCategories(), Req::val('product_category')); ?>
             </select>
@@ -73,7 +72,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="status"><?php echo Filters::noXSS(L('status')); ?></label>
+            <label for="status"><?= eL('status') ?></label>
             <select id="status" name="item_status" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
               <?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', ($user->perms('modify_all_tasks') ? STATUS_NEW : STATUS_UNCONFIRMED))); ?>
             </select>
@@ -86,7 +85,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label><?php echo Filters::noXSS(L('assignedto')); ?></label>
+            <label><?= eL('assignedto') ?></label>
             <?php if ($user->perms('modify_all_tasks')): ?>
             <?php $this->display('common.multiuserselect.tpl'); ?>
             <?php endif; ?>
@@ -99,7 +98,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="os"><?php echo Filters::noXSS(L('operatingsystem')); ?></label>
+            <label for="os"><?= eL('operatingsystem') ?></label>
             <select id="os" name="operating_system">
               <?php echo tpl_options($proj->listOs(), Req::val('operating_system')); ?>
             </select>
@@ -111,7 +110,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="severity"><?php echo Filters::noXSS(L('severity')); ?></label>
+            <label for="severity"><?= eL('severity') ?></label>
             <select onchange="getElementById('edit_summary').className = 'summary severity' + this.value;
                               getElementById('itemsummary').className = 'text severity' + this.value;"
                               id="severity" class="adminlist" name="task_severity">
@@ -125,7 +124,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="priority"><?php echo Filters::noXSS(L('priority')); ?></label>
+            <label for="priority"><?= eL('priority') ?></label>
             <select id="priority" name="task_priority" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
               <?php echo tpl_options($fs->priorities, Req::val('task_priority', 4)); ?>
             </select>
@@ -137,7 +136,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="reportedver"><?php echo Filters::noXSS(L('reportedversion')); ?></label>
+            <label for="reportedver"><?= eL('reportedversion') ?></label>
             <select class="adminlist" name="product_version" id="reportedver">
               <?php echo tpl_options($proj->listVersions(false, 2), Req::val('product_version')); ?>
             </select>
@@ -149,9 +148,9 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="dueversion"><?php echo Filters::noXSS(L('dueinversion')); ?></label>
+            <label for="dueversion"><?= eL('dueinversion') ?></label>
             <select id="dueversion" name="closedby_version" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')); ?>>
-              <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
+              <option value="0"><?= eL('undecided') ?></option>
               <?php echo tpl_options($proj->listVersions(false, 3),$proj->prefs['default_due_version'], false); ?>
             </select>
           </li>
@@ -163,7 +162,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="due_date"><?php echo Filters::noXSS(L('duedate')); ?></label>
+            <label for="due_date"><?= eL('duedate') ?></label>
             <?php echo tpl_datepicker('due_date', '', Req::val('due_date')); ?>
           </li>
           <?php endif; ?>
@@ -171,10 +170,10 @@
         <?php if($proj->prefs['use_effort_tracking']) {
         	if ($user->perms('view_effort')) {
         ?>
-        	<li style="...">
-                <label for="estimatedeffort"><?php echo Filters::noXSS(L('estimatedeffort')); ?></label>
+        	<li>
+                <label for="estimatedeffort"><?= eL('estimatedeffort') ?></label>
                 <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="0" />
-                <?php echo Filters::noXSS(L('hours')); ?>
+                <?= eL('hours') ?>
         	</li>
         	<?php }
         } ?>
@@ -186,7 +185,7 @@
           <?php } else { ?>
             <li style="display:none">
           <?php } ?>
-            <label for="private"><?php echo Filters::noXSS(L('private')); ?></label>
+            <label for="private"><?= eL('private') ?></label>
             <?php echo tpl_checkbox('mark_private', Req::val('mark_private', 0), 'private'); ?>
           </li>
           <?php endif; ?>
@@ -194,13 +193,13 @@
       </div>
 
       <div id="taskdetailsfull">
-        <!--<h3 class="taskdesc"><?php echo Filters::noXSS(L('details')); ?></h3>-->
+        <!--<h3 class="taskdesc"><?= eL('details') ?></h3>-->
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-        <input id="itemsummary" placeholder="<?php echo Filters::noXSS(L('summary')); ?>" title="<?php echo Filters::noXSS(L('tooltipshorttasktitle'));?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+        <input id="itemsummary" required="required" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
             name="item_summary" maxlength="100" />
 	<div id="edit_tags">
-        <label for="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>"><?php echo Filters::noXSS(L('tags')); ?>:</label>
-        <input id="tags" title="<?php echo Filters::noXSS(L('tagsinfo'));?>" class="text" type="text"
+        <label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
+        <input id="tags" title="<?= eL('tagsinfo') ?>" class="text" type="text"
         value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" />
 	</div>
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
@@ -211,7 +210,7 @@
 
       <p class="buttons">
           <?php if ($user->isAnon()): ?>
-          <label class="inline" for="anon_email"><?php echo Filters::noXSS(L('youremail')); ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30"  value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
+          <label class="inline" for="anon_email"><?= eL('youremail') ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30" required="required" value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
           <?php endif; ?>
           <?php if (!$user->perms('modify_all_tasks')): ?>
           <input type="hidden" name="item_status"   value="1" />
@@ -221,7 +220,7 @@
           <input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
           <?php if (!$user->isAnon()): ?>
           &nbsp;&nbsp;<input class="text" type="checkbox" id="notifyme" name="notifyme"
-          value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?php echo Filters::noXSS(L('notifyme')); ?></label>
+          value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?= eL('notifyme') ?></label>
           <?php endif; ?>
       </p>
 
@@ -239,33 +238,29 @@
           </noscript>
         </div>
         <button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields('uploadfilebox')">
-          <?php echo Filters::noXSS(L('uploadafile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
+          <?= eL('uploadafile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
         </button>
         <button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields('uploadfilebox')">
-           <?php echo Filters::noXSS(L('attachanotherfile')); ?> (<?php echo Filters::noXSS(L('max')); ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?php echo Filters::noXSS(L('MiB')); ?>)
+           <?= eL('attachanotherfile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
         </button>
 
         <div id="addlinkbox">
     <span style="display: none">
-	 <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
-	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+	 <input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+	 <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
     </span>
     <noscript>
 	 <span>
-	       <input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
-	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?php echo Filters::noXSS(L('remove')); ?></a><br />
+	       <input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+	       <a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
 	 </span>
     </noscript>
 </div>
-<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')">
-	<?php echo Filters::noXSS(L('addalink')); ?>
-</button>
-<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')">
-	<?php echo Filters::noXSS(L('addanotherlink')); ?>
-</button>
+<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addalink') ?></button>
+<button id="addlinkbox_addanotherlink" tabindex="10" style="display:none" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addanotherlink') ?></button>
         <?php endif; ?>
 
-<button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?php echo Filters::noXSS(L('addthistask')); ?></button>
+<button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?= eL('addthistask') ?></button>
       </div>
 
     <div class="clear"></div>

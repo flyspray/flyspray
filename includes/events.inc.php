@@ -7,7 +7,7 @@
 function get_events($task_id, $where = '')
 {
     global $db;
-    return $db->Query("SELECT h.*,
+    return $db->query("SELECT h.*,
                       tt1.tasktype_name AS task_type1,
                       tt2.tasktype_name AS task_type2,
                       los1.os_name AS operating_system1,
@@ -153,8 +153,8 @@ function event_description($history) {
                     break;
                 case 'estimated_effort':
                     $field = eL($translate[$field]);
-                    $old_value = effort::SecondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-                    $new_value = effort::SecondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
+                    $old_value = effort::secondsToString($old_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+                    $new_value = effort::secondsToString($new_value, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);;
                     break;
             }
             $return .= eL('fieldchanged').": {$field}";
@@ -261,16 +261,16 @@ function event_description($history) {
             $return .= eL('reopenrequestmade') . ' - ' . $new_value;
             break;
     case '22': // Dependency added
-            $return .= eL('depadded') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depadded') . ': ' . tpl_tasklink($new_value);
             break;
     case '23': // Dependency added to other task
-            $return .= eL('depaddedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depaddedother') . ': ' . tpl_tasklink($new_value);
             break;
     case '24': // Dependency removed
-            $return .= eL('depremoved') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremoved') . ': ' . tpl_tasklink($new_value);
             break;
     case '25': // Dependency removed from other task
-            $return .= eL('depremovedother') . ' ' . tpl_tasklink($new_value);
+            $return .= eL('depremovedother') . ': ' . tpl_tasklink($new_value);
             break;
     // 26 and 27 replaced by 0 (mark_private)
     case '28': // PM request denied
