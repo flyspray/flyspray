@@ -14,7 +14,15 @@ $conf = @parse_ini_file(Flyspray::get_config_path(), true);
 // $baseurl
 // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
 if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'] != '') {
-    $baseurl = $conf['general']['force_baseurl'];
+   if (isset($conf['general']['force_urlscheme']) && $conf['general']['force_urlscheme'] == '1' &&
+        strlen($conf['general']['force_baseurl']) >= strlen($_SERVER['REQUEST_SCHEME']) && substr($conf['general']['force_baseurl'], 0, strlen($_SERVER['REQUEST_SCHEME'])) !== $_SERVER['REQUEST_SCHEME'])
+    {
+        $baseurl = $_SERVER['REQUEST_SCHEME'] . $conf['general']['force_baseurl'];
+    }
+    else
+    {
+        $baseurl = $conf['general']['force_baseurl'];
+    }
 } else {
     if (!isset($webdir)) {
         $webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
