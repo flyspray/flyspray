@@ -651,8 +651,8 @@ table.inline td {border:1px solid #ccc; padding:4px;}
   padding:10px;
   box-shadow:0 0 400px #000;
   top:50%;
-  margin-top:-250px;
-  height:520px;
+  margin-top:-260px;
+  max-height:540px;
   left:50%;
   width:300px;
   margin-left:-150px;
