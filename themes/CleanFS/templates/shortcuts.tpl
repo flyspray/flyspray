@@ -1,19 +1,24 @@
 <?php
-/*
-TODO: show only or at least highlight the section that is matching the current view.
-TODO: a fast platform and browser detection of user agent string to dynamically adapt accesskey help,
-see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey
-if ($is_mac) {
-$accesskey='<kbd>CTRL</kbd> + <kbd>ALT</kbd>';
-} elseif ($is_firefox) {
-	$accesskey='<kbd>ALT</kbd> + <kbd>SHIFT</kbd>';
+# TODO: show only or at least highlight the section that is matching the current view.
+
+# following decisions based on:
+# https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey
+# https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers
+if (isset($_SESSION['ua'])) {
+	if ($_SESSION['ua']['platform'] == 'MacOSX') {
+		# all Browsers on Apple Macs
+		$modifier='<kbd>Ctrl</kbd> + <kbd>⌥ Opt</kbd>';
+	} elseif ($_SESSION['ua']['browser'] == 'Firefox') {
+		# Firefox on Windows and Linux
+		$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
+	} else {
+		# all others
+		$modifier='<kbd>Alt</kbd>';
+	}	
 } else {
-	$accesskey='<kbd>ALT</kbd>';
+	# fallback
+	$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
 }
-*/
-
-$accesskey='<kbd>CTRL</kbd> + <kbd>ALT</kbd>';
-
 ?>
 <input type="checkbox" id="s_shortcuts" />
 <label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> <?= eL('keyboardshortcuts') ?></label>
@@ -23,10 +28,10 @@ $accesskey='<kbd>CTRL</kbd> + <kbd>ALT</kbd>';
 <h3><?= eL('availablekeybshortcuts') ?></h3>
 <h4></h4>
 <ul>
-<li><?= $accesskey ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
-<li><?= $accesskey ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>
-<li><?= $accesskey ?> + <kbd>m</kbd> <?= eL('mysearch') ?></li>
-<li><?= $accesskey ?> + <kbd>t</kbd> <?= eL('focustaskidsearch') ?></li>
+<li><?= $modifier ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
+<li><?= $modifier ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>
+<li><?= $modifier ?> + <kbd>m</kbd> <?= eL('mysearch') ?></li>
+<li><?= $modifier ?> + <kbd>t</kbd> <?= eL('focustaskidsearch') ?></li>
 </ul>
 <h4><?= eL('tasklist') ?></h4>
 <ul>
@@ -38,12 +43,12 @@ $accesskey='<kbd>CTRL</kbd> + <kbd>ALT</kbd>';
 <ul>
 <li><kbd>n</kbd> <?= eL('nexttask') ?></li>
 <li><kbd>p</kbd> <?= eL('previoustask') ?></li>
-<li><?= $accesskey ?> + <kbd>e</kbd> <kbd>ENTER</kbd> <?= eL('edittask') ?></li>
-<li><?= $accesskey ?> + <kbd>w</kbd> <?= eL('watchtask') ?></li>
-<li><?= $accesskey ?> + <kbd>y</kbd> <?= eL('closetask') ?></li>
+<li><?= $modifier ?> + <kbd>e</kbd> <kbd>↵ Enter</kbd> <?= eL('edittask') ?></li>
+<li><?= $modifier ?> + <kbd>w</kbd> <?= eL('watchtask') ?></li>
+<li><?= $modifier ?> + <kbd>y</kbd> <?= eL('closetask') ?></li>
 </ul>
 <h4><?= eL('taskediting') ?></h4>
 <ul>
-<li><?= $accesskey ?> + <kbd>s</kbd> <?= eL('savetask') ?></li>
+<li><?= $modifier ?> + <kbd>s</kbd> <?= eL('savetask') ?></li>
 </ul>
 </div>
