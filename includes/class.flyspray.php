@@ -993,21 +993,37 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
      * @version 1.0
      * @notes smile intented
      */
-    public static function startSession()
-    {
-    	global $conf;
-        if (defined('IN_FEED') || php_sapi_name() === 'cli') {
-            return;
-        }
+	public static function startSession()
+	{
+		global $conf;
+		if (defined('IN_FEED') || php_sapi_name() === 'cli') {
+			return;
+		}
 
-        $url = parse_url($GLOBALS['baseurl']);
-        session_name('flyspray');
-        session_set_cookie_params(0,$url['path'],'', (isset($conf['general']['securecookies'])? $conf['general']['securecookies']:false), TRUE);
-        session_start();
-        if(!isset($_SESSION['csrftoken'])){
-                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
-        }
-    }
+		$url = parse_url($GLOBALS['baseurl']);
+		session_name('flyspray');
+		session_set_cookie_params(0,$url['path'],'', (isset($conf['general']['securecookies'])? $conf['general']['securecookies']:false), TRUE);
+		session_start();
+		if(!isset($_SESSION['csrftoken'])){
+			$_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
+		}
+	
+		/**
+		 * For the access key help: differences of browser and operating system combinations.
+		 * As it is relative expensive and very slow below PHP 7.1.1:
+		 * only do that once per user session and
+		 * only on newer php versions and
+		 * only if a browscap file is installed.
+		 * lite_php_browscap.ini from browscap.org should be sufficient. 
+		 * (below 1ms on a linux with php7.3 in virtualbox on old laptop)
+		*/
+		if (!isset($_SESSION['ua']) && version_compare(PHP_VERSION, '7.1.1') >= 0 && ini_get('browscap')){
+			$ua = get_browser(null, true);
+			$_SESSION['ua'] = array();
+			$_SESSION['ua']['platform'] = $ua['platform'];
+			$_SESSION['ua']['browser'] = $ua['browser'];
+		}
+	}
 
     /**
      * Compares two tasks and returns an array of differences
