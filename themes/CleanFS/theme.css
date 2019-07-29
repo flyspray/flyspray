@@ -654,8 +654,8 @@ table.inline td {border:1px solid #ccc; padding:4px;}
   margin-top:-260px;
   max-height:540px;
   left:50%;
-  width:300px;
-  margin-left:-150px;
+  width:360px;
+  margin-left:-180px;
   box-sizing:border-box;
 }
 #shortcutsmodal {
