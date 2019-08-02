@@ -231,11 +231,7 @@ div.popup {
   border: #e1e1e1 1px solid;
   margin-top: 5px;
   padding: 5px;
-  -moz-box-shadow: 0px 1px 2px #f9f9f9;
-  -webkit-box-shadow: 0px 1px 2px #f9f9f9;
   box-shadow: 0px 1px 2px #f9f9f9;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
 }
 
 /* ------------------ STYLE -------------------- */
@@ -373,11 +369,7 @@ div#mysearches td {vertical-align: middle;}
   /* Links */
   border: 1px solid #bbb;
   border-radius: 4px;
-  -moz-box-shadow: 0px 1px 1px #ddd;
-  -webkit-box-shadow: 0px 1px 1px #ddd;
   box-shadow: 0px 1px 1px #ddd;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
   font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
   font-size: 100%;
   line-height: 130%;
@@ -1189,24 +1181,17 @@ ul.slim .userSelectWidget select {width:100%;}
 /* closing task form */
 div#closeform {
   border-radius: 3px;
-  -moz-box-shadow: 0px 1px 1px #dddddd;
-  -webkit-box-shadow: 0px 1px 1px #dddddd;
-  box-shadow: 0px 1px 1px #dddddd;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+  box-shadow: 0px 1px 1px #ddd;
   padding: 2em;
   position: absolute;
   right: 5px;
   top: 3em;
   z-index:300;
 }
+/* 'quick actions' on the right side */
 #actionsform {
     border-radius: 3px;
-    -moz-box-shadow: 0px 1px 1px #dddddd;
-    -webkit-box-shadow: 0px 1px 1px #dddddd;
-    box-shadow: 0px 1px 1px #dddddd;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+	box-shadow: 0px 1px 1px #ddd;
     position: absolute;
     right: 5px;
     top: 3em;
