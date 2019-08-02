@@ -358,7 +358,7 @@ echo tpl_select(
 	<?php
 	endif;
 	foreach ($visible as $col):
-	echo tpl_list_heading($col, "<th%s>%s</th>");
+	echo tpl_list_heading($col, "\n\t<th%s>%s</th>");
 	endforeach;
 	?>
 </tr>
