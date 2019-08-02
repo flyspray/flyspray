@@ -16,14 +16,15 @@ if ((Get::has('project_id') && Get::val('graph', 'project') == 'project')) {
 		$today          = date('Y-m-d');
 		$thirtyone_days = date('U' , strtotime("-31 day", strtotime($today)));
 		$sixtyone_days  = date('U' , strtotime("-61 day", strtotime($today)));
+		$end            = date('U' , strtotime("+1 day", strtotime($today)));
 
 		//look 30 + days and if found scale
 		$projectCheck = Project::getActivityProjectCount($sixtyone_days, $thirtyone_days, Get::num('project_id'));
 
 		if($projectCheck > 0) {
-			$data = Project::getDayActivityByProject($sixtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'));
+			$data = Project::getDayActivityByProject($sixtyone_days, $end, Get::num('project_id'));
 		} else {
-			$data = Project::getDayActivityByProject($thirtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'));
+			$data = Project::getDayActivityByProject($thirtyone_days, $end, Get::num('project_id'));
 		}
 
 		$data = implode(',', $data);
@@ -37,14 +38,15 @@ if ((Get::has('project_id') && Get::val('graph', 'project') == 'project')) {
 		$today          = date('Y-m-d');
 		$thirtyone_days = date('U' , strtotime("-31 day", strtotime($today)));
 		$sixtyone_days  = date('U' , strtotime("-61 day", strtotime($today)));
+		$end            = date('U' , strtotime("+1 day", strtotime($today)));
 
 		//look 30 + days and if found scale
 		$projectCheck = Project::getActivityProjectCount($sixtyone_days, $thirtyone_days, Get::num('project_id'));
 
 		if($projectCheck > 0) {
-			$data = User::getDayActivityByUser($sixtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'), Get::num('user_id'));
+			$data = User::getDayActivityByUser($sixtyone_days, $end, Get::num('project_id'), Get::num('user_id'));
 		} else {
-			$data = User::getDayActivityByUser($thirtyone_days, date('U', strtotime(date('Y-m-d'))), Get::num('project_id'), Get::num('user_id'));
+			$data = User::getDayActivityByUser($thirtyone_days, $end, Get::num('project_id'), Get::num('user_id'));
 		}
 
 		$data = implode(',', $data);
