@@ -82,7 +82,7 @@ body a.button.positive, body button.positive {
 }
 
 /*
- highlight advanced search fields that have input 
+ highlight advanced search fields that have input
  no pure CSS styling of options of multiselects possible (it was back in time in some web browsers, a shame!)
 */
 #search #searchtext:not(:placeholder-shown),
@@ -1125,8 +1125,8 @@ ul.slim .userSelectWidget select {width:100%;}
   /* triggers hasLayout for IE */
   *display: inline;
   /* target IE7 only */
-   vertical-align: middle;
-   width: 40%;
+  vertical-align: middle;
+  width: 40%;
 }
 .double_select .dualselect_selected select {
   width: 100%;
@@ -1381,8 +1381,8 @@ a.tooltip span{
 	border: 1px solid #e1e1e1;
 	border-radius: 3px;
 	background-image: none;
-    	margin: 10px 0;
-    	padding: 10px;
+  margin: 10px 0;
+  padding: 10px;
 	max-height: 144px;
 	width: 400px;
 	position: absolute;
@@ -1426,6 +1426,11 @@ button.fakelinkbutton:hover {
 
 button.fakelinkbutton:visited {
 	color: #69c;
+}
+
+/* Make it correctly align */
+#searchtext {
+  vertical-align: baseline;
 }
 
 @media only screen and (max-width: 480px) and (orientation: portrait) {

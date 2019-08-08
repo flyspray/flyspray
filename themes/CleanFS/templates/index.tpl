@@ -26,10 +26,10 @@
         var check_count = 0, uncheck_count;
         for(var n=0;n < form.length;n++){
             if(form[n].name == 'ids[]'){
-		if(form[n].checked)
-		    check_count++;
-		else
-		    uncheck_count++;
+                if(form[n].checked)
+                    check_count++;
+                else
+                    uncheck_count++;
             }
         }
 
@@ -69,32 +69,31 @@
 <?php if (!($user->isAnon() &&  (count($fs->projects) == 0 || ($proj->id >0 && !$user->can_view_project($proj->id)))) ): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-  <button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
-  <input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
-   maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
-  <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
-  <input type="hidden" name="do" value="index"/>
-  <button type="submit" name="export_list" value="1" id="exporttasklist" title="<?= eL('exporttasklist') ?>"><i class="fa fa-download"></i></button>
+    <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
+    <input type="hidden" name="do" value="index"/>
+    <input class="text" id="searchtext" name="string" type="text" size="25" placeholder=" " maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
+    <button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
+    <button type="submit" name="export_list" value="1" id="exporttasklist" title="<?= eL('exporttasklist') ?>"><i class="fa fa-download"></i></button>
 <style>
-#sc2,#s_searchstate{display:none;}
-#searchstateactions{color:#999;display:block;cursor:pointer;}
-#s_searchstate:checked ~ #sc2 {display:block;}
-#s_searchstate ~ label::before { content: "\25bc";}
-#s_searchstate:checked ~ label::before { content: "\25b2";}
+    #sc2,#s_searchstate{display:none;}
+    #searchstateactions{color:#999;display:block;cursor:pointer;}
+    #s_searchstate:checked ~ #sc2 {display:block;}
+    #s_searchstate ~ label::before { content: "\25bc";}
+    #s_searchstate:checked ~ label::before { content: "\25b2";}
 </style>
 <input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
 <label id="searchstateactions" for="s_searchstate"><?= eL('advanced') ?></label>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
 <fieldset>
-  <div class="save_search"><label for="save_search" id="lblsaveas"><?= eL('saveas') ?></label>
-   <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/> <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?= eL('saving') ?>', '<?php echo Filters::noJsXSS($_SESSION['csrftoken']); ?>')" type="button"><?= eL('OK') ?></button>
-  </div>
+    <div class="save_search"><label for="save_search" id="lblsaveas"><?= eL('saveas') ?></label>
+        <input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/> <button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?= eL('saving') ?>', '<?php echo Filters::noJsXSS($_SESSION['csrftoken']); ?>')" type="button"><?= eL('OK') ?></button>
+    </div>
 </fieldset>
 <?php endif; ?>
 <fieldset class="advsearch_misc">
-   <legend><?= eL('miscellaneous') ?></legend>
-   <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
+    <legend><?= eL('miscellaneous') ?></legend>
+    <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
                     <label class="left" for="sic"><?= eL('searchcomments') ?></label>
 
                     <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
@@ -116,7 +115,7 @@
 		#blockerornoblocker {display:none;color:#c00;}
 		#only_primary:checked ~ #only_blocker:checked ~ #blockerornoblocker {display:inline;}
 		</style>
-		
+
                     <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
                     <label class="left" for="has_attachment"><?= eL('hasattachment') ?></label>
 
@@ -341,7 +340,7 @@ echo tpl_select(
 	function Hide(elem, id)	{
 		document.getElementById("desc_"+id).style.display = "none";
 	}
-</script>	
+</script>
 <table id="tasklist_table">
 <colgroup>
 	<col class="caret" />
