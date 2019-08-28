@@ -20,9 +20,15 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
     // $username = Backend::clean_username(Req::val('user_name'));
     $username = Req::val('user_name');
     $password = Req::val('password');
+    $method = $conf['general']['auth_method'] ?? 'native';
 
     // Run the username and password through the login checker
-    if (($user_id = Flyspray::checkLogin($username, $password)) < 1) {
+    $user_id = Flyspray::checkLogin($username, $password, $method);
+    if($method === 'ldap' && $user_id < 1) {
+        // Recheck with native method if LDAP
+        $user_id = Flyspray::checkLogin($username, $password, 'native');
+    }
+    if ($user_id < 1) {
         $_SESSION['failed_login'] = Req::val('user_name');
         if($user_id === -2) {
             Flyspray::show_error(L('usernotexist'));
