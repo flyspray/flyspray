@@ -44,18 +44,18 @@ http://flyspray.org/manual/install
 
 #### Installing from prepackaged releases that include also needed 3rd party libraries
 
-    tar xzf flyspray-1.0-rc8.tgz
+    tar xzf flyspray-1.0-rc9.tgz
 
-Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc9 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Installing from source releases via command line
 
-    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc8.tar.gz | tar xz
-    cd flyspray-1.0-rc8
+    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc9.tar.gz | tar xz
+    cd flyspray-1.0-rc9
     curl -sS https://getcomposer.org/installer | php
     php composer.phar install --no-dev
     
-Rename folder flyspray-1.0-rc8 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc9 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.
