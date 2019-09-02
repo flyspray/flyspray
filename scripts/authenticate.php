@@ -20,7 +20,7 @@ if (Req::val('user_name') != '' && Req::val('password') != '') {
     // $username = Backend::clean_username(Req::val('user_name'));
     $username = Req::val('user_name');
     $password = Req::val('password');
-    $method = $conf['general']['auth_method'] ?? 'native';
+    $method = isset($conf['general']['auth_method']) ? $conf['general']['auth_method'] : 'native';
 
     // Run the username and password through the login checker
     $user_id = Flyspray::checkLogin($username, $password, $method);

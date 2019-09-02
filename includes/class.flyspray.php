@@ -925,8 +925,8 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		$ldap_search_user = $conf['ldap']['search_user'];  #
 		$ldap_search_pass = $conf['ldap']['search_pass'];  #
 		$filter =           $conf['ldap']['filter'];       # uid=%USERNAME%
-		$lf_name =          $conf['ldap']['field_name'] ?? 'cn';
-		$lf_email =         $conf['ldap']['field_email'] ?? 'mail';
+		$lf_name =          isset($conf['ldap']['field_name']) ? $conf['ldap']['field_name'] : 'cn';
+		$lf_email =         isset($conf['ldap']['field_email']) ? $conf['ldap']['field_email'] : 'mail';
 
 		if (strlen($password) == 0){ // LDAP will succeed binding with no password on AD (defaults to anon bind)
 			return false;
