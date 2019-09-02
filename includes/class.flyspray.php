@@ -812,7 +812,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		                      ORDER BY  g.group_id ASC",
 		                     array($user_id, $username, 0));
 		$auth_details = $db->fetchRow($result);
-		if(!$result || !count($auth_details)) {
+		if(!$result || (is_array($auth_details) && !count($auth_details))) {
 			return false;
 		}
 		if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
