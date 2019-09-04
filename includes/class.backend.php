@@ -705,6 +705,9 @@ abstract class Backend
                 $newuser[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
             }
 
+	    if(is_null($notify)) {
+		    $notify = new Notifications();
+	    }
             // Notify the appropriate users
 			if ($fs->prefs['notify_registration']) {
                 $notify->create(NOTIFY_NEW_USER, null,
