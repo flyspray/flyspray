@@ -917,12 +917,10 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 	{
 		global $conf, $db, $fs;
 
-		# TODO: add to admin settings area, maybe let user set the config at final installation step
-		$ldap_host =        $conf['ldap']['host'];         # ldap.example.com
-		$ldap_port =        $conf['ldap']['port'];         # 389
-		$ldap_version =     $conf['ldap']['version'];      # 3
+		$ldap_uri =         isset($conf['ldap']['uri']) ? $conf['ldap']['uri'] : null; # ldap://example.com:389 
+		$ldap_version =     isset($conf['ldap']['version']) ? $conf['ldap']['version'] : 3; 
 		$base_dn =          $conf['ldap']['base_dn'];      # ou=users,dc=example,dc=com
-		$ldap_search_user = $conf['ldap']['search_user'];  #
+		$ldap_search_user = $conf['ldap']['search_user'];  # cn=admin,dc=example,dc=com
 		$ldap_search_pass = $conf['ldap']['search_pass'];  #
 		$filter =           $conf['ldap']['filter'];       # uid=%USERNAME%
 		$lf_name =          isset($conf['ldap']['field_name']) ? $conf['ldap']['field_name'] : 'cn';
@@ -932,7 +930,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 			return false;
 		}
 
-		$rs = ldap_connect($ldap_host, $ldap_port);
+		$rs = ldap_connect($ldap_uri);
 		@ldap_set_option($rs, LDAP_OPT_PROTOCOL_VERSION, $ldap_version);
 		@ldap_set_option($rs, LDAP_OPT_REFERRALS, 0);
 		$ldap_bind_dn = empty($ldap_search_user) ? NULL : $ldap_search_user;
