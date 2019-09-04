@@ -936,9 +936,9 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		$ldap_bind_dn = empty($ldap_search_user) ? NULL : $ldap_search_user;
 		$ldap_bind_pw = empty($ldap_search_pass) ? NULL : $ldap_search_pass;
 		if (!$bindok = @ldap_bind($rs, $ldap_bind_dn, $ldap_search_pass)){
-			// Uncomment for LDAP debugging
+			# Uncomment for LDAP debugging
 			#$error_msg = ldap_error($rs);
-			#die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+			#die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_uri." Because:".$error_msg);
 			return false;
 		} else{
 			$filter_r = str_replace("%USERNAME%", $username, $filter);
@@ -952,13 +952,13 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 			}
 			$first_user = $result_user[0];
 			$ldap_user_dn = $first_user["dn"];
-			// Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
+			# Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
 			if (!$bind_user = @ldap_bind($rs, $ldap_user_dn, $password)){
 				#$error_msg = ldap_error($rs);
-				#die("Couldn't bind using ".$ldap_user_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+				#die("Couldn't bind using ".$ldap_user_dn."@".$ldap_uri." Because:".$error_msg);
 				return false;
 			} else{
-				// Create user if it doesn't exist
+				# Create user if it doesn't exist
 				$result = $db->query("SELECT user_id
 					              FROM {users}
 						      WHERE user_name = ?", array($username));
