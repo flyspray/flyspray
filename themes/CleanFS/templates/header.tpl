@@ -105,7 +105,6 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 	<?php endif;?>
 
 <div id="content">
-	<div class="clear"></div>
 	<?php $show_message = explode(' ', $fs->prefs['pages_welcome_msg']);
 	if ($fs->prefs['intro_message'] && ($proj->id == 0 || $proj->prefs['disp_intro']) && (in_array($do, $show_message)) ):?>
 	<div id="intromessage"><?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?></div>

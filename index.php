@@ -209,6 +209,7 @@ $sql = $db->query('
 # new: project_id as index for easier access, needs testing and maybe simplification
 # similiar situation also includes/class.flyspray.php function listProjects()
 $sres=$db->fetchAllArray($sql);
+$prs=array();
 foreach($sres as $p){
 	$prs[$p['project_id']]=$p;
 }
