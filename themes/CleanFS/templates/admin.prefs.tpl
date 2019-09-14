@@ -261,6 +261,13 @@ function ShowHidePassword(id) {
 	<h2><?php echo Filters::noXSS(L('antispam')); ?></h2>
 	<p><?php echo Filters::noXSS(L('antispamprefsinfo')); ?></p>
 
+	<ul class="form_elements">
+	<li>
+		<?php echo tpl_checkbox('relnofollow', isset($fs->prefs['relnofollow']) ? $fs->prefs['relnofollow'] : false, 'relnofollow'); ?>
+		<label for="relnofollow"><?= eL('relnofollow') ?></label>
+	</li>
+	</ul>
+	
 	<h3>Securimage</h3>
 	<p><?php echo Filters::noXSS(L('securimageprefsinfo')); ?></p>
 	<ul class="form_elements">
