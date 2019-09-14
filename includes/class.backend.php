@@ -303,7 +303,7 @@ abstract class Backend
      */
     public static function add_comment($task, $comment_text, $time = null)
     {
-        global $conf, $db, $user, $notify, $proj;
+        global $conf, $db, $user, $notify, $proj, $fs;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
             return false;
@@ -311,6 +311,7 @@ abstract class Backend
 
 	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 		$purifier = new HTMLPurifier($purifierconfig);
 		$comment_text = $purifier->purify($comment_text);
 	}
@@ -972,7 +973,7 @@ abstract class Backend
      */
     public static function create_task($args)
     {
-        global $conf, $db, $user, $proj;
+        global $conf, $db, $user, $proj, $fs;
 
         if (!isset($args)) return 0;
 
@@ -1081,6 +1082,7 @@ abstract class Backend
 	# dokuwiki syntax plugin filters on output
 	if($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc']) ){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 		$purifier = new HTMLPurifier($purifierconfig);
 		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
 	}
