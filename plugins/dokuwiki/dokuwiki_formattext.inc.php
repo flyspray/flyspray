@@ -68,8 +68,8 @@ class dokuwiki_TextFormatter
         $conf = $fs_conf;
 		
         // Display the output
-        if (Get::val('histring')) {
-            $words = explode(' ', Get::val('histring'));
+        if (Get::val('string')) {
+            $words = explode(' ', Get::val('string'));
             foreach($words as $word) {
                 $return = html_hilight($return, $word);
             }
