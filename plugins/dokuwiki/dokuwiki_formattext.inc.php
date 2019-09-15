@@ -53,8 +53,7 @@ class dokuwiki_TextFormatter
         $Renderer->entities = getEntities();
         $Renderer->acronyms = getAcronyms();
         $Renderer->interwiki = getInterwiki();
-
-        $conf = $fs_conf;
+        
         $conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
         $conf['fperm'] = 0600;
         $conf['dperm'] = 0700;
@@ -66,10 +65,11 @@ class dokuwiki_TextFormatter
         }
 
         $return = $Renderer->doc;
-
+        $conf = $fs_conf;
+		
         // Display the output
-        if (Get::val('histring')) {
-            $words = explode(' ', Get::val('histring'));
+        if (Get::val('string')) {
+            $words = explode(' ', Get::val('string'));
             foreach($words as $word) {
                 $return = html_hilight($return, $word);
             }
