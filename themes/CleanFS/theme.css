@@ -218,7 +218,7 @@ caption { background: #eee; }
 }
 .clear {clear: both;}
 .fade {color: gray; background: pink !important; border: 1px solid blue !important;}
-.search_hit {background: red !important; border: 1px solid green !important;}
+.search_hit {background: rgba(255,255,0,.4);}
 img:-moz-broken {
   /* show broken images */
   -moz-force-broken-image-icon: 1;
