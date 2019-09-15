@@ -1361,6 +1361,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_password', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_emailaddress', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'massops', '0');</query>
+	<query>INSERT INTO prefs VALUES (DEFAULT, 'relnofollow', '1');</query>
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_securimage', '0');</query>
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha', '0');</query>
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_sitekey', '');</query>
