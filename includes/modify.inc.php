@@ -421,6 +421,7 @@ switch ($action = Req::val('action'))
 	# dokuwiki syntax plugin filters on output
 	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 		$purifier = new HTMLPurifier($purifierconfig);
 		$detailed_desc = $purifier->purify($detailed_desc);
 	}
@@ -1297,10 +1298,13 @@ switch ($action = Req::val('action'))
 		'active_oauths', 'only_oauth_reg', 'enable_avatars', 'max_avatar_size', 'default_order_by',
 		'max_vote_per_day', 'votes_per_project', 'url_rewriting',
 		'custom_style', 'general_integration', 'footer_integration',
-		'repeat_password', 'repeat_emailaddress', 'massops');
+		'repeat_password', 'repeat_emailaddress', 'massops', 'relnofollow');
 
 		if(!isset($fs->prefs['massops'])){
 			$db->query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('massops',0)");
+                }
+		if(!isset($fs->prefs['relnofollow'])){
+                        $db->query("INSERT INTO {prefs} (pref_name,pref_value) VALUES('relnofollow',1)");
                 }
 
 		# candid for a plugin, so separate them for the future.
@@ -2292,6 +2296,7 @@ switch ($action = Req::val('action'))
 		# dokuwiki syntax plugin filters on output
 		if($conf['general']['syntax_plugin'] != 'dokuwiki'){
 			$purifierconfig = HTMLPurifier_Config::createDefault();
+			if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 			$purifier = new HTMLPurifier($purifierconfig);
 			$comment_text = $purifier->purify($comment_text);
 			$previous_text= $purifier->purify($comment_text);
