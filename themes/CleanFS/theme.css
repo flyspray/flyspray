@@ -517,7 +517,7 @@ a {text-decoration: none;}
   display: block;
 }
 #tasklist_table thead tr th {line-height:1;}
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle; word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
@@ -678,7 +678,7 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   border-radius: 3px;
 }
 #taskdetails #navigation {float: right;padding:6px;}
-#taskdetails h2 {color: #555;display:inline-block;}
+#taskdetails h2 {color: #555;display:inline-block;max-width:100%;/* for word-wrap working chrome+safari */}
 #taskdetailsfull p,
 #taskdetailsfull li,
 .commenttext p,
@@ -690,6 +690,7 @@ max-width:40em;
 #taskdetailsfull h2,
 .commenttext{
 	word-wrap:break-word;
+	word-wrap:anywhere; /* css3, firefox65+ */
 }
 .group.inactive{ background-color:#eee;}
 .tag {
