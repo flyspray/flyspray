@@ -28,7 +28,7 @@ http://flyspray.org/manual/install
 4. Make sure flyspray.conf.php is writeable by the webserver.
 5. Open http://yourflyspray/setup/ in your webbrowser. It detects the existing installation and you can follow the upgrade steps.
 
-6. Note: Do not forget to press F5 (or CTRL+F5, depending on cache policy) after the upgrade in web browser to reload also cached css-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
+6. Note: Do not forget to press F5 (or CTRL+F5, depending on cache policy) after the upgrade in web browser to reload also cached CSS-files to see effects of updated CSS-files. They are cached by default for 14 days in the webbrowser.
 
 ## Dependencies
 
