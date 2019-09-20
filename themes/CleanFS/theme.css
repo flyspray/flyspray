@@ -516,8 +516,9 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
-#tasklist_table thead tr th {line-height:1;}
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle; word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
+#tasklist_table thead th {line-height:1;}
+#tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+.task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
