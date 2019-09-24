@@ -3,7 +3,7 @@ class dokuwiki_TextFormatter
 {    
     static function render($text, $type = null, $id = null, $instructions = null)
     {
-        global $conf, $baseurl, $db;
+        global $conf, $baseurl, $db, $fs;
         
         // Unfortunately dokuwiki also uses $conf
         $fs_conf = $conf;
@@ -54,6 +54,8 @@ class dokuwiki_TextFormatter
         $Renderer->acronyms = getAcronyms();
         $Renderer->interwiki = getInterwiki();
         
+	$conf = $fs_conf;
+	$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
         $conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
         $conf['fperm'] = 0600;
         $conf['dperm'] = 0700;
@@ -65,7 +67,6 @@ class dokuwiki_TextFormatter
         }
 
         $return = $Renderer->doc;
-        $conf = $fs_conf;
 		
         // Display the output
         if (Get::val('string')) {
