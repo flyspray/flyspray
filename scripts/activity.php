@@ -61,9 +61,10 @@ $height=25;
 $width=160;
 if (extension_loaded('gd')) {
 	// Not pretty but gets the job done.
+	$data=implode(',', $data);
 	$_SERVER['QUERY_STRING'] = 'size='.$width.'x'.$height.'&data='.$data;
-	$_GET['size']            = $width.'x'.$height;
-	$_GET['data']            = implode(',', $data);
+	$_GET['size'] = $width.'x'.$height;
+	$_GET['data'] = $data;
 	require dirname(__DIR__) . '/vendor/jamiebicknell/Sparkline/sparkline.php';
 } else {
 	# maybe svg gets the default as it is more versatile than just sparklines with gd
