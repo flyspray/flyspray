@@ -1180,7 +1180,8 @@ ul.slim .userSelectWidget select {width:100%;}
 .perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
 .perms .everybody > * { background-color: #6c6; }
 
-/* closing task form */
+/* closing and requestreopen task form */
+div#requestreopen,
 div#closeform {
   border-radius: 3px;
   box-shadow: 0px 1px 1px #ddd;
