@@ -1351,6 +1351,7 @@ LEFT JOIN ({groups} pg
 	// Keeps the overall logic somewhat simpler.
 	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
 	$from .= ' LEFT JOIN {task_tag} tt ON t.task_id = tt.task_id';
+	$from .= ' LEFT JOIN {list_tag} flt ON tt.tag_id = flt.tag_id';
         $cfrom = $from;
         
         // Seems resution name really is needed...
@@ -1764,8 +1765,8 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 					continue;
 				}
 				$likeWord = '%' . str_replace('+', ' ', $word) . '%';
-				$where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
-				array_push($sql_params, $likeWord, intval($word));
+				$where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? OR flt.tag_name $LIKEOP ? $comments)";
+				array_push($sql_params, $likeWord, intval($word), $likeWord);
 				if (array_get($args, 'search_in_comments')) {
 					array_push($sql_params, $likeWord);
 				}
