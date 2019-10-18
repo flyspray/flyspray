@@ -13,7 +13,7 @@ if (!$user->perms('view_reports')) {
     Flyspray::redirect($baseurl);
 }
 
-require_once(BASEDIR . '/includes/events.inc.php');
+require_once BASEDIR . '/includes/events.inc.php';
 $page->setTitle($fs->prefs['page_title'] . L('reports'));
 
 /**********************\
@@ -53,7 +53,7 @@ $events = array(1 => L('opened'),
                 35 => L('supertaskremoved'),
     );
 
-// Should events 19, 20, 21, 29 be here instead? 
+// Should events 19, 20, 21, 29 be here instead?
 $user_events = array(30 => L('created'),
                      31 => L('deleted'));
 

@@ -9,7 +9,7 @@ define('IN_FS', true);
 
 header('Content-type: text/html; charset=utf-8');
 
-require_once('../../header.php');
+require_once '../../header.php';
 
 
 if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
@@ -34,7 +34,7 @@ if (Req::has('name')) {
 
 // Get the list of users from the global groups above
 $get_users = $db->query('
-    SELECT count(u.user_name) AS anz_u_user, count(r.user_name) AS anz_r_user 
+    SELECT count(u.user_name) AS anz_u_user, count(r.user_name) AS anz_r_user
     FROM {users} u
     LEFT JOIN {registrations} r ON u.user_name = r.user_name
     WHERE LOWER(u.user_name) = ? OR LOWER(r.user_name) = ?',

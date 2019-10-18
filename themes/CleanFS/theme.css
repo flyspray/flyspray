@@ -218,7 +218,7 @@ caption { background: #eee; }
 }
 .clear {clear: both;}
 .fade {color: gray; background: pink !important; border: 1px solid blue !important;}
-.search_hit {background: red !important; border: 1px solid green !important;}
+.search_hit {background: rgba(255,255,0,.4);}
 img:-moz-broken {
   /* show broken images */
   -moz-force-broken-image-icon: 1;
@@ -231,11 +231,7 @@ div.popup {
   border: #e1e1e1 1px solid;
   margin-top: 5px;
   padding: 5px;
-  -moz-box-shadow: 0px 1px 2px #f9f9f9;
-  -webkit-box-shadow: 0px 1px 2px #f9f9f9;
   box-shadow: 0px 1px 2px #f9f9f9;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
 }
 
 /* ------------------ STYLE -------------------- */
@@ -243,7 +239,7 @@ body {background: #f9f9f9; /* direction:rtl;*/}
 a {color: #336699;}
 a:hover {color: #6699cc;}
 #container { min-width: 1000px; position: relative; text-align: left; }
-#content { padding: 10px 20px 10px 20px; min-width: 660px; }
+#content { padding: 0 20px 10px 20px; margin-top:10px; min-width: 660px; clear:both; }
 #footer {
   display: block;
   margin: 0px 20px 20px 20px;
@@ -373,11 +369,7 @@ div#mysearches td {vertical-align: middle;}
   /* Links */
   border: 1px solid #bbb;
   border-radius: 4px;
-  -moz-box-shadow: 0px 1px 1px #ddd;
-  -webkit-box-shadow: 0px 1px 1px #ddd;
   box-shadow: 0px 1px 1px #ddd;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
   font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
   font-size: 100%;
   line-height: 130%;
@@ -524,8 +516,9 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
-#tasklist_table thead tr th {line-height:1;}
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+#tasklist_table thead th {line-height:1;}
+#tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+.task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
@@ -651,11 +644,11 @@ table.inline td {border:1px solid #ccc; padding:4px;}
   padding:10px;
   box-shadow:0 0 400px #000;
   top:50%;
-  margin-top:-250px;
-  height:520px;
+  margin-top:-260px;
+  max-height:540px;
   left:50%;
-  width:300px;
-  margin-left:-150px;
+  width:360px;
+  margin-left:-180px;
   box-sizing:border-box;
 }
 #shortcutsmodal {
@@ -686,7 +679,7 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   border-radius: 3px;
 }
 #taskdetails #navigation {float: right;padding:6px;}
-#taskdetails h2 {color: #555;display:inline-block;}
+#taskdetails h2 {color: #555;display:inline-block;max-width:100%;/* for word-wrap working chrome+safari */}
 #taskdetailsfull p,
 #taskdetailsfull li,
 .commenttext p,
@@ -698,6 +691,7 @@ max-width:40em;
 #taskdetailsfull h2,
 .commenttext{
 	word-wrap:break-word;
+	word-wrap:anywhere; /* css3, firefox65+ */
 }
 .group.inactive{ background-color:#eee;}
 .tag {
@@ -1186,27 +1180,21 @@ ul.slim .userSelectWidget select {width:100%;}
 .perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
 .perms .everybody > * { background-color: #6c6; }
 
-/* closing task form */
+/* closing and requestreopen task form */
+div#requestreopen,
 div#closeform {
   border-radius: 3px;
-  -moz-box-shadow: 0px 1px 1px #dddddd;
-  -webkit-box-shadow: 0px 1px 1px #dddddd;
-  box-shadow: 0px 1px 1px #dddddd;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+  box-shadow: 0px 1px 1px #ddd;
   padding: 2em;
   position: absolute;
   right: 5px;
   top: 3em;
   z-index:300;
 }
+/* 'quick actions' on the right side */
 #actionsform {
     border-radius: 3px;
-    -moz-box-shadow: 0px 1px 1px #dddddd;
-    -webkit-box-shadow: 0px 1px 1px #dddddd;
-    box-shadow: 0px 1px 1px #dddddd;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color')";
-    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=90, Color='$color');
+	box-shadow: 0px 1px 1px #ddd;
     position: absolute;
     right: 5px;
     top: 3em;

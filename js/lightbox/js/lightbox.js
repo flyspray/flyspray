@@ -52,7 +52,7 @@ LightboxOptions = Object.extend({
     overlayOpacity: 0.8,   // controls transparency of shadow overlay
 
     animate: true,         // toggles resizing animations
-    resizeSpeed: 7,        // controls the speed of the image resizing animations (1=slowest and 10=fastest)
+    resizeSpeed: 10,        // controls the speed of the image resizing animations (1=slowest and 10=fastest)
 
     borderSize: 10,         //if you adjust the padding in the CSS, you will need to update this variable
 
@@ -164,7 +164,7 @@ Lightbox.prototype = {
 
 		$('overlay').hide().observe('click', (function() { this.end(); }).bind(this));
 		$('lightbox').hide().observe('click', (function(event) { if (event.element().id == 'lightbox') this.end(); }).bind(this));
-		$('outerImageContainer').setStyle({ width: size, height: size });
+		//$('outerImageContainer').setStyle({ width: size, height: size });
 		$('prevLink').observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage - 1); }).bindAsEventListener(this));
 		$('nextLink').observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage + 1); }).bindAsEventListener(this));
 		$('loadingLink').observe('click', (function(event) { event.stop(); this.end(); }).bind(this));
@@ -205,8 +205,8 @@ Lightbox.prototype = {
         $$('select', 'object', 'embed').each(function(node){ node.style.visibility = 'hidden' });
 
         // stretch overlay to fill page and fade in
-        var arrayPageSize = this.getPageSize();
-        $('overlay').setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
+        //var arrayPageSize = this.getPageSize();
+        //$('overlay').setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
 
         new Effect.Appear(this.overlay, { duration: this.overlayDuration, from: 0.0, to: LightboxOptions.overlayOpacity });
 
@@ -285,9 +285,9 @@ Lightbox.prototype = {
         // calculate size difference between new and old image, and resize if necessary
         var wDiff = widthCurrent - widthNew;
         var hDiff = heightCurrent - heightNew;
-
-        if (hDiff != 0) new Effect.Scale(this.outerImageContainer, yScale, {scaleX: false, duration: this.resizeDuration, queue: 'front'}); 
-        if (wDiff != 0) new Effect.Scale(this.outerImageContainer, xScale, {scaleY: false, duration: this.resizeDuration, delay: this.resizeDuration}); 
+   
+		//if (hDiff != 0) new Effect.Scale(this.outerImageContainer, yScale, {scaleX: false, duration: this.resizeDuration, queue: 'front'}); 
+		//if (wDiff != 0) new Effect.Scale(this.outerImageContainer, xScale, {scaleY: false, duration: this.resizeDuration, delay: this.resizeDuration}); 
 
         // if new and old image are same size and no scaling transition is necessary, 
         // do a quick pause to prevent image flicker.
@@ -298,9 +298,9 @@ Lightbox.prototype = {
         }
 
         (function(){
-            this.prevLink.setStyle({ height: imgHeight + 'px' });
-            this.nextLink.setStyle({ height: imgHeight + 'px' });
-            this.imageDataContainer.setStyle({ width: widthNew + 'px' });
+            //this.prevLink.setStyle({ height: imgHeight + 'px' });
+            //this.nextLink.setStyle({ height: imgHeight + 'px' });
+            //this.imageDataContainer.setStyle({ width: widthNew + 'px' });
 
             this.showImage();
         }).bind(this).delay(timeout / 1000);
@@ -345,8 +345,8 @@ Lightbox.prototype = {
                 duration: this.resizeDuration, 
                 afterFinish: (function() {
 	                // update overlay size and update nav
-	                var arrayPageSize = this.getPageSize();
-	                this.overlay.setStyle({ height: arrayPageSize[1] + 'px' });
+	                //var arrayPageSize = this.getPageSize();
+	                //this.overlay.setStyle({ height: arrayPageSize[1] + 'px' });
 	                this.updateNav();
                 }).bind(this)
             } 

@@ -791,54 +791,68 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 	}
   }
 
-    /**
-     * Check if a user provided the right credentials
-     * @param string $username
-     * @param string $password
-     * @param string $method '', 'oauth', 'ldap', 'native'
-     * @access public static
-     * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
-     * @version 1.0
-     */
-    public static function checkLogin($username, $password, $method = 'native')
-    {
-        global $db;
 
-		$email_address = $username;  //handle multiple email addresses
-		$temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?",$email_address);
-		$user_id = $db->fetchRow($temp);
-		$user_id = $user_id["id"];
-
+	public static function fetchAuthDetails($username, $method = 'native')
+	{
+		global $db;
+		if($method === 'ldap') {
+			$user_id = -42;
+		} else {
+			// handle multiple email addresses
+			$temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?", $username);
+			$user_id = $db->fetchRow($temp);
+			$user_id = $user_id["id"];
+		}
 		$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
-                                        lock_until, login_attempts
-                                FROM  {users_in_groups} uig
-                           LEFT JOIN  {groups} g ON uig.group_id = g.group_id
-                           LEFT JOIN  {users} u ON uig.user_id = u.user_id
-                               WHERE  u.user_id = ? OR u.user_name = ? AND g.project_id = ?
-                            ORDER BY  g.group_id ASC", array($user_id, $username, 0));
-
+		                              lock_until, login_attempts
+		                      FROM  {users_in_groups} uig
+		                      LEFT JOIN  {groups} g ON uig.group_id = g.group_id
+		                      LEFT JOIN  {users} u ON uig.user_id = u.user_id
+		                      WHERE  (u.user_id = ? OR u.user_name = ?) AND g.project_id = ?
+		                      ORDER BY  g.group_id ASC",
+		                     array($user_id, $username, 0));
 		$auth_details = $db->fetchRow($result);
+		if(!$result || (is_array($auth_details) && !count($auth_details))) {
+			return false;
+		}
+		if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
+			$db->query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
+			            WHERE user_id = ?',
+			           array($auth_details['user_id']));
+			$auth_details['account_enabled'] = 1;
+			$_SESSION['was_locked'] = true;
+		}
+		return $auth_details;
+	}
 
+	/**
+	 * Check if a user provided the right credentials
+	 * @param string $username
+	 * @param string $password
+	 * @param string $method '', 'oauth', 'ldap', 'native'
+	 * @access public static
+	 * @return integer user_id on success, 0 if account or user is disabled, -1 if password is wrong
+	 * @version 1.0
+	 */
+	public static function checkLogin($username, $password, $method = 'native')
+	{
+		$pwok = null;
+		if($method == 'oauth') {
+			// skip password check if the user is using oauth
+			$pwok = true;
+		} elseif($method === 'ldap') {
+			$pwok = Flyspray::checkForLDAPUser($username, $password);
+			if(!$pwok) {
+				return -1;
+			}
+		}
+
+		$auth_details = Flyspray::fetchAuthDetails($username, $method);
 		if($auth_details === false) {
 			return -2;
 		}
-		if(!$result || !count($auth_details)) {
-			return 0;
-		}
 
-        if ($auth_details['lock_until'] > 0 && $auth_details['lock_until'] < time()) {
-            $db->query('UPDATE {users} SET lock_until = 0, account_enabled = 1, login_attempts = 0
-                           WHERE user_id = ?', array($auth_details['user_id']));
-            $auth_details['account_enabled'] = 1;
-            $_SESSION['was_locked'] = true;
-        }
-
-		// skip password check if the user is using oauth
-		if($method == 'oauth'){
-			$pwok = true;
-		} elseif( $method == 'ldap'){
-			$pwok = Flyspray::checkForLDAPUser($username, $password);
-		} else{
+		if(is_null($pwok)) {
 			// encrypt the password with the method used in the db
 			if(substr($auth_details['user_pass'],0,1)!='$' && (
 			           strlen($auth_details['user_pass'])==32
@@ -873,7 +887,7 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 		}
 
 		return ($auth_details['account_enabled'] && $auth_details['group_open']) ? 0 : -1;
-    }
+	}
 
     static public function checkForOauthUser($uid, $provider)
     {
@@ -893,33 +907,38 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
     }
 
 	/**
-	* 20150320 just added from provided patch, untested!
-	*/
+	 * Check if a LDAP user exists and binds
+	 * @param string $username
+	 * @param string $password
+	 * @access public static
+	 * @return bool
+	 */
 	public static function checkForLDAPUser($username, $password)
 	{
-		# TODO: add to admin settings area, maybe let user set the config at final installation step
-		$ldap_host = 'ldaphost';
-		$ldap_port = '389';
-		$ldap_version = '3';
-		$base_dn = 'OU=SBSUsers,OU=Users,OU=MyBusiness,DC=MyDomain,DC=local';
-		$ldap_search_user = 'ldapuser@mydomain.local';
-		$ldap_search_pass = "ldapuserpass";
-		$filter = "SAMAccountName=%USERNAME%"; // this is for AD - may be different with other setups
-		$username = $username;
+		global $conf, $db, $fs;
+
+		$ldap_uri =         isset($conf['ldap']['uri']) ? $conf['ldap']['uri'] : null; # ldap://example.com:389 
+		$ldap_version =     isset($conf['ldap']['version']) ? $conf['ldap']['version'] : 3; 
+		$base_dn =          $conf['ldap']['base_dn'];      # ou=users,dc=example,dc=com
+		$ldap_search_user = $conf['ldap']['search_user'];  # cn=admin,dc=example,dc=com
+		$ldap_search_pass = $conf['ldap']['search_pass'];  #
+		$filter =           $conf['ldap']['filter'];       # uid=%USERNAME%
+		$lf_name =          isset($conf['ldap']['field_name']) ? $conf['ldap']['field_name'] : 'cn';
+		$lf_email =         isset($conf['ldap']['field_email']) ? $conf['ldap']['field_email'] : 'mail';
 
 		if (strlen($password) == 0){ // LDAP will succeed binding with no password on AD (defaults to anon bind)
 			return false;
 		}
 
-		$rs = ldap_connect($ldap_host, $ldap_port);
+		$rs = ldap_connect($ldap_uri);
 		@ldap_set_option($rs, LDAP_OPT_PROTOCOL_VERSION, $ldap_version);
 		@ldap_set_option($rs, LDAP_OPT_REFERRALS, 0);
 		$ldap_bind_dn = empty($ldap_search_user) ? NULL : $ldap_search_user;
 		$ldap_bind_pw = empty($ldap_search_pass) ? NULL : $ldap_search_pass;
 		if (!$bindok = @ldap_bind($rs, $ldap_bind_dn, $ldap_search_pass)){
-			// Uncomment for LDAP debugging
-			$error_msg = ldap_error($rs);
-			die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+			# Uncomment for LDAP debugging
+			#$error_msg = ldap_error($rs);
+			#die("Couldn't bind using ".$ldap_bind_dn."@".$ldap_uri." Because:".$error_msg);
 			return false;
 		} else{
 			$filter_r = str_replace("%USERNAME%", $username, $filter);
@@ -933,12 +952,33 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 			}
 			$first_user = $result_user[0];
 			$ldap_user_dn = $first_user["dn"];
-			// Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
+			# Bind with the dn of the user that matched our filter (only one user should match sAMAccountName or uid etc..)
 			if (!$bind_user = @ldap_bind($rs, $ldap_user_dn, $password)){
-				$error_msg = ldap_error($rs);
-				die("Couldn't bind using ".$ldap_user_dn."@".$ldap_host.":".$ldap_port." Because:".$error_msg);
+				#$error_msg = ldap_error($rs);
+				#die("Couldn't bind using ".$ldap_user_dn."@".$ldap_uri." Because:".$error_msg);
 				return false;
 			} else{
+				# Create user if it doesn't exist
+				$result = $db->query("SELECT user_id
+					              FROM {users}
+						      WHERE user_name = ?", array($username));
+				$user_id = $db->fetchRow($result);
+				if (!$result || !$user_id) {
+					$group_in = $fs->prefs['anon_group'];
+					$success  = Backend::create_user(
+						$username,                    // login
+						null,                         // password
+						$first_user[$lf_name][0],     // name
+						'',                           // jabber id
+						$first_user[$lf_email][0],    // email
+						1,                            // notify type
+						(intval(strftime("%z"))/100), // time zone
+						$group_in,                    // group in
+						1);                           // enabled
+					if(!$success) {
+						die('Unable to register new LDAP user');
+					}
+				}
 				return true;
 			}
 		}
@@ -993,21 +1033,37 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
      * @version 1.0
      * @notes smile intented
      */
-    public static function startSession()
-    {
-    	global $conf;
-        if (defined('IN_FEED') || php_sapi_name() === 'cli') {
-            return;
-        }
+	public static function startSession()
+	{
+		global $conf;
+		if (defined('IN_FEED') || php_sapi_name() === 'cli') {
+			return;
+		}
 
-        $url = parse_url($GLOBALS['baseurl']);
-        session_name('flyspray');
-        session_set_cookie_params(0,$url['path'],'', (isset($conf['general']['securecookies'])? $conf['general']['securecookies']:false), TRUE);
-        session_start();
-        if(!isset($_SESSION['csrftoken'])){
-                $_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
-        }
-    }
+		$url = parse_url($GLOBALS['baseurl']);
+		session_name('flyspray');
+		session_set_cookie_params(0,$url['path'],'', (isset($conf['general']['securecookies'])? $conf['general']['securecookies']:false), TRUE);
+		session_start();
+		if(!isset($_SESSION['csrftoken'])){
+			$_SESSION['csrftoken']=rand(); # lets start with one anti csrf token secret for the session and see if it's simplicity is good enough (I hope together with enforced Content Security Policies)
+		}
+	
+		/**
+		 * For the access key help: differences of browser and operating system combinations.
+		 * As it is relative expensive and very slow below PHP 7.1.1:
+		 * only do that once per user session and
+		 * only on newer php versions and
+		 * only if a browscap file is installed.
+		 * lite_php_browscap.ini from browscap.org should be sufficient. 
+		 * (below 1ms on a linux with php7.3 in virtualbox on old laptop)
+		*/
+		if (!isset($_SESSION['ua']) && version_compare(PHP_VERSION, '7.1.1') >= 0 && ini_get('browscap')){
+			$ua = get_browser(null, true);
+			$_SESSION['ua'] = array();
+			$_SESSION['ua']['platform'] = $ua['platform'];
+			$_SESSION['ua']['browser'] = $ua['browser'];
+		}
+	}
 
     /**
      * Compares two tasks and returns an array of differences

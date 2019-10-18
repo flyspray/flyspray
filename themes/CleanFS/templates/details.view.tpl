@@ -125,6 +125,13 @@
               </form>
             </li>
             <?php endif; ?>
+	    
+	    <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+            <li>
+                <a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
+            </li>
+            <?php endif; ?>
+	    
             <li>
                 <a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('depgraph')); ?></a>
             </li>
@@ -137,12 +144,6 @@
               FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
               <button type="submit" name="submit"><?php echo Filters::noXSS(L('add')); ?></button>
               </form>
-            </li>
-            <?php endif; ?>
-
-            <?php if ($proj->id && $user->perms('open_new_tasks')): ?>
-            <li>
-                <a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?php echo Filters::noXSS(L('addnewsubtask')); ?></a>
             </li>
             <?php endif; ?>
 
@@ -346,7 +347,7 @@ function quick_edit(elem, id)
 						<select id="tasktype" name="task_type">
 							<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 						</select>
-						<br/><a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a></span>
+						<br/><a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?php echo Filters::noXSS(L('confirmedit')); ?></a><a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?php echo Filters::noXSS(L('canceledit')); ?></a>
 					</div>
 				</span>
 			<?php endif; ?></li>
@@ -719,7 +720,7 @@ function quick_edit(elem, id)
             <tr>
                 <td><?php echo $dependency['task_id'] ?></td>
                 <td><?php echo $dependency['project_title'] ?></td>
-                <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
+                <td class="task_summary"><?php echo tpl_tasklink($dependency['task_id']); ?></td>
                 <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
@@ -766,7 +767,7 @@ function quick_edit(elem, id)
             <tr>
                 <td><?php echo $dependency['task_id'] ?></td>
                 <td><?php echo $dependency['project_title'] ?></td>
-                <td><?php echo tpl_tasklink($dependency['task_id']); ?></td>
+                <td class="task_summary"><?php echo tpl_tasklink($dependency['task_id']); ?></td>
                 <td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
                 <td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->
                     severities[$dependency['task_severity']] ?>
@@ -821,7 +822,7 @@ function quick_edit(elem, id)
             <tr id="task<?php echo $subtask['task_id']; ?>" class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>">
                 <td><?php echo $subtask['task_id'] ?></td>
                 <td><?php echo $subtask['project_title'] ?></td>
-                <td><?php echo tpl_tasklink($subtask['task_id']); ?></td>
+                <td class="task_summary"><?php echo tpl_tasklink($subtask['task_id']); ?></td>
                 <td><?php echo $fs->priorities[$subtask['task_priority']] ?></td>
                 <td class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>"><?php echo $fs->severities[$subtask['task_severity']]
                     ?>

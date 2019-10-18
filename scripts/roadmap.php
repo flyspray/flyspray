@@ -18,7 +18,7 @@ if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $
 } else{
 
 	if($proj->prefs['use_effort_tracking']){
-	    require_once(BASEDIR . '/includes/class.effort.php');
+	    require_once BASEDIR . '/includes/class.effort.php';
 	}
 
 
@@ -28,7 +28,7 @@ if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $
 	$milestones = $db->query('SELECT   version_id, version_name
                           FROM     {list_version}
                           WHERE    (project_id = ? OR project_id=0) AND version_tense = 3
-                          ORDER BY list_position ASC', 
+                          ORDER BY list_position ASC',
 		array($proj->id));
 
 	$data = array();

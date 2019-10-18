@@ -12,7 +12,7 @@ if (!defined('IN_FS')) {
 }
 
 // Need to get function ConvertSeconds
-require_once(BASEDIR . '/includes/class.effort.php');
+require_once BASEDIR . '/includes/class.effort.php';
 
 if (!$user->can_select_project($proj->id)) {
     $proj = new Project(0);
@@ -84,7 +84,7 @@ while ($row = $db->fetchRow($result)) {
 $page->assign('userlist', $userlist);
 
 /**
- * tpl function that Displays a header cell for report list 
+ * tpl function that Displays a header cell for report list
  */
 function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
@@ -276,14 +276,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
         case 'private':
             $value = $task[$indexes[$colname]] ? L('yes') : L('no');
             break;
-            
+
         case 'commentedby':
         case 'openedby':
         case 'editedby':
         case 'closedby':
                 $value = '';
                 # a bit expensive! tpl_userlinkavatar()  an additional sql query for each new user in the output table
-                # at least tpl_userlink() uses a $cache array so query for repeated users 
+                # at least tpl_userlink() uses a $cache array so query for repeated users
 		if ($task[$indexes[$colname]] > 0) {
 			# deactivated: avatars looks too ugly in the tasklist, user's name needs to be visible on a first look here, without needed mouse hovering..
 			#if ($fs->prefs['enable_avatars']==1){
@@ -293,7 +293,7 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 			#}
 		}
                 break;
-                
+
         case 'parent':
             $value = '';
             if ($task['supertask_id'] > 0) {
@@ -513,7 +513,7 @@ if (Get::val('toggleadvanced')) {
  */
 if(Get::has('hideupdatemsg')) {
 	unset($_SESSION['latest_version']);
-} else if ($conf['general']['update_check'] 
+} else if ($conf['general']['update_check']
 	&& $user->perms('is_admin')
 	&& $fs->prefs['last_update_check'] < time()-60*60*24*3) {
 	if (!isset($_SESSION['latest_version'])) {
