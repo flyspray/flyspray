@@ -1023,9 +1023,15 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
 
         return $ret;
     }
-
-    function _xmlEntities($string) {
-        return htmlspecialchars($string);
+    
+    /**
+     * Escape string for output
+     *
+     * @param $string
+     * @return string
+     */
+    public function _xmlEntities($string) {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     }
 
     /**
