@@ -777,12 +777,36 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     /**
      * Renders an RSS feed
      *
+     * Intentional castrated for Flyspray to only output an external link.
+     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function rss ($url,$params){
+    function rss($url, $params){
         global $lang;
         global $conf;
 
+        # Fix for Flyspray: We do not want users able to include RSS feeds in Flyspray tasks/comments or Flyspray doing requests to user provided urls.
+        # So only provide the link to the provided RSS feed and skip this dokuwiki feature.
+        $link['target'] = $conf['target']['extern'];
+        $link['style']  = '';
+        $link['pre']    = '';
+        $link['suf']    = '';
+        $link['more']   = '';
+        $link['class']  = 'urlextern rsslink';
+        $link['url']    = $url;
+        # icon also possible with just ::before or ::after CSS, but you can also shift the fontawesome icon 
+        # with a little theme CSS like a.rsslink i {float left; padding:0.2em;}
+        $link['name']   = $this->_xmlEntities($url).' <i class="fa fa-rss-square"></i>'; 
+        $link['title']  = $this->_xmlEntities($url);
+
+        if($conf['relnofollow']) $link['more'] .= ' rel="nofollow"';
+
+        $this->doc .= $this->_formatLink($link);
+
+        # FeedParser.php (for SimplePie) is not included with Flyspray for a good reason and returning early here prevents unnecessary warning.
+        return;
+        # end of Fix for Flyspray
+        
         require_once(DOKU_INC.'inc/FeedParser.php');
         $feed = new FeedParser();
         $feed->feed_url($url);
