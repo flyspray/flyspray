@@ -803,7 +803,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
 
         $this->doc .= $this->_formatLink($link);
 
-        # FeedParser.php (for SimplePie) is not included with Flyspray for a good reason and returning early here prevents unnecessary warning.
+        # FeedParser.php (for SimplePie) is not included with Flyspray for a good reason and returning early here prevents fatal error.
         return;
         # end of Fix for Flyspray
         
