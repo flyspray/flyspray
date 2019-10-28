@@ -779,6 +779,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * Intentional castrated for Flyspray to only output an external link.
      *
+     * @param string $url    URL of the feed
+     * @param array  $params Finetuning of the output
+     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function rss($url, $params){
@@ -826,7 +829,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $mod   = 1;
             $start = 0;
             $end   = $feed->get_item_quantity();
-            $end   = ($end > $params['max']) ? $params['max'] : $end;;
+            $end   = ($end > $params['max']) ? $params['max'] : $end;
         }
 
         $this->doc .= '<ul class="rss">';
@@ -841,7 +844,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                     if($author){
                         $name = $author->get_name();
                         if(!$name) $name = $author->get_email();
-                        if($name) $this->doc .= ' '.$lang['by'].' '.$name;
+                        if($name) $this->doc .= ' '.$lang['by'].' '.hsc($name);
                     }
                 }
                 if($params['date']){
