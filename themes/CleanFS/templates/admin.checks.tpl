@@ -34,21 +34,32 @@
 .dbtable{ background-color:#ccc;}
 .dbtable td {border-bottom:1px solid #999;}
 .dbfield{ background-color:#eee;}
+
+#toggledbinfo { display:none; }
+#toggledbinfo ~ #toggledbinfolabel:after { content:'Hide connection info'; }
+#toggledbinfo:checked ~ #toggledbinfolabel::after { content:'Show connection info'; }
+#toggledbinfo:checked ~ #dbinfo { display:none; }
+
 #togglefields { display:none; }
-#togglefields ~ label:after { content:'Hide Fields'; }
-#togglefields:checked ~ label:after { content:'Show Fields'; }
+#togglefields ~ #togglefieldslabel:after { content:'Hide Fields'; }
+#togglefields:checked ~ #togglefieldslabel::after { content:'Show Fields'; }
 #togglefields:checked ~ #dbtables .dbfield { display:none; }
 </style>
-<div>
-<div>default_character_set_name: <?=$fsdb['default_character_set_name'] ?></div>
-<div>default_collation_name: <?=$fsdb['default_collation_name'] ?></div>
+<div><?= $conf['database']['dbtype'] ?></div>
+<div>Default character set: <?= Filters::noXSS($fsdb['default_character_set_name']) ?></div>
+<div>Default collation: <?= Filters::noXSS($fsdb['default_collation_name']) ?></div>
+<input type="checkbox" id="toggledbinfo" name="toggledbinfo" checked="checked" />
+<label for="toggledbinfo" class="button" id="toggledbinfolabel"></label>
+<div id="dbinfo">
+	<pre><?php global $db; echo Filters::noXSS(print_r($db->dblink, true)); ?></pre>       
 </div>
+<br/>
 <input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
-<label for="togglefields" class="button"></label>
+<label for="togglefields" class="button" id="togglefieldslabel"></label>
 <table id="dbtables">
 <thead>
 <tr class="dbtable">
-<th>tabl_name</th>
+<th>table_name</th>
 <th>table_type</th>
 <th></th>
 <th>default collation</th>
