@@ -159,6 +159,9 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
 
 		} elseif($db->dbtype=='pgsql'){
+			$fsdb=$db->query("SELECT datcollate AS default_collation_name, datctype AS default_character_set_name FROM pg_database WHERE datname=?", array($db->dblink->database));
+                        $page->assign('fsdb', $db->fetchRow($fsdb));
+			
 			$fstables=$db->query("SELECT table_name, '' AS table_collation, table_type, '' AS create_options, '-' AS table_comment
 				FROM INFORMATION_SCHEMA.tables
 				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
