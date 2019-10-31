@@ -1,0 +1,78 @@
+/* I'm not a designer, feel free to improve! */
+@media (prefers-color-scheme: dark) {
+
+body {background-color:#222; color:#ccc;}
+.button, button,
+input[type="submit"],
+input[type="text"],
+input[type="password"],
+fieldset,
+body.toplevel .box,
+div.box,
+p.box,
+div.roadmap,
+.descbox,
+#toolboxmenu a.active,
+#submenu a.active, #search, #search fieldset,
+#intromessage, #toolbox, #toolbox div.tab,
+#tasklist, #taskdetails, #taskfields, #taskdetails #showvotes, #comments,
+#related, #notify, #remind,
+#effort,
+#history, #events,
+div#taskclosed, #tasklist_table th,
+#controlBox, #shortcuts{
+  background-color: #333;
+}
+div.comment_container .comment_header {background-color: #444; border-bottom:#555;}
+#comments{border-color:#333;}
+body.toplevel .box {border-color:#444;}
+div.comment_container .comment {border-color:#444;}
+div.comment_container .comment::before {border-right-color:#555;}
+div.comment_container .comment::after {border-right-color:#444;}
+div.comment_container .attachments, div.comment_container .links{background-color:#666; border-color:#333;}
+div.comment_container .comment_header_usertype {border-color:#333;}
+.cke_chrome {border-color:#444 !important;}
+.cke_bottom, .cke_top {background:#444 !important;box-shadow:none !important;}
+.cke_toolgroup {background: #ddd !important;}
+#taskdetails{border-color:#444;}
+#taskdetails h2{color:#ccc;}
+#intromessage {border-color:#444;}
+#taskinfo {border-top-color:#444;}
+#taskfields {border-right-color:#555;}
+#taskfields ul.fieldslist > li:nth-child(2n-1){background-color:#393939;}
+#search, #tasklist {border-color:#555;}
+#tasklist_table tr.current_row td.caret {color:#fff;}
+#tasklist_table tbody tr:hover td{border-color:#555;}
+#submenu a{color:#69c;background-color:#444;border-color:#333;}
+#submenu a:hover {background-color:#333;border-color:#444;border-bottom-color:#333;}
+#submenu a.active{border-bottom-color:#333;}
+#shortcuts{border-color:#444;}
+div.roadmap {border-color:#444;}
+.progress_bar_container span {color:#eee; text-shadow: 0 0 6px #000;}
+.progress_bar_container {background-color:#111;}
+
+/* works not in every browser .. */
+option:active { background:linear-gradient(#6c3, #6c3); }
+option:checked { background:linear-gradient(#693, #693); }
+
+#toolbox {border-color:#444;}
+#toolbox div.tab {border-color:#444;}
+#toolboxmenu a {background-color:#444;color:#ccc;border-color:#333;}
+#toolboxmenu a:hover {background-color:#333;color:#eee;border-color:#222;}
+#toolboxmenu a.active {color:#fff;border-color:#555;border-left-color:#78bf34;}
+#disp_intro:not(:checked) ~ .disp_introdep { background-color:#666;}
+#disp_intro:not(:checked) ~ .disp_introdep select, #disp_intro:not(:checked) ~ .disp_introdep textarea{ background-color:#444;color:#666;}
+.double_select .dualselect_selectable {background-color:#333;color:#fff;}
+select, .double_select .dualselect_selected select {background-color:#444;color:#fff;border-color:#666;}
+.button, button, input[type="submit"]{
+        color:#ccc;
+        box-shadow: 0 1px 1px #000;
+        border-color:#222;
+}
+kbd{color:#333;background-color:#ccc;}
+input[type="text"], input[type="password"]{color:#fff;border-color:#555;}
+ul.form_elements label {color:#ccc;}
+a, button.fakelinkbutton {color:#9cf;}
+img {opacity: .75; transition: opacity .5s ease-in-out;}
+img:hover {opacity: 1;}
+}
