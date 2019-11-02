@@ -40,7 +40,8 @@ div.comment_container .comment_header_usertype {border-color:#333;}
 #taskinfo {border-top-color:#444;}
 #taskfields {border-right-color:#555;}
 #taskfields ul.fieldslist > li:nth-child(2n-1){background-color:#393939;}
-#search, #tasklist {border-color:#555;}
+#search, #tasklist {border-color:#444;}
+#search fieldset {border-color:#444;}
 #tasklist_table tr.current_row td.caret {color:#fff;}
 #tasklist_table tbody tr:hover td{border-color:#555;}
 #submenu a{color:#69c;background-color:#444;border-color:#333;}
@@ -54,7 +55,18 @@ div.roadmap {border-color:#444;}
 /* works not in every browser .. */
 option:active { background:linear-gradient(#6c3, #6c3); }
 option:checked { background:linear-gradient(#693, #693); }
-
+#search #searchtext:not(:placeholder-shown), 
+#search #duedatefrom:not(:placeholder-shown), 
+#search #duedateto:not(:placeholder-shown), 
+#search #changedfrom:not(:placeholder-shown), 
+#search #changedto:not(:placeholder-shown),
+#search #openedfrom:not(:placeholder-shown),
+#search #openedto:not(:placeholder-shown),
+#search #closedfrom:not(:placeholder-shown),
+#search #closedto:not(:placeholder-shown),
+#search input.users:not(:placeholder-shown) {
+    background-color:#360;
+}
 #toolbox {border-color:#444;}
 #toolbox div.tab {border-color:#444;}
 #toolboxmenu a {background-color:#444;color:#ccc;border-color:#333;}
