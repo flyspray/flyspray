@@ -1027,18 +1027,18 @@ div#taskdeps {float: left;width: 50%; margin-bottom: 8px;}
 div#subtasks {display: inline;align: right;float: left;width: 50%;margin-bottom: 8px;}
 div#taskblocks { float: left; width: 45%;}
 a.datelink {
-  background-image: url(img/black/calendar_alt_fill_16x16.png);
-  background-repeat: no-repeat;
-  display: -moz-inline-stack;
-  /* optional */
-  display: inline-block;
-  zoom: 1;
-  /* triggers hasLayout for IE */
-  *display: inline;
-  /* target IE7 only */
-  height: 16px;
-  width: 16px;
-  vertical-align: middle;
+	display:inline-block;
+	vertical-align: middle;
+}
+a.datelink::before {
+        font-family:fontawesome;
+        content:"\f133";
+        color:#555;
+        font-size:large;
+}
+a.datelink:hover::before {
+        content:"\f073";
+        color:#000;
 }
 hr { /*color: $box_border;*/ border: none; border-top: 1px solid #e1e1e1;}
 .perms{display:inline-block;vertical-align:top;}
