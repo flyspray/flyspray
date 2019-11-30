@@ -1408,7 +1408,7 @@ function pagenums($pagenum, $perpage, $totalcount)
 
 		$neighborsprev=2;
 		$neighborsnext=2;
-	
+
 		$start  = max(1, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
 		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
 
@@ -1422,7 +1422,7 @@ function pagenums($pagenum, $perpage, $totalcount)
 			#$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
 
 			if ($start==3){
-				$output .= sprintf('<a href="%s">%d</a>', $url, $pagenum);
+				$output .= sprintf('<a href="%s">%d</a>', $url, 2);
 			} elseif ($start>3) {
 				$output .= '<span class="ellipsis"></span>';
 			}
