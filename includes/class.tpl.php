@@ -1415,7 +1415,7 @@ function pagenums($pagenum, $perpage, $totalcount)
         }
         if ($pagenum > 1) {
             $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
-		$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">&lt; %s</a>', $url, eL('previous'), eL('previous'));
+		$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
         }
 
         for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
