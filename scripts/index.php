@@ -127,11 +127,14 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 
 
 	$new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
-	# unneeded params from $_GET for the sort links
+	# unneeded or duplicate params from $_GET for the sort links
 	$params=array_merge($_GET, $new_order);
 	unset($params['do']);
 	unset($params['project']);
 	unset($params['switch']);
+	# resorting a search result should show always the first results 
+        unset($params['pagenum']);
+	
 	$html = sprintf('<a title="%s" href="%s">%s</a>',
 		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html);
 
