@@ -65,7 +65,8 @@ body a.button.positive, body button.positive,
 #menu-list a.active, #menu-list a.active:hover,
 #s_loginbox:checked ~ #show_loginbox,
 #s_quickactions:checked ~ #actions,
-#menu-list a#show_loginbox:hover {
+#menu-list a#show_loginbox:hover,
+.pagenums .active {
 	background-color: #5f9729;
 }
 body a.button.positive, body button.positive {
@@ -423,7 +424,16 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border-radius: 3px;
 }
 #tasklist_table {width: 100%;}
-span.pagenums:before{ content:"--";padding-left:10px;padding-right:10px;}
+.pagenums a, .pagenums .active {
+	padding:0.2em 0.4em;
+	margin-left:0.1em;
+	margin-right:0.1em;
+}
+.pagenums a { border:1px solid #ddd; background-color:#fff;}
+.pagenums a.first::before { content:'<<';padding-right:0.5em;}
+.pagenums a.previous::before { content:'<';padding-right:0.5em;}
+.pagenums a.next::after { content:'>';padding-left:0.5em;}
+.pagenums a.last::after { content:'>>';padding-left:0.5em;}
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
