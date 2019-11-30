@@ -424,7 +424,9 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border-radius: 3px;
 }
 #tasklist_table {width: 100%;}
+.pagenums{display:inline-block;}
 .pagenums a, .pagenums .active {
+	display:inline-block;
 	padding:0.2em 0.4em;
 	margin-left:0.1em;
 	margin-right:0.1em;
