@@ -69,7 +69,7 @@ body a.button.positive, body button.positive,
 .pagenums .active {
 	background-color: #5f9729;
 }
-body a.button.positive, body button.positive {
+body a.button.positive, body button.positive, .pagenums .active {
 	color: #fff;
 }
 
@@ -427,11 +427,15 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 .pagenums{display:inline-block;}
 .pagenums a, .pagenums .active {
 	display:inline-block;
-	padding:0.2em 0.4em;
 	margin-left:0.1em;
 	margin-right:0.1em;
 }
-.pagenums a { border:1px solid #ddd; background-color:#fff;}
+.pagenums .active {padding:0.2em 0.5em;}
+.pagenums a {
+	padding:0.2em 0.4em;
+	border:1px solid #ddd;
+	background-color:#fff;
+}
 .pagenums a.first::before { content:'<<';padding-right:0.5em;}
 .pagenums a.previous::before { content:'<';padding-right:0.5em;}
 .pagenums a.next::after { content:'>';padding-left:0.5em;}
