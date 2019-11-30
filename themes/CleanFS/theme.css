@@ -429,6 +429,9 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 	display:inline-block;
 	margin-left:0.1em;
 	margin-right:0.1em;
+	min-width:1em;
+	border-radius:3px;
+	text-align:center;
 }
 .pagenums .active {padding:0.2em 0.5em;}
 .pagenums a {
