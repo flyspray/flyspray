@@ -1386,59 +1386,77 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
  */
 function pagenums($pagenum, $perpage, $totalcount)
 {
-    global $proj;
-    $pagenum = intval($pagenum);
-    $perpage = intval($perpage);
-    $totalcount = intval($totalcount);
+	global $proj;
+	$pagenum = intval($pagenum);
+	$perpage = intval($perpage);
+	$totalcount = intval($totalcount);
 
-    // Just in case $perpage is something weird, like 0, fix it here:
-    if ($perpage < 1) {
-        $perpage = $totalcount > 0 ? $totalcount : 1;
-    }
-    $pages  = ceil($totalcount / $perpage);
-    $output = sprintf(eL('page'), $pagenum, $pages);
+	// Just in case $perpage is something weird, like 0, fix it here:
+	if ($perpage < 1) {
+		$perpage = $totalcount > 0 ? $totalcount : 1;
+	}
+	$pages  = ceil($totalcount / $perpage);
+	$output = '<span class="pagerange">'.sprintf(eL('page'), $pagenum, $pages).'</span>';
 
-    if ( $totalcount / $perpage > 1 ) {
- 	$params=$_GET;
- 	# unset some to avoid unneeded or duplicated parameters for createURL()
-	unset($params['do']); # 1th paramater of createURL()
-	unset($params['project']); # 2th parameter of CreateURL() 
-	unset($params['switch']); # not needed
-        $output .= '<nav class="pagenums" aria-label="Search results pages">';
+	if ( $totalcount / $perpage > 1 ) {
+		$params=$_GET;
+		# unset some to avoid unneeded or duplicated parameters for createURL()
+		unset($params['do']); # 1th paramater of createURL()
+		unset($params['project']); # 2th parameter of createURL() 
+		unset($params['switch']); # not needed
+		$output .= '<nav class="pagenums" aria-label="Search results pages">';
 
-        $start  = max(1, $pagenum - 4 + min(2, $pages - $pagenum));
-        $finish = min($start + 4, $pages);
+		$neighborsprev=2;
+		$neighborsnext=2;
+	
+		$start  = max(1, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
+		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
 
-        if ($start > 1) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
-            $output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), eL('first'));
-        }
-        if ($pagenum > 1) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
-		$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
-        }
+		if ($start > 1) {
+			$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
+			#$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), eL('first'));
+			$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), 1);
+		}
+		if ($pagenum > 1) {
+			#$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
+			#$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
 
-        for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
-            if ($pagelink == $pagenum) {
-                $output .= sprintf('<span class="active">%d</span>', $pagelink);
-            } else {
-                $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
-                $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
-            }
-        }
+			if ($start==3){
+				$output .= sprintf('<a href="%s">%d</a>', $url, $pagenum);
+			} elseif ($start>3) {
+				$output .= '<span class="ellipsis"></span>';
+			}
+		}
 
-        if ($pagenum < $pages) {
-            $url =  Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
-            $output .= sprintf('<a class="next" accesskey="n" href="%s" aria-label="%s">%s</a>', $url, eL('next'), eL('next'));
-        }
-        if ($finish < $pages) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
-            $output .= sprintf('<a class="last" href="%s" aria-label="%s">%s</a>', $url, eL('last'), eL('last'));
-        }
-        $output .= '</nav>';
-    }
+		for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
+			if ($pagelink == $pagenum) {
+				$output .= sprintf('<span class="active">%d</span>', $pagelink);
+			} else {
+				$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
+				$output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
+			}
+		}
 
-    return $output;
+		if ($pagenum < $pages) {
+			#$url =  Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
+			#$output .= sprintf('<a class="next" accesskey="n" href="%s" aria-label="%s">%s</a>', $url, eL('next'), eL('next'));
+
+			if($finish == ($pages-2)){
+				$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages - 1 ))));
+				$output .= sprintf('<a href="%s">%d</a>', $url, $pages-1);
+			} else if ($finish < ($pages-2)) {
+				$output .= '<span class="ellipsis"></span>';
+			}
+		}
+		if ($finish < $pages) {
+			$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
+			#$output .= sprintf('<a class="last" href="%s" aria-label="%s">%s</a>', $url, eL('last'), eL('last'));
+			$output .= sprintf('<a class="last" href="%s" aria-label="%s">%s</a>', $url, eL('last'), $pages);
+		}
+		$output .= '</nav>';
+	}
+
+	return $output;
 }
 
 class Url {
