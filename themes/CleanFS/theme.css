@@ -440,6 +440,8 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
 .pagenums a.previous::before { content:'<';padding-right:0.5em;}
 .pagenums a.next::after { content:'>';padding-left:0.5em;}
 .pagenums a.last::after { content:'>>';padding-left:0.5em;}
+.pagenums span.ellipsis::before {content:'…';padding-left:0.5em;padding-right:0.5em;}
+.pagerange, .taskrange{padding-top:0.2em;padding-bottom:0.2em;}
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
