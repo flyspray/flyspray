@@ -34,8 +34,10 @@ if ($conf['general']['syntax_plugin'] == 'dokuwiki'){
 	$purifierconfig = HTMLPurifier_Config::createDefault();
 	if ($fs->prefs['relnofollow']) {
 		$purifierconfig->set('HTML.Nofollow', true);
-		#$purifierconfig->set('AutoFormat.Linkify',true);
 	}
+	# should be in sync with settings used by the real save
+	#$purifierconfig->set('AutoFormat.Linkify',true);
+	
 	$purifier = new HTMLPurifier($purifierconfig);
 	echo $purifier->purify(Post::val('text'));
 }
