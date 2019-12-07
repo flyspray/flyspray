@@ -1414,7 +1414,6 @@ function pagenums($pagenum, $perpage, $totalcount)
 		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
 
 		$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
-		$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), 1);
 		$firstactive = ($pagenum==1) ? 'first active' : 'first';
 		$output .= sprintf('<a class="%s" href="%s" aria-label="%s">%s</a>', $firstactive, $url, eL('first'), 1);
 		
