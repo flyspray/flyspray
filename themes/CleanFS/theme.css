@@ -239,8 +239,7 @@ div.popup {
 body {background: #f9f9f9; /* direction:rtl;*/}
 a {color: #336699;}
 a:hover {color: #6699cc;}
-#container { min-width: 1000px; position: relative; text-align: left; }
-#content { padding: 0 20px 10px 20px; margin-top:10px; min-width: 660px; clear:both; }
+#content { padding: 0 20px 10px 20px; margin-top:10px; clear:both; }
 #footer {
   display: block;
   margin: 0px 20px 20px 20px;
