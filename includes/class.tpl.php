@@ -1406,8 +1406,8 @@ function pagenums($pagenum, $perpage, $totalcount)
 		unset($params['switch']); # not needed
 		$output .= '<nav class="pagenums" aria-label="Search results pages">';
 
-		$neighborsprev=2;
-		$neighborsnext=2;
+		$neighborsprev=5;
+		$neighborsnext=5;
 
 		$start  = max(1, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
 		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
@@ -1434,7 +1434,9 @@ function pagenums($pagenum, $perpage, $totalcount)
 				$output .= sprintf('<span class="active">%d</span>', $pagelink);
 			} else {
 				$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
-				$output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
+				# Enables CSS themes to shorten the pagination bar by hiding some links on small screens by media queries.
+				$distclass= ($pagelink != 1 && abs($pagenum - $pagelink) > 2) ? ' class="distancefar"' : '';
+				$output .= sprintf('<a href="%s"%s>%d</a>', $url, $distclass, $pagelink);
 			}
 		}
 
