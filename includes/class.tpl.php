@@ -1396,7 +1396,8 @@ function pagenums($pagenum, $perpage, $totalcount)
 		$perpage = $totalcount > 0 ? $totalcount : 1;
 	}
 	$pages  = ceil($totalcount / $perpage);
-	$output = '<span class="pagerange">'.sprintf(eL('page'), $pagenum, $pages).'</span>';
+	$output = '';
+	$output .= '<span class="pagerange">'.sprintf(eL('page'), $pagenum, $pages).'</span>';
 
 	if ( $totalcount / $perpage > 1 ) {
 		$params=$_GET;
@@ -1409,24 +1410,29 @@ function pagenums($pagenum, $perpage, $totalcount)
 		$neighborsprev=5;
 		$neighborsnext=5;
 
-		$start  = max(1, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
+		$start  = max(2, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
 		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
 
-		if ($start > 1) {
-			$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
-			#$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), eL('first'));
-			$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), 1);
-		}
+		$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
+		$output .= sprintf('<a class="first" href="%s" aria-label="%s">%s</a>', $url, eL('first'), 1);
+		$firstactive = ($pagenum==1) ? 'first active' : 'first';
+		$output .= sprintf('<a class="%s" href="%s" aria-label="%s">%s</a>', $firstactive, $url, eL('first'), 1);
+		
 		if ($pagenum > 1) {
 			#$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
 			#$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
+		}
 
-			if ($start==3){
-				$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 2))));
-				$output .= sprintf('<a href="%s">%d</a>', $url, 2);
-			} elseif ($start>3) {
-				$output .= '<span class="ellipsis"></span>';
-			}
+		if ($pagenum > 4 && $pagenum < 9){
+			$output.='<span class="distancefargap"></span>';
+		}
+			
+		if ($start==3){
+			$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 2))));
+			$distclass= (abs($pagenum - 2) > 2) ? ' class="distancefar"' : '';
+			$output .= sprintf('<a href="%s"%s>%d</a>', $url, $distclass, 2);
+		} elseif ($start>3) {
+			$output .= '<span class="ellipsis"></span>';
 		}
 
 		for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
