@@ -1422,6 +1422,7 @@ function pagenums($pagenum, $perpage, $totalcount)
 			#$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
 
 			if ($start==3){
+				$url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 2))));
 				$output .= sprintf('<a href="%s">%d</a>', $url, 2);
 			} elseif ($start>3) {
 				$output .= '<span class="ellipsis"></span>';
