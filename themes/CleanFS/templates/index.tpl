@@ -404,16 +404,12 @@ foreach ($tasks as $task): ?>
 <?php endforeach; ?>
 </tbody>
 </table>
-<table id="pagenumbers">
-<tr>
 <?php if ($total): ?>
-	<td id="taskrange"><?php echo sprintf(L('taskrange'), $offset + 1, ($offset + $perpage > $total ? $total : $offset + $perpage), $total); ?></td>
-	<td id="numbers"><?php echo pagenums($pagenum, $perpage, $total); ?></td>
+	<span class="taskrange"><?php echo sprintf(L('taskrange'), $offset + 1, ($offset + $perpage > $total ? $total : $offset + $perpage), $total); ?></span>
+	<?php echo pagenums($pagenum, $perpage, $total); ?>
 <?php else: ?>
-	<td id="taskrange"><strong><?= eL('noresults') ?></strong></td>
+	<div class="noresult"><strong><?= eL('noresults') ?></strong></div>
 <?php endif; ?>
-</tr>
-</table>
 
 <!-- Bulk editing Tasks -->
 <?php if (!$user->isAnon() && $proj->id !=0 && $total): ?>
