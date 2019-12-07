@@ -527,8 +527,10 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 td.task_progress .progress_bar_container {width: 100%;box-sizing:border-box;}
 a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
-#tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
-#tasklist_table td.caret {width: 15px;padding: 0 !important;}
+#tasklist_table tr.current_row td.caret::after {
+	font-family: fontawesome;
+	content: '\f054'; /* fa-chevron-right */
+}
 #tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
 #tasklist_table .ttcolumn a, a.toggle_selected {
@@ -1454,6 +1456,13 @@ button.fakelinkbutton:visited {
 	color: #69c;
 }
 
+@media only screen and (max-width: 640px) {
+	#content {padding:0;}
+	#tasklist {padding:0;}
+	#tasklist th.caret {padding:0;}
+	.taskrange {padding-left:10px;}
+}
+
 @media only screen and (max-width: 480px) and (orientation: portrait) {
 
 th, td, caption {padding: 5px 2px;}
@@ -1484,6 +1493,8 @@ th, td, caption {padding: 5px 2px;}
 #projectselector select{height:40px;padding-right:4px;max-width:100%;}
 #content {padding:0;min-width:unset;}
 #tasklist {padding:0;}
+.pagenums a.distancefar {display:none;}
+.pagenums .distancefargap::after {content:'…';padding-left:0.5em;padding-right:0.5em;}
 table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
 body.toplevel.p0 .box {width:auto;}
