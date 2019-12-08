@@ -1003,37 +1003,35 @@ class TextFormatter
         return $return;
     }
 
-    public static function render($text, $type = null, $id = null, $instructions = null)
-    {
-        global $conf;
+	public static function render($text, $type = null, $id = null, $instructions = null)
+	{
+		global $conf;
 
-        $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
-        $methods = is_array($methods) ? $methods : array();
+		$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		$methods = is_array($methods) ? $methods : array();
 
-        if (in_array('render', $methods)) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
-                                  $text, $type, $id, $instructions);
-        } else {
-            $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
-            if (   $conf['general']['syntax_plugin']
+		if (in_array('render', $methods)) {
+			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
+				$text, $type, $id, $instructions);
+		} else {
+			$text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
+			if (   $conf['general']['syntax_plugin']
 				&& $conf['general']['syntax_plugin'] != 'none'
 				&& $conf['general']['syntax_plugin'] != 'html') {
-                $text='Unsupported output plugin '.$conf['general']['syntax_plugin'].'!'
-                .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
-                .'<br/>Temporarily handled like it is HTML until fixed.<br/>'
-                .$text;
-            }
+				$text='Unsupported output plugin '.$conf['general']['syntax_plugin'].'!'
+					.'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
+					.'<br/>Temporarily handled like it is HTML until fixed.<br/>'
+					.$text;
+			}
 
-            //TODO: Remove Redundant Code once tested completely
-            //Author: Steve Tredinnick
-            //Have removed this as creating additional </br> lines even though <p> is already dealing with it
-            //possibly an conversion from Dokuwiki syntax to html issue, left in in case anyone has issues and needs to comment out
-            //$text = ' ' . nl2br($text) . ' ';
+			if ($conf['general']['syntax_plugin'] != 'html') {
+				$text = nl2br($text);
+			}
 
-            // Change FS#123 into hyperlinks to tasks
-            return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
-        }
-    }
+			// Change FS#123 into hyperlinks to tasks
+			return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
+		}
+	}
 
     public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
     {
