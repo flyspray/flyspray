@@ -23,6 +23,7 @@ div#taskclosed, #tasklist_table th,
 #controlBox, #shortcuts{
   background-color: #333;
 }
+textarea {color:#ddd;background-color:#444;border-color:#555;}
 div.comment_container .comment_header {background-color: #444; border-bottom:#555;}
 #comments{border-color:#333;}
 body.toplevel .box {border-color:#444;}
@@ -75,4 +76,32 @@ ul.form_elements label {color:#ccc;}
 a, button.fakelinkbutton {color:#9cf;}
 img {opacity: .75; transition: opacity .5s ease-in-out;}
 img:hover {opacity: 1;}
+}
+.tag {color:#000;}
+.pagenums a {background-color:#444;border-color:#666;}
+.pagenums .active {background-color: #592;}
+
+#tasklist_table tbody tr td {
+border-bottom-color: #666 !important;
+}
+.typ1::before{color:#d00 !important;}
+.sev5::before{color:#d00 !important;}
+
+tr .typ1::before, tr .typ2::before, tr .typ3::before, tr .typ4::before,
+tr .sev1::before, tr .sev2::before, tr .sev3::before, tr .sev4::before, tr .sev5::before,
+tr .pri1::before, tr .pri2::before, tr .pri3::before, tr .pri4::before, tr .pri5::before {
+border-color: #666 !important;
+}
+
+tr.severity2, tr.severity2 .task_severity, tr.severity2 .task_id {
+background: #444 linear-gradient(#555,#444) repeat scroll 0 0 !important;
+}
+tr.severity3, tr.severity3 .task_severity, tr.severity3 .task_id {
+background: #653 linear-gradient(#653,#542) repeat scroll 0 0 !important;
+}
+tr.severity4, tr.severity4 .task_severity, tr.severity4 .task_id {
+background: #862 linear-gradient(#862,#751) repeat scroll 0 0 !important;
+}
+tr.severity5, tr.severity5 .task_severity, tr.severity5 .task_id {
+background: #a41 linear-gradient(#a41,#a30) repeat scroll 0 0 !important;
 }
