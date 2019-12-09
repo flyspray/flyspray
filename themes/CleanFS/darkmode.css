@@ -23,6 +23,11 @@ div#taskclosed, #tasklist_table th,
 #controlBox, #shortcuts{
   background-color: #333;
 }
+a.button:hover, button:hover, .button:hover, input[type="submit"] {
+  background-color: #444;
+  border-color: #000;
+  color:#fff;
+} 
 textarea {color:#ddd;background-color:#444;border-color:#555;}
 div.comment_container .comment_header {background-color: #444; border-bottom:#555;}
 #comments{border-color:#333;}
