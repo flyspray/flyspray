@@ -53,6 +53,10 @@ div.roadmap {border-color:#444;}
 .progress_bar_container span {color:#eee; text-shadow: 0 0 6px #000;}
 .progress_bar_container {background-color:#111;}
 
+.dbtable {background-color:#444;}
+.dbtable td {border-bottom-color: #999;}
+.dbfield {background-color:#555;}
+  
 /* works not in every browser .. */
 option:active { background:linear-gradient(#6c3, #6c3); }
 option:checked { background:linear-gradient(#693, #693); }
