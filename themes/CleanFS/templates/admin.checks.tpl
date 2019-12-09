@@ -31,10 +31,6 @@
 
 <?php if(isset($fstables)): ?>
 <style>
-.dbtable{ background-color:#ccc;}
-.dbtable td {border-bottom:1px solid #999;}
-.dbfield{ background-color:#eee;}
-
 #toggledbinfo { display:none; }
 #toggledbinfo ~ #toggledbinfolabel:after { content:'Hide connection info'; }
 #toggledbinfo:checked ~ #toggledbinfolabel::after { content:'Show connection info'; }
