@@ -530,6 +530,7 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 td.task_progress .progress_bar_container {width: 100%;box-sizing:border-box;}
 a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
+#tasklist_table .caret {width:10px; padding-left:2px; padding-right:0px;}
 #tasklist_table tr.current_row td.caret::after {
 	font-family: fontawesome;
 	content: '\f054'; /* fa-chevron-right */
