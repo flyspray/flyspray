@@ -50,7 +50,10 @@ $language=array(
 'databasehostname'=>'database hostname',
 'databasehostnamehint'=>'Enter the <strong>database hostname</strong> of the server Flyspray is to be installed on. This is usually "localhost" or an IP.',
 'databasetype'=>'database type',
-'databasetypehint'=>'Choose the <strong>database type</strong>. If you have both the choice between MySQL driver and MySQLi driver, use MySQLi. The old MySQL driver (mysql_*) is deprecated in PHP since a long time. If you have MariaDB as MySQL replacement, select MySQLi.',
+'databasetypehint'=>
+	'Choose the <strong>database driver type</strong>.'
+	.(version_compare(PHP_VERSION,'7.0','<') ? '<br/>If you have both the choice between MySQL driver and MySQLi driver, use MySQLi. The old MySQL driver (mysql_*) is deprecated in PHP since a long time.' : '')
+	.'<br/>If you use MariaDB as MySQL replacement, select MySQLi.',
 'databasename'=>'database name',
 'databasenamehint'=>'Insert a name of an existing database or a new name. If the database not exists, Flyspray tries to create that database for you. Use simple names like "flyspray".',
 'databaseusername'=>'database username',
