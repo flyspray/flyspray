@@ -48,7 +48,7 @@ $language=array(
 'databaseconfiguration'=>'Database Configuration for ',
 'proceedtoadmin'=>'Proceed to Administration setup',
 'databasehostname'=>'database hostname',
-'databasehostnamehint'=>'Enter the <strong>database hostname</strong> of the server Flyspray is to be installed on. This is usually "localhost" or an IP.',
+'databasehostnamehint'=>'Enter the <strong>database hostname</strong> of the server Flyspray is to be installed on. This is usually "localhost" or an IP address.',
 'databasetype'=>'database type',
 'databasetypehint'=>
 	'Choose the <strong>database driver type</strong>.'
