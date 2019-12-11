@@ -625,19 +625,22 @@ if (!$user->can_view_task($task_details)) {
                                   WHERE task_id = ? AND user_id = ?',
                                   array($task_id, $user->id));
 
-		// Check if task has been reopened some time
+		// Check if task has been reopened before
 		$reopened = $db->query('SELECT COUNT(*)
                                    FROM {history}
                                   WHERE task_id = ? AND event_type = 13',
                                   array($task_id));
 
-		// Check for cached version
-		$cached = $db->query("SELECT content, last_updated
-                            FROM {cache}
-                           WHERE topic = ? AND type = 'task'",
-                           array($task_details['task_id']));
-		$cached = $db->fetchRow($cached);
-
+		// Check for a cached version, which is currently only necessary for dokuwiki syntax.
+		if (defined('FLYSPRAY_USE_CACHE')) {
+			$cached = $db->query("SELECT content, last_updated
+				FROM {cache}
+				WHERE topic = ?
+				AND type = 'task'",
+				array($task_details['task_id']));
+			$cached = $db->fetchRow($cached);
+		}
+		
 		// List of votes
 		$get_votes = $db->query('SELECT u.user_id, u.user_name, u.real_name, v.date_time
                                FROM {votes} v
@@ -646,10 +649,10 @@ if (!$user->can_view_task($task_details)) {
                             ORDER BY v.date_time DESC',
                             array($task_id));
 
-		if ($task_details['last_edited_time'] > $cached['last_updated'] || !defined('FLYSPRAY_USE_CACHE')) {
-			$task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id']);
-		} else {
+		if (defined('FLYSPRAY_USE_CACHE') && is_array($cached) && $task_details['last_edited_time'] <= $cached['last_updated']) {
 			$task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id'], $cached['content']);
+		} else {
+			$task_text = TextFormatter::render($task_details['detailed_desc'], 'task', $task_details['task_id']);
 		}
 
 		$page->assign('prev_id',   $prev_id);
