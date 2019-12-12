@@ -637,6 +637,14 @@ td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_as
   cursor: move;
   height: 12px;
 }
+.grip::after {
+    content: '\2550\2550';
+    text-align: center;
+    display: block;
+    color: #999;
+    line-height: 10px;
+    font-size: 16px;
+}
 #controlBox div.inner {
   padding: 5px 5px 4px 5px;
   white-space: nowrap;
