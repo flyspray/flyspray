@@ -65,10 +65,11 @@ body a.button.positive, body button.positive,
 #menu-list a.active, #menu-list a.active:hover,
 #s_loginbox:checked ~ #show_loginbox,
 #s_quickactions:checked ~ #actions,
-#menu-list a#show_loginbox:hover {
+#menu-list a#show_loginbox:hover,
+.pagenums .active {
 	background-color: #5f9729;
 }
-body a.button.positive, body button.positive {
+body a.button.positive, body button.positive, .pagenums .active {
 	color: #fff;
 }
 
@@ -93,6 +94,10 @@ body a.button.positive, body button.positive {
 #search input.users:not(:placeholder-shown) {
     background-color: #ff9;
 }
+
+.dbtable {background-color:#ccc;}
+.dbtable td {border-bottom:1px solid #999;}
+.dbfield {background-color:#eee;}
 
 /* end default Flyspray color scheme */
 
@@ -218,7 +223,7 @@ caption { background: #eee; }
 }
 .clear {clear: both;}
 .fade {color: gray; background: pink !important; border: 1px solid blue !important;}
-.search_hit {background: red !important; border: 1px solid green !important;}
+.search_hit {background: rgba(255,255,0,.4);}
 img:-moz-broken {
   /* show broken images */
   -moz-force-broken-image-icon: 1;
@@ -238,8 +243,7 @@ div.popup {
 body {background: #f9f9f9; /* direction:rtl;*/}
 a {color: #336699;}
 a:hover {color: #6699cc;}
-#container { min-width: 1000px; position: relative; text-align: left; }
-#content { padding: 0 20px 10px 20px; margin-top:10px; min-width: 660px; clear:both; }
+#content { padding: 0 20px 10px 20px; margin-top:10px; clear:both; }
 #footer {
   display: block;
   margin: 0px 20px 20px 20px;
@@ -423,7 +427,29 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border-radius: 3px;
 }
 #tasklist_table {width: 100%;}
-span.pagenums:before{ content:"--";padding-left:10px;padding-right:10px;}
+.pagenums{display:inline-block;}
+.pagenums a, .pagenums .active {
+	display:inline-block;
+	margin-left:0.1em;
+	margin-right:0.1em;
+	min-width:1em;
+	border-radius:3px;
+	text-align:center;
+}
+.pagenums .active {padding:0.2em 0.5em;}
+.pagenums a {
+	padding:0.2em 0.4em;
+	border:1px solid #ddd;
+	background-color:#fff;
+}
+/*
+.pagenums a.first::before { content:'<<';padding-right:0.5em;}
+.pagenums a.previous::before { content:'<';padding-right:0.5em;}
+.pagenums a.next::after { content:'>';padding-left:0.5em;}
+.pagenums a.last::after { content:'>>';padding-left:0.5em;}
+*/
+.pagenums span.ellipsis::before {content:'…';padding-left:0.5em;padding-right:0.5em;}
+.pagerange, .taskrange{padding-top:0.2em;padding-bottom:0.2em;}
 #search {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -504,8 +530,11 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 td.task_progress .progress_bar_container {width: 100%;box-sizing:border-box;}
 a {text-decoration: none;}
 #tasklist_table th img {position: relative;top: 2px;}
-#tasklist_table tr.current_row td.caret {background-image: url(img/caret.gif);background-repeat:no-repeat;background-position: 3px;}
-#tasklist_table td.caret {width: 15px;padding: 0 !important;}
+#tasklist_table .caret {width:10px; padding-left:2px; padding-right:0px;}
+#tasklist_table tr.current_row td.caret::after {
+	font-family: fontawesome;
+	content: '\f054'; /* fa-chevron-right */
+}
 #tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
 #tasklist_table .ttcolumn a, a.toggle_selected {
@@ -516,8 +545,9 @@ a {text-decoration: none;}
   height: 16px;
   display: block;
 }
-#tasklist_table thead tr th {line-height:1;}
-#tasklist_table tbody tr td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+#tasklist_table thead th {line-height:1;}
+#tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
+.task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
 tr.severity1 .task_severity {background-color: #fff;}
@@ -607,6 +637,14 @@ td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_as
   cursor: move;
   height: 12px;
 }
+.grip::after {
+    content: '\2550\2550';
+    text-align: center;
+    display: block;
+    color: #999;
+    line-height: 10px;
+    font-size: 16px;
+}
 #controlBox div.inner {
   padding: 5px 5px 4px 5px;
   white-space: nowrap;
@@ -678,7 +716,7 @@ kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2
   border-radius: 3px;
 }
 #taskdetails #navigation {float: right;padding:6px;}
-#taskdetails h2 {color: #555;display:inline-block;}
+#taskdetails h2 {color: #555;display:inline-block;max-width:100%;/* for word-wrap working chrome+safari */}
 #taskdetailsfull p,
 #taskdetailsfull li,
 .commenttext p,
@@ -690,6 +728,7 @@ max-width:40em;
 #taskdetailsfull h2,
 .commenttext{
 	word-wrap:break-word;
+	word-wrap:anywhere; /* css3, firefox65+ */
 }
 .group.inactive{ background-color:#eee;}
 .tag {
@@ -1025,18 +1064,18 @@ div#taskdeps {float: left;width: 50%; margin-bottom: 8px;}
 div#subtasks {display: inline;align: right;float: left;width: 50%;margin-bottom: 8px;}
 div#taskblocks { float: left; width: 45%;}
 a.datelink {
-  background-image: url(img/black/calendar_alt_fill_16x16.png);
-  background-repeat: no-repeat;
-  display: -moz-inline-stack;
-  /* optional */
-  display: inline-block;
-  zoom: 1;
-  /* triggers hasLayout for IE */
-  *display: inline;
-  /* target IE7 only */
-  height: 16px;
-  width: 16px;
-  vertical-align: middle;
+	display:inline-block;
+	vertical-align: middle;
+}
+a.datelink::before {
+        font-family:fontawesome;
+        content:"\f133";
+        color:#555;
+        font-size:large;
+}
+a.datelink:hover::before {
+        content:"\f073";
+        color:#000;
 }
 hr { /*color: $box_border;*/ border: none; border-top: 1px solid #e1e1e1;}
 .perms{display:inline-block;vertical-align:top;}
@@ -1178,7 +1217,8 @@ ul.slim .userSelectWidget select {width:100%;}
 .perms .everybody th:before {content:'Allowed for everybody - project setting overrules this group setting!';color:#900;position:absolute;left:2px;z-index:2;text-shadow:0 0 2px #fff;top:-2px;}
 .perms .everybody > * { background-color: #6c6; }
 
-/* closing task form */
+/* closing and requestreopen task form */
+div#requestreopen,
 div#closeform {
   border-radius: 3px;
   box-shadow: 0px 1px 1px #ddd;
@@ -1428,9 +1468,11 @@ button.fakelinkbutton:visited {
 	color: #69c;
 }
 
-/* Make it correctly align */
-#searchtext {
-  vertical-align: baseline;
+@media only screen and (max-width: 640px) {
+	#content {padding:0;}
+	#tasklist {padding:0;}
+	#tasklist th.caret {padding:0;}
+	.taskrange {padding-left:10px;}
 }
 
 @media only screen and (max-width: 480px) and (orientation: portrait) {
@@ -1463,6 +1505,8 @@ th, td, caption {padding: 5px 2px;}
 #projectselector select{height:40px;padding-right:4px;max-width:100%;}
 #content {padding:0;min-width:unset;}
 #tasklist {padding:0;}
+.pagenums a.distancefar {display:none;}
+.pagenums .distancefargap::after {content:'…';padding-left:0.5em;padding-right:0.5em;}
 table.toplevel th, table.toplevel td {display:block;}
 body.toplevel .box {margin:0 0 10px 0;}
 body.toplevel.p0 .box {width:auto;}

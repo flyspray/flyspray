@@ -1,5 +1,8 @@
 /* customization example. Use for color, fontawesome icons, background and border-color settings only, avoid layout changes. */
 
+/* use experimental dark colors if users OS/desktop/web browser settings prefer dark mode */
+@import url("darkmode.css");
+
 /*
 body.p1 #title {background:#060;}
 body.p1 #pm-menu {border-color:#090;}

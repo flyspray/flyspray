@@ -9,7 +9,7 @@
         "swiftmailer/swiftmailer": "~5.0",
         "adodb/adodb-php": "~5.20",
         "jamiebicknell/sparkline": "1.*",
-        "ezyang/htmlpurifier": "~4.10.0",
+        "ezyang/htmlpurifier": "~4.12",
         "dapphp/securimage": "3.6.6",
         "league/oauth2-client": "~0.12" 
     },

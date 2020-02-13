@@ -62,6 +62,7 @@ footer_integration=""
 repeat_password="0"
 repeat_emailaddress="0"
 massops="0"
+relnofollow="1"
 ; Would like to see captchastuff be optional prefs, but
 ; current upgrade logic wipes such additional prefs if not listed here too.
 captcha_securimage="0"

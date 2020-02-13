@@ -1,0 +1,130 @@
+/* I'm not a designer, feel free to improve! */
+@media (prefers-color-scheme: dark) {
+
+body {background-color:#222; color:#ccc;}
+.button, button,
+input[type="submit"],
+input[type="text"],
+input[type="password"],
+fieldset,
+body.toplevel .box,
+div.box,
+p.box,
+div.roadmap,
+.descbox,
+#toolboxmenu a.active,
+#submenu a.active, #search, #search fieldset,
+#intromessage, #toolbox, #toolbox div.tab,
+#tasklist, #taskdetails, #taskfields, #taskdetails #showvotes, #comments,
+#related, #notify, #remind,
+#effort,
+#history, #events,
+div#taskclosed, #tasklist_table th,
+#controlBox, #shortcuts{
+  background-color: #333;
+}
+a.button:hover, button:hover, .button:hover, input[type="submit"] {
+  background-color: #444;
+  border-color: #000;
+  color:#fff;
+} 
+textarea {color:#ddd;background-color:#444;border-color:#555;}
+div.comment_container .comment_header {background-color: #444; border-bottom:#555;}
+#comments{border-color:#333;}
+body.toplevel .box {border-color:#444;}
+div.comment_container .comment {border-color:#444;}
+div.comment_container .comment::before {border-right-color:#555;}
+div.comment_container .comment::after {border-right-color:#444;}
+div.comment_container .attachments, div.comment_container .links{background-color:#666; border-color:#333;}
+div.comment_container .comment_header_usertype {border-color:#333;}
+.cke_chrome {border-color:#444 !important;}
+.cke_bottom, .cke_top {background:#444 !important;box-shadow:none !important;}
+.cke_toolgroup {background: #ddd !important;}
+#taskdetails{border-color:#444;}
+#taskdetails h2{color:#ccc;}
+#intromessage {border-color:#444;}
+#taskinfo {border-top-color:#444;}
+#taskfields {border-right-color:#555;}
+#taskfields ul.fieldslist > li:nth-child(2n-1){background-color:#393939;}
+#search, #tasklist {border-color:#444;}
+#search fieldset {border-color:#444;}
+#tasklist_table tr.current_row td.caret {color:#fff;}
+#tasklist_table tbody tr:hover td{border-color:#555;}
+#submenu a{color:#69c;background-color:#444;border-color:#333;}
+#submenu a:hover {background-color:#333;border-color:#444;border-bottom-color:#333;}
+#submenu a.active{border-bottom-color:#333;}
+#shortcuts{border-color:#444;}
+div.roadmap {border-color:#444;}
+.progress_bar_container span {color:#eee; text-shadow: 0 0 6px #000;}
+.progress_bar_container {background-color:#111;}
+
+.dbtable {background-color:#444;}
+.dbtable td {border-bottom-color: #999;}
+.dbfield {background-color:#555;}
+  
+/* works not in every browser .. */
+option:active { background:linear-gradient(#6c3, #6c3); }
+option:checked { background:linear-gradient(#693, #693); }
+#search #searchtext:not(:placeholder-shown), 
+#search #duedatefrom:not(:placeholder-shown), 
+#search #duedateto:not(:placeholder-shown), 
+#search #changedfrom:not(:placeholder-shown), 
+#search #changedto:not(:placeholder-shown),
+#search #openedfrom:not(:placeholder-shown),
+#search #openedto:not(:placeholder-shown),
+#search #closedfrom:not(:placeholder-shown),
+#search #closedto:not(:placeholder-shown),
+#search input.users:not(:placeholder-shown) {
+    background-color:#360;
+}
+#toolbox {border-color:#444;}
+#toolbox div.tab {border-color:#444;}
+#toolboxmenu a {background-color:#444;color:#ccc;border-color:#333;}
+#toolboxmenu a:hover {background-color:#333;color:#eee;border-color:#222;}
+#toolboxmenu a.active {color:#fff;border-color:#555;border-left-color:#78bf34;}
+#disp_intro:not(:checked) ~ .disp_introdep { background-color:#666;}
+#disp_intro:not(:checked) ~ .disp_introdep select, #disp_intro:not(:checked) ~ .disp_introdep textarea{ background-color:#444;color:#666;}
+.double_select .dualselect_selectable {background-color:#333;color:#fff;}
+select, .double_select .dualselect_selected select {background-color:#444;color:#fff;border-color:#666;}
+.button, button, input[type="submit"]{
+        color:#ccc;
+        box-shadow: 0 1px 1px #000;
+        border-color:#222;
+}
+kbd{color:#333;background-color:#ccc;}
+input[type="text"], input[type="password"]{color:#fff;border-color:#555;}
+ul.form_elements label {color:#ccc;}
+a, button.fakelinkbutton {color:#9cf;}
+img {opacity: .75; transition: opacity .5s ease-in-out;}
+img:hover {opacity: 1;}
+
+.tag {color:#000;}
+.pagenums a {background-color:#444;border-color:#666;}
+.pagenums .active {background-color: #592;}
+
+#tasklist_table tbody tr td {
+border-bottom-color: #666 !important;
+}
+.typ1::before{color:#d00 !important;}
+.sev5::before{color:#d00 !important;}
+
+tr .typ1::before, tr .typ2::before, tr .typ3::before, tr .typ4::before,
+tr .sev1::before, tr .sev2::before, tr .sev3::before, tr .sev4::before, tr .sev5::before,
+tr .pri1::before, tr .pri2::before, tr .pri3::before, tr .pri4::before, tr .pri5::before {
+border-color: #666 !important;
+}
+
+tr.severity2, tr.severity2 .task_severity, tr.severity2 .task_id {
+background: #444 linear-gradient(#555,#444) repeat scroll 0 0 !important;
+}
+tr.severity3, tr.severity3 .task_severity, tr.severity3 .task_id {
+background: #653 linear-gradient(#653,#542) repeat scroll 0 0 !important;
+}
+tr.severity4, tr.severity4 .task_severity, tr.severity4 .task_id {
+background: #862 linear-gradient(#862,#751) repeat scroll 0 0 !important;
+}
+tr.severity5, tr.severity5 .task_severity, tr.severity5 .task_id {
+background: #a41 linear-gradient(#a41,#a30) repeat scroll 0 0 !important;
+}
+
+} /* end of media dark */

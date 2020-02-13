@@ -164,7 +164,7 @@ function buildURLparams($params, $sep='&amp;'){
 }
 
 /**
- * Build an string of html tag attributes
+ * Build a string of html tag attributes
  *
  * Skips keys starting with '_', values get HTML encoded
  *
@@ -173,10 +173,10 @@ function buildURLparams($params, $sep='&amp;'){
 function buildAttributes($params){
   $url = '';
   foreach($params as $key => $val){
-    if($key{0} == '_') continue;
+    if($key[0] == '_') continue;
 
     $url .= $key.'="';
-    $url .= htmlspecialchars ($val);
+    $url .= htmlspecialchars($val);
     $url .= '" ';
   }
   return $url;
@@ -933,7 +933,7 @@ function obfuscate($email) {
 
     case 'hex' :
       $encode = '';
-      for ($x=0; $x < strlen($email); $x++) $encode .= '&#x' . bin2hex($email{$x}).';';
+      for ($x=0; $x < strlen($email); $x++) $encode .= '&#x' . bin2hex($email[$x]).';';
       return $encode;
 
     case 'none' :
