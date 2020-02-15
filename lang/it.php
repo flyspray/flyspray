@@ -1094,8 +1094,8 @@ $translation = array(
 'adminchecksinfo'         => 'Informazioni e verifiche sulla tua installazione',
 'repeatpassword'          => 'Ripeti Password',
 'repeatemailaddress'      => 'Ripeti Indirizzo Email',
-'tooltipshorttasktitle'   => 'Scrivi una sintesi che renda comprensibile il task a colpo d\'occhio',
-'lastlogin'               => 'Ultimo accesso',
+'tooltipshorttasktitle'   => 'Scrivi un titolo che sintetizzi il problema e lo renda comprensibile a colpo d\'occhio',
+'lastlogin'               => 'Ultimo Accesso',
 );
 
 ?>
