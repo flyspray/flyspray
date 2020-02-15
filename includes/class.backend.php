@@ -1760,11 +1760,19 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
 			}
 
 			foreach ($words as $word) {
-				$word=trim($word);
-				if($word==''){
+				$word = trim($word);
+				if ($word==''){
 					continue;
 				}
-				$likeWord = '%' . str_replace('+', ' ', $word) . '%';
+
+				# The 2006-2020 hidden/undocumented '+' search feature: 'open+source' finds 'open source', but not 'open closed source'
+				if (substr($word, -1) === '+') {
+					# do not replace the + at end of a word like archlinux package name 'memtest86+'
+					$likeWord = '%' . trim(str_replace('+', ' ', substr($word, 0, -1))) . '+%';
+				} else {
+					$likeWord = '%' . trim(str_replace('+', ' ', $word)) . '%';
+				}
+				
 				$where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? OR flt.tag_name $LIKEOP ? $comments)";
 				array_push($sql_params, $likeWord, intval($word), $likeWord);
 				if (array_get($args, 'search_in_comments')) {
