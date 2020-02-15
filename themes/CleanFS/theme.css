@@ -95,6 +95,23 @@ body a.button.positive, body button.positive, .pagenums .active {
     background-color: #ff9;
 }
 
+/* avoid bad wrapping of advanced search checkboxes/labels, instead hide the native checkbox and style labels */
+.advsearch_misc input[type="checkbox"] {
+	display: none;
+}
+.advsearch_misc input[type="checkbox"] + label {
+	margin: 0.3em;
+	padding: 0.1em 0.4em;
+	display: inline-block;
+	background-color: #eee;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+.advsearch_misc input[type="checkbox"]:checked + label {
+	border-color: #9c0;
+	background-color: #ff9;
+}
+
 .dbtable {background-color:#ccc;}
 .dbtable td {border-bottom:1px solid #999;}
 .dbfield {background-color:#eee;}
