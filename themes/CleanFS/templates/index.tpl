@@ -93,40 +93,25 @@
 </fieldset>
 <?php endif; ?>
 <fieldset class="advsearch_misc">
-   <legend><?= eL('miscellaneous') ?></legend>
-   <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
-                    <label class="left" for="sic"><?= eL('searchcomments') ?></label>
+	<legend><?= eL('miscellaneous') ?></legend>
+	<?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?><label class="left" for="sic"><?= eL('searchcomments') ?></label>
+	<?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?><label class="left" for="search_in_details"><?= eL('searchindetails') ?></label>
+	<?php echo tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa'); ?><label class="left" for="sfa"><?= eL('searchforall') ?></label>
+	<?php echo tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched'); ?><label class="left" for="only_watched"><?= eL('taskswatched') ?></label>
+	<?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?><label class="left" for="only_primary"><?= eL('onlyprimary') ?></label>
+	<?php echo tpl_checkbox('only_blocker', Get::has('only_blocker'), 'only_blocker'); ?><label class="left" for="only_blocker" id="blockerlabel"><?= eL('onlyblocker') ?></label>
+	<span id="blockerornoblocker"><?= eL('blockerornoblocker') ?></span>
+	<style>
+	#blockerornoblocker {display:none;color:#c00;}
+	#only_primary:checked ~ #only_blocker:checked ~ #blockerornoblocker {display:inline;}
+	</style>
 
-                    <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
-                    <label class="left" for="search_in_details"><?= eL('searchindetails') ?></label>
-
-                    <?php echo tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa'); ?>
-                    <label class="left" for="sfa"><?= eL('searchforall') ?></label>
-
-                    <?php echo tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched'); ?>
-                    <label class="left" for="only_watched"><?= eL('taskswatched') ?></label>
-
-                    <?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?>
-                    <label class="left" for="only_primary"><?= eL('onlyprimary') ?></label>
-
-		<?php echo tpl_checkbox('only_blocker', Get::has('only_blocker'), 'only_blocker'); ?>
-		<label class="left" for="only_blocker" id="blockerlabel"><?= eL('onlyblocker') ?></label>
-		<span id="blockerornoblocker"><?= eL('blockerornoblocker') ?></span>
-		<style>
-		#blockerornoblocker {display:none;color:#c00;}
-		#only_primary:checked ~ #only_blocker:checked ~ #blockerornoblocker {display:inline;}
-		</style>
-		
-                    <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
-                    <label class="left" for="has_attachment"><?= eL('hasattachment') ?></label>
-
-                    <?php echo tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks'); ?>
-                    <label class="left" for="hide_subtasks"><?= eL('hidesubtasks') ?></label>
-                </fieldset>
-
-                <fieldset class="advsearch_task">
-                    <legend><?= eL('taskproperties') ?></legend>
-            <!-- Task Type -->
+	<?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?><label class="left" for="has_attachment"><?= eL('hasattachment') ?></label>
+	<?php echo tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks'); ?><label class="left" for="hide_subtasks"><?= eL('hidesubtasks') ?></label>
+</fieldset>
+<fieldset class="advsearch_task">
+	<legend><?= eL('taskproperties') ?></legend>
+	<!-- Task Type -->
 		    <?php if (!$filter || in_array('tasktype', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -138,7 +123,7 @@
                         </select>
                     </div>
 
-            <!-- Severity -->
+	<!-- Severity -->
 		    <?php if (!$filter || in_array('severity', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -150,7 +135,7 @@
                         </select>
                     </div>
 
-            <!-- Priority -->
+	<!-- Priority -->
 		    <?php if (!$filter || in_array('priority', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -162,7 +147,7 @@
                         </select>
                     </div>
 
-            <!-- Due Version -->
+	<!-- Due Version -->
 		    <?php if (!$filter || in_array('dueversion', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -174,7 +159,7 @@
                         </select>
                     </div>
 
-            <!-- Reportedin -->
+	<!-- Reportedin -->
 		    <?php if (!$filter || in_array('reportedin', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -186,7 +171,7 @@
                         </select>
                     </div>
 
-            <!-- Category -->
+	<!-- Category -->
 		    <?php if (!$filter || in_array('category', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -198,7 +183,7 @@
                         </select>
                     </div>
 
-            <!-- Status -->
+	<!-- Status -->
 		    <?php if (!$filter || in_array('status', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
@@ -213,7 +198,7 @@
                         </select>
                     </div>
 
-            <!-- Progress -->
+	<!-- Progress -->
 		    <?php if (!$filter || in_array('progress', $fields)) { ?>
                     <div class="search_select">
 		    <?php } else { ?>
