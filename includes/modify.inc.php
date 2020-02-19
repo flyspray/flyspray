@@ -2335,14 +2335,14 @@ switch ($action = Req::val('action'))
         $result = $db->query('SELECT  task_id, comment_text, user_id, date_added
                                 FROM  {comments}
                                WHERE  comment_id = ?',
-        array(Get::val('comment_id')));
+        array(Post::val('comment_id')));
         $comment = $db->fetchRow($result);
 
         // Check for files attached to this comment
         $check_attachments = $db->query('SELECT  *
                                            FROM  {attachments}
                                           WHERE  comment_id = ?',
-        array(Req::val('comment_id')));
+        array(Post::val('comment_id')));
 
         if ($db->countRows($check_attachments) && !$user->perms('delete_attachments')) {
             Flyspray::show_error(L('commentattachperms'));
@@ -2350,11 +2350,12 @@ switch ($action = Req::val('action'))
         }
 
         $db->query("DELETE FROM {comments} WHERE comment_id = ? AND task_id = ?",
-                   array(Req::val('comment_id'), $task['task_id']));
+                   array(Post::val('comment_id'), $task['task_id']));
 
         if ($db->affectedRows()) {
-            Flyspray::logEvent($task['task_id'], 6, $comment['user_id'],
-                    $comment['comment_text'], '', $comment['date_added']);
+		# uses history.new_value for storing deleted comment creator user_id
+		# uses history.field_changed for storing deleted comment date_added
+		Flyspray::logEvent($task['task_id'], 6, $comment['user_id'], $comment['comment_text'], $comment['date_added']);
         }
 
         while ($attachment = $db->fetchRow($check_attachments)) {
