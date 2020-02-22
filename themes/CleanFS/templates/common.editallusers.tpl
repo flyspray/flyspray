@@ -18,7 +18,7 @@ function toggleCheckbox(id)
 <form action="<?php echo Filters::noXSS(createURL($do, 'editallusers'));?>" method="get">
 <input type="hidden" name="do" value="admin" />
 <input type="hidden" name="area" value="editallusers" />
-<div style="background-color:#ff9">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
+<div class="warning">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
 <select name="showfields[]" multiple="multiple" size="3">
 <option value="-">---basic---</option>
 <option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
