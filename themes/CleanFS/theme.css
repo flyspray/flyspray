@@ -992,6 +992,7 @@ div.success {
   color: #24380d;
   background: #e8f9d4;
 }
+.warning {background-color:#fc0; color:#333;}
 a#show_loginbox {margin-right: 5px;}
 #loginbox {
   border-radius: 3px 0 3px 3px;
