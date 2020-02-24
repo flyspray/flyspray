@@ -537,14 +537,11 @@ a {text-decoration: none;}
 }
 #tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
-#tasklist_table .ttcolumn a, a.toggle_selected {
-  background-image: url(img/black/loop_alt3_12x9.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 16px;
-  height: 16px;
-  display: block;
+#tasklist_table .ttcolumn a::after, a.toggle_selected::after {
+        font-family: fontawesome;
+        content: '\f0ec'; /* fa-exchange */
 }
+
 #tasklist_table thead th {line-height:1;}
 #tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
 .task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
