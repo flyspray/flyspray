@@ -479,6 +479,14 @@ class Flyspray
 	{
 		global $db;
 
+		if (!isset($opts['offset'])) {
+			$opts['offset'] = 0;
+		}
+
+		if (!isset($opts['perpage'])) {
+			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
+		}
+
 		if( empty($opts) || !isset($opts['stats']) ){
 
 			$res = $db->query('SELECT account_enabled, user_id, user_name, real_name,
@@ -488,7 +496,7 @@ class Flyspray
 		register_date, login_attempts, lock_until,
 		profile_image, hide_my_email, last_login
 		FROM {users}
-		ORDER BY account_enabled DESC, user_name ASC');
+		ORDER BY account_enabled DESC, user_name ASC', false, $opts['perpage'], $opts['offset']);
 
 		} else {
 			# Well, this is a big and slow query, but the current solution I found.
@@ -603,7 +611,7 @@ UNION
         GROUP BY u.user_id
 ) u
 GROUP BY u.user_id
-ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC'); 
+ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC', false, $opts['perpage'], $opts['offset']); 
 		}
 
 		return $db->fetchAllArray($res);
