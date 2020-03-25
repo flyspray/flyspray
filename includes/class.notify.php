@@ -478,27 +478,35 @@ class Notifications {
 
         return true;
     } //}}}
-    // {{{ create a message for any occasion
-    function generateMsg($type, $task_id, $arg1 = '0', $lang) {
-        global $db, $fs, $user, $proj;
 
-        // Get the task details
-        $task_details = Flyspray::getTaskDetails($task_id);
-        if ($task_id) {
-            $proj = new Project($task_details['project_id']);
-        }
+	/**
+	 * create a message for any occasion
+	 *
+	 * @param int $type
+	 * @param int|null $task_id
+	 * @param array|string|int $arg1 depends on notification type
+	 * @param string $lang
+	 */
+	function generateMsg($type, $task_id, $arg1 = '0', $lang) {
+		global $db, $fs, $user, $proj;
 
-        // Set the due date correctly
-        if ($task_details['due_date'] == '0') {
-            $due_date = tL('undecided', $lang);
-        } else {
-            $due_date = formatDate($task_details['due_date']);
-        }
+		if ($task_id) {
+			$task_details = Flyspray::getTaskDetails($task_id);
+        
+			$proj = new Project($task_details['project_id']);
 
-        // Set the due version correctly
-        if ($task_details['closedby_version'] == '0') {
-            $task_details['due_in_version_name'] = tL('undecided', $lang);
-        }
+			// Set the due date correctly
+			if ($task_details['due_date'] == '0') {
+				$due_date = tL('undecided', $lang);
+			} else {
+				$due_date = formatDate($task_details['due_date']);
+			}
+
+			// Set the due version correctly
+			if ($task_details['closedby_version'] == '0') {
+				$task_details['due_in_version_name'] = tL('undecided', $lang);
+			}
+		}
 
         // Get the string of modification
         $notify_type_msg = array(
@@ -919,8 +927,6 @@ class Notifications {
         $body .= "\n\n" . tL('disclaimer', $lang);
         return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
     }
-
-// }}}
 
     public static function assignRecipients($recipients, &$emails, &$jabbers, &$onlines, $ignoretype = false) {
         global $db, $fs, $user;
