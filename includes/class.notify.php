@@ -413,7 +413,7 @@ class Notifications {
         }
 
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
-        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-z0-9\-.]+\.[a-z\-]+(:[0-9]+)?([\/]([a-z0-9_\/\-.?&%=+#])*)*)/i", '<a href="$1$2">$2</a>', $body);
         $htmlbody = str_replace("\n","<br>", $htmlbody);
         
         // Those constants used were introduced in 5.4.
