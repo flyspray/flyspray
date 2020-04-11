@@ -487,21 +487,20 @@ class Flyspray
 			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
 		}
 
-		if( empty($opts) || !isset($opts['stats']) ){
+		if (!isset($opts['stats']) ){
 
-			$res = $db->query('SELECT account_enabled, user_id, user_name, real_name,
-		email_address, jabber_id, oauth_provider, oauth_uid,
-		notify_type, notify_own, notify_online,
-		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
-		register_date, login_attempts, lock_until,
-		profile_image, hide_my_email, last_login
-		FROM {users}
-		ORDER BY account_enabled DESC, user_name ASC', false, $opts['perpage'], $opts['offset']);
-
+			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
+				email_address, jabber_id, oauth_provider, oauth_uid,
+				notify_type, notify_own, notify_online,
+				tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
+				register_date, login_attempts, lock_until,
+				profile_image, hide_my_email, last_login
+				FROM {users}
+				ORDER BY account_enabled DESC, user_name ASC';
 		} else {
 			# Well, this is a big and slow query, but the current solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
-			$res = $db->query('
+			$sql = '
 SELECT
 MIN(u.account_enabled) AS account_enabled,
 MIN(u.user_id) AS user_id,
@@ -611,10 +610,18 @@ UNION
         GROUP BY u.user_id
 ) u
 GROUP BY u.user_id
-ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC', false, $opts['perpage'], $opts['offset']); 
+ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC';
+
 		}
 
-		return $db->fetchAllArray($res);
+		$sqlcount=$db->query('SELECT COUNT(*) FROM ('.$sql.') u');
+		$usercount=$db->fetchOne($sqlcount);
+		$res = $db->query($sql, array(), $opts['perpage'], $opts['offset']);
+		$users=$db->fetchAllArray($res);
+		return array(
+			'users'=>$users,
+			'count'=>$usercount
+		);
 	}
 
     /**
