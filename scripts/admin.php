@@ -33,9 +33,9 @@ switch ($area = Req::val('area', 'prefs')) {
             Flyspray::show_error(5, true, null, $_SESSION['prev_page']);
         }
         $page->assign('theuser', $theuser);
-    case 'cat':
+
     case 'editgroup':
-        // yeah, utterly stupid, is changed in 1.0 already
+        // looks a bit dumb, maybe replace that big switch-case fallthrough construct
         if (Req::val('area') == 'editgroup') {
             $group_details = Flyspray::getGroupDetails(Req::num('id'));
             if (!$group_details || $group_details['project_id'] != $proj->id) {
@@ -44,18 +44,45 @@ switch ($area = Req::val('area', 'prefs')) {
             }
             $page->uses('group_details');
         }
-    case 'groups':
-    case 'newuser':
-    case 'newuserbulk':
+
     case 'editallusers':
-        $page->assign('groups', Flyspray::listGroups());
-    case 'userrequest':
-	$sql = $db->query("SELECT  *
+		// looks a bit dumb, maybe replace that big switch-case fallthrough construct
+		if ($area == 'editallusers') {
+			$perpage = 250; # take care of the PHP max_input_vars / (your form vars per user row in html output)
+			$pagenum = Get::num('pagenum', 1);
+			if ($pagenum < 1) {
+				$pagenum = 1;
+			}
+			$offset = $perpage * ($pagenum - 1);
+
+			$showstats = (isset($_GET['showfields']) && in_array('stats', $_GET['showfields'])) ? 1 : 0;
+			$showltf = (isset($_GET['showfields']) && in_array('ltf', $_GET['showfields'])) ? 1 : 0;
+
+			$listopts['perpage']=$perpage;
+			$listopts['pagenum']=$pagenum;
+			$listopts['offset']=$offset;
+			if($showstats){
+				$listopts['stats']=1;
+			}
+
+			$users = Flyspray::listUsers($listopts);
+			$page->assign('users', $users['users']);
+			$page->assign('usercount', $users['count']);
+			$page->uses('showstats','showltf','perpage','pagenum');
+		}
+		
+	case 'cat':
+	case 'groups':
+	case 'newuser':
+	case 'newuserbulk':
+		$page->assign('groups', Flyspray::listGroups());
+	case 'userrequest':
+		$sql = $db->query("SELECT  *
                              FROM  {admin_requests}
                             WHERE  request_type = 3 AND project_id = 0 AND resolved_by = 0
                          ORDER BY  time_submitted ASC");
 
-        $page->assign('pendings', $db->fetchAllArray($sql));
+		$page->assign('pendings', $db->fetchAllArray($sql));
     case 'newproject':
     case 'os':
     case 'prefs':
