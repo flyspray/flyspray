@@ -11,10 +11,6 @@ function toggleCheckbox(id)
 	}
 }
 </script>
-<?php
-     	$showstats=(isset($_GET['showfields']) && in_array('stats',$_GET['showfields'])) ? 1 : 0;
-        $showltf=  (isset($_GET['showfields']) && in_array('ltf',  $_GET['showfields'])) ? 1 : 0;
- ?>
 <form action="<?php echo Filters::noXSS(createURL($do, 'editallusers'));?>" method="get">
 <input type="hidden" name="do" value="admin" />
 <input type="hidden" name="area" value="editallusers" />
@@ -26,6 +22,7 @@ function toggleCheckbox(id)
 </select>
 <button type="submit">Show selected fields</button>
 </form>
+<div class="pagination"><?php echo pagenums($pagenum, $perpage, $usercount, 'admin', 'editallusers'); ?></div>
 <?php 
 if ($do == 'admin'): echo tpl_form(Filters::noXSS(createURL($do, 'editallusers')), null, null, null, 'id="editallusers"');
                else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']), null, null, null, 'id="editallusers"');
@@ -63,10 +60,7 @@ if ($do == 'admin'): ?>
 	</tr>
 	</thead>
 	<tbody>
-	<?php
-$listopts=null;
-if($showstats){ $listopts['stats']=1; }
-foreach (Flyspray::listUsers($listopts) as $usr): ?>
+<?php foreach ($users as $usr): ?>
 <tr class="<?php echo ($usr['account_enabled']) ? 'account_enabled':'account_disabled'; ?>" onclick="toggleCheckbox('<?php echo $usr['user_id']; ?>')">
 	<td><input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
 	<td><a href="<?php echo createURL('edituser', $usr['user_id'] ); ?>"><?php echo Filters::noXSS($usr['real_name']); ?></a></td>
@@ -135,3 +129,4 @@ foreach (Flyspray::listUsers($listopts) as $usr): ?>
   <p><button type="submit" id="buSubmit"><?= eL('updateaccounts') ?></button></p>
 -->
 </form>
+<div class="pagination"><?php echo pagenums($pagenum, $perpage, $usercount, 'admin', 'editallusers'); ?></div>
