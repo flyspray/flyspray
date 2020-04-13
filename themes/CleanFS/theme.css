@@ -1091,11 +1091,16 @@ fieldset.advsearch_users .multisel {position: absolute;white-space: nowrap;}
 fieldset.advsearch_users input {margin-top: 1.5em;}
 /* --------------------------- FORMS -----------------------*/
 .bulkuser {padding-left: 120px;}
-.account_header{background: #999;border: 1px solid #111;}
-.account_enabled{background: #EAF7D9;border: 1px solid #BBDF8D;}
-.account_enabled:hover {background: #00FF00;}
-.account_disabled{background: #FFD1D1;border: 1px solid #F8ACAC;}
-.account_disabled:hover {background: #FF0000;}
+
+.bulkedituser td.inactive{color:#888;}
+.account_header {background-color: #ddd;}
+.account_enabled {background-color: #efd;}
+.account_enabled:nth-child(2n) {background-color: #dfb;}
+.account_enabled:hover, .account_enabled:nth-child(2n):hover {background-color: #af8;}
+.account_disabled {background-color: #fdd;}
+.account_disabled:nth-child(2n) {background-color: #fcc;}
+.account_disabled:hover, .account_disabled:nth-child(2n):hover {background-color: #f99;}
+
 ul.form_elements {list-style: none;padding: 0;margin: 0 0 0 1em;}
 ul.form_elements li {padding: 2px;margin-bottom: 9px;}
 ul.form_elements label {
