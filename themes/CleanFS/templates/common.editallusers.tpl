@@ -32,7 +32,6 @@ if ($do == 'admin'): ?>
 	<input type="hidden" name="do" value="admin" />
 	<input type="hidden" name="area" value="editallusers" />
 <?php endif; ?>
-<style>.bulkedituser td.inactive{color:#999;}</style>
 <table class="bulkedituser">
 	<thead>
 	<tr class="account_header">
