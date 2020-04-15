@@ -487,16 +487,31 @@ class Flyspray
 			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
 		}
 
-		if (!isset($opts['stats']) ){
+		$filter = array();
+		if (isset($opts['status']) && ($opts['status']===1 || $opts['status']===0)) {
+			$filter[] = 'account_enabled = '.$opts['status'];
+		}
 
+		if (count($filter)) {
+			$where = "\nWHERE ".implode( "\nAND " , $filter);
+			$having = "\nHAVING ".implode( "\nAND " , $filter);
+		} else {
+			$where = '';
+			$having = '';
+		}
+		
+		if (!isset($opts['stats']) ){
 			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
 				email_address, jabber_id, oauth_provider, oauth_uid,
 				notify_type, notify_own, notify_online,
 				tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
 				register_date, login_attempts, lock_until,
 				profile_image, hide_my_email, last_login
-				FROM {users}
-				ORDER BY account_enabled DESC, user_name ASC';
+				FROM {users}';
+			$sql .= $where;
+			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
+			$sql .= $orderby;
+			
 		} else {
 			# Well, this is a big and slow query, but the current solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
@@ -575,7 +590,7 @@ UNION
         FROM {users} u
         LEFT JOIN {comments} c ON c.user_id=u.user_id
         GROUP BY u.user_id
- UNION
+UNION
      	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
         u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
         u.notify_type, u.notify_own, u.notify_online,
@@ -609,9 +624,11 @@ UNION
         LEFT JOIN {votes} v ON v.user_id=u.user_id
         GROUP BY u.user_id
 ) u
-GROUP BY u.user_id
-ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC';
+GROUP BY u.user_id';
 
+			$sql .= $having;
+			$orderby = "\nORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC";
+			$sql .= $orderby;
 		}
 
 		$sqlcount=$db->query('SELECT COUNT(*) FROM ('.$sql.') u');
