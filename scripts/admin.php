@@ -58,17 +58,23 @@ switch ($area = Req::val('area', 'prefs')) {
 			$showstats = (isset($_GET['showfields']) && in_array('stats', $_GET['showfields'])) ? 1 : 0;
 			$showltf = (isset($_GET['showfields']) && in_array('ltf', $_GET['showfields'])) ? 1 : 0;
 
-			$listopts['perpage']=$perpage;
-			$listopts['pagenum']=$pagenum;
-			$listopts['offset']=$offset;
-			if($showstats){
+			$listopts['perpage'] = $perpage;
+			$listopts['pagenum'] = $pagenum;
+			$listopts['offset'] = $offset;
+			if($showstats) {
 				$listopts['stats']=1;
+			}
+
+			if (isset($_GET['status']) && $_GET['status']==='1'){
+				$listopts['status']=1;
+			} elseif (isset($_GET['status']) && $_GET['status']==='0'){
+				$listopts['status']=0;
 			}
 
 			$users = Flyspray::listUsers($listopts);
 			$page->assign('users', $users['users']);
 			$page->assign('usercount', $users['count']);
-			$page->uses('showstats','showltf','perpage','pagenum');
+			$page->uses('showstats', 'showltf', 'perpage', 'pagenum', 'offset');
 		}
 		
 	case 'cat':
