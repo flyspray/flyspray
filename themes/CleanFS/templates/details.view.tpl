@@ -513,32 +513,31 @@ function quick_edit(elem, id)
         <!-- Due Date -->
         <?php if (in_array('duedate', $fields)): ?>
         <li>
-            <span class="label"><?php echo Filters::noXSS(L('duedate')); ?></span>
-	    <span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value">
-			<?php echo Filters::noXSS(formatDate($task_details['due_date'], false, L('undecided'))); ?><br><?php
-				$days = floor((strtotime(date('c', $task_details['due_date'])) - strtotime(date("Y-m-d"))) / (60 * 60 * 24));
-				if($task_details['due_date'] > 0)
-				{
-					if($days <$fs->prefs['days_before_alert'] && $days > 0)
-					{
-						echo "<font style='color: red; font-weight: bold'>".$days." ".L('daysleft')."</font>";
-					}
-					elseif($days < 0)
-					{
-						echo "<font style='color: red; font-weight: bold'>".str_replace('-', '', $days)."
-                        ".L('dayoverdue')."</font>";
-					}
-					elseif($days == 0)
-					{
-						echo "<font style='color: red; font-weight: bold'>".L('duetoday')."</font>";
-					}
-					else
-					{
-						echo $days." ".L('daysleft');
-					}
-				}
-				?>
-				</span>
+		<span class="label"><?= eL('duedate'); ?></span>
+	<?php
+	$days = floor((strtotime(date('c', $task_details['due_date'])) - strtotime(date('Y-m-d'))) / (60 * 60 * 24));
+	$due='';
+	$dueclass='';
+	if ($task_details['due_date'] > 0) {
+		if ($days < $fs->prefs['days_before_alert'] && $days > 0) {
+			$due=$days.' '.L('daysleft');
+			$dueclass=' duewarn';
+		} elseif ($days < 0) {
+			$due=str_replace('-', '', $days).' '.L('dayoverdue');
+			$dueclass=' overdue';
+		} elseif ($days == 0) {
+			$due=L('duetoday');
+			$dueclass=' duetoday';
+		} else {
+			$due= $days.' '.L('daysleft');
+		}
+	}
+	?>  
+	<span<?php if ($user->can_edit_task($task_details)): ?> onclick="show_hide(this, true)"<?php endif;?> class="value<?= $dueclass ?>">
+		<?php echo Filters::noXSS(formatDate($task_details['due_date'], false, L('undecided'))); ?>
+		<br/>
+		<span><?= Filters::noXSS($due) ?></span>
+        </span>
 
 	<?php if ($user->can_edit_task($task_details)): ?>
 		<span style="display:none">
