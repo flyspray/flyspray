@@ -99,6 +99,10 @@ body a.button.positive, body button.positive, .pagenums .active {
 .dbtable td {border-bottom:1px solid #999;}
 .dbfield {background-color:#eee;}
 
+.overdue {color:#f00;}
+.duetoday {color:#f00;}
+.duewarn {color:#660;}
+
 /* end default Flyspray color scheme */
 
 body {
