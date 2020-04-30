@@ -231,18 +231,17 @@ function quick_edit(elem, id)
 	xmlHttp.onreadystatechange = function(){
 		if(xmlHttp.readyState == 4){
 			var target = elem.previousElementSibling;
-			if(xmlHttp.status == 200){
-				if(target.getElementsByTagName("span").length > 0)//for progress
-				{
-					target.getElementsByTagName("span")[0].innerHTML = text;
-					target.getElementsByClassName("progress_bar")[0].style.width = text;
-				}else{
+			if (xmlHttp.status == 200) {
+				if (target.getElementsByClassName('progress_bar_container').length > 0) {
+					target.getElementsByTagName('span')[0].innerHTML = text;
+					target.getElementsByClassName('progress_bar')[0].style.width = text;
+				} else {
 					target.innerHTML = text;
 				}
 				target.className='fa fa-check';
 				elem.className='fa fa-check';
 				show_hide(elem, false);
-			}else{
+			} else {
 				// TODO show error message returned from the server and let quickedit form open
 				target.className='fa fa-warning';
 				elem.className='fa fa-warning';
