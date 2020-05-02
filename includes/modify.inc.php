@@ -866,7 +866,7 @@ switch ($action = Req::val('action'))
                               uniqid(mt_rand(), true));
         }
 
-        $confirm_code = substr($randval, 0, 20);
+        $confirm_code = substr($randval, 0, 10);
 
         // echo "<pre>Am I here?</pre>";
         // send the email first
