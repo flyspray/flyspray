@@ -54,11 +54,11 @@ if (count($categories)) : ?>
 <div id="controlBox">
   <div class="grip"></div>
   <div class="inner">
-      <a href="#" onclick="TableControl.up('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
-      <a href="#" onclick="TableControl.down('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
-      <a href="#" onclick="TableControl.shallower('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/left.png" alt="Left" /></a>
-      <a href="#" onclick="TableControl.deeper('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/right.png" alt="Right" /></a>
-  </div>
+    <a style="display:block;text-align:center;" href="#" onclick="TableControl.up('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>   
+    <a href="#" onclick="TableControl.shallower('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/left.png" alt="Left" /></a>
+    <a href="#" onclick="TableControl.deeper('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/right.png" alt="Right" /></a>
+    <a style="display:block;text-align:center;" href="#" onclick="TableControl.down('catTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
+</div>
 </div>
 <?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(CreateURL($do, 'cat', $proj->id))); ?>

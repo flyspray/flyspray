@@ -6,7 +6,7 @@
 */
 define('IN_FS', true);
 
-require_once(dirname(__FILE__).'/header.php');
+require_once dirname(__FILE__).'/header.php';
 
 // Get available do-modes
 $modes = str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/scripts/*.php")));
@@ -105,7 +105,7 @@ $csp->add('style-src', "'unsafe-inline'");
 $csp->add('script-src', "'self'");
 $csp->add('script-src', "'unsafe-inline'");
 $csp->add('connect-src', "'self'");
-	
+
 if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
 	# unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
 	$csp->add('script-src', "'unsafe-eval'");
@@ -173,7 +173,7 @@ if (Req::has('action')) {
     if( !Post::has('csrftoken') ){
         die('missingtoken');
     }elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
-        require_once(BASEDIR . '/includes/modify.inc.php');
+        require_once BASEDIR . '/includes/modify.inc.php';
     }else{
         die('wrongtoken');
     }
@@ -206,9 +206,10 @@ $sql = $db->query('
 	ORDER BY project_is_active DESC, project_title'
 );
 
-# new: project_id as index for easier access, needs testing and maybe simplification 
+# new: project_id as index for easier access, needs testing and maybe simplification
 # similiar situation also includes/class.flyspray.php function listProjects()
 $sres=$db->fetchAllArray($sql);
+$prs=array();
 foreach($sres as $p){
 	$prs[$p['project_id']]=$p;
 }
@@ -237,9 +238,9 @@ $page->assign('supertask_id', $supertask_id);
 $page->pushTpl('header.tpl');
 
 if (!defined('NO_DO')) {
-    require_once(BASEDIR . "/scripts/$do.php");
+    require_once BASEDIR . "/scripts/$do.php";
 } else{
-    # not nicest solution, NO_DO currently only used on register actions 
+    # not nicest solution, NO_DO currently only used on register actions
     $page->pushTpl('register.ok.tpl');
 }
 

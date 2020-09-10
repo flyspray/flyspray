@@ -303,7 +303,7 @@ abstract class Backend
      */
     public static function add_comment($task, $comment_text, $time = null)
     {
-        global $conf, $db, $user, $notify, $proj;
+        global $conf, $db, $user, $notify, $proj, $fs;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
             return false;
@@ -311,6 +311,7 @@ abstract class Backend
 
 	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 		$purifier = new HTMLPurifier($purifierconfig);
 		$comment_text = $purifier->purify($comment_text);
 	}
@@ -705,6 +706,9 @@ abstract class Backend
                 $newuser[0][$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
             }
 
+	    if(is_null($notify)) {
+		    $notify = new Notifications();
+	    }
             // Notify the appropriate users
 			if ($fs->prefs['notify_registration']) {
                 $notify->create(NOTIFY_NEW_USER, null,
@@ -969,7 +973,7 @@ abstract class Backend
      */
     public static function create_task($args)
     {
-        global $conf, $db, $user, $proj;
+        global $conf, $db, $user, $proj, $fs;
 
         if (!isset($args)) return 0;
 
@@ -1078,6 +1082,7 @@ abstract class Backend
 	# dokuwiki syntax plugin filters on output
 	if($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc']) ){
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
 		$purifier = new HTMLPurifier($purifierconfig);
 		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
 	}
@@ -1219,7 +1224,7 @@ abstract class Backend
 
         if ($user->isAnon()) {
             $anonuser = array();
-            $anonuser[$email] = array('recipient' => $args['anon_email'], 'lang' => $fs->prefs['lang_code']);
+            $anonuser[] = array('recipient' => $args['anon_email']);
             $recipients = array($anonuser);
             $notify->create(NOTIFY_ANON_TASK, $task_id, $token,
                             $recipients, NOTIFY_EMAIL, $proj->prefs['lang_code']);
@@ -1275,7 +1280,7 @@ abstract class Backend
                     array($user->id, time(), $task_id, 1));
 
         // duplicate
-        if ($reason == 6) {
+        if ($reason == RESOLUTION_DUPLICATE) {
             preg_match("/\b(?:FS#|bug )(\d+)\b/", $comment, $dupe_of);
             if (count($dupe_of) >= 2) {
                 $existing = $db->query('SELECT * FROM {related} WHERE this_task = ? AND related_task = ? AND is_duplicate = 1',
@@ -1346,6 +1351,7 @@ LEFT JOIN ({groups} pg
 	// Keeps the overall logic somewhat simpler.
 	$from .= ' LEFT JOIN {assigned} ass ON t.task_id = ass.task_id';
 	$from .= ' LEFT JOIN {task_tag} tt ON t.task_id = tt.task_id';
+	$from .= ' LEFT JOIN {list_tag} flt ON tt.tag_id = flt.tag_id';
         $cfrom = $from;
         
         // Seems resution name really is needed...
@@ -1479,19 +1485,19 @@ LEFT JOIN {users} u ON ass.user_id = u.user_id ';
         
 	# not every db system has this feature out of box, it is not standard sql
 	if($conf['database']['dbtype']=='mysqli' || $conf['database']['dbtype']=='mysql'){
-		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
+		#$select .= ' GROUP_CONCAT(DISTINCT tg.tag_name ORDER BY tg.list_position) AS tags, ';
 		$select .= ' GROUP_CONCAT(DISTINCT tg.tag_id ORDER BY tg.list_position) AS tagids, ';
-		$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
+		#$select .= ' GROUP_CONCAT(DISTINCT tg.class ORDER BY tg.list_position) AS tagclass, ';
 	} elseif($conf['database']['dbtype']=='pgsql'){
-		$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
+		#$select .= " array_to_string(array_agg(tg.tag_name ORDER BY tg.list_position), ',') AS tags, ";
 		$select .= " array_to_string(array_agg(CAST(tg.tag_id as text) ORDER BY tg.list_position), ',') AS tagids, ";
-		$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
+		#$select .= " array_to_string(array_agg(tg.class ORDER BY tg.list_position), ',') AS tagclass, ";
 	} else{
 		# unsupported groupconcat or we just do not know how write it for the other databasetypes in this section 
-		$select .= ' MIN(tg.tag_name) AS tags, ';
+		#$select .= ' MIN(tg.tag_name) AS tags, ';
 		#$select .= ' (SELECT COUNT(tt.tag_id) FROM {task_tag} tt WHERE tt.task_id = t.task_id)  AS tagnum, ';
 		$select .= ' MIN(tg.tag_id) AS tagids, ';
-		$select .= " '' AS tagclass, ";
+		#$select .= " '' AS tagclass, ";
 	}
 	// task_tag join table is now always included in join
 	$from .= '
@@ -1741,45 +1747,59 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
         }
 
-        if (array_get($args, 'string')) {
-            $words = explode(' ', strtr(array_get($args, 'string'), '()', '  '));
-            $comments = '';
-            $where_temp = array();
+		if (array_get($args, 'string')) {
+			$words = explode(' ', strtr(array_get($args, 'string'), '()', '  '));
+			$comments = '';
+			$where_temp = array();
 
-            if (array_get($args, 'search_in_comments')) {
-                $comments .= " OR c.comment_text $LIKEOP ?";
-            }
-            if (array_get($args, 'search_in_details')) {
-                $comments .= " OR t.detailed_desc $LIKEOP ?";
-            }
+			if (array_get($args, 'search_in_comments')) {
+				$comments .= " OR c.comment_text $LIKEOP ?";
+			}
+			if (array_get($args, 'search_in_details')) {
+				$comments .= " OR t.detailed_desc $LIKEOP ?";
+			}
 
-            foreach ($words as $word) {
-                $likeWord = '%' . str_replace('+', ' ', trim($word)) . '%';
-                $where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? $comments)";
-                array_push($sql_params, $likeWord, intval($word));
-                if (array_get($args, 'search_in_comments')) {
-                    array_push($sql_params, $likeWord);
-                }
-                if (array_get($args, 'search_in_details')) {
-                    array_push($sql_params, $likeWord);
-                }
-            }
+			foreach ($words as $word) {
+				$word = trim($word);
+				if ($word==''){
+					continue;
+				}
 
-            $where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
-        }
+				# The 2006-2020 hidden/undocumented '+' search feature: 'open+source' finds 'open source', but not 'open closed source'
+				if (substr($word, -1) === '+') {
+					# do not replace the + at end of a word like archlinux package name 'memtest86+'
+					$likeWord = '%' . trim(str_replace('+', ' ', substr($word, 0, -1))) . '+%';
+				} else {
+					$likeWord = '%' . trim(str_replace('+', ' ', $word)) . '%';
+				}
+				
+				$where_temp[] = "(t.item_summary $LIKEOP ? OR t.task_id = ? OR flt.tag_name $LIKEOP ? $comments)";
+				array_push($sql_params, $likeWord, intval($word), $likeWord);
+				if (array_get($args, 'search_in_comments')) {
+					array_push($sql_params, $likeWord);
+				}
+				if (array_get($args, 'search_in_details')) {
+					array_push($sql_params, $likeWord);
+				}
+			}
 
-	if ($user->isAnon()) {
-		$where[] = 't.mark_private = 0 AND p.others_view = 1';
-		if(array_key_exists('status', $args)){
-			if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
-				$where[] = 't.is_closed = 1';
-			} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
-				$where[] = 't.is_closed = 0';
+			if(count($where_temp)>0){
+				$where[] = '(' . implode((array_get($args, 'search_for_all') ? ' AND ' : ' OR '), $where_temp) . ')';
 			}
 		}
-	}
 
-        $where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
+		if ($user->isAnon()) {
+			$where[] = 't.mark_private = 0 AND p.others_view = 1';
+			if(array_key_exists('status', $args)){
+				if (in_array('closed', $args['status']) && !in_array('open', $args['status'])) {
+					$where[] = 't.is_closed = 1';
+				} elseif (in_array('open', $args['status']) && !in_array('closed', $args['status'])) {
+					$where[] = 't.is_closed = 0';
+				}
+			}
+		}
+
+		$where = (count($where)) ? 'WHERE ' . join(' AND ', $where) : '';
 
         // Get the column names of table tasks for the group by statement
         if (!strcasecmp($conf['database']['dbtype'], 'pgsql')) {

@@ -1,7 +1,7 @@
 <?php if ($label): ?>
 <label for="<?php echo Filters::noXSS($name); ?>"><?php echo Filters::noXSS($label); ?></label>
 <?php endif; ?>
-<input id="<?php echo Filters::noXSS($name); ?>" type="text" class="text" size="10" name="<?php echo Filters::noXSS($name); ?>" value="<?php echo Filters::noXSS($date); ?>" />
+<input id="<?php echo Filters::noXSS($name); ?>" type="text" class="text" size="10" name="<?php echo Filters::noXSS($name); ?>" placeholder=" " value="<?php echo Filters::noXSS($date); ?>" />
 
 <a class="datelink" href="#" id="<?php echo Filters::noXSS($name); ?>dateview">
   <!--<img src="<?php echo Filters::noXSS($this->get_image('x-office-calendar')); ?>" alt="<?php echo Filters::noXSS(L('selectdate')); ?>" />-->

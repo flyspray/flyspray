@@ -1,72 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo Filters::noXSS(L('locale')); ?>" xml:lang="<?php echo Filters::noXSS(L('locale')); ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?= eL('locale') ?>" xml:lang="<?= eL('locale') ?>">
 <head>
 <title><?php echo Filters::noXSS($this->_title); ?></title>
-
-    <meta name="description" content="Flyspray, a Bug Tracking System written in PHP." />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Script-Type" content="text/javascript" />
-    <meta http-equiv="Content-Style-Type" content="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <?php if ($fs->prefs['url_rewriting']): ?>
-    <base href="<?php echo Filters::noXSS($baseurl); ?>" />
-    <?php endif; ?>
-    <?php if(trim($this->get_image('favicon'))): ?>
-    <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
-    <?php endif; ?>
-    <link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
-    <?php foreach ($fs->projects as $project): ?>
-    <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
-    <?php endforeach; ?>
-    <link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
+<meta name="description" content="Flyspray, a Bug Tracking System written in PHP." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<?php if ($fs->prefs['url_rewriting']): ?>
+<base href="<?php echo Filters::noXSS($baseurl); ?>" />
+<?php endif; ?>
+<?php if(trim($this->get_image('favicon'))): ?>
+<link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
+<?php endif; ?>
+<link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
+<?php foreach ($fs->projects as $project): ?>
+<link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
+<?php endforeach; ?>
+<link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
 <?php
 # css hack to fix css3only state switches with ~ in older android browser <4.3 TODO: find webkit version when that issue was fixed.
 if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 4\.[012]/' , $_SERVER['HTTP_USER_AGENT'])):?>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>oldwebkitsiblingfix.css'; ?>" />
 <?php endif; ?>
-<link media="print"  href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-    <link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link media="print" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
-	<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>tags.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>tags.css" rel="stylesheet" type="text/css" />
 <?php endif; ?>
 <?php if($proj->prefs['custom_style'] !=''): ?>
-	<link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()).$proj->prefs['custom_style']; ?>" rel="stylesheet" type="text/css" />
+<link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()).$proj->prefs['custom_style']; ?>" rel="stylesheet" type="text/css" />
 <?php endif; ?>
-    <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
-          href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
-    <link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
-          href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
-	<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
-	      href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
-
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/prototype/prototype.js"></script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/script.aculo.us/scriptaculous.js"></script>
-    <?php if ('index' == $do || 'details' == $do): ?>
-        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/<?php echo Filters::noXSS($do); ?>.js"></script>
-    <?php endif; ?>
-    <?php if ( $do == 'pm' || $do == 'admin'): ?>
-        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
-    <?php endif; ?>
-    <?php if ( $do == 'depends'): ?>
-        <!--[if IE]><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/excanvas.js"></script><![endif]-->
-        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/jit.js"></script>
-    <?php endif; ?>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tabs.js"></script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/functions.js"></script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar_stripped.js"></script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
-    <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
-    <?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
-    <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
-    <!--[if IE]>
-    <link media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>ie.css" rel="stylesheet" type="text/css" />
-    <![endif]-->
-    <?php foreach(TextFormatter::get_javascript() as $file): ?>
-        <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
-    <?php endforeach; ?>
+<link rel="alternate" type="application/rss+xml" title="Flyspray RSS 1.0 Feed"
+  href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
+<link rel="alternate" type="application/rss+xml" title="Flyspray RSS 2.0 Feed"
+  href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
+<link rel="alternate" type="application/atom+xml" title="Flyspray Atom 0.3 Feed"
+  href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;project=<?php echo Filters::noXSS($proj->id); ?>" />
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/prototype/prototype.js"></script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/script.aculo.us/scriptaculous.js"></script>
+<?php if ('index' == $do): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/index.js"></script>
+<?php endif; ?>
+<?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
+<?php endif; ?>
+<?php if ( $do == 'pm' || $do == 'admin'): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
+<?php endif; ?>
+<?php if ( $do == 'depends'): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/jit.js"></script>
+<?php endif; ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tabs.js"></script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/functions.js"></script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar_stripped.js"></script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
+<?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
+<link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
+<?php foreach(TextFormatter::get_javascript() as $file): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
+<?php endforeach; ?>
 <?php if(isset($fs->prefs['captcha_recaptcha']) && $fs->prefs['captcha_recaptcha']
 	&& isset($fs->prefs['captcha_recaptcha_sitekey']) && $fs->prefs['captcha_recaptcha_sitekey']!=''
 	&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']!=''
@@ -108,7 +105,6 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 	<?php endif;?>
 
 <div id="content">
-	<div class="clear"></div>
 	<?php $show_message = explode(' ', $fs->prefs['pages_welcome_msg']);
 	if ($fs->prefs['intro_message'] && ($proj->id == 0 || $proj->prefs['disp_intro']) && (in_array($do, $show_message)) ):?>
 	<div id="intromessage"><?php echo TextFormatter::render($fs->prefs['intro_message'], 'msg', $proj->id); ?></div>

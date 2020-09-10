@@ -9,19 +9,19 @@
 <body>
 <div id="header">
   <div id="logo">
-    <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - <?php echo Filters::noXSS(L('slogan')); ?>"><?php echo Filters::noXSS(L('slogan')); ?></a></h1>
+    <h1><a href="<?php echo Filters::noXSS($index); ?>" title="Flyspray - <?= eL('slogan') ?>"><?= eL('slogan') ?></a></h1>
   </div><!-- End of logo -->
 </div><!-- End of header -->
 <div id="content">
-  <div id="stepbar" title="<?php echo Filters::noXSS(L('progress')); ?>">
-    <!-- <div><?php echo Filters::noXSS(L('progress')); ?></div> -->
+  <div id="stepbar" title="<?= eL('progress') ?>">
+    <!-- <div><?= eL('progress') ?></div> -->
     <div class="done">3rd party libs</div>
     <div<?php
     if(!isset($_POST['action'])){
       echo ' class="step-on"';
     } elseif( $_POST['action'] == 'database' || $_POST['action'] == 'administration' || $_POST['action'] == 'complete' ){
       echo ' class="done"';
-    } ?>><?php echo Filters::noXSS(L('preinstallcheck')); ?></div>
+    } ?>><?= eL('preinstallcheck') ?></div>
     <div<?php
     if(isset($_POST['action'])){
       if( $_POST['action'] == 'database' ){
@@ -30,7 +30,7 @@
         echo ' class="done"';
       }
     }
-    ?>><?php echo Filters::noXSS(L('databasesetup')); ?></div>
+    ?>><?= eL('databasesetup') ?></div>
     <div<?php
     if(isset($_POST['action'])){
       if($_POST['action'] == 'administration'){
@@ -38,15 +38,15 @@
       } elseif($_POST['action'] == 'complete'){
         echo ' class="done"';
       }
-    } ?>><?php echo Filters::noXSS(L('administration')); ?></div>
+    } ?>><?= eL('administration') ?></div>
     <div<?php echo (isset($_POST['action']) && ($_POST['action'] == 'complete')) ? ' class="step-on"' : ''; ?>><?php echo Filters::noXSS(L('installflyspray')); ?></div>
   </div>
   <?php echo $body; ?>
 </div><!-- End of content -->
 <div id="footer">
   <ul id="docs">
-    <li><a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" title="<?php echo Filters::noXSS(L('lgpllicense')); ?>" target="_blank"><?php echo Filters::noXSS(L('lgpllicense')); ?></a></li>
-    <li><a href="http://flyspray.org/manual" title="<?php echo Filters::noXSS(L('installationguide')); ?>" target="_blank"><?php echo Filters::noXSS(L('installationguide')); ?></a></li>
+    <li><a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" title="<?= eL('lgpllicense') ?>" target="_blank"><?= eL('lgpllicense') ?></a></li>
+    <li><a href="https://www.flyspray.org/manual/" title="<?= eL('installationguide') ?>" target="_blank"><?= eL('installationguide') ?></a></li>
   </ul>
   <p>Flyspray <?php echo Filters::noXSS($version); ?><br />
   Copyright 2004-<?php echo Filters::noXSS(date('Y')); ?> &copy; The Flyspray team.  All rights reserved.

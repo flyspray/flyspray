@@ -140,27 +140,29 @@ function load_translations(){
 	$lang_code = strtolower($lang_code);
 	$translation = BASEDIR.'/lang/'.$lang_code.'.php';
 	if ($lang_code != 'en' && is_readable($translation)) {
-		include_once($translation);
+		include_once $translation;
 		$language = is_array($translation) ? array_merge($language, $translation) : $language;
                 FlySprayI18N::init($lang_code, $language);
-	}elseif( 'en'!=substr($lang_code, 0, strpos($lang_code, '_')) && is_readable(BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php') ){
+	} elseif ( 'en'!=substr($lang_code, 0, strpos($lang_code, '_')) && is_readable(BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php') ){
 		# fallback 'de_AT' to 'de', but not for 'en_US'
 		$translation=BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php';
-		include_once($translation);
-		$language = is_array($translation) ? array_merge($language, $translation) : $language;    
+		include_once $translation;
+		$language = is_array($translation) ? array_merge($language, $translation) : $language;
 	}
 
-        FlySprayI18N::setDefault($language);
-    // correctly translate title since language not set when initialising the project
-    if (isset($proj) && !$proj->id) {
-        $proj->prefs['project_title'] = L('allprojects');
-        $proj->prefs['feed_description']  = L('feedforall');
-    }
+	FlySprayI18N::setDefault($language);
+	// correctly translate title since language not set when initialising the project
+	if (isset($proj) && !$proj->id) {
+		$proj->prefs['project_title'] = L('allprojects');
+		$proj->prefs['feed_description']  = L('feedforall');
+	}
 
-    for ($i = 6; $i >= 1; $i--) {
-        $fs->priorities[$i] = L('priority' . $i);
-    }
-    for ($i = 5; $i >= 1; $i--) {
-        $fs->severities[$i] = L('severity' . $i);
-    }
+	if (is_object($fs)) {
+		for ($i = 6; $i >= 1; $i--) {
+			$fs->priorities[$i] = L('priority' . $i);
+		}
+		for ($i = 5; $i >= 1; $i--) {
+			$fs->severities[$i] = L('severity' . $i);
+		}
+	}
 }

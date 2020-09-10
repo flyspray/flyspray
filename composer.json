@@ -3,15 +3,18 @@
     "type": "application",
     "description": "The Flyspray bug tracking system.",
     "keywords": ["bug","bugs","tracker","issue","issues", "web"],
-    "homepage": "http://flyspray.org",
+    "homepage": "https://flyspray.org",
     "license": "LGPL-2.1",
     "require": {
         "swiftmailer/swiftmailer": "~5.0",
         "adodb/adodb-php": "~5.20",
-        "jamiebicknell/Sparkline": "1.*",
-        "ezyang/htmlpurifier": "~4.8.0",
+        "jamiebicknell/sparkline": "1.*",
+        "ezyang/htmlpurifier": "~4.12",
         "dapphp/securimage": "3.6.6",
-        "league/oauth2-client": "~0.3|~0.12" 
+        "league/oauth2-client": "~0.12" 
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     },
     "repositories": [
         {

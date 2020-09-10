@@ -1,0 +1,76 @@
+/* mockup colors for Flyspray 1.0 CleanFS layout debugging and development
+ * It just sets ugly background colors for some html tags and prints overlayed the labels of ids or CSS classes.
+ * mainly used for reviewing/test/redo layout of task details page
+ */
+
+#menu:before,
+#pm-menu:before,
+#pmcontrol:before,
+#content:before,
+#actionbar:before,
+#taskdetails:before,
+#navigation:before,
+#taskfields:before,
+.fieldslist:before,
+#taskdetailsfull:before,
+span.tags:before,
+#taskinfo:before,
+#fineprint:before,
+#actionbuttons:before,
+div.comment_container:before,
+div.commenttext:before,
+#footer:before {
+        position:absolute;top:0;left:0;
+        z-index:100;
+        border:1px solid #666;
+        line-height:0.9em;
+        background-color:rgba(255,255,255,0.5);
+        color:#c0c;
+}
+/* overlaps with #taskdetails so shift a bit more rightdown*/
+#taskfields:before{top:1em !important;}
+/* more opacity */
+span.tags:before{background-color:rgba(255,255,255,0.9);}
+
+#menu:before,
+#pm-menu:before,
+#pmcontrol:before,
+#content:before,
+#actionbar:before,
+#taskdetails:before,
+#navigation:before,
+#taskfields:before,
+#fieldslist:before,
+#taskdetailsfull:before,
+#taskinfo:before,
+#fineprint:before,
+#actionbuttons:before,
+#footer:before{
+        content:'#'attr(id);
+}
+
+span.tags:before,
+.fieldslist:before,
+div.comment_container:before,
+div.commenttext:before {
+        content:'.'attr(class);
+}
+
+#pm-menu{position:relative;}
+#pmcontrol{position:relative;}
+#content{background-color:rgba(150,150,255,0.5);position:relative;}
+#actionbar{background-color:#fdf;}
+#taskdetails{background-color:rgba(200,200,150,0.5);position:relative;}
+#navigation{background-color:rgba(255,255,255,0.5);position:relative;}
+#taskdetailsfull{background-color:#rgba(255,230,230,0.5);position:relative;}
+span.tags{background-color:#fff;position:relative;}
+#taskfields{background-color:#dfd;position:relative;}
+.fieldslist {position:relative;}
+#taskfields .fieldslist li{background-color:rgba(150,255,150,0.5) !important;}
+#fineprint {background-color:#rgba(200,255,255,0.5);position:relative;}
+#taskinfo {background-color:#fdc;position:relative;}
+#actionbuttons{background-color:rgba(150,150,255,0.5);position:relative;}
+div#taskclosed{background-color:rgba(255,150,150,0.5);}
+div.comment_container{background-color:rgba(200,255,200,0.5);position:relative;}
+div.commenttext{background-color:rgba(255,255,100,0.5);position:relative;}
+#footer {background-color:rgba(255,200,255,0.5);position:relative;}

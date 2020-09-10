@@ -3,7 +3,8 @@
 // Calendar BG language
 // Author: Mihai Bazon, <mihai_bazon@yahoo.com>
 // Translator: Valentin Sheiretsky, <valio@valio.eu.org>
-// Encoding: Windows-1251
+// Translator: Doncho N. Gunchev, <gunchev@gmail.com> 2006-11-20
+// Encoding: UTF-8
 // Distributed under the same terms as the calendar itself.
 
 // For translators: please use UTF-8 if possible.  We strongly believe that
@@ -12,14 +13,14 @@
 
 // full day names
 Calendar._DN = new Array
-("Неделя",
- "Понеделник",
- "Вторник",
- "Сряда",
- "Четвъртък",
- "Петък",
- "Събота",
- "Неделя");
+("РќРµРґРµР»СЏ",
+ "РџРѕРЅРµРґРµР»РЅРёРє",
+ "Р’С‚РѕСЂРЅРёРє",
+ "РЎСЂСЏРґР°",
+ "Р§РµС‚РІСЉСЂС‚СЉРє",
+ "РџРµС‚СЉРє",
+ "РЎСЉР±РѕС‚Р°",
+ "РќРµРґРµР»СЏ");
 
 // Please note that the following array of short day names (and the same goes
 // for short month names, _SMN) isn't absolutely necessary.  We give it here
@@ -35,90 +36,96 @@ Calendar._DN = new Array
 
 // short day names
 Calendar._SDN = new Array
-("Нед",
- "Пон",
- "Вто",
- "Сря",
- "Чет",
- "Пет",
- "Съб",
- "Нед");
+("РќРµРґ",
+ "РџРѕРЅ",
+ "Р’С‚Рѕ",
+ "РЎСЂСЏ",
+ "Р§РµС‚",
+ "РџРµС‚",
+ "РЎСЉР±",
+ "РќРµРґ");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // full month names
 Calendar._MN = new Array
-("Януари",
- "Февруари",
- "Март",
- "Април",
- "Май",
- "Юни",
- "Юли",
- "Август",
- "Септември",
- "Октомври",
- "Ноември",
- "Декември");
+("РЇРЅСѓР°СЂРё",
+ "Р¤РµРІСЂСѓР°СЂРё",
+ "РњР°СЂС‚",
+ "РђРїСЂРёР»",
+ "РњР°Р№",
+ "Р®РЅРё",
+ "Р®Р»Рё",
+ "РђРІРіСѓСЃС‚",
+ "РЎРµРїС‚РµРјРІСЂРё",
+ "РћРєС‚РѕРјРІСЂРё",
+ "РќРѕРµРјРІСЂРё",
+ "Р”РµРєРµРјРІСЂРё");
 
 // short month names
 Calendar._SMN = new Array
-("Яну",
- "Фев",
- "Мар",
- "Апр",
- "Май",
- "Юни",
- "Юли",
- "Авг",
- "Сеп",
- "Окт",
- "Ное",
- "Дек");
+("РЇРЅСѓ",
+ "Р¤РµРІ",
+ "РњР°СЂ",
+ "РђРїСЂ",
+ "РњР°Р№",
+ "Р®РЅРё",
+ "Р®Р»Рё",
+ "РђРІРі",
+ "РЎРµРї",
+ "РћРєС‚",
+ "РќРѕРµ",
+ "Р”РµРє");
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "Информация за календара";
+Calendar._TT["INFO"] = "РРЅС„РѕСЂРјР°С†РёСЏ Р·Р° РєР°Р»РµРЅРґР°СЂР°";
+
+
 
 Calendar._TT["ABOUT"] =
-"DHTML Date/Time Selector\n" +
+"DHTML Р”Р°С‚Р°/Р§Р°СЃ РЎРµР»РµРєС‚РѕСЂ\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)
-"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
-"Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
+"Р—Р° РїРѕСЃР»РµРґРЅР° РІРµСЂСЃРёСЏ РїРѕСЃРµС‚РµС‚Рµ: http://www.dynarch.com/projects/calendar/\n" +
+"Р Р°Р·РїСЂРѕСЃС‚СЂР°РЅСЏРІР° СЃРµ РїРѕРґ GNU LGPL.  Р’РёР¶С‚Рµ http://gnu.org/licenses/lgpl.html Р·Р° РїРѕРІРµС‡Рµ РёРЅС„РѕСЂРјР°С†РёСЏ." +
 "\n\n" +
-"Date selection:\n" +
-"- Use the \xab, \xbb buttons to select year\n" +
-"- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
-"- Hold mouse button on any of the above buttons for faster selection.";
+"РР·Р±РѕСЂ РЅР° РґР°С‚Р°:\n" +
+"- РџРѕР»Р·РІР°Р№С‚Рµ Р±СѓС‚РѕРЅРё \xab, \xbb Р·Р° РґР° РёР·Р±РµСЂРµС‚Рµ РіРѕРґРёРЅР°\n" +
+"- РџРѕР»Р·РІР°Р№С‚Рµ Р±СѓС‚РѕРЅРё " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " Р·Р° РґР° РёР·Р±РµСЂРµС‚Рµ РјРµСЃРµС†\n" +
+"- Р—Р°РґСЂСЉР¶С‚Рµ Р±СѓС‚РѕРЅР° РЅР° РјРёС€РєР°С‚Р° РЅР° РЅСЏРєРѕР№ РѕС‚ РіРѕСЂРЅРёС‚Рµ Р±СѓС‚РѕРЅРё Р·Р° РїРѕ-Р±СЉСЂР· РёР·Р±РѕСЂ.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
-"Time selection:\n" +
-"- Click on any of the time parts to increase it\n" +
-"- or Shift-click to decrease it\n" +
-"- or click and drag for faster selection.";
+"РР·Р±РѕСЂ РЅР° РІСЂРµРјРµ:\n" +
+"- РќР°С‚РёСЃРЅРµС‚Рµ СЃ РјРёС€РєР°С‚Р° РЅР° РЅСЏРєРѕР№ РѕС‚ РµР»РµРјРµРЅС‚РёС‚Рµ РЅР° С‡Р°СЃР° Р·Р° РґР° РіРѕ СѓРІРµР»РёС‡РёС‚Рµ\n" +
+"- РёР»Рё РЅР°С‚РёСЃРЅРµС‚Рµ СЃ РјРёС€РєР°С‚Р° РґСЉСЂР¶РµР№РєРё Shift Р·Р° РґР° РіРѕ РЅР°РјР°Р»РёС‚Рµ\n" +
+"- РёР»Рё РЅР°С‚РёСЃРЅРµС‚Рµ Рё РІР»Р°С‡РµС‚Рµ (Р»СЏРІРѕ-РґСЏСЃРЅРѕ) Р·Р° РїРѕ-Р±СЉСЂР· РёР·Р±РѕСЂ.";
 
-Calendar._TT["PREV_YEAR"] = "Предна година (задръжте за меню)";
-Calendar._TT["PREV_MONTH"] = "Преден месец (задръжте за меню)";
-Calendar._TT["GO_TODAY"] = "Изберете днес";
-Calendar._TT["NEXT_MONTH"] = "Следващ месец (задръжте за меню)";
-Calendar._TT["NEXT_YEAR"] = "Следваща година (задръжте за меню)";
-Calendar._TT["SEL_DATE"] = "Изберете дата";
-Calendar._TT["DRAG_TO_MOVE"] = "Преместване";
-Calendar._TT["PART_TODAY"] = " (днес)";
+Calendar._TT["PREV_YEAR"] = "РџСЂРµРґРЅР° РіРѕРґРёРЅР° (Р·Р°РґСЂСЉР¶С‚Рµ Р·Р° РјРµРЅСЋ)";
+Calendar._TT["PREV_MONTH"] = "РџСЂРµРґРµРЅ РјРµСЃРµС† (Р·Р°РґСЂСЉР¶С‚Рµ Р·Р° РјРµРЅСЋ)";
+Calendar._TT["GO_TODAY"] = "РР·Р±РµСЂРµС‚Рµ РґРЅРµСЃ";
+Calendar._TT["NEXT_MONTH"] = "РЎР»РµРґРІР°С‰ РјРµСЃРµС† (Р·Р°РґСЂСЉР¶С‚Рµ Р·Р° РјРµРЅСЋ)";
+Calendar._TT["NEXT_YEAR"] = "РЎР»РµРґРІР°С‰Р° РіРѕРґРёРЅР° (Р·Р°РґСЂСЉР¶С‚Рµ Р·Р° РјРµРЅСЋ)";
+Calendar._TT["SEL_DATE"] = "РР·Р±РµСЂРµС‚Рµ РґР°С‚Р°";
+Calendar._TT["DRAG_TO_MOVE"] = "РџСЂРµРјРµСЃС‚РІР°РЅРµ";
+Calendar._TT["PART_TODAY"] = " (РґРЅРµСЃ)";
 
 // the following is to inform that "%s" is to be the first day of week
 // %s will be replaced with the day name.
-Calendar._TT["DAY_FIRST"] = "%s като първи ден";
+Calendar._TT["DAY_FIRST"] = "%s РєР°С‚Рѕ РїСЉСЂРІРё РґРµРЅ";
 
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
 // means Monday, etc.
 Calendar._TT["WEEKEND"] = "0,6";
 
-Calendar._TT["CLOSE"] = "Затворете";
-Calendar._TT["TODAY"] = "Днес";
-Calendar._TT["TIME_PART"] = "(Shift-)Click или drag за да промените стойността";
+Calendar._TT["CLOSE"] = "Р—Р°С‚РІРѕСЂРµС‚Рµ";
+Calendar._TT["TODAY"] = "Р”РЅРµСЃ";
+Calendar._TT["TIME_PART"] = "РќР°С‚РёСЃРЅРµС‚Рµ (СЃСЉСЃ Shift) РёР»Рё РІР»Р°С‡РµС‚Рµ";
 
 // date formats
-Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
+Calendar._TT["DEF_DATE_FORMAT"] = "%d.%m.%Y";
 Calendar._TT["TT_DATE_FORMAT"] = "%A - %e %B %Y";
 
-Calendar._TT["WK"] = "Седм";
-Calendar._TT["TIME"] = "Час:";
+Calendar._TT["WK"] = "РЎРµРґРј";
+Calendar._TT["TIME"] = "Р§Р°СЃ:";

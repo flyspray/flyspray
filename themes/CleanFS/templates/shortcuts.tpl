@@ -1,31 +1,54 @@
+<?php
+# TODO: show only or at least highlight the section that is matching the current view.
+
+# following decisions based on:
+# https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey
+# https://en.wikipedia.org/wiki/Access_key#Access_in_different_browsers
+if (isset($_SESSION['ua'])) {
+	if ($_SESSION['ua']['platform'] == 'MacOSX') {
+		# all Browsers on Apple Macs
+		$modifier='<kbd>Ctrl</kbd> + <kbd>⌥ Opt</kbd>';
+	} elseif ($_SESSION['ua']['browser'] == 'Firefox') {
+		# Firefox on Windows and Linux
+		$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
+	} else {
+		# all others
+		$modifier='<kbd>Alt</kbd>';
+	}	
+} else {
+	# fallback
+	$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
+}
+?>
 <input type="checkbox" id="s_shortcuts" />
-<label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> <?php echo Filters::noXSS(L('keyboardshortcuts')); ?></label>
+<label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> <?= eL('keyboardshortcuts') ?></label>
 <label for="s_shortcuts" id="shortcutsmodal"></label>
 <div id="shortcuts">
 <label for="s_shortcuts" id="shortcutclose"><i class="fa fa-close fa-2x"></i></label>
-<h3><?php echo Filters::noXSS(L('availablekeybshortcuts')); ?></h3>
+<h3><?= eL('availablekeybshortcuts') ?></h3>
 <h4></h4>
 <ul>
-<li><kbd>SHIFT+ALT+l</kbd> <?php echo Filters::noXSS(L('logindialoglogout')); ?></li>
-<li><kbd>SHIFT+ALT+a</kbd> <?php echo Filters::noXSS(L('addnewtask')); ?></li>
-<li><kbd>SHIFT+ALT+m</kbd> <?php echo Filters::noXSS(L('mysearch')); ?></li>
-<li><kbd>SHIFT+ALT+t</kbd> <?php echo Filters::noXSS(L('focustaskidsearch')); ?></li>
+<li><?= $modifier ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
+<li><?= $modifier ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>
+<li><?= $modifier ?> + <kbd>m</kbd> <?= eL('mysearch') ?></li>
+<li><?= $modifier ?> + <kbd>t</kbd> <?= eL('focustaskidsearch') ?></li>
 </ul>
-<h4><?php echo Filters::noXSS(L('tasklist')); ?></h4>
+<h4><?= eL('tasklist') ?></h4>
 <ul>
-<li><kbd>o</kbd> <?php echo Filters::noXSS(L('openselectedtask')); ?></li>
-<li><kbd>j</kbd> <?php echo Filters::noXSS(L('movecursordown')); ?></li>
-<li><kbd>k</kbd> <?php echo Filters::noXSS(L('movecursorup')); ?></li>
+<li><kbd>o</kbd> <?= eL('openselectedtask') ?></li>
+<li><kbd>j</kbd> <?= eL('movecursordown') ?></li>
+<li><kbd>k</kbd> <?= eL('movecursorup') ?></li>
 </ul>
-<h4><?php echo Filters::noXSS(L('taskdetails')); ?></h4>
+<h4><?= eL('taskdetails') ?></h4>
 <ul>
-<li><kbd>n</kbd> <?php echo Filters::noXSS(L('nexttask')); ?></li>
-<li><kbd>p</kbd> <?php echo Filters::noXSS(L('previoustask')); ?></li>
-<li><kbd>SHIFT+ALT+e</kbd> <kbd>ENTER</kbd> <?php echo Filters::noXSS(L('edittask')); ?></li>
-<li><kbd>SHIFT+ALT+y</kbd> <?php echo Filters::noXSS(L('closetask')); ?></li>
+<li><kbd>n</kbd> <?= eL('nexttask') ?></li>
+<li><kbd>p</kbd> <?= eL('previoustask') ?></li>
+<li><?= $modifier ?> + <kbd>e</kbd> <kbd>↵ Enter</kbd> <?= eL('edittask') ?></li>
+<li><?= $modifier ?> + <kbd>w</kbd> <?= eL('watchtask') ?></li>
+<li><?= $modifier ?> + <kbd>y</kbd> <?= eL('closetask') ?></li>
 </ul>
-<h4><?php echo Filters::noXSS(L('taskediting')); ?></h4>
+<h4><?= eL('taskediting') ?></h4>
 <ul>
-<li><kbd>SHIFT+ALT+s</kbd> <?php echo Filters::noXSS(L('savetask')); ?></li>
+<li><?= $modifier ?> + <kbd>s</kbd> <?= eL('savetask') ?></li>
 </ul>
 </div>

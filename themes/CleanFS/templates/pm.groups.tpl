@@ -2,10 +2,10 @@
 <h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('groupmanage')); ?></h2>
 <?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo CreateURL('admin', 'newuser', $proj->id); ?>"><i class="fa fa-user-plus fa-lg fa-fw"></i> <?php echo Filters::noXSS(L('newuser')); ?></a><?php endif; ?>
 <a class="button" href="<?php echo Filters::noXSS(CreateURL('pm', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?php echo Filters::noXSS(L('newgroup')); ?></a>
-  
+
 <form style="display:inline-block" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 <label for="edit_user"><?php echo Filters::noXSS(L('edituser')); ?></label>
-<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>               
+<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
 <button type="submit"><?php echo Filters::noXSS(L('edit')); ?></button>
 <input type="hidden" name="do" value="user" />
 <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
@@ -105,7 +105,7 @@ foreach ($merge as $group){
 </thead>
 <tbody>
 <?php foreach ($perm_fields as $p): ?>
-<tr<?php 
+<tr<?php
 # TODO view_own_tasks
 echo ( ($p=='view_tasks' || $p=='view_groups_tasks' || $p=='view_own_tasks')  && $proj->prefs['others_view']) ? ' class="everybody"':'';
 echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="everybody"':'';
@@ -113,8 +113,8 @@ echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="ever
 ?>>
 <th<?php echo ($p=='modify_own_tasks') ? ' title="Fields allowed to change: '.implode(', ', $proj->prefs['basic_fields']).'"':''; ?>><?php echo eL(str_replace('_', '', $p)); ?></th>
 <?php
-require_once('permicons.tpl');
-$i=0; 
+require_once 'permicons.tpl';
+$i=0;
 
 foreach($perms[$p] as $val){
   if ($perms['is_admin'][$i]==1 && $val == 0){
@@ -129,9 +129,9 @@ foreach($perms[$p] as $val){
     echo $yesno[$val];
   }
   $i++;
-} 
+}
 ?>
-</tr> 
+</tr>
 <?php endforeach; ?>
 </tbody>
 </table>

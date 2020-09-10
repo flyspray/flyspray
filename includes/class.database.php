@@ -227,12 +227,12 @@ class Database
              * cast to integer here anyway */
             $result =  $this->dblink->selectLimit($sql, (int) $numrows, (int) $offset, $inputarr);
         } else {
-           $result =  $this->dblink->execute($sql, $inputarr);
+            $result =  $this->dblink->execute($sql, $inputarr);
         }
 
         if (!$result) {
 
-            if (function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
+            if(function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
                 var_dump(debug_backtrace());
                 echo "</pre>";
@@ -241,15 +241,13 @@ class Database
             $query_params = '';
 
             if(is_array($inputarr) && count($inputarr)) {
-
                 $query_params =  implode(',', array_map(array('Filters','noXSS'), $inputarr));
-
             }
 
-            die (sprintf("Query {%s} with params {%s} Failed! (%s)",
-                    Filters::noXSS($sql), $query_params, Filters::noXSS($this->dblink->errorMsg())));
-        }
+            die(sprintf("Query {%s} with params {%s} failed! (%s)",
+                Filters::noXSS($sql), $query_params, Filters::noXSS($this->dblink->errorMsg())));
 
+        }
 
         return $result;
     }

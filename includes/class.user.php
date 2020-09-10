@@ -8,7 +8,7 @@ class User
     public $searches = array();
     public $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_in_details', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
-                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
+                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment', 'hide_subtasks');
 
     public function __construct($uid = 0)
     {
@@ -402,16 +402,22 @@ class User
     {
     }
 
+    /**
+    * tests if current configuration allows a guest user to register - without email verification code
+    */
     public function can_self_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
+        return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && !$fs->prefs['spam_proof'] ;
     }
 
+    /**
+    * tests if current configuration allows a guest user to register - with email verification code
+    */
     public function can_register()
     {
         global $fs;
-        return $this->isAnon() && !$fs->prefs['need_approval'] && $fs->prefs['spam_proof'] && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'];
+        return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && $fs->prefs['spam_proof'] && !$fs->prefs['need_approval'] ;
     }
 
     public function can_open_task($proj)
