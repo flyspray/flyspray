@@ -811,6 +811,12 @@ function quick_edit(elem, id)
                 <th><?php echo Filters::noXSS(L('severity')); ?></th>
 				<th><?php echo Filters::noXSS(L('assignedto')); ?></th>
                 <th><?php echo Filters::noXSS(L('progress')); ?></th>
+                <th><?php echo Filters::noXSS(L('')); ?></th>
+                <?php
+                if($proj->prefs['use_effort_tracking']){
+                     echo "<th>".Filters::noXSS(L('effort'))."</th>";
+                }
+                ?>
                 <th></th>
             </tr>
             </thead>
@@ -840,6 +846,13 @@ function quick_edit(elem, id)
                     <input type="hidden" name="subtaskid" value="<?php echo Filters::noXSS($subtask['task_id']); ?>" />
                     <input type="hidden" name="action" value="removesubtask" />
                     <button type="submit" title="<?php echo Filters::noXSS(L('remove')); ?>" class="fa fa-unlink fa-lg"></button>
+                    <?php
+                        if($proj->prefs['use_effort_tracking']){
+                            echo "<td>";
+                            echo effort::secondsToString($subtask['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); 
+                            echo "</td>";
+                        }
+                     ?>
 		    </form>
                 </td>
             </tr>
