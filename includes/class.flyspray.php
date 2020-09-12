@@ -238,7 +238,12 @@ class Flyspray
         }
 
         if (empty($protocol)) {
-            if (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
+            if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])){
+                $protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+                if($protocol =='https'){
+                   $port=443;
+                }
+            }elseif (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
                 $protocol = 'https';
             } else {
                 $protocol = 'http';
