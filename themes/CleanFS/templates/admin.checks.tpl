@@ -58,12 +58,14 @@
 <th>table_name</th>
 <th>table_type</th>
 <th></th>
+<th></th>
 <th>default collation</th>
 <th>comment</th>
 </tr>
 <tr class="dbfield">
 <th>column_name</th>
 <th>data_type</th>
+<th>is_nullable</th>
 <th>character_set_name</th>
 <th>collation_name</th>
 <th>comment</th>
@@ -84,6 +86,7 @@ foreach($fsfields as $f):
 	<td><?= Filters::noXSS($fstables[$ti]['table_name']) ?></td>
 	<td><?= $fstables[$ti]['table_type'] ?></td>
 	<td></td>
+	<td></td>
 	<td><?= $fstables[$ti]['table_collation'] ?></td>
 	<td><?= Filters::noXSS($fstables[$ti]['table_comment']) ?></td>
 	</tr>
@@ -91,6 +94,7 @@ foreach($fsfields as $f):
 <tr class="dbfield">
 <td><?= Filters::noXSS($f['column_name']) ?></td>
 <td><?= $f['column_type'] ?></td>
+<td><?= $f['is_nullable'] ?></td>
 <td><?= $f['character_set_name'] ?></td>
 <td><?= $f['collation_name'] ?></td>
 <td><?= Filters::noXSS($f['column_comment']) ?></td>
