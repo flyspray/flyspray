@@ -184,7 +184,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('fstables', $db->fetchAllArray($fstables));
 
 			$fsfields=$db->query("
-				SELECT table_name, column_name, column_default, data_type, character_set_name, collation_name, column_type, column_comment
+				SELECT table_name, column_name, column_default, data_type, is_nullable, character_set_name, collation_name, column_type, column_comment
 				FROM INFORMATION_SCHEMA.columns
 				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
 				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
@@ -203,7 +203,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('fstables', $db->fetchAllArray($fstables));
 
 			$fsfields=$db->query("
-				SELECT table_name, column_name, column_default, data_type as column_type, character_set_name, collation_name, '-' AS column_comment
+				SELECT table_name, column_name, column_default, data_type as column_type, is_nullable, character_set_name, collation_name, '-' AS column_comment
 				FROM INFORMATION_SCHEMA.columns
 				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
 				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
