@@ -19,6 +19,11 @@
 	<tr>
 		<td>XML Extension</td>
 		<td align="left"><b><?php echo Setup::ReturnStatus($xmlStatus); ?></b></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>mbstring Extension</td>
+		<td align="left"><b><?php echo Setup::ReturnStatus(extension_loaded('mbstring'), 'yes'); ?></b></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
