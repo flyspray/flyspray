@@ -14,7 +14,7 @@
             <tr>
                <td><?= eL('databasetype') ?></td>
                <td><select name="db_type">
-                 <?php echo tpl_options(array_combine(array_map(create_function('$x', 'return $x[2];'), $databases), array_keys($databases)), $db_type); ?>
+                 <?php echo tpl_options(array_combine(array_map(function($x){return $x[2];}, $databases), array_keys($databases)), $db_type); ?>
                </select>
                </td>
                <td><?= L('databasetypehint') ?></td>
