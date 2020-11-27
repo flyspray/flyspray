@@ -94,7 +94,7 @@ class Flyspray
                 continue;
             }
 
-            $last = strtolower($val{strlen($val)-1});
+            $last = strtolower($val[strlen($val)-1]);
             $val = trim($val, 'gGmMkK');
             switch ($last) {
                 // The 'G' modifier is available since PHP 5.1.0
@@ -258,17 +258,17 @@ class Flyspray
         $server = $protocol .'://'. $host . (isset($port) ? ':'. $port : '');
 
 
-        if (!strlen($url) || $url{0} == '?' || $url{0} == '#') {
+        if (!strlen($url) || $url[0] == '?' || $url[0] == '#') {
             $uri = isset($_SERVER['REQUEST_URI']) ?
                 $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
-            if ($url && $url{0} == '?' && false !== ($q = strpos($uri, '?'))) {
+            if ($url && $url[0] == '?' && false !== ($q = strpos($uri, '?'))) {
                 $url = substr($uri, 0, $q) . $url;
             } else {
                 $url = $uri . $url;
             }
         }
 
-        if ($url{0} == '/') {
+        if ($url[0] == '/') {
             return $server . $url;
         }
 
