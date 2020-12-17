@@ -198,10 +198,10 @@
         <li>
           <label for="default_order_by2"><?php echo Filters::noXSS(L('defaultorderby2')); ?></label>
           <select id="default_order_by2" name="default_order_by2">
-            <?php echo tpl_options($columnnames, $proj->prefs['sorting'][1]['field'], false); ?>
+            <?php echo tpl_options($columnnames, isset($proj->prefs['sorting'][1]['field']) ? $proj->prefs['sorting'][1]['field'] : null, false); ?>
           </select>
           <select id="default_order_by_dir2" name="default_order_by_dir2">
-            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), $proj->prefs['sorting'][1]['dir'], false); ?>
+            <?php echo tpl_options(array('asc' => L('ascending'), 'desc' => L('descending')), isset($proj->prefs['sorting'][1]['dir']) ? $proj->prefs['sorting'][1]['dir'] : null, false); ?>
           </select>
         </li>
 
