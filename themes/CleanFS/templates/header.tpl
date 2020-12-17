@@ -10,6 +10,7 @@
 <?php if ($fs->prefs['url_rewriting']): ?>
 <base href="<?php echo Filters::noXSS($baseurl); ?>" />
 <?php endif; ?>
+<link rel="icon" href="favicon.ico">
 <?php if(trim($this->get_image('favicon'))): ?>
 <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
 <?php endif; ?>
