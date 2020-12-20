@@ -83,9 +83,10 @@ function utf8_isASCII($str){
 if (!function_exists('utf8_strip')){
 function utf8_strip($str){
   $ascii = '';
-  for($i=0; $i<strlen($str); $i++){
-    if(ord($str[$i]) <128){
-      $ascii .= $str{$i};
+  $len = strlen($str);
+  for ($i=0; $i < $len; $i++){
+    if (ord($str[$i]) <128){
+      $ascii .= $str[$i];
     }
   }
   return $ascii;
@@ -100,7 +101,8 @@ function utf8_strip($str){
  */
 if (!function_exists('utf8_check')){
 function utf8_check($Str) {
- for ($i=0; $i<strlen($Str); $i++) {
+ $len = strlen($Str);
+ for ($i=0; $i<$len; $i++) {
   $b = ord($Str[$i]);
   if ($b < 0x80) continue; # 0bbbbbbb
   elseif (($b & 0xE0) == 0xC0) $n=1; # 110bbbbb
@@ -110,8 +112,8 @@ function utf8_check($Str) {
   elseif (($b & 0xFE) == 0xFC) $n=5; # 1111110b
   else return false; # Does not match any model
   for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
-   if ((++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80))
-   return false;
+   if ((++$i == $len) || ((ord($Str[$i]) & 0xC0) != 0x80))
+    return false;
   }
  }
  return true;
