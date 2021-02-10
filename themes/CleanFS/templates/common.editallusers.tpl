@@ -58,6 +58,7 @@ if ($do == 'admin'): ?>
 	<thead>
 	<tr class="account_header">
 		<th></th>
+		<th><span class="fa fa-pencil fa-lg"></span></th>
 		<th><?= eL('realname') ?></th>
 		<th><?= eL('username') ?></th>
 		<th><?= eL('emailaddress') ?></th>
@@ -84,8 +85,9 @@ if ($do == 'admin'): ?>
 <?php foreach ($users as $usr): ?>
 <tr class="<?php echo ($usr['account_enabled']) ? 'account_enabled':'account_disabled'; ?>" onclick="toggleCheckbox('<?php echo $usr['user_id']; ?>')">
 	<td><input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
-	<td><a href="<?php echo createURL('edituser', $usr['user_id'] ); ?>"><?php echo Filters::noXSS($usr['real_name']); ?></a></td>
-	<td><?php echo $usr['user_name']; ?></td>
+	<td><a href="<?= createURL('edituser', $usr['user_id']) ?>" title="Edit user <?= Filters::noXSS($usr['real_name']) ?>"><span class="fa fa-pencil fa-lg"></span></a></td>
+	<td><a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= Filters::noXSS($usr['real_name']) ?></a></td>
+	<td><a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= $usr['user_name'] ?></a></td>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
 	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
 	<td><?php echo formatDate($usr['register_date']); ?></td>
