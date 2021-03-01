@@ -1007,7 +1007,10 @@ class TextFormatter
 	{
 		global $conf;
 
-		$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		$methods=array();
+		if(class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')){
+			$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		}
 		$methods = is_array($methods) ? $methods : array();
 
 		if (in_array('render', $methods)) {
@@ -1033,36 +1036,37 @@ class TextFormatter
 		}
 	}
 
-    public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
-    {
-        global $conf;
+	public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
+	{
+		global $conf;
 
-        if (@in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
-                                  $name, $rows, $cols, $attrs, $content);
-        }
+		if (class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')
+		    && in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
+			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
+			                      $name, $rows, $cols, $attrs, $content);
+		}
 
-        $name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
-        $return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
-        if (is_array($attrs) && count($attrs)) {
-            $return .= join_attrs($attrs);
-        }
-        $return .= '>';
-        if (is_string($content) && strlen($content)) {
-            $return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
-        }
-        $return .= '</textarea>';
+		$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
+		$return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
+		if (is_array($attrs) && count($attrs)) {
+			$return .= join_attrs($attrs);
+		}
+		$return .= '>';
+		if (is_string($content) && strlen($content)) {
+			$return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
+		}
+		$return .= '</textarea>';
 
-	# Activate CkEditor on textareas
-	if($conf['general']['syntax_plugin']=='html'){
-		$return .= "
+		# Activate CkEditor on textareas
+		if($conf['general']['syntax_plugin']=='html'){
+			$return .= "
 <script>
 	CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
 </script>";
-	}
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 }
 
 /**
