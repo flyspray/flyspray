@@ -149,7 +149,7 @@ class ADODB2_postgres extends ADODB_DataDict
 				$sql[] = 'ALTER TABLE '.$tabname.' ALTER COLUMN '.$colname.' SET DEFAULT ' . $default;
 			}
 			// SERIAL is not a true type in PostgreSQL and is only allowed when creating a new table.
-			// See http://www.postgresql.org/docs/9.4/static/datatype-numeric.html, 8.1.4. Serial Types.
+			// See https://www.postgresql.org/docs/13/datatype-numeric.html#DATATYPE-SERIAL 8.1.4. Serial Types
 			elseif (preg_match('/^([^ ]+) .*SERIAL/i',$v,$matches)) {
 				list(, $colname, $default) = $matches;
 				$sql[] = 'CREATE SEQUENCE '.$tabname.'_'.$colname.'_seq';
@@ -180,8 +180,8 @@ class ADODB2_postgres extends ADODB_DataDict
 	 *
 	 * Postgres can't do that on it's own, you need to supply the complete defintion of the new table,
 	 * to allow, recreating the table and copying the content over to the new table
-	 * @param string $tabname table-name
-	 * @param string $flds column-name and type for the changed column
+	 * @param string $tabname table name
+	 * @param string $flds column name and type for the changed column
 	 * @param string $tableflds complete defintion of the new table, eg. for postgres, default ''
 	 * @param array/ $tableoptions options for the new table see createTableSQL, default ''
 	 * @return array with SQL strings
@@ -274,7 +274,7 @@ class ADODB2_postgres extends ADODB_DataDict
 		// does not have alter column
 		if (!$tableflds) {
 			if ($this->debug) {
-				ADOConnection::outp("AlterColumnSQL needs a complete table-definiton for PostgreSQL");
+				ADOConnection::outp("alterColumnSQL needs a complete table-definiton for PostgreSQL");
 			}
 			return array();
 		}
@@ -284,12 +284,12 @@ class ADODB2_postgres extends ADODB_DataDict
 	/**
 	 * Drop one column
 	 *
-	 * Postgres < 7.3 can't do that on it's own, you need to supply the complete defintion of the new table,
+	 * Postgres < 7.3 can't do that on it's own, you need to supply the complete definition of the new table,
 	 * to allow, recreating the table and copying the content over to the new table
-	 * @param string $tabname table-name
-	 * @param string $flds column-name and type for the changed column
+	 * @param string $tabname table name
+	 * @param string $flds column name and type for the changed column
 	 * @param string $tableflds complete defintion of the new table, eg. for postgres, default ''
-	 * @param array/ $tableoptions options for the new table see CreateTableSQL, default ''
+	 * @param array/ $tableoptions options for the new table see createTableSQL, default ''
 	 * @return array with SQL strings
 	 */
 	function dropColumnSQL($tabname, $flds, $tableflds='', $tableoptions='')
@@ -310,18 +310,20 @@ class ADODB2_postgres extends ADODB_DataDict
 	/**
 	 * Save the content into a temp. table, drop and recreate the original table and copy the content back in
 	 *
-	 * We also take care to set the values of the sequenz and recreate the indexes.
+	 * We also take care to set the values of the sequence and recreate the indexes.
 	 * All this is done in a transaction, to not loose the content of the table, if something went wrong!
 	 * @internal
-	 * @param string $tabname table-name
-	 * @param string $dropflds column-names to drop
-	 * @param string $tableflds complete defintion of the new table, eg. for postgres
-	 * @param array/string $tableoptions options for the new table see CreateTableSQL, default ''
+	 * @param string $tabname table name
+	 * @param string $dropflds column names to drop
+	 * @param string $tableflds complete definition of the new table, eg. for postgres
+	 * @param array|string $tableoptions options for the new table see createTableSQL, default ''
 	 * @return array with SQL strings
 	 */
 	function _recreate_copy_table($tabname, $dropflds, $tableflds, $tableoptions='')
 	{
-		if ($dropflds && !is_array($dropflds)) $dropflds = explode(',', $dropflds);
+		if ($dropflds && !is_array($dropflds)) {
+			$dropflds = explode(',', $dropflds);
+		}
 		$copyflds = array();
 		foreach($this->metaColumns($tabname) as $fld) {
 			if (!$dropflds || !in_array($fld->name, $dropflds)) {
@@ -343,19 +345,18 @@ class ADODB2_postgres extends ADODB_DataDict
 		$copyflds = implode(', ', $copyflds);
 
 		$tempname = $tabname.'_tmp';
-		$aSql[] = 'BEGIN';		// we use a transaction, to make sure not to loose the content of the table
+		$aSql[] = 'BEGIN'; // we use a transaction, to make sure not to loose the content of the table
 		$aSql[] = "SELECT * INTO TEMPORARY TABLE $tempname FROM $tabname";
-		$aSql = array_merge($aSql,$this->dropTableSQL($tabname));
-		$aSql = array_merge($aSql,$this->createTableSQL($tabname, $tableflds, $tableoptions));
+		$aSql = array_merge($aSql, $this->dropTableSQL($tabname));
+		$aSql = array_merge($aSql, $this->createTableSQL($tabname, $tableflds, $tableoptions));
 		$aSql[] = "INSERT INTO $tabname SELECT $copyflds FROM $tempname";
-		if ($seq_name && $seq_fld) {	// if we have a sequence we need to set it again
-			$seq_name = $tabname.'_'.$seq_fld.'_seq';	// has to be the name of the new implicit sequence
+		if ($seq_name && $seq_fld) { // if we have a sequence we need to set it again
+			$seq_name = $tabname.'_'.$seq_fld.'_seq'; // has to be the name of the new implicit sequence
 			$aSql[] = "SELECT setval('$seq_name', MAX($seq_fld)) FROM $tabname";
 		}
 		$aSql[] = "DROP TABLE $tempname";
-		// recreate the indexes, if they not contain one of the droped columns
-		foreach($this->metaIndexes($tabname) as $idx_name => $idx_data)
-		{
+		// recreate the indexes, if they not contain one of the dropped columns
+		foreach($this->metaIndexes($tabname) as $idx_name => $idx_data) {
 			if (substr($idx_name,-5) != '_pkey' && (!$dropflds || !count(array_intersect($dropflds,$idx_data['columns'])))) {
 				$aSql = array_merge($aSql,$this->createIndexSQL($idx_name, $tabname, $idx_data['columns'],
 					$idx_data['unique'] ? array('UNIQUE') : false));
@@ -390,9 +391,9 @@ class ADODB2_postgres extends ADODB_DataDict
 		return $suffix;
 	}
 
-	// search for a sequece for the given table (asumes the seqence-name contains the table-name!)
+	// search for a sequece for the given table (assumes the sequence-name contains the table-name!)
 	// if yes return sql to drop it
-	// this is still necessary if postgres < 7.3 or the SERIAL was created on an earlier version!!!
+	// This is still necessary if postgres < 7.3 or the SERIAL was created on an earlier version!!!
 	function _dropAutoIncrement($tabname)
 	{
 		$tabname = $this->connection->quote('%'.$tabname.'%');
@@ -459,8 +460,9 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 
 		if (isset($idxoptions['REPLACE']) || isset($idxoptions['DROP'])) {
 			$sql[] = sprintf ($this->dropIndex, $idxname, $tabname);
-			if ( isset($idxoptions['DROP']) )
+			if ( isset($idxoptions['DROP']) ) {
 				return $sql;
+			}
 		}
 
 		if (empty($flds)) {
@@ -479,8 +481,8 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 			$s .= $idxoptions[$this->upperName];
 		}
 
-		if ( is_array($flds) ) {
-			$flds = implode(', ',$flds);
+		if (is_array($flds)) {
+			$flds = implode(', ', $flds);
 		}
 		$s .= '(' . $flds . ')';
 		$sql[] = $s;
@@ -543,7 +545,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 					// If already not allowing nulls, then don't change
 					$obj = $cols[$k];
 					if (isset($obj->not_null) && $obj->not_null) {
-						$v = str_replace('NOT NULL','',$v);
+						$v = str_replace('NOT NULL', '', $v);
 					}
 					if (isset($obj->auto_increment) && $obj->auto_increment && empty($v['AUTOINCREMENT'])) {
 					    $v = str_replace('AUTOINCREMENT', '', $v);
@@ -551,7 +553,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 					
 					$c = $cols[$k];
 					$ml = $c->max_length;
-					$mt = $this->metaType($c->type,$ml);
+					$mt = $this->metaType($c->type, $ml);
 
 					if (isset($c->scale)) {
 						$sc = $c->scale;
@@ -605,9 +607,11 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 
                 if ($dropOldFlds) {
                         $alter = 'ALTER TABLE ' . $this->tableName($tablename);
-			foreach ($cols as $id => $v)
-			    if ( !isset($lines[$id]) )
+			foreach ($cols as $id => $v) {
+			    if (!isset($lines[$id])) {
 					$sql[] = $alter . $this->dropCol . ' ' . $v->name;
+			    }
+			}
 		}
 		return $sql;
 	}
