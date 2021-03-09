@@ -1,7 +1,7 @@
 <?php
 
 /**
-  @version   v5.20.9-flyspray  21-Dec-2016
+  @version v5.21.0-flyspray  09-Mar-2021
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
   @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -9,7 +9,6 @@
   the BSD license will take precedence.
 
   Set tabs to 4 for best viewing.
-
 */
 
 // security - hide paths
@@ -25,6 +24,9 @@ class ADODB2_postgres extends ADODB_DataDict
 	public $renameTable = 'ALTER TABLE %s RENAME TO %s'; // at least since 7.1
 	public $dropTable = 'DROP TABLE %s CASCADE';
 
+	public $blobAllowsDefaultValue = true;
+	public $blobAllowsNotNull = true;
+	
 	function metaType($t, $len=-1, $fieldobj=false)
 	{
 		if (is_object($t)) {
@@ -33,7 +35,7 @@ class ADODB2_postgres extends ADODB_DataDict
 			$len = $fieldobj->max_length;
 		}
 		$is_serial = is_object($fieldobj) && !empty($fieldobj->primary_key) && !empty($fieldobj->unique) &&
-			!empty($fieldobj->has_default) && substr($fieldobj->default_value,0,8) == 'nextval(';
+			!empty($fieldobj->has_default) && substr($fieldobj->default_value, 0, 8) == 'nextval(';
 
 		switch (strtoupper($t)) {
 			case 'INTERVAL':
