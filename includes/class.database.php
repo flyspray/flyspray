@@ -365,21 +365,26 @@ class Database
      */
     public function replace($table, $field, $keys, $autoquote = true)
     {
-        $table = $this->_add_prefix($table);
+        $table = $this->_add_prefix($table, false); // ADOdb 5.21 quotes $table parameter too, so avoid double quoting.
         return $this->dblink->replace($table, $field, $keys, $autoquote);
     }
 
-    /**
-     * Adds the table prefix
-     * @param string $sql_data table name or sql query
-     * @return string sql with correct,quoted table prefix
-     * @access private
-     * @since 0.9.9
-     */
-    private function _add_prefix($sql_data)
-    {
-        return preg_replace('/{([\w\-]*?)}/', $this->quoteIdentifier($this->dbprefix . '\1'), $sql_data);
-    }
+	/**
+	 * Adds the table prefix
+	 * @param string $sql_data table name or sql query
+	 * @param bool $quote (optional) This option was added to avoid double quoting with ADOdb 5.21 replace()
+	 * @return string sql with correct,quoted table prefix
+	 * @access private
+	 * @since 0.9.9
+	 */
+	private function _add_prefix($sql_data, $quote=true)
+	{
+		if ($quote) {
+			return preg_replace('/{([\w\-]*?)}/', $this->quoteIdentifier($this->dbprefix . '\1'), $sql_data);
+		} else {
+			return preg_replace('/{([\w\-]*?)}/', $this->dbprefix . '\1', $sql_data);
+		}
+	}
 
     /**
      * Helper method to quote an indentifier
