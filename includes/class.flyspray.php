@@ -17,104 +17,108 @@
 class Flyspray
 {
 
-    /**
-     * Current Flyspray version. Change this for each release.  Don't forget!
-     * @access public
-     * @var string
-     * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
-     * For making github release use e.g. '1.0-beta' here.
-     * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
-     * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
-     * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
-     */
+	/**
+	 * Current Flyspray version. Change this for each release.  Don't forget!
+	 * @access public
+	 * @var string
+	 * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
+	 * For making github release use e.g. '1.0-beta' here.
+	 * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
+	 * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
+	 * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
+	 */
 	public $version = '1.0-rc10 dev';
 
-    /**
-     * Flyspray preferences
-     * @access public
-     * @var array
-     */
-    public $prefs = array();
+	/**
+	 * Flyspray preferences
+	 * @access public
+	 * @var array
+	 */
+	public $prefs = array();
 
-    /**
-     * Max. file size for file uploads. 0 = no uploads allowed
-     * @access public
-     * @var integer
-     */
-    public $max_file_size = 0;
+	/**
+	 * Max. file size for file uploads. 0 = no uploads allowed
+	 * @access public
+	 * @var integer
+	 */
+	public $max_file_size = 0;
 
-    /**
-     * List of projects the user is allowed to view
-     * @access public
-     * @var array
-     */
-    public $projects = array();
+	/**
+	 * List of projects the user is allowed to view
+	 * @access public
+	 * @var array
+	 */
+	public $projects = array();
 
-    /**
-     * List of severities. Loaded in i18n.inc.php
-     * @access public
-     * @var array
-     */
-    public $severities = array();
+	/**
+	 * List of severities. Loaded in i18n.inc.php
+	 * @access public
+	 * @var array
+	 */
+	public $severities = array();
 
-    /**
-     * List of priorities. Loaded in i18n.inc.php
-     * @access public
-     * @var array
-     */
-    public $priorities = array();
+	/**
+	 * List of priorities. Loaded in i18n.inc.php
+	 * @access public
+	 * @var array
+	 */
+	public $priorities = array();
 
-    /**
-     * Constructor, starts session, loads settings
-     * @access private
-     * @return void
-     * @version 1.0
-     */
-    public function __construct()
-    {
-        global $db;
+	/**
+	* Constructor, starts session, loads settings
+	* @access private
+	* @return void
+	* @version 1.0
+	*/
+	public function __construct()
+	{
+		global $db;
 
-        $this->startSession();
+		$this->startSession();
 
-        $res = $db->query('SELECT pref_name, pref_value FROM {prefs}');
+		$res = $db->query('SELECT pref_name, pref_value FROM {prefs}');
 
-        while ($row = $db->fetchRow($res)) {
-            $this->prefs[$row['pref_name']] = $row['pref_value'];
-        }
+		while ($row = $db->fetchRow($res)) {
+			$this->prefs[$row['pref_name']] = $row['pref_value'];
+		}
 
-        $this->setDefaultTimezone();
+		$this->setDefaultTimezone();
 
-        $sizes = array();
-        foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
-        	if($val === '-1'){
-				// unlimited value in php configuration
-				$val = PHP_INT_MAX;
+		// only needed to calculate max_file_size if uploads are allowed by PHP configuration
+		if (ini_get('file_uploads')) {
+		
+			$sizes = array();
+			foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
+				if($val === '-1') {
+					// unlimited value in php configuration
+					$val = PHP_INT_MAX;
+				}
+				if (!$val || $val < 0) {
+					continue;
+				}
+
+				if (!is_int($val)) {
+					$last = strtolower($val[strlen($val)-1]);
+					$val = trim($val, 'gGmMkK');
+					switch ($last) {
+						case 'g':
+							$val *= 1024;
+						case 'm':
+							$val *= 1024;
+						case 'k':
+							$val *= 1024;
+					}
+				}
+				$sizes[] = $val;
 			}
-            if (!$val || $val < 0) {
-                continue;
-            }
 
-            $last = strtolower($val[strlen($val)-1]);
-            $val = trim($val, 'gGmMkK');
-            switch ($last) {
-                // The 'G' modifier is available since PHP 5.1.0
-                case 'g':
-                    $val *= 1024;
-                case 'm':
-                    $val *= 1024;
-                case 'k':
-                    $val *= 1024;
-            }
-
-            $sizes[] = $val;
-        }
-        clearstatcache();
-	$this->max_file_size = (
-                (bool) ini_get('file_uploads')
-                && is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
-                && is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
-                ) ? round((min($sizes)/1024/1024), 1) : 0;
-    }
+			clearstatcache();
+			$this->max_file_size = (
+				is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
+				&& is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
+				) ? round((min($sizes)/1024/1024), 1) : 0;
+		}
+	}
 
     protected function setDefaultTimezone()
     {
