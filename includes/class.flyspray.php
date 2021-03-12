@@ -831,13 +831,14 @@ GROUP BY u.user_id';
 	public static function fetchAuthDetails($username, $method = 'native')
 	{
 		global $db;
+		
 		if($method === 'ldap') {
-			$user_id = -42;
+			$user_id = -42; // just an invalid id
 		} else {
 			// handle multiple email addresses
 			$temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?", $username);
 			$user_id = $db->fetchRow($temp);
-			$user_id = $user_id["id"];
+			$user_id = is_array($user_id) ? $user_id['id'] : -41; // just an invalid id
 		}
 		$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
 		                              lock_until, login_attempts
