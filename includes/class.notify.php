@@ -444,9 +444,11 @@ class Notifications {
         $message->getHeaders()->addTextHeader('Precedence', 'list');
         $message->getHeaders()->addTextHeader('X-Mailer', 'Flyspray');
 
-        if ($proj->prefs['notify_reply']) {
-            $message->setReplyTo($proj->prefs['notify_reply']);
-        }
+		if ($proj->prefs['notify_reply']) {
+			$replyto = explode(',', $proj->prefs['notify_reply']);
+			$replyto = array_map('trim', $replyto);
+			$message->setReplyTo($replyto);
+		}
 
         if (isset($task_id)) {
             $hostdata = parse_url($GLOBALS['baseurl']);
