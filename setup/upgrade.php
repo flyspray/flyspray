@@ -98,9 +98,9 @@ if (Post::val('upgrade')) {
 	fix_duplicate_list_entries(true);
 	foreach ($folders as $folder) {
 		if (version_compare($installed_version, $folder, '<=')) {
-			$uplog[]="Start $installed_version to $folder";
+			$uplog[]="Start <strong>$installed_version</strong> to <strong>$folder</strong>";
 			$uplog[]= execute_upgrade_file($folder, $installed_version);
-			$uplog[]="End $installed_version to $folder";
+			$uplog[]="End <strong>$installed_version</strong> to <strong>$folder</strong>";
 			$installed_version = $folder;
 		}
 	}
