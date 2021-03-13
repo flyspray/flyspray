@@ -198,7 +198,7 @@ function execute_upgrade_file($folder, $installed_version)
 
     $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(basename($upgrade_path), 'fs_ver'));
     #$page->assign('done', true);
-    return "Write ".basename($upgrade_path)." into table {prefs} fs_ver in database";
+    return "Wrote <strong>".basename($upgrade_path)."</strong> into database table {prefs} field fs_ver.";
 }
 
  /**
