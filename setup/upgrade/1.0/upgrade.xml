@@ -414,30 +414,17 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="notify_email" type="X">
-      <NOTNULL/>
-      <DEFAULT value=""/>
+    <field name="notify_email" type="C" size="1000"/>
+    <field name="notify_jabber" type="C" size="1000">
+      <descr>xmpp addresses</descr>
     </field>
-    <field name="notify_jabber" type="X">
-      <NOTNULL/>
-      <DEFAULT value=""/>
-    </field>
-    <field name="notify_reply" type="X">
-      <NOTNULL/>
-      <DEFAULT value=""/>
-    </field>
+	  <field name="notify_reply" type="C" size="255"/>
     <field name="notify_types" type="C" size="100">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="feed_img_url" type="X">
-      <NOTNULL/>
-      <DEFAULT value=""/>
-    </field>
-    <field name="feed_description" type="X">
-      <NOTNULL/>
-      <DEFAULT value=""/>
-    </field>
+    <field name="feed_img_url" type="C" size="255"/>
+    <field name="feed_description" type="X"/>
     <field name="notify_subject" type="C" size="100">
       <NOTNULL/>
       <DEFAULT value=""/>
