@@ -98,6 +98,10 @@ body a.button.positive, body button.positive, .pagenums .active {
 .dbtable {background-color:#ccc;}
 .dbtable td {border-bottom:1px solid #999;}
 .dbfield {background-color:#eee;}
+.dbfield em {
+    background-color: #ccc;
+    padding: 0.2em;
+}
 
 .overdue {color:#f00;}
 .duetoday {color:#f00;}
