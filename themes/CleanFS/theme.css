@@ -852,7 +852,7 @@ div.comment_container .comment {
 	margin-left: 10px;
 	border: 1px solid #e1e1e1;
 	vertical-align: top;
-	width: 700px;
+	max-width: 700px;
 	border-radius: 3px;
 }
 div.comment_container .comment:before {
