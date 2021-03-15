@@ -1560,4 +1560,5 @@ form #taskdetailsfull button.positive {margin-left:auto;margin-right:auto;width:
 div.comment_container {margin:0;}
 div.comment_container .commenttext{padding:2px;}
 div.comment_container .comment {margin:0;width:auto;}
+div#successanderrors {width:auto; min-width:initial; margin-top:initial; position:initial;}
 }
