@@ -1,45 +1,47 @@
 <div id="toolbox">
-<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('preferences')); ?></h3>
-<?php echo tpl_form(CreateUrl('pm', 'prefs', $proj->id)); ?>
-  <ul id="submenu">
-   <li><a href="#general"><?php echo Filters::noXSS(L('general')); ?></a></li>
-   <li><a href="#lookandfeel"><?php echo Filters::noXSS(L('lookandfeel')); ?></a></li>
-   <li><a href="#notifications"><?php echo Filters::noXSS(L('notifications')); ?></a></li>
-   <li><a href="#feeds"><?php echo Filters::noXSS(L('feeds')); ?></a></li>
-   <li><a href="#effort"><?php echo Filters::noXSS(L('efforttracking')); ?></a></li>
-  </ul>
+<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?= eL('preferences') ?></h3>
+<?php echo tpl_form(createUrl('pm', 'prefs', $proj->id)); ?>
+<ul id="submenu">
+	<li><a href="#general"><?= eL('general') ?></a></li>
+	<li><a href="#lookandfeel"><?= eL('lookandfeel') ?></a></li>
+	<li><a href="#notifications"><?= eL('notifications') ?></a></li>
+	<li><a href="#feeds"><?= eL('feeds') ?></a></li>
+	<li><a href="#effort"><?= eL('efforttracking') ?></a></li>
+</ul>
 
-  <div id="general" class="tab">
-    <ul class="form_elements wide">
-      <li>
-        <label for="projecttitle"><?php echo Filters::noXSS(L('projecttitle')); ?></label>
-        <input id="projecttitle" name="project_title" class="text" type="text" maxlength="100"
-          value="<?php echo Filters::noXSS(Post::val('project_title', $proj->prefs['project_title'])); ?>" />
-      </li>
-
-      <li>
-        <label for="defaultcatowner"><?php echo Filters::noXSS(L('defaultcatowner')); ?></label>
-        <?php echo tpl_userselect('default_cat_owner', Post::val('default_cat_owner', $proj->prefs['default_cat_owner']), 'defaultcatowner'); ?>
-      </li>
-
-      <li>
-        <label for="langcode"><?php echo Filters::noXSS(L('language')); ?></label>
-          <select id="langcode" name="lang_code">
-            <?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
-          </select>
-      </li>
-      
-      <?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
-      <label for="disp_intro"><?php echo Filters::noXSS(L('dispintro')); ?></label>
-      <li class="disp_introdep">
-        <label class="labeltextarea" for="intromesg"><?php echo Filters::noXSS(L('intromessage')); ?></label>
-        <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <div class="hide preview" id="preview"></div>
-          <button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
-        <?php endif; ?>
-        <?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $proj->prefs['intro_message'])); ?>
-
-        <label class="labeltextarea"><?php echo Filters::noXSS(L('pagesintromsg')); ?></label>
+<div id="general" class="tab">
+	<ul class="form_elements wide">
+		<li>
+			<label for="projecttitle"><?= eL('projecttitle') ?></label>
+			<input id="projecttitle" name="project_title" class="text" type="text" maxlength="100"
+				value="<?php echo Filters::noXSS(Post::val('project_title', $proj->prefs['project_title'])); ?>" />
+		</li>
+		<li>
+			<label for="defaultcatowner"><?= eL('defaultcatowner') ?></label>
+			<?php echo tpl_userselect('default_cat_owner', Post::val('default_cat_owner', $proj->prefs['default_cat_owner']), 'defaultcatowner'); ?>
+		</li>
+		<li>
+		<label for="langcode"><?= eL('language') ?></label>
+			<select id="langcode" name="lang_code">
+			<?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
+			</select>
+		</li>     
+		<?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
+		<label for="disp_intro"><?= eL('dispintro') ?></label>
+		<li class="disp_introdep">
+			<label class="labeltextarea" for="intromesg"><?= eL('intromessage') ?></label>
+			<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+			<div class="hide preview" id="preview"></div>
+			<button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?= eL('preview') ?></button>
+			<?php endif; ?>
+			<?php echo TextFormatter::textarea(
+				'intro_message',
+				8,
+				70,
+				array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'),
+				Post::val('intro_message', $proj->prefs['intro_message'])
+				); ?>
+        <label class="labeltextarea"><?= eL('pagesintromsg') ?></label>
         <?php
           $pages = array(
             'index' => L('tasklist'),
@@ -54,80 +56,82 @@
           $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
           echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
         ?>
-      </li>
-
-      <li>
-          <label class="labeltextarea" for="default_task"><?php echo Filters::noXSS(L('defaulttask')); ?></label>
-          <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-          <div class="hide preview" id="preview_taskdesc"></div>
-          <button tabindex="9" type="button" onclick="showPreview('default_task', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview_taskdesc')"><?php echo Filters::noXSS(L('preview')); ?></button>
-          <?php endif; ?>
-          <?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task'])); ?>
-      </li>
-
-      <li>
-          <label for="isactive"><?php echo Filters::noXSS(L('isactive')); ?></label>
-          <?php echo tpl_checkbox('project_is_active', Post::val('project_is_active', $proj->prefs['project_is_active']), 'isactive'); ?>
-      </li>
-
-      <li>
-          <label><?php echo tpl_checkbox('delete_project', null); ?> <?php echo Filters::noXSS(L('deleteproject')); ?></label>
-          <select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
-      </li>
-      
-      <li>
-          <label for="othersviewroadmap"><?php echo Filters::noXSS(L('othersviewroadmap')); ?></label>
-          <?php 
+		</li>
+		<li>
+			<label class="labeltextarea" for="default_task"><?= eL('defaulttask') ?></label>
+			<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
+			<div class="hide preview" id="preview_taskdesc"></div>
+			<button tabindex="9" type="button" onclick="showPreview('default_task', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview_taskdesc')"><?php echo Filters::noXSS(L('preview')); ?></button>
+			<?php endif; ?>
+			<?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task'])); ?>
+		</li>
+		<li>
+			<label for="isactive"><?= eL('isactive') ?></label>
+			<?php echo tpl_checkbox('project_is_active', Post::val('project_is_active', $proj->prefs['project_is_active']), 'isactive'); ?>
+		</li>
+		<li>
+			<label><?php echo tpl_checkbox('delete_project', null); ?> <?= eL('deleteproject') ?></label>
+			<select name="move_to"><?php echo tpl_options(array_merge(array(0 => L('none')), Flyspray::listProjects()), null, false, null, (string) $proj->id); ?></select>
+		</li>
+		<li>
+			<label for="othersviewroadmap"><?= eL('othersviewroadmap') ?></label>
+			<?php 
           # note for FS1.0: This setting is currently also used as anon/public permission for: show project name, activity, stats, milestone progress
           # but not listing tasks per milestone
           echo tpl_checkbox('others_viewroadmap', Post::val('others_viewroadmap', $proj->prefs['others_viewroadmap']), 'othersviewroadmap'); ?>
-      </li>
-      
-      <li>
-          <label for="othersview"><?php echo Filters::noXSS(L('othersview')); ?></label>
-          <?php
+		</li>  
+		<li>
+			<label for="othersview"><?= eL('othersview') ?></label>
+			<?php
           # note for FS1.0: This setting is current anon/public task view permission for: listing tasks (toplevel, tasklist, roadmap, RSS feed, ..)
           echo tpl_checkbox('others_view', Post::val('others_view', $proj->prefs['others_view']), 'othersview'); ?>
-      </li>
+		</li>
+		<li>
+			<label for="anon_open"><?= eL('allowanonopentask') ?></label>
+			<?php echo tpl_checkbox('anon_open', Post::val('anon_open', $proj->prefs['anon_open']), 'anon_open'); ?>
+		</li>
+		<li>
+			<label for="comment_closed"><?= eL('allowclosedcomments') ?></label>
+			<?php echo tpl_checkbox('comment_closed', Post::val('comment_closed', $proj->prefs['comment_closed']), 'comment_closed'); ?>
+		</li>
+		<li>
+			<label for="auto_assign"><?= eL('autoassign') ?></label>
+			<?php echo tpl_checkbox('auto_assign', Post::val('auto_assign', $proj->prefs['auto_assign']), 'auto_assign'); ?>
+		</li>
+		<li>
+			<label for="defaultdueversion"><?php echo Filters::noXSS(L('defaultdueinversion')); ?></label>
+			<select id="defaultdueversion" name="default_due_version">
+			<option value="0"><?= eL('undecided') ?></option>
+			<?php echo tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version']), true); ?>
+			</select>
+		</li>
+		<li>
+			<label for="use_tags"><?= eL('usetags') ?></label>
+			<?php echo tpl_checkbox('use_tags', Post::val('use_tags', $proj->prefs['use_tags']), 'use_tags'); ?>
+		</li>
+		<li>
+			<label for="freetagging"><?= eL('freetagging') ?></label>
+			<?php echo tpl_checkbox('freetagging', Post::val('freetagging', $proj->prefs['freetagging']), 'freetagging'); ?>
+		</li>
+		<li>
+			<label for="use_gantt"><?= eL('usegantt') ?></label>
+			<?php echo tpl_checkbox('use_gantt', Post::val('use_gantt', $proj->prefs['use_gantt']), 'use_gantt'); ?>
+		</li>
+		<li>
+			<label for="use_kanban"><?= eL('usekanban') ?></label>
+			<?php echo tpl_checkbox('use_kanban', Post::val('use_kanban', $proj->prefs['use_kanban']), 'use_kanban'); ?>
+		</li>
+	</ul>
+</div>
 
-      <li>
-          <label for="anon_open"><?php echo Filters::noXSS(L('allowanonopentask')); ?></label>
-          <?php echo tpl_checkbox('anon_open', Post::val('anon_open', $proj->prefs['anon_open']), 'anon_open'); ?>
-      </li>
-
-      <li>
-          <label for="comment_closed"><?php echo Filters::noXSS(L('allowclosedcomments')); ?></label>
-          <?php echo tpl_checkbox('comment_closed', Post::val('comment_closed', $proj->prefs['comment_closed']), 'comment_closed'); ?>
-      </li>
-
-      <li>
-          <label for="auto_assign"><?php echo Filters::noXSS(L('autoassign')); ?></label>
-          <?php echo tpl_checkbox('auto_assign', Post::val('auto_assign', $proj->prefs['auto_assign']), 'auto_assign'); ?>
-      </li>
-
-      <li>
-          <label for="defaultdueversion"><?php echo Filters::noXSS(L('defaultdueinversion')); ?></label>
-          <select id="defaultdueversion" name="default_due_version">
-              <option value="0"><?php echo Filters::noXSS(L('undecided')); ?></option>
-              <?php echo tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version']), true); ?>
-          </select>
-      </li>
-        
-      <li>
-          <label for="freetagging"><?php echo Filters::noXSS(L('freetagging')); ?></label>
-          <?php echo tpl_checkbox('freetagging', Post::val('freetagging', $proj->prefs['freetagging']), 'freetagging'); ?>
-      </li>
-    </ul>
-  </div>
-
-  <div id="lookandfeel" class="tab">
-    <ul class="form_elements wide">
-      <li>
-        <label for="themestyle"><?php echo Filters::noXSS(L('themestyle')); ?></label>
+<div id="lookandfeel" class="tab">
+	<ul class="form_elements wide">
+		<li>
+        <label for="themestyle"><?= eL('themestyle') ?></label>
         <select id="themestyle" name="theme_style">
           <?php echo tpl_options(Flyspray::listThemes(), Post::val('theme_style', $proj->prefs['theme_style']), true); ?>
         </select>
-        <label for="customstyle" style="width:auto"><?php echo Filters::noXSS(L('customstyle')); ?></label>
+        <label for="customstyle" style="width:auto"><?= eL('customstyle') ?></label>
         <select id="customstyle" name="custom_style">
         <?php
         $customs[]=array('', L('no'));
@@ -141,7 +145,7 @@
       </li>
 
       <li>
-        <label for="default_entry"><?php echo Filters::noXSS(L('defaultentry')); ?></label>
+        <label for="default_entry"><?= eL('defaultentry') ?></label>
         <select id="default_entry" name="default_entry">
           <?php echo tpl_options(array('index' => L('tasklist'), 'toplevel' => L('toplevel'), 'roadmap' => L('roadmap')), Post::val('default_entry', $proj->prefs['default_entry'])); ?>
         </select>
