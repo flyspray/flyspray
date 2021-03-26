@@ -821,14 +821,30 @@
       <DEFAULT value="id"/>
     </field>
     <field name="default_order_by_dir" type="C" size="5">
+      <descr>deprecated and unused, default_order_by field now contains complete order by rules</descr>
       <NOTNULL/>
       <DEFAULT value="desc"/>
     </field>
     <field name="custom_style" type="C" size="32">
     </field>
     <field name="freetagging" type="I" size="1">
+      <descr>allows automatic creation of new tags when adding/editing a task</descr>
       <NOTNULL/>
-      <DEFAULT value="1"/>>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="use_tags" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_gantt" type="I" size="1">
+      <descr>link to gantt view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_kanban" type="I" size="1">
+      <descr>link to kanban view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="registrations">
@@ -1100,6 +1116,12 @@
       <KEY/>
     </field>
     <field name="tag_id" type="I" size="5">
+      <KEY/>
+    </field>
+    <field name="added" type="I" size="5">
+      <KEY/>
+    </field>
+    <field name="added_by" type="I" size="3">
       <KEY/>
     </field>
     <index name="task_id_tag">
