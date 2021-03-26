@@ -94,7 +94,7 @@ endif; ?>
 		file_exists(BASEDIR . '/scripts/gantt.php')
 		&& $proj->id
 		&& $user->perms('view_roadmap')
-		&& (isset($proj->use_gantt) && $proj->use_gantt)        
+		&& (isset($proj->prefs['use_gantt']) && $proj->prefs['use_gantt'])        
 	): ?><li><a id="gantt"
 		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(createURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
@@ -104,7 +104,7 @@ endif; ?>
 		file_exists(BASEDIR . '/scripts/kanban.php')
 		&& $proj->id
 		&& $user->perms('view_roadmap')	
-		&& (isset($proj->use_kanban) && $proj->use_kanban)
+		&& (isset($proj->prefs['use_kanban']) && $proj->prefs['use_kanban'])
 	): ?><li><a id="kanban"
 		<?php if($do == 'kanban'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(createURL('kanban', $proj->id)); ?>" title="Kanban view"><i class="fa fa-columns fa-lg"></i></a>
