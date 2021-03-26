@@ -1227,84 +1227,88 @@ function tpl_disableif ($if)
  */
 function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf, $fs;
+	global $baseurl, $conf, $fs;
 
-    $url = $baseurl;
+	$url = $baseurl;
 
-    // If we do want address rewriting
-    if ($fs->prefs['url_rewriting']) {
-        switch ($type) {
-            case 'depends':
-                $return = $url . 'task/' . $arg1 . '/' . $type;
-                break;
-            case 'details':
-                $return = $url . 'task/' . $arg1;
-                break;
-            case 'edittask':
-                $return = $url . 'task/' . $arg1 . '/edit';
-                break;
-            case 'pm':
-                $return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
-                break;
+	// If we do want address rewriting
+	if ($fs->prefs['url_rewriting']) {
+		switch ($type) {
+			case 'depends':
+				$return = $url . 'task/' . $arg1 . '/' . $type;
+				break;
 
-            case 'admin':
-            case 'edituser':
-            case 'user':
-                $return = $url . $type . '/' . $arg1;
-                break;
+			case 'details':
+				$return = $url . 'task/' . $arg1;
+				break;
 
-            case 'project':
-                $return = $url . 'proj' . $arg1;
-                break;
+			case 'edittask':
+				$return = $url . 'task/' . $arg1 . '/edit';
+				break;
 
-            case 'reports':
-            case 'roadmap':
-            case 'toplevel':
-            case 'gantt':
-            case 'index':
-            	$return = $url.$type.'/proj'.$arg1;
-            	break;
+			case 'pm':
+				$return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
+				break;
 
-            case 'newtask':
-            case 'newmultitasks':
-                $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+			case 'admin':
+			case 'edituser':
+			case 'user':
+				$return = $url . $type . '/' . $arg1;
+				break;
+
+			case 'project':
+				$return = $url . 'proj' . $arg1;
                 break;
 
-            case 'editgroup':
-                $return = $url . $arg2 . '/' . $type . '/' . $arg1;
-                break;
+			case 'reports':
+			case 'roadmap':
+			case 'toplevel':
+			case 'gantt':
+			case 'kanban':
+			case 'index':
+				$return = $url.$type.'/proj'.$arg1;
+				break;
 
-            case 'logout':
-            case 'lostpw':
-            case 'myprofile':
-            case 'register':
-                $return = $url . $type;
-                break;
+			case 'newtask':
+			case 'newmultitasks':
+				$return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+				break;
 
-            case 'mytasks':
-                $return = $url.'proj'.$arg1.'/dev'.$arg2;
-                break;
+			case 'editgroup':
+				$return = $url . $arg2 . '/' . $type . '/' . $arg1;
+				break;
+
+			case 'logout':
+			case 'lostpw':
+			case 'myprofile':
+			case 'register':
+				$return = $url . $type;
+				break;
+
+			case 'mytasks':
+				$return = $url.'proj'.$arg1.'/dev'.$arg2;
+				break;
+
             case 'tasklist':
-		# see also .htaccess for the mapping
-		if($arg1>0 && $fs->projects[$arg1]['default_entry']=='index'){
-			$return = $url.'proj'.$arg1;
-		}else{
-			$return = $url.$type.'/proj'.$arg1;
+				# see also .htaccess for the mapping
+				if ($arg1>0 && $fs->projects[$arg1]['default_entry'] == 'index'){
+					$return = $url.'proj'.$arg1;
+				} else {
+					$return = $url.$type.'/proj'.$arg1;
+				}
+            	break;
+			default:
+				$return = $baseurl . 'index.php';
+				break;
+		}
+	} else {
+		if ($type == 'edittask') {
+			$url .= 'index.php?do=details';
+		} else {
+			$url .= 'index.php?do=' . $type;
 		}
 
-            	break;
-            default:
-            	$return = $baseurl . 'index.php';
-            	break;
-        }
-    } else {
-        if ($type == 'edittask') {
-            $url .= 'index.php?do=details';
-        } else {
-            $url .= 'index.php?do=' . $type;
-        }
-
-        switch ($type) {
+		switch ($type) {
             case 'admin':
                 $return = $url . '&area=' . $arg1;
                 break;
@@ -1337,6 +1341,7 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
+            case 'kanban':
             case 'index':
             case 'tasklist':
             	$return = $url . '&project=' . $arg1;
@@ -1364,14 +1369,14 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             default:
         		$return = $baseurl . 'index.php';
         		break;
-        }
-    }
+		}
+	}
 
-    $url = new Url($return);
-    if( !is_null($arg3) && count($arg3) ) {
-        $url->addvars($arg3);
-    }
-    return $url->get();
+	$url = new Url($return);
+	if (!is_null($arg3) && count($arg3)) {
+		$url->addvars($arg3);
+	}
+	return $url->get();
 }
 
 /**
