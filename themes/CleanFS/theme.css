@@ -628,6 +628,7 @@ td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_as
   /*border-left: 1px solid lighten($top1, 30%);*/
   border-left: 2px solid #78bf34;
 }
+#prefslogo {max-width:200px;}
 #controlBox {
   border: 1px solid gray;
   padding: 1px;
