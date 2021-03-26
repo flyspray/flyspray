@@ -1118,12 +1118,8 @@
     <field name="tag_id" type="I" size="5">
       <KEY/>
     </field>
-    <field name="added" type="I" size="5">
-      <KEY/>
-    </field>
-    <field name="added_by" type="I" size="3">
-      <KEY/>
-    </field>
+    <field name="added" type="I" size="11"></field>
+    <field name="added_by" type="I" size="3"></field>
     <index name="task_id_tag">
       <UNIQUE/>
       <col>task_id</col>
