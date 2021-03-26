@@ -115,6 +115,8 @@ RewriteRule ^lostpw$ index.php?do=lostpw [L,QSA]
 
 # gantt and team are experimental pagetypes not within FS1.0 
 RewriteRule ^gantt/proj([0-9]+)$ index.php?do=gantt&project=$1 [L,QSA]
+RewriteRule ^kanban$ index.php?do=kanban [L,QSA]
+RewriteRule ^kanban/proj([0-9]+)$ index.php?do=kanban&project=$1 [L,QSA]
 RewriteRule ^team$ index.php?do=team [L,QSA]
 RewriteRule ^team/proj([0-9]+)$ index.php?do=team&project=$1 [L,QSA]
 
