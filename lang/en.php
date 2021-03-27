@@ -1115,5 +1115,8 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'lastlogin'               => 'Last Login',
 'relnofollow'             => 'add rel="nofollow" to links in task details and comments',
 'relnofollowdescription'  => 'Tells search engines to not use user generated links for page ranking. Used to reduce the motivation of linkspammers.',
+'usetags'                 => 'Enable tags',
+'usegantt'                => 'Enable Gantt view',
+'usekanban'               => 'Enable Kanban view',
 );
 ?>
