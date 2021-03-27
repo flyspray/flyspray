@@ -1483,84 +1483,115 @@ switch ($action = Req::val('action'))
         Flyspray::redirect(createURL('pm', 'prefs', $pid));
         break;
 
-        // ##################
-        // updating project preferences
-        // ##################
-    case 'pm.updateproject':
-        if (!$user->perms('manage_project')) {
-            break;
-        }
+	// ##################
+	// updating project preferences
+	// ##################
+	case 'pm.updateproject':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
 
-        if (Post::val('delete_project')) {
-            if (Backend::delete_project($proj->id, Post::val('move_to'))) {
-                $_SESSION['SUCCESS'] = L('projectdeleted');
-            } else {
-                $_SESSION['ERROR'] = L('projectnotdeleted');
-            }
+		if (Post::val('delete_project')) {
+			if (Backend::delete_project($proj->id, Post::val('move_to'))) {
+				$_SESSION['SUCCESS'] = L('projectdeleted');
+			} else {
+				$_SESSION['ERROR'] = L('projectnotdeleted');
+			}
 
-            if (Post::val('move_to')) {
-                Flyspray::redirect(createURL('pm', 'prefs', Post::val('move_to')));
-            } else {
-                Flyspray::redirect($baseurl);
-            }
-        }
+			if (Post::val('move_to')) {
+				Flyspray::redirect(createURL('pm', 'prefs', Post::val('move_to')));
+			} else {
+				Flyspray::redirect($baseurl);
+			}
+		}
 
-        if (!Post::val('project_title')) {
-            Flyspray::show_error(L('emptytitle'));
-            break;
-        }
+		if (!Post::val('project_title')) {
+			Flyspray::show_error(L('emptytitle'));
+			break;
+		}
 
-        $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
-                'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
-        $args = array_map('Post_to0', $cols);
-        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign', 'freetagging'));
-        $args = array_merge($args, array_map(array('Post', 'num'), $ints));
-        $cols[] = 'notify_types';
-        $args[] = implode(' ', (array) Post::val('notify_types'));
-        $cols[] = 'last_updated';
-        $args[] = time();
-        $cols[] = 'disp_intro';
-        $args[] = Post::num('disp_intro');
-        $cols[] = 'default_cat_owner';
-        $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
-        $cols[] = 'custom_style';
-        $args[] = Post::val('custom_style');
+		$cols = array(
+			'project_title',
+			'theme_style',
+			'lang_code',
+			'default_task',
+			'default_entry',
+			'intro_message',
+			'notify_email',
+			'notify_jabber',
+			'notify_subject',
+			'notify_reply',
+			'feed_description',
+			'feed_img_url',
+			'default_due_version',
+			'use_effort_tracking',
+			'pages_intro_msg',
+			'estimated_effort_format',
+			'current_effort_done_format'
+		);
+		$args = array_map('Post_to0', $cols);
+		$cols = array_merge($cols, $ints = array(
+			'project_is_active',
+			'others_view',
+			'others_viewroadmap',
+			'anon_open',
+			'comment_closed',
+			'auto_assign',
+			'freetagging',
+			'use_tags',
+			'use_gantt',
+			'use_kanban'
+			)
+		);
+		$args = array_merge($args, array_map(array('Post', 'num'), $ints));
+		$cols[] = 'notify_types';
+		$args[] = implode(' ', (array) Post::val('notify_types'));
+		$cols[] = 'last_updated';
+		$args[] = time();
+		$cols[] = 'disp_intro';
+		$args[] = Post::num('disp_intro');
+		$cols[] = 'default_cat_owner';
+		$args[] = Flyspray::userNameToId(Post::val('default_cat_owner'));
+		$cols[] = 'custom_style';
+		$args[] = Post::val('custom_style');
 
-        // Convert to seconds.
-        if (Post::val('hours_per_manday')) {
-            $args[] = effort::editStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-            $cols[] = 'hours_per_manday';
-        }
+		// Convert to seconds
+		if (Post::val('hours_per_manday')) {
+			$args[] = effort::editStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+			$cols[] = 'hours_per_manday';
+		}
 
-        # TODO validation
-        if( Post::val('default_order_by2') !=''){
-                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
-        } else{
-                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
-        }
-        $cols[]='default_order_by';
-        $args[]= $_POST['default_order_by'];
+		# TODO validation
+		if (Post::val('default_order_by2') !='') {
+			$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+		} else {
+			$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+		}
+		$cols[] = 'default_order_by';
+		$args[] = $_POST['default_order_by'];
 
-        $args[] = $proj->id;
+		$args[] = $proj->id;
 
-        $update = $db->query("UPDATE  {projects}
-                                 SET  ".join('=?, ', $cols)."=?
-                               WHERE  project_id = ?", $args);
+		$update = $db->query("UPDATE {projects}
+			SET ".join('=?, ', $cols)."=?
+			WHERE project_id = ?",
+			$args);
 
-        $update = $db->query('UPDATE {projects} SET visible_columns = ? WHERE project_id = ?',
-                             array(trim(Post::val('visible_columns')), $proj->id));
+		$update = $db->query('UPDATE {projects}
+			SET visible_columns = ?
+			WHERE project_id = ?',
+			array(trim(Post::val('visible_columns')), $proj->id));
 
-        $update = $db->query('UPDATE {projects} SET visible_fields = ? WHERE project_id = ?',
-                             array(trim(Post::val('visible_fields')), $proj->id));
+		$update = $db->query('UPDATE {projects}
+			SET visible_fields = ?
+			WHERE project_id = ?',
+			array(trim(Post::val('visible_fields')), $proj->id));
 
-        // Update project prefs for following scripts
-        $proj = new Project($proj->id);
-        $_SESSION['SUCCESS'] = L('projectupdated');
-        Flyspray::redirect(createURL('pm', 'prefs', $proj->id));
-        break;
-
+		// Update project prefs for following scripts
+		$proj = new Project($proj->id);
+		$_SESSION['SUCCESS'] = L('projectupdated');
+		Flyspray::redirect(createURL('pm', 'prefs', $proj->id));
+		break;
         // ##################
         // modifying user details/profile
         // ##################
