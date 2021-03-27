@@ -7,11 +7,11 @@ if (!defined('IN_FS')) {
 	die('Do not access this file directly.');
 }
 
-/**
- * Experimental playground, so disabled the page until stable.
- */
-Flyspray::show_error(17);
+if (!$proj->prefs['use_kanban']) {
+        Flyspray::show_error(28);
+}
 
+# experimental, maybe later add a user group permission for that
 if (!$user->perms('is_admin')) {
 	Flyspray::show_error(4);
 }
