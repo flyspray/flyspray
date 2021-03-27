@@ -97,7 +97,7 @@ endif; ?>
 		&& (isset($proj->prefs['use_gantt']) && $proj->prefs['use_gantt'])        
 	): ?><li><a id="gantt"
 		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
-		href="<?php echo Filters::noXSS(createURL('gantt', $proj->id)); ?>" title="Gantt chart"><i class="fa fa-tasks fa-lg"></i></a>
+		href="<?php echo Filters::noXSS(createURL('gantt', $proj->id)); ?>" title="<?= eL('gantt') ?>"><i class="fa fa-tasks fa-lg"></i></a>
 		</li><?php
 	endif;
 	if(
@@ -107,23 +107,23 @@ endif; ?>
 		&& (isset($proj->prefs['use_kanban']) && $proj->prefs['use_kanban'])
 	): ?><li><a id="kanban"
 		<?php if($do == 'kanban'): ?> class="active" <?php endif; ?>
-		href="<?php echo Filters::noXSS(createURL('kanban', $proj->id)); ?>" title="Kanban view"><i class="fa fa-columns fa-lg"></i></a>
+		href="<?php echo Filters::noXSS(createURL('kanban', $proj->id)); ?>" title="<?= eL('kanban') ?>"><i class="fa fa-columns fa-lg"></i></a>
 		</li><?php
 	endif;
 	if ($proj->id && $user->perms('manage_project')): ?><li>
-		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(createURL('pm', 'prefs', $proj->id)); ?>"><?php echo Filters::noXSS(L('manageproject')); ?></a>
+		<a id="projectslink"<?php if($do=='pm'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(createURL('pm', 'prefs', $proj->id)); ?>"><?= eL('manageproject') ?></a>
 	</li><?php
 	endif;
 	if ($proj->id && isset($pm_pendingreq_num) && $pm_pendingreq_num):
 	?><li>
 		<a class="pendingreq attention"
-		href="<?php echo Filters::noXSS(createURL('pm', 'pendingreq', $proj->id)); ?>"><?php echo Filters::noXSS($pm_pendingreq_num); ?> <?php echo Filters::noXSS(L('pendingreq')); ?></a>
+		href="<?php echo Filters::noXSS(createURL('pm', 'pendingreq', $proj->id)); ?>"><?php echo Filters::noXSS($pm_pendingreq_num); ?> <?= eL('pendingreq') ?></a>
 		</li><?php
 	endif;
 	if ($user->perms('is_admin') && isset($admin_pendingreq_num) && $admin_pendingreq_num):
 	?><li>
 		<a class="pendingreq attention"
-		href="<?php echo Filters::noXSS(createURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?php echo Filters::noXSS(L('adminrequestswaiting')); ?></a>
+		href="<?php echo Filters::noXSS(createURL('admin', 'userrequest')); ?>"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <?= eL('adminrequestswaiting') ?></a>
 	</li><?php
 	endif; ?>
 	</ul>
