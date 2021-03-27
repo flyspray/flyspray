@@ -1099,5 +1099,8 @@ Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung, fal
 'lastlogin'               => 'letzte Anmeldung',
 'relnofollow'             => 'rel="nofollow" bei Links hinzufügen',
 'relnofollowdescription'  => 'Weist Suchmaschinen an, nutzergenerierte Verweise in Aufgaben und Kommentaren nicht für die Bewertung von Webseiten zu verwenden.',
+ 'usetags'                => 'Nutze Schildchen',
+ 'usegantt'               => 'Gantt Ansicht',
+ 'usekanban'              => 'Kanban Ansicht',
 );
 ?>
