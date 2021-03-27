@@ -1118,5 +1118,7 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'usetags'                 => 'Enable tags',
 'usegantt'                => 'Enable Gantt view',
 'usekanban'               => 'Enable Kanban view',
+'gantt'                   => 'Gantt view',
+'kanban'                  => 'Kanban view',
 );
 ?>
