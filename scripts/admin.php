@@ -10,42 +10,41 @@
   \***********************************************/
 
 if (!defined('IN_FS')) {
-    die('Do not access this file directly.');
+	die('Do not access this file directly.');
 }
 
 if (!$user->perms('is_admin')) {
-    Flyspray::show_error(4);
+	Flyspray::show_error(4);
 }
 
 $proj = new Project(0);
-#I $proj->setCookie();
 
 $page->pushTpl('admin.menu.tpl');
 
 switch ($area = Req::val('area', 'prefs')) {
-    case 'users':
-        $id = Flyspray::usernameToId(Req::val('user_name'));
-        if (!$id) {
-            $id = is_numeric(Req::val('user_id')) ? Req::val('user_id') : 0;
-        }
-        $theuser = new User($id, $proj);
-        if ($theuser->isAnon()) {
-            Flyspray::show_error(5, true, null, $_SESSION['prev_page']);
-        }
-        $page->assign('theuser', $theuser);
+	case 'users':
+		$id = Flyspray::usernameToId(Req::val('user_name'));
+		if (!$id) {
+			$id = is_numeric(Req::val('user_id')) ? Req::val('user_id') : 0;
+		}
+		$theuser = new User($id, $proj);
+		if ($theuser->isAnon()) {
+			Flyspray::show_error(5, true, null, $_SESSION['prev_page']);
+		}
+		$page->assign('theuser', $theuser);
 
-    case 'editgroup':
-        // looks a bit dumb, maybe replace that big switch-case fallthrough construct
-        if (Req::val('area') == 'editgroup') {
-            $group_details = Flyspray::getGroupDetails(Req::num('id'));
-            if (!$group_details || $group_details['project_id'] != $proj->id) {
-                Flyspray::show_error(L('groupnotexist'));
-                Flyspray::redirect(createURL('pm', 'groups', $proj->id));
-            }
-            $page->uses('group_details');
-        }
+	case 'editgroup':
+		// looks a bit dumb, maybe replace that big switch-case fallthrough construct
+		if (Req::val('area') == 'editgroup') {
+			$group_details = Flyspray::getGroupDetails(Req::num('id'));
+			if (!$group_details || $group_details['project_id'] != $proj->id) {
+				Flyspray::show_error(L('groupnotexist'));
+				Flyspray::redirect(createURL('pm', 'groups', $proj->id));
+			}
+			$page->uses('group_details');
+		}
 
-    case 'editallusers':
+	case 'editallusers':
 		// looks a bit dumb, maybe replace that big switch-case fallthrough construct
 		if ($area == 'editallusers') {
 			$perpage = 250; # take care of the PHP max_input_vars / (your form vars per user row in html output)
@@ -87,24 +86,23 @@ switch ($area = Req::val('area', 'prefs')) {
                              FROM  {admin_requests}
                             WHERE  request_type = 3 AND project_id = 0 AND resolved_by = 0
                          ORDER BY  time_submitted ASC");
-
 		$page->assign('pendings', $db->fetchAllArray($sql));
-    case 'newproject':
-    case 'os':
-    case 'prefs':
-    case 'resolution':
-    case 'tasktype':
-    case 'tag':
-    case 'status':
-    case 'version':
-    case 'newgroup':
-        $page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
-        $page->pushTpl('admin.'.$area.'.tpl');
-        break;
+	case 'newproject':
+	case 'os':
+	case 'prefs':
+	case 'resolution':
+	case 'tasktype':
+	case 'tag':
+	case 'status':
+	case 'version':
+	case 'newgroup':
+		$page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
+		$page->pushTpl('admin.'.$area.'.tpl');
+		break;
 
-    case 'translations':
-        require_once BASEDIR.'/scripts/langdiff.php';
-        break;
+	case 'translations':
+		require_once BASEDIR.'/scripts/langdiff.php';
+		break;
 
 	case 'checks':
 		$hashtypes=$db->query('
@@ -156,7 +154,7 @@ switch ($area = Req::val('area', 'prefs')) {
 		$page->assign('registrations', $db->fetchAllArray($registrations));
 
 		$sinfo=$db->dblink->serverInfo();
-		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])){
+		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
 			$fsdb=$db->query("SELECT default_character_set_name, default_collation_name
 				FROM INFORMATION_SCHEMA.SCHEMATA
 				WHERE SCHEMA_NAME=?", array($db->dblink->database)
@@ -191,7 +189,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			);
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
 
-		} elseif($db->dbtype=='pgsql'){
+		} elseif ($db->dbtype=='pgsql') {
 			$fsdb=$db->query("SELECT datcollate AS default_collation_name, datctype AS default_character_set_name FROM pg_database WHERE datname=?", array($db->dblink->database));
                         $page->assign('fsdb', $db->fetchRow($fsdb));
 			
@@ -212,10 +210,19 @@ switch ($area = Req::val('area', 'prefs')) {
 		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
+		
+		# swiftmailer 5.4.* version not set for class when installed with composer, so test for a VERSION file in swiftmailer directory first:
+		if (file_exists('./vendor/swiftmailer/swiftmailer/VERSION')) {
+			$page->assign('swiftmailerversion', file_get_contents('./vendor/swiftmailer/swiftmailer/VERSION'));
+		} else {
+			# maybe	later versions get it right
+			$page->assign('swiftmailerversion', Swift::VERSION);
+		}
+		
 		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
-    default:
-        Flyspray::show_error(6);
+	default:
+		Flyspray::show_error(6);
 }
 
 ?>
