@@ -33,6 +33,13 @@
         max-width:240px;
         min-width:60px;
 }
+
+.kanbanboard .task .assignedto img{
+        width:20px;
+        height:20px;
+        border-radius:50%; 
+}
+
 .typ1,
 .typ2,
 .typ3,
