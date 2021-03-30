@@ -746,7 +746,16 @@ max-width:40em;
     white-space: nowrap;
     vertical-align:text-bottom;
 }
-.tag:before {font-family:fontawesome;padding-right:3px;}
+
+.details .tag {
+	position:relative;
+}
+.details .tag span.added { display:none; position:absolute; left:0;top:1.2em;}
+.details .tag span.addedby { display:none; position:absolute; left:0;top:2.2em;}
+.details .tag:hover span.added {display:block;}
+.details .tag:hover span.addedby {display:block;}
+
+.tag:before {font-family:fontawesome; padding-right:3px;}
 .tag:after {content:attr(title);}
 /* style your tags by their tag_id, may be managed by tag list management in admin/project settings */
 /*
