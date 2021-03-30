@@ -444,8 +444,12 @@ function tpl_tag($id, $showid=false, $added=null, $addedby=null)
 			# task details view contains more details
 			$out .= '>';
 			$out .= htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8');
-			$out .= '<span class="added">'.formatDate($added).'</span>';
-			$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
+			if ($added>0) {
+				$out .= '<span class="added">'.formatDate($added).'</span>';
+			}
+			if ($addedby>0) {
+				$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
+			}
 			$out .= '</i>';
 		}
 		return $out;
