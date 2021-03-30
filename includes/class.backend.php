@@ -1026,13 +1026,15 @@ abstract class Backend
         if ($user->perms('manage_project')) {
             $allowedPostArgs[] = 'mark_private';
         }
-        // now copy all over all POST variables the user is ALLOWED to provide
-        // (but only if they are not empty)
-        foreach ($allowedPostArgs as $allowed) {
-            if (!empty($args[$allowed])) {
-                $sql_args[$allowed] = $args[$allowed];
-            }
-        }
+
+		// now copy all over all POST variables the user is ALLOWED to provide
+		// (but only if they are not empty)
+		foreach ($allowedPostArgs as $allowed) {
+			# always set detailed_desc even if empty. NULL and a default value set may not work for TEXT/BLOB Mysql8 (but not Mariadb10.2+)
+			if (!empty($args[$allowed]) or $allowed === 'detailed_desc') {
+				$sql_args[$allowed] = $args[$allowed];
+			}
+		}
 
         // Process the due_date
         if ( isset($args['due_date']) && ($due_date = $args['due_date']) || ($due_date = 0) ) {
