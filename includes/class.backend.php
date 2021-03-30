@@ -1146,7 +1146,11 @@ abstract class Backend
 					continue;
 				}
 			};
-			$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
+			#$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
+			$db->query(
+				"INSERT INTO {task_tag} (task_id, tag_id, added, added_by) VALUES(?,?,?,?)",
+				array($task_id, $tag_id, time(), intval($user->id))
+			);
 		}
 	}
 
