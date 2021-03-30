@@ -71,7 +71,7 @@ switch ($list_type){
 }
 ?>
 <tr>
-    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], true); ?></td><?php endif; ?>
     <td<?= ($list_type!='tag') ? ' class="'.$classtype.' '.$class.'"':'' ?>><?= ($list_type=='tag') ? tpl_tag($row['tag_id']) : Filters::noXSS($row[$list_type.'_name']); ?></td>
     <?php if ($list_type == 'tag'): ?><td><?php echo Filters::noXSS($row['class']); ?></td><?php endif; ?>
     <td title="<?= eL('ordertip') ?>"><?php echo Filters::noXSS($row['list_position']); ?></td>
@@ -108,7 +108,7 @@ switch ($list_type){
     $countlines++;
 ?>
 <tr<?= ($list_type == 'resolution' && $row[$list_type.'_id'] == RESOLUTION_DUPLICATE ) ? ' class="nodelete" title="fixed duplicate resolution status"':'' ?>>
-    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], $row['tag_id'], $row['class']); ?></td><?php endif; ?>
+    <?php if ($list_type == 'tag'): ?><td><?php echo tpl_tag($row['tag_id'], true); ?></td><?php endif; ?>
     <td>
         <input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
           value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
