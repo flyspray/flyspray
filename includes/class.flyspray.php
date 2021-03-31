@@ -1149,24 +1149,26 @@ GROUP BY u.user_id';
         return $changes;
     }
 
-        /**
-        * Get all tags of a task
-        * @access public static
-        * @return array
-        * @version 1.0
-        */
-        public static function getTags($task_id)
-        {
-                global $db;
-                # pre FS1.0beta
-                #$sql = $db->query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
-                # since FS1.0beta
-                $sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
-                        JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
-                        WHERE task_id = ?
-                        ORDER BY list_position', array($task_id));
-                return $db->fetchAllArray($sql);
-	}
+		/**
+		 * Get all tags of a task
+		 * @param int $task_id
+		 * 
+		 * @access public static
+		 * @return array
+		 * @version 1.0
+		 */
+		public static function getTags($task_id)
+		{
+			global $db;
+			$sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class, tt.added, tt.added_by
+				FROM {task_tag} tt
+				JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
+				WHERE task_id = ?
+				ORDER BY list_position',
+				array($task_id)
+			);
+			return $db->fetchAllArray($sql);
+		}
 
 	/**
 	* load all task tags into array

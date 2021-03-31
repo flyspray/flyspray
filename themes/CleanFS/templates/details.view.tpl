@@ -703,7 +703,7 @@ function quick_edit(elem, id)
 	</h2>
 
 	<span class="tags"><?php foreach($tags as $tag): ?>
-		<?= tpl_tag($tag['tag_id']); ?>
+		<?= tpl_tag($tag['tag_id'], false, $tag['added'], $tag['added_by']) ?>
 		<?php endforeach; ?></span>
 	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 

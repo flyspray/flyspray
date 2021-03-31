@@ -477,55 +477,133 @@ switch ($action = Req::val('action'))
             array($task['task_id']));
 
             // Convert assigned_to and store them in the 'assigned' table
-            foreach ((array) Post::val('rassigned_to') as $key => $val)
-            {
+            foreach ((array) Post::val('rassigned_to') as $key => $val) {
                 $db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id','task_id'));
             }
         }
 
-	# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
-	# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
-	#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
-	# update tags
-	$tagList = explode(';', Post::val('tags'));
-	$tagList = array_map('strip_tags', $tagList);
-	$tagList = array_map('trim', $tagList);
-	$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
-	$storedtags=array();
-	foreach($task['tags'] as $temptag){
-		$storedtags[]=$temptag['tag'];
-	}
-	$tags_changed = count(array_diff($storedtags, $tagList)) + count(array_diff($tagList, $storedtags));
+		# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
+		# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
+		#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
+		# update tags
+		$tagList = explode(';', Post::val('tags'));
+		$tagList = array_map('strip_tags', $tagList);
+		$tagList = array_map('trim', $tagList);
+		$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+		$storedtags=array();
+		foreach($task['tags'] as $temptag){
+			$storedtags[]=$temptag['tag'];
+		}
+		$tags_changed = count(array_diff($storedtags, $tagList)) + count(array_diff($tagList, $storedtags));
 
-	if($tags_changed){
-		// Delete the current assigned tags for this task
-		$db->query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
-		foreach ($tagList as $tag){
-			if ($tag == ''){
-				continue;
-			}
-			# size of {list_tag}.tag_name, see flyspray-install.xml
-			if(mb_strlen($tag) > 40){
-				# report that softerror
-				$errors['tagtoolong']=1;
-				continue;
-			}
-
-			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
-			if($t=$db->fetchRow($res)){
-				$tag_id=$t['tag_id'];
-			} else{
-				if( $proj->prefs['freetagging']==1){
-					# add to taglist of the project
-					$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
-					$tag_id=$db->insert_ID();
-				} else{
+		if ($tags_changed) {
+			/*
+			// Delete the current assigned tags for this task
+			$db->query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
+			foreach ($tagList as $tag){
+				if ($tag == ''){
 					continue;
 				}
-			};
-			$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+				# size of {list_tag}.tag_name, see flyspray-install.xml
+				if(mb_strlen($tag) > 40){
+					# report that softerror
+					$errors['tagtoolong']=1;
+					continue;
+				}
+
+				$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+				if($t=$db->fetchRow($res)){
+					$tag_id=$t['tag_id'];
+				} else {
+					if( $proj->prefs['freetagging']==1){
+						# add to taglist of the project
+						$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+						$tag_id=$db->insert_ID();
+					} else{
+						continue;
+					}
+				};
+				$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+			}
+			*/
+
+			foreach ($tagList as $tag){
+				if ($tag == ''){
+					continue;
+				}
+
+				if (in_array($tag, $storedtags) ){
+					echo "\n<br>in array storetags: $tag";
+					# no db change required, just drop this tag from $storedtags
+					$storedtags = array_diff($storedtags, array($tag));
+				} else {
+					$res=$db->query("SELECT tag_id
+						FROM {list_tag}
+						WHERE (project_id=0 OR project_id=?)
+						AND tag_name LIKE ?
+						ORDER BY project_id",
+						array($proj->id, $tag)
+					);
+
+					if ($t=$db->fetchRow($res)) {
+						$tag_id=$t['tag_id'];
+					} else {
+						if ($proj->prefs['freetagging']==1) {
+							# size of {list_tag}.tag_name, see flyspray-install.xml
+							if (mb_strlen($tag) > 40) {
+								# report that softerror
+								$errors['tagtoolong']=1;
+								continue;
+							}
+
+							# add to taglist of the project, not global
+							$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id, $tag));
+							$tag_id=$db->insert_ID();
+						} else {
+							continue;
+						}
+					}
+					$db->query("INSERT INTO {task_tag} (task_id, tag_id, added, added_by)
+						VALUES(?, ?, ?, ?)",
+						array($task['task_id'], $tag_id, time(), $user->id)
+					);
+				}
+			}
+
+			# What is left in $storedtags should be removed
+			# TODO: Log the remove of a tag from a task to {history} table?
+			if (count($storedtags)>0) {
+				# get ids of storedtags
+				$removetags=array();
+				foreach ($storedtags as $tagname) {
+					$res=$db->query("SELECT tag_id
+						FROM {list_tag}
+						WHERE (project_id=0 OR project_id=?)
+						AND tag_name LIKE ?
+						ORDER BY project_id",
+						array($proj->id, $tagname)
+					);
+
+					if ($t=$db->fetchRow($res)) {
+						$tag_id=$t['tag_id'];
+						$removetags[]=$tag_id;
+
+						# maybe tag same name stored as global and project so remove both to be sure.
+						if ($t=$db->fetchRow($res)) {
+							$tag_id=$t['tag_id'];
+							$removetags[]=$tag_id;
+						}
+					}
+				}
+
+				if (count($removetags)>0) {
+					$db->query(
+						'DELETE FROM {task_tag} WHERE task_id = ? AND tag_id IN('.implode(',', $removetags).')',
+						array($task['task_id'])
+					);
+				}
+			}
 		}
-	}
 
         // Get the details of the task we just updated
         // To generate the changed-task message

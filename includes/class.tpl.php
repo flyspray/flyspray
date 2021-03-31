@@ -398,12 +398,15 @@ function tpl_fast_tasklink($arr)
 /**
  * Formats a task tag for HTML output based on a global $alltags array
  *
- * @param int id tag_id of {list_tag} db table
- * @param bool showid set true if the tag_id is shown instead of the tag_name
+ * @param int $id tag_id of {list_tag} db table
+ * @param bool $showid set true if the tag_id is shown instead of the tag_name
+ * @param int $added for task details view
+ * @param int $addedby for task details view
  *
  * @return string ready for output
  */
-function tpl_tag($id, $showid=false) {
+function tpl_tag($id, $showid=false, $added=null, $addedby=null)
+{
 	global $alltags;
 
 	if(!is_array($alltags)) {
@@ -433,13 +436,25 @@ function tpl_tag($id, $showid=false) {
 		} else {
 			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
 		}
-		if($showid){
-			$out.='>'.$id;
-		} else{
-			$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'">';
-		}
 
-		$out.='</i>';
+		if (is_null($added) && is_null($addedby)) {
+			if ($showid) {
+				$out.='>'.$id.'</i>';
+			} else {
+				$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'"></i>';
+			}
+		} else {
+			# task details view contains more details
+			$out .= '>';
+			$out .= htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8');
+			if ($added>0) {
+				$out .= '<span class="added">'.formatDate($added).'</span>';
+			}
+			if ($addedby>0) {
+				$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
+			}
+			$out .= '</i>';
+		}
 		return $out;
 	}
 }
