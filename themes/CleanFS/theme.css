@@ -862,7 +862,7 @@ div.comment_container .comment {
 	margin-left: 10px;
 	border: 1px solid #e1e1e1;
 	vertical-align: top;
-	max-width: 700px;
+	width: 700px;
 	border-radius: 3px;
 }
 div.comment_container .comment:before {
@@ -1494,6 +1494,8 @@ button.fakelinkbutton:visited {
 	#tasklist {padding:0;}
 	#tasklist th.caret {padding:0;}
 	.taskrange {padding-left:10px;}
+	div.comment_container .comment {width:98%;}
+        div.comment_container .comment_header_infos {max-width: unset;}
 }
 
 @media only screen and (max-width: 480px) and (orientation: portrait) {
