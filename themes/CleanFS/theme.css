@@ -571,7 +571,7 @@ td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a
 	bottom: 0;
 	color: rgba(0,0,0,0);
 	content: attr(title);
-	font-size: 8px;
+	/*font-size: 8px;*/
 	left: 0;
 	line-height:1;
 	position: absolute;
