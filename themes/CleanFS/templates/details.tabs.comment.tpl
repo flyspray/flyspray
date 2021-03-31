@@ -36,7 +36,7 @@
 						<?php endif; ?>
 						</form>
 					</div>
-					<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?= eL('commentedon') ?> <a href="<?= createUrl('details', $task_details['task_id']).'#comment'.$comment['comment_id'] ?>"><?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></a></div>
+					<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?= eL('commentedon') ?> <a href="<?= createUrl('details', $task_details['task_id']).'#comment'.$comment['comment_id'] ?>" class="datelink"><?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></a></div>
 				</div>
 				<div class="commenttext">
 					<?php echo TextFormatter::render($comment['comment_text'], 'comm', $comment['comment_id'], $comment['content']); ?>
