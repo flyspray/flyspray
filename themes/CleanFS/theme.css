@@ -1079,19 +1079,22 @@ div#taskclosed {
 div#taskdeps {float: left;width: 50%; margin-bottom: 8px;}
 div#subtasks {display: inline;align: right;float: left;width: 50%;margin-bottom: 8px;}
 div#taskblocks { float: left; width: 45%;}
-a.datelink {
+a.datebutton {
 	display:inline-block;
 	vertical-align: middle;
 }
-a.datelink::before {
+a.datebutton::before {
         font-family:fontawesome;
         content:"\f133";
         color:#555;
         font-size:large;
 }
-a.datelink:hover::before {
+a.datebutton:hover::before {
         content:"\f073";
         color:#000;
+}
+a.datelink{
+	white-space:nowrap;
 }
 hr { /*color: $box_border;*/ border: none; border-top: 1px solid #e1e1e1;}
 .perms{display:inline-block;vertical-align:top;}
