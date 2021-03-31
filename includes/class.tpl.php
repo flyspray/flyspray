@@ -291,36 +291,39 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     return $link;
 }
 
-/*
+/**
  * Creates a textlink to a user profile.
  *
- * For a link with user icon use tpl_userlinkavatar().
+ * @param int|array $uid user_id or a simple array(user_id, user_name, real_name) from {users} db table
  *
- * @param int uid user_id from {users} db table
+ * @since 1.0-rc10 Changed displaying user_name instead real_name because username is unique for a Flyspray installation while there could be many 'John Smith'.
+ *                 Also there are cases real_name is just empty string in database, so the link was not visible.
+ *                 The real_name is now in the title attribute of the link so simply hover shows what's the users chosen real_name or accessed by CSS.
+ *                 Also makes creating a '@mention'-plugin possible as people know quickly how to link someone in a task description or comment.
+ *
+ * @since 0.9.9.7 Changed the display from 'real_name (user_name)' to just 'real_name'.
+ *
+ * @see tpl_userlinkavatar() for a link with user avatar icon
  */
 function tpl_userlink($uid)
 {
-    global $db, $user;
+	global $db, $user;
 
-    static $cache = array();
+	static $cache = array();
 
-    if (is_array($uid)) {
-        list($uid, $uname, $rname) = $uid;
-    } elseif (empty($cache[$uid])) {
-        $sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
+	if (is_array($uid)) {
+		list($uid, $uname, $rname) = $uid;
+	} elseif (empty($cache[$uid])) {
+		$sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
                            array(intval($uid)));
-        if ($sql && $db->countRows($sql)) {
-            list($uname, $rname) = $db->fetchRow($sql);
-        }
-    }
+		if ($sql && $db->countRows($sql)) {
+			list($uname, $rname) = $db->fetchRow($sql);
+		}
+	}
 
 	if (isset($uname)) {
-		#$url = createURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
-		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
-		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 		$url = createURL('user', $uid);
-		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
+		$cache[$uid] = vsprintf('<a href="%s" title="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
 	} elseif (empty($cache[$uid])) {
 		$cache[$uid] = eL('anonymous');
 	}
