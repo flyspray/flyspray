@@ -387,18 +387,21 @@ function createTestData(){
 		$args['item_status'] = rand(1,6); # 6 global task status after install
 		$args['item_status'] = rand(1,6); # 6 global task status after install
 		# assigned or researching status
-		if ($args['item_status'==3 or $args['item_status'==4]{
+		if ($args['item_status']==3 or $args['item_status']==4) {
 			$args['percent_complete'] = rand(0,8)*10;
 		}
 		# waiting or testing status
-		if ($args['item_status'==5 or $args['item_status'==5]{
+		if ($args['item_status']==5 or $args['item_status']==6) {
 			$args['percent_complete'] = rand(4,9)*10;
-		}  
-		// 'product_version'
-		// 'operating_system'
-		// 'estimated_effort'
-		// 'supertask_id' - find existing task of project
+		}
 		
+		/**
+		 * @todo 'product_version'
+		 * @todo 'operating_system'
+		 * @todo 'estimated_effort'
+		 * @todo 'supertask_id' - find existing task of project
+		 */
+
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
 		array($project_id));
 		$projectname = $db->fetchOne($sql);
