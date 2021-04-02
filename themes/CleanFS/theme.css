@@ -663,6 +663,11 @@ div#fineprint {
   padding: 0;
   color: #555;
 }
+#controlBox #controlBoxUp,
+#controlBox #controlBoxDown {
+	display:block;
+}
+
 .dokuwiki_toolbar {display:inline;vertical-align:bottom;}
 form #taskfields { width: 335px;}
 form #taskdetailsfull {
