@@ -12,8 +12,8 @@ if($list_type == 'tag') {
 <div id="controlBox">
     <div class="grip"></div>
     <div class="inner">
-        <a style="display:block;" href="#" onclick="TableControl.up('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
-        <a style="display:block;" href="#" onclick="TableControl.down('listTable'); return false;"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
+        <a href="#" id="controlBoxUp"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/up.png" alt="Up" /></a>
+        <a href="#" id="controlBoxDown"><img src="<?php echo Filters::noXSS($this->themeUrl()); ?>/down.png" alt="Down" /></a>
     </div>
 </div>
 <?php endif; ?>
@@ -163,17 +163,7 @@ switch ($list_type){
     <?php endif; ?>
   </table>
   <?php if (count($rows)): ?>
-  <script type="text/javascript">
-        <?php
-            echo 'TableControl.create("listTable",{
-                controlBox: "controlBox",
-                tree: false
-            });';
-            echo 'new Draggable("controlBox",{
-                handle: "grip"
-            });';
-        ?>
-  </script>
+  <script type="text/javascript" src="js/commonlist.js"></script>
   <?php endif; ?>
 </form>
 <hr />
@@ -209,10 +199,9 @@ switch ($list_type){
         <input id="showinlistnew" type="checkbox" name="show_in_list" checked="checked" disabled="disabled" />
       </td>
       <?php if ($list_type == 'version'): ?>
-      <td title="<?php echo Filters::noXSS(L('listtensetip')); ?>">
+      <td title="<?= eL('listtensetip') ?>">
         <select id="tensenew" name="<?php echo Filters::noXSS($list_type); ?>_tense">
           <?php echo tpl_options(array(1=>L('past'), 2=>L('present'), 3=>L('future')), 2); ?>
-
         </select>
       </td>
       <?php endif; ?>
