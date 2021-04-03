@@ -1503,17 +1503,30 @@ switch ($action = Req::val('action'))
                     : 'id tasktype priority severity summary status dueversion progress';
 
 
-        $db->query('INSERT INTO  {projects}
-                                 ( project_title, theme_style, intro_message,
-                                   others_view, others_viewroadmap, anon_open, project_is_active,
-                                   visible_columns, visible_fields, lang_code, notify_email, notify_jabber, disp_intro)
-                         VALUES  (?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
-        array(Post::val('project_title'), Post::val('theme_style'),
-              Post::val('intro_message'), Post::num('others_view', 0), Post::num('others_viewroadmap', 0),
-              Post::num('anon_open', 0),  $viscols, $visfields,
-              Post::val('lang_code', 'en'), '', '',
-        Post::num('disp_intro')
-    ));
+		// 3 per row for better overview
+		$db->query('
+			INSERT INTO {projects} (
+				project_title, theme_style, intro_message,
+				others_view, others_viewroadmap, anon_open,
+				project_is_active, visible_columns, visible_fields,
+				lang_code, notify_email, notify_jabber,
+				notify_reply, disp_intro, default_task 
+			)
+			VALUES (
+				?, ?, ?,
+				?, ?, ?,
+				1, ?, ?,
+				?, ?, ?, 
+				?, ?, ?
+			)',
+			array(
+				Post::val('project_title'), Post::val('theme_style'), Post::val('intro_message'),
+				Post::num('others_view', 0), Post::num('others_viewroadmap', 0), Post::num('anon_open', 0),
+				$viscols, $visfields,
+				Post::val('lang_code', 'en'), '', '',
+				'', Post::num('disp_intro'), ''
+			)
+        );
 
         // $sql = $db->query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
         // $pid = $db->fetchOne($sql);
