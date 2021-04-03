@@ -6,7 +6,7 @@
 			<div class="comment">
 				<div class="comment_header">
 					<div class="comment_header_actions">
-						<?php echo tpl_form(CreateUrl('details', $task_details['task_id'])); ?>
+						<?php echo tpl_form(createUrl('details', $task_details['task_id'])); ?>
 						<?php
 							$theuser = new User($comment['user_id']);
 							if (!$theuser->isAnon()) {
@@ -14,7 +14,7 @@
 									$rank = 'Admin';
 								}
 								else if ($theuser->perms('manage_project')) {
-									$rank = 'Project Manager';
+									$rank = L('projectmanager');
 								}
 								else {
 									$rank = '';
@@ -36,7 +36,7 @@
 						<?php endif; ?>
 						</form>
 					</div>
-					<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?php echo Filters::noXSS(L('commentedon')); ?> <?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></div>
+					<div class="comment_header_infos"><?php echo tpl_userlink($comment['user_id']); ?> <?= eL('commentedon') ?> <a href="<?= createUrl('details', $task_details['task_id']).'#comment'.$comment['comment_id'] ?>" class="datelink"><?php echo Filters::noXSS(formatDate($comment['date_added'], true)); ?></a></div>
 				</div>
 				<div class="commenttext">
 					<?php echo TextFormatter::render($comment['comment_text'], 'comm', $comment['comment_id'], $comment['content']); ?>

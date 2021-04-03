@@ -10,6 +10,7 @@
 <?php if ($fs->prefs['url_rewriting']): ?>
 <base href="<?php echo Filters::noXSS($baseurl); ?>" />
 <?php endif; ?>
+<link rel="icon" href="favicon.ico" />
 <?php if(trim($this->get_image('favicon'))): ?>
 <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
 <?php endif; ?>
@@ -44,8 +45,14 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <?php if ('index' == $do): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/index.js"></script>
 <?php endif; ?>
-<?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
-<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
+<?php
+// load only for page types that have an editor textarea
+if (
+	isset($conf['general']['syntax_plugin'])
+	&& $conf['general']['syntax_plugin'] == 'html'
+	&& in_array($do, array('details', 'newtask', 'admin', 'pm'))
+): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>

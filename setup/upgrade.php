@@ -92,18 +92,18 @@ $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
 usort($folders, 'version_compare'); // start with lowest version
 
 if (Post::val('upgrade')) {
-    $uplog=array();
-    $uplog[]="Start database transaction";
-    $db->dblink->StartTrans();
-    fix_duplicate_list_entries(true);
-    foreach ($folders as $folder) {
-        if (version_compare($installed_version, $folder, '<=')) {
-            $uplog[]="Start $installed_version to $folder";
-            $uplog[]= execute_upgrade_file($folder, $installed_version);
-            $installed_version = $folder;
-            $uplog[]="End $installed_version to $folder";
-        }
-    }
+	$uplog=array();
+	$uplog[]="Start database transaction";
+	$db->dblink->startTrans();
+	fix_duplicate_list_entries(true);
+	foreach ($folders as $folder) {
+		if (version_compare($installed_version, $folder, '<=')) {
+			$uplog[]="Start <strong>$installed_version</strong> to <strong>$folder</strong>";
+			$uplog[]= execute_upgrade_file($folder, $installed_version);
+			$uplog[]="End <strong>$installed_version</strong> to <strong>$folder</strong>";
+			$installed_version = $folder;
+		}
+	}
 
     # maybe as Filter: $out=html2wiki($input, 'wikistyle'); and $out=wiki2html($input, 'wikistyle') ?
     # No need for any filter, because dokuwiki format wouldn't be touched anyway. But maybe ask the user
@@ -122,7 +122,7 @@ if (Post::val('upgrade')) {
 
     // we should be done at this point
     $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
-    
+
     // Fix the sequence in tasks table for PostgreSQL.
     if ($db->dblink->dataProvider == 'postgres') {
         $rslt = $db->query('SELECT MAX(task_id) FROM {tasks}');
@@ -134,7 +134,7 @@ if (Post::val('upgrade')) {
             $db->query('SELECT setval(?, ?)', array($seqname, $maxid));
         }
     }
-    // */
+
     $db->dblink->completeTrans();
     $installed_version = $fs->version;
     $page->assign('done', true);
@@ -198,7 +198,7 @@ function execute_upgrade_file($folder, $installed_version)
 
     $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(basename($upgrade_path), 'fs_ver'));
     #$page->assign('done', true);
-    return "Write ".basename($upgrade_path)." into table {prefs} fs_ver in database";
+    return "Wrote <strong>".basename($upgrade_path)."</strong> into database table {prefs} field fs_ver.";
 }
 
  /**

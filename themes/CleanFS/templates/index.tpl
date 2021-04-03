@@ -364,41 +364,52 @@ echo tpl_select(
 </tr>
 </thead>
 <tbody>
-<?php foreach ($tasks as $task):?>
+<?php
+# to limit preloading detailed_desc in tasklist table in favor of smaller page size and time spend by TextFormatter::render()
+$maxrender=25;
+$taskcount=0;
+foreach ($tasks as $task): ?>
 <tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  echo $task['is_closed'] ==1 ? ' closed': '';?>">
 	<td class="caret"></td>
 	<?php if (!$user->isAnon() && $proj->id !=0): ?>
 	<td class="ttcolumn"><input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="<?php echo $task['task_id']; ?>"/></td>
 	<?php
 	endif;
+	$taskcount++;
 	foreach ($visible as $col):
 		if($col == 'progress'):?>
 	<td class="task_progress"><div class="progress_bar_container"><span><?php echo $task['percent_complete']; ?>%</span><div class="progress_bar" style="width:<?php echo $task['percent_complete']; ?>%"></div></div></td>
 		<?php elseif ($col == 'summary'):
-			echo tpl_draw_cell($task, $col, "<td class='%s' onmouseover=\"Show(this," . $task['task_id'] . ")\" onmouseout=\"Hide(this, " . $task['task_id'] . ")\">%s</td>");
+			$sumtpl='<td class="%s"';
+			if ($taskcount <= $maxrender) {
+				# TODO: get rid of that inline javascript to make more strict content-security-policy possible.
+				# Maybe replace by event listener that takes care of first $maxrender items?
+				$sumtpl.=' onmouseover="Show(this, '.$task['task_id'].')" onmouseout="Hide(this, '.$task['task_id'].')"';
+			}
+			$sumtpl.='>%s</td>';
+			echo tpl_draw_cell($task, $col, $sumtpl);
 		else:
-		echo tpl_draw_cell($task, $col);
+			echo tpl_draw_cell($task, $col);
 		endif;
 	endforeach;
-	?>
+	if ($taskcount <= $maxrender): ?>
 	<td id="desc_<?php echo $task['task_id']; ?>" class="descbox box">
 	<b><?php echo L('taskdescription'); ?></b>
 	<?php echo $task['detailed_desc'] ? TextFormatter::render($task['detailed_desc'], 'task', $task['task_id'], $task['desccache']) : '<p>'.L('notaskdescription').'</p>'; ?>
 	</td>
+	<?php else: ?>
+	<td></td>
+	<?php endif;?>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
-<table id="pagenumbers">
-<tr>
 <?php if ($total): ?>
-	<td id="taskrange"><?php echo sprintf(L('taskrange'), $offset + 1, ($offset + $perpage > $total ? $total : $offset + $perpage), $total); ?></td>
-	<td id="numbers"><?php echo pagenums($pagenum, $perpage, $total); ?></td>
+	<span class="taskrange"><?php echo sprintf(L('taskrange'), $offset + 1, ($offset + $perpage > $total ? $total : $offset + $perpage), $total); ?></span>
+	<?php echo pagenums($pagenum, $perpage, $total); ?>
 <?php else: ?>
-	<td id="taskrange"><strong><?= eL('noresults') ?></strong></td>
+	<div class="noresult"><strong><?= eL('noresults') ?></strong></div>
 <?php endif; ?>
-</tr>
-</table>
 
 <!-- Bulk editing Tasks -->
 <?php if (!$user->isAnon() && $proj->id !=0 && $total): ?>

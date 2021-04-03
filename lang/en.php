@@ -1113,5 +1113,12 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'repeatemailaddress'      => 'repeat email address',
 'tooltipshorttasktitle'   => 'Write a title that summarizes the problem and makes it understandable at a glance',
 'lastlogin'               => 'Last Login',
+'relnofollow'             => 'add rel="nofollow" to links in task details and comments',
+'relnofollowdescription'  => 'Tells search engines to not use user generated links for page ranking. Used to reduce the motivation of linkspammers.',
+'usetags'                 => 'Enable tags',
+'usegantt'                => 'Enable Gantt view',
+'usekanban'               => 'Enable Kanban view',
+'gantt'                   => 'Gantt view',
+'kanban'                  => 'Kanban view',
 );
 ?>

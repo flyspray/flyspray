@@ -127,11 +127,14 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 
 
 	$new_order = array('order' => $colname, 'sort' => $sort1, 'order2' => $order2, 'sort2' => $sort2);
-	# unneeded params from $_GET for the sort links
+	# unneeded or duplicate params from $_GET for the sort links
 	$params=array_merge($_GET, $new_order);
 	unset($params['do']);
 	unset($params['project']);
 	unset($params['switch']);
+	# resorting a search result should show always the first results 
+        unset($params['pagenum']);
+	
 	$html = sprintf('<a title="%s" href="%s">%s</a>',
 		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html);
 
@@ -175,14 +178,14 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
             'private'    => 'mark_private',
             'parent'     => 'supertask_id',
             'estimatedeffort' => 'estimated_effort',
-        );
+	);
 
     //must be an array , must contain elements and be alphanumeric (permitted  "_")
     if(!is_array($task) || empty($task) || preg_match('![^A-Za-z0-9_]!', $colname)) {
         //run away..
         return '';
     }
-    $class= 'task_'.$colname;
+	$class= 'task_'.$colname;
 
 	switch ($colname) {
         case 'id':
@@ -227,12 +230,20 @@ function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
 		$value = $task[$indexes[$colname]]>0 ? $task[$indexes[$colname]]:'';
 		break;
 
-        case 'lastedit':
-        case 'duedate':
-        case 'dateopened':
-        case 'dateclosed':
-            $value = formatDate($task[$indexes[$colname]]);
-            break;
+	case 'lastedit':
+	case 'dateopened':
+	case 'dateclosed':
+		$value = formatDate($task[$indexes[$colname]]);
+		break;
+
+	case 'duedate':
+		# TODO: calc for duetoday, calc duewarn period, with correct timezones and DST
+		# and use of $fs->prefs['days_before_alert']
+		if ($task[$indexes[$colname]] < time()) {
+			$class.=' overdue';
+		}
+		$value = formatDate($task[$indexes[$colname]]);
+		break;
 
         case 'status':
             if ($task['is_closed']) {

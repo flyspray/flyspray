@@ -8,7 +8,7 @@ class User
     public $searches = array();
     public $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_in_details', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
-                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment');
+                             'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment', 'hide_subtasks');
 
     public function __construct($uid = 0)
     {
@@ -396,10 +396,6 @@ class User
     {
 	global $fs;
 	return $this->isAnon() && $fs->prefs['need_approval'] && $fs->prefs['anon_reg'];
-    }
-
-    public function get_group_id()
-    {
     }
 
     /**

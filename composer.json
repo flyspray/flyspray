@@ -3,13 +3,32 @@
     "type": "application",
     "description": "The Flyspray bug tracking system.",
     "keywords": ["bug","bugs","tracker","issue","issues", "web"],
-    "homepage": "https://flyspray.org",
+    "homepage": "https://www.flyspray.org",
+    "support": {
+        "issues": "https://bugs.flyspray.org",
+        "source": "https://github.com/flyspray/flyspray"
+    },
     "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Peter Liscovius",
+            "role": "Current maintainer"
+        },
+        {
+            "name": "former developers",
+            "homepage": "https://github.com/flyspray/flyspray/graphs/contributors"
+        },
+        {
+            "name": "contributors",
+            "homepage": "https://github.com/flyspray/flyspray/graphs/contributors"
+        }
+    ],
     "require": {
+        "php" : "^5.5.9 || ^7.0 || ^8.0",
         "swiftmailer/swiftmailer": "~5.0",
-        "adodb/adodb-php": "~5.20",
+        "adodb/adodb-php": "~5.21",
         "jamiebicknell/sparkline": "1.*",
-        "ezyang/htmlpurifier": "~4.10.0",
+        "ezyang/htmlpurifier": "~4.12",
         "dapphp/securimage": "3.6.6",
         "league/oauth2-client": "~0.12" 
     },

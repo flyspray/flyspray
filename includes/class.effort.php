@@ -281,10 +281,10 @@ class effort
         
         $matches = array();
         if (preg_match('/^((\d+)\s)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
-            return FALSE;
+            return false;
         }
 
-        if (!isset($matches[2])) {
+        if (!isset($matches[2]) || $matches[2] == '') {
             $matches[2] = 0;
         }
             
@@ -292,7 +292,7 @@ class effort
             $matches[5] = 0;
         } else {
             if ($matches[5] > 59) {
-                return FALSE;
+                return false;
             }
         }
             

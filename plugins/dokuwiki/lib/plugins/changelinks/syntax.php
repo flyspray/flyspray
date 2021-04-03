@@ -116,13 +116,14 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($mode, &$renderer, $data) {
-        if($mode == 'xhtml') {
+    function render($mode, &$renderer, $data)
+    {
+        if ($mode == 'xhtml') {
             global $conf;
             $id = $data[0];
             $name = $data[1];
            
-            //prepare for formating
+            // prepare for formatting
             $link['target'] = $conf['target']['wiki'];
             $link['style']  = '';
             $link['pre']    = '';
@@ -131,21 +132,21 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
             $link['class']  = 'internallink';
             $link['url']    = DOKU_INTERNAL_LINK . $id;
          
-            if(is_array($name)){
-               $link['name']   = (isset($name['title'])) ? hsc($name['title']) : hsc($id);
+            if (is_array($name)) {
+               $link['name'] = (isset($name['title'])) ? hsc($name['title']) : hsc($id);
                $link['title'] = $id;
-            } else{
-               $link['name']   = ($name) ? hsc($name) : hsc($id);
+            } else {
+               $link['name'] = ($name) ? hsc($name) : hsc($id);
                $link['title'] = ($name) ? $name : $id;
             }
 
             //add search string
-            if($search){
+            if (isset($search)) {
                 ($conf['userewrite']) ? $link['url'].='?s=' : $link['url'].='&amp;s=';
                 $link['url'] .= urlencode($search);
             }
     
-            //output formatted
+            // output formatted
             $renderer->doc .= $renderer->_formatLink($link);
         }
         return true;

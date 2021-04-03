@@ -212,34 +212,40 @@
       <col>dep_task_id</col>
     </index>
   </table>
-    <table name="effort">
-    	<descr>log of time spent on tasks</descr>
-        <field name="effort_id" type="I" size="10">
-            <KEY/>
-            <AUTOINCREMENT/>
-        </field>
-        <field name="task_id" type="I" size="10">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="date_added" type="I" size="11">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="user_id" type="I" size="3">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="start_timestamp" type="I" size="11"/>
-        <field name="end_timestamp" type="I" size="11"/>
-        <field name="effort" type="I" size="15">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <index name="task_id_effort">
-            <col>task_id</col>
-        </index>
-    </table>
+  <table name="effort">
+    <descr>log time spent on a task</descr>
+    <field name="effort_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="start_timestamp" type="I" size="11"/>
+    <field name="end_timestamp" type="I" size="11"/>
+    <field name="effort" type="I" size="15">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="description" type="C" size="200">
+      <descr>optional notes, e.g. for generating bills</descr>
+    </field>	
+    <index name="task_id_effort">
+      <col>task_id</col>
+    </index>
+    <index name="user_id_effort">
+      <col>user_id</col>
+    </index>
+  </table>
   <table name="groups">
   	<descr>User Groups for the Flyspray bug killer</descr>
     <field name="group_id" type="I" size="3">
@@ -821,14 +827,30 @@
       <DEFAULT value="id"/>
     </field>
     <field name="default_order_by_dir" type="C" size="5">
+      <descr>deprecated and unused, default_order_by field now contains complete order by rules</descr>
       <NOTNULL/>
       <DEFAULT value="desc"/>
     </field>
     <field name="custom_style" type="C" size="32">
     </field>
     <field name="freetagging" type="I" size="1">
+      <descr>allows automatic creation of new tags when adding/editing a task</descr>
       <NOTNULL/>
-      <DEFAULT value="1"/>>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="use_tags" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_gantt" type="I" size="1">
+      <descr>link to gantt view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_kanban" type="I" size="1">
+      <descr>link to kanban view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="registrations">
@@ -1102,6 +1124,8 @@
     <field name="tag_id" type="I" size="5">
       <KEY/>
     </field>
+    <field name="added" type="I" size="11"></field>
+    <field name="added_by" type="I" size="3"></field>
     <index name="task_id_tag">
       <UNIQUE/>
       <col>task_id</col>
@@ -1366,8 +1390,8 @@
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha', '0');</query>
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_sitekey', '');</query>
 	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_secret', '');</query>
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id desc', 'DESC', '', 1 );</query>
-    <query>INSERT INTO tasks VALUES (DEFAULT, 1, 1, 1452600000, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project! We hope that Flyspray provides you increased productivity. If you have any issues, go to https://bugs.flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', '', '0', '', '', '', 'en', 0, 0, 0, '', 'index', 0, 0, 'Undecided', '', 0, 0, 0, 'id desc', 'DESC', '', 1, 0, 0, 0)</query>
+    <query>INSERT INTO tasks VALUES (DEFAULT, 1, 1, 1452600000, 1, 0, 0, 0, ' ', 'Sample Task', 'This is not a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
     <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Superuser', '', '', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0, NULL);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>

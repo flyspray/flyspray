@@ -125,17 +125,20 @@ class Setup extends Flyspray
       $this->xmlStatus = function_exists('xml_parser_create');
       $this->sapiStatus = (php_sapi_name() != 'cgi');
 
-      // If the database is supported in Flyspray, the function to check in PHP.
-      $this->mSupportedDatabases = array(
-                                 'MySQLi' => array(true,'mysqli_connect','mysqli'),
-                                 'MySQL' => array(true, 'mysql_connect', 'mysql'),
-                                 'Postgres' => array(true, 'pg_connect', 'pgsql'),
-                              );
-      $this->mAvailableDatabases = array();
+		// If the database is supported in Flyspray, the function to check in PHP.
+		$this->mSupportedDatabases = array(
+			'MySQLi' => array(true,'mysqli_connect','mysqli'),
+			'Postgres' => array(true, 'pg_connect', 'pgsql'),
+		);
 
-      // Process the page actions
-      $this->processActions();
-   }
+		if (version_compare(PHP_VERSION, '7.0', '<')) {
+			$this->mSupportedDatabases['MySQL'] = array(true, 'mysql_connect', 'mysql');
+		}
+		$this->mAvailableDatabases = array();
+
+		// Process the page actions
+		$this->processActions();
+	}
 
    /**
    * Function to check the permission of the config file
@@ -185,7 +188,7 @@ class Setup extends Flyspray
          ?  $this->mAvailableDatabases[$which]['status']
          :  false;
 
-      // Just transferring the value for ease of veryfying Database support.
+      // Just transferring the value for ease of verifying Database support.
       $status[] = $this->mAvailableDatabases[$which]['supported'];
 
       // Generating the output to be displayed

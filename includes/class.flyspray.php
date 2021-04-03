@@ -17,104 +17,108 @@
 class Flyspray
 {
 
-    /**
-     * Current Flyspray version. Change this for each release.  Don't forget!
-     * @access public
-     * @var string
-     * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
-     * For making github release use e.g. '1.0-beta' here.
-     * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
-     * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
-     * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
-     */
+	/**
+	 * Current Flyspray version. Change this for each release.  Don't forget!
+	 * @access public
+	 * @var string
+	 * For github development use e.g. '1.0-beta dev' ; Flyspray::base_version() currently splits on the ' ' ...
+	 * For making github release use e.g. '1.0-beta' here.
+	 * For online version check www.flyspray.org/version.txt use e.g. '1.0-beta'
+	 * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
+	 * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
+	 */
 	public $version = '1.0-rc10 dev';
 
-    /**
-     * Flyspray preferences
-     * @access public
-     * @var array
-     */
-    public $prefs = array();
+	/**
+	 * Flyspray preferences
+	 * @access public
+	 * @var array
+	 */
+	public $prefs = array();
 
-    /**
-     * Max. file size for file uploads. 0 = no uploads allowed
-     * @access public
-     * @var integer
-     */
-    public $max_file_size = 0;
+	/**
+	 * Max. file size for file uploads. 0 = no uploads allowed
+	 * @access public
+	 * @var integer
+	 */
+	public $max_file_size = 0;
 
-    /**
-     * List of projects the user is allowed to view
-     * @access public
-     * @var array
-     */
-    public $projects = array();
+	/**
+	 * List of projects the user is allowed to view
+	 * @access public
+	 * @var array
+	 */
+	public $projects = array();
 
-    /**
-     * List of severities. Loaded in i18n.inc.php
-     * @access public
-     * @var array
-     */
-    public $severities = array();
+	/**
+	 * List of severities. Loaded in i18n.inc.php
+	 * @access public
+	 * @var array
+	 */
+	public $severities = array();
 
-    /**
-     * List of priorities. Loaded in i18n.inc.php
-     * @access public
-     * @var array
-     */
-    public $priorities = array();
+	/**
+	 * List of priorities. Loaded in i18n.inc.php
+	 * @access public
+	 * @var array
+	 */
+	public $priorities = array();
 
-    /**
-     * Constructor, starts session, loads settings
-     * @access private
-     * @return void
-     * @version 1.0
-     */
-    public function __construct()
-    {
-        global $db;
+	/**
+	* Constructor, starts session, loads settings
+	* @access private
+	* @return void
+	* @version 1.0
+	*/
+	public function __construct()
+	{
+		global $db;
 
-        $this->startSession();
+		$this->startSession();
 
-        $res = $db->query('SELECT pref_name, pref_value FROM {prefs}');
+		$res = $db->query('SELECT pref_name, pref_value FROM {prefs}');
 
-        while ($row = $db->fetchRow($res)) {
-            $this->prefs[$row['pref_name']] = $row['pref_value'];
-        }
+		while ($row = $db->fetchRow($res)) {
+			$this->prefs[$row['pref_name']] = $row['pref_value'];
+		}
 
-        $this->setDefaultTimezone();
+		$this->setDefaultTimezone();
 
-        $sizes = array();
-        foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
-        	if($val === '-1'){
-				// unlimited value in php configuration
-				$val = PHP_INT_MAX;
+		// only needed to calculate max_file_size if uploads are allowed by PHP configuration
+		if (ini_get('file_uploads')) {
+		
+			$sizes = array();
+			foreach (array(ini_get('memory_limit'), ini_get('post_max_size'), ini_get('upload_max_filesize')) as $val) {
+				if($val === '-1') {
+					// unlimited value in php configuration
+					$val = PHP_INT_MAX;
+				}
+				if (!$val || $val < 0) {
+					continue;
+				}
+
+				if (!is_int($val)) {
+					$last = strtolower($val[strlen($val)-1]);
+					$val = trim($val, 'gGmMkK');
+					switch ($last) {
+						case 'g':
+							$val *= 1024;
+						case 'm':
+							$val *= 1024;
+						case 'k':
+							$val *= 1024;
+					}
+				}
+				$sizes[] = $val;
 			}
-            if (!$val || $val < 0) {
-                continue;
-            }
 
-            $last = strtolower($val{strlen($val)-1});
-            $val = trim($val, 'gGmMkK');
-            switch ($last) {
-                // The 'G' modifier is available since PHP 5.1.0
-                case 'g':
-                    $val *= 1024;
-                case 'm':
-                    $val *= 1024;
-                case 'k':
-                    $val *= 1024;
-            }
-
-            $sizes[] = $val;
-        }
-        clearstatcache();
-	$this->max_file_size = (
-                (bool) ini_get('file_uploads')
-                && is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
-                && is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
-                ) ? round((min($sizes)/1024/1024), 1) : 0;
-    }
+			clearstatcache();
+			$this->max_file_size = (
+				is_file(BASEDIR.DIRECTORY_SEPARATOR.'attachments'.DIRECTORY_SEPARATOR.'index.html')
+				&& is_writable(BASEDIR.DIRECTORY_SEPARATOR.'attachments')
+				) ? round((min($sizes)/1024/1024), 1) : 0;
+		}
+	}
 
     protected function setDefaultTimezone()
     {
@@ -258,17 +262,17 @@ class Flyspray
         $server = $protocol .'://'. $host . (isset($port) ? ':'. $port : '');
 
 
-        if (!strlen($url) || $url{0} == '?' || $url{0} == '#') {
+        if (!strlen($url) || $url[0] == '?' || $url[0] == '#') {
             $uri = isset($_SERVER['REQUEST_URI']) ?
                 $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
-            if ($url && $url{0} == '?' && false !== ($q = strpos($uri, '?'))) {
+            if ($url && $url[0] == '?' && false !== ($q = strpos($uri, '?'))) {
                 $url = substr($uri, 0, $q) . $url;
             } else {
                 $url = $uri . $url;
             }
         }
 
-        if ($url{0} == '/') {
+        if ($url[0] == '/') {
             return $server . $url;
         }
 
@@ -479,21 +483,43 @@ class Flyspray
 	{
 		global $db;
 
-		if( empty($opts) || !isset($opts['stats']) ){
+		if (!isset($opts['offset'])) {
+			$opts['offset'] = 0;
+		}
 
-			$res = $db->query('SELECT account_enabled, user_id, user_name, real_name,
-		email_address, jabber_id, oauth_provider, oauth_uid,
-		notify_type, notify_own, notify_online,
-		tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
-		register_date, login_attempts, lock_until,
-		profile_image, hide_my_email, last_login
-		FROM {users}
-		ORDER BY account_enabled DESC, user_name ASC');
+		if (!isset($opts['perpage'])) {
+			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
+		}
 
+		$filter = array();
+		if (isset($opts['status']) && ($opts['status']===1 || $opts['status']===0)) {
+			$filter[] = 'account_enabled = '.$opts['status'];
+		}
+
+		if (count($filter)) {
+			$where = "\nWHERE ".implode( "\nAND " , $filter);
+			$having = "\nHAVING ".implode( "\nAND " , $filter);
+		} else {
+			$where = '';
+			$having = '';
+		}
+		
+		if (!isset($opts['stats']) ){
+			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
+				email_address, jabber_id, oauth_provider, oauth_uid,
+				notify_type, notify_own, notify_online,
+				tasks_perpage, lang_code, time_zone, dateformat, dateformat_extended,
+				register_date, login_attempts, lock_until,
+				profile_image, hide_my_email, last_login
+				FROM {users}';
+			$sql .= $where;
+			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
+			$sql .= $orderby;
+			
 		} else {
 			# Well, this is a big and slow query, but the current solution I found.
 			# If you know a more elegant for calculating user stats from the different tables with one query let us know!
-			$res = $db->query('
+			$sql = '
 SELECT
 MIN(u.account_enabled) AS account_enabled,
 MIN(u.user_id) AS user_id,
@@ -568,7 +594,7 @@ UNION
         FROM {users} u
         LEFT JOIN {comments} c ON c.user_id=u.user_id
         GROUP BY u.user_id
- UNION
+UNION
      	SELECT u.account_enabled, u.user_id, u.user_name, u.real_name,
         u.email_address, u.jabber_id, u.oauth_provider, u.oauth_uid,
         u.notify_type, u.notify_own, u.notify_online,
@@ -602,11 +628,21 @@ UNION
         LEFT JOIN {votes} v ON v.user_id=u.user_id
         GROUP BY u.user_id
 ) u
-GROUP BY u.user_id
-ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC'); 
+GROUP BY u.user_id';
+
+			$sql .= $having;
+			$orderby = "\nORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC";
+			$sql .= $orderby;
 		}
 
-		return $db->fetchAllArray($res);
+		$sqlcount=$db->query('SELECT COUNT(*) FROM ('.$sql.') u');
+		$usercount=$db->fetchOne($sqlcount);
+		$res = $db->query($sql, array(), $opts['perpage'], $opts['offset']);
+		$users=$db->fetchAllArray($res);
+		return array(
+			'users'=>$users,
+			'count'=>$usercount
+		);
 	}
 
     /**
@@ -795,13 +831,14 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
 	public static function fetchAuthDetails($username, $method = 'native')
 	{
 		global $db;
+		
 		if($method === 'ldap') {
-			$user_id = -42;
+			$user_id = -42; // just an invalid id
 		} else {
 			// handle multiple email addresses
 			$temp = $db->query("SELECT id FROM {user_emails} WHERE email_address = ?", $username);
 			$user_id = $db->fetchRow($temp);
-			$user_id = $user_id["id"];
+			$user_id = is_array($user_id) ? $user_id['id'] : -41; // just an invalid id
 		}
 		$result = $db->query("SELECT  uig.*, g.group_open, u.account_enabled, u.user_pass,
 		                              lock_until, login_attempts
@@ -1112,24 +1149,26 @@ ORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC');
         return $changes;
     }
 
-        /**
-        * Get all tags of a task
-        * @access public static
-        * @return array
-        * @version 1.0
-        */
-        public static function getTags($task_id)
-        {
-                global $db;
-                # pre FS1.0beta
-                #$sql = $db->query('SELECT * FROM {tags} WHERE task_id = ?', array($task_id));
-                # since FS1.0beta
-                $sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class FROM {task_tag} tt
-                        JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
-                        WHERE task_id = ?
-                        ORDER BY list_position', array($task_id));
-                return $db->fetchAllArray($sql);
-	}
+		/**
+		 * Get all tags of a task
+		 * @param int $task_id
+		 * 
+		 * @access public static
+		 * @return array
+		 * @version 1.0
+		 */
+		public static function getTags($task_id)
+		{
+			global $db;
+			$sql = $db->query('SELECT tg.tag_id, tg.tag_name AS tag, tg.class, tt.added, tt.added_by
+				FROM {task_tag} tt
+				JOIN {list_tag} tg ON tg.tag_id=tt.tag_id 
+				WHERE task_id = ?
+				ORDER BY list_position',
+				array($task_id)
+			);
+			return $db->fetchAllArray($sql);
+		}
 
 	/**
 	* load all task tags into array

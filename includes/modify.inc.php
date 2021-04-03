@@ -477,55 +477,133 @@ switch ($action = Req::val('action'))
             array($task['task_id']));
 
             // Convert assigned_to and store them in the 'assigned' table
-            foreach ((array) Post::val('rassigned_to') as $key => $val)
-            {
+            foreach ((array) Post::val('rassigned_to') as $key => $val) {
                 $db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id','task_id'));
             }
         }
 
-	# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
-	# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
-	#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
-	# update tags
-	$tagList = explode(';', Post::val('tags'));
-	$tagList = array_map('strip_tags', $tagList);
-	$tagList = array_map('trim', $tagList);
-	$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
-	$storedtags=array();
-	foreach($task['tags'] as $temptag){
-		$storedtags[]=$temptag['tag'];
-	}
-	$tags_changed = count(array_diff($storedtags, $tagList)) + count(array_diff($tagList, $storedtags));
+		# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
+		# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
+		#   - Create new tag(s) in target project if user has permission to create new tags but what with the users who have not the permission?
+		# update tags
+		$tagList = explode(';', Post::val('tags'));
+		$tagList = array_map('strip_tags', $tagList);
+		$tagList = array_map('trim', $tagList);
+		$tagList = array_unique($tagList); # avoid duplicates for inputs like: "tag1;tag1" or "tag1; tag1<p></p>"
+		$storedtags=array();
+		foreach($task['tags'] as $temptag){
+			$storedtags[]=$temptag['tag'];
+		}
+		$tags_changed = count(array_diff($storedtags, $tagList)) + count(array_diff($tagList, $storedtags));
 
-	if($tags_changed){
-		// Delete the current assigned tags for this task
-		$db->query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
-		foreach ($tagList as $tag){
-			if ($tag == ''){
-				continue;
-			}
-			# size of {list_tag}.tag_name, see flyspray-install.xml
-			if(mb_strlen($tag) > 40){
-				# report that softerror
-				$errors['tagtoolong']=1;
-				continue;
-			}
-
-			$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
-			if($t=$db->fetchRow($res)){
-				$tag_id=$t['tag_id'];
-			} else{
-				if( $proj->prefs['freetagging']==1){
-					# add to taglist of the project
-					$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
-					$tag_id=$db->insert_ID();
-				} else{
+		if ($tags_changed) {
+			/*
+			// Delete the current assigned tags for this task
+			$db->query('DELETE FROM {task_tag} WHERE task_id = ?',  array($task['task_id']));
+			foreach ($tagList as $tag){
+				if ($tag == ''){
 					continue;
 				}
-			};
-			$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+				# size of {list_tag}.tag_name, see flyspray-install.xml
+				if(mb_strlen($tag) > 40){
+					# report that softerror
+					$errors['tagtoolong']=1;
+					continue;
+				}
+
+				$res=$db->query("SELECT tag_id FROM {list_tag} WHERE (project_id=0 OR project_id=?) AND tag_name LIKE ? ORDER BY project_id", array($proj->id,$tag) );
+				if($t=$db->fetchRow($res)){
+					$tag_id=$t['tag_id'];
+				} else {
+					if( $proj->prefs['freetagging']==1){
+						# add to taglist of the project
+						$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id,$tag));
+						$tag_id=$db->insert_ID();
+					} else{
+						continue;
+					}
+				};
+				$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task['task_id'], $tag_id) );
+			}
+			*/
+
+			foreach ($tagList as $tag){
+				if ($tag == ''){
+					continue;
+				}
+
+				if (in_array($tag, $storedtags) ){
+					echo "\n<br>in array storetags: $tag";
+					# no db change required, just drop this tag from $storedtags
+					$storedtags = array_diff($storedtags, array($tag));
+				} else {
+					$res=$db->query("SELECT tag_id
+						FROM {list_tag}
+						WHERE (project_id=0 OR project_id=?)
+						AND tag_name LIKE ?
+						ORDER BY project_id",
+						array($proj->id, $tag)
+					);
+
+					if ($t=$db->fetchRow($res)) {
+						$tag_id=$t['tag_id'];
+					} else {
+						if ($proj->prefs['freetagging']==1) {
+							# size of {list_tag}.tag_name, see flyspray-install.xml
+							if (mb_strlen($tag) > 40) {
+								# report that softerror
+								$errors['tagtoolong']=1;
+								continue;
+							}
+
+							# add to taglist of the project, not global
+							$db->query("INSERT INTO {list_tag} (project_id,tag_name) VALUES (?,?)", array($proj->id, $tag));
+							$tag_id=$db->insert_ID();
+						} else {
+							continue;
+						}
+					}
+					$db->query("INSERT INTO {task_tag} (task_id, tag_id, added, added_by)
+						VALUES(?, ?, ?, ?)",
+						array($task['task_id'], $tag_id, time(), $user->id)
+					);
+				}
+			}
+
+			# What is left in $storedtags should be removed
+			# TODO: Log the remove of a tag from a task to {history} table?
+			if (count($storedtags)>0) {
+				# get ids of storedtags
+				$removetags=array();
+				foreach ($storedtags as $tagname) {
+					$res=$db->query("SELECT tag_id
+						FROM {list_tag}
+						WHERE (project_id=0 OR project_id=?)
+						AND tag_name LIKE ?
+						ORDER BY project_id",
+						array($proj->id, $tagname)
+					);
+
+					if ($t=$db->fetchRow($res)) {
+						$tag_id=$t['tag_id'];
+						$removetags[]=$tag_id;
+
+						# maybe tag same name stored as global and project so remove both to be sure.
+						if ($t=$db->fetchRow($res)) {
+							$tag_id=$t['tag_id'];
+							$removetags[]=$tag_id;
+						}
+					}
+				}
+
+				if (count($removetags)>0) {
+					$db->query(
+						'DELETE FROM {task_tag} WHERE task_id = ? AND tag_id IN('.implode(',', $removetags).')',
+						array($task['task_id'])
+					);
+				}
+			}
 		}
-	}
 
         // Get the details of the task we just updated
         // To generate the changed-task message
@@ -866,7 +944,7 @@ switch ($action = Req::val('action'))
                               uniqid(mt_rand(), true));
         }
 
-        $confirm_code = substr($randval, 0, 20);
+        $confirm_code = substr($randval, 0, 10);
 
         // echo "<pre>Am I here?</pre>";
         // send the email first
@@ -1483,84 +1561,115 @@ switch ($action = Req::val('action'))
         Flyspray::redirect(createURL('pm', 'prefs', $pid));
         break;
 
-        // ##################
-        // updating project preferences
-        // ##################
-    case 'pm.updateproject':
-        if (!$user->perms('manage_project')) {
-            break;
-        }
+	// ##################
+	// updating project preferences
+	// ##################
+	case 'pm.updateproject':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
 
-        if (Post::val('delete_project')) {
-            if (Backend::delete_project($proj->id, Post::val('move_to'))) {
-                $_SESSION['SUCCESS'] = L('projectdeleted');
-            } else {
-                $_SESSION['ERROR'] = L('projectnotdeleted');
-            }
+		if (Post::val('delete_project')) {
+			if (Backend::delete_project($proj->id, Post::val('move_to'))) {
+				$_SESSION['SUCCESS'] = L('projectdeleted');
+			} else {
+				$_SESSION['ERROR'] = L('projectnotdeleted');
+			}
 
-            if (Post::val('move_to')) {
-                Flyspray::redirect(createURL('pm', 'prefs', Post::val('move_to')));
-            } else {
-                Flyspray::redirect($baseurl);
-            }
-        }
+			if (Post::val('move_to')) {
+				Flyspray::redirect(createURL('pm', 'prefs', Post::val('move_to')));
+			} else {
+				Flyspray::redirect($baseurl);
+			}
+		}
 
-        if (!Post::val('project_title')) {
-            Flyspray::show_error(L('emptytitle'));
-            break;
-        }
+		if (!Post::val('project_title')) {
+			Flyspray::show_error(L('emptytitle'));
+			break;
+		}
 
-        $cols = array( 'project_title', 'theme_style', 'lang_code', 'default_task', 'default_entry',
-                'intro_message', 'notify_email', 'notify_jabber', 'notify_subject', 'notify_reply',
-                'feed_description', 'feed_img_url','default_due_version','use_effort_tracking',
-                'pages_intro_msg', 'estimated_effort_format', 'current_effort_done_format');
-        $args = array_map('Post_to0', $cols);
-        $cols = array_merge($cols, $ints = array('project_is_active', 'others_view', 'others_viewroadmap', 'anon_open', 'comment_closed', 'auto_assign', 'freetagging'));
-        $args = array_merge($args, array_map(array('Post', 'num'), $ints));
-        $cols[] = 'notify_types';
-        $args[] = implode(' ', (array) Post::val('notify_types'));
-        $cols[] = 'last_updated';
-        $args[] = time();
-        $cols[] = 'disp_intro';
-        $args[] = Post::num('disp_intro');
-        $cols[] = 'default_cat_owner';
-        $args[] =  Flyspray::UserNameToId(Post::val('default_cat_owner'));
-        $cols[] = 'custom_style';
-        $args[] = Post::val('custom_style');
+		$cols = array(
+			'project_title',
+			'theme_style',
+			'lang_code',
+			'default_task',
+			'default_entry',
+			'intro_message',
+			'notify_email',
+			'notify_jabber',
+			'notify_subject',
+			'notify_reply',
+			'feed_description',
+			'feed_img_url',
+			'default_due_version',
+			'use_effort_tracking',
+			'pages_intro_msg',
+			'estimated_effort_format',
+			'current_effort_done_format'
+		);
+		$args = array_map('Post_to0', $cols);
+		$cols = array_merge($cols, $ints = array(
+			'project_is_active',
+			'others_view',
+			'others_viewroadmap',
+			'anon_open',
+			'comment_closed',
+			'auto_assign',
+			'freetagging',
+			'use_tags',
+			'use_gantt',
+			'use_kanban'
+			)
+		);
+		$args = array_merge($args, array_map(array('Post', 'num'), $ints));
+		$cols[] = 'notify_types';
+		$args[] = implode(' ', (array) Post::val('notify_types'));
+		$cols[] = 'last_updated';
+		$args[] = time();
+		$cols[] = 'disp_intro';
+		$args[] = Post::num('disp_intro');
+		$cols[] = 'default_cat_owner';
+		$args[] = Flyspray::userNameToId(Post::val('default_cat_owner'));
+		$cols[] = 'custom_style';
+		$args[] = Post::val('custom_style');
 
-        // Convert to seconds.
-        if (Post::val('hours_per_manday')) {
-            $args[] = effort::editStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-            $cols[] = 'hours_per_manday';
-        }
+		// Convert to seconds
+		if (Post::val('hours_per_manday')) {
+			$args[] = effort::editStringToSeconds(Post::val('hours_per_manday'), $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+			$cols[] = 'hours_per_manday';
+		}
 
-        # TODO validation
-        if( Post::val('default_order_by2') !=''){
-                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
-        } else{
-                $_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
-        }
-        $cols[]='default_order_by';
-        $args[]= $_POST['default_order_by'];
+		# TODO validation
+		if (Post::val('default_order_by2') !='') {
+			$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'].', '.$_POST['default_order_by2'].' '.$_POST['default_order_by_dir2'];
+		} else {
+			$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
+		}
+		$cols[] = 'default_order_by';
+		$args[] = $_POST['default_order_by'];
 
-        $args[] = $proj->id;
+		$args[] = $proj->id;
 
-        $update = $db->query("UPDATE  {projects}
-                                 SET  ".join('=?, ', $cols)."=?
-                               WHERE  project_id = ?", $args);
+		$update = $db->query("UPDATE {projects}
+			SET ".join('=?, ', $cols)."=?
+			WHERE project_id = ?",
+			$args);
 
-        $update = $db->query('UPDATE {projects} SET visible_columns = ? WHERE project_id = ?',
-                             array(trim(Post::val('visible_columns')), $proj->id));
+		$update = $db->query('UPDATE {projects}
+			SET visible_columns = ?
+			WHERE project_id = ?',
+			array(trim(Post::val('visible_columns')), $proj->id));
 
-        $update = $db->query('UPDATE {projects} SET visible_fields = ? WHERE project_id = ?',
-                             array(trim(Post::val('visible_fields')), $proj->id));
+		$update = $db->query('UPDATE {projects}
+			SET visible_fields = ?
+			WHERE project_id = ?',
+			array(trim(Post::val('visible_fields')), $proj->id));
 
-        // Update project prefs for following scripts
-        $proj = new Project($proj->id);
-        $_SESSION['SUCCESS'] = L('projectupdated');
-        Flyspray::redirect(createURL('pm', 'prefs', $proj->id));
-        break;
-
+		// Update project prefs for following scripts
+		$proj = new Project($proj->id);
+		$_SESSION['SUCCESS'] = L('projectupdated');
+		Flyspray::redirect(createURL('pm', 'prefs', $proj->id));
+		break;
         // ##################
         // modifying user details/profile
         // ##################
@@ -2335,14 +2444,14 @@ switch ($action = Req::val('action'))
         $result = $db->query('SELECT  task_id, comment_text, user_id, date_added
                                 FROM  {comments}
                                WHERE  comment_id = ?',
-        array(Get::val('comment_id')));
+        array(Post::val('comment_id')));
         $comment = $db->fetchRow($result);
 
         // Check for files attached to this comment
         $check_attachments = $db->query('SELECT  *
                                            FROM  {attachments}
                                           WHERE  comment_id = ?',
-        array(Req::val('comment_id')));
+        array(Post::val('comment_id')));
 
         if ($db->countRows($check_attachments) && !$user->perms('delete_attachments')) {
             Flyspray::show_error(L('commentattachperms'));
@@ -2350,11 +2459,12 @@ switch ($action = Req::val('action'))
         }
 
         $db->query("DELETE FROM {comments} WHERE comment_id = ? AND task_id = ?",
-                   array(Req::val('comment_id'), $task['task_id']));
+                   array(Post::val('comment_id'), $task['task_id']));
 
         if ($db->affectedRows()) {
-            Flyspray::logEvent($task['task_id'], 6, $comment['user_id'],
-                    $comment['comment_text'], '', $comment['date_added']);
+		# uses history.new_value for storing deleted comment creator user_id
+		# uses history.field_changed for storing deleted comment date_added
+		Flyspray::logEvent($task['task_id'], 6, $comment['user_id'], $comment['comment_text'], $comment['date_added']);
         }
 
         while ($attachment = $db->fetchRow($check_attachments)) {

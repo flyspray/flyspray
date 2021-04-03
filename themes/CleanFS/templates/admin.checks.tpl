@@ -3,6 +3,7 @@
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
 <div>ADOdb version: <?php if(isset($adodbversion)) { echo Filters::noXSS($adodbversion); } ?></div>
+<div>Swiftmailer version: <?php if(isset($swiftmailerversion)) { echo Filters::noXSS($swiftmailerversion); } ?></div>
 <div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
 <div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
@@ -31,25 +32,34 @@
 
 <?php if(isset($fstables)): ?>
 <style>
-.dbtable{ background-color:#ccc;}
-.dbtable td {border-bottom:1px solid #999;}
-.dbfield{ background-color:#eee;}
+#toggledbinfo { display:none; }
+#toggledbinfo ~ #toggledbinfolabel:after { content:'Hide connection info'; }
+#toggledbinfo:checked ~ #toggledbinfolabel::after { content:'Show connection info'; }
+#toggledbinfo:checked ~ #dbinfo { display:none; }
+
 #togglefields { display:none; }
-#togglefields ~ label:after { content:'Hide Fields'; }
-#togglefields:checked ~ label:after { content:'Show Fields'; }
+#togglefields ~ #togglefieldslabel:after { content:'Hide Fields'; }
+#togglefields:checked ~ #togglefieldslabel::after { content:'Show Fields'; }
 #togglefields:checked ~ #dbtables .dbfield { display:none; }
 </style>
-<div>
-<div>default_character_set_name: <?=$fsdb['default_character_set_name'] ?></div>
-<div>default_collation_name: <?=$fsdb['default_collation_name'] ?></div>
+<div><?= $conf['database']['dbtype'] ?></div>
+<div>Default character set: <?= Filters::noXSS($fsdb['default_character_set_name']) ?></div>
+<div>Default collation: <?= Filters::noXSS($fsdb['default_collation_name']) ?></div>
+<input type="checkbox" id="toggledbinfo" name="toggledbinfo" checked="checked" />
+<label for="toggledbinfo" class="button" id="toggledbinfolabel"></label>
+<div id="dbinfo">
+	<pre><?php global $db; echo Filters::noXSS(print_r($db->dblink, true)); ?></pre>       
 </div>
+<br/>
 <input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
-<label for="togglefields" class="button"></label>
+<label for="togglefields" class="button" id="togglefieldslabel"></label>
 <table id="dbtables">
 <thead>
 <tr class="dbtable">
-<th>tabl_name</th>
+<th>table_name</th>
 <th>table_type</th>
+<th></th>
+<th></th>
 <th></th>
 <th>default collation</th>
 <th>comment</th>
@@ -57,6 +67,8 @@
 <tr class="dbfield">
 <th>column_name</th>
 <th>data_type</th>
+<th>column_default</th>
+<th>is_nullable</th>
 <th>character_set_name</th>
 <th>collation_name</th>
 <th>comment</th>
@@ -77,6 +89,8 @@ foreach($fsfields as $f):
 	<td><?= Filters::noXSS($fstables[$ti]['table_name']) ?></td>
 	<td><?= $fstables[$ti]['table_type'] ?></td>
 	<td></td>
+	<td></td>
+	<td></td>
 	<td><?= $fstables[$ti]['table_collation'] ?></td>
 	<td><?= Filters::noXSS($fstables[$ti]['table_comment']) ?></td>
 	</tr>
@@ -84,6 +98,8 @@ foreach($fsfields as $f):
 <tr class="dbfield">
 <td><?= Filters::noXSS($f['column_name']) ?></td>
 <td><?= $f['column_type'] ?></td>
+<td><?= is_null($f['column_default']) ? '<em>NULL</em>' : Filters::noXSS($f['column_default']) ?></td>
+<td><?= $f['is_nullable'] ?></td>
 <td><?= $f['character_set_name'] ?></td>
 <td><?= $f['collation_name'] ?></td>
 <td><?= Filters::noXSS($f['column_comment']) ?></td>

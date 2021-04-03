@@ -1,5 +1,8 @@
 /* customization example. Use for color, fontawesome icons, background and border-color settings only, avoid layout changes. */
 
+/* use experimental dark colors if users OS/desktop/web browser settings prefer dark mode */
+@import url("darkmode.css");
+
 /*
 body.p1 #title {background:#060;}
 body.p1 #pm-menu {border-color:#090;}
@@ -23,7 +26,13 @@ tr.severity2 .task_severity, tr.severity2 .task_id {background: #eee linear-grad
 th.tasktype, th.severity, th.priority {width:20px;max-width:20px;overflow:hidden;}
 
 /* padding done by the ::before pseudoelement.. */
-#tasklist_table .task_tasktype, #tasklist_table .task_severity,#tasklist_table .task_priority {padding-left: 0;padding-right: 0;}
+#tasklist_table .task_tasktype,
+#tasklist_table .task_severity,
+#tasklist_table .task_priority {
+  padding-left: 0;
+  padding-right: 0;
+  text-align:center;
+}
 tr .typ1, tr .typ2, tr .typ3, tr .typ4, tr .typ5,
 tr .sev1, tr .sev2, tr .sev3, tr .sev4, tr .sev5,
 tr .pri1, tr .pri2, tr .pri3, tr .pri4, tr .pri5

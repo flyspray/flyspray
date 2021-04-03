@@ -224,12 +224,12 @@ function createTestData(){
 				( project_title, theme_style, intro_message,
 				others_view, anon_open, project_is_active,
 				visible_columns, visible_fields, lang_code,
-				notify_email, notify_jabber, disp_intro)
-			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
+				notify_email, notify_jabber, disp_intro, default_task)
+			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?)',
 			array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
 			'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
 			'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
-			'en', '', '', 1)
+			'en', '', '', 1, '')
 		);
 		$project_id=$db->insert_Id();
 		add_project_data($project_id);
@@ -383,12 +383,25 @@ function createTestData(){
 		$args['product_category'] = $category;
 		$args['task_severity'] = rand(1,5); # 5 fixed severities
 		$args['task_priority'] = rand(1,6); # 6 fixed priorities
-		$args['task_type'] = rand(1,2); # 2 global tasktypes after install
-		// 'product_version'
-		// 'operating_system'
-		// 'estimated_effort'
-		// 'supertask_id' - find existing task of project
+		$args['task_type'] = rand(1,2); # 2 global task types after install
+		$args['item_status'] = rand(1,6); # 6 global task status after install
+		$args['item_status'] = rand(1,6); # 6 global task status after install
+		# assigned or researching status
+		if ($args['item_status']==3 or $args['item_status']==4) {
+			$args['percent_complete'] = rand(0,8)*10;
+		}
+		# waiting or testing status
+		if ($args['item_status']==5 or $args['item_status']==6) {
+			$args['percent_complete'] = rand(4,9)*10;
+		}
 		
+		/**
+		 * @todo 'product_version'
+		 * @todo 'operating_system'
+		 * @todo 'estimated_effort'
+		 * @todo 'supertask_id' - find existing task of project
+		 */
+
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
 		array($project_id));
 		$projectname = $db->fetchOne($sql);

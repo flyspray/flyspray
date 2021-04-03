@@ -291,36 +291,39 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     return $link;
 }
 
-/*
+/**
  * Creates a textlink to a user profile.
  *
- * For a link with user icon use tpl_userlinkavatar().
+ * @param int|array $uid user_id or a simple array(user_id, user_name, real_name) from {users} db table
  *
- * @param int uid user_id from {users} db table
+ * @since 1.0-rc10 Changed displaying user_name instead real_name because username is unique for a Flyspray installation while there could be many 'John Smith'.
+ *                 Also there are cases real_name is just empty string in database, so the link was not visible.
+ *                 The real_name is now in the title attribute of the link so simply hover shows what's the users chosen real_name or accessed by CSS.
+ *                 Also makes creating a '@mention'-plugin possible as people know quickly how to link someone in a task description or comment.
+ *
+ * @since 0.9.9.7 Changed the display from 'real_name (user_name)' to just 'real_name'.
+ *
+ * @see tpl_userlinkavatar() for a link with user avatar icon
  */
 function tpl_userlink($uid)
 {
-    global $db, $user;
+	global $db, $user;
 
-    static $cache = array();
+	static $cache = array();
 
-    if (is_array($uid)) {
-        list($uid, $uname, $rname) = $uid;
-    } elseif (empty($cache[$uid])) {
-        $sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
+	if (is_array($uid)) {
+		list($uid, $uname, $rname) = $uid;
+	} elseif (empty($cache[$uid])) {
+		$sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
                            array(intval($uid)));
-        if ($sql && $db->countRows($sql)) {
-            list($uname, $rname) = $db->fetchRow($sql);
-        }
-    }
+		if ($sql && $db->countRows($sql)) {
+			list($uname, $rname) = $db->fetchRow($sql);
+		}
+	}
 
 	if (isset($uname)) {
-		#$url = createURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
-		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
-		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 		$url = createURL('user', $uid);
-		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
+		$cache[$uid] = vsprintf('<a href="%s" title="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
 	} elseif (empty($cache[$uid])) {
 		$cache[$uid] = eL('anonymous');
 	}
@@ -429,12 +432,15 @@ function tpl_fast_tasklink($arr)
 /**
  * Formats a task tag for HTML output based on a global $alltags array
  *
- * @param int id tag_id of {list_tag} db table
- * @param bool showid set true if the tag_id is shown instead of the tag_name
+ * @param int $id tag_id of {list_tag} db table
+ * @param bool $showid set true if the tag_id is shown instead of the tag_name
+ * @param int $added for task details view
+ * @param int $addedby for task details view
  *
  * @return string ready for output
  */
-function tpl_tag($id, $showid=false) {
+function tpl_tag($id, $showid=false, $added=null, $addedby=null)
+{
 	global $alltags;
 
 	if(!is_array($alltags)) {
@@ -464,13 +470,25 @@ function tpl_tag($id, $showid=false) {
 		} else {
 			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
 		}
-		if($showid){
-			$out.='>'.$id;
-		} else{
-			$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'">';
-		}
 
-		$out.='</i>';
+		if (is_null($added) && is_null($addedby)) {
+			if ($showid) {
+				$out.='>'.$id.'</i>';
+			} else {
+				$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'"></i>';
+			}
+		} else {
+			# task details view contains more details
+			$out .= '>';
+			$out .= htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8');
+			if ($added>0) {
+				$out .= '<span class="added">'.formatDate($added).'</span>';
+			}
+			if ($addedby>0) {
+				$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
+			}
+			$out .= '</i>';
+		}
 		return $out;
 	}
 }
@@ -1037,68 +1055,70 @@ class TextFormatter
         return $return;
     }
 
-    public static function render($text, $type = null, $id = null, $instructions = null)
-    {
-        global $conf;
+	public static function render($text, $type = null, $id = null, $instructions = null)
+	{
+		global $conf;
 
-        $methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
-        $methods = is_array($methods) ? $methods : array();
+		$methods=array();
+		if(class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')){
+			$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		}
+		$methods = is_array($methods) ? $methods : array();
 
-        if (in_array('render', $methods)) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
-                                  $text, $type, $id, $instructions);
-        } else {
-            $text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
-            if (   $conf['general']['syntax_plugin']
+		if (in_array('render', $methods)) {
+			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
+				$text, $type, $id, $instructions);
+		} else {
+			$text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
+			if (   $conf['general']['syntax_plugin']
 				&& $conf['general']['syntax_plugin'] != 'none'
 				&& $conf['general']['syntax_plugin'] != 'html') {
-                $text='Unsupported output plugin '.$conf['general']['syntax_plugin'].'!'
-                .'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
-                .'<br/>Temporarily handled like it is HTML until fixed.<br/>'
-                .$text;
-            }
+				$text='Unsupported output plugin '.$conf['general']['syntax_plugin'].'!'
+					.'<br/>Couldn\'t call '.$conf['general']['syntax_plugin'].'_TextFormatter::render()'
+					.'<br/>Temporarily handled like it is HTML until fixed.<br/>'
+					.$text;
+			}
 
-            //TODO: Remove Redundant Code once tested completely
-            //Author: Steve Tredinnick
-            //Have removed this as creating additional </br> lines even though <p> is already dealing with it
-            //possibly an conversion from Dokuwiki syntax to html issue, left in in case anyone has issues and needs to comment out
-            //$text = ' ' . nl2br($text) . ' ';
+			if ($conf['general']['syntax_plugin'] != 'html') {
+				$text = nl2br($text);
+			}
 
-            // Change FS#123 into hyperlinks to tasks
-            return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
-        }
-    }
+			// Change FS#123 into hyperlinks to tasks
+			return preg_replace_callback("/\b(?:FS#|bug )(\d+)\b/", 'tpl_fast_tasklink', trim($text));
+		}
+	}
 
-    public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
-    {
-        global $conf;
+	public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
+	{
+		global $conf;
 
-        if (@in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
-                                  $name, $rows, $cols, $attrs, $content);
-        }
+		if (class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')
+		    && in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
+			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
+			                      $name, $rows, $cols, $attrs, $content);
+		}
 
-        $name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
-        $return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
-        if (is_array($attrs) && count($attrs)) {
-            $return .= join_attrs($attrs);
-        }
-        $return .= '>';
-        if (is_string($content) && strlen($content)) {
-            $return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
-        }
-        $return .= '</textarea>';
+		$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
+		$return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
+		if (is_array($attrs) && count($attrs)) {
+			$return .= join_attrs($attrs);
+		}
+		$return .= '>';
+		if (is_string($content) && strlen($content)) {
+			$return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
+		}
+		$return .= '</textarea>';
 
-	# Activate CkEditor on textareas
-	if($conf['general']['syntax_plugin']=='html'){
-		$return .= "
+		# Activate CkEditor on textareas
+		if($conf['general']['syntax_plugin']=='html'){
+			$return .= "
 <script>
 	CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
 </script>";
-	}
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 }
 
 /**
@@ -1259,84 +1279,88 @@ function tpl_disableif ($if)
  */
 function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf, $fs;
+	global $baseurl, $conf, $fs;
 
-    $url = $baseurl;
+	$url = $baseurl;
 
-    // If we do want address rewriting
-    if ($fs->prefs['url_rewriting']) {
-        switch ($type) {
-            case 'depends':
-                $return = $url . 'task/' . $arg1 . '/' . $type;
-                break;
-            case 'details':
-                $return = $url . 'task/' . $arg1;
-                break;
-            case 'edittask':
-                $return = $url . 'task/' . $arg1 . '/edit';
-                break;
-            case 'pm':
-                $return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
-                break;
+	// If we do want address rewriting
+	if ($fs->prefs['url_rewriting']) {
+		switch ($type) {
+			case 'depends':
+				$return = $url . 'task/' . $arg1 . '/' . $type;
+				break;
 
-            case 'admin':
-            case 'edituser':
-            case 'user':
-                $return = $url . $type . '/' . $arg1;
-                break;
+			case 'details':
+				$return = $url . 'task/' . $arg1;
+				break;
 
-            case 'project':
-                $return = $url . 'proj' . $arg1;
-                break;
+			case 'edittask':
+				$return = $url . 'task/' . $arg1 . '/edit';
+				break;
 
-            case 'reports':
-            case 'roadmap':
-            case 'toplevel':
-            case 'gantt':
-            case 'index':
-            	$return = $url.$type.'/proj'.$arg1;
-            	break;
+			case 'pm':
+				$return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
+				break;
 
-            case 'newtask':
-            case 'newmultitasks':
-                $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+			case 'admin':
+			case 'edituser':
+			case 'user':
+				$return = $url . $type . '/' . $arg1;
+				break;
+
+			case 'project':
+				$return = $url . 'proj' . $arg1;
                 break;
 
-            case 'editgroup':
-                $return = $url . $arg2 . '/' . $type . '/' . $arg1;
-                break;
+			case 'reports':
+			case 'roadmap':
+			case 'toplevel':
+			case 'gantt':
+			case 'kanban':
+			case 'index':
+				$return = $url.$type.'/proj'.$arg1;
+				break;
 
-            case 'logout':
-            case 'lostpw':
-            case 'myprofile':
-            case 'register':
-                $return = $url . $type;
-                break;
+			case 'newtask':
+			case 'newmultitasks':
+				$return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+				break;
 
-            case 'mytasks':
-                $return = $url.'proj'.$arg1.'/dev'.$arg2;
-                break;
+			case 'editgroup':
+				$return = $url . $arg2 . '/' . $type . '/' . $arg1;
+				break;
+
+			case 'logout':
+			case 'lostpw':
+			case 'myprofile':
+			case 'register':
+				$return = $url . $type;
+				break;
+
+			case 'mytasks':
+				$return = $url.'proj'.$arg1.'/dev'.$arg2;
+				break;
+
             case 'tasklist':
-		# see also .htaccess for the mapping
-		if($arg1>0 && $fs->projects[$arg1]['default_entry']=='index'){
-			$return = $url.'proj'.$arg1;
-		}else{
-			$return = $url.$type.'/proj'.$arg1;
+				# see also .htaccess for the mapping
+				if ($arg1>0 && $fs->projects[$arg1]['default_entry'] == 'index'){
+					$return = $url.'proj'.$arg1;
+				} else {
+					$return = $url.$type.'/proj'.$arg1;
+				}
+            	break;
+			default:
+				$return = $baseurl . 'index.php';
+				break;
+		}
+	} else {
+		if ($type == 'edittask') {
+			$url .= 'index.php?do=details';
+		} else {
+			$url .= 'index.php?do=' . $type;
 		}
 
-            	break;
-            default:
-            	$return = $baseurl . 'index.php';
-            	break;
-        }
-    } else {
-        if ($type == 'edittask') {
-            $url .= 'index.php?do=details';
-        } else {
-            $url .= 'index.php?do=' . $type;
-        }
-
-        switch ($type) {
+		switch ($type) {
             case 'admin':
                 $return = $url . '&area=' . $arg1;
                 break;
@@ -1369,6 +1393,7 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
+            case 'kanban':
             case 'index':
             case 'tasklist':
             	$return = $url . '&project=' . $arg1;
@@ -1396,80 +1421,115 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             default:
         		$return = $baseurl . 'index.php';
         		break;
-        }
-    }
+		}
+	}
 
-    $url = new Url($return);
-    if( !is_null($arg3) && count($arg3) ) {
-        $url->addvars($arg3);
-    }
-    return $url->get();
+	$url = new Url($return);
+	if (!is_null($arg3) && count($arg3)) {
+		$url->addvars($arg3);
+	}
+	return $url->get();
 }
 
 /**
- * Page  numbering
+ * tasklist pagination
  *
- * Thanks to Nathan Fritz for this.  http://www.netflint.net/
+ * Generates the HTML for pagination navigation of tasklist.
+ * Uses the global $proj and $_GET parameters to generate links with the current search filter.
+ *
+ * @param int $pagenum
+ * @param int $perpage
+ * @param int $totalcount
+ * @param string $pagetype optional
+ * @param string $pagearea optional
+ *
+ * @return string
  */
-function pagenums($pagenum, $perpage, $totalcount)
+function pagenums($pagenum, $perpage, $totalcount, $pagetype='tasklist', $pagearea=null)
 {
-    global $proj;
-    $pagenum = intval($pagenum);
-    $perpage = intval($perpage);
-    $totalcount = intval($totalcount);
+	$pagenum = intval($pagenum);
+	$perpage = intval($perpage);
+	$totalcount = intval($totalcount);
 
-    // Just in case $perpage is something weird, like 0, fix it here:
-    if ($perpage < 1) {
-        $perpage = $totalcount > 0 ? $totalcount : 1;
-    }
-    $pages  = ceil($totalcount / $perpage);
-    $output = sprintf(eL('page'), $pagenum, $pages);
+	if($pagetype=='tasklist'){
+		$pagearea = $GLOBALS['proj']->id;
+	}
 
-    if ( $totalcount / $perpage > 1 ) {
- 	$params=$_GET;
- 	# unset unneeded params for shorter urls
-	unset($params['do']);
-	unset($params['project']);
-	unset($params['switch']);
-        $output .= '<span class="pagenums DoNotPrint">';
+	// Just in case $perpage is something weird, like 0, fix it here:
+	if ($perpage < 1) {
+		$perpage = $totalcount > 0 ? $totalcount : 1;
+	}
+	$pages  = ceil($totalcount / $perpage);
+	$output = '';
+	$output .= '<span class="pagerange">'.sprintf(eL('page'), $pagenum, $pages).'</span>';
 
-        $start  = max(1, $pagenum - 4 + min(2, $pages - $pagenum));
-        $finish = min($start + 4, $pages);
+	if ( $totalcount / $perpage > 1 ) {
+		$params=$_GET;
+		# unset some to avoid unneeded or duplicated parameters for createURL()
+		unset($params['do']); # 1th paramater of createURL()
+		unset($params['project']); # 2th parameter of createURL()
+		unset($params['switch']); # not needed
+		unset($params['area']); # duplicated admin area 
+		$output .= '<nav class="pagenums" aria-label="Search results pages">';
 
-        if ($start > 1) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => 1))));
-            $output .= sprintf('<a href="%s">&lt;&lt;%s </a>', $url, eL('first'));
-        }
-        if ($pagenum > 1) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum - 1))));
-            $output .= sprintf('<a id="previous" accesskey="p" href="%s">&lt; %s</a> - ', $url, eL('previous'));
-        }
+		$neighborsprev=5;
+		$neighborsnext=5;
 
-        for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
-            if ($pagelink != $start) {
-                $output .= ' - ';
-            }
+		$start  = max(2, $pagenum - 1 - $neighborsprev + min(1, $pages - $pagenum));
+		$finish = min($start + $neighborsprev + $neighborsnext, $pages);
 
-            if ($pagelink == $pagenum) {
-                $output .= sprintf('<strong>%d</strong>', $pagelink);
-            } else {
-                $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagelink))));
-                $output .= sprintf('<a href="%s">%d</a>', $url, $pagelink);
-            }
-        }
+		$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => 1))));
+		$firstactive = ($pagenum==1) ? 'first active' : 'first';
+		$output .= sprintf('<a class="%s" href="%s" aria-label="%s">%s</a>', $firstactive, $url, eL('first'), 1);
+		
+		if ($pagenum > 1) {
+			#$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => $pagenum - 1))));
+			#$output .= sprintf('<a class="previous" accesskey="p" href="%s" aria-label="%s">%s</a>', $url, eL('previous'), eL('previous'));
+		}
 
-        if ($pagenum < $pages) {
-            $url =  Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pagenum + 1))));
-            $output .= sprintf(' - <a id="next" accesskey="n" href="%s">%s &gt;</a>', $url, eL('next'));
-        }
-        if ($finish < $pages) {
-            $url = Filters::noXSS(createURL('tasklist', $proj->id, null, array_merge($params, array('pagenum' => $pages))));
-            $output .= sprintf('<a href="%s"> %s &gt;&gt;</a>', $url, eL('last'));
-        }
-        $output .= '</span>';
-    }
+		if ($pagenum > 4 && $pagenum < 9){
+			$output.='<span class="distancefargap"></span>';
+		}
+			
+		if ($start==3){
+			$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => 2))));
+			$distclass= (abs($pagenum - 2) > 2) ? ' class="distancefar"' : '';
+			$output .= sprintf('<a href="%s"%s>%d</a>', $url, $distclass, 2);
+		} elseif ($start>3) {
+			$output .= '<span class="ellipsis"></span>';
+		}
 
-    return $output;
+		for ($pagelink = $start; $pagelink <= $finish;  $pagelink++) {
+			if ($pagelink == $pagenum) {
+				$output .= sprintf('<span class="active">%d</span>', $pagelink);
+			} else {
+				$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => $pagelink))));
+				# Enables CSS themes to shorten the pagination bar by hiding some links on small screens by media queries.
+				$distclass= ($pagelink != 1 && abs($pagenum - $pagelink) > 2) ? ' class="distancefar"' : '';
+				$output .= sprintf('<a href="%s"%s>%d</a>', $url, $distclass, $pagelink);
+			}
+		}
+
+		if ($pagenum < $pages) {
+			#$url =  Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => $pagenum + 1))));
+			#$output .= sprintf('<a class="next" accesskey="n" href="%s" aria-label="%s">%s</a>', $url, eL('next'), eL('next'));
+
+			if($finish == ($pages-2)){
+				$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => $pages - 1 ))));
+				$output .= sprintf('<a href="%s">%d</a>', $url, $pages-1);
+			} else if ($finish < ($pages-2)) {
+				$output .= '<span class="ellipsis"></span>';
+			}
+		}
+		if ($finish < $pages) {
+			$url = Filters::noXSS(createURL($pagetype, $pagearea, null, array_merge($params, array('pagenum' => $pages))));
+			#$output .= sprintf('<a class="last" href="%s" aria-label="%s">%s</a>', $url, eL('last'), eL('last'));
+			$output .= sprintf('<a class="last" href="%s" aria-label="%s">%s</a>', $url, eL('last'), $pages);
+		}
+		$output .= '</nav>';
+	}
+
+	return $output;
 }
 
 class Url {

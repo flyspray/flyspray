@@ -182,19 +182,27 @@ if(!isset($_SERVER['SERVER_NAME']) && php_sapi_name() === 'cli') {
     $_SERVER['SERVER_NAME'] = php_uname('n');
 }
 
-//for reasons outside flsypray, the PHP core may throw Exceptions in PHP5
-// for a good example see this article
-// http://ilia.ws/archives/107-Another-unserialize-abuse.html
+/** 
+ * For reasons outside Flyspray sources, used extensions may throw Exceptions.
+ *
+ * for a good example see this article
+ * http://ilia.ws/archives/107-Another-unserialize-abuse.html
+ */
+function flyspray_exception_handler($exception)
+{
+	if (defined('DEBUG_EXCEPTION') && DEBUG_EXCEPTION==true) {
+		echo "<pre>";
+		var_dump(debug_backtrace());
+		echo "</pre>";
+	}
 
-function flyspray_exception_handler($exception) {
-    // Sometimes it helps removing temporary comments from the following three lines.
-    // echo "<pre>";
-    // var_dump(debug_backtrace());
-    // echo "</pre>";
-    die("Completely unexpected exception: " .
-        htmlspecialchars($exception->getMessage(),ENT_QUOTES, 'utf-8')  . "<br/>" .
-      "This should <strong> never </strong> happend, please inform Flyspray Developers");
-
+	die(
+		'Unhandled exception: '
+		. htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'utf-8') 
+		. '<br/>This should <strong>never</strong> happen, please inform Flyspray Developers.'
+		. '<br/><br/>'
+		. 'If you are an Administrator of this Flyspray installation you might enable <strong>temporarly!</strong> <em>DEBUG_EXCEPTION</em> in <em>constants.inc.php</em> for more details.'
+	);
 }
 
 set_exception_handler('flyspray_exception_handler');
