@@ -762,8 +762,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="feed_img_url" type="X">
-      <NOTNULL/>
+    <field name="feed_img_url" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
