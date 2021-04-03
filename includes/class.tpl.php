@@ -332,6 +332,40 @@ function tpl_userlink($uid)
 }
 
 /**
+* turns a @username or just username into a link to the flyspray user profile
+* intended to be used by dokuwiki plugin flyspray user mention
+*
+* @param string $username
+*
+* @return string
+*/
+function tpl_mentionlink($username)
+{
+	global $db, $user;
+
+	if (is_string($username)) {
+		if (substr($username, 0, 1)=='@') {
+			$uname=substr($username, 1);
+		} else {
+			$uname=$username;
+		}
+		$sql = $db->query(
+			'SELECT user_id, user_name, real_name FROM {users} WHERE user_name LIKE ?',
+			array($uname));
+		if ($sql && $db->countRows($sql)) {
+			list($uid,$uname, $rname) = $db->fetchRow($sql);
+			$url = createURL('user', $uid);
+			return vsprintf(
+				'<a href="%s" class="ulink">%s</a>',
+				array_map(array('Filters', 'noXSS'), array($url, '@'.$uname))
+			);
+		}
+		# return unchanged as $username only contains /@*[0-9a-zA-Z]+/
+		return $username;
+	}
+}
+
+/**
 * Builds the HTML string for displaying a gravatar image or an uploaded user image.
 * The string for a user and a size is cached per request.
 *
