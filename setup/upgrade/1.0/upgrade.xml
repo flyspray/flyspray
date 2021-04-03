@@ -208,8 +208,14 @@
             <NOTNULL/>
             <DEFAULT value="0"/>
         </field>
+	<field name="description" type="C" size="200">
+		<descr>optional notes, e.g. for generating bills</descr>
+	</field>
         <index name="task_id_effort">
             <col>task_id</col>
+        </index>
+        <index name="user_id_effort">
+            <col>user_id</col>
         </index>
     </table>
   <table name="groups">
