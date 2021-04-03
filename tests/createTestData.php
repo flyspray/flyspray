@@ -82,8 +82,17 @@ function createTestData(){
 
   ### End of Simulation Settings ###
 
-	$subjects[] = "help me";
-
+	$subjects = array(
+		'get some fresh air dude',
+		'Cool idea I have!',
+		'bad weather :-/ change it',
+		'buy present for ...',
+		'write release notes',
+		'weired funny bug in the matrix',
+		'organize conference',
+		'send invitations'
+        );
+	
 	error_reporting(E_ALL);
 
 	define('IN_FS', 1);
