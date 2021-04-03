@@ -220,16 +220,33 @@ function createTestData(){
 	for ($i = 1; $i <= $maxprojects; $i++) {
 		$projname = 'Product '.($i+1);
 
-		$db->query('INSERT INTO {projects}
-				( project_title, theme_style, intro_message,
+		$db->query('
+			INSERT INTO {projects} (
+				project_title, theme_style, intro_message,
 				others_view, anon_open, project_is_active,
-				visible_columns, visible_fields, lang_code,
-				notify_email, notify_jabber, disp_intro, default_task, notify_reply, feed_description)
-			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-			array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
-			'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
-			'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
-			'en', '', '', 1, '', '', '')
+				visible_columns,
+				visible_fields,
+				lang_code, notify_email, notify_jabber,
+				disp_intro, default_task, notify_reply,
+				feed_description
+			)
+			VALUES (
+				?, ?, ?,
+				?, ?, 1,
+				?,
+				?,
+				?,
+				?, ?, ?,
+				?, ?, ?
+			)',
+			array(
+				$projname, 'CleanFS', "Welcome to $projname",
+				0, 0,
+				'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
+				'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
+				'en', '', '',
+				1, '', '',
+				'')
 		);
 		$project_id=$db->insert_Id();
 		add_project_data($project_id);
