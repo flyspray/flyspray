@@ -394,7 +394,6 @@
       <DEFAULT value="0"/>
     </field>
     <field name="intro_message" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="project_is_active" type="I" size="1">
@@ -420,16 +419,13 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="notify_email" type="X">
-      <NOTNULL/>
+    <field name="notify_email" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_jabber" type="X">
-      <NOTNULL/>
+    <field name="notify_jabber" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_reply" type="X">
-      <NOTNULL/>
+    <field name="notify_reply" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="notify_types" type="C" size="100">
@@ -440,7 +436,6 @@
       <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="notify_subject" type="C" size="100">
@@ -463,9 +458,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="default_task" type="X">
-      <NOTNULL/>
+      <descr>a task description placeholder for the create task form</descr>
     </field>
     <field name="default_entry" type="C" size="8">
+      <descr>default page type (index,toplevel,roadmap,kanban)</descr>
       <NOTNULL/>
       <DEFAULT value="index"/>
     </field>
