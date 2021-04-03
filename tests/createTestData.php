@@ -224,12 +224,12 @@ function createTestData(){
 				( project_title, theme_style, intro_message,
 				others_view, anon_open, project_is_active,
 				visible_columns, visible_fields, lang_code,
-				notify_email, notify_jabber, disp_intro, default_task, notify_reply)
-			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?)',
+				notify_email, notify_jabber, disp_intro, default_task, notify_reply, feed_description)
+			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
 			'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
 			'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
-			'en', '', '', 1, '', '')
+			'en', '', '', 1, '', '', '')
 		);
 		$project_id=$db->insert_Id();
 		add_project_data($project_id);
@@ -448,11 +448,16 @@ function createTestData(){
 						$sent.=$clausepart;
 						$sent.=($c+1 < $dcommas) ? ', ': '.';
 					}
-					$para.=$sent;
+					if (rand(0, 5) < 1) {
+						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+					}
 				}
 			}elseif($type==1){
 				# dokuwiki list
 				$para.="  * listitem\n  * listitem\n  * listitem3";
+				if (rand(0, 5) < 1) {
+					$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+				}
 			}elseif($type==2) {
 				# dokuwiki code
 				$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
