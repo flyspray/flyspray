@@ -212,38 +212,40 @@
       <col>dep_task_id</col>
     </index>
   </table>
-    <table name="effort">
-    	<descr>log of time spent on tasks</descr>
-        <field name="effort_id" type="I" size="10">
-            <KEY/>
-            <AUTOINCREMENT/>
-        </field>
-        <field name="task_id" type="I" size="10">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="date_added" type="I" size="11">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="user_id" type="I" size="3">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="start_timestamp" type="I" size="11"/>
-        <field name="end_timestamp" type="I" size="11"/>
-        <field name="effort" type="I" size="15">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="description" type="C" size="50"/>
-        <index name="task_id_effort">
-            <col>task_id</col>
-        </index>
-        <index name="user_id_effort">
-            <col>user_id</col>
-        </index>
-    </table>
+  <table name="effort">
+    <descr>log time spent on a task</descr>
+    <field name="effort_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="start_timestamp" type="I" size="11"/>
+    <field name="end_timestamp" type="I" size="11"/>
+    <field name="effort" type="I" size="15">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="description" type="C" size="200">
+      <descr>optional notes, e.g. for generating bills</descr>
+    </field>	
+    <index name="task_id_effort">
+      <col>task_id</col>
+    </index>
+    <index name="user_id_effort">
+      <col>user_id</col>
+    </index>
+  </table>
   <table name="groups">
   	<descr>User Groups for the Flyspray bug killer</descr>
     <field name="group_id" type="I" size="3">
