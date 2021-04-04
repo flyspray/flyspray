@@ -702,6 +702,12 @@ div#fineprint {
 .dokuwiki_toolbar a .fa-stack {
 	vertical-align:bottom;
 }
+
+a.urlextern::after {
+	content: ' \f08e';
+	font-family: fontawesome;
+}
+
 form #taskfields { width: 335px;}
 form #taskdetailsfull {
   position: relative;
