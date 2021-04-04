@@ -133,7 +133,7 @@ style="display:inline-block;margin-left:-12px;vertical-align:middle">5</span></a
 		$out.='<a tabindex="-1" title="'.eL('editororderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ol fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><hr style="display:inline-block;width:16px;border-color:#999;border-top-width:2px;"/></a>';
 		$out.='<span class="divider"></span>';
-		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[http://example.com|External Link\', \']]\', \''.$textareaId.'\'); return false;"><i class="fa fa-link fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[https://\', \']]\', \''.$textareaId.'\'); return false;"><i class="fa fa-link fa-lg"></i></a>';
 
 		/* emailicon for a generic link and a globe for today ftp is a bit unpopular: seems not the most important button/syntax on flyspray's default dokuwiki toolbar
 		$out.='<a tabindex="-1" title="Insert Email" href="javascript:void(0);" onclick="surroundText(\'[[\', \']]\', \''.$textareaId.'\'); return false;">
