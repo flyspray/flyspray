@@ -668,7 +668,26 @@ div#fineprint {
 	display:block;
 }
 
-.dokuwiki_toolbar {display:inline;vertical-align:bottom;}
+.dokuwiki_toolbar {
+        display:inline;
+        vertical-align:bottom;
+}
+.dokuwiki_toolbar a{
+        display:inline-block;
+        width:28px;
+        height:26px;
+        text-align:center;
+}
+.dokuwiki_toolbar .divider {
+        display:inline-block;
+        width:0;
+        height:20px;
+        border-left:1px solid #aaa;
+}
+
+.dokuwiki_toolbar a .fa-stack {
+
+}
 form #taskfields { width: 335px;}
 form #taskdetailsfull {
   position: relative;
