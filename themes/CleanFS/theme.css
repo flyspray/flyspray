@@ -669,24 +669,38 @@ div#fineprint {
 }
 
 .dokuwiki_toolbar {
-        display:inline;
-        vertical-align:bottom;
+	display:inline;
+	vertical-align:bottom;
 }
-.dokuwiki_toolbar a{
-        display:inline-block;
-        width:28px;
-        height:26px;
-        text-align:center;
+
+/* can be overwritten by darkmode.css */
+.dokuwiki_toolbar a {
+	display:inline-block;
+	width:28px;
+	height:26px;
+	text-align:center;
+	border-radius:3px;
+	background-color:#eee;
+	border:1px solid #ddd;
+	vertical-align:bottom;
+	color:#666;
 }
+
+.dokuwiki_toolbar a:hover {
+	background-color:#fff;
+	color:#000;
+}
+
 .dokuwiki_toolbar .divider {
-        display:inline-block;
-        width:0;
-        height:20px;
-        border-left:1px solid #aaa;
+	display:inline-block;
+	width:0;
+	height:20px;
+	border-left:1px solid #aaa;
+	vertical-align:bottom;
 }
 
 .dokuwiki_toolbar a .fa-stack {
-
+	vertical-align:bottom;
 }
 form #taskfields { width: 335px;}
 form #taskdetailsfull {
