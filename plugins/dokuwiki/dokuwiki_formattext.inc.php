@@ -111,18 +111,12 @@ class dokuwiki_TextFormatter
 		$out.='<a tabindex="-1" title="'.eL('editorbold').'" href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;"><i class="fa fa-bold fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editoritalic').'" href="javascript:void(0);" onclick="surroundText(\'//\', \'//\', \''.$textareaId.'\'); return false;"><i class="fa fa-italic fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editorunderline').'" href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;"><i class="fa fa-underline fa-lg"></i></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;"><i class="fa fa-strikethrough fa-lg"></i></a>';
-		$out.='<span class="divider"></span>';
-		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><span class="fa-stack fa-lg"><i
-class="fa fa-header fa-stack-1x" style="margin-left:-6px"></i></span><span
-style="display:inline-block;margin-left:-12px;vertical-align:middle">3</span></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorh4').'" href="javascript:void(0);"  onclick="surroundText(\'===\', \'===\', \''.$textareaId.'\'); return false;"><span class="fa-stack fa-lg"><i
-class="fa fa-header fa-stack-1x" style="margin-left:-6px"></i></span><span
-style="display:inline-block;margin-left:-12px;vertical-align:middle">4</span></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorh5').'" href="javascript:void(0);" onclick="surroundText(\'==\', \'==\', \''.$textareaId.'\'); return false;"><span class="fa-stack fa-lg"><i 
-class="fa fa-header fa-stack-1x" style="margin-left:-6px"></i></span><span
-style="display:inline-block;margin-left:-12px;vertical-align:middle">5</span></a>';
-		$out.='<span class="divider"></span>';
+		$out.='<a tabindex="-1" title="'.eL('editorstrikethrough').'" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;"><i class="fa fa-strikethrough fa-lg"></i></a>';
+		#$out.='<span class="divider"></span>';
+		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"</i><span class="hdepth">3</span></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorh4').'" href="javascript:void(0);"  onclick="surroundText(\'===\', \'===\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">4</span></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorh5').'" href="javascript:void(0);" onclick="surroundText(\'==\', \'==\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">5</span></a>';
+		#$out.='<span class="divider"></span>';
 
 		/* hide embed syntax until the 'fetch.php issue' is solved or an alternative is implemented
 		$out.='<a tabindex="-1" title="'.eL('editorimage').'" href="javascript:void(0);" onclick="surroundText(\'&#123;&#123;http://\', \'&#125;&#125;\', \''.$textareaId.'\'); return false;">
@@ -131,8 +125,8 @@ style="display:inline-block;margin-left:-12px;vertical-align:middle">5</span></a
 
 		$out.='<a tabindex="-1" title="'.eL('editorunorderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ul fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editororderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ol fa-lg"></i></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><hr style="display:inline-block;width:16px;border-color:#999;border-top-width:2px;"/></a>';
-		$out.='<span class="divider"></span>';
+		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><hr class="editorhr"/></a>';
+		#$out.='<span class="divider"></span>';
 		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[https://\', \']]\', \''.$textareaId.'\'); return false;"><i class="fa fa-link fa-lg"></i></a>';
 
 		/* emailicon for a generic link and a globe for today ftp is a bit unpopular: seems not the most important button/syntax on flyspray's default dokuwiki toolbar
