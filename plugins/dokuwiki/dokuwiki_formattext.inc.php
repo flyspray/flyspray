@@ -113,7 +113,7 @@ class dokuwiki_TextFormatter
 		$out.='<a tabindex="-1" title="'.eL('editorunderline').'" href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;"><i class="fa fa-underline fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editorstrikethrough').'" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;"><i class="fa fa-strikethrough fa-lg"></i></a>';
 		#$out.='<span class="divider"></span>';
-		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"</i><span class="hdepth">3</span></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">3</span></a>';
 		$out.='<a tabindex="-1" title="'.eL('editorh4').'" href="javascript:void(0);"  onclick="surroundText(\'===\', \'===\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">4</span></a>';
 		$out.='<a tabindex="-1" title="'.eL('editorh5').'" href="javascript:void(0);" onclick="surroundText(\'==\', \'==\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">5</span></a>';
 		#$out.='<span class="divider"></span>';
