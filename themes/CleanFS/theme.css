@@ -680,8 +680,8 @@ div#fineprint {
 	height:28px;
 	text-align:center;
 	border-radius:3px;
-	background-color:#fff;
-	border:1px solid #fff;
+	background-color:transparent;
+	border:1px solid transparent;
 	vertical-align:bottom;
 	color:#555;
 }
