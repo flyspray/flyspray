@@ -676,19 +676,20 @@ div#fineprint {
 /* can be overwritten by darkmode.css */
 .dokuwiki_toolbar a {
 	display:inline-block;
-	width:28px;
-	height:26px;
+	width:30px;
+	height:28px;
 	text-align:center;
 	border-radius:3px;
-	background-color:#eee;
-	border:1px solid #ddd;
+	background-color:#fff;
+	border:1px solid #fff;
 	vertical-align:bottom;
-	color:#666;
+	color:#555;
 }
 
 .dokuwiki_toolbar a:hover {
-	background-color:#fff;
+	background-color:#eee;
 	color:#000;
+	border-color:#666;
 }
 
 .dokuwiki_toolbar .divider {
@@ -697,10 +698,27 @@ div#fineprint {
 	height:20px;
 	border-left:1px solid #aaa;
 	vertical-align:bottom;
+	margin-bottom:4px;
 }
 
-.dokuwiki_toolbar a .fa-stack {
+.dokuwiki_toolbar a i {
 	vertical-align:bottom;
+	line-height:1.8em;
+}
+span.hdepth {
+	display:inline-block;
+	vertical-align:bottom;
+	height:20px;
+	font-size:16px;
+	margin-bottom:6px;
+}
+span.buttonhr {
+	margin-top:14px;
+	height:0;
+	border-color:#666;
+	border-top-width:2px;
+	width:16px;
+	display:inline-block;
 }
 
 a.urlextern::after {
