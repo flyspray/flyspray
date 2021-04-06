@@ -96,9 +96,10 @@ input.collapsestatus:checked + .col + label {
 input.collapsestatus:checked + .col .task {display:none;}
 
 .kanbanboard .task .assignedto img{
-        width:20px;
-        height:20px;
-        border-radius:50%; 
+	width:20px;
+	height:20px;
+	border-radius:50%;
+	user-select:none; /* prevent user image be dragged instead of task */
 }
 
 .typ1,
@@ -107,15 +108,10 @@ input.collapsestatus:checked + .col .task {display:none;}
 .typ4,
 .typ5,
 .typ6 {
-        font-family:fontawesome;
+	font-family:fontawesome;
 }
 
-.status1 {
-	background-color:#999;
-}
-.status2 {
-	background-color:#cf0;
-}
-.status3 {
-	background-color:#fc0;
-}
+/* demo coloring for some basic kanban volumns */
+.status1 {background-color:#999;}
+.status2 {background-color:#cf0;}
+.status3 {background-color:#fc0;}
