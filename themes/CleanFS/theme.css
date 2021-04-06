@@ -722,8 +722,12 @@ hr.editorhr {
 }
 
 a.urlextern::after {
-	content: ' \f08e';
+	content: '\f08e';
 	font-family: fontawesome;
+	display:inline-block;
+	padding-left:0.3em;
+	font-size:10px;
+	opacity:0.6;
 }
 
 form #taskfields { width: 335px;}
