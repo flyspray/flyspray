@@ -45,14 +45,8 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <?php if ('index' == $do): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/index.js"></script>
 <?php endif; ?>
-<?php
-// load only for page types that have an editor textarea
-if (
-	isset($conf['general']['syntax_plugin'])
-	&& $conf['general']['syntax_plugin'] == 'html'
-	&& in_array($do, array('details', 'newtask', 'admin', 'pm'))
-): ?>
-<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
+<?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
@@ -66,7 +60,15 @@ if (
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
-<?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
+<?php
+// load only for page types that have an editor textarea
+if (
+	isset($conf['general']['syntax_plugin'])
+	&& $conf['general']['syntax_plugin'] == 'html'
+	&& in_array($do, array('details', 'newtask', 'admin', 'pm'))
+): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
+<?php endif; ?>
 <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
 <?php foreach(TextFormatter::get_javascript() as $file): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>
