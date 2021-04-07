@@ -660,29 +660,37 @@ switch ($action = Req::val('action'))
 		Flyspray::redirect(createURL('details', $task['task_id']));
 		break;
 
-        // ##################
-        // closing a task
-        // ##################
-    case 'details.close':
-        if (!$user->can_close_task($task)) {
-            break;
-        }
+	/**
+	 * closing a task
+	 */
+	case 'details.close':
+		if (!$user->can_close_task($task)) {
+			break;
+		}
 
-        if ($task['is_closed']) {
-            break;
-        }
+		if ($task['is_closed']) {
+			break;
+		}
 
-        if (!Post::val('resolution_reason')) {
-            Flyspray::show_error(L('noclosereason'));
-            break;
-        }
+		if (!Post::val('resolution_reason')) {
+			Flyspray::show_error(L('noclosereason'));
+			break;
+		}
 
-        Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
+		// self duplicate check
+		if (Post::val('resolution_reason') == RESOLUTION_DUPLICATE) {
+			preg_match("/\b(?:FS#|bug )(\d+)\b/", Post::val('closure_comment', ''), $dupe_of);
+			if ($task['task_id'] == $dupe_of[1]) {
+				Flyspray::show_error(L('circularduplicate'));
+				break;
+			}
+		}
 
-        $_SESSION['SUCCESS'] = L('taskclosedmsg');
-        # FIXME there are several pages using this form, details and pendingreq at least
-        #Flyspray::redirect(createURL('details', $task['task_id']));
-        break;
+		Backend::close_task($task['task_id'], Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
+		$_SESSION['SUCCESS'] = L('taskclosedmsg');
+		# FIXME there are several pages using this form, details and pendingreq at least
+		#Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
 
     case 'details.associatesubtask':
 	if ( $task['task_id'] == Post::num('associate_subtask_id')) {
