@@ -31,7 +31,7 @@ body
 blockquote
 {
 	font-style: italic;
-	font-family: Georgia, Times, "Times New Roman", serif;
+	/*font-family: Georgia, Times, "Times New Roman", serif;*/
 	padding: 2px 0;
 	border-style: solid;
 	border-color: #ccc;
@@ -205,4 +205,17 @@ a > img {
 	max-width: 1920px;
 	max-height: 1080px;
 	margin:0 auto;
+}
+
+/* customizations for Flyspray */
+table {
+	border: 1px solid #999;
+	border-collapse: collapse;
+} 
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color:#222;
+		color:#ddd;
+	}
 }
