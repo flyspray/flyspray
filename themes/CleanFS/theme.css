@@ -779,7 +779,13 @@ table.inline td {border:1px solid #ccc; padding:4px;}
     padding-left: 0;
 }
 #shortcuts li{line-height:2em;}
-kbd {background-color: #eee;border: 1px solid #ccc;border-radius: 4px;padding: 2px;}
+kbd {
+	color:#000;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 2px;
+}
 
 #taskdetails {
   margin: 10px 0px 10px 0px;
