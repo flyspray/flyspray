@@ -106,13 +106,11 @@ $csp->add('script-src', "'self'");
 $csp->add('script-src', "'unsafe-inline'");
 $csp->add('connect-src', "'self'");
 
-if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin']=='dokuwiki'){
-	# unsafe-eval for tabs.js :-/ (can be replaced by a css only solution)
-	$csp->add('script-src', "'unsafe-eval'");
-} else{
-	# unsafe-eval for tabs.js and flyspray's version of ckeditor :-/
-	$csp->add('script-src', "'unsafe-eval'");
-}
+/**
+ * unsafe-eval required only for tabs.js :-/
+ * @todo: work on CSS only solution
+ */
+$csp->add('script-src', "'unsafe-eval'");
 
 # maybe a future 'beforehttpheader' event position for extension/plugins to add their own exceptions/modifications
 if(isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1){
