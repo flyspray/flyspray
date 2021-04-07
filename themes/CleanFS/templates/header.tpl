@@ -65,7 +65,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 if (
 	isset($conf['general']['syntax_plugin'])
 	&& $conf['general']['syntax_plugin'] == 'html'
-	&& in_array($do, array('details', 'newtask', 'admin', 'pm'))
+	&& in_array($do, array('details', 'newtask', 'admin', 'pm', 'editcomment'))
 ): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
 <?php endif; ?>
