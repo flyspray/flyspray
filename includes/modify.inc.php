@@ -848,140 +848,148 @@ switch ($action = Req::val('action'))
         // ##################
         // sending a new user a confirmation code
         // ##################
-    case 'register.sendcode':
-        if (!$user->can_register()) {
-            break;
-        }
+	case 'register.sendcode':
+		if (!$user->can_register()) {
+			break;
+		}
 
 		$captchaerrors=array();
-		if($fs->prefs['captcha_securimage']){
+		if ($fs->prefs['captcha_securimage']) {
 			$image = new Securimage();
-			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
+			if (!Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				$captchaerrors['invalidsecurimage']=1;
 			}
 		}
 
-		if($fs->prefs['captcha_recaptcha']){
+		if ($fs->prefs['captcha_recaptcha']) {
 			require_once 'class.recaptcha.php';
 			if( !recaptcha::verify()) {
 				$captchaerrors['invalidrecaptcha']=1;
 			}
 		}
 
-		if(count($captchaerrors)){
+		if (count($captchaerrors)) {
 			$_SESSION['ERRORS']=$captchaerrors;
 			Flyspray::show_error(L('captchaerror'));
 			break;
 		}
 
-        if (!Post::val('user_name') || !Post::val('real_name')
-            || !Post::val('email_address'))
-        {
-            // If the form wasn't filled out correctly, show an error
-            Flyspray::show_error(L('registererror'));
-            break;
-        }
+		if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address')) {
+			// If the form wasn't filled out correctly, show an error
+			Flyspray::show_error(L('registererror'));
+			break;
+		}
 
-        if ($fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
-        {
-            Flyspray::show_error(L('emailverificationwrong'));
-            break;
-        }
+		if ($fs->prefs['repeat_emailaddress'] && trim(Post::val('email_address')) != trim(Post::val('verify_email_address'))) {
+			Flyspray::show_error(L('emailverificationwrong'));
+			break;
+		}
 
-        $email =  strtolower(Post::val('email_address'));
-        $jabber_id = strtolower(Post::val('jabber_id'));
+		$email = strtolower(trim(Post::val('email_address')));
+		$jabber_id = strtolower(trim(Post::val('jabber_id')));
 
-        //email is mandatory
-        if (!$email || !Flyspray::check_email($email)) {
-            Flyspray::show_error(L('novalidemail'));
-            break;
-        }
-        //jabber_id is optional
-        if ($jabber_id && !Jabber::check_jid($jabber_id)) {
-            Flyspray::show_error(L('novalidjabber'));
-            break;
-        }
+		// email is mandatory
+		if (!$email || !Flyspray::check_email($email)) {
+			Flyspray::show_error(L('novalidemail'));
+			break;
+		}
 
-        $user_name = Backend::clean_username(Post::val('user_name'));
+		// jabber_id is optional
+		if ($jabber_id && !Jabber::check_jid($jabber_id)) {
+			Flyspray::show_error(L('novalidjabber'));
+			break;
+		}
 
-        // Limit length
-        $real_name = substr(trim(Post::val('real_name')), 0, 100);
-        // Remove doubled up spaces and control chars
-        $real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
+		$user_name = Backend::clean_username(Post::val('user_name'));
 
-        if (!$user_name || empty($user_name) || !$real_name) {
-            Flyspray::show_error(L('entervalidusername'));
-            break;
-        }
+		// Limit length
+		$real_name = substr(trim(Post::val('real_name')), 0, 100);
+		// Remove doubled up spaces and control chars
+		$real_name = preg_replace('![\x00-\x1f\s]+!u', ' ', $real_name);
 
-        // Delete registration codes older than 24 hours
-        $yesterday = time() - 86400;
-        $db->query('DELETE FROM {registrations} WHERE reg_time < ?', array($yesterday));
+		if (!$user_name || empty($user_name) || !$real_name) {
+			Flyspray::show_error(L('entervalidusername'));
+			break;
+		}
 
-        $sql = $db->query('SELECT COUNT(*) FROM {users} u, {registrations} r
-                           WHERE  u.user_name = ? OR r.user_name = ?',
-        array($user_name, $user_name));
-        if ($db->fetchOne($sql)) {
-            Flyspray::show_error(L('usernametaken'));
-            break;
-        }
+		// Delete registration codes older than 24 hours
+		$yesterday = time() - 86400;
+		$db->query('DELETE FROM {registrations} WHERE reg_time < ?', array($yesterday));
 
-        $sql = $db->query("SELECT COUNT(*) FROM {users} WHERE
+		$sql = $db->query('SELECT COUNT(*) FROM {users} u, {registrations} r
+			WHERE  u.user_name = ? OR r.user_name = ?',
+			array($user_name, $user_name));
+		if ($db->fetchOne($sql)) {
+			Flyspray::show_error(L('usernametaken'));
+			break;
+		}
+
+		$sql = $db->query("SELECT COUNT(*) FROM {users} WHERE
                            jabber_id = ? AND jabber_id != ''
                            OR email_address = ? AND email_address != ''",
-        array($jabber_id, $email));
-        if ($db->fetchOne($sql)) {
-            Flyspray::show_error(L('emailtaken'));
-            break;
-        }
+			array($jabber_id, $email));
+		if ($db->fetchOne($sql)) {
+			Flyspray::show_error(L('emailtaken'));
+			break;
+		}
 
-        // Generate a random bunch of numbers for the confirmation code and the confirmation url
+		// Generate a random bunch of numbers for the confirmation code and the confirmation url
+		foreach (array('randval','magic_url') as $genrandom) {
+			$$genrandom = md5(function_exists('openssl_random_pseudo_bytes') ?
+				openssl_random_pseudo_bytes(32) :
+				uniqid(mt_rand(), true));
+		}
 
-        foreach(array('randval','magic_url') as $genrandom) {
+		$confirm_code = substr($randval, 0, 10);
 
-            $$genrandom = md5(function_exists('openssl_random_pseudo_bytes') ?
-                              openssl_random_pseudo_bytes(32) :
-                              uniqid(mt_rand(), true));
-        }
+		// send the email first
+		$userconfirmation = array();
+		$userconfirmation[$email] = array(
+			'recipient' => $email, 
+			'lang' => $fs->prefs['lang_code']
+			);
+		$recipients = array($userconfirmation);
+		if($notify->create(
+			NOTIFY_CONFIRMATION,
+			null,
+			array($baseurl, $magic_url, $user_name, $confirm_code),
+			$recipients,
+			NOTIFY_EMAIL)
+		) {
+			// email sent successfully, now update the database.
+			$reg_values = array(
+				time(),
+				$confirm_code,
+				$user_name,
+				$real_name,
+				$email,
+				$jabber_id,
+				Post::num('notify_type'),
+				$magic_url,
+				Post::num('time_zone')
+			);
+			// Insert everything into the database
+			$query = $db->query("INSERT INTO  {registrations}
+				(reg_time, confirm_code, user_name, real_name,
+				email_address, jabber_id, notify_type,
+				magic_url, time_zone)
+				VALUES ( " . $db->fill_placeholders($reg_values) . ' )',
+				$reg_values);
 
-        $confirm_code = substr($randval, 0, 10);
+			if ($query) {
+				$_SESSION['SUCCESS'] = L('codesent');
+				Flyspray::redirect($baseurl);
+			}
+		} else {
+			Flyspray::show_error(L('codenotsent'));
+			break;
+		}
+		break;
 
-        // echo "<pre>Am I here?</pre>";
-        // send the email first
-        $userconfirmation = array();
-        $userconfirmation[$email] = array('recipient' => $email, 'lang' => $fs->prefs['lang_code']);
-        $recipients = array($userconfirmation);
-        if($notify->create(NOTIFY_CONFIRMATION, null, array($baseurl, $magic_url, $user_name, $confirm_code),
-            $recipients,
-            NOTIFY_EMAIL)) {
-
-            //email sent succefully, now update the database.
-            $reg_values = array(time(), $confirm_code, $user_name, $real_name,
-                        $email, $jabber_id,
-                        Post::num('notify_type'), $magic_url, Post::num('time_zone'));
-            // Insert everything into the database
-            $query = $db->query("INSERT INTO  {registrations}
-                                 ( reg_time, confirm_code, user_name, real_name,
-                                   email_address, jabber_id, notify_type,
-                                   magic_url, time_zone )
-                         VALUES ( " . $db->fill_placeholders($reg_values) . ' )', $reg_values);
-
-            if ($query) {
-                $_SESSION['SUCCESS'] = L('codesent');
-                Flyspray::redirect($baseurl);
-            }
-
-        } else {
-            Flyspray::show_error(L('codenotsent'));
-            break;
-        }
-
-        break;
-
-        // ##################
-        // new user self-registration with a confirmation code
-        // ##################
-    case 'register.registeruser':
+	/**
+	 * new user self-registration with a confirmation code
+	 */
+	case 'register.registeruser':
         if (!$user->can_register()) {
             break;
         }
@@ -996,7 +1004,7 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+        if ($fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
             Flyspray::show_error(L('nomatchpass'));
             break;
         }
@@ -1014,8 +1022,8 @@ switch ($action = Req::val('action'))
         $profile_image = 'profile_image';
         $image_path = '';
 
-        if(isset($_FILES[$profile_image])) {
-            if(!empty($_FILES[$profile_image]['name'])) {
+        if (isset($_FILES[$profile_image])) {
+            if (!empty($_FILES[$profile_image]['name'])) {
                 $allowed = array('jpg', 'jpeg', 'gif', 'png');
 
                 $image_name = $_FILES[$profile_image]['name'];
@@ -1057,193 +1065,197 @@ switch ($action = Req::val('action'))
         define('NO_DO', true);
         break;
 
-        // ##################
-        // new user self-registration without a confirmation code
-        // ##################
-    case 'register.newuser':
-    case 'admin.newuser':
-        if (!($user->perms('is_admin') || $user->can_self_register())) {
-            break;
-        }
+	/**
+	 * new user self-registration without a confirmation code
+	 */
+	case 'register.newuser':
+	case 'admin.newuser':
+		if (!($user->perms('is_admin') || $user->can_self_register())) {
+			break;
+		}
 
 		$captchaerrors=array();
-		if( !($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
+		if (!($user->perms('is_admin')) && $fs->prefs['captcha_securimage']) {
 			$image = new Securimage();
-			if( !Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
+			if (!Post::isAlnum('captcha_code') || !$image->check(Post::val('captcha_code'))) {
 				$captchaerrors['invalidsecurimage']=1;
 			}
 		}
 
-		if( !($user->perms('is_admin')) && $fs->prefs['captcha_recaptcha']){
+		if (!($user->perms('is_admin')) && $fs->prefs['captcha_recaptcha']) {
 			require_once 'class.recaptcha.php';
-			if( !recaptcha::verify()) {
+			if (!recaptcha::verify()) {
 				$captchaerrors['invalidrecaptcha']=1;
 			}
 		}
 
 		# if both captchatypes are configured, maybe show the user which one or both failed.
-		if(count($captchaerrors)){
+		if (count($captchaerrors)) {
 			$_SESSION['ERRORS']=$captchaerrors;
 			Flyspray::show_error(L('captchaerror'));
 			break;
 		}
 
-        if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address'))
-        {
-            // If the form wasn't filled out correctly, show an error
-            Flyspray::show_error(L('registererror'));
-            break;
-        }
+		if (!Post::val('user_name') || !Post::val('real_name') || !Post::val('email_address')) {
+			// If the form wasn't filled out correctly, show an error
+			Flyspray::show_error(L('registererror'));
+			break;
+		}
 
-	// Check email format
-        if (!Post::val('email_address') || !Flyspray::check_email(Post::val('email_address')))
-        {
-            Flyspray::show_error(L('novalidemail'));
-            break;
-        }
+		$email = strtolower(trim(Post::val('email_address')));
+		
+		if ($fs->prefs['repeat_emailaddress'] && $email != trim(Post::val('verify_email_address'))) {
+			Flyspray::show_error(L('emailverificationwrong'));
+			break;
+		}
 
-        if ( $fs->prefs['repeat_emailaddress'] && Post::val('email_address') != Post::val('verify_email_address'))
-        {
-            Flyspray::show_error(L('emailverificationwrong'));
-            break;
-        }
+		// Check email format
+		if (!$email || !Flyspray::check_email($email)) {
+			Flyspray::show_error(L('novalidemail'));
+			break;
+		}
 
-        if (strlen(Post::val('user_pass')) && (strlen(Post::val('user_pass')) < MIN_PW_LENGTH)) {
-            Flyspray::show_error(L('passwordtoosmall'));
-            break;
-        }
+		if (strlen(Post::val('user_pass')) && (strlen(Post::val('user_pass')) < MIN_PW_LENGTH)) {
+			Flyspray::show_error(L('passwordtoosmall'));
+			break;
+		}
 
-	if ( $fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
-            Flyspray::show_error(L('nomatchpass'));
-            break;
-        }
+		if ($fs->prefs['repeat_password'] && Post::val('user_pass') != Post::val('user_pass2')) {
+			Flyspray::show_error(L('nomatchpass'));
+			break;
+		}
 
-        if ($user->perms('is_admin')) {
-            $group_in = Post::val('group_in');
-        } else {
-            $group_in = $fs->prefs['anon_group'];
-        }
+		if ($user->perms('is_admin')) {
+			$group_in = Post::val('group_in');
+		} else {
+			$group_in = $fs->prefs['anon_group'];
+		}
 
-        if(!$user->perms('is_admin')) {
+		if (!$user->perms('is_admin')) {
+			$sql = $db->query("SELECT COUNT(*) FROM {users} WHERE
+				jabber_id = ? AND jabber_id != ''
+				OR email_address = ? AND email_address != ''",
+			array(
+				Post::val('jabber_id'),
+				$email
+			));
 
-            $sql = $db->query("SELECT COUNT(*) FROM {users} WHERE
-                           jabber_id = ? AND jabber_id != ''
-                           OR email_address = ? AND email_address != ''",
-            array(Post::val('jabber_id'), Post::val('email_address')));
+			if ($db->fetchOne($sql)) {
+				Flyspray::show_error(L('emailtaken'));
+				break;
+			}
+		}
 
-            if ($db->fetchOne($sql)) {
-                Flyspray::show_error(L('emailtaken'));
-                break;
-            }
-        }
+		$enabled = 1;
+		if($user->need_admin_approval()) {
+			$enabled = 0;
+		}
+		$profile_image = 'profile_image';
+		$image_path = '';
 
-        $enabled = 1;
-        if($user->need_admin_approval()) $enabled = 0;
+		if (isset($_FILES[$profile_image])) {
+			if (!empty($_FILES[$profile_image]['name'])) {
+				$allowed = array('jpg', 'jpeg', 'gif', 'png');
 
-        $profile_image = 'profile_image';
-        $image_path = '';
+				$image_name = $_FILES[$profile_image]['name'];
+				$explode = explode('.', $image_name);
+				$image_extn = strtolower(end($explode));
+				$image_temp = $_FILES[$profile_image]['tmp_name'];
 
-        if(isset($_FILES[$profile_image])) {
-            if(!empty($_FILES[$profile_image]['name'])) {
-                $allowed = array('jpg', 'jpeg', 'gif', 'png');
+				if (in_array($image_extn, $allowed)) {
+					$avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
+					$image_path = BASEDIR.'/avatars/'.$avatar_name;
+					move_uploaded_file($image_temp, $image_path);
+					resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
+				} else {
+					Flyspray::show_error(L('incorrectfiletype'));
+					break;
+				}
+			}
+		}
 
-                $image_name = $_FILES[$profile_image]['name'];
-                $explode = explode('.', $image_name);
-                $image_extn = strtolower(end($explode));
-                $image_temp = $_FILES[$profile_image]['tmp_name'];
+		if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
+			Post::val('real_name'), Post::val('jabber_id'),
+			$email, Post::num('notify_type'),
+			Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
+			Flyspray::show_error(L('usernametaken'));
+			break;
+		}
 
-                if(in_array($image_extn, $allowed)) {
-                    $avatar_name = substr(md5(time()), 0, 10).'.'.$image_extn;
-                    $image_path = BASEDIR.'/avatars/'.$avatar_name;
-                    move_uploaded_file($image_temp, $image_path);
-                	resizeImage($avatar_name, $fs->prefs['max_avatar_size'], $fs->prefs['max_avatar_size']);
-                } else {
-                    Flyspray::show_error(L('incorrectfiletype'));
-                    break;
-                }
-            }
-        }
+		$_SESSION['SUCCESS'] = L('newusercreated');
 
-        if (!Backend::create_user(Post::val('user_name'), Post::val('user_pass'),
-            Post::val('real_name'), Post::val('jabber_id'),
-            Post::val('email_address'), Post::num('notify_type'),
-            Post::num('time_zone'), $group_in, $enabled, '', '', $image_path)) {
-            Flyspray::show_error(L('usernametaken'));
-            break;
-        }
-
-        $_SESSION['SUCCESS'] = L('newusercreated');
-
-        if (!$user->perms('is_admin')) {
-            define('NO_DO', true);
-        }
-        break;
-
+		if (!$user->perms('is_admin')) {
+			define('NO_DO', true);
+		}
+		break;
 
         // ##################
         // Admin based bulk registration of users
         // ##################
-    case 'register.newuserbulk':
-    case 'admin.newuserbulk':
-        if (!($user->perms('is_admin')))
-            break;
+	case 'register.newuserbulk':
+	case 'admin.newuserbulk':
+		if (!($user->perms('is_admin'))) {
+			break;
+		}
+		$group_in = Post::val('group_in');
+		$error = '';
+		$success = '';
+		$noUsers = true;
 
-        $group_in = Post::val('group_in');
-        $error = '';
-        $success = '';
-        $noUsers = true;
+		// For each user in post, add them
+		for ($i = 0 ; $i < 10 ; $i++) {
+			$user_name = Post::val('user_name' . $i);
+			$real_name = Post::val('real_name' . $i);
+			$email_address = Post::val('email_address' . $i);
 
-        // For each user in post, add them
-        for ($i = 0 ; $i < 10 ; $i++)
-        {
-            $user_name     = Post::val('user_name' . $i);
-            $real_name     = Post::val('real_name' . $i);
-            $email_address = Post::val('email_address' . $i);
+			if ($user_name == '' || $real_name == '' || $email_address == '') {
+				continue;
+			} else {
+				$noUsers = false;
+			}
+			$enabled = 1;
 
+			// Avoid dups
+			$sql = $db->query("SELECT COUNT(*) FROM {users} WHERE email_address = ?",
+				array($email_address));
 
-            if( $user_name == '' || $real_name == '' || $email_address == '')
-                continue;
-            else
-                $noUsers = false;
+			if ($db->fetchOne($sql)) {
+				$error .= "\n" . L('emailtakenbulk') . ": $email_address\n";
+				continue;
+			}
 
-            $enabled = 1;
+			if (!Backend::create_user(
+				$user_name,
+				Post::val('user_pass'),
+				$real_name,
+				'',
+				$email_address,
+				Post::num('notify_type'),
+				Post::num('time_zone'),
+				$group_in,
+				$enabled,
+				'',
+				'',
+				'')
+			) {
+				$error .= "\n" . L('usernametakenbulk') .": $user_name\n";
+				continue;
+			} else {
+				$success .= ' '.$user_name.' ';
+			}
+		}
 
-            // Avoid dups
-            $sql = $db->query("SELECT COUNT(*) FROM {users} WHERE email_address = ?",
-                              array($email_address));
-
-            if ($db->fetchOne($sql))
-            {
-                $error .= "\n" . L('emailtakenbulk') . ": $email_address\n";
-                continue;
-            }
-
-            if (!Backend::create_user($user_name, Post::val('user_pass'),
-                $real_name, '',
-                $email_address,
-                Post::num('notify_type'),
-                Post::num('time_zone'), $group_in, $enabled, '', '', ''))
-            {
-                $error .= "\n" . L('usernametakenbulk') .": $user_name\n";
-                continue;
-            }
-            else
-                $success .= ' '.$user_name.' ';
-        }
-
-        if ($error != '')
-            Flyspray::show_error($error);
-        else if ( $noUsers == true)
-            Flyspray::show_error(L('nouserstoadd'));
-        else
-        {
-            $_SESSION['SUCCESS'] = L('created').$success;
-            if (!$user->perms('is_admin')) {
-                define('NO_DO', true);
-            }
-        }
-        break;
-
+		if ($error != '') {
+			Flyspray::show_error($error);
+		} else if ($noUsers == true) {
+			Flyspray::show_error(L('nouserstoadd'));
+		} else {
+			$_SESSION['SUCCESS'] = L('created').$success;
+			if (!$user->perms('is_admin')) {
+				define('NO_DO', true);
+			}
+		}
+		break;
 
         // ##################
         // Bulk User Edit Form
