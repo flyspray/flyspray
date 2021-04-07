@@ -186,7 +186,13 @@ li.errorinput{background-color:#fc9;}
 	<?php endif; ?>
 	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
 	<br />
-	<button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
+	<?php
+	/* Our CKEditor 4.16 setup has undo/redo plugin and the reset button in this template has no functionality if javascript is enabled */
+	if ($conf['general']['syntax_plugin'] == 'html'): ?>
+		<noscript><button type="reset"><?= eL('reset') ?></button></noscript>
+	<?php else: ?>
+		<button type="reset"><?= eL('reset') ?></button>
+	<?php endif; ?>
 	<br />
 
 	<div id="addlinkbox">
