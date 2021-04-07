@@ -500,7 +500,7 @@ body.toplevel .single-project {
   height: auto;
 }
 body.myprofile .box {display:inline-block;vertical-align:top;}
-body.myprofile .box.permissions {
+body.myprofile .box .permissions {
 	display:flex;
 }
 .permissions tbody th,
