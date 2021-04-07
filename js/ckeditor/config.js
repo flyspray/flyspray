@@ -10,25 +10,33 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// The toolbar groups arrangement, optimized for a single toolbar row.
 	config.toolbarGroups = [
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		//{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
 		{ name: 'forms' },
+		{ name: 'styles' },
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'links' },
 		{ name: 'insert' },
-		{ name: 'styles' },
+		//{ name: 'styles' },
 		{ name: 'colors' },
 		{ name: 'tools' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
 		{ name: 'others' },
 		{ name: 'about' }
 	];
 
 	// The default plugins included in the basic setup define some buttons that
 	// are not needed in a basic editor. They are removed here.
-	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+	//config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+	config.removeButtons = 'Anchor,Underline,Subscript,Superscript';
 
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
+
+	// h1 for Flyspray page title
+	// h2 for task title
+	// But better allow them also for task description and comment for backward compatibility.
+	config.format_tags = 'p;h1;h2;h3;h4;h5;pre';
 };
