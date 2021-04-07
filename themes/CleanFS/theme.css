@@ -503,6 +503,9 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 body.myprofile .box .permissions {
 	display:flex;
 }
+.permissions thead th {
+	height:3em;
+}
 .permissions tbody th,
 .permissions tbody td {
 	height: 22px;
