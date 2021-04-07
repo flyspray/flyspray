@@ -68,6 +68,16 @@ if (
 	&& in_array($do, array('details', 'newtask', 'admin', 'pm', 'editcomment'))
 ): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
+<?php
+/** prototype.js spits js-error when enabling hljs.initHighlightingOnLoad();
+ * As removal of prototype.js is planned keep the codesnippet highlight stuff here for later turn on.
+ */
+/*
+<link href="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
+<script src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+*/
+?>
 <?php endif; ?>
 <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
 <?php foreach(TextFormatter::get_javascript() as $file): ?>
