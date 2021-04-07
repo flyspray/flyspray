@@ -377,7 +377,9 @@ function createTestData(){
 	$codes=array('','php','xml','sql','html');
 	
 	echo "Creating $maxtasks tasks: ";
-	for ($i = 1; $i <= $maxtasks; $i++) {
+	# task 1 is defautl task after install
+	$finaltaskid=$maxtasks+1;
+	for ($i = 2; $i <= $finaltaskid; $i++) {
 		$project_id = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
 		if ($i==1) {
 			$opened = time() - rand($timerange-(30*24*3600), $timerange);
@@ -434,39 +436,39 @@ function createTestData(){
 		$subject = $subjects[rand(0, count($subjects) - 1)];
 		$subject = sprintf($subject, $projectname);
 
-		$args['item_summary'] = "task $i ($subject)";
+		$args['item_summary'] = "$subject (task $i)";
 
 		$dparts=rand($parts[0],$parts[1]);
 		$descr='';
-		for($p=0;$p<$dparts;$p++){
+		for ($p=0; $p<$dparts; $p++) {
 			$para='';
 			$type=rand(0,2); # text, list, code
-			if($type==0){
+			if ($type==0) {
 				$dsent=rand($paralen[0],$paralen[1]);
-				for($s=0;$s<$dsent;$s++){
+				for ($s=0; $s<$dsent; $s++) {
 					$sent='';
 					$dcommas=rand($commas[0],$commas[1]);
-					for($c=0;$c<$dcommas;$c++){
+					for ($c=0; $c<$dcommas; $c++) {
 						$clausepart='';
 						$dwords=rand($clauselen[0],$clauselen[1]);
-						for($w=0;$w<$dwords;$w++){
+						for ($w=0; $w<$dwords; $w++) {
 							$v=rand(0,1);
 							$wd='';
 							$dletters=rand($wordlen[0],$wordlen[1]);
-							for($l=0;$l<$dletters;$l++){
+							for ($l=0; $l<$dletters; $l++) {
 								$wd.= ($v % 2) ? $vocals[rand(0,count($vocals)-1)] : $conso[rand(0,count($conso)-1)];
 								$v++;
 							}
-							if(rand(0,100)<1){
+							if (rand(0,100)<1) {
 								$wd='FS#'.rand(2,$i);
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='//'.$wd.'//';
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='**'.$wd.'**';
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='__'.$wd.'__';
 							}
 							$clausepart.=$wd.' ';	
@@ -478,13 +480,13 @@ function createTestData(){
 						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
 					}
 				}
-			}elseif($type==1){
+			} elseif ($type==1) {
 				# dokuwiki list
 				$para.="  * listitem\n  * listitem\n  * listitem3";
 				if (rand(0, 5) < 1) {
 					$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
 				}
-			}elseif($type==2) {
+			} elseif ($type==2) {
 				# dokuwiki code
 				$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
 			}
@@ -510,7 +512,7 @@ function createTestData(){
 			);
 		}
 		$prevtaskopened=$opened;
-		if($i%500==0){
+		if ($i%500==0) {
                         echo $i.' mem:'.memory_get_usage()."\n";
                 }
 	} # end for maxtasks
