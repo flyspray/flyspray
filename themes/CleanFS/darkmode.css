@@ -49,8 +49,18 @@ div.comment_container .comment_header_usertype {border-color:#333;}
 	background:#444 !important;
 	box-shadow:none !important;
 }
+.cke_top{
+ 	border-bottom-color:#666;
+}
+.cke_bottom{
+ 	border-top-color:#666;
+}
+/* workaround till I get the filter to color invert the dark Moona-Lisa icons */ 
 .cke_toolgroup {
 	background: #999 !important;
+}
+.cke_path_item{
+	color: #ccc;
 }
 
 #taskdetails{border-color:#444;}
