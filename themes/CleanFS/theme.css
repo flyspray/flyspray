@@ -500,6 +500,16 @@ body.toplevel .single-project {
   height: auto;
 }
 body.myprofile .box {display:inline-block;vertical-align:top;}
+body.myprofile .box.permissions {
+	display:flex;
+}
+.permissions tbody th,
+.permissions tbody td {
+	height: 22px;
+	white-space: nowrap;
+	border-bottom: 1px solid #999;
+	display: table-cell;
+}
 #editgroup, #userlist{display:inline-block;vertical-align:top;}
 .progress_bar_container {
   width: 150px;
