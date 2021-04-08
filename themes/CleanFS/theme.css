@@ -756,8 +756,11 @@ table.inline {
 	border-collapse:collapse;
 }
 #taskdetailstext table td,
+#taskdetailstext table th,
 .commenttext table td,
-table.inline td {
+.commenttext table th,
+table.inline td,
+table.inline th {
 	border:1px solid #ccc;
 	padding:4px;
 }
