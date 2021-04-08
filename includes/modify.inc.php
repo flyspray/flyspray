@@ -419,9 +419,12 @@ switch ($action = Req::val('action'))
 	$detailed_desc = Post::val('detailed_desc', $defaults['detailed_desc']);
 
 	# dokuwiki syntax plugin filters on output
-	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+		$purifierconfig->set('CSS.AllowedProperties', array());
+		if ($fs->prefs['relnofollow']) {
+			$purifierconfig->set('HTML.Nofollow', true);
+		}
 		$purifier = new HTMLPurifier($purifierconfig);
 		$detailed_desc = $purifier->purify($detailed_desc);
 	}
@@ -2436,9 +2439,12 @@ switch ($action = Req::val('action'))
 		$previous_text=Post::val('previous_text');
 
 		# dokuwiki syntax plugin filters on output
-		if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+		if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 			$purifierconfig = HTMLPurifier_Config::createDefault();
-			if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+			$purifierconfig->set('CSS.AllowedProperties', array());
+			if ($fs->prefs['relnofollow']) {
+				$purifierconfig->set('HTML.Nofollow', true);
+			}
 			$purifier = new HTMLPurifier($purifierconfig);
 			$comment_text = $purifier->purify($comment_text);
 			$previous_text= $purifier->purify($comment_text);
