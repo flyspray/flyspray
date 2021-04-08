@@ -750,9 +750,17 @@ form #taskdetailsfull {
   margin-left: 355px;
 }
 
-/* style tables in task comments (dokuwiki) */
-table.inline{border-collapse:collapse;}
-table.inline td {border:1px solid #ccc; padding:4px;}
+#taskdetailstext table,
+.commenttext table,
+table.inline {
+	border-collapse:collapse;
+}
+#taskdetailstext table td,
+.commenttext table td,
+table.inline td {
+	border:1px solid #ccc;
+	padding:4px;
+}
 
 #shortcutlabel { cursor:pointer;padding-left:1em;}
 #shortcutclose { cursor:pointer;float:right; }
