@@ -309,9 +309,12 @@ abstract class Backend
             return false;
         }
 
-	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+		$purifierconfig->set('CSS.AllowedProperties', array());
+		if ($fs->prefs['relnofollow']) {
+			$purifierconfig->set('HTML.Nofollow', true);
+		}
 		$purifier = new HTMLPurifier($purifierconfig);
 		$comment_text = $purifier->purify($comment_text);
 	}
@@ -1082,9 +1085,12 @@ abstract class Backend
         }
 
 	# dokuwiki syntax plugin filters on output
-	if($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc']) ){
+	if ($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc'])) {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+		$purifierconfig->set('CSS.AllowedProperties', array());
+		if ($fs->prefs['relnofollow']) {
+			$purifierconfig->set('HTML.Nofollow', true);
+		}
 		$purifier = new HTMLPurifier($purifierconfig);
 		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
 	}
