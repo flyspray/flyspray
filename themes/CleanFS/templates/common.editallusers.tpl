@@ -23,20 +23,17 @@ function toggleCheckbox(id)
 <option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
 </select>
 </fieldset>
-<style>
-label.userstatus {border:1px solid #ccc; padding:4px; margin:3px; max-width:100px; border-radius:3px;}
-input[value=""]:checked ~ label#s_all {background-color:#ddd;}
-input[value="1"]:checked ~ label#s_enabled {background-color:#cf6;}
-input[value="0"]:checked ~ label#s_disabled {background-color:#f90;}
-</style>
 <fieldset>
 <legend>Filter</legend>
 <input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
-<label class="userstatus" id="s_all" for="status_all">all users</label>
 <input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
-<label class="userstatus" id="s_enabled" for="status_enabled">enabled users only</label>
 <input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
-<label class="userstatus" id="s_disabled" for="status_disabled">disabled users only</label>
+<div class="btn-group">
+<label
+class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label><label 
+class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label><label
+class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+</div>
 </fieldset>
 <button type="submit">Show selected fields</button>
 </form>
