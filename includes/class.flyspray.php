@@ -496,6 +496,12 @@ class Flyspray
 			$filter[] = 'account_enabled = '.$opts['status'];
 		}
 
+		if (isset($opts['namesearch']) && is_string($opts['namesearch']) && ($opts['namesearch']!='')) {
+			$filter[] = "(user_name LIKE ? OR real_name LIKE ?)";
+			$params[] = $opts['namesearch'];
+			$params[] = $opts['namesearch'];
+		}
+
 		if (count($filter)) {
 			$where = "\nWHERE ".implode( "\nAND " , $filter);
 			$having = "\nHAVING ".implode( "\nAND " , $filter);
