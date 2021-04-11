@@ -49,6 +49,7 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
+<link rel="stylesheet" href="<?php echo Filters::noXSS($this->themeUrl()); ?>adminpm.css"></link>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
