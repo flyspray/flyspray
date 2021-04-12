@@ -505,8 +505,8 @@ class Flyspray
 			'lastlogin' => 'last_login',
 			'username' => 'user_name',
 			'realname' => 'real_name',
-			'email' => 'email_address',
-			'xmpp' => 'jabber_id'
+			'emailaddress' => 'email_address',
+			'jabberid' => 'jabber_id'
 		);
 
 		$filter = array();
