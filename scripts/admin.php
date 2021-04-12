@@ -76,11 +76,17 @@ switch ($area = Req::val('area', 'prefs')) {
 			} else { 
 				$namesearch=false;
 			}
+			
+			if (isset($_GET['mailsearch']) && is_string($_GET['mailsearch']) && $_GET['mailsearch'] != '') {
+				$mailsearch=$_GET['mailsearch'];
+			} else {
+				$mailsearch=false;
+			}
 
 			$users = Flyspray::listUsers($listopts);
 			$page->assign('users', $users['users']);
 			$page->assign('usercount', $users['count']);
-			$page->uses('showstats', 'showltf', 'perpage', 'pagenum', 'offset', 'namesearch');
+			$page->uses('showstats', 'showltf', 'perpage', 'pagenum', 'offset', 'namesearch', 'mailsearch');
 		}
 		
 	case 'cat':
