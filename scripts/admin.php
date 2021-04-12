@@ -106,7 +106,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			}
 
 			if (isset($_GET['order']) && is_string($_GET['order']) && $_GET['order'] != '') {
-				$sortings = array('realname', 'username', 'emailaddress', 'jabberid', 'register', 'lastlogin');
+				$sortings = array('realname', 'username', 'emailaddress', 'jabberid', 'regdate', 'lastlogin');
 				if (in_array($_GET['order'], $sortings)) {
 					$listopts['order'] = $_GET['order'];
 				}
