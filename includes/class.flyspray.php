@@ -482,6 +482,7 @@ class Flyspray
 	 *                  perpage=> unset|integer,
 	 *                  status=> unset|0|1,
 	 *                  namesearch=> unset|string,
+	 *                  mailsearch=> unset|string,
 	 *                  stats=> unset|isset
 	 *              )
 	 * @return array
@@ -510,6 +511,15 @@ class Flyspray
 			$filter[] = "(user_name LIKE ? OR real_name LIKE ?)";
 			$params[] = $opts['namesearch'];
 			$params[] = $opts['namesearch'];
+		}
+		
+		/**
+		 * @note currently only primary email address in {users}, not {user_emails}
+		 * @todo when doing table user_emails review, see reopened FS#1812
+		 */
+		if (isset($opts['mailsearch']) && is_string($opts['mailsearch']) && ($opts['mailsearch']!='')) {
+			$filter[] = "email_address LIKE ?";
+			$params[] = $opts['mailsearch'];
 		}
 
 		if (count($filter)) {
