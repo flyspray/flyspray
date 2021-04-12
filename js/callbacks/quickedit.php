@@ -23,7 +23,7 @@ load_translations();
 if (!Post::has('csrftoken')) {
 	http_response_code(428); # 'Precondition Required'
         die('missingtoken');
-} elseif ( Post::val('csrftoken')===$_SESSION['csrftoken']) {
+} elseif (Post::val('csrftoken') == $_SESSION['csrftoken']) {
         # ok
 } else {
 	http_response_code(412); # 'Precondition Failed'
