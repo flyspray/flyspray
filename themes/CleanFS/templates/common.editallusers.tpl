@@ -24,8 +24,8 @@ function toggleCheckbox(id)
 </select>
 </fieldset>
 <fieldset>
-<legend><?= eL('userfilter') ?></legend>
-<p>
+<legend><?= eL('accountfilter') ?></legend>
+<div style="margin-bottom:1em;">
 <div style="display:inline-block">
         <input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
         <label for="usersearchtext" style="padding-top:0.3em;float:left;padding-right:0.5em"><?= eL('name') ?>:</label>
@@ -34,18 +34,21 @@ function toggleCheckbox(id)
         <input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
         <label for="mailsearchtext" style="padding-top:0.3em;float:left;margin-left:2em;padding-right:0.5em"><?= eL('email') ?>:</label>
 </div>
-</p>
-<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
-<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
-<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
-<div class="btn-group">
-<label
-class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label><label 
-class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label><label
-class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
 </div>
+<div>
+	<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
+	<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
+	<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
+	<span><?= eL('accountstatus') ?>:</span>
+	<div class="btn-group" style="display:inline-block">
+	<label
+	class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label><label 
+	class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label><label
+	class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+	</div>
+</div>
+<p><button type="submit"><?= eL('search')</button></p>
 </fieldset>
-<button type="submit">Show selected fields</button>
 </form>
 <?php if ($usercount): ?>
 <div class="pagination">
