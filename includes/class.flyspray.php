@@ -529,7 +529,17 @@ class Flyspray
 			$where = '';
 			$having = '';
 		}
-		
+
+		if (isset($opts['order']) && is_string($opts['order']) && ($opts['order'] != '')) {
+			$orderby = "\nORDER BY ?";
+			if (isset($opts['sort']) && $opts['sort'] ==='desc') {
+				$orderby.= ' DESC';
+			}
+			$params[] = $opts['order'];
+		} else {
+			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
+		}
+
 		if (!isset($opts['stats']) ) {
 			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
 				email_address, jabber_id, oauth_provider, oauth_uid,
@@ -539,7 +549,6 @@ class Flyspray
 				profile_image, hide_my_email, last_login
 				FROM {users}';
 			$sql .= $where;
-			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
 			$sql .= $orderby;
 			
 		} else {
