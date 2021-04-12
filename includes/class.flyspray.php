@@ -472,14 +472,22 @@ class Flyspray
         return $db->fetchAllArray($res);
     }
 
-    /**
-     * Returns a list of a all users
-     * @access public static
-     * @param array $opts optional filter which fields (or group of fields) are needed, more may be added later (sorting, where ..)
-     * @return array
-     * @version 1.0
-     */
-	public static function listUsers($opts=array())
+	/**
+	 * Returns a list of a all users
+	 *
+	 * @access public static
+	 * @param array $opts optional filter and verbosity of user infos
+	 *              array(
+	 *                  offset=> unset|integer,
+	 *                  perpage=> unset|integer,
+	 *                  status=> unset|0|1,
+	 *                  namesearch=> unset|string,
+	 *                  stats=> unset|isset
+	 *              )
+	 * @return array
+	 * @version 1.0
+	 */
+	public static function listUsers($opts = array())
 	{
 		global $db;
 
@@ -492,6 +500,8 @@ class Flyspray
 		}
 
 		$filter = array();
+		$params = array();
+		
 		if (isset($opts['status']) && ($opts['status']===1 || $opts['status']===0)) {
 			$filter[] = 'account_enabled = '.$opts['status'];
 		}
@@ -510,7 +520,7 @@ class Flyspray
 			$having = '';
 		}
 		
-		if (!isset($opts['stats']) ){
+		if (!isset($opts['stats']) ) {
 			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
 				email_address, jabber_id, oauth_provider, oauth_uid,
 				notify_type, notify_own, notify_online,
@@ -641,9 +651,9 @@ GROUP BY u.user_id';
 			$sql .= $orderby;
 		}
 
-		$sqlcount=$db->query('SELECT COUNT(*) FROM ('.$sql.') u');
+		$sqlcount=$db->query('SELECT COUNT(*) FROM ('.$sql.') u', $params);
 		$usercount=$db->fetchOne($sqlcount);
-		$res = $db->query($sql, array(), $opts['perpage'], $opts['offset']);
+		$res = $db->query($sql, $params, $opts['perpage'], $opts['offset']);
 		$users=$db->fetchAllArray($res);
 		return array(
 			'users'=>$users,
@@ -660,7 +670,6 @@ GROUP BY u.user_id';
     public static function listLangs()
     {
         return str_replace('.php', '', array_map('basename', glob_compat(BASEDIR ."/lang/[a-zA-Z]*.php")));
-
     }
 
     /**
