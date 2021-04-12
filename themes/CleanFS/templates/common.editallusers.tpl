@@ -24,7 +24,11 @@ function toggleCheckbox(id)
 </select>
 </fieldset>
 <fieldset>
-<legend>Filter</legend>
+<legend><?= eL('userfilter') ?></legend>
+<p>
+<input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
+<label for="usersearchtext"></label>
+</p>
 <input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
 <input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
 <input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
