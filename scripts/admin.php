@@ -78,6 +78,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			}
 			
 			if (isset($_GET['mailsearch']) && is_string($_GET['mailsearch']) && $_GET['mailsearch'] != '') {
+				$listopts['mailsearch'] = '%'.$_GET['mailsearch'].'%';
 				$mailsearch=$_GET['mailsearch'];
 			} else {
 				$mailsearch=false;
