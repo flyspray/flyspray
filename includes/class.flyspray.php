@@ -477,13 +477,15 @@ class Flyspray
 	 *
 	 * @access public static
 	 * @param array $opts optional filter and verbosity of user infos
-	 *              array(
-	 *                  offset=> unset|integer,
-	 *                  perpage=> unset|integer,
-	 *                  status=> unset|0|1,
-	 *                  namesearch=> unset|string,
-	 *                  mailsearch=> unset|string,
-	 *                  stats=> unset|isset
+	 *              $opts=array(
+	 *                  offset => unset|integer,
+	 *                  perpage => unset|integer,
+	 *                  status => unset|0|1,
+	 *                  namesearch => unset|string,
+	 *                  mailsearch => unset|string,
+	 *                  stats => unset|isset
+	 *                  order => unset|string (one of allowed sortable fields)
+	 *                  sort => unset|desc
 	 *              )
 	 * @return array
 	 * @version 1.0
@@ -497,10 +499,12 @@ class Flyspray
 		}
 
 		if (!isset($opts['perpage'])) {
-			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
+			# default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars
+			# we now have filterable userlist, 100 per page seems ok.
+			$opts['perpage'] = 100;
 		}
 
-		$sortable=array(
+		$sortable = array(
 			'regdate' => 'register_date',
 			'lastlogin' => 'last_login',
 			'username' => 'user_name',
@@ -548,7 +552,7 @@ class Flyspray
 			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
 		}
 
-		if (!isset($opts['stats']) ) {
+		if (!isset($opts['stats'])) {
 			$sql = 'SELECT account_enabled, user_id, user_name, real_name,
 				email_address, jabber_id, oauth_provider, oauth_uid,
 				notify_type, notify_own, notify_online,
