@@ -1448,13 +1448,14 @@ input[type=text], input[type=submit], button {
 div.denyform {
 	visibility:hidden;
 	position:absolute;
+	right:10px;
 	background-image: none;
 	border: 1px solid #E1E1E1;
 	margin-top:5px;
 	display:block;
-	width:300px;
+	width:280px;
 	height:auto;
-	padding:5px 30px 5px 5px;
+	padding:5px 5px 5px 5px;
 }
 /*#notify_types {height: 10em;}*/
 #rassigned_to {height: 12em; }
