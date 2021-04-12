@@ -47,7 +47,7 @@ function toggleCheckbox(id)
 	class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
 	</div>
 </div>
-<p><button type="submit"><?= eL('search')</button></p>
+<p><button type="submit"><?= eL('search') ?></button></p>
 </fieldset>
 </form>
 <?php if ($usercount): ?>
