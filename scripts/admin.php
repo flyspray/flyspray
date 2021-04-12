@@ -21,6 +21,27 @@ $proj = new Project(0);
 
 $page->pushTpl('admin.menu.tpl');
 
+/**
+ * @TODO sortable headings on editallusers page
+ */
+function tpl_userlistheading($colname)
+{
+	$coltitle=eL($colname);
+	$sort1='desc';
+	$new_order = array('order' => $colname, 'sort' => $sort1);
+	# unneeded or duplicate params from $_GET for the sort links
+	$params=array_merge($_GET, $new_order);
+	unset($params['do']);
+	unset($params['area']);
+	# resorting a search result should show always the first results
+	unset($params['pagenum']);
+
+	$html = sprintf('<a title="%s" href="%s">%s</a>',
+		eL('sortthiscolumn'), Filters::noXSS(createURL('admin', 'editallusers', null, $params)), $coltitle);
+
+	return $html;
+}
+
 switch ($area = Req::val('area', 'prefs')) {
 	case 'users':
 		$id = Flyspray::usernameToId(Req::val('user_name'));
