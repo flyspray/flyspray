@@ -500,6 +500,14 @@ class Flyspray
 			$opts['perpage'] = 500; # default max_input_vars of PHP is 1000, so 1 checkbox per user + other/hidden/submitbutton form vars <= max_input_vars 
 		}
 
+		$sortable=array(
+			'regdate' => 'register_date',
+			'lastlogin' => 'last_login',
+			'username' => 'user_name',
+			'realname' => 'real_name',
+			'emailaddress' => 'email_address'
+		);
+
 		$filter = array();
 		$params = array();
 		
@@ -530,12 +538,11 @@ class Flyspray
 			$having = '';
 		}
 
-		if (isset($opts['order']) && is_string($opts['order']) && ($opts['order'] != '')) {
-			$orderby = "\nORDER BY ?";
+		if (isset($opts['order']) && is_string($opts['order']) && array_key_exists($opts['order'], $sortable)) {
+			$orderby = "\nORDER BY ".$sortable[$opts['order']];
 			if (isset($opts['sort']) && $opts['sort'] ==='desc') {
 				$orderby.= ' DESC';
 			}
-			$params[] = $opts['order'];
 		} else {
 			$orderby = "\nORDER BY account_enabled DESC, user_name ASC";
 		}
