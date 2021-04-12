@@ -60,13 +60,13 @@ switch ($area = Req::val('area', 'prefs')) {
 			$listopts['perpage'] = $perpage;
 			$listopts['pagenum'] = $pagenum;
 			$listopts['offset'] = $offset;
-			if($showstats) {
+			if ($showstats) {
 				$listopts['stats']=1;
 			}
 
-			if (isset($_GET['status']) && $_GET['status']==='1'){
+			if (isset($_GET['status']) && $_GET['status']==='1') {
 				$listopts['status']=1;
-			} elseif (isset($_GET['status']) && $_GET['status']==='0'){
+			} elseif (isset($_GET['status']) && $_GET['status']==='0') {
 				$listopts['status']=0;
 			}
 			
@@ -82,6 +82,17 @@ switch ($area = Req::val('area', 'prefs')) {
 				$mailsearch=$_GET['mailsearch'];
 			} else {
 				$mailsearch=false;
+			}
+
+			if (isset($_GET['order']) && is_string($_GET['order']) && $_GET['order'] != '') {
+				$sortings = array('realname', 'username', 'email', 'xmpp', 'register', 'lastlogin');
+				if (in_array($_GET['order'], $sortings)) {
+					$listopts['order'] = $_GET['order'];
+				}
+			}
+
+			if (isset($_GET['sort']) && is_string($_GET['sort']) && $_GET['sort'] == 'desc') {
+				$listopts['sort'] = 'desc';
 			}
 
 			$users = Flyspray::listUsers($listopts);
