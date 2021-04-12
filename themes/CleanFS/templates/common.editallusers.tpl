@@ -66,12 +66,12 @@ if ($do == 'admin'): ?>
 	<tr class="account_header">
 		<th></th>
 		<th><span class="fa fa-pencil fa-lg"></span></th>
-		<th><?= eL('realname') ?></th>
-		<th><?= eL('username') ?></th>
-		<th><?= eL('emailaddress') ?></th>
+		<th><?= tpl_userlistheading('realname') ?></th>
+		<th><?= tpl_userlistheading('username') ?></th>
+		<th><?= tpl_userlistheading('emailaddress') ?></th>
 		<th><?= eL('jabberid') ?></th>
-                <th><?= eL('regdate') ?></th>
-		<th><?= eL('lastlogin') ?></th>
+                <th><?= tpl_userlistheading('regdate') ?></th>
+		<th><?= tpl_userlistheading('lastlogin') ?></th>
 <?php if($showstats): ?>
 		<th>opened_by</th>
 		<th>closed_by</th>
