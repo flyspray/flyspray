@@ -69,8 +69,8 @@ if ($do == 'admin'): ?>
 		<th><?= tpl_userlistheading('realname') ?></th>
 		<th><?= tpl_userlistheading('username') ?></th>
 		<th><?= tpl_userlistheading('emailaddress') ?></th>
-		<th><?= eL('jabberid') ?></th>
-                <th><?= tpl_userlistheading('regdate') ?></th>
+		<th><?= tpl_userlistheading('jabberid') ?></th>
+		<th><?= tpl_userlistheading('regdate') ?></th>
 		<th><?= tpl_userlistheading('lastlogin') ?></th>
 <?php if($showstats): ?>
 		<th>opened_by</th>
