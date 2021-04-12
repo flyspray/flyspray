@@ -1118,5 +1118,10 @@ Flyspray lädt und verwendet es nur für die Seiten der Nutzerregistrierung, fal
 'usekanban'               => 'Kanban Ansicht',
 'gantt'                   => 'Gantt Ansicht',
 'kanban'                  => 'Kanban Ansicht',
+'accountfilter'           => 'Benutzerkontenfilter',
+'accountstatus'           => 'Benutzerkontenstatus',
+'showaccountsall'         => 'alle',
+'showaccountsenabled'     => 'freigeschalten',
+'showaccountsdisabled'    => 'gesperrt',
 );
 ?>
