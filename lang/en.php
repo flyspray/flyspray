@@ -201,7 +201,7 @@ $language = array(
 'youareloggedout'         => 'You have been logged out.',
 'waitwhiletransfer'       => 'Please wait while you are transferred...',
 'clicknowait'             => 'Click here if you do not wish to wait.',
-'accountdisabled'         => 'Your account is disabled.  Contact a full admin.',
+'accountdisabled'         => 'Your account is disabled. Contact a full admin.',
 'task'                    => 'Task',
 'edittask'                => 'Edit this task',
 'openedby'                => 'Opened by',
@@ -1130,5 +1130,10 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'usekanban'               => 'Enable Kanban view',
 'gantt'                   => 'Gantt view',
 'kanban'                  => 'Kanban view',
+'accountfilter'           => 'User filter',
+'accountstatus'           => 'Account status',
+'showaccountsall'         => 'All',
+'showaccountsenabled'     => 'Enabled',
+'showaccountsdisabled'    => 'Disabled',
 );
 ?>
