@@ -22,12 +22,27 @@ $proj = new Project(0);
 $page->pushTpl('admin.menu.tpl');
 
 /**
- * @TODO sortable headings on editallusers page
+ * @param string $colname user column, use the string used also for translations, so use 'emailaddress' instead of user db field 'email_address'.
  */
 function tpl_userlistheading($colname)
 {
-	$coltitle=eL($colname);
-	$sort1='desc';
+	$coltitle = eL($colname);
+	if (isset($_GET['order']) && $_GET['order'] === $colname) {
+		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
+			$sort1 = 'asc';
+			$coltitle .=' <i class="fa fa-sort-desc"></i>';
+		} else {
+			$sort1 = 'desc';
+			$coltitle .=' <i class="fa fa-sort-asc"></i>';
+		}
+	} else {
+		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
+			$sort1 = 'desc';
+		} else {
+			$sort1 = 'asc';
+		}
+	}
+
 	$new_order = array('order' => $colname, 'sort' => $sort1);
 	# unneeded or duplicate params from $_GET for the sort links
 	$params=array_merge($_GET, $new_order);
