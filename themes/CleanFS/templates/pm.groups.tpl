@@ -73,19 +73,6 @@ foreach ($merge as $group) {
 	}
 }
 ?>
-<style>
-.perms {border-collapse:collapse;margin-top:20px;display:block;}
-.perms tbody tr:hover {background-color:#eee;}
-.perms td, .perms th{border:1px solid #999;}
-.perms thead th, .perms thead td {text-align:center;}
-.perms tbody th{text-align:right;}
-.perms tbody td{width:100px;text-align:center;}
-.perms tbody span i:first-child {color: #090;}
-.group.globalgroup {background-color:#ddd;}
-.group.globalgroup.inactive {background-color:#ccc;}
-.perm-no { color:#999; }
-.perm-yes {}
-</style>
 <table class="perms">
 <colgroup>
 <col></col>
