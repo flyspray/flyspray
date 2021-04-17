@@ -173,13 +173,30 @@ li.errorinput{background-color:#fc9;}
 	<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
 		<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 	</label>
-	<?php
-	foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
-	isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
-	?>
-	<label style="display:block;" for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:
-		<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-	</label>
+	<?php if ($proj->prefs['use_tags']): ?>
+		<?php
+		foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
+		isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
+		?>
+		<div>
+			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
+			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::no$
+			<style>
+			/* temporary, move to theme.css if finished */
+			input#tags {max-width:80%;}
+			input#availtags {display:none;}
+			input#availtags + div {display:none; border:1px solid #ccc;background-color:#eee;margin:1em;border-radius:5px;}
+			input#availtags:checked + div {display:block;}
+			</style>
+			<label for="availtags" class="button">&nbsp;+&nbsp;</label>
+		</div>
+		<input type="checkbox" id="availtags">
+		<div>
+		<?php foreach($taglist as $tagavail): ?>
+		<i class="tag t<?= $tagavail['tag_id'] ?>" title="<?= Filters::noXSS($tagavail['tag_name']) ?>"></i>
+		<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
