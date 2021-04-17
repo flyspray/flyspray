@@ -15,17 +15,23 @@
 <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
 <?php endif; ?>
 <link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
-<?php foreach ($fs->projects as $project): ?>
+<?php 
+/** @todo: This was added around Flyspray 0.9.8 by floele to help search engines find all public visible projects of a Flyspray installation.
+ * Probably because the project select is a drop down select, not simple links.
+ * What are the alternatives to not list all public projects in the HTML head section of all pages?
+ * Maybe only for the configured default page of Flyspray?
+ */
+foreach ($fs->projects as $project): ?>
 <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
 <?php endforeach; ?>
 <link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
 <?php
 # css hack to fix css3only state switches with ~ in older android browser <4.3 TODO: find webkit version when that issue was fixed.
 if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 4\.[012]/' , $_SERVER['HTTP_USER_AGENT'])):?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>oldwebkitsiblingfix.css'; ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/oldwebkitsiblingfix.css'; ?>" />
 <?php endif; ?>
-<link media="print" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link media="print" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme_print.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme_print.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
