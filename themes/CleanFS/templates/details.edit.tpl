@@ -180,7 +180,7 @@ li.errorinput{background-color:#fc9;}
 		?>
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
-			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::no$
+			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
 			<style>
 			/* temporary, move to theme.css if finished */
 			input#tags {max-width:80%;}
