@@ -84,6 +84,19 @@ if (!$user->can_view_task($task_details)) {
 		}
 		$page->assign('userlist', $userlist);
 
+		# tag choose helper
+		if ($proj->prefs['use_tags']) {
+			$restaglist=$db->query('
+				SELECT * FROM {list_tag}
+				WHERE (project_id=0 OR project_id=?)
+				AND show_in_list=1
+				ORDER BY list_position ASC',
+				array($task_details['project_id'])
+			);
+			$taglist=$db->fetchAllArray($restaglist);
+			$page->assign('taglist', $taglist);
+		}
+
 		# Build the select arrays, for 'move task' or normal taskedit
 		# Then in the template just use tpl_select($xxxselect);
 
@@ -94,7 +107,19 @@ if (!$user->can_view_task($task_details)) {
 		$stselected=Req::val('item_status', $task_details['item_status']);
 		$repverselected=Req::val('reportedver', $task_details['product_version']);
 		$dueverselected=Req::val('closedby_version', $task_details['closedby_version']);
-		if(isset($move) && $move==1){
+
+		if (isset($move) && $move==1) {
+			/**
+			 * @todo Handling of project only tags (not global tags):
+			 * When a tag assigned to the task that is only for the old project:
+			 * Either
+			 * - Assign to existing tags in target project if similar tags exists there and remove the old tags from task. - or
+			 * - Create a similar tag in target project if there is no similar tag there and remove the old tags from task - or
+			 * - Convert the old project tags to a global tag - or
+			 * - Remove the tag from task - or
+			 * - Ignore and tag_id still points to the old project tag (so tag not shown, but internally in database the connection exists)
+			 */
+
 			# get global categories
 			$gcats=$proj->listCategories(0);
 			if( count($gcats)>0){
