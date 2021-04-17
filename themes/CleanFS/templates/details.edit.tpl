@@ -180,20 +180,14 @@ li.errorinput{background-color:#fc9;}
 		?>
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
-			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-			<style>
-			/* temporary, move to theme.css if finished */
-			input#tags {max-width:80%;}
-			input#availtags {display:none;}
-			input#availtags + div {display:none; border:1px solid #ccc;background-color:#eee;margin:1em;border-radius:5px;}
-			input#availtags:checked + div {display:block;}
-			</style>
+			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
 			<label for="availtags" class="button">&nbsp;+&nbsp;</label>
 		</div>
+		<div id="tagrender"></div>
 		<input type="checkbox" id="availtags">
-		<div>
+		<div id="availtaglist">
 		<?php foreach($taglist as $tagavail): ?>
-		<i class="tag t<?= $tagavail['tag_id'] ?>" title="<?= Filters::noXSS($tagavail['tag_name']) ?>"></i>
+		<i class="tag t<?= $tagavail['tag_id'] ?>" title="<?= Filters::noXSS($tagavail['tag_name']) ?>"><?= Filters::noXSS($tagavail['tag_name']) ?></i>
 		<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
