@@ -48,8 +48,16 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
 <?php endif; ?>
+<?php 
+/** 
+ * @todo load only for taskedit page, not task view (currently 'edit=yep' getparam)
+ */
+if ($do === 'details' && $proj->prefs['use_tags']): ?>
+<link media="screen" rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'taskedit.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>taskedit.css"></link>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/taghelper.js"></script>
+<?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
-<link rel="stylesheet" href="<?php echo Filters::noXSS($this->themeUrl()); ?>adminpm.css"></link>
+<link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'adminpm.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>adminpm.css"></link>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
