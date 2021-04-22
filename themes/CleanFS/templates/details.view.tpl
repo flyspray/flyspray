@@ -33,17 +33,20 @@
 		</select>
 		<button type="submit"><?= eL('closetask') ?></button>
 		<br/>
-		<label class="default text" for="closure_comment"><?= eL('closurecomment') ?></label>
+		<label class="text" for="closure_comment"><?= eL('closurecomment') ?></label>
 		<textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
 		<?php if($task_details['percent_complete'] != '100'): ?>
-			<label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?= eL('mark100') ?></label>
+			<div>
+			<?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')), 'mark100'); ?>
+			<label for="mark100"><?= eL('mark100') ?></label>
+			</div>
 		<?php endif; ?>
 		</form>
 		</div>
 	<?php elseif (!$d_open && !$user->isAnon() && !Flyspray::adminRequestCheck(1, $task_details['task_id'])): ?>
 		<a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?= eL('requestclose') ?></a>
 		<div id="closeform" class="popup hide">
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), 'form3', null, null, 'id="formclosetask"'); ?>
 		<input type="hidden" name="action" value="requestclose"/>
 		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
 		<label for="reason"><?= eL('reasonforreq') ?></label>
@@ -73,7 +76,7 @@
 	<?php endif; ?>
 
 	<?php if ($user->can_take_ownership($task_details)): ?>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
+		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), null, null, null, 'style="display:inline"'); ?>
 		<input type="hidden" name="action" value="takeownership" />
 		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
