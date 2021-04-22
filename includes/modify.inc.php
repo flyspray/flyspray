@@ -748,56 +748,72 @@ switch ($action = Req::val('action'))
         break;
 
 
-    case 'reopen':
-        // ##################
-        // re-opening an task
-        // ##################
-        if (!$user->can_close_task($task)) {
-            break;
-        }
+	case 'reopen':
+		/**
+		 * re-opening an task
+		 */
+		if (!$user->can_close_task($task)) {
+			break;
+		}
 
-        // Get last %
-        $old_percent = $db->query("SELECT old_value, new_value
-                                     FROM {history}
-                                    WHERE field_changed = 'percent_complete'
-                                          AND task_id = ? AND old_value != '100'
-                                 ORDER BY event_date DESC
-                                    LIMIT 1",
-        array($task['task_id']));
-        $old_percent = $db->fetchRow($old_percent);
+		// Get last %
+		$old_percent = $db->query("SELECT old_value, new_value
+			FROM {history}
+			WHERE field_changed = 'percent_complete'
+			AND task_id = ?
+			AND old_value != '100'
+			ORDER BY event_date DESC
+			LIMIT 1",
+			array($task['task_id'])
+		);
+		
+		$old_percent = $db->fetchRow($old_percent);
 
-        $db->query("UPDATE  {tasks}
-                       SET  resolution_reason = 0, closure_comment = '', date_closed = 0,
-                            last_edited_time = ?, last_edited_by = ?, is_closed = 0, percent_complete = ?
-                     WHERE  task_id = ?",
-        array(time(), $user->id, intval($old_percent['old_value']), $task['task_id']));
+		if (!isset($old_percent['old_value'])) {
+			$old_percent['old_value']=0;
+			$old_percent['new_value']=0;
+		}
 
-        Flyspray::logEvent($task['task_id'], 3, $old_percent['old_value'], $old_percent['new_value'], 'percent_complete');
+		$db->query("UPDATE {tasks}
+			SET resolution_reason = 0, closure_comment = '', date_closed = 0,
+			last_edited_time = ?, last_edited_by = ?, is_closed = 0, percent_complete = ?
+			WHERE task_id = ?",
+			array(time(), $user->id, intval($old_percent['old_value']), $task['task_id'])
+		);
 
-        $notify->create(NOTIFY_TASK_REOPENED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
+		Flyspray::logEvent($task['task_id'], 3, $old_percent['old_value'], $old_percent['new_value'], 'percent_complete');
 
-        // add comment of PM request to comment page if accepted
-        $sql = $db->query('SELECT * FROM {admin_requests} WHERE  task_id = ? AND request_type = ? AND resolved_by = 0',
-                              array($task['task_id'], 2));
-        $request = $db->fetchRow($sql);
-        if ($request) {
-            $db->query('INSERT INTO  {comments}
-                                     (task_id, date_added, last_edited_time, user_id, comment_text)
-                             VALUES  ( ?, ?, ?, ?, ? )',
-            array($task['task_id'], time(), time(), $request['submitted_by'], $request['reason_given']));
-            // delete existing PM request
-            $db->query('UPDATE  {admin_requests}
-                           SET  resolved_by = ?, time_resolved = ?
-                         WHERE  request_id = ?',
-            array($user->id, time(), $request['request_id']));
-        }
+		$notify->create(NOTIFY_TASK_REOPENED, $task['task_id'], null, null, NOTIFY_BOTH, $proj->prefs['lang_code']);
 
-        Flyspray::logEvent($task['task_id'], 13);
+		// add comment of PM request to comment page if accepted
+		$sql = $db->query('SELECT * FROM {admin_requests}
+			WHERE task_id = ?
+			AND request_type = ?
+			AND resolved_by = 0',
+			array($task['task_id'], 2)
+		);
+		$request = $db->fetchRow($sql);
 
-        $_SESSION['SUCCESS'] = L('taskreopenedmsg');
-	# FIXME there are several pages using this form, details and pendingreq at least
-	#Flyspray::redirect(createURL('details', $task['task_id']));
-        break;
+		if ($request) {
+			$db->query('
+				INSERT INTO {comments} (task_id, date_added, last_edited_time, user_id, comment_text)
+				VALUES ( ?, ?, ?, ?, ? )',
+				array($task['task_id'], time(), time(), $request['submitted_by'], $request['reason_given'])
+			);
+			// delete existing PM request
+			$db->query('UPDATE  {admin_requests}
+				SET resolved_by = ?, time_resolved = ?
+				WHERE  request_id = ?',
+				array($user->id, time(), $request['request_id'])
+			);
+		}
+
+		Flyspray::logEvent($task['task_id'], 13);
+
+		$_SESSION['SUCCESS'] = L('taskreopenedmsg');
+		# FIXME There are several pages using this form, details and pendingreq at least.
+		#Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
 
         // ##################
         // adding a comment
