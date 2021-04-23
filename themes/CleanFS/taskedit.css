@@ -19,9 +19,7 @@ input#availtags {
 	margin:0.3em;
 	border:1px solid transparent;
 }
-#availtaglist i.tag:hover {
-	border-color:#6a3;
-}
+
 #availtaglist i.tag::before {
 	content: '+';
 	border-radius:3px;
@@ -31,11 +29,12 @@ input#availtags {
 	padding-right:0.4em;
 	vertical-align:text-bottom;
 	margin-right:0.2em;
-	background-color:rgba(255,255,255,0.5);
+	opacity:0.5;
+	color:rgba(0,0,0,0.5);
 }
-#availtaglist i.tag:hover::after {
-	background-color:#6a3;
-	color:#000;
+#availtaglist i.tag:hover::before {
+	background-color:#fff;
+	opacity:1;
 }
 input#availtags:checked + #availtaglist {
 	display:block;
