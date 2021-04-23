@@ -34,6 +34,7 @@ input#availtags {
 }
 #availtaglist i.tag:hover::before {
 	background-color:#fff;
+	color:#000;
 	opacity:1;
 }
 input#availtags:checked + #availtaglist {
