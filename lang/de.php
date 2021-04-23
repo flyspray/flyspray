@@ -1028,6 +1028,7 @@ $translation = array(
 'myvotes'                 => 'Meine Stimmen',
 'tag'                     => 'Schildchen',
 'tags'                    => 'Schildchen',
+'tagsavail'               => 'verfügbare Schildchen',
 'tagsinfo'                => 'Trenne die Schildchen (Label/Aufkleber/Tags) durch Semikolon ; voneinander. Eine optische Gestaltung, Filterung oder Einbeziehung in die Suche ist derzeit noch nicht möglich.',
 'novalues'                => 'keine Einträge',
 'youhaveregistered'       => 'Sie haben sich bei Flyspray registriert. Ihre Anmeldedaten sind folgende:',
