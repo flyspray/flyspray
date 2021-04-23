@@ -185,11 +185,13 @@ li.errorinput{background-color:#fc9;}
 		</div>
 		<div id="tagrender"></div>
 		<input type="checkbox" id="availtags">
-		<div id="availtaglist">
-		<?php foreach($taglist as $tagavail): ?>
-		<i class="tag t<?= $tagavail['tag_id'] ?>" title="<?= Filters::noXSS($tagavail['tag_name']) ?>"><?= Filters::noXSS($tagavail['tag_name']) ?></i>
-		<?php endforeach; ?>
-		</div>
+		<fieldset id="availtaglist">
+                <legend><?= eL('tagsavail') ?></legend>
+                <?php
+                foreach ($taglist as $tagavail) {
+                        echo tpl_tag($tagavail['tag_id']); 
+                } ?>
+                </fieldset>
 	<?php endif; ?>
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
