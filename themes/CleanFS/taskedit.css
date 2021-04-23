@@ -5,7 +5,7 @@ input#tags {
 input#availtags {
 	display:none;
 }
-div#availtaglist {
+#availtaglist {
 	display:none;
 	border:1px solid #ccc;
 	background-color:#eee;
@@ -13,16 +13,16 @@ div#availtaglist {
 	padding:0.5em;
 	border-radius:5px;
 }
-div#availtaglist i.tag {
+#availtaglist i.tag {
 	cursor:pointer;
 	display:inline-block;
 	margin:0.3em;
 	border:1px solid transparent;
 }
-div#availtaglist i.tag:hover {
+#availtaglist i.tag:hover {
 	border-color:#6a3;
 }
-div#availtaglist i.tag::after {
+#availtaglist i.tag::before {
 	content: '+';
 	border-radius:3px;
 	padding-top:0;
@@ -30,15 +30,14 @@ div#availtaglist i.tag::after {
 	padding-left:0.4em;
 	padding-right:0.4em;
 	vertical-align:text-bottom;
-	margin-left:0.2em;
-	background-color:rgba(255,255,255,0.3);
-	color: #999;
+	margin-right:0.2em;
+	background-color:rgba(255,255,255,0.5);
 }
-div#availtaglist i.tag:hover::after {
+#availtaglist i.tag:hover::after {
 	background-color:#6a3;
 	color:#000;
 }
-input#availtags:checked + div#availtaglist {
+input#availtags:checked + #availtaglist {
 	display:block;
 }
 #tagrender .tag {
