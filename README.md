@@ -13,7 +13,7 @@ You can send a note to the Mailing List including your project or company name, 
 homepage, and a nice testimonial if you are in the mood and we'll have it added to the list of who is using Flyspray.
 
 ## Installation
-http://flyspray.org/manual/install
+https://www.flyspray.org/manual/install
 
 ## Upgrading
 1. Create a backup of your files and database
@@ -38,24 +38,24 @@ http://flyspray.org/manual/install
     sudo apt-get install php
     
     Windows:
-    http://php.net/downloads
+    https://php.net/downloads
 
 #### Install
 
 #### Installing from prepackaged releases that include also needed 3rd party libraries
 
-    tar xzf flyspray-1.0-rc9.tgz
+    tar xzf flyspray-1.0-rc10.tgz
 
-Rename folder flyspray-1.0-rc9 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc10 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Installing from source releases via command line
 
-    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc9.tar.gz | tar xz
-    cd flyspray-1.0-rc9
+    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc10.tar.gz | tar xz
+    cd flyspray-1.0-rc10
     curl -sS https://getcomposer.org/installer | php
     php composer.phar install --no-dev
     
-Rename folder flyspray-1.0-rc9 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc10 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.
