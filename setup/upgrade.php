@@ -138,11 +138,12 @@ if (Post::val('upgrade')) {
 	$db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
 	$uplog[]="Final Step: Set version in {prefs} to the version in class.flyspray.php: End <strong>$installed_version</strong> to <strong>$fs->version</strong>";
 
-	$db->dblink->completeTrans();
+	$result=$db->dblink->completeTrans();
+        $uplog[]= 'Transaction completed: '.$result;
 	
-    $installed_version = $fs->version;
-    $page->assign('done', true);
-    $page->assign('upgradelog', $uplog);
+	$installed_version = $fs->version;
+	$page->assign('done', true);
+	$page->assign('upgradelog', $uplog);
 }
 
 function execute_upgrade_file($folder, $installed_version)
