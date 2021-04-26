@@ -22,6 +22,8 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 require_once OBJECTS_PATH . '/class.flyspray.php';
 define('CONFIG_PATH', Flyspray::get_config_path(APPLICATION_PATH));
 
+#define('DEBUG_SQL', 1);
+
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 $conf  = @parse_ini_file(CONFIG_PATH, true) or die('Cannot open config file at ' . CONFIG_PATH);
 
@@ -120,9 +122,6 @@ if (Post::val('upgrade')) {
         $page->assign('conversion', false);
     }
 
-    // we should be done at this point
-    $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
-
     // Fix the sequence in tasks table for PostgreSQL.
     if ($db->dblink->dataProvider == 'postgres') {
         $rslt = $db->query('SELECT MAX(task_id) FROM {tasks}');
@@ -135,7 +134,12 @@ if (Post::val('upgrade')) {
         }
     }
 
-    $db->dblink->completeTrans();
+	// we should be done at this point
+	$db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array($fs->version, 'fs_ver'));
+	$uplog[]="Final Step: Set version in {prefs} to the version in class.flyspray.php: End <strong>$installed_version</strong> to <strong>$fs->version</strong>";
+
+	$db->dblink->completeTrans();
+	
     $installed_version = $fs->version;
     $page->assign('done', true);
     $page->assign('upgradelog', $uplog);
