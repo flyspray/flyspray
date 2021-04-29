@@ -561,9 +561,7 @@
     <field name="item_summary" type="C" size="100">
       <NOTNULL/>
     </field>
-    <field name="detailed_desc" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="detailed_desc" type="X"></field>
     <field name="item_status" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
