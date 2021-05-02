@@ -555,9 +555,7 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="closure_comment" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="closure_comment" type="X"></field>
     <field name="item_summary" type="C" size="100">
       <NOTNULL/>
     </field>
