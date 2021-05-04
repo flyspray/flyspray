@@ -490,13 +490,31 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 		return $sql;
 	}
 
-	function _getSize($ftype, $ty, $fsize, $fprec)
+	function _getSize($ftype, $ty, $fsize, $fprec, $options=false)
 	{
 		if (strlen($fsize) && $ty != 'X' && $ty != 'B' && $ty  != 'I' && strpos($ftype,'(') === false) {
 			$ftype .= "(".$fsize;
-			if (strlen($fprec)) $ftype .= ",".$fprec;
+			if (strlen($fprec)) {
+				$ftype .= ",".$fprec;
+			}
 			$ftype .= ')';
 		}
+
+		/**
+		* Handle additional options
+		*/
+		if (is_array($options)) {
+			foreach ($options as $type=>$value) {
+				switch ($type) {
+					case 'ENUM':
+					$ftype .= '(' . $value . ')';
+					break;
+
+					default:
+				}
+			}
+		}
+
 		return $ftype;
 	}
 
