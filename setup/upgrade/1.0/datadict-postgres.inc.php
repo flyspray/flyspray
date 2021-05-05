@@ -26,7 +26,7 @@ class ADODB2_postgres extends ADODB_DataDict
 
 	public $blobAllowsDefaultValue = true;
 	public $blobAllowsNotNull = true;
-	
+
 	function metaType($t, $len=-1, $fieldobj=false)
 	{
 		if (is_object($t)) {
@@ -44,8 +44,9 @@ class ADODB2_postgres extends ADODB_DataDict
 			case 'VARCHAR':
 			case 'NAME':
 	   		case 'BPCHAR':
-				if ($len <= $this->blobSize) return 'C';
-
+				if ($len <= $this->blobSize) {
+					return 'C';
+				}
 			case 'TEXT':
 				return 'X';
 
@@ -196,7 +197,7 @@ class ADODB2_postgres extends ADODB_DataDict
 			$sql = array();
 			list($lines,$pkey) = $this->_genFields($flds);
 			$set_null = false;
-			foreach($lines as $v) {
+			foreach ($lines as $v) {
 				$alter = 'ALTER TABLE ' . $tabname . $this->alterCol . ' ';
 				if ($not_null = preg_match('/NOT NULL/i', $v)) {
 					$v = preg_replace('/NOT NULL/i', '', $v);
@@ -230,14 +231,14 @@ class ADODB2_postgres extends ADODB_DataDict
 					$t = trim(str_replace('DEFAULT '.$default,'',$v));
 
 					// Type change from bool to int
-					if ( $old_coltype == 'L' && $t == 'INTEGER' ) {
+					if ($old_coltype == 'L' && $t == 'INTEGER') {
 						$sql[] = $alter . ' DROP DEFAULT';
 						$sql[] = $alter . " TYPE $t USING ($colname::BOOL)::INT";
 						$sql[] = $alter . " SET DEFAULT $default";
 					}
 					// Type change from int to bool
-					else if ( $old_coltype == 'I' && $t == 'BOOLEAN' ) {
-						if( strcasecmp('NULL', trim($default)) != 0 ) {
+					else if ($old_coltype == 'I' && $t == 'BOOLEAN') {
+						if (strcasecmp('NULL', trim($default)) != 0) {
 							$default = $this->connection->qstr($default);
 						}
 						$sql[] = $alter . ' DROP DEFAULT';
@@ -325,7 +326,7 @@ class ADODB2_postgres extends ADODB_DataDict
 			$dropflds = explode(',', $dropflds);
 		}
 		$copyflds = array();
-		foreach($this->metaColumns($tabname) as $fld) {
+		foreach ($this->metaColumns($tabname) as $fld) {
 			if (!$dropflds || !in_array($fld->name, $dropflds)) {
 				// we need to explicit convert varchar to a number to be able to do an AlterColumn of a char column to a nummeric one
 				if (preg_match('/'.$fld->name.' (I|I2|I4|I8|N|F)/i', $tableflds, $matches) &&
@@ -415,10 +416,10 @@ class ADODB2_postgres extends ADODB_DataDict
 			$this->schema = false;
 			$rename_to = $this->tableName($newname);
 			$this->schema = $schema_save;
-			return array (sprintf($this->renameTable, $rename_from, $rename_to));
+			return array(sprintf($this->renameTable, $rename_from, $rename_to));
 		}
 
-		return array (sprintf($this->renameTable, $this->tableName($tabname), $this->tableName($newname)));
+		return array(sprintf($this->renameTable, $this->tableName($tabname), $this->tableName($newname)));
 	}
 
 	/**
@@ -460,7 +461,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 
 		if (isset($idxoptions['REPLACE']) || isset($idxoptions['DROP'])) {
 			$sql[] = sprintf ($this->dropIndex, $idxname, $tabname);
-			if ( isset($idxoptions['DROP']) ) {
+			if (isset($idxoptions['DROP'])) {
 				return $sql;
 			}
 		}
@@ -533,7 +534,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 		if ($this->connection->fetchMode !== false) {
 			$savem = $this->connection->setFetchMode(false);
 		}
-		
+
 		// check table exists
 		$save_handler = $this->connection->raiseErrorFn;
 		$this->connection->raiseErrorFn = '';
@@ -543,32 +544,32 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 		if (isset($savem)) {
 			$this->connection->setFetchMode($savem);
 		}
-		
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (empty($cols)) {
 			return $this->createTableSQL($tablename, $flds, $tableoptions);
 		}
 
-                $addedcols = array();
-                $modifiedcols = array();
-                
+		$addedcols = array();
+		$modifiedcols = array();
+
 		if (is_array($flds)) {
 			// Cycle through the update fields, comparing
 			// existing fields to fields to update.
 			// if the Metatype and size is exactly the
 			// same, ignore - by Mark Newham
-			foreach($flds as $k=>$v) {
-				if ( isset($cols[$k]) && is_object($cols[$k]) ) {
+			foreach ($flds as $k=>$v) {
+				if (isset($cols[$k]) && is_object($cols[$k])) {
 					// If already not allowing nulls, then don't change
 					$obj = $cols[$k];
 					if (isset($obj->not_null) && $obj->not_null) {
 						$v = str_replace('NOT NULL', '', $v);
 					}
 					if (isset($obj->auto_increment) && $obj->auto_increment && empty($v['AUTOINCREMENT'])) {
-					    $v = str_replace('AUTOINCREMENT', '', $v);
+						$v = str_replace('AUTOINCREMENT', '', $v);
 					}
-					
+
 					$c = $cols[$k];
 					$ml = $c->max_length;
 					$mt = $this->metaType($c->type, $ml);
@@ -578,40 +579,49 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 					} else {
 						$sc = 99; // always force change if scale not known.
 					}
-					
-					if ($sc == -1) $sc = false;
+
+					if ($sc == -1) {
+						$sc = false;
+					}
 					list($fsize, $fprec) = $this->_getSizePrec($v['SIZE']);
 
-					if ($ml == -1) $ml = '';
-					if ($mt == 'X') $ml = $v['SIZE'];
+					if ($ml == -1) {
+						$ml = '';
+					}
+					if ($mt == 'X') {
+						$ml = $v['SIZE'];
+					}
 					if (($mt != $v['TYPE']) || ($ml != $fsize || $sc != $fprec) || (isset($v['AUTOINCREMENT']) && $v['AUTOINCREMENT'] != $obj->auto_increment)) {
-                                                $modifiedcols[$k] = $v;
+						$modifiedcols[$k] = $v;
                                         }
 				} else {
-                                        $addedcols[$k] = $v;
+					$addedcols[$k] = $v;
 				}
 			}
 		}
 
 		$sql = array();
-                $sql = $this->addColumnSQL($tablename, $addedcols);
+		$sql = $this->addColumnSQL($tablename, $addedcols);
 
-                // already exists, alter table instead
+		// already exists, alter table instead
 		list($lines, $pkey, $idxs) = $this->_genFields($modifiedcols);
 		// genfields can return FALSE at times
 		if ($lines == null) {
 			$lines = array();
 		}
-                $holdflds = array();
-		foreach ( $lines as $id => $v ) {
-			if (isset($cols[$id]) && is_object($cols[$id])) {
 
-				$flds = lens_ParseArgs($v,',');
+		$holdflds = array();
+		foreach ($lines as $id => $v) {
+			if (isset($cols[$id]) && is_object($cols[$id])) {
+				$flds = lens_ParseArgs($v, ',');
 
 				//  We are trying to change the size of the field, if not allowed, simply ignore the request.
 				// $flds[1] holds the type, $flds[2] holds the size -postnuke addition
-				if ($flds && in_array(strtoupper(substr($flds[0][1], 0, 4)), $this->invalidResizeTypes4)
-				 && (isset($flds[0][2]) && is_numeric($flds[0][2]))) {
+				if (
+					$flds
+					&& in_array(strtoupper(substr($flds[0][1], 0, 4)), $this->invalidResizeTypes4)
+					&& (isset($flds[0][2]) && is_numeric($flds[0][2]))
+				) {
 					if ($this->debug) {
 						ADOConnection::outp(sprintf("<h3>%s cannot be changed to %s currently</h3>", $flds[0][0], $flds[0][1]));
 					}
@@ -626,9 +636,9 @@ CREATE [ UNIQUE ] INDEX index_name ON table
                 if ($dropOldFlds) {
                         $alter = 'ALTER TABLE ' . $this->tableName($tablename);
 			foreach ($cols as $id => $v) {
-			    if (!isset($lines[$id])) {
+				if (!isset($lines[$id])) {
 					$sql[] = $alter . $this->dropCol . ' ' . $v->name;
-			    }
+				}
 			}
 		}
 		return $sql;
