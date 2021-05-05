@@ -216,36 +216,59 @@ switch ($area = Req::val('area', 'prefs')) {
 
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
-			$fsdb=$db->query("SELECT default_character_set_name, default_collation_name
+			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
+			$fsdb=$db->query("
+				SELECT
+				default_character_set_name AS default_character_set_name,
+				default_collation_name AS default_collation_name
 				FROM INFORMATION_SCHEMA.SCHEMATA
 				WHERE SCHEMA_NAME=?", array($db->dblink->database)
 			);
 			$page->assign('fsdb', $db->fetchRow($fsdb));
 
-			# TODO Test if Flyspray tables really have default charset utf8mb4 and default collation utf8mb4_unicode_ci.
-			# TODO Test if the TEXT/CHAR/VARCHAR fields that should have utf8mb_unicode_ci really have it.
-			# TODO Test if the TEXT/CHAR/VARCHAR fields that should have other collations really have that other collation.
-			# utf8mb4_unicode_ci may be not optimal for every TEXT/CHAR/VARCHAR field of Flyspray.
-			# Must be defined explicit for fields that differs from the default in the xmlschemas in the setup/upgrade/* files.
-			# At the moment (in 2019) the current ADODB 5.20.14 release does not handle that stuff yet.
-
+			/**
+			 * @todo Test if Flyspray tables really have default charset utf8mb4 and default collation utf8mb4_unicode_ci.
+			 * @todo Test if the TEXT/CHAR/VARCHAR fields that should have utf8mb4_general_ci or utf8mb_unicode_ci really have it.
+			 * (*general_ci assumed faster, *unicode_ci sorting more accurate)
+			 * @todo Test if the TEXT/CHAR/VARCHAR fields that should have other collations really have that other collation.
+			 * utf8mb4_unicode_ci may be not optimal for every TEXT/CHAR/VARCHAR field of Flyspray.
+			 * Must be defined explicit for fields that differs from the default in the xmlschemas in the setup/upgrade/* files.
+			 * At the moment (in 2021) the current ADODB 5.21.0 release does not handle that stuff yet.
+			 */
 			if(version_compare($sinfo['version'], '5.5.3')>=0 ){
 				$page->assign('utf8mb4upgradable', "Your MySQL supports full utf-8 since 5.5.3. You are using ".$sinfo['version']." and Flyspray tables could be upgraded.");
 			} else{
 				$page->assign('oldmysqlversion', "Your MySQL version ".$sinfo['version']." does not support full utf-8, only up to 3 Byte chars. No emojis for instance. Consider upgrading your MySQL server version.");
 			}
 
-			$fstables=$db->query("SELECT table_name, table_collation, engine as table_type, create_options, table_comment
+			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
+			$fstables=$db->query("SELECT
+				table_name AS table_name,
+				table_collation AS table_collation,
+				engine AS table_type,
+				create_options AS create_options,
+				table_comment AS table_comment
 				FROM INFORMATION_SCHEMA.tables
 				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
 				ORDER BY table_name ASC", array($db->dblink->database)
 			);
 			$page->assign('fstables', $db->fetchAllArray($fstables));
 
+			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
 			$fsfields=$db->query("
-				SELECT table_name, column_name, column_default, data_type, is_nullable, character_set_name, collation_name, column_type, column_comment
+				SELECT
+				table_name AS table_name,
+				column_name AS column_name,
+				column_default AS column_default,
+				data_type AS data_type,
+				is_nullable AS is_nullable,
+				character_set_name AS character_set_name,
+				collation_name AS collation_name,
+				column_type AS column_type,
+				column_comment AS column_comment
 				FROM INFORMATION_SCHEMA.columns
-				WHERE table_schema=? AND table_name LIKE '".$db->dbprefix."%'
+				WHERE table_schema=?
+				AND table_name LIKE '".$db->dbprefix."%'
 				ORDER BY table_name ASC, ordinal_position ASC", array($db->dblink->database)
 			);
 			$page->assign('fsfields', $db->fetchAllArray($fsfields));
