@@ -26,7 +26,7 @@
     "require": {
         "php" : "^5.5.9 || ^7.0 || ^8.0",
         "swiftmailer/swiftmailer": "~5.0",
-        "adodb/adodb-php": "~5.21",
+        "adodb/adodb-php": "5.21.0",
         "jamiebicknell/sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.12",
         "dapphp/securimage": "3.6.6",
@@ -46,6 +46,7 @@
             "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
             "rm -rf vendor/dapphp/securimage/audio/*",
             "rm -rf vendor/dapphp/securimage/backgrounds/*",
+            "cp setup/upgrade/1.0/datadict-postgres.inc.php vendor/adodb/adodb-php/datadict/datadict-postgres.inc.php",
             "echo '<?php return array(\"session_name\"=>\"flyspray\"); ?>' > vendor/dapphp/securimage/config.inc.php"
         ]
     },
