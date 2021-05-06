@@ -489,7 +489,8 @@ class Notifications {
 	 * @param array|string|int $arg1 depends on notification type
 	 * @param string $lang
 	 */
-	function generateMsg($type, $task_id, $arg1 = '0', $lang) {
+	function generateMsg($type, $task_id, $arg1 = '0', $lang = 'en')
+	{
 		global $db, $fs, $user, $proj;
 
 		if ($task_id) {
@@ -510,50 +511,57 @@ class Notifications {
 			}
 		}
 
-        // Get the string of modification
-        $notify_type_msg = array(
-            0 => tL('none'),
-            NOTIFY_TASK_OPENED => tL('taskopened', $lang),
-            NOTIFY_TASK_CHANGED => tL('pm.taskchanged', $lang),
-            NOTIFY_TASK_CLOSED => tL('taskclosed', $lang),
-            NOTIFY_TASK_REOPENED => tL('pm.taskreopened', $lang),
-            NOTIFY_DEP_ADDED => tL('pm.depadded', $lang),
-            NOTIFY_DEP_REMOVED => tL('pm.depremoved', $lang),
-            NOTIFY_COMMENT_ADDED => tL('commentadded', $lang),
-            NOTIFY_ATT_ADDED => tL('attachmentadded', $lang),
-            NOTIFY_REL_ADDED => tL('relatedadded', $lang),
-            NOTIFY_OWNERSHIP => tL('ownershiptaken', $lang),
-            NOTIFY_PM_REQUEST => tL('pmrequest', $lang),
-            NOTIFY_PM_DENY_REQUEST => tL('pmrequestdenied', $lang),
-            NOTIFY_NEW_ASSIGNEE => tL('newassignee', $lang),
-            NOTIFY_REV_DEP => tL('revdepadded', $lang),
-            NOTIFY_REV_DEP_REMOVED => tL('revdepaddedremoved', $lang),
-            NOTIFY_ADDED_ASSIGNEES => tL('assigneeadded', $lang),
-        );
+		// Get the string of modification
+		$notify_type_msg = array(
+			0 => tL('none'),
+			NOTIFY_TASK_OPENED => tL('taskopened', $lang),
+			NOTIFY_TASK_CHANGED => tL('pm.taskchanged', $lang),
+			NOTIFY_TASK_CLOSED => tL('taskclosed', $lang),
+			NOTIFY_TASK_REOPENED => tL('pm.taskreopened', $lang),
+			NOTIFY_DEP_ADDED => tL('pm.depadded', $lang),
+			NOTIFY_DEP_REMOVED => tL('pm.depremoved', $lang),
+			NOTIFY_COMMENT_ADDED => tL('commentadded', $lang),
+			NOTIFY_ATT_ADDED => tL('attachmentadded', $lang),
+			NOTIFY_REL_ADDED => tL('relatedadded', $lang),
+			NOTIFY_OWNERSHIP => tL('ownershiptaken', $lang),
+			NOTIFY_PM_REQUEST => tL('pmrequest', $lang),
+			NOTIFY_PM_DENY_REQUEST => tL('pmrequestdenied', $lang),
+			NOTIFY_NEW_ASSIGNEE => tL('newassignee', $lang),
+			NOTIFY_REV_DEP => tL('revdepadded', $lang),
+			NOTIFY_REV_DEP_REMOVED => tL('revdepaddedremoved', $lang),
+			NOTIFY_ADDED_ASSIGNEES => tL('assigneeadded', $lang),
+		);
 
-        // Generate the nofication message
-        if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
-            $proj->prefs['notify_subject'] = '[%p][#%t] %s';
-        }
-        if (!isset($proj->prefs['notify_subject']) ||
-                $type == NOTIFY_CONFIRMATION ||
-                $type == NOTIFY_ANON_TASK ||
-                $type == NOTIFY_PW_CHANGE ||
-                $type == NOTIFY_NEW_USER ||
-                $type == NOTIFY_OWN_REGISTRATION) {
-            $subject = tL('notifyfromfs', $lang);
-        } else {
-            $subject = strtr($proj->prefs['notify_subject'], array('%p' => $proj->prefs['project_title'],
-                '%s' => $task_details['item_summary'],
-                '%t' => $task_id,
-                '%a' => $notify_type_msg[$type],
-                '%u' => $user->infos['user_name']));
-        }
+		// Generate the nofication message
+		if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
+			$proj->prefs['notify_subject'] = '[%p][#%t] %s';
+		}
 
-        $subject = strtr($subject, "\n", '');
+		if (
+			!isset($proj->prefs['notify_subject']) ||
+			$type == NOTIFY_CONFIRMATION ||
+			$type == NOTIFY_ANON_TASK ||
+			$type == NOTIFY_PW_CHANGE ||
+			$type == NOTIFY_NEW_USER ||
+			$type == NOTIFY_OWN_REGISTRATION
+		) {
+			$subject = tL('notifyfromfs', $lang);
+		} else {
+			$subject = strtr(
+				$proj->prefs['notify_subject'],
+				array(
+					'%p' => $proj->prefs['project_title'],
+					'%s' => $task_details['item_summary'],
+					'%t' => $task_id,
+					'%a' => $notify_type_msg[$type],
+					'%u' => $user->infos['user_name']
+				)
+			);
+		}
 
+		$subject = strtr($subject, "\n", '');
 
-        /* -------------------------------
+        /** -----------------------------
           | List of notification types: |
           | 1. Task opened              |
           | 2. Task details changed     |
