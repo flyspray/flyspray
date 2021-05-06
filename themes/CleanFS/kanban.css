@@ -37,6 +37,10 @@
         max-width:240px;
         min-width:60px;
 }
+.task[draggable="true"]:hover {
+	background-color: #ff6;
+	cursor: grab;
+}
 
 .collapsestatus{display:none;}
 
