@@ -156,27 +156,31 @@ a { color: #06c; text-decoration: underline; }
 blockquote { margin: 1.5em; font-style: italic;}
 strong, dfn { font-weight: bold; }
 em, dfn { font-style: italic; }
-em.u {text-decoration: underline;} /* dokuwiki underline*/
+em.u {text-decoration: underline;} /* dokuwiki underline */
 sup, sub { line-height: 0; }
 /*
 abbr,acronym { border-bottom: 1px dotted #666; }
 */
 address { margin: 0 0 1.5em; font-style: italic; }
-/*
-del { color:#666; }
-*/
-pre { margin: 1.5em 0; white-space: pre; }
-pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+pre {
+	margin: 1.5em 0;
+	white-space: pre;
+	overflow-x:auto;
+}
+pre, code, tt {
+	font: 1em 'andale mono', 'lucida console', monospace;
+	line-height: 1.5;
+}
 /* only matches pre tags if there is a language set too e.g. '<pre class="php code">' */
 pre[class*=" code"]::before {
-    background: #eee none repeat scroll 0 0;
-    content: attr(class);
-    display: block;
+	background: #eee none repeat scroll 0 0;
+	content: attr(class);
+	display: block;
 }
 pre.code {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    overflow:auto;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	overflow:auto;
 }
 
 li ul, li ol { margin: 0; }
