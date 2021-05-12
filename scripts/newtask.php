@@ -42,10 +42,25 @@ while ($row = $db->fetchRow($result)) {
 
 $assignees = array();
 if (is_array(Post::val('rassigned_to'))) {
-    $assignees = Post::val('rassigned_to');
+	$assignees = Post::val('rassigned_to');
 }
-
 $page->assign('assignees', $assignees);
+
+# tag choose helper
+$taglist = array();
+if ($proj->prefs['use_tags']) {
+	$restaglist=$db->query('
+		SELECT * FROM {list_tag}
+		WHERE (project_id=0 OR project_id=?)
+		AND show_in_list=1
+		ORDER BY list_position ASC',
+		array($proj->id)
+	);
+	$taglist=$db->fetchAllArray($restaglist);
+	
+}
+$page->assign('taglist', $taglist);
+
 $page->assign('userlist', $userlist);
 $page->assign('old_assigned', '');
 $page->pushTpl('newtask.tpl');
