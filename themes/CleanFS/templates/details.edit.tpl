@@ -178,6 +178,7 @@ li.errorinput{background-color:#fc9;}
 		foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
 		isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
 		?>
+		<input type="checkbox" id="availtags">
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
@@ -185,7 +186,6 @@ li.errorinput{background-color:#fc9;}
 			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
 		</div>
 		<div id="tagrender"></div>
-		<input type="checkbox" id="availtags">
 		<fieldset id="availtaglist">
                 <legend><?= eL('tagsavail') ?></legend>
                 <?php
