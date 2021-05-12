@@ -65,7 +65,11 @@ function addTag(event) {
 		// exists
 		return false;
 	} else {
-		document.getElementById('tags').value += ';' + event.target.getAttribute('title');
+		if (tags !='') {                        
+			document.getElementById('tags').value += ';' + event.target.getAttribute('title');
+		} else {
+			document.getElementById('tags').value += event.target.getAttribute('title');
+		}
 		//console.log(event.target);
 	}
 	renderTags();
