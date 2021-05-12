@@ -197,11 +197,23 @@
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
         <input id="itemsummary" required="required" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
             name="item_summary" maxlength="100" />
-	<div id="edit_tags">
-        <label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
-        <input id="tags" title="<?= eL('tagsinfo') ?>" class="text" type="text"
-        value="<?php echo Filters::noXSS(Req::val('tags')); ?>" name="tags" maxlength="100" />
-	</div>
+	<?php if ($proj->prefs['use_tags']): ?>
+		<input type="checkbox" id="availtags">
+		<div id="edit_tags">
+			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
+			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags','')); ?>" />
+			<label for="availtags" class="button" id="availtagsshow"><i class="fa fa-plus"></i></label>
+			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
+		</div>
+		<div id="tagrender"></div>
+		<fieldset id="availtaglist">
+                <legend><?= eL('tagsavail') ?></legend>
+                <?php
+                foreach ($taglist as $tagavail) {
+                        echo tpl_tag($tagavail['tag_id']); 
+                } ?>
+                </fieldset>
+	<?php endif; ?>
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
         <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
