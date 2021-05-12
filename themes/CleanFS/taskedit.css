@@ -33,7 +33,7 @@ input#availtags {
 	color:#000;
 	opacity:1;
 }
-input#availtags:checked + #availtaglist {
+input#availtags:checked ~ #availtaglist {
 	display:block;
 }
 #tagrender .tag {
