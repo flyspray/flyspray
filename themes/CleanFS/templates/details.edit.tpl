@@ -181,7 +181,8 @@ li.errorinput{background-color:#fc9;}
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-			<label for="availtags" class="button">&nbsp;+&nbsp;</label>
+			<label for="availtags" class="button" id="availtagsshow"><i class="fa fa-plus"></i></label>
+			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
 		</div>
 		<div id="tagrender"></div>
 		<input type="checkbox" id="availtags">
