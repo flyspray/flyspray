@@ -7,7 +7,8 @@
 </ul>
 <?php $this->display('common.profile.tpl'); ?>
 </div>
-<div class="box"><h3><?= L('myvotes') ?></h3>
+<div class="box">
+  <h3><?= L('myvotes') ?></h3>
 <?php if(count($votes)>0): ?>
 <table id="myvotes">
 <thead>
@@ -36,5 +37,8 @@
   echo eL('novotes');
 endif; ?>
 </div>
-<div class="box"><h3><?php echo eL('permissionsforproject').' '.$proj->prefs['project_title']; ?></h3><?php echo tpl_draw_perms($user->perms); ?></div>
+<div class="box">
+  <h3><?php echo eL('permissionsforproject').' '.$proj->prefs['project_title']; ?></h3>
+  <div class="permissions"><?php echo tpl_draw_perms($user->perms); ?></div>
+</div>
 <div class="clear"></div>

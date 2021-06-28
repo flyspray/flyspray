@@ -1,0 +1,45 @@
+label.userstatus {
+        display:inline;
+        border:1px solid #999;
+        border-left-width:0;
+        padding:4px;
+        margin:0;
+        max-width:100px;
+        border-radius:0;
+        background-color:#ccc;
+        color:#444;
+        cursor:pointer;
+}
+label.userstatus:first-child {
+        border-left-width:1px;
+        border-top-left-radius:4px;
+        border-bottom-left-radius:4px;
+}
+label.userstatus:last-child {
+        border-top-right-radius:4px;
+        border-bottom-right-radius:4px;
+}
+input#status_all,
+input#status_enabled,
+input#status_disabled {
+        display:none;
+}
+input[value=""]:checked  ~ div.btn-group label#s_all      {background-color:#fff; color:#000;}
+input[value="1"]:checked ~ div.btn-group label#s_enabled  {background-color:#cf6; color:#000;}
+input[value="0"]:checked ~ div.btn-group label#s_disabled {background-color:#f96; color:#000;}
+
+.bulkedituser { 
+        margin-top:0.5em;
+}
+
+.perms {border-collapse:collapse;margin-top:20px;display:block;}
+.perms tbody tr:hover {background-color:#eee;}
+.perms td, .perms th{border:1px solid #999;}
+.perms thead th, .perms thead td {text-align:center;}
+.perms tbody th{text-align:right;}
+.perms tbody td{width:100px;text-align:center;}
+.perms tbody span i:first-child {color: #090;}
+.group.globalgroup {background-color:#ddd;}
+.group.globalgroup.inactive {background-color:#ccc;}
+.perm-no { color:#999; }
+.perm-yes {}

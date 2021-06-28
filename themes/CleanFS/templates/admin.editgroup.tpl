@@ -1,4 +1,4 @@
 <div id="toolbox">
-  <h3><?php echo Filters::noXSS(L('admintoolboxlong')); ?> :: <?php echo Filters::noXSS(L('editgroup')); ?></h3>
-  <?php $this->display('common.editgroup.tpl'); ?>
+<h3><?= eL('admintoolboxlong') ?> :: <?= eL('editgroup') ?></h3>
+<?php $this->display('common.editgroup.tpl'); ?>
 </div>

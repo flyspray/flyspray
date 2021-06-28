@@ -173,20 +173,40 @@ li.errorinput{background-color:#fc9;}
 	<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
 		<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 	</label>
-	<?php
-	foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
-	isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
-	?>
-	<label style="display:block;" for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:
-		<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="100" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-	</label>
+	<?php if ($proj->prefs['use_tags']): ?>
+		<?php
+		foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
+		isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
+		?>
+		<input type="checkbox" id="availtags">
+		<div>
+			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
+			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
+			<label for="availtags" class="button" id="availtagsshow"><i class="fa fa-plus"></i></label>
+			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
+		</div>
+		<div id="tagrender"></div>
+		<fieldset id="availtaglist">
+                <legend><?= eL('tagsavail') ?></legend>
+                <?php
+                foreach ($taglist as $tagavail) {
+                        echo tpl_tag($tagavail['tag_id']); 
+                } ?>
+                </fieldset>
+	<?php endif; ?>
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 	<?php endif; ?>
 	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
 	<br />
-	<button type="reset"><?php echo Filters::noXSS(L('reset')); ?></button>
+	<?php
+	/* Our CKEditor 4.16 setup has undo/redo plugin and the reset button in this template has no functionality if javascript is enabled */
+	if ($conf['general']['syntax_plugin'] == 'html'): ?>
+		<noscript><button type="reset"><?= eL('reset') ?></button></noscript>
+	<?php else: ?>
+		<button type="reset"><?= eL('reset') ?></button>
+	<?php endif; ?>
 	<br />
 
 	<div id="addlinkbox">

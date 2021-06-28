@@ -309,9 +309,12 @@ abstract class Backend
             return false;
         }
 
-	if($conf['general']['syntax_plugin'] != 'dokuwiki'){
+	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+		$purifierconfig->set('CSS.AllowedProperties', array());
+		if ($fs->prefs['relnofollow']) {
+			$purifierconfig->set('HTML.Nofollow', true);
+		}
 		$purifier = new HTMLPurifier($purifierconfig);
 		$comment_text = $purifier->purify($comment_text);
 	}
@@ -1026,13 +1029,15 @@ abstract class Backend
         if ($user->perms('manage_project')) {
             $allowedPostArgs[] = 'mark_private';
         }
-        // now copy all over all POST variables the user is ALLOWED to provide
-        // (but only if they are not empty)
-        foreach ($allowedPostArgs as $allowed) {
-            if (!empty($args[$allowed])) {
-                $sql_args[$allowed] = $args[$allowed];
-            }
-        }
+
+		// now copy all over all POST variables the user is ALLOWED to provide
+		// (but only if they are not empty)
+		foreach ($allowedPostArgs as $allowed) {
+			# always set detailed_desc even if empty. NULL and a default value set may not work for TEXT/BLOB Mysql8 (but not Mariadb10.2+)
+			if (!empty($args[$allowed]) or $allowed === 'detailed_desc') {
+				$sql_args[$allowed] = $args[$allowed];
+			}
+		}
 
         // Process the due_date
         if ( isset($args['due_date']) && ($due_date = $args['due_date']) || ($due_date = 0) ) {
@@ -1080,9 +1085,12 @@ abstract class Backend
         }
 
 	# dokuwiki syntax plugin filters on output
-	if($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc']) ){
+	if ($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc'])) {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		if ($fs->prefs['relnofollow']) { $purifierconfig->set('HTML.Nofollow', true); }
+		$purifierconfig->set('CSS.AllowedProperties', array());
+		if ($fs->prefs['relnofollow']) {
+			$purifierconfig->set('HTML.Nofollow', true);
+		}
 		$purifier = new HTMLPurifier($purifierconfig);
 		$sql_args['detailed_desc'] = $purifier->purify($sql_args['detailed_desc']);
 	}
@@ -1146,7 +1154,11 @@ abstract class Backend
 					continue;
 				}
 			};
-			$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
+			#$db->query("INSERT INTO {task_tag}(task_id,tag_id) VALUES(?,?)", array($task_id, $tag_id) );
+			$db->query(
+				"INSERT INTO {task_tag} (task_id, tag_id, added, added_by) VALUES(?,?,?,?)",
+				array($task_id, $tag_id, time(), intval($user->id))
+			);
 		}
 	}
 
@@ -1224,7 +1236,7 @@ abstract class Backend
 
         if ($user->isAnon()) {
             $anonuser = array();
-            $anonuser[$email] = array('recipient' => $args['anon_email'], 'lang' => $fs->prefs['lang_code']);
+            $anonuser[] = array('recipient' => $args['anon_email']);
             $recipients = array($anonuser);
             $notify->create(NOTIFY_ANON_TASK, $task_id, $token,
                             $recipients, NOTIFY_EMAIL, $proj->prefs['lang_code']);
@@ -1299,11 +1311,12 @@ abstract class Backend
 
     /**
      * Returns an array of tasks (respecting pagination) and an ID list (all tasks)
-     * @param array $args
-     * @param array $visible
-     * @param integer $offset
-     * @param integer $comment
-     * @param bool $perpage
+     *
+     * @param array $args search/filter values
+     * @param array $visible task fields/properties to be fetched from database
+     * @param integer $offset for paginated results
+     * @param bool $perpage for paginated results
+     *
      * @access public
      * @return array
      * @version 1.0
@@ -1819,8 +1832,8 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
         // echo '<pre>' . print_r($cgroupbyarr, true) . '</pre>';
         $cgroupby = count($cgroupbyarr) ? 'GROUP BY ' . implode(',', array_unique($cgroupbyarr)) : '';
 
-        $sqlcount = "SELECT  COUNT(*) FROM (SELECT 1, t.task_id, t.date_opened, t.date_closed, t.last_edited_time
-                           FROM     $cfrom
+        $sqlcount = "SELECT COUNT(*) FROM (SELECT 1, t.task_id, t.date_opened, t.date_closed, t.last_edited_time
+                           FROM $cfrom
                            $where
                            $cgroupby
                            $having) s";
@@ -1851,16 +1864,16 @@ ORDER BY $sortorder
 t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
 */
 
-// echo '<pre>'.print_r($sql_params, true).'</pre>'; # for debugging 
-// echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
-// echo '<pre>'.$sqltext.'</pre>'; # for debugging 
+	//echo '<pre>'.print_r($sql_params, true).'</pre>'; # for debugging 
+	//echo '<pre>'.$sqlcount.'</pre>'; # for debugging 
+	//echo '<pre>'.$sqltext.'</pre>'; # for debugging 
         $sql = $db->query($sqlcount, $sql_params);
         $totalcount = $db->fetchOne($sql);
 
-# 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
+	# 20150313 peterdd: Do not override task_type with tasktype_name until we changed t.task_type to t.task_type_id! We need the id too.
 
         $sql = $db->query($sqltext, $sql_params, $perpage, $offset);
-        // $sql = $db->query($sqlexperiment, $sql_params);
+        //$sql = $db->query($sqlexperiment, $sql_params);
         $tasks = $db->fetchAllArray($sql);
         $id_list = array();
         $limit = array_get($args, 'limit', -1);
@@ -1873,11 +1886,9 @@ t WHERE rownum BETWEEN $offset AND " . ($offset + $perpage);
             }
         }
 
-// Work on this is not finished until $forbidden_tasks_count is always zero.
-// echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
+	// Work on this is not finished until $forbidden_tasks_count is always zero.
+	// echo "<pre>$offset : $perpage : $totalcount : $forbidden_tasks_count</pre>";
         return array($tasks, $id_list, $totalcount, $forbidden_tasks_count);
-// # end alternative
-    }
-
-# end get_task_list
+	// # end alternative
+    } # end get_task_list
 } # end class

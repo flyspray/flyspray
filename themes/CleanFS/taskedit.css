@@ -1,0 +1,65 @@
+/* taskedit.css used for the task details edit page */
+input#tags {
+	max-width:80%;
+}
+input#availtags {
+	display:none;
+}
+
+label#availtagsshow {display:inline-block;}
+label#availtagshide {display:none;}
+
+#availtags:checked + div label#availtagsshow {
+	display:none;
+}
+
+#availtags:checked ~ div label#availtagshide {
+	display:inline-block;
+}
+
+#availtaglist {
+	display:none;
+	background-color:#eee;
+}
+#availtaglist i.tag {
+	cursor:pointer;
+	display:inline-block;
+	margin:0.3em;
+	border:1px solid transparent;
+}
+
+#availtaglist i.tag::before {
+	content: '+';
+	border-radius:3px;
+	padding-top:0;
+	padding-bottom:0.2em;
+	padding-left:0.4em;
+	padding-right:0.4em;
+	vertical-align:text-bottom;
+	margin-right:0.2em;
+	opacity:0.5;
+	color:rgba(0,0,0,0.5);
+}
+#availtaglist i.tag:hover::before {
+	background-color:#fff;
+	color:#000;
+	opacity:1;
+}
+input#availtags:checked ~ #availtaglist {
+	display:block;
+}
+#tagrender .tag {
+	cursor:pointer;
+	display:inline-block;
+	margin:0.2em;
+	border:1px solid transparent;
+}
+#tagrender .tag:hover {
+	border-color:rgba(200,0,0,1);
+}
+#tagrender .tag:hover::after {
+	background-color:rgba(200,0,0,1);
+}
+#tagrender .tag::after {
+	content: attr(title)' x';
+}

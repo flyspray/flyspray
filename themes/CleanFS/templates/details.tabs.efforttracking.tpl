@@ -49,4 +49,6 @@
             </tbody>
         </table>
     </form>
+    <!-- a href with target flyspraytimers for webbrowsers with disabled javascript -->
+    <a href="/mytimers.php" onclick="javascript:window.open('/mytimers.php','flyspraytimers','innerWidth=320,innerHeight=300,scrollbars=no');return false;" target="flyspraytimers">watch my effort tracking timers</a>
 </div>

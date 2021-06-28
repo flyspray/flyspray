@@ -20,18 +20,18 @@ if ($user->isAnon()) {
 }
 load_translations();
 
-if( !Post::has('csrftoken') ){
+if (!Post::has('csrftoken')) {
 	http_response_code(428); # 'Precondition Required'
         die('missingtoken');
-} elseif( Post::val('csrftoken')==$_SESSION['csrftoken']){
+} elseif (Post::val('csrftoken') == $_SESSION['csrftoken']) {
         # ok
-} else{
+} else {
 	http_response_code(412); # 'Precondition Failed'
         die('wrongtoken');
 }
 
 $task = Flyspray::getTaskDetails(Post::val('task_id'));
-if (!$user->can_edit_task($task)){
+if (!$user->can_edit_task($task)) {
 	http_response_code(403); # 'Forbidden'
 	die(L('nopermission'));
 }
@@ -40,7 +40,7 @@ if (!$user->can_edit_task($task)){
 # maybe FUTURE: add (dynamic read from database) allowed CUSTOM FIELDS checks for the project and user
 # (if there is urgent request for implementing custom fields into Flyspray
 # and using of tag-feature isn't enough to accomplish - like numbers/dates/timestamps as custom fields)
-$allowedFields=array(
+$allowedFields = array(
 	'due_date',
 	'item_status',
 	'percent_complete',
@@ -52,11 +52,12 @@ $allowedFields=array(
 	'product_version',
 	'closedby_version'
 );
-if ($proj->prefs['use_effort_tracking'] && $user->perms('track_effort')){
+
+if ($proj->prefs['use_effort_tracking'] && $user->perms('track_effort')) {
 	$allowedFields[]='estimated_effort';
 }
 
-if (!in_array(Post::val('name'), $allowedFields)){
+if (!in_array(Post::val('name'), $allowedFields)) {
 	http_response_code(403);
 	die(L('invalidfield'));
 }
@@ -64,7 +65,7 @@ if (!in_array(Post::val('name'), $allowedFields)){
 $value = Post::val('value');
 
 # check if user is not sending manipulated invalid values
-switch(Post::val('name')){
+switch (Post::val('name')) {
 	case 'due_date':
 		$value = Flyspray::strtotime(Post::val('value'));
 		$value = intval($value);
@@ -76,21 +77,21 @@ switch(Post::val('name')){
 		break;
 
 	case 'task_severity':
-		if(!preg_match("/^[1-5]$/", $value)){
+		if(!preg_match("/^[1-5]$/", $value)) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
 		break;
 
 	case 'task_priority':
-		if(!preg_match("/^[1-6]$/", $value)){
+		if(!preg_match("/^[1-6]$/", $value)) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
 		break;
 
 	case 'percent_complete':
-		if(!is_numeric($value) || $value<0 || $value>100){
+		if(!is_numeric($value) || $value<0 || $value>100) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
@@ -98,7 +99,7 @@ switch(Post::val('name')){
 
 	case 'item_status':
 		$res=$db->query('SELECT * FROM {list_status} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND status_id=?', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
@@ -106,7 +107,7 @@ switch(Post::val('name')){
 
 	case 'task_type':
 		$res=$db->query('SELECT * FROM {list_tasktype} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND tasktype_id=?', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
@@ -114,7 +115,7 @@ switch(Post::val('name')){
 
 	case 'operating_system':
 		$res=$db->query('SELECT * FROM {list_os} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND os_id=?', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
@@ -122,22 +123,30 @@ switch(Post::val('name')){
 
 	case 'product_category':
 		$res=$db->query('SELECT * FROM {list_category} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND category_id=?', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
 		break;
 
 	case 'product_version':
+		# allow '0' as unset version
+		if ($value ==='0') {
+			break;
+		}
 		$res=$db->query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=2', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
 		break;
 	case 'closedby_version':
+		# allow '0' as unset version
+		if ($value ==='0') {
+			break;
+		}
 		$res=$db->query('SELECT * FROM {list_version} WHERE (project_id=0 OR project_id=?) AND show_in_list=1 AND version_id=? AND version_tense=3', array($task['project_id'], $value) );
-		if($db->countRows($res)<1){
+		if ($db->countRows($res)<1) {
 			http_response_code(403);
 			die(L('invalidvalue'));
 		}
@@ -151,7 +160,10 @@ switch(Post::val('name')){
 $oldvalue = $task[Post::val('name')];
 
 $time=time();
-$sql = $db->query("UPDATE {tasks} SET ".Post::val('name')." = ?,last_edited_time = ? WHERE task_id = ?", array($value, $time, Post::val('task_id')));
+$sql = $db->query("
+	UPDATE {tasks} SET ".Post::val('name')." = ?, last_edited_time = ? WHERE task_id = ?",
+	array($value, $time, Post::val('task_id'))
+);
 
 # load $proj again of task with correct project_id for getting active notification types in notification class
 $proj= new Project($task['project_id']);

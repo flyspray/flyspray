@@ -413,7 +413,7 @@ class Notifications {
         }
 
         // Make plaintext URLs into hyperlinks, but don't disturb existing ones!
-        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+#])*)*)/", '<a href="$1$2">$2</a>', $body);
+        $htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-z0-9\-.]+\.[a-z\-]+(:[0-9]+)?([\/]([a-z0-9_\/\-.?&%=+#])*)*)/i", '<a href="$1$2">$2</a>', $body);
         $htmlbody = str_replace("\n","<br>", $htmlbody);
         
         // Those constants used were introduced in 5.4.
@@ -444,9 +444,11 @@ class Notifications {
         $message->getHeaders()->addTextHeader('Precedence', 'list');
         $message->getHeaders()->addTextHeader('X-Mailer', 'Flyspray');
 
-        if ($proj->prefs['notify_reply']) {
-            $message->setReplyTo($proj->prefs['notify_reply']);
-        }
+		if ($proj->prefs['notify_reply']) {
+			$replyto = explode(',', $proj->prefs['notify_reply']);
+			$replyto = array_map('trim', $replyto);
+			$message->setReplyTo($replyto);
+		}
 
         if (isset($task_id)) {
             $hostdata = parse_url($GLOBALS['baseurl']);
@@ -478,72 +480,88 @@ class Notifications {
 
         return true;
     } //}}}
-    // {{{ create a message for any occasion
-    function generateMsg($type, $task_id, $arg1 = '0', $lang) {
-        global $db, $fs, $user, $proj;
 
-        // Get the task details
-        $task_details = Flyspray::getTaskDetails($task_id);
-        if ($task_id) {
-            $proj = new Project($task_details['project_id']);
-        }
+	/**
+	 * create a message for any occasion
+	 *
+	 * @param int $type
+	 * @param int|null $task_id
+	 * @param array|string|int $arg1 depends on notification type
+	 * @param string $lang
+	 */
+	function generateMsg($type, $task_id, $arg1 = '0', $lang = 'en')
+	{
+		global $db, $fs, $user, $proj;
 
-        // Set the due date correctly
-        if ($task_details['due_date'] == '0') {
-            $due_date = tL('undecided', $lang);
-        } else {
-            $due_date = formatDate($task_details['due_date']);
-        }
+		if ($task_id) {
+			$task_details = Flyspray::getTaskDetails($task_id);
+        
+			$proj = new Project($task_details['project_id']);
 
-        // Set the due version correctly
-        if ($task_details['closedby_version'] == '0') {
-            $task_details['due_in_version_name'] = tL('undecided', $lang);
-        }
+			// Set the due date correctly
+			if ($task_details['due_date'] == '0') {
+				$due_date = tL('undecided', $lang);
+			} else {
+				$due_date = formatDate($task_details['due_date']);
+			}
 
-        // Get the string of modification
-        $notify_type_msg = array(
-            0 => tL('none'),
-            NOTIFY_TASK_OPENED => tL('taskopened', $lang),
-            NOTIFY_TASK_CHANGED => tL('pm.taskchanged', $lang),
-            NOTIFY_TASK_CLOSED => tL('taskclosed', $lang),
-            NOTIFY_TASK_REOPENED => tL('pm.taskreopened', $lang),
-            NOTIFY_DEP_ADDED => tL('pm.depadded', $lang),
-            NOTIFY_DEP_REMOVED => tL('pm.depremoved', $lang),
-            NOTIFY_COMMENT_ADDED => tL('commentadded', $lang),
-            NOTIFY_ATT_ADDED => tL('attachmentadded', $lang),
-            NOTIFY_REL_ADDED => tL('relatedadded', $lang),
-            NOTIFY_OWNERSHIP => tL('ownershiptaken', $lang),
-            NOTIFY_PM_REQUEST => tL('pmrequest', $lang),
-            NOTIFY_PM_DENY_REQUEST => tL('pmrequestdenied', $lang),
-            NOTIFY_NEW_ASSIGNEE => tL('newassignee', $lang),
-            NOTIFY_REV_DEP => tL('revdepadded', $lang),
-            NOTIFY_REV_DEP_REMOVED => tL('revdepaddedremoved', $lang),
-            NOTIFY_ADDED_ASSIGNEES => tL('assigneeadded', $lang),
-        );
+			// Set the due version correctly
+			if ($task_details['closedby_version'] == '0') {
+				$task_details['due_in_version_name'] = tL('undecided', $lang);
+			}
+		}
 
-        // Generate the nofication message
-        if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
-            $proj->prefs['notify_subject'] = '[%p][#%t] %s';
-        }
-        if (!isset($proj->prefs['notify_subject']) ||
-                $type == NOTIFY_CONFIRMATION ||
-                $type == NOTIFY_ANON_TASK ||
-                $type == NOTIFY_PW_CHANGE ||
-                $type == NOTIFY_NEW_USER ||
-                $type == NOTIFY_OWN_REGISTRATION) {
-            $subject = tL('notifyfromfs', $lang);
-        } else {
-            $subject = strtr($proj->prefs['notify_subject'], array('%p' => $proj->prefs['project_title'],
-                '%s' => $task_details['item_summary'],
-                '%t' => $task_id,
-                '%a' => $notify_type_msg[$type],
-                '%u' => $user->infos['user_name']));
-        }
+		// Get the string of modification
+		$notify_type_msg = array(
+			0 => tL('none'),
+			NOTIFY_TASK_OPENED => tL('taskopened', $lang),
+			NOTIFY_TASK_CHANGED => tL('pm.taskchanged', $lang),
+			NOTIFY_TASK_CLOSED => tL('taskclosed', $lang),
+			NOTIFY_TASK_REOPENED => tL('pm.taskreopened', $lang),
+			NOTIFY_DEP_ADDED => tL('pm.depadded', $lang),
+			NOTIFY_DEP_REMOVED => tL('pm.depremoved', $lang),
+			NOTIFY_COMMENT_ADDED => tL('commentadded', $lang),
+			NOTIFY_ATT_ADDED => tL('attachmentadded', $lang),
+			NOTIFY_REL_ADDED => tL('relatedadded', $lang),
+			NOTIFY_OWNERSHIP => tL('ownershiptaken', $lang),
+			NOTIFY_PM_REQUEST => tL('pmrequest', $lang),
+			NOTIFY_PM_DENY_REQUEST => tL('pmrequestdenied', $lang),
+			NOTIFY_NEW_ASSIGNEE => tL('newassignee', $lang),
+			NOTIFY_REV_DEP => tL('revdepadded', $lang),
+			NOTIFY_REV_DEP_REMOVED => tL('revdepaddedremoved', $lang),
+			NOTIFY_ADDED_ASSIGNEES => tL('assigneeadded', $lang),
+		);
 
-        $subject = strtr($subject, "\n", '');
+		// Generate the nofication message
+		if (isset($proj->prefs['notify_subject']) && !$proj->prefs['notify_subject']) {
+			$proj->prefs['notify_subject'] = '[%p][#%t] %s';
+		}
 
+		if (
+			!isset($proj->prefs['notify_subject']) ||
+			$type == NOTIFY_CONFIRMATION ||
+			$type == NOTIFY_ANON_TASK ||
+			$type == NOTIFY_PW_CHANGE ||
+			$type == NOTIFY_NEW_USER ||
+			$type == NOTIFY_OWN_REGISTRATION
+		) {
+			$subject = tL('notifyfromfs', $lang);
+		} else {
+			$subject = strtr(
+				$proj->prefs['notify_subject'],
+				array(
+					'%p' => $proj->prefs['project_title'],
+					'%s' => $task_details['item_summary'],
+					'%t' => $task_id,
+					'%a' => $notify_type_msg[$type],
+					'%u' => $user->infos['user_name']
+				)
+			);
+		}
 
-        /* -------------------------------
+		$subject = strtr($subject, "\n", '');
+
+        /** -----------------------------
           | List of notification types: |
           | 1. Task opened              |
           | 2. Task details changed     |
@@ -919,8 +937,6 @@ class Notifications {
         $body .= "\n\n" . tL('disclaimer', $lang);
         return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
     }
-
-// }}}
 
     public static function assignRecipients($recipients, &$emails, &$jabbers, &$onlines, $ignoretype = false) {
         global $db, $fs, $user;

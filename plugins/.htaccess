@@ -1,8 +1,23 @@
-<Files *.php>
-Deny From All
-</Files>
+# Apache 2.4
+<IfModule mod_authz_core.c>
+        <Files *.php>
+        Require all denied
+        </Files>
 
-<Files fetch.php>
-Allow From All
-</Files>
+        # currently also disabled at top of fetch.php until safe refactor/replacement for fetch.php available.
+        #<Files fetch.php>
+        #Require all granted
+        #</Files>
+</IfModule>
 
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+        <Files *.php>
+        Deny from all
+        </Files>
+
+        # currently also disabled at top of fetch.php until safe refactor/replacement for fetch.php available.
+        #<Files fetch.php>
+        #Allow from all
+        #</Files>
+</IfModule>

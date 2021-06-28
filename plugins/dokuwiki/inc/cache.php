@@ -87,8 +87,10 @@ class cache {
    * it should not remove any existing dependencies and
    * it should only overwrite a dependency when the new value is more stringent than the old
    */
-  function _addDependencies() {
-    if (isset($_REQUEST['purge'])) $this->depends['purge'] = true;   // purge requested
+  function _addDependencies()
+  {
+    # we do not use a purge parameter in Flyspray so better comment out this
+    #if (isset($_REQUEST['purge'])) $this->depends['purge'] = true;   // purge requested
   }
 
   /**

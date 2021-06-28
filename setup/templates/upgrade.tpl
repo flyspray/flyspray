@@ -51,9 +51,9 @@
 	<?php endif; ?>
 
 	<h2><?php echo L('performupgrade'); ?></h2>
-	<p><input name="upgrade" id="upgradebutton" class="button" value="<?php echo eL('performupgrade'); ?>" type="submit" /></p>
+	<p><input name="upgrade" id="upgradebutton" class="button" value="<?= eL('performupgrade'); ?>" type="submit" /></p>
 	<?php if (isset($done)): ?>
-	<div class="green"><?php echo join('<br />',$upgradelog); ?></div>
+	<div class="green"><?php echo join('<br />', $upgradelog); ?></div>
 	<p>If all went fine:</p>
 	<ol>
 	<li>Delete setup directory or restrict access to this directory by a htaccess rule.</li>
@@ -67,10 +67,9 @@
 	</div><!-- End of install -->
 </form>
 </div><!-- End of content -->
+
 <div id="footer">
-      <p>Flyspray <?php echo Filters::noXSS($fs->version); ?><br />
-        Copyright 2004-<?php echo Filters::noXSS(date('Y')); ?> &copy; The Flyspray team.  All rights reserved.
-      </p>
-</div><!-- End of footer -->
+<p>Flyspray <?php echo Filters::noXSS($fs->version); ?><br /> &copy; 2004-<?php echo Filters::noXSS(date('Y')); ?> Flyspray team</p>
+</div>
 </body>
 </html>

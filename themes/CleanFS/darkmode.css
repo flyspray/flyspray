@@ -27,7 +27,8 @@ a.button:hover, button:hover, .button:hover, input[type="submit"] {
   background-color: #444;
   border-color: #000;
   color:#fff;
-} 
+}
+#title {background-image: linear-gradient(#111, #222);}
 textarea {color:#ddd;background-color:#444;border-color:#555;}
 div.comment_container .comment_header {background-color: #444; border-bottom:#555;}
 #comments{border-color:#333;}
@@ -37,9 +38,31 @@ div.comment_container .comment::before {border-right-color:#555;}
 div.comment_container .comment::after {border-right-color:#444;}
 div.comment_container .attachments, div.comment_container .links{background-color:#666; border-color:#333;}
 div.comment_container .comment_header_usertype {border-color:#333;}
-.cke_chrome {border-color:#444 !important;}
-.cke_bottom, .cke_top {background:#444 !important;box-shadow:none !important;}
-.cke_toolgroup {background: #ddd !important;}
+
+/** emulate CKEditor4.16 darkmode for Moona-Lisa
+ * TODO: needs finetuning!
+ */
+.cke_chrome {
+	border-color:#444 !important;
+}
+.cke_bottom, .cke_top {
+	background:#444 !important;
+	box-shadow:none !important;
+}
+.cke_top{
+ 	border-bottom-color:#666;
+}
+.cke_bottom{
+ 	border-top-color:#666;
+}
+/* workaround till I get the filter to color invert the dark Moona-Lisa icons */ 
+.cke_toolgroup {
+	background: #999 !important;
+}
+.cke_path_item{
+	color: #ccc;
+}
+
 #taskdetails{border-color:#444;}
 #taskdetails h2{color:#ccc;}
 #intromessage {border-color:#444;}
@@ -57,11 +80,12 @@ div.comment_container .comment_header_usertype {border-color:#333;}
 div.roadmap {border-color:#444;}
 .progress_bar_container span {color:#eee; text-shadow: 0 0 6px #000;}
 .progress_bar_container {background-color:#111;}
+.progress_bar_container .progress_bar {background-image: linear-gradient(#080, #090);}
 
 .dbtable {background-color:#444;}
 .dbtable td {border-bottom-color: #999;}
 .dbfield {background-color:#555;}
-  
+
 /* works not in every browser .. */
 option:active { background:linear-gradient(#6c3, #6c3); }
 option:checked { background:linear-gradient(#693, #693); }
@@ -91,6 +115,23 @@ select, .double_select .dualselect_selected select {background-color:#444;color:
         box-shadow: 0 1px 1px #000;
         border-color:#222;
 }
+.success {
+	background-color: #390;
+	color: #eee;
+}
+.error {
+	background-color: #900;
+	color: #eee;
+}
+.error .fa-exclamation-triangle {
+	color: #f00;
+}
+.warning {
+	background-color: #fc0;
+	color: #000;
+}
+.account_enabled{background-color:#060;}
+.account_disabled {background: #222 repeating-linear-gradient(-45deg,#333, #333 10px, #222 10px, #222 20px);}
 kbd{color:#333;background-color:#ccc;}
 input[type="text"], input[type="password"]{color:#fff;border-color:#555;}
 ul.form_elements label {color:#ccc;}
@@ -125,6 +166,10 @@ background: #862 linear-gradient(#862,#751) repeat scroll 0 0 !important;
 }
 tr.severity5, tr.severity5 .task_severity, tr.severity5 .task_id {
 background: #a41 linear-gradient(#a41,#a30) repeat scroll 0 0 !important;
+}
+
+#tasklist_table tr.closed, #myvotes tr.closed {
+       background: #222 repeating-linear-gradient(-45deg, #111, #111 10px, #222 10px, #222 20px) !important;
 }
 
 } /* end of media dark */

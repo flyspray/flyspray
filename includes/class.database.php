@@ -2,7 +2,7 @@
 /**
  * Flyspray
  *
- * Database class class
+ * Database class
  *
  * This class is a wrapper for ADOdb functions.
  *
@@ -18,132 +18,147 @@ if (!defined('IN_FS')) {
 
 class Database
 {
-    /**
-     * Table prefix, usually flyspray_
-     * @var string
-     * @access private
-     */
-    public $dbprefix;
+	/**
+	 * Table prefix, usually 'flyspray_'
+	 * @var string
+	 * @access private
+	 */
+	public $dbprefix;
 
-    /**
-     * Cache for queries done by cached_query()
-     * @var array
-     * @access private
-     * @see cached_query();
-     */
-    private $cache = array();
+	/**
+	 * Cache for queries done by cached_query()
+	 * @var array
+	 * @access private
+	 * @see cached_query();
+	 */
+	private $cache = array();
 
-    /**
-     * dblink
-     * adodb handler object
-     * @var object
-     * @access public
-     */
-    public $dblink = null;
+	/**
+	 * ADOdb database connection handler object
+	 * @var object
+	 * @access public
+	*/
+	public $dblink = null;
 
-    /**
-     * Open a connection to the database quickly
-     * @param array $conf connection data
-     * @return void
-     */
-    public function dbOpenFast($conf)
-    {
-        if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 5) {
+	/**
+	 * Open a connection to the database quickly
+	 * (note by maintainer: not 'faster' because it calls dbOpen(), just easier to call with an array of parameters)
+	 *
+	 * @param array $conf connection data
+	 *
+	 * @return void
+	 */
+	public function dbOpenFast($conf)
+	{
+		if(!is_array($conf) || extract($conf, EXTR_REFS|EXTR_SKIP) < 5) {
+			die(
+				'Flyspray was unable to connect to the database. '
+				.'Check your settings in flyspray.conf.php'
+			);
+		}
 
-            die( 'Flyspray was unable to connect to the database. '
-                 .'Check your settings in flyspray.conf.php');
-        }
+		$this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, isset($dbprefix) ? $dbprefix : '');
+	}
 
-       $this->dbOpen($dbhost, $dbuser, $dbpass, $dbname, $dbtype, isset($dbprefix) ? $dbprefix : '');
-    }
-
-    /**
-     * Open a connection to the database and set connection parameters
-     * @param string $dbhost hostname where the database server uses
-     * @param string $dbuser username to connect to the database
-     * @param string $dbpass password to connect to the database
-     * @param string $dbname
-     * @param string $dbtype database driver to use, currently : "mysql", "mysqli", "pgsql"
-     * "pdo_mysql" and "pdo_pgsql" experimental
-     * @param string $dbprefix database prefix.
-     */
-    public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
-    {
-
-        $this->dbtype   = $dbtype;
-        $this->dbprefix = $dbprefix;
-        $ADODB_COUNTRECS = false;
+	/**
+	 * Opens a connection to the database and set connection parameters.
+	 *
+	 * @param string $dbhost hostname which the database server uses
+	 * @param string $dbuser username to connect to the database
+	 * @param string $dbpass password to connect to the database
+	 * @param string $dbname
+	 * @param string $dbtype database driver to use
+	 *                       supported: "mysqli", "pgsql"
+	 *                       experimental: "pdo_mysql", "pdo_pgsql", do not use.
+	 * @param string $dbprefix database prefix
+	 *
+	 * @return void
+	 */
+	public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
+	{
+		if ($dbtype==='mysql' && version_compare(PHP_VERSION,'7.0.0')>=0) {
+			// silently switch to mysqli as mysql extension is obsolete and removed by PHP7
+			$dbtype='mysqli';
+		}
+		$this->dbtype = $dbtype;
+		$this->dbprefix = $dbprefix;
+		$ADODB_COUNTRECS = false;
     
-        # 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
-        # For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
-        if( ($dbtype=='mysqli' || $dbtype='pdo_mysql') && 'localhost:/'==substr($dbhost,0,11) ){
-            $dbsocket=substr($dbhost,10);
-            $dbhost='localhost';
-            if($dbtype=='mysqli'){
-                 ini_set('mysqli.default_socket', $dbsocket );
-            }else{
-                 ini_set('pdo_mysql.default_socket',$dbsocket);
-            }
-        }
+		/** 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
+		 *  For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
+		 */
+		if (($dbtype=='mysqli' || $dbtype='pdo_mysql') && 'localhost:/'==substr($dbhost,0,11)) {
+			$dbsocket=substr($dbhost,10);
+			$dbhost='localhost';
+			if ($dbtype=='mysqli') {
+				ini_set('mysqli.default_socket', $dbsocket );
+			} else {
+				ini_set('pdo_mysql.default_socket',$dbsocket);
+			}
+		}
         
-        # adodb for pdo is a bit different then the others at the moment (adodb 5.20.4)
-        # see http://adodb.org/dokuwiki/doku.php?id=v5:database:pdo
-        if($this->dbtype=='pdo_mysql'){
-                $this->dblink = ADOnewConnection('pdo');
-                $dsnString= 'host='.$dbhost.';dbname='.$dbname.';charset=utf8mb4';
-                $this->dblink->connect('mysql:' . $dsnString, $dbuser, $dbpass);
-        }else{
-                $this->dblink = ADOnewConnection($this->dbtype);
-                $this->dblink->connect($dbhost, $dbuser, $dbpass, $dbname);
-        }
+		# adodb for pdo is a bit different then the others at the moment (adodb 5.20.4)
+		# see https://adodb.org/dokuwiki/doku.php?id=v5:database:pdo
+		if ($this->dbtype=='pdo_mysql') {
+			$this->dblink = ADOnewConnection('pdo');
+			$dsnString= 'host='.$dbhost.';dbname='.$dbname.';charset=utf8mb4';
+			$this->dblink->connect('mysql:' . $dsnString, $dbuser, $dbpass);
+		} else {
+			$this->dblink = ADOnewConnection($this->dbtype);
+			$this->dblink->connect($dbhost, $dbuser, $dbpass, $dbname);
+		}
 
-        if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
+		if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
+			die(
+				'Flyspray was unable to connect to the database. '
+				.'Check your settings in flyspray.conf.php'
+			);
+		}
+		$this->dblink->setFetchMode(ADODB_FETCH_BOTH);
 
-            die('Flyspray was unable to connect to the database. '
-               .'Check your settings in flyspray.conf.php');
-        }
-        $this->dblink->setFetchMode(ADODB_FETCH_BOTH);
+		/** ADOdb 5.21 now supports setting connection parameters before the connect().
+		 * So setting the charset could be done before connect in future avoiding extra request.
+		 */
+		if ($dbtype=='mysqli') {
+			$sinfo=$this->dblink->serverInfo();
+			if (version_compare($sinfo['version'], '5.5.3')>=0) {
+				$this->dblink->setCharSet('utf8mb4');
+			} else {
+				$this->dblink->setCharSet('utf8');
+			}
+		} else {
+			$this->dblink->setCharSet('utf8');
+		}
 
-        if($dbtype=='mysqli'){
-            $sinfo=$this->dblink->serverInfo();
-            if(version_compare($sinfo['version'], '5.5.3')>=0 ){
-                $this->dblink->setCharSet('utf8mb4');
-            }else{
-                $this->dblink->setCharSet('utf8');
-            }
-        }else{
-            $this->dblink->setCharSet('utf8');
-        }
-
-        // enable debug if constant DEBUG_SQL is defined.
-        !defined('DEBUG_SQL') || $this->dblink->debug = true;
+		// enable debug if constant DEBUG_SQL is defined.
+		!defined('DEBUG_SQL') || $this->dblink->debug = true;
             
-        if($dbtype === 'mysql' || $dbtype === 'mysqli') {
-            $dbinfo = $this->dblink->serverInfo();
-            if(isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
-                $this->dblink->execute("SET SESSION SQL_MODE='TRADITIONAL'");
-            }
-        }
-    }
+		if ($dbtype === 'mysql' || $dbtype === 'mysqli') {
+			$dbinfo = $this->dblink->serverInfo();
+			if (isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {
+				$this->dblink->execute("SET SESSION SQL_MODE='TRADITIONAL'");
+			}
+		}
+	}
 
-    /**
-     * Closes the database connection
-     * @return void
-     */
-    public function dbClose()
-    {
-        $this->dblink->close();
-    }
+	/**
+	 * Closes the database connection
+	 * @return void
+	 */
+	public function dbClose()
+	{
+		$this->dblink->close();
+	}
 
-    /**
-     * insert_ID
-     * 
-     * @access public
-     */
-    public function insert_ID()
-    {
-        return $this->dblink->insert_ID();
-    }
+	/**
+	 * insert_ID
+	 * 
+	 * @access public
+	 */
+	public function insert_ID()
+	{
+		return $this->dblink->insert_ID();
+	}
 
     /**
      * countRows
@@ -325,7 +340,6 @@ class Database
      * @access public
      * @return void
      */
-
     public function getColumnNames($table, $alt, $prefix)
     {
         global $conf;
@@ -365,21 +379,26 @@ class Database
      */
     public function replace($table, $field, $keys, $autoquote = true)
     {
-        $table = $this->_add_prefix($table);
+        $table = $this->_add_prefix($table, false); // ADOdb 5.21 quotes $table parameter too, so avoid double quoting.
         return $this->dblink->replace($table, $field, $keys, $autoquote);
     }
 
-    /**
-     * Adds the table prefix
-     * @param string $sql_data table name or sql query
-     * @return string sql with correct,quoted table prefix
-     * @access private
-     * @since 0.9.9
-     */
-    private function _add_prefix($sql_data)
-    {
-        return preg_replace('/{([\w\-]*?)}/', $this->quoteIdentifier($this->dbprefix . '\1'), $sql_data);
-    }
+	/**
+	 * Adds the table prefix
+	 * @param string $sql_data table name or sql query
+	 * @param bool $quote (optional) This option was added to avoid double quoting with ADOdb 5.21 replace()
+	 * @return string sql with correct,quoted table prefix
+	 * @access private
+	 * @since 0.9.9
+	 */
+	private function _add_prefix($sql_data, $quote=true)
+	{
+		if ($quote) {
+			return preg_replace('/{([\w\-]*?)}/', $this->quoteIdentifier($this->dbprefix . '\1'), $sql_data);
+		} else {
+			return preg_replace('/{([\w\-]*?)}/', $this->dbprefix . '\1', $sql_data);
+		}
+	}
 
     /**
      * Helper method to quote an indentifier
@@ -430,5 +449,5 @@ class Database
             trigger_error("incorrect data passed to fill_placeholders", E_USER_ERROR);
         }
     }
-    // End of Database Class
-}
+
+} // end class Database

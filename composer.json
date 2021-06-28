@@ -3,11 +3,30 @@
     "type": "application",
     "description": "The Flyspray bug tracking system.",
     "keywords": ["bug","bugs","tracker","issue","issues", "web"],
-    "homepage": "https://flyspray.org",
+    "homepage": "https://www.flyspray.org",
+    "support": {
+        "issues": "https://bugs.flyspray.org",
+        "source": "https://github.com/flyspray/flyspray"
+    },
     "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Peter Liscovius",
+            "role": "Current maintainer"
+        },
+        {
+            "name": "former developers",
+            "homepage": "https://github.com/flyspray/flyspray/graphs/contributors"
+        },
+        {
+            "name": "contributors",
+            "homepage": "https://github.com/flyspray/flyspray/graphs/contributors"
+        }
+    ],
     "require": {
+        "php" : "^5.5.9 || ^7.0 || ^8.0",
         "swiftmailer/swiftmailer": "~5.0",
-        "adodb/adodb-php": "~5.20",
+        "adodb/adodb-php": "5.21.0",
         "jamiebicknell/sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.12",
         "dapphp/securimage": "3.6.6",
@@ -27,6 +46,7 @@
             "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
             "rm -rf vendor/dapphp/securimage/audio/*",
             "rm -rf vendor/dapphp/securimage/backgrounds/*",
+            "cp setup/upgrade/1.0/datadict-postgres.inc.php vendor/adodb/adodb-php/datadict/datadict-postgres.inc.php",
             "echo '<?php return array(\"session_name\"=>\"flyspray\"); ?>' > vendor/dapphp/securimage/config.inc.php"
         ]
     },
