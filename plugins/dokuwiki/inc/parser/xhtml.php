@@ -8,7 +8,7 @@
 
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
 
-if ( !defined('DOKU_LF') ) {
+if (!defined('DOKU_LF')) {
     // Some whitespace to help View > Source
     define ('DOKU_LF',"\n");
 }
@@ -24,12 +24,12 @@ require_once DOKU_INC . 'inc/html.php';
 /**
  * The Renderer
  */
-class Doku_Renderer_xhtml extends Doku_Renderer {
+class Doku_Renderer_xhtml extends Doku_Renderer
+{
 
     // @access public
     var $doc = '';        // will contain the whole document
     var $toc = array();   // will contain the Table of Contents
-
 
     var $headers = array();
 
@@ -485,7 +485,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function internallink($id, $name = NULL, $search=NULL,$returnonly=false) {
+    function internallink($id, $name = NULL, $search=NULL, $returnonly=false)
+    {
         global $conf;
         global $ID;
         // default name is based on $id as given
@@ -538,7 +539,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
     }
 
-    function externallink($url, $name = NULL) {
+    function externallink($url, $name = NULL)
+    {
         global $conf;
 
         $name = $this->_getLinkTitle($name, $url, $isImage);
@@ -570,9 +572,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $this->doc .= $this->_formatLink($link);
     }
 
-    /**
-    */
-    function interwikilink($match, $name = NULL, $wikiName, $wikiUri) {
+    function interwikilink($match, $name, $wikiName, $wikiUri)
+    {
         global $conf;
 
         $link = array();
@@ -582,8 +583,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['more']   = '';
         $link['name']   = $this->_getLinkTitle($name, $wikiUri, $isImage);
 
-        //get interwiki URL
-        if ( isset($this->interwiki[$wikiName]) ) {
+        // get interwiki URL
+        if (isset($this->interwiki[$wikiName])) {
             $url = $this->interwiki[$wikiName];
         } else {
             // Default to Google I'm feeling lucky
@@ -591,7 +592,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $wikiName = 'go';
         }
 
-        if ( !$isImage ) {
+        if (!$isImage) {
             $class = preg_replace('/[^_\-a-z0-9]+/i','_',$wikiName);
             $link['class'] = "interwiki iw_$class";
         } else {
@@ -599,11 +600,11 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
 
         //do we stay at the same server? Use local target
-        if( strpos($url,DOKU_URL) === 0 ){
+        if (strpos($url,DOKU_URL) === 0) {
             $link['target'] = $conf['target']['wiki'];
         }
 
-        //split into hash and url part
+        // split into hash and url part
         list($wikiUri,$hash) = explode('#',$wikiUri,2);
 
         //replace placeholder
@@ -619,12 +620,13 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $url = str_replace('{PATH}',$parsed['path'],$url);
             $url = str_replace('{QUERY}',$parsed['query'],$url);
             $link['url'] = $url;
-        }else{
-            //default
+        } else {
+            // default
             $link['url'] = $url.rawurlencode($wikiUri);
         }
-        if($hash) $link['url'] .= '#'.rawurlencode($hash);
-
+        if ($hash) {
+            $link['url'] .= '#'.rawurlencode($hash);
+        }
         $link['title'] = htmlspecialchars($link['url']);
 
         //output formatted
@@ -688,9 +690,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         if(empty($name)){
             $name = $address;
         }
-#elseif($isImage{
-#            $name = $this->_xmlEntities($name);
-#        }
+        #elseif($isImage{
+        #   $name = $this->_xmlEntities($name);
+        #}
 
         if($conf['mailguard'] == 'visible') $address = rawurlencode($address);
 
@@ -989,8 +991,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _media ($src, $title=NULL, $align=NULL, $width=NULL,
-                      $height=NULL, $cache=NULL) {
+    function _media($src, $title=NULL, $align=NULL, $width=NULL,
+                      $height=NULL, $cache=NULL
+    ) {
 
         $ret = '';
 
@@ -1068,7 +1071,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      * @param boolean $create  Create a new unique ID?
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _headerToLink($title,$create=false) {
+    function _headerToLink($title, $create=false) {
         $title = str_replace(':','',cleanID($title));
         $title = ltrim($title,'0123456789._-');
         if(empty($title)) $title='section';
@@ -1126,5 +1129,3 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                               $img['cache']);
     }
 }
-
-//Setup VIM: ex: et ts=4 enc=utf-8 :
