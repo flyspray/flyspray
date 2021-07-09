@@ -38,9 +38,31 @@ div.comment_container .comment::before {border-right-color:#555;}
 div.comment_container .comment::after {border-right-color:#444;}
 div.comment_container .attachments, div.comment_container .links{background-color:#666; border-color:#333;}
 div.comment_container .comment_header_usertype {border-color:#333;}
-.cke_chrome {border-color:#444 !important;}
-.cke_bottom, .cke_top {background:#444 !important;box-shadow:none !important;}
-.cke_toolgroup {background: #ddd !important;}
+
+/** emulate CKEditor4.16 darkmode for Moona-Lisa
+ * TODO: needs finetuning!
+ */
+.cke_chrome {
+	border-color:#444 !important;
+}
+.cke_bottom, .cke_top {
+	background:#444 !important;
+	box-shadow:none !important;
+}
+.cke_top{
+ 	border-bottom-color:#666;
+}
+.cke_bottom{
+ 	border-top-color:#666;
+}
+/* workaround till I get the filter to color invert the dark Moona-Lisa icons */ 
+.cke_toolgroup {
+	background: #999 !important;
+}
+.cke_path_item{
+	color: #ccc;
+}
+
 #taskdetails{border-color:#444;}
 #taskdetails h2{color:#ccc;}
 #intromessage {border-color:#444;}

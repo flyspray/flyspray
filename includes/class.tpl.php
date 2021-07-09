@@ -291,41 +291,78 @@ function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $t
     return $link;
 }
 
-/*
+/**
  * Creates a textlink to a user profile.
  *
- * For a link with user icon use tpl_userlinkavatar().
+ * @param int|array $uid user_id or a simple array(user_id, user_name, real_name) from {users} db table
  *
- * @param int uid user_id from {users} db table
+ * @since 1.0-rc10 Changed displaying user_name instead real_name because username is unique for a Flyspray installation while there could be many 'John Smith'.
+ *                 Also there are cases real_name is just empty string in database, so the link was not visible.
+ *                 The real_name is now in the title attribute of the link so simply hover shows what's the users chosen real_name or accessed by CSS.
+ *                 Also makes creating a '@mention'-plugin possible as people know quickly how to link someone in a task description or comment.
+ *
+ * @since 0.9.9.7 Changed the display from 'real_name (user_name)' to just 'real_name'.
+ *
+ * @see tpl_userlinkavatar() for a link with user avatar icon
  */
 function tpl_userlink($uid)
 {
-    global $db, $user;
+	global $db, $user;
 
-    static $cache = array();
+	static $cache = array();
 
-    if (is_array($uid)) {
-        list($uid, $uname, $rname) = $uid;
-    } elseif (empty($cache[$uid])) {
-        $sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
+	if (is_array($uid)) {
+		list($uid, $uname, $rname) = $uid;
+	} elseif (empty($cache[$uid])) {
+		$sql = $db->query('SELECT user_name, real_name FROM {users} WHERE user_id = ?',
                            array(intval($uid)));
-        if ($sql && $db->countRows($sql)) {
-            list($uname, $rname) = $db->fetchRow($sql);
-        }
-    }
+		if ($sql && $db->countRows($sql)) {
+			list($uname, $rname) = $db->fetchRow($sql);
+		}
+	}
 
 	if (isset($uname)) {
-		#$url = createURL(($user->perms('is_admin')) ? 'edituser' : 'user', $uid);
-		# peterdd: I think it is better just to link to the user's page instead direct to the 'edit user' page also for admins.
-		# With more personalisation coming (personal todo list, charts, ..) in future to flyspray
-		# the user page itself is of increasing value. Instead show the 'edit user'-button on user's page.
 		$url = createURL('user', $uid);
-		$cache[$uid] = vsprintf('<a href="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname)));
+		$cache[$uid] = vsprintf('<a href="%s" title="%s">%s</a>', array_map(array('Filters', 'noXSS'), array($url, $rname, $uname)));
 	} elseif (empty($cache[$uid])) {
 		$cache[$uid] = eL('anonymous');
 	}
 
 	return $cache[$uid];
+}
+
+/**
+* turns a @username or just username into a link to the flyspray user profile
+* intended to be used by dokuwiki plugin flyspray user mention
+*
+* @param string $username
+*
+* @return string
+*/
+function tpl_mentionlink($username)
+{
+	global $db, $user;
+
+	if (is_string($username)) {
+		if (substr($username, 0, 1)=='@') {
+			$uname=substr($username, 1);
+		} else {
+			$uname=$username;
+		}
+		$sql = $db->query(
+			'SELECT user_id, user_name, real_name FROM {users} WHERE user_name LIKE ?',
+			array($uname));
+		if ($sql && $db->countRows($sql)) {
+			list($uid,$uname, $rname) = $db->fetchRow($sql);
+			$url = createURL('user', $uid);
+			return vsprintf(
+				'<a href="%s" class="ulink">%s</a>',
+				array_map(array('Filters', 'noXSS'), array($url, '@'.$uname))
+			);
+		}
+		# return unchanged as $username only contains /@*[0-9a-zA-Z]+/
+		return $username;
+	}
 }
 
 /**
@@ -395,12 +432,15 @@ function tpl_fast_tasklink($arr)
 /**
  * Formats a task tag for HTML output based on a global $alltags array
  *
- * @param int id tag_id of {list_tag} db table
- * @param bool showid set true if the tag_id is shown instead of the tag_name
+ * @param int $id tag_id of {list_tag} db table
+ * @param bool $showid set true if the tag_id is shown instead of the tag_name
+ * @param int $added for task details view
+ * @param int $addedby for task details view
  *
  * @return string ready for output
  */
-function tpl_tag($id, $showid=false) {
+function tpl_tag($id, $showid=false, $added=null, $addedby=null)
+{
 	global $alltags;
 
 	if(!is_array($alltags)) {
@@ -430,13 +470,25 @@ function tpl_tag($id, $showid=false) {
 		} else {
 			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
 		}
-		if($showid){
-			$out.='>'.$id;
-		} else{
-			$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'">';
-		}
 
-		$out.='</i>';
+		if (is_null($added) && is_null($addedby)) {
+			if ($showid) {
+				$out.='>'.$id.'</i>';
+			} else {
+				$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'"></i>';
+			}
+		} else {
+			# task details view contains more details
+			$out .= '>';
+			$out .= htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8');
+			if ($added>0) {
+				$out .= '<span class="added">'.formatDate($added).'</span>';
+			}
+			if ($addedby>0) {
+				$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
+			}
+			$out .= '</i>';
+		}
 		return $out;
 	}
 }
@@ -1007,14 +1059,17 @@ class TextFormatter
 	{
 		global $conf;
 
-		$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		$methods=array();
+		if(class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')){
+			$methods = get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter');
+		}
 		$methods = is_array($methods) ? $methods : array();
 
 		if (in_array('render', $methods)) {
 			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'render'),
 				$text, $type, $id, $instructions);
 		} else {
-			$text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><code>');
+			$text=strip_tags($text, '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><pre><code><hr>');
 			if (   $conf['general']['syntax_plugin']
 				&& $conf['general']['syntax_plugin'] != 'none'
 				&& $conf['general']['syntax_plugin'] != 'html') {
@@ -1033,36 +1088,37 @@ class TextFormatter
 		}
 	}
 
-    public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
-    {
-        global $conf;
+	public static function textarea($name, $rows, $cols, $attrs = null, $content = null)
+	{
+		global $conf;
 
-        if (@in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
-            return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
-                                  $name, $rows, $cols, $attrs, $content);
-        }
+		if (class_exists($conf['general']['syntax_plugin'] . '_TextFormatter')
+		    && in_array('textarea', get_class_methods($conf['general']['syntax_plugin'] . '_TextFormatter'))) {
+			return call_user_func(array($conf['general']['syntax_plugin'] . '_TextFormatter', 'textarea'),
+			                      $name, $rows, $cols, $attrs, $content);
+		}
 
-        $name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
-        $return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
-        if (is_array($attrs) && count($attrs)) {
-            $return .= join_attrs($attrs);
-        }
-        $return .= '>';
-        if (is_string($content) && strlen($content)) {
-            $return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
-        }
-        $return .= '</textarea>';
+		$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
+		$return = sprintf('<textarea name="%s" cols="%d" rows="%d"', $name, $cols, $rows);
+		if (is_array($attrs) && count($attrs)) {
+			$return .= join_attrs($attrs);
+		}
+		$return .= '>';
+		if (is_string($content) && strlen($content)) {
+			$return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
+		}
+		$return .= '</textarea>';
 
-	# Activate CkEditor on textareas
-	if($conf['general']['syntax_plugin']=='html'){
-		$return .= "
+		# Activate CkEditor on textareas
+		if($conf['general']['syntax_plugin']=='html'){
+			$return .= "
 <script>
 	CKEDITOR.replace( '".$name."', { entities: true, entities_latin: false, entities_processNumerical: false } );
 </script>";
-	}
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 }
 
 /**
@@ -1223,84 +1279,88 @@ function tpl_disableif ($if)
  */
 function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
-    global $baseurl, $conf, $fs;
+	global $baseurl, $conf, $fs;
 
-    $url = $baseurl;
+	$url = $baseurl;
 
-    // If we do want address rewriting
-    if ($fs->prefs['url_rewriting']) {
-        switch ($type) {
-            case 'depends':
-                $return = $url . 'task/' . $arg1 . '/' . $type;
-                break;
-            case 'details':
-                $return = $url . 'task/' . $arg1;
-                break;
-            case 'edittask':
-                $return = $url . 'task/' . $arg1 . '/edit';
-                break;
-            case 'pm':
-                $return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
-                break;
+	// If we do want address rewriting
+	if ($fs->prefs['url_rewriting']) {
+		switch ($type) {
+			case 'depends':
+				$return = $url . 'task/' . $arg1 . '/' . $type;
+				break;
 
-            case 'admin':
-            case 'edituser':
-            case 'user':
-                $return = $url . $type . '/' . $arg1;
-                break;
+			case 'details':
+				$return = $url . 'task/' . $arg1;
+				break;
 
-            case 'project':
-                $return = $url . 'proj' . $arg1;
-                break;
+			case 'edittask':
+				$return = $url . 'task/' . $arg1 . '/edit';
+				break;
 
-            case 'reports':
-            case 'roadmap':
-            case 'toplevel':
-            case 'gantt':
-            case 'index':
-            	$return = $url.$type.'/proj'.$arg1;
-            	break;
+			case 'pm':
+				$return = $url . 'pm/proj' . $arg2 . '/' . $arg1;
+				break;
 
-            case 'newtask':
-            case 'newmultitasks':
-                $return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+			case 'admin':
+			case 'edituser':
+			case 'user':
+				$return = $url . $type . '/' . $arg1;
+				break;
+
+			case 'project':
+				$return = $url . 'proj' . $arg1;
                 break;
 
-            case 'editgroup':
-                $return = $url . $arg2 . '/' . $type . '/' . $arg1;
-                break;
+			case 'reports':
+			case 'roadmap':
+			case 'toplevel':
+			case 'gantt':
+			case 'kanban':
+			case 'index':
+				$return = $url.$type.'/proj'.$arg1;
+				break;
 
-            case 'logout':
-            case 'lostpw':
-            case 'myprofile':
-            case 'register':
-                $return = $url . $type;
-                break;
+			case 'newtask':
+			case 'newmultitasks':
+				$return = $url . $type . '/proj' . $arg1 . ($arg2 ? '/supertask' . $arg2 : '');
+				break;
 
-            case 'mytasks':
-                $return = $url.'proj'.$arg1.'/dev'.$arg2;
-                break;
+			case 'editgroup':
+				$return = $url . $arg2 . '/' . $type . '/' . $arg1;
+				break;
+
+			case 'logout':
+			case 'lostpw':
+			case 'myprofile':
+			case 'register':
+				$return = $url . $type;
+				break;
+
+			case 'mytasks':
+				$return = $url.'proj'.$arg1.'/dev'.$arg2;
+				break;
+
             case 'tasklist':
-		# see also .htaccess for the mapping
-		if($arg1>0 && $fs->projects[$arg1]['default_entry']=='index'){
-			$return = $url.'proj'.$arg1;
-		}else{
-			$return = $url.$type.'/proj'.$arg1;
+				# see also .htaccess for the mapping
+				if ($arg1>0 && $fs->projects[$arg1]['default_entry'] == 'index'){
+					$return = $url.'proj'.$arg1;
+				} else {
+					$return = $url.$type.'/proj'.$arg1;
+				}
+            	break;
+			default:
+				$return = $baseurl . 'index.php';
+				break;
+		}
+	} else {
+		if ($type == 'edittask') {
+			$url .= 'index.php?do=details';
+		} else {
+			$url .= 'index.php?do=' . $type;
 		}
 
-            	break;
-            default:
-            	$return = $baseurl . 'index.php';
-            	break;
-        }
-    } else {
-        if ($type == 'edittask') {
-            $url .= 'index.php?do=details';
-        } else {
-            $url .= 'index.php?do=' . $type;
-        }
-
-        switch ($type) {
+		switch ($type) {
             case 'admin':
                 $return = $url . '&area=' . $arg1;
                 break;
@@ -1333,6 +1393,7 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             case 'roadmap':
             case 'toplevel':
             case 'gantt':
+            case 'kanban':
             case 'index':
             case 'tasklist':
             	$return = $url . '&project=' . $arg1;
@@ -1360,14 +1421,14 @@ function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
             default:
         		$return = $baseurl . 'index.php';
         		break;
-        }
-    }
+		}
+	}
 
-    $url = new Url($return);
-    if( !is_null($arg3) && count($arg3) ) {
-        $url->addvars($arg3);
-    }
-    return $url->get();
+	$url = new Url($return);
+	if (!is_null($arg3) && count($arg3)) {
+		$url->addvars($arg3);
+	}
+	return $url->get();
 }
 
 /**

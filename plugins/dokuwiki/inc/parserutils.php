@@ -489,36 +489,36 @@ function p_get_first_heading($id){
  *
  * @author Christopher Smith <chris@jalakai.co.uk>
  */
-function p_xhtml_cached_geshi($code, $language) {
-  $cache = getCacheName($language.$code,".code");
+function p_xhtml_cached_geshi($code, $language)
+{
+	$cache = getCacheName($language.$code,".code");
 
-  if (@file_exists($cache) && !$_REQUEST['purge'] &&
-     (filemtime($cache) > filemtime(DOKU_INC . 'inc/geshi.php'))) {
+	if (
+		@file_exists($cache) &&
+		(filemtime($cache) > filemtime(DOKU_INC . 'inc/geshi.php'))
+	) {
+		$highlighted_code = io_readFile($cache, false);
+		@touch($cache);
+	} else {
+		require_once(DOKU_INC . 'inc/geshi.php');
 
-    $highlighted_code = io_readFile($cache, false);
-    @touch($cache);
+		$geshi = new GeSHi($code, strtolower($language), DOKU_INC . 'inc/geshi');
+		$geshi->set_encoding('utf-8');
+		$geshi->enable_classes();
+		$geshi->set_header_type(GESHI_HEADER_PRE);
 
-  } else {
-
-    require_once(DOKU_INC . 'inc/geshi.php');
-
-    $geshi = new GeSHi($code, strtolower($language), DOKU_INC . 'inc/geshi');
-    $geshi->set_encoding('utf-8');
-    $geshi->enable_classes();
-    $geshi->set_header_type(GESHI_HEADER_PRE);
-
-    #$geshi->set_overall_class("code $language");
-    # geshi 1.0.8.* now adds the language first
-    $geshi->set_overall_class("code");
+		#$geshi->set_overall_class("code $language");
+		# geshi 1.0.8.* now adds the language first
+		$geshi->set_overall_class("code");
     
-    $geshi->set_link_target($conf['target']['extern']);
+		$geshi->set_link_target($conf['target']['extern']);
 
-    $highlighted_code = $geshi->parse_code();
+		$highlighted_code = $geshi->parse_code();
 
-    io_saveFile($cache,$highlighted_code);
-  }
+		io_saveFile($cache, $highlighted_code);
+	}
 
-  return $highlighted_code;
+	return $highlighted_code;
 }
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

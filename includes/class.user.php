@@ -398,10 +398,6 @@ class User
 	return $this->isAnon() && $fs->prefs['need_approval'] && $fs->prefs['anon_reg'];
     }
 
-    public function get_group_id()
-    {
-    }
-
     /**
     * tests if current configuration allows a guest user to register - without email verification code
     */

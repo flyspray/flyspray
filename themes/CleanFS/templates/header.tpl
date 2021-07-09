@@ -10,21 +10,28 @@
 <?php if ($fs->prefs['url_rewriting']): ?>
 <base href="<?php echo Filters::noXSS($baseurl); ?>" />
 <?php endif; ?>
+<link rel="icon" href="favicon.ico" />
 <?php if(trim($this->get_image('favicon'))): ?>
 <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
 <?php endif; ?>
 <link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
-<?php foreach ($fs->projects as $project): ?>
+<?php 
+/** @todo: This was added around Flyspray 0.9.8 by floele to help search engines find all public visible projects of a Flyspray installation.
+ * Probably because the project select is a drop down select, not simple links.
+ * What are the alternatives to not list all public projects in the HTML head section of all pages?
+ * Maybe only for the configured default page of Flyspray?
+ */
+foreach ($fs->projects as $project): ?>
 <link rel="section" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>?project=<?php echo Filters::noXSS($project[0]); ?>" />
 <?php endforeach; ?>
 <link media="screen" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme.css" rel="stylesheet" type="text/css" />
 <?php
 # css hack to fix css3only state switches with ~ in older android browser <4.3 TODO: find webkit version when that issue was fixed.
 if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 4\.[012]/' , $_SERVER['HTTP_USER_AGENT'])):?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Filters::noXSS($this->themeUrl()); ?>oldwebkitsiblingfix.css'; ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/oldwebkitsiblingfix.css'; ?>" />
 <?php endif; ?>
-<link media="print" href="<?php echo Filters::noXSS($this->themeUrl()); ?>theme_print.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo Filters::noXSS($this->themeUrl()); ?>font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link media="print" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme_print.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme_print.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
@@ -47,7 +54,16 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
 <?php endif; ?>
+<?php 
+/** 
+ * @todo load only for taskedit page, not task view (currently 'edit=yep' getparam)
+ */
+if (($do === 'details' or $do === 'newtask') && $proj->prefs['use_tags']): ?>
+<link media="screen" rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'taskedit.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>taskedit.css"></link>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/taghelper.js"></script>
+<?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
+<link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'adminpm.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>adminpm.css"></link>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
@@ -59,7 +75,25 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/calendar-setup_stripped.js"> </script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jscalendar/lang/calendar-<?php echo Filters::noXSS(substr(L('locale'), 0, 2)); ?>.js"></script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/js/lightbox.js"></script>
-<?php if(isset($conf['general']['syntax_plugin']) && $conf['general']['syntax_plugin'] !='dokuwiki'): ?><script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script><?php endif; ?>
+<?php
+// load only for page types that have an editor textarea
+if (
+	isset($conf['general']['syntax_plugin'])
+	&& $conf['general']['syntax_plugin'] == 'html'
+	&& in_array($do, array('details', 'newtask', 'admin', 'pm', 'editcomment'))
+): ?>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/ckeditor.js"></script>
+<?php
+/** prototype.js spits js-error when enabling hljs.initHighlightingOnLoad();
+ * As removal of prototype.js is planned keep the codesnippet highlight stuff here for later turn on.
+ */
+/*
+<link href="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
+<script src="<?php echo Filters::noXSS($baseurl); ?>js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+*/
+?>
+<?php endif; ?>
 <link rel="stylesheet" href="<?php echo Filters::noXSS($baseurl); ?>js/lightbox/css/lightbox.css" type="text/css" media="screen" />
 <?php foreach(TextFormatter::get_javascript() as $file): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>plugins/<?php echo Filters::noXSS($file); ?>"></script>

@@ -1,0 +1,121 @@
+/* ugly rough experimental development css */
+
+.kanbanboard {
+        display:flex;
+        flex-wrap:wrap;
+	min-height:200px;
+}
+.col {
+        background-color:#eee;
+        margin:3px;
+        border:1px solid #ccc;
+        min-width:10%;
+        border-radius:4px;
+	position:relative;
+}
+.colname {
+        background-color:#fc9;
+        text-align:center;
+	padding:0.4em;
+        padding-right:1.5em;
+}
+.colname span{
+        border-radius:50%;
+        background-color:#fff;
+        float:left;
+        display:inline-block;
+        line-height:1em;
+        padding:0.2em;
+        min-width:1em;
+}
+.task {
+        margin:0.5em;
+        border:1px solid #ccc;
+        background-color:#fff;
+        padding:0.2em;
+        border-radius:4px;
+        max-width:240px;
+        min-width:60px;
+}
+.task[draggable="true"]:hover {
+	background-color: #ff6;
+	cursor: grab;
+}
+
+.collapsestatus{display:none;}
+
+.col label{
+	padding:0.2em 0.4em;
+        margin:0.2em;
+        position:absolute;
+        right:0;
+        top:0;
+	cursor:pointer;
+        border-radius:3px;
+        display:none;
+}
+.col .colname:hover + label {
+        display:block;
+        background-color:rgba(0,0,0,0.2);
+}
+input.collapsestatus + .col + label {display:none;}
+input.collapsestatus:checked + .col {
+        height:1em;
+        width:2em;
+        min-width:0;
+}
+input.collapsestatus:checked + .col {
+        transform-origin:2em 2em;
+        transform:rotate(90deg);
+}
+input.collapsestatus:checked + .col .colname {
+        position:absolute;
+        width:200px;
+        box-sizing:border-box;
+        padding-left:4em;
+}
+input.collapsestatus:checked + .col .colname span {
+        transform-origin:top left;
+        transform:rotate(-90deg);
+        position:absolute;
+        left:0;
+        top:2em;
+        margin:0.2em;
+}
+input.collapsestatus:checked + .col > label{display:none;}
+input.collapsestatus:checked + .col + label {
+        display:block;
+        z-index:1;
+        padding:0.6em;
+        padding-top:0.2em;
+        background-color:rgba(0,0,0,0.2);
+        border-radius:3px;
+        margin-left:-0.6em;
+        margin-top:2em;
+        width:2em;
+        height:2em;
+        box-sizing:border-box;
+        cursor:pointer;
+}
+input.collapsestatus:checked + .col .task {display:none;}
+
+.kanbanboard .task .assignedto img{
+	width:20px;
+	height:20px;
+	border-radius:50%;
+	user-select:none; /* prevent user image be dragged instead of task */
+}
+
+.typ1,
+.typ2,
+.typ3,
+.typ4,
+.typ5,
+.typ6 {
+	font-family:fontawesome;
+}
+
+/* demo coloring for some basic kanban volumns */
+.status1 {background-color:#999;}
+.status2 {background-color:#cf0;}
+.status3 {background-color:#fc0;}

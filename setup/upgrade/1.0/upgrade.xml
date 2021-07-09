@@ -208,8 +208,14 @@
             <NOTNULL/>
             <DEFAULT value="0"/>
         </field>
+	<field name="description" type="C" size="200">
+		<descr>optional notes, e.g. for generating bills</descr>
+	</field>
         <index name="task_id_effort">
             <col>task_id</col>
+        </index>
+        <index name="user_id_effort">
+            <col>user_id</col>
         </index>
     </table>
   <table name="groups">
@@ -388,7 +394,6 @@
       <DEFAULT value="0"/>
     </field>
     <field name="intro_message" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="project_is_active" type="I" size="1">
@@ -414,28 +419,23 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="notify_email" type="X">
-      <NOTNULL/>
+    <field name="notify_email" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_jabber" type="X">
-      <NOTNULL/>
+    <field name="notify_jabber" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_reply" type="X">
-      <NOTNULL/>
+    <field name="notify_reply" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="notify_types" type="C" size="100">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="feed_img_url" type="X">
-      <NOTNULL/>
+    <field name="feed_img_url" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="notify_subject" type="C" size="100">
@@ -458,9 +458,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="default_task" type="X">
-      <NOTNULL/>
+      <descr>a task description placeholder for the create task form</descr>
     </field>
     <field name="default_entry" type="C" size="8">
+      <descr>default page type (index,toplevel,roadmap,kanban)</descr>
       <NOTNULL/>
       <DEFAULT value="index"/>
     </field>
@@ -495,12 +496,28 @@
       <DEFAULT value="id"/>
     </field>
     <field name="default_order_by_dir" type="C" size="5">
+      <descr>deprecated and unused, default_order_by field now contains complete order by rules</descr>
       <NOTNULL/>
       <DEFAULT value="desc"/>
     </field>
     <field name="custom_style" type="C" size="32">
     </field>
     <field name="freetagging" type="I" size="1">
+      <descr>allows automatic creation of new tags when adding/editing a task</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_tags" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_gantt" type="I" size="1">
+      <descr>link to gantt view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_kanban" type="I" size="1">
+      <descr>link to kanban view</descr>
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
@@ -538,15 +555,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="closure_comment" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="closure_comment" type="X"></field>
     <field name="item_summary" type="C" size="100">
       <NOTNULL/>
     </field>
-    <field name="detailed_desc" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="detailed_desc" type="X"></field>
     <field name="item_status" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -888,6 +901,8 @@
     <field name="tag_id" type="I" size="5">
       <KEY/>
     </field>
+    <field name="added" type="I" size="11"></field>
+    <field name="added_by" type="I" size="3"></field>
     <index name="task_id_tag">
       <UNIQUE/>
       <col>task_id</col>

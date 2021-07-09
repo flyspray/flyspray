@@ -3,6 +3,7 @@
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
 <div>ADOdb version: <?php if(isset($adodbversion)) { echo Filters::noXSS($adodbversion); } ?></div>
+<div>Swiftmailer version: <?php if(isset($swiftmailerversion)) { echo Filters::noXSS($swiftmailerversion); } ?></div>
 <div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
 <div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
@@ -58,12 +59,16 @@
 <th>table_name</th>
 <th>table_type</th>
 <th></th>
+<th></th>
+<th></th>
 <th>default collation</th>
 <th>comment</th>
 </tr>
 <tr class="dbfield">
 <th>column_name</th>
 <th>data_type</th>
+<th>column_default</th>
+<th>is_nullable</th>
 <th>character_set_name</th>
 <th>collation_name</th>
 <th>comment</th>
@@ -84,6 +89,8 @@ foreach($fsfields as $f):
 	<td><?= Filters::noXSS($fstables[$ti]['table_name']) ?></td>
 	<td><?= $fstables[$ti]['table_type'] ?></td>
 	<td></td>
+	<td></td>
+	<td></td>
 	<td><?= $fstables[$ti]['table_collation'] ?></td>
 	<td><?= Filters::noXSS($fstables[$ti]['table_comment']) ?></td>
 	</tr>
@@ -91,6 +98,8 @@ foreach($fsfields as $f):
 <tr class="dbfield">
 <td><?= Filters::noXSS($f['column_name']) ?></td>
 <td><?= $f['column_type'] ?></td>
+<td><?= is_null($f['column_default']) ? '<em>NULL</em>' : Filters::noXSS($f['column_default']) ?></td>
+<td><?= $f['is_nullable'] ?></td>
 <td><?= $f['character_set_name'] ?></td>
 <td><?= $f['collation_name'] ?></td>
 <td><?= Filters::noXSS($f['column_comment']) ?></td>

@@ -14,7 +14,14 @@
 
 		<li>
 			<label for="emailaddress"><?= eL('emailaddress') ?></label>
-			<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" required="required" type="text" size="20" maxlength="100" /> <?= eL('validemail') ?>
+			<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" required="required" type="text" size="20" maxlength="100" /> 
+			<?php 
+			/* multiple email addresses now disabled at registration, so do not show that multiple addresses hint anymore.
+			 * 1. Would require separate email verification (roundtrip with magic verification code) for each email address.
+			 * 2. Users need a user interface to manage their multiple email addresses and which action/notification types connected to each address.
+			 */
+			/* eL('validemail') */
+			?>
 		</li>
 		<?php if ($fs->prefs['repeat_emailaddress']): ?>
 		<li>

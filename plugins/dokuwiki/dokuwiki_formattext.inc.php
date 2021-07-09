@@ -1,13 +1,13 @@
 <?php
 class dokuwiki_TextFormatter
 {    
-    static function render($text, $type = null, $id = null, $instructions = null)
-    {
-        global $conf, $baseurl, $db, $fs;
+		static function render($text, $type = null, $id = null, $instructions = null)
+		{
+			global $conf, $baseurl, $db, $fs;
         
-        // Unfortunately dokuwiki also uses $conf
-        $fs_conf = $conf;
-        $conf = array();
+			// Unfortunately dokuwiki also uses $conf
+			$fs_conf = $conf;
+			$conf = array();
 
         // Dokuwiki generates some notices
         error_reporting(E_ALL ^ E_NOTICE);
@@ -54,50 +54,48 @@ class dokuwiki_TextFormatter
         $Renderer->acronyms = getAcronyms();
         $Renderer->interwiki = getInterwiki();
         
-	$conf = $fs_conf;
-	$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
-        $conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
-        $conf['fperm'] = 0600;
-        $conf['dperm'] = 0700;
+		$conf = $fs_conf;
+		$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
+		$conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
+		$conf['fperm'] = 0600;
+		$conf['dperm'] = 0700;
         
-        // Loop through the instructions
-        foreach ($instructions as $instruction) {
-            // Execute the callback against the Renderer
-            call_user_func_array(array(&$Renderer, $instruction[0]), $instruction[1]);
-        }
+		// Loop through the instructions
+		foreach ($instructions as $instruction) {
+			// Execute the callback against the Renderer
+			call_user_func_array(array(&$Renderer, $instruction[0]), $instruction[1]);
+		}
 
-        $return = $Renderer->doc;
+		$return = $Renderer->doc;
 		
-        // Display the output
-        if (Get::val('string')) {
-            $words = explode(' ', Get::val('string'));
-            foreach($words as $word) {
-                $return = html_hilight($return, $word);
-            }
-        }
+		// Display the output
+		if (Get::val('string')) {
+			$words = explode(' ', Get::val('string'));
+			foreach($words as $word) {
+				$return = html_hilight($return, $word);
+			}
+		}
         
-        return $return;
-    }
-    static function textarea( $name, $rows, $cols, $attrs = null, $content = null) {
-    	
-    	$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
-        $rows = intval($rows);
-        $cols = intval($cols);
-        $return = '<div class="dokuwiki_toolbar">'
-        		. dokuwiki_TextFormatter::getDokuWikiToolbar( $attrs['id'] )
-        		. '</div>';
-        
-        $return .= "<textarea name=\"{$name}\" cols=\"$cols\" rows=\"$rows\" ";
-        if (is_array($attrs)) {
-            $return .= join_attrs($attrs);
-        }
-        $return .= '>';
-        if (!is_null($content)) {
-            $return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
-        }
-        $return .= '</textarea>';
-        return $return;
-    }
+		return $return;
+	}
+
+	static function textarea($name, $rows, $cols, $attrs = null, $content = null)
+	{   	
+		$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
+		$rows = intval($rows);
+		$cols = intval($cols);
+		$return = '<div class="dokuwiki_toolbar">'. dokuwiki_TextFormatter::getDokuWikiToolbar($attrs['id']) . '</div>';
+		$return .= "<textarea name=\"{$name}\" cols=\"$cols\" rows=\"$rows\" ";
+		if (is_array($attrs)) {
+			$return .= join_attrs($attrs);
+		}
+		$return .= '>';
+		if (!is_null($content)) {
+			$return .= htmlspecialchars($content, ENT_QUOTES, 'utf-8');
+		}
+		$return .= '</textarea>';
+		return $return;
+	}
 
 	/**
 	 * Displays a toolbar for formatting text in the DokuWiki Syntax
@@ -105,45 +103,42 @@ class dokuwiki_TextFormatter
 	 *
 	 * @param string $textareaId
 	 */
-	static function getDokuWikiToolbar( $textareaId ) {
+	static function getDokuWikiToolbar($textareaId)
+	{
 		global $conf, $baseurl;
 		$out='';
-		
-		$out.='<a tabindex="-1" title="'.eL('editorbold').'" href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/format-text-bold.png" alt="Bold" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editoritalic').'" href="javascript:void(0);" onclick="surroundText(\'//\', \'//\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/format-text-italic.png" alt="Italics" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorunderline').'" href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/format-text-underline.png" alt="Underline" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorstrikethrough').'" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/format-text-strikethrough.png" alt="Strikethrough" /></a>';
-		$out.='<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" align="bottom" alt="|" style="margin: 0 3px 0 3px;" />';
-		$out.='<a tabindex="-1" title="'.eL('editorh1').'" href="javascript:void(0);" onclick="surroundText(\'======\', \'======\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/h1.gif" width="23" height="22" alt="H1" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorh2').'" href="javascript:void(0);" onclick="surroundText(\'=====\', \'=====\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/h2.gif" width="23" height="22" alt="H2" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/h3.gif" width="23" height="22" alt="H3" /></a>';
-		$out.='<img title="Divider" src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
+
+		$out.='<a tabindex="-1" title="'.eL('editorbold').'" href="javascript:void(0);" onclick="surroundText(\'**\', \'**\', \''.$textareaId.'\'); return false;"><i class="fa fa-bold fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editoritalic').'" href="javascript:void(0);" onclick="surroundText(\'//\', \'//\', \''.$textareaId.'\'); return false;"><i class="fa fa-italic fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorunderline').'" href="javascript:void(0);" onclick="surroundText(\'__\', \'__\', \''.$textareaId.'\'); return false;"><i class="fa fa-underline fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorstrikethrough').'" href="javascript:void(0);" onclick="surroundText(\'&lt;del&gt;\', \'&lt;/del&gt;\', \''.$textareaId.'\'); return false;"><i class="fa fa-strikethrough fa-lg"></i></a>';
+		#$out.='<span class="divider"></span>';
+		$out.='<a tabindex="-1" title="'.eL('editorh3').'" href="javascript:void(0);" onclick="surroundText(\'====\', \'====\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">3</span></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorh4').'" href="javascript:void(0);"  onclick="surroundText(\'===\', \'===\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">4</span></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorh5').'" href="javascript:void(0);" onclick="surroundText(\'==\', \'==\', \''.$textareaId.'\'); return false;"><i class="fa fa-header fa-lg"></i><span class="hdepth">5</span></a>';
+		#$out.='<span class="divider"></span>';
 
 		/* hide embed syntax until the 'fetch.php issue' is solved or an alternative is implemented
 		$out.='<a tabindex="-1" title="'.eL('editorimage').'" href="javascript:void(0);" onclick="surroundText(\'&#123;&#123;http://\', \'&#125;&#125;\', \''.$textareaId.'\'); return false;">
-			<img src="'.$baseurl.'plugins/dokuwiki/img/image-x-generic.png" alt="image" /></a>';
+		<img src="'.$baseurl.'plugins/dokuwiki/img/image-x-generic.png" alt="image" /></a>';
 		*/
 
-		$out.='<a tabindex="-1" title="'.eL('editorunorderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/ul.gif" width="23" height="22" alt="ul" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editororderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/ol.gif" width="23" height="22" alt="ol" /></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/hr.gif" width="23" height="22" alt="hr" /></a>';
-		$out.='<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
-		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[http://example.com|External Link\', \']]\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/text-html.png" alt="Link" /></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorunorderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ul fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editororderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ol fa-lg"></i></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><hr class="editorhr"/></a>';
+		#$out.='<span class="divider"></span>';
+		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[https://\', \']]\', \''.$textareaId.'\'); return false;"><i class="fa fa-link fa-lg"></i></a>';
 
 		/* emailicon for a generic link and a globe for today ftp is a bit unpopular: seems not the most important button/syntax on flyspray's default dokuwiki toolbar
 		$out.='<a tabindex="-1" title="Insert Email" href="javascript:void(0);" onclick="surroundText(\'[[\', \']]\', \''.$textareaId.'\'); return false;">
-			<img src="'.$baseurl.'plugins/dokuwiki/img/email.png" alt="Insert Email" border="0" /></a>';
+		<img src="'.$baseurl.'plugins/dokuwiki/img/email.png" alt="Insert Email" border="0" /></a>';
 		$out.='<a tabindex="-1" href="javascript:void(0);" onclick="surroundText(\'[[ftp://\', \']]\', \''.$textareaId.'\'); return false;">
-			<img src="'.$baseurl.'plugins/dokuwiki/img/network.png" alt="Insert FTP Link" title="Insert FTP Link" border="0" /></a>';
-				
-		$out.='<img src="'.$baseurl.'plugins/dokuwiki/img/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
-		*/
-		
-		$out.='<a tabindex="-1" title="'.eL('editorcode').'" href="javascript:void(0);" onclick="surroundText(\'<code>\', \'</code>\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/source.png" alt="Code" /></a>';
-		/*
-		$out.='<a tabindex="-1" title="'.eL('editorcodesyntax).'" href="javascript:void(0);" onclick="surroundText(\'<code php>\', \'</code>\', \''.$textareaId.'\'); return false;"><img src="'.$baseurl.'plugins/dokuwiki/img/source_php.png" alt="Code" /></a>';
+		<img src="'.$baseurl.'plugins/dokuwiki/img/network.png" alt="Insert FTP Link" title="Insert FTP Link" border="0" /></a>';
+		$out.='<span class="divider"></span>';
 		*/
 
+		$out.='<a tabindex="-1" title="'.eL('editorcode').'" href="javascript:void(0);" onclick="surroundText(\'<code>\', \'</code>\', \''.$textareaId.'\'); return false;"><i class="fa fa-code fa-lg"></i></a>';
+		
 		# IDEA/TODO: list of available languages for syntax highlighting, dropdownlist or cheatsheet similiar to the wikicheatsheet below
 		# IDEA/TODO: smiley selector similiar to the wikicheatsheet below.
 		
@@ -166,16 +161,16 @@ class dokuwiki_TextFormatter
 <div id="wikicheatsheet_'.$textareaId.'">
 <table>
 <tbody>
-<tr><th>'.L('editorlink').'</th><td>[[https://www.flyspray.org|Flyspray]]</td></tr>
-<tr><th>'.L('editorquote').'</th><td>&gt; a quote</td></tr>
-<tr><th>'.L('editorcode').'</th><td>&lt;code&gt;preformatted monospace text&lt;code&gt;</td></tr>
-<tr><th>'.L('editorcodesyntax').'</th><td>&lt;code php&gt;echo "Helloworld";&lt;code&gt;</td></tr>
+<tr><th>'.eL('editorlink').'</th><td>[[https://www.flyspray.org|Flyspray]]</td></tr>
+<tr><th>'.eL('editorquote').'</th><td>&gt; a quote</td></tr>
+<tr><th>'.eL('editorcode').'</th><td>&lt;code&gt;preformatted monospace text&lt;code&gt;</td></tr>
+<tr><th>'.eL('editorcodesyntax').'</th><td>&lt;code php&gt;echo "Helloworld";&lt;code&gt;</td></tr>
 </tbody>
 </table>
 </div>
 </div>';
 		*/
-		
+
 		return $out;
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <schema version="0.3">
   <table name="user_emails">
-  	<descr>multiple addresses for users. subject to change in FS1.1+!</descr>
+    <descr>multiple addresses for users. subject to change in FS1.1+!</descr>
     <field name="id" type="I" size="5"></field>
     <field name="email_address" type="C" size="100"></field>
     <field name="oauth_uid" type="C" size="255">
@@ -14,7 +14,7 @@
     </field>
   </table>
   <table name="tags">
-  	<desc>Do not use this table. pre FS1.0-beta table</desc>
+    <desc>Do not use this table. pre FS1.0-beta table</desc>
     <field name="task_id" type="I" size="5"></field>
     <field name="tag" type="C" size="100"></field>
   </table>
@@ -122,7 +122,7 @@
     </index>
   </table>
   <table name="cache">
-  	<descr>Table to cache RSS/Atom feeds</descr>
+    <descr>Table to cache RSS/Atom feeds</descr>
     <field name="id" type="I" size="6">
       <KEY/>
       <AUTOINCREMENT/>
@@ -193,7 +193,7 @@
     </index>
   </table>
   <table name="dependencies">
-  	<descr>Task inter-dependencies</descr>
+    <descr>Task inter-dependencies</descr>
     <field name="depend_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -212,36 +212,42 @@
       <col>dep_task_id</col>
     </index>
   </table>
-    <table name="effort">
-    	<descr>log of time spent on tasks</descr>
-        <field name="effort_id" type="I" size="10">
-            <KEY/>
-            <AUTOINCREMENT/>
-        </field>
-        <field name="task_id" type="I" size="10">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="date_added" type="I" size="11">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="user_id" type="I" size="3">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <field name="start_timestamp" type="I" size="11"/>
-        <field name="end_timestamp" type="I" size="11"/>
-        <field name="effort" type="I" size="15">
-            <NOTNULL/>
-            <DEFAULT value="0"/>
-        </field>
-        <index name="task_id_effort">
-            <col>task_id</col>
-        </index>
-    </table>
+  <table name="effort">
+    <descr>log time spent on a task</descr>
+    <field name="effort_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+    </field>
+    <field name="task_id" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="date_added" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="user_id" type="I" size="3">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="start_timestamp" type="I" size="11"/>
+    <field name="end_timestamp" type="I" size="11"/>
+    <field name="effort" type="I" size="15">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="description" type="C" size="200">
+      <descr>optional notes, e.g. for generating bills</descr>
+    </field>	
+    <index name="task_id_effort">
+      <col>task_id</col>
+    </index>
+    <index name="user_id_effort">
+      <col>user_id</col>
+    </index>
+  </table>
   <table name="groups">
-  	<descr>User Groups for the Flyspray bug killer</descr>
+    <descr>User Groups for the Flyspray bug killer</descr>
     <field name="group_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -390,7 +396,7 @@
     </index>
   </table>
   <table name="history">
-  	<descr>log of Flyspray activities</descr>
+    <descr>log of Flyspray activities</descr>
     <field name="history_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -462,7 +468,7 @@
     </index>
   </table>
   <table name="list_os">
-  	<descr>Operating system list for the Flyspray bug killer</descr>
+    <descr>Operating system list for the Flyspray bug killer</descr>
     <field name="os_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -489,7 +495,7 @@
     </index>
   </table>
   <table name="list_resolution">
- 	<descr>task close reasons</descr>
+    <descr>task close reasons</descr>
     <field name="resolution_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -516,7 +522,7 @@
     </index>
   </table>
   <table name="list_status">
-  	<descr>List of possible task statuses</descr>
+    <descr>List of possible task statuses</descr>
     <field name="status_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -543,7 +549,7 @@
     </index>
   </table>
   <table name="list_tag">
-  	<descr>definition of tags/labels for tasks</descr>
+    <descr>definition of tags/labels for tasks</descr>
     <field name="tag_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -571,7 +577,7 @@
     </index>
   </table>
   <table name="list_tasktype">
-  	<descr>List of possible task types</descr>
+    <descr>List of possible task types</descr>
     <field name="tasktype_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -598,7 +604,7 @@
     </index>
   </table>
   <table name="list_version">
-  	<descr>list of project versions/milestones/software release versions</descr>
+    <descr>list of project versions/milestones/software release versions</descr>
     <field name="version_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -633,7 +639,7 @@
     </index>
   </table>
   <table name="notification_messages">
-  	<descr>Notification body and subject</descr>
+    <descr>Notification body and subject</descr>
     <field name="message_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -650,7 +656,7 @@
     </field>
   </table>
   <table name="notification_recipients">
-  	<descr>Notification recipient list</descr>
+    <descr>Notification recipient list</descr>
     <field name="recipient_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -667,7 +673,7 @@
     </field>
   </table>
   <table name="notifications">
-  	<descr>Extra task notification registrations are stored here</descr>
+    <descr>Extra task notification registrations are stored here</descr>
     <field name="notify_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -687,7 +693,7 @@
     </index>
   </table>
   <table name="prefs">
-  	<descr>global settings of Flyspray</descr>
+    <descr>global settings of Flyspray</descr>
     <field name="pref_id" type="I" size="1">
       <KEY/>
       <AUTOINCREMENT/>
@@ -698,7 +704,7 @@
     <field name="pref_value" type="X" />
   </table>
   <table name="projects">
-  	<descr>project settings</descr>
+    <descr>project settings</descr>
     <field name="project_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -715,7 +721,6 @@
       <DEFAULT value="0"/>
     </field>
     <field name="intro_message" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="project_is_active" type="I" size="1">
@@ -740,28 +745,23 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="notify_email" type="X">
-      <NOTNULL/>
+    <field name="notify_email" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_jabber" type="X">
-      <NOTNULL/>
+    <field name="notify_jabber" type="C" size="1000">
       <DEFAULT value=""/>
     </field>
-    <field name="notify_reply" type="X">
-      <NOTNULL/>
+    <field name="notify_reply" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="notify_types" type="C" size="100">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="feed_img_url" type="X">
-      <NOTNULL/>
+    <field name="feed_img_url" type="C" size="255">
       <DEFAULT value=""/>
     </field>
     <field name="feed_description" type="X">
-      <NOTNULL/>
       <DEFAULT value=""/>
     </field>
     <field name="notify_subject" type="C" size="100">
@@ -784,9 +784,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="default_task" type="X">
-      <NOTNULL/>
+      <descr>task description placeholder for create task form</descr>
     </field>
     <field name="default_entry" type="C" size="8">
+      <descr>default page type (index, toplevel, roadmap, kanban)</descr>
       <NOTNULL/>
       <DEFAULT value="index"/>
     </field>
@@ -821,18 +822,34 @@
       <DEFAULT value="id"/>
     </field>
     <field name="default_order_by_dir" type="C" size="5">
+      <descr>deprecated and unused, default_order_by field now contains complete order by rules</descr>
       <NOTNULL/>
       <DEFAULT value="desc"/>
     </field>
     <field name="custom_style" type="C" size="32">
     </field>
     <field name="freetagging" type="I" size="1">
+      <descr>allows automatic creation of new tags when adding/editing a task</descr>
       <NOTNULL/>
-      <DEFAULT value="1"/>>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="use_tags" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="use_gantt" type="I" size="1">
+      <descr>link to gantt view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="use_kanban" type="I" size="1">
+      <descr>link to kanban view</descr>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
   <table name="registrations">
-  	<descr>table for yet unconfirmed user registrations</descr>
+    <descr>table for yet unconfirmed user registrations</descr>
     <field name="reg_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -869,7 +886,7 @@
     </field>
   </table>
   <table name="related">
-  	<descr>contains loose task relations to another task or task duplicates</descr>
+    <descr>contains loose task relations to another task or task duplicates</descr>
     <field name="related_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -894,7 +911,7 @@
     </index>
   </table>
   <table name="reminders">
-  	<descr>scheduled task reminders</descr>
+    <descr>scheduled task reminders</descr>
     <field name="reminder_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -928,7 +945,7 @@
     </field>
   </table>
   <table name="searches">
-  	<descr>Saves custom searches of users</descr>
+    <descr>Saves custom searches of users</descr>
     <field name="id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -949,7 +966,7 @@
     </field>
   </table>
   <table name="tasks">
-  	<desc>main table for storing tasks</desc>
+    <desc>main table for storing tasks</desc>
     <field name="task_id" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -982,15 +999,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="closure_comment" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="closure_comment" type="X"></field>
     <field name="item_summary" type="C" size="100">
       <NOTNULL/>
     </field>
-    <field name="detailed_desc" type="X">
-      <NOTNULL/>
-    </field>
+    <field name="detailed_desc" type="X"></field>
     <field name="item_status" type="I" size="3">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1095,13 +1108,15 @@
     </index>
   </table>
   <table name="task_tag">
-  	<desc>join table to add tags/labels to tasks</desc>
+    <desc>join table to add tags/labels to tasks</desc>
     <field name="task_id" type="I" size="5">
       <KEY/>
     </field>
     <field name="tag_id" type="I" size="5">
       <KEY/>
     </field>
+    <field name="added" type="I" size="11"></field>
+    <field name="added_by" type="I" size="3"></field>
     <index name="task_id_tag">
       <UNIQUE/>
       <col>task_id</col>
@@ -1109,7 +1124,7 @@
     </index>
   </table>
   <table name="users">
-  	<descr>user accounts of Flyspray</descr>
+    <descr>user accounts of Flyspray</descr>
     <field name="user_id" type="I" size="3">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1205,7 +1220,7 @@
     </index>
   </table>
   <table name="users_in_groups">
-  	<descr>Which users are in which groups</descr>
+    <descr>Which users are in which groups</descr>
     <field name="record_id" type="I" size="5">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1228,7 +1243,7 @@
     </index>
   </table>
   <table name="votes">
-  	<descr>votes for tasks</descr>
+    <descr>votes for tasks</descr>
     <field name="vote_id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1246,11 +1261,11 @@
       <DEFAULT value="0"/>
   </field>
   <index name="task_id_votes">
-  	<col>task_id</col>
+    <col>task_id</col>
   </index>
   </table>
   <table name="links">
-  	<descr>link a resource (e.g. an URL) with a task - in a more structured way than the task description text area.</descr>
+    <descr>link a resource (e.g. an URL) with a task - in a more structured way than the task description text area.</descr>
     <field name="link_id" type="I" size="11">
       <KEY/>
       <AUTOINCREMENT/>
@@ -1279,10 +1294,10 @@
     </index>
   </table>
   <sql>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Admin', 'Members have unlimited access to all functionality', 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Developers', 'Global Developers for all projects', 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1);</query>
-    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Reporters', 'Open new tasks / add comments in all projects', 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0);</query>
+    <query>INSERT INTO groups VALUES (DEFAULT, 'Basic', 'Members can login, relying upon Project permissions only', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0);</query>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Pending', 'Users who are awaiting approval of their accounts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);</query>
     <query>INSERT INTO groups VALUES (DEFAULT, 'Project Managers', 'Permission to do anything related to the Default Project', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);</query>
     <query>INSERT INTO history VALUES (DEFAULT, 1, 1, 1130024797, 1, '', '', '');</query>
@@ -1325,7 +1340,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'need_approval', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'spam_proof', '1');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_project', '1');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'default_entry', 'index');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'default_entry', 'index');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'dateformat_extended', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'anon_reg', '1');</query>
@@ -1361,13 +1376,13 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_password', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'repeat_emailaddress', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'massops', '0');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'relnofollow', '1');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_securimage', '0');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha', '0');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_sitekey', '');</query>
-	<query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_secret', '');</query>
-    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project!  We hope that Flyspray provides you with many hours of increased productivity.  If you have any issues, go to http://flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', NULL, '0', NULL, NULL, '', 'en', 0, 0, 0, NULL, 'index', 0, 0,'Undecided', '', 0, 0, 0, 'id desc', 'DESC', '', 1 );</query>
-    <query>INSERT INTO tasks VALUES (DEFAULT, 1, 1, 1452600000, 1, 0, 0, 0, ' ', 'Sample Task', 'This isn''t a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'relnofollow', '1');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_securimage', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha', '0');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_sitekey', '');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'captcha_recaptcha_secret', '');</query>
+    <query>INSERT INTO projects VALUES (DEFAULT, 'Default Project', 'CleanFS', 0, 'Welcome to your first Flyspray project! We hope that Flyspray provides you increased productivity. If you have any issues, go to https://bugs.flyspray.org . You can customise this message [[?do=pm&amp;project=1|here]]', 1, 'id category tasktype priority severity summary status progress', 'tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes', 1, 1, 0, '', '', '', '0', '', '', '', 'en', 0, 0, 0, '', 'index', 0, 0, 'Undecided', '', 0, 0, 0, 'id desc', 'DESC', '', 1, 0, 0, 0)</query>
+    <query>INSERT INTO tasks VALUES (DEFAULT, 1, 1, 1452600000, 1, 0, 0, 0, ' ', 'Sample Task', 'This is not a real task.  You should close it and start opening some real tasks.', 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0, '', '0', 0, 0, 0);</query>
     <query>INSERT INTO users VALUES (DEFAULT, 'super', '1b3231655cebb7a1f783eddf27d254ca', 'Superuser', '', '', 0, 1, 1, '', '', '', 25, 0, 0, 0, 0, 'en', '0', '', '', 0, 0, NULL);</query>
     <query>INSERT INTO users_in_groups VALUES (DEFAULT, 1, 1);</query>
   </sql>

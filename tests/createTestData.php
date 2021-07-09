@@ -43,7 +43,8 @@
 #createTestData();
 
 # temp: just wrapped that code in a function so it is not run by phpunit
-function createTestData(){
+function createTestData()
+{
 	# quick safety
 	exit;
 
@@ -82,8 +83,17 @@ function createTestData(){
 
   ### End of Simulation Settings ###
 
-	$subjects[] = "help me";
-
+	$subjects = array(
+		'get some fresh air dude',
+		'Cool idea I have!',
+		'bad weather :-/ change it',
+		'buy present for ...',
+		'write release notes',
+		'weired funny bug in the matrix',
+		'organize conference',
+		'send invitations'
+        );
+	
 	error_reporting(E_ALL);
 
 	define('IN_FS', 1);
@@ -119,7 +129,7 @@ function createTestData(){
 	$notify = new Notifications;
 	load_translations();
 
-	$last=$now;$now=microtime(true);echo round($now-$last,6)." s Flyspray objects\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6)." s Flyspray objects\n";
 
 	for ($i = 1; $i <= $maxadmins; $i++) {
 		$user_name = "admin$i";
@@ -130,7 +140,7 @@ function createTestData(){
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 1, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxadmins." admins created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxadmins." admins created\n";
 
 	for ($i = 1; $i <= $maxmanagers; $i++) {
 		$user_name = "pm$i";
@@ -141,7 +151,7 @@ function createTestData(){
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 2, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxmanagers." managers created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxmanagers." managers created\n";
 
 	$db->query('UPDATE {projects} SET project_is_active = 0 WHERE project_id = 1');
 	// Show more columns by default, trying to make database or flyspray crash under stress.
@@ -178,7 +188,7 @@ function createTestData(){
 	$db->query("INSERT INTO {groups} "
         . "(group_name,group_desc,project_id,group_open) "
         . "VALUES('Non-trusted Users', 'Non-trusted Users', 0, 1)");
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '."3 global user groups created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6).': '."3 global user groups created\n";
 
 
 	for ($i = 1; $i <= $maxdevelopers; $i++) {
@@ -220,21 +230,38 @@ function createTestData(){
 	for ($i = 1; $i <= $maxprojects; $i++) {
 		$projname = 'Product '.($i+1);
 
-		$db->query('INSERT INTO {projects}
-				( project_title, theme_style, intro_message,
+		$db->query('
+			INSERT INTO {projects} (
+				project_title, theme_style, intro_message,
 				others_view, anon_open, project_is_active,
-				visible_columns, visible_fields, lang_code,
-				notify_email, notify_jabber, disp_intro)
-			VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)',
-			array($projname, 'CleanFS', "Welcome to $projname", 0, 0,
-			'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
-			'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
-			'en', '', '', 1)
+				visible_columns,
+				visible_fields,
+				lang_code, notify_email, notify_jabber,
+				disp_intro, default_task, notify_reply,
+				feed_description
+			)
+			VALUES (
+				?, ?, ?,
+				?, ?, 1,
+				?,
+				?,
+				?,
+				?, ?, ?,
+				?, ?, ?
+			)',
+			array(
+				$projname, 'CleanFS', "Welcome to $projname",
+				0, 0,
+				'id category tasktype severity summary status openedby dateopened progress comments attachments votes',
+				'supertask tasktype category severity priority status private assignedto reportedin dueversion duedate progress os votes',
+				'en', '', '',
+				1, '', '',
+				'')
 		);
 		$project_id=$db->insert_Id();
 		add_project_data($project_id);
 
-		for($t=0; $t<count($tags); $t++){
+		for ($t=0; $t<count($tags); $t++){
 			$db->query("INSERT INTO {list_tag} (project_id, tag_name, show_in_list, class) VALUES (?, ?, ?, ?)",
 				array($project_id, $tags[$t]['name'].($i+1), rand(0,1), $tags[$t]['color'])
 			);
@@ -351,13 +378,19 @@ function createTestData(){
 	$codes=array('','php','xml','sql','html');
 	
 	echo "Creating $maxtasks tasks: ";
-	for ($i = 1; $i <= $maxtasks; $i++) {
-		$project_id = rand(2, $maxprojects+1); # project id 1 is default project which we exclude here
-		if ($i==1) {
+	# task id 1 is the single 'default task' after a fresh install.
+	$prevtaskopened = 1; # TODO use information_schema info about next auto_increment value of table {tasks}
+	$firsttaskid = $prevtaskopened + 1;
+	$finaltaskid=$maxtasks + $prevtaskopened;
+
+	for ($i = $firsttaskid; $i <= $finaltaskid; $i++) {
+		$project_id = rand(2, $maxprojects + 1); # project id 1 is default project which we exclude.
+		if ($i === $firsttaskid) {
 			$opened = time() - rand($timerange-(30*24*3600), $timerange);
 		} else {
 			$opened = $prevtaskopened + rand(0, 0.9*2*$timerange/$maxtasks); # 0.9 to be sure not in future
 		}
+
 		// Find someone who is allowed to open a task, do not use global groups
 		$sql = $db->query("SELECT u.user_id
 			FROM {users} u
@@ -383,51 +416,64 @@ function createTestData(){
 		$args['product_category'] = $category;
 		$args['task_severity'] = rand(1,5); # 5 fixed severities
 		$args['task_priority'] = rand(1,6); # 6 fixed priorities
-		$args['task_type'] = rand(1,2); # 2 global tasktypes after install
-		// 'product_version'
-		// 'operating_system'
-		// 'estimated_effort'
-		// 'supertask_id' - find existing task of project
+		$args['task_type'] = rand(1,2); # 2 global task types after install
+		$args['item_status'] = rand(1,6); # 6 global task status after install
+		$args['item_status'] = rand(1,6); # 6 global task status after install
+		# assigned or researching status
+		if ($args['item_status']==3 or $args['item_status']==4) {
+			$args['percent_complete'] = rand(0,8)*10;
+		}
+		# waiting or testing status
+		if ($args['item_status']==5 or $args['item_status']==6) {
+			$args['percent_complete'] = rand(4,9)*10;
+		}
 		
+		/**
+		 * @todo 'product_version'
+		 * @todo 'operating_system'
+		 * @todo 'estimated_effort'
+		 * @todo 'supertask_id' - find existing task of project
+		 */
+
 		$sql = $db->query("SELECT project_title FROM {projects} WHERE project_id = ?",
 		array($project_id));
 		$projectname = $db->fetchOne($sql);
 		$subject = $subjects[rand(0, count($subjects) - 1)];
 		$subject = sprintf($subject, $projectname);
 
-		$args['item_summary'] = "task $i ($subject)";
+		$args['item_summary'] = "$subject (task $i)";
 
-		$dparts=rand($parts[0],$parts[1]);
+		$dparts=rand($parts[0], $parts[1]);
 		$descr='';
-		for($p=0;$p<$dparts;$p++){
+		for ($p=0; $p<$dparts; $p++) {
 			$para='';
 			$type=rand(0,2); # text, list, code
-			if($type==0){
-				$dsent=rand($paralen[0],$paralen[1]);
-				for($s=0;$s<$dsent;$s++){
+			if ($type==0) {
+				$dsent=rand($paralen[0], $paralen[1]);
+				for ($s=0; $s<$dsent; $s++) {
 					$sent='';
-					$dcommas=rand($commas[0],$commas[1]);
-					for($c=0;$c<$dcommas;$c++){
+					$dcommas=rand($commas[0], $commas[1]);
+					for ($c=0; $c<$dcommas; $c++) {
 						$clausepart='';
-						$dwords=rand($clauselen[0],$clauselen[1]);
-						for($w=0;$w<$dwords;$w++){
+						$dwords=rand($clauselen[0], $clauselen[1]);
+						for ($w=0; $w<$dwords; $w++) {
 							$v=rand(0,1);
 							$wd='';
-							$dletters=rand($wordlen[0],$wordlen[1]);
-							for($l=0;$l<$dletters;$l++){
-								$wd.= ($v % 2) ? $vocals[rand(0,count($vocals)-1)] : $conso[rand(0,count($conso)-1)];
+							$dletters=rand($wordlen[0], $wordlen[1]);
+							for ($l=0; $l<$dletters; $l++) {
+								$wd.= ($v % 2) ? $vocals[rand(0, count($vocals)-1)] : $conso[rand(0, count($conso)-1)];
 								$v++;
 							}
-							if(rand(0,100)<1){
+							if (rand(0,100)<1) {
 								$wd='FS#'.rand(2,$i);
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='//'.$wd.'//';
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='**'.$wd.'**';
 							}
-							if(rand(0,100)<2){
+							if (rand(0,100)<2) {
 								$wd='__'.$wd.'__';
 							}
 							$clausepart.=$wd.' ';	
@@ -435,12 +481,17 @@ function createTestData(){
 						$sent.=$clausepart;
 						$sent.=($c+1 < $dcommas) ? ', ': '.';
 					}
-					$para.=$sent;
+					if (rand(0, 5) < 1) {
+						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+					}
 				}
-			}elseif($type==1){
+			} elseif ($type==1) {
 				# dokuwiki list
 				$para.="  * listitem\n  * listitem\n  * listitem3";
-			}elseif($type==2) {
+				if (rand(0, 5) < 1) {
+					$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+				}
+			} elseif ($type==2) {
 				# dokuwiki code
 				$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
 			}
@@ -466,12 +517,12 @@ function createTestData(){
 			);
 		}
 		$prevtaskopened=$opened;
-		if($i%500==0){
+		if ($i%500 == 0) {
                         echo $i.' mem:'.memory_get_usage()."\n";
                 }
 	} # end for maxtasks
 
-	$last=$now;$now=microtime(true); echo round($now-$last,6).': '.$maxtasks." tasks created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last, 6).': '.$maxtasks." tasks created\n";
 
 	echo "Creating $maxcomments comments: \n";
         $maxtask=$task_id;
@@ -506,11 +557,11 @@ function createTestData(){
 		$db->query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
 			array($reporter->id, $added, $comment_id));
 		
-		if($i%500==0){
+		if ($i%500 == 0){
                         echo $i.' mem:'.memory_get_usage()."\n";
                 }
 	} # end for maxcomments
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxcomments." comments created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxcomments." comments created\n";
 
 
 	// And $maxattachments total, either to task or comment
@@ -533,93 +584,72 @@ function createTestData(){
 			$origname,
 			$user_id, $date_added));
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxattachments." pseudo attachments created\n";
+	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxattachments." pseudo attachments created\n";
 	echo "\nTestdata filled in ".round($now-$start,1)." s.\n\n";
 	$db->dbClose();
 } // end function createTestData
 
 
-function getAttachmentDescription() {
+function getAttachmentDescription()
+{
     $type = rand(1, 100);
 
     if ($type > 80 && $type <= 100) {
         return 'Information that might help solve the problem';
-    }
-    elseif ($type == 79) {
+    } elseif ($type == 79) {
         return 'Pic of my pet alligator';
-    }
-    elseif ($type == 78) {
+    } elseif ($type == 78) {
         return 'Pic of my pet rhinoceros';
-    }
-    elseif ($type == 77) {
+    } elseif ($type == 77) {
         return 'Pic of my pet elephant';
-    }
-    elseif ($type == 76 || $type == 75) {
+    } elseif ($type == 76 || $type == 75) {
         return 'Pic of my pet monkey';
-    }
-    elseif ($type == 74 || $type == 73) {
+    } elseif ($type == 74 || $type == 73) {
         return 'Pic of my undulate';
-    }
-    elseif ($type == 72 || $type == 71) {
+    } elseif ($type == 72 || $type == 71) {
         return 'Pic of my goldfish';
-    }
-    elseif ($type == 70 || $type == 69) {
+    } elseif ($type == 70 || $type == 69) {
         return 'Pic of my pet pig';
-    }
-    elseif ($type == 68 || $type == 67) {
+    } elseif ($type == 68 || $type == 67) {
         return 'Pic of my pet snake';
-    }
-    elseif ($type == 66 || $type == 65) {
+    } elseif ($type == 66 || $type == 65) {
         return 'Pic of my pet rat';
-    }
-    elseif ($type == 64 || $type == 63) {
+    } elseif ($type == 64 || $type == 63) {
         return 'Pic of my pet goat';
-    }
-    elseif ($type == 62 || $type == 61) {
+    } elseif ($type == 62 || $type == 61) {
         return 'Pic of my pet rabbit';
-    }
-    elseif ($type == 60 || $type == 59) {
+    } elseif ($type == 60 || $type == 59) {
         return 'Pic of my pet gerbil';
-    }
-    elseif ($type == 58 || $type == 57) {
+    } elseif ($type == 58 || $type == 57) {
         return 'Pic of my pet hamster';
-    }
-    elseif ($type == 56 || $type == 55) {
+    } elseif ($type == 56 || $type == 55) {
         return 'Pic of my pet chinchilla';
-    }
-    elseif ($type == 54 || $type == 53) {
+    } elseif ($type == 54 || $type == 53) {
         return 'Pic of my pet guinea pig';
-    }
-    elseif ($type == 52 || $type == 51) {
+    } elseif ($type == 52 || $type == 51) {
         return 'Pic of my pet turtle';
-    }
-    elseif ($type == 50 || $type == 49) {
+    } elseif ($type == 50 || $type == 49) {
         return 'Pic of my pet lizard';
-    }
-    elseif ($type == 48 || $type == 47) {
+    } elseif ($type == 48 || $type == 47) {
         return 'Pic of my pet frog';
-    }
-    elseif ($type == 46 || $type == 45) {
+    } elseif ($type == 46 || $type == 45) {
         return 'Pic of my pet tarantula';
-    }
-    elseif ($type == 44 || $type == 43) {
+    } elseif ($type == 44 || $type == 43) {
         return 'Pic of my pet hermit crab';
-    }
-    elseif ($type == 42 || $type == 41) {
+    } elseif ($type == 42 || $type == 41) {
         return 'Pic of my pet parrot';
-    }
-    elseif ($type >= 40 && $type < 25) {
+    } elseif ($type >= 40 && $type < 25) {
         return 'Pic of my dog';
-    }
-    else {
+    } else {
         return 'Pic of my cat';
     }
 }
 
-function add_project_data($pid = 0) {
+function add_project_data($pid = 0)
+{
 	global $db;
 
-	if(!$pid>0){
+	if (!$pid>0) {
 		$sql = $db->query('SELECT project_id FROM {projects} ORDER BY project_id DESC', false, 1);
 		$pid = $db->fetchOne($sql);
 	}
@@ -698,5 +728,3 @@ function add_project_data($pid = 0) {
 		);
 	}
 } # end function add_project_data
-
-?>
