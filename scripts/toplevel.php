@@ -57,7 +57,7 @@ if(count($projects)>0){
     $stats[$project['project_id']]['open'] = $db->fetchOne($sql);
 
     $sql = $db->query('SELECT avg(percent_complete) FROM {tasks} WHERE project_id = ? AND is_closed = 0', array($project['project_id']));
-    $stats[$project['project_id']]['average_done'] = round($db->fetchOne($sql), 0);
+    $stats[$project['project_id']]['average_done'] = round(floatval($db->fetchOne($sql)), 0);
 
     if ($proj->id) {
       $prefs = $proj->prefs;
