@@ -188,9 +188,8 @@ class Database
      *
      * @param $result
      * @access public
-     * @return void
+     * @return array
      */
-
     public function fetchRow($result)
     {
         return $result->fetchRow();
@@ -202,9 +201,8 @@ class Database
      * @param $result
      * @param int $col
      * @access public
-     * @return void
+     * @return array
      */
-
     public function fetchCol($result, $col=0)
     {
         $tab = array();
@@ -224,7 +222,6 @@ class Database
      * @access public
      * @return void
      */
-
     public function query($sql, $inputarr = false, $numrows = -1, $offset = -1)
     {
         // auto add $dbprefix where we have {table}
@@ -246,8 +243,7 @@ class Database
         }
 
         if (!$result) {
-
-            if(function_exists("debug_backtrace") && defined('DEBUG_SQL')) {
+            if(function_exists('debug_backtrace') && defined('DEBUG_SQL')) {
                 echo "<pre style='text-align: left;'>";
                 var_dump(debug_backtrace());
                 echo "</pre>";
@@ -255,7 +251,7 @@ class Database
 
             $query_params = '';
 
-            if(is_array($inputarr) && count($inputarr)) {
+            if (is_array($inputarr) && count($inputarr)) {
                 $query_params =  implode(',', array_map(array('Filters','noXSS'), $inputarr));
             }
 
@@ -291,7 +287,7 @@ class Database
      *
      * @param $result
      * @access public
-     * @return array
+     * @return mixed
      */
     public function fetchOne($result)
     {
@@ -338,7 +334,7 @@ class Database
      * @param mixed $alt
      * @param mixed $prefix
      * @access public
-     * @return void
+     * @return string
      */
     public function getColumnNames($table, $alt, $prefix)
     {
@@ -353,8 +349,7 @@ class Database
                                          array(str_replace('"', '', $table)));
         $fetched_columns = $this->fetchAllArray($fetched_columns);
 
-        foreach ($fetched_columns as $key => $value)
-        {
+        foreach ($fetched_columns as $key => $value) {
             $col_names[$key] = $prefix . $value[0];
         }
 
