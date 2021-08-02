@@ -258,7 +258,7 @@ class effort
             case self::FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES:
                 $days = floor($seconds / $factor);
                 $hours = floor(($seconds - ($days * $factor)) / 3600);
-                $minutes = floor(($seconds - ($hours * 3600)) / 60);
+                $minutes = floor(($seconds - ($days * $factor) - ($hours * 3600)) / 60);
                 if ($days == 0) {
                     return sprintf('%01u:%02u', $hours, $minutes);
                 } else {
