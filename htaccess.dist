@@ -55,6 +55,13 @@ php_flag always_populate_raw_post_data Off
 	deny from all
 </Files>
 
+# hide default location of the config
+<Files ~ "^flyspray.conf.php$">
+	Order allow,deny
+	Deny from all
+</Files>
+
+
 # Some hostings have autocorrection of minor misspelled URLs enabled.
 # We do not want that for Flyspray as it could lead to subtile unwanted behavior.
 <IfModule mod_speling.c>
