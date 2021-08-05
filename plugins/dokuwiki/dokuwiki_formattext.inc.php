@@ -1,65 +1,66 @@
 <?php
 class dokuwiki_TextFormatter
 {    
-		static function render($text, $type = null, $id = null, $instructions = null)
-		{
-			global $conf, $baseurl, $db, $fs;
+	static function render($text, $type = null, $id = null, $instructions = null)
+	{
+		global $conf, $baseurl, $db, $fs;
         
-			// Unfortunately dokuwiki also uses $conf
-			$fs_conf = $conf;
-			$conf = array();
+		// Unfortunately dokuwiki also uses $conf
+		$fs_conf = $conf;
+		$conf = array();
 
-        // Dokuwiki generates some notices
-        error_reporting(E_ALL ^ E_NOTICE);
-        if (!$instructions) {
-            include_once(BASEDIR . '/plugins/dokuwiki/inc/parser/parser.php');
-        }
-        require_once(BASEDIR . '/plugins/dokuwiki/inc/common.php');
-        require_once(BASEDIR . '/plugins/dokuwiki/inc/parser/xhtml.php');
-        
+		// Dokuwiki generates some notices
+		error_reporting(E_ALL ^ E_NOTICE);
+		if (!$instructions) {
+			include_once BASEDIR . '/plugins/dokuwiki/inc/parser/parser.php';
+		}
+		require_once BASEDIR . '/plugins/dokuwiki/inc/common.php';
+		require_once BASEDIR . '/plugins/dokuwiki/inc/parser/xhtml.php';
 
-        // Create a renderer
-        $Renderer = new Doku_Renderer_XHTML();
+		// Create a renderer
+		$Renderer = new Doku_Renderer_XHTML();
 
-        if (!is_string($instructions) || strlen($instructions) < 1) {
-            $modes = p_get_parsermodes();
+		if (!is_string($instructions) || strlen($instructions) < 1) {
+			$modes = p_get_parsermodes();
             
-            $Parser = new Doku_Parser();
-            
-            // Add the Handler
-            $Parser->Handler = new Doku_Handler();
-            
-            // Add modes to parser
-            foreach($modes as $mode){
-                $Parser->addMode($mode['mode'], $mode['obj']);
-            }
-            $instructions = $Parser->parse($text);
+			$Parser = new Doku_Parser();
+			// Add the Handler
+			$Parser->Handler = new Doku_Handler();
 
-            
-            // Cache the parsed text
-            if (!is_null($type) && !is_null($id)) {
-                $fields = array('content'=> serialize($instructions), 'type'=> $type , 'topic'=> $id,
-                                'last_updated'=> time());
+			// Add modes to parser
+			foreach($modes as $mode){
+				$Parser->addMode($mode['mode'], $mode['obj']);
+			}
+			$instructions = $Parser->parse($text);
 
-                $keys = array('type','topic');
-                //autoquote is always true on db class
-                $db->Replace('{cache}', $fields, $keys);
-            }
-        } else {
-            $instructions = unserialize($instructions);
-        }
+			// Cache the parsed text
+			if (!is_null($type) && !is_null($id)) {
+				$fields = array(
+					'content'=> serialize($instructions),
+					'type'=> $type ,
+					'topic'=> $id,
+					'last_updated'=> time()
+				);
 
-        $Renderer->smileys = getSmileys();
-        $Renderer->entities = getEntities();
-        $Renderer->acronyms = getAcronyms();
-        $Renderer->interwiki = getInterwiki();
-        
+				$keys = array('type','topic');
+				//autoquote is always true on db class
+				$db->Replace('{cache}', $fields, $keys);
+			}
+		} else {
+			$instructions = unserialize($instructions);
+		}
+
+		$Renderer->smileys = getSmileys();
+		$Renderer->entities = getEntities();
+		$Renderer->acronyms = getAcronyms();
+		$Renderer->interwiki = getInterwiki();
+
 		$conf = $fs_conf;
 		$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
 		$conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
 		$conf['fperm'] = 0600;
 		$conf['dperm'] = 0700;
-        
+
 		// Loop through the instructions
 		foreach ($instructions as $instruction) {
 			// Execute the callback against the Renderer
@@ -80,7 +81,7 @@ class dokuwiki_TextFormatter
 	}
 
 	static function textarea($name, $rows, $cols, $attrs = null, $content = null)
-	{   	
+	{
 		$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
 		$rows = intval($rows);
 		$cols = intval($cols);
@@ -138,10 +139,10 @@ class dokuwiki_TextFormatter
 		*/
 
 		$out.='<a tabindex="-1" title="'.eL('editorcode').'" href="javascript:void(0);" onclick="surroundText(\'<code>\', \'</code>\', \''.$textareaId.'\'); return false;"><i class="fa fa-code fa-lg"></i></a>';
-		
+
 		# IDEA/TODO: list of available languages for syntax highlighting, dropdownlist or cheatsheet similiar to the wikicheatsheet below
 		# IDEA/TODO: smiley selector similiar to the wikicheatsheet below.
-		
+
 		/*
 		# wikicheatsheet
 		# Maybe move the generic CSS (without $textareaID) to a dokuwiki.css or something like that.
