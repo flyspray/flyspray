@@ -120,13 +120,3 @@ $conf['proxy']['port'] = '';
 $conf['proxy']['user'] = '';
 $conf['proxy']['pass'] = '';
 $conf['proxy']['ssl']  = 0;
-
-/* Safemode Hack */
-
-$conf['safemodehack'] = 0;               //read http://wiki.splitbrain.org/wiki:safemodehack !
-$conf['ftp']['host'] = 'localhost';
-$conf['ftp']['port'] = '21';
-$conf['ftp']['user'] = 'user';
-$conf['ftp']['pass'] = 'password';
-$conf['ftp']['root'] = '/home/user/htdocs';
-
