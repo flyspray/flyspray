@@ -1,10 +1,10 @@
 <?php
 class dokuwiki_TextFormatter
-{    
+{
 	static function render($text, $type = null, $id = null, $instructions = null)
 	{
 		global $conf, $baseurl, $db, $fs;
-        
+
 		// Unfortunately dokuwiki also uses $conf
 		$fs_conf = $conf;
 		$conf = array();
@@ -22,7 +22,6 @@ class dokuwiki_TextFormatter
 
 		if (!is_string($instructions) || strlen($instructions) < 1) {
 			$modes = p_get_parsermodes();
-            
 			$Parser = new Doku_Parser();
 			// Add the Handler
 			$Parser->Handler = new Doku_Handler();
@@ -68,7 +67,7 @@ class dokuwiki_TextFormatter
 		}
 
 		$return = $Renderer->doc;
-		
+
 		// Display the output
 		if (Get::val('string')) {
 			$words = explode(' ', Get::val('string'));
@@ -76,7 +75,7 @@ class dokuwiki_TextFormatter
 				$return = html_hilight($return, $word);
 			}
 		}
-        
+
 		return $return;
 	}
 
