@@ -52,7 +52,7 @@ function createTestData()
 		die('Please call it only from commandline');
 	}
 
-	global $db, $fs, $conf, $proj, $user, $notify;
+	global $db, $fs, $conf, $proj, $user, $notify, $language;
 
 	# Use this only on a new test installation, code does not work on
 	# an existing one, and never will.
@@ -89,7 +89,7 @@ function createTestData()
 		'bad weather :-/ change it',
 		'buy present for ...',
 		'write release notes',
-		'weired funny bug in the matrix',
+		'weird funny bug in the matrix',
 		'organize conference',
 		'send invitations'
         );
