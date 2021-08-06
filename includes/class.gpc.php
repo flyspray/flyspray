@@ -23,7 +23,7 @@ abstract class Req
 
     public static function val($key, $default = null)
     {
-        return Req::has($key) ? $_REQUEST[$key] : $default;
+        return (Req::has($key) && is_string($_REQUEST[$key])) ? $_REQUEST[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
@@ -71,7 +71,7 @@ abstract class Post
 
     public static function val($key, $default = null)
     {
-        return Post::has($key) ? $_POST[$key] : $default;
+        return (Post::has($key) && is_string($_POST[$key])) ? $_POST[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
@@ -104,7 +104,7 @@ abstract class Get
 
     public static function val($key, $default = null)
     {
-        return Get::has($key) ? $_GET[$key] : $default;
+        return (Get::has($key) && is_string($_GET[$key])) ? $_GET[$key] : $default;
     }
 
     //it will always return a number no matter what(null is 0)
