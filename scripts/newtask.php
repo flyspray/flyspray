@@ -41,8 +41,12 @@ while ($row = $db->fetchRow($result)) {
 }
 
 $assignees = array();
-if (is_array(Post::val('rassigned_to'))) {
-	$assignees = Post::val('rassigned_to');
+if (is_array($_POST['rassigned_to'])) {
+	foreach	($_POST['rassigned_to'] as $ass) {
+		if (is_numeric($ass)) {
+			$assignees[] = $ass;
+		}
+	}
 }
 $page->assign('assignees', $assignees);
 
