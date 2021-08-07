@@ -76,8 +76,14 @@ if (!$user->can_view_task($task_details)) {
 			}
 		}
 
-		if (is_array(Post::val('rassigned_to'))) {
-			$page->assign('assignees', Post::val('rassigned_to'));
+		if (isset($_POST['rassigned_to']) && is_array($_POST['rassigned_to'])) {
+			$assignees = array();
+			foreach ($_POST['rassigned_to'] as $ass) {
+				if (is_numeric($ass)) {
+					$assignees[] = $ass;
+				}
+			}
+			$page->assign('assignees', $assignees);
 		} else {
 			$assignees = $db->query('SELECT user_id FROM {assigned} WHERE task_id = ?', $task_details['task_id']);
 			$page->assign('assignees', $db->fetchCol($assignees));
