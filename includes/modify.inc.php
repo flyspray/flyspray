@@ -469,21 +469,26 @@ switch ($action = Req::val('action'))
 		)
 	);
 
-        // Update the list of users assigned this task
-        $assignees = (array) Post::val('rassigned_to');
-        $assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
-        if ($user->perms('edit_assignments') && $assignees_changed) {
-
-            // Delete the current assignees for this task
-            $db->query('DELETE FROM {assigned}
-                              WHERE task_id = ?',
-            array($task['task_id']));
-
-            // Convert assigned_to and store them in the 'assigned' table
-            foreach ((array) Post::val('rassigned_to') as $key => $val) {
-                $db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id','task_id'));
-            }
-        }
+		// Update the list of users assigned to this task
+		$assignees = array();
+		if (isset($_POST['rassigned_to']) && is_array($_POST['rassigned_to'])) {
+			foreach ($_POST['rassigned_to'] as $ass) {
+				if (is_numeric($ass)) {
+					$assignees[] = $ass;
+				}
+			}
+		}
+		$assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
+		
+		if ($user->perms('edit_assignments') && $assignees_changed) {
+			// TODO: only update assignee changes without deletion
+			// So date of assignment is kept if table {assigned} gets a timestamp field 'added' someday.
+			// Delete the current assignees for this task
+			$db->query('DELETE FROM {assigned} WHERE task_id = ?', array($task['task_id']));
+			foreach ($assignees as $val) {
+				$db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id', 'task_id'));
+			}
+		}
 
 		# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
 		# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
