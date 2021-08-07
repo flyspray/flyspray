@@ -654,11 +654,15 @@ switch ($action = Req::val('action'))
             }
         }
 
-        Backend::add_comment($task, Post::val('comment_text'), $time);
-        Backend::delete_files(Post::val('delete_att'));
-        Backend::upload_files($task['task_id'], '0', 'usertaskfile');
-        Backend::delete_links(Post::val('delete_link'));
-        Backend::upload_links($task['task_id'], '0', 'userlink');
+		Backend::add_comment($task, Post::val('comment_text'), $time);
+		if (isset($_POST['delete_att']) && is_array($_POST['delete_att'])) {
+			Backend::delete_files($_POST['delete_att']);
+		}
+		Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+		if (isset($_POST['delete_link']) && is_array($_POST['delete_link'])) {
+			Backend::delete_links($_POST['delete_link']);
+		}
+		Backend::upload_links($task['task_id'], '0', 'userlink');
 
 		$_SESSION['SUCCESS'] = L('taskupdated');
 		# report minor/soft errors too that does not hindered saving task
@@ -2449,12 +2453,12 @@ switch ($action = Req::val('action'))
         // ##################
         // editing a comment
         // ##################
-    case 'editcomment':
-        if (!($user->perms('edit_comments') || $user->perms('edit_own_comments'))) {
-            break;
-        }
+	case 'editcomment':
+		if (!($user->perms('edit_comments') || $user->perms('edit_own_comments'))) {
+			break;
+		}
 
-        $where = '';
+		$where = '';
 
 		$comment_text=Post::val('comment_text');
 		$previous_text=Post::val('previous_text');
@@ -2473,25 +2477,31 @@ switch ($action = Req::val('action'))
 
 		$params = array($comment_text, time(), Post::val('comment_id'), $task['task_id']);
 
-        if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
-            $where = ' AND user_id = ?';
-            array_push($params, $user->id);
-        }
+		if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
+			$where = ' AND user_id = ?';
+			array_push($params, $user->id);
+		}
 
-        $db->query("UPDATE  {comments}
-                       SET  comment_text = ?, last_edited_time = ?
-                     WHERE  comment_id = ? AND task_id = ? $where", $params);
-        $db->query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
+		$db->query("UPDATE {comments}
+			SET comment_text = ?, last_edited_time = ?
+			WHERE comment_id = ?
+			AND task_id = ?
+			$where", $params);
+		$db->query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
 
-        Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text, Post::val('comment_id'));
+		Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text, Post::val('comment_id'));
 
-        Backend::upload_files($task['task_id'], Post::val('comment_id'));
-        Backend::delete_files(Post::val('delete_att'));
-        Backend::upload_links($task['task_id'], Post::val('comment_id'));
-        Backend::delete_links(Post::val('delete_link'));
+		Backend::upload_files($task['task_id'], Post::val('comment_id'));
+		if (isset($_POST['delete_att']) && is_array($_POST['delete_att'])) {
+			Backend::delete_files($_POST['delete_att']);
+		}
+		Backend::upload_links($task['task_id'], Post::val('comment_id'));
+		if (isset($_POST['delete_link']) && is_array($_POST['delete_link'])) {
+			Backend::delete_links($_POST['delete_link']);
+		}
 
-        $_SESSION['SUCCESS'] = L('editcommentsaved');
-        break;
+		$_SESSION['SUCCESS'] = L('editcommentsaved');
+		break;
 
         // ##################
         // deleting a comment
@@ -2501,9 +2511,9 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $result = $db->query('SELECT  task_id, comment_text, user_id, date_added
-                                FROM  {comments}
-                               WHERE  comment_id = ?',
+        $result = $db->query('SELECT task_id, comment_text, user_id, date_added
+                                FROM {comments}
+                               WHERE comment_id = ?',
         array(Post::val('comment_id')));
         $comment = $db->fetchRow($result);
 
