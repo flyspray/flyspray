@@ -41,7 +41,7 @@ while ($row = $db->fetchRow($result)) {
 }
 
 $assignees = array();
-if (is_array($_POST['rassigned_to'])) {
+if (isset($_POST['rassigned_to']) && is_array($_POST['rassigned_to'])) {
 	foreach	($_POST['rassigned_to'] as $ass) {
 		if (is_numeric($ass)) {
 			$assignees[] = $ass;
