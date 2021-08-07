@@ -1296,68 +1296,62 @@ switch ($action = Req::val('action'))
         // ##################
         // Bulk User Edit Form
         // ##################
-    case 'admin.editallusers':
+	case 'admin.editallusers':
 
-        if (!($user->perms('is_admin'))) {
-            break;
-        }
-
-	$userids = Post::val('checkedUsers');
-
-	if(!is_array($userids)){
-		break;
-	}
-
-	$users=array();
-
-	foreach ($userids as $uid) {
-		if( ctype_digit($uid) ) {
-			if( $user->id == $uid ){
-				Flyspray::show_error(L('nosuicide'));
-			} else{
-				$users[]=$uid;
-			}
-		} else{
-			Flyspray::show_error(L('invalidinput'));
-			break 2;
+		if (!($user->perms('is_admin'))) {
+			break;
 		}
-	}
+ 
+		if(isset($_POST['checkedUsers']) && is_array($_POST['checkedUsers'])) {
+			$userids= $_POST['checkedUsers'];
+		} else {
+			break;
+		}
 
-  	if (count($users) == 0){
-            Flyspray::show_error(L('nouserselected'));
-            break;
-        }
+		$users=array();
 
-        // Make array of users to modify
-        $ids = "(" . $users[0];
-        for ($i = 1 ; $i < count($users) ; $i++)
-        {
-            $ids .= ", " . $users[$i];
-        }
-        $ids .= ")";
+		foreach ($userids as $uid) {
+			if( ctype_digit($uid) ) {
+				if( $user->id == $uid ){
+					Flyspray::show_error(L('nosuicide'));
+				} else{
+					$users[]=$uid;
+				}
+			} else{
+				Flyspray::show_error(L('invalidinput'));
+				break 2;
+			}
+		}
 
-        // Grab the action
-        if (isset($_POST['enable']))
-        {
-            $sql = $db->query("UPDATE {users} SET account_enabled = 1 WHERE user_id IN $ids");
-        }
-        else if (isset($_POST['disable']))
-        {
-            $sql = $db->query("UPDATE {users} SET account_enabled = 0 WHERE user_id IN $ids");
-        }
-        else if (isset($_POST['delete']))
-        {
-            //$sql = $db->query("DELETE FROM {users} WHERE user_id IN $ids");
-            foreach ($users as $uid) {
-                Backend::delete_user($uid);
-            }
-        }
+		if (count($users) == 0){
+			Flyspray::show_error(L('nouserselected'));
+			break;
+		}
 
-        // Show success message and exit
-        $_SESSION['SUCCESS'] = L('usersupdated');
-        break;
+		// Make array of users to modify
+		$ids = "(" . $users[0];
+		for ($i = 1 ; $i < count($users) ; $i++) {
+			$ids .= ", " . $users[$i];
+		}
+		$ids .= ")";
 
+		// Grab the action
+		if (isset($_POST['enable'])) {
+			$sql = $db->query("UPDATE {users} SET account_enabled = 1 WHERE user_id IN $ids");
+		} else if (isset($_POST['disable'])) {
+			$sql = $db->query("UPDATE {users} SET account_enabled = 0 WHERE user_id IN $ids");
+		} else if (isset($_POST['delete'])) {
+			//$sql = $db->query("DELETE FROM {users} WHERE user_id IN $ids");
+			foreach ($users as $uid) {
+				Backend::delete_user($uid);
+			}
+		}
 
+		/** Show success message and exit
+		 * @todo show better success message: action - enabled, disabled deleted and how many users affected.
+		 */
+		$_SESSION['SUCCESS'] = L('usersupdated');
+		break;
 
         // ##################
         //  adding a new group
