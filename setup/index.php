@@ -16,6 +16,27 @@ define('APPLICATION_PATH', dirname(BASEDIR));
 define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
+// -----------------------------------------------------------------------------
+// CLI
+// -----------------------------------------------------------------------------
+$shortopts = "";
+
+$longopts = array(
+  "db_type:",         // 'mysql', 'mysqli', or 'pgsql'
+  "db_hostname:",
+  "db_username:",
+  "db_password:",
+  "db_name:",
+  "db_prefix:",
+  "admin_username:",
+  "admin_password:",
+  "admin_email:",
+  "syntaxplugin:",    // 'dokuwiki', 'html', or 'none'
+  "reminder_daemon:", // '1', or '0'
+);
+$cli_options = getopt($shortopts,$longopts);
+
+
 require_once OBJECTS_PATH.'/fix.inc.php';
 require_once OBJECTS_PATH.'/class.gpc.php';
 require_once OBJECTS_PATH.'/class.flyspray.php';
@@ -112,7 +133,7 @@ class Setup extends Flyspray
 
    public $mXmlSchema;
 
-   public function __construct()
+   public function __construct($preset_data=null)
    {
       // Look for ADOdb
       $this->mAdodbPath = dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb.inc.php';
@@ -136,8 +157,17 @@ class Setup extends Flyspray
 		}
 		$this->mAvailableDatabases = array();
 
-		// Process the page actions
-		$this->processActions();
+		if ($preset_data != null) {
+			// Process the page actions
+			$this->processActions();
+		}
+		else {
+			// Process the database checks and install tables
+			if ($this->processDatabaseSetup($preset_data)) {
+				// Proceed to Administration part
+				$this->processAdminConfig($preset_data);
+			}
+		}
 	}
 
    /**
@@ -1227,4 +1257,4 @@ class Setup extends Flyspray
 }
 
 //start the installer, it handles the rest inside the class
-new Setup();
+new Setup($cli_options);
