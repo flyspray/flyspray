@@ -294,7 +294,6 @@ class Setup extends Flyspray
                                 'product_name' => $this->mProductName,
                                 'message' => $this->getPageMessage(),
                                 'admin_email' => $this->getParamValue($data, 'admin_email', ''),
-                                'pass_phrase' => $this->getParamValue($data, 'pass_phrase', ''),
                                 'admin_username' => $this->getParamValue($data, 'admin_username', ''),
 				'admin_realname' => $this->getParamValue($data, 'admin_realname', ''),
 				'admin_xmpp' => $this->getParamValue($data, 'admin_xmpp', ''),
