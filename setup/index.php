@@ -153,8 +153,7 @@ class Setup extends Flyspray
       // In case it is flyspray.conf.php, the file does not exist
       // so we can't tell that it is writeable. So we attempt to create an empty one
       if ($path == 'flyspray.conf.php') {
-        $fp = @fopen($file, 'wb');
-        @fclose($fp);
+        @touch($file);
         // Let's try at least...
         #@chmod($file, 0666);
         @chmod($file, 0644); # looks a bit better than worldwritable
