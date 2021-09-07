@@ -23,96 +23,103 @@ class effort
     private $_userId;
     public $details;
 
-    /**
-     * Class Constructor: Requires the user id and task id as all effort is in context of the task.
-     *
-     * @param $task_id
-     * @param $user_id
-     */
-    public function __construct($task_id,$user_id)
-    {
-        $this->_task_id = $task_id;
-        $this->_userId = $user_id;
-    }
+	/**
+	 * Class Constructor: Requires the user id and task id as all effort is in context of the task.
+	 *
+	 * @param int $task_id
+	 * @param int $user_id
+	 */
+	public function __construct($task_id, $user_id)
+	{
+		$this->_task_id = $task_id;
+		$this->_userId = $user_id;
+	}
 
     /**
-     * Manually add effort to the effort table for this issue / user.
+     * Manually add effort to the effort table for this task and user.
      *
-     * @param $effort_to_add int amount of effort in hh:mm to add to effort table.
+     * @param string $effort_to_add int amount of effort in hh:mm to add to effort table.
+     * @param int $proj a bit redundant as it can be received by task_id, maybe deprecate it someday..
+     * @param string $description optional description, e.g. for writing bills out of tracked effort
+	 *
+	 * @return bool
      */
-    public function addEffort($effort_to_add, $proj)
-    {
-        global $db;
+	public function addEffort($effort_to_add, $proj, $description = null)
+	{
+		global $db;
 
-        # note: third parameter seem useless, not used by EditStringToSeconds().., maybe drop it..
+        # note: third parameter seem useless, not used by editStringToSeconds().., maybe drop it..
         $effort = self::editStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-        if ($effort === FALSE) {
+        if ($effort === false) {
             Flyspray::show_error(L('invalideffort'));
             return false;
         }
 
-        # quickfix to avoid useless table entries.
-        if($effort==0){ 
-            Flyspray::show_error(L('zeroeffort'));
-            return false;
-        } else{
-            $db->query('INSERT INTO {effort}
-                (task_id, date_added, user_id,start_timestamp,end_timestamp,effort)
-                VALUES  ( ?, ?, ?, ?,?,? )',
-                array($this->_task_id, time(), $this->_userId,time(),time(),$effort)
-            );
-            return true;
-        }
-    }
+		# quickfix to avoid useless table entries.
+		if ($effort==0) { 
+			Flyspray::show_error(L('zeroeffort'));
+			return false;
+		} else {
+			$db->query('INSERT INTO {effort}
+				(task_id, date_added, user_id, start_timestamp, end_timestamp, effort, description)
+				VALUES (?, ?, ?, ?, ?, ?, ?)',
+				array($this->_task_id, time(), $this->_userId, time(), time(), $effort, $description)
+			);
+			return true;
+		}
+	}
 
-    /**
+	/**
      * Starts tracking effort for the current user against the current issue.
      *
      * @return bool Returns Success or Failure of the action.
      */
-    public function startTracking()
-    {
-        global $db;
+	public function startTracking()
+	{
+		global $db;
 
-        //check if the user is already tracking time against this task.
-        $result = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
-        if($db->countRows($result)>0)
-        {
-            return false;
-        }
-        else
-        {
-                $db->query('INSERT INTO  {effort}
-                                         (task_id, date_added, user_id,start_timestamp)
-                                 VALUES  ( ?, ?, ?, ? )',
-                                 array   ($this->_task_id, time(), $this->_userId,time()));
+		// check if the user is already tracking time against this task.
+		$result = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
+		if ($db->countRows($result)>0) {
+			return false;
+		} else {
+			$db->query('INSERT INTO  {effort}
+				(task_id, date_added, user_id, start_timestamp)
+				VALUES (?, ?, ?, ?)',
+				array($this->_task_id, time(), $this->_userId, time())
+			);
+			return true;
+		}
+	}
 
-                return true;
-        }
-    }
+	/**
+	 * Stops tracking the current tracking request and then updates the actual hours field on the table, this
+	 * is useful as both stops constant calculation from start/end timestamps and provides a quick aggregation
+	 * method as we only need to deal with one field.
+	 */
+	public function stopTracking()
+	{
+		global $db;
 
-    /**
-     * Stops tracking the current tracking request and then updates the actual hours field on the table, this
-     * is useful as both stops constant calculation from start/end timestamps and provides a quick aggregation
-     * method as we only need to deal with one field.
-     */
-    public function stopTracking()
-    {
-        global $db;
+		$time = time();
 
-        $time = time();
+		$sql = $db->query('SELECT start_timestamp FROM {effort}
+			WHERE user_id='.$this->_userId.'
+			AND task_id='.$this->_task_id.'
+			AND end_timestamp IS NULL;');
 
+		$result = $db->fetchRow($sql);
+		$start_time = $result[0];
+		$seconds = $time - $start_time;
 
-        $sql = $db->query('SELECT start_timestamp FROM {effort}  WHERE user_id='.$this->_userId.' AND task_id='.$this->_task_id.' AND end_timestamp IS NULL;');
-        $result = $db->fetchRow($sql);
-        $start_time = $result[0];
-        $seconds = $time - $start_time;
-        
-        // Round to full minutes upwards.
-        $effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
+		// Round to full minutes upwards.
+		$effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
  
-        $sql = $db->query("UPDATE {effort} SET end_timestamp = ".$time.",effort = ".$effort." WHERE user_id=".$this->_userId." AND task_id=".$this->_task_id." AND end_timestamp IS NULL;");
-    }
+		$sql = $db->query("UPDATE {effort} SET end_timestamp = ".$time.", effort = ".$effort."
+			WHERE user_id=".$this->_userId."
+			AND task_id=".$this->_task_id."
+			AND end_timestamp IS NULL;");
+	}
 
     /**
      * Removes any outstanding tracking requests for this task for this user.
@@ -132,21 +139,29 @@ class effort
         );
     }
 
-    public function populateDetails()
-    {
-        global $db;
+	public function populateDetails()
+	{
+		global $db;
 
-        $this->details = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
-    }
-    
-    public static function secondsToString($seconds, $factor, $format) {
-        if ($seconds == 0) {
-            return '';
-        }
-        
-        $factor = ($factor == 0 ? 86400 : $factor);
+		$this->details = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
+	}
 
-        switch ($format) {
+	/**
+	 * @param $seconds
+	 * @param $factor for calculating workdays from seconds; default 0 means 86400 sec -> 24h
+	 * @param int $format one the defined constants
+	 *
+	 * @return string
+	 */
+	public static function secondsToString($seconds, $factor, $format)
+	{
+		if ($seconds == 0) {
+			return '';
+		}
+
+		$factor = ($factor == 0 ? 86400 : $factor);
+
+		switch ($format) {
             case self::FORMAT_HOURS_COLON_MINUTES:
                 $seconds = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
                 $hours = floor($seconds / 3600);
@@ -228,11 +243,12 @@ class effort
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds - ($hours * 3600)) / 60);
                 return sprintf('%01u:%02u', $hours, $minutes);
-        }
-    }
+		}
+	}
 
-    public static function secondsToEditString($seconds, $factor, $format) {
-        $factor = ($factor == 0 ? 86400 : $factor);
+	public static function secondsToEditString($seconds, $factor, $format)
+	{
+		$factor = ($factor == 0 ? 86400 : $factor);
 
         // Adjust seconds to be evenly dividable by 60, so
         // 3595 -> 3600, floor can be safely used for minutes in formats
@@ -269,17 +285,24 @@ class effort
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds - (($days * $factor) + ($hours * 3600))) / 60);
                 return sprintf('%01u:%02u', $hours, $minutes);
-        }
-    }
+		}
+	}
 
-    public static function editStringToSeconds($string, $factor, $format) {
-        if (!isset($string) || empty($string)) {
-            return 0;
-        }
+	/**
+	 * @param string $string from form effort input
+	 * @param int $factor how many seconds are a workday, default 0 means 86400 sec ->24h
+	 * @param string $format ??? unused copy&paste error???
+	 */
+	public static function editStringToSeconds($string, $factor, $format)
+	{
+		if (!isset($string) || empty($string)) {
+			return 0;
+		}
         
-        $factor = ($factor == 0 ? 86400 : $factor);
+		$factor = ($factor == 0 ? 86400 : $factor);
         
         $matches = array();
+		# currently match example: '5 3:45' for 5 workdays + 3 h + 45 minutes
         if (preg_match('/^((\d+)\s)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
             return false;
         }
@@ -296,7 +319,7 @@ class effort
             }
         }
             
-        $effort = ($matches[2] * $factor) + ($matches[3] * 3600) + ($matches[5] * 60);
-        return $effort;
-    }
+		$effort = ($matches[2] * $factor) + ($matches[3] * 3600) + ($matches[5] * 60);
+		return $effort;
+	}
 }
