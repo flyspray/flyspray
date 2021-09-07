@@ -7,21 +7,21 @@
  */
 class effort
 {
-    const FORMAT_HOURS_COLON_MINUTES = 0; // Default value in database
-    const FORMAT_HOURS_SPACE_MINUTES = 1;
-    const FORMAT_HOURS_PLAIN = 2;
-    const FORMAT_HOURS_ONE_DECIMAL = 3;
-    const FORMAT_MINUTES = 4;
-    const FORMAT_DAYS_PLAIN = 5;
-    const FORMAT_DAYS_ONE_DECIMAL = 6;
-    const FORMAT_DAYS_PLAIN_HOURS_PLAIN = 7;
-    const FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL = 8;
-    const FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES = 9;
-    const FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES = 10;
+	const FORMAT_HOURS_COLON_MINUTES = 0; // Default value in database
+	const FORMAT_HOURS_SPACE_MINUTES = 1;
+	const FORMAT_HOURS_PLAIN = 2;
+	const FORMAT_HOURS_ONE_DECIMAL = 3;
+	const FORMAT_MINUTES = 4;
+	const FORMAT_DAYS_PLAIN = 5;
+	const FORMAT_DAYS_ONE_DECIMAL = 6;
+	const FORMAT_DAYS_PLAIN_HOURS_PLAIN = 7;
+	const FORMAT_DAYS_PLAIN_HOURS_ONE_DECIMAL = 8;
+	const FORMAT_DAYS_PLAIN_HOURS_COLON_MINUTES = 9;
+	const FORMAT_DAYS_PLAIN_HOURS_SPACE_MINUTES = 10;
 
-    private $_task_id;
-    private $_userId;
-    public $details;
+	private $_task_id;
+	private $_userId;
+	public $details;
 
 	/**
 	 * Class Constructor: Requires the user id and task id as all effort is in context of the task.
@@ -35,25 +35,25 @@ class effort
 		$this->_userId = $user_id;
 	}
 
-    /**
-     * Manually add effort to the effort table for this task and user.
-     *
-     * @param string $effort_to_add int amount of effort in hh:mm to add to effort table.
-     * @param int $proj a bit redundant as it can be received by task_id, maybe deprecate it someday..
-     * @param string $description optional description, e.g. for writing bills out of tracked effort
+	/**
+	 * Manually add effort to the effort table for this task and user.
+	 *
+	 * @param string $effort_to_add int amount of effort in hh:mm to add to effort table.
+	 * @param int $proj a bit redundant as it can be received by task_id, maybe deprecate it someday..
+	 * @param string $description optional description, e.g. for writing bills out of tracked effort
 	 *
 	 * @return bool
-     */
+	 */
 	public function addEffort($effort_to_add, $proj, $description = null)
 	{
 		global $db;
 
-        # note: third parameter seem useless, not used by editStringToSeconds().., maybe drop it..
-        $effort = self::editStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
-        if ($effort === false) {
-            Flyspray::show_error(L('invalideffort'));
-            return false;
-        }
+		# note: third parameter seem useless, not used by editStringToSeconds().., maybe drop it..
+		$effort = self::editStringToSeconds($effort_to_add, $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']);
+		if ($effort === false) {
+			Flyspray::show_error(L('invalideffort'));
+			return false;
+		}
 
 		# quickfix to avoid useless table entries.
 		if ($effort==0) { 
@@ -70,10 +70,10 @@ class effort
 	}
 
 	/**
-     * Starts tracking effort for the current user against the current issue.
-     *
-     * @return bool Returns Success or Failure of the action.
-     */
+	 * Starts tracking effort for the current user against the current issue.
+	 *
+	 * @return bool Returns Success or Failure of the action.
+	 */
 	public function startTracking()
 	{
 		global $db;
@@ -121,23 +121,23 @@ class effort
 			AND end_timestamp IS NULL;");
 	}
 
-    /**
-     * Removes any outstanding tracking requests for this task for this user.
-     */
-    public function cancelTracking()
-    {
-        global $db;
+	/**
+	 * Removes any outstanding tracking requests for this task for this user.
+	 */
+	public function cancelTracking()
+	{
+		global $db;
     
-        # 2016-07-04: also remove invalid finished 0 effort entries that were accidently possible up to Flyspray 1.0-rc
-        $db->query('DELETE FROM {effort}
-            WHERE user_id='.$this->_userId.'
-            AND task_id='.$this->_task_id.'
-            AND (
-                end_timestamp IS NULL
-                OR (start_timestamp=end_timestamp AND effort=0)
-            );'
-        );
-    }
+		# 2016-07-04: also remove invalid finished 0 effort entries that were accidently possible up to Flyspray 1.0-rc
+		$db->query('DELETE FROM {effort}
+			WHERE user_id='.$this->_userId.'
+			AND task_id='.$this->_task_id.'
+			AND (
+				end_timestamp IS NULL
+				OR (start_timestamp=end_timestamp AND effort=0)
+			)'
+		);
+	}
 
 	public function populateDetails()
 	{
@@ -301,23 +301,23 @@ class effort
         
 		$factor = ($factor == 0 ? 86400 : $factor);
         
-        $matches = array();
-		# currently match example: '5 3:45' for 5 workdays + 3 h + 45 minutes
-        if (preg_match('/^((\d+)\s)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
-            return false;
-        }
+		$matches = array();
+		# current match example: '5 3:45' for 5 workdays + 3 h + 45 minutes
+		if (preg_match('/^((\d+)\s)?(\d+)(:(\d{2}))?$/', $string, $matches) !== 1) {
+			return false;
+		}
 
-        if (!isset($matches[2]) || $matches[2] == '') {
-            $matches[2] = 0;
-        }
+		if (!isset($matches[2]) || $matches[2] == '') {
+			$matches[2] = 0;
+		}
             
-        if (!isset($matches[5])) {
-            $matches[5] = 0;
-        } else {
-            if ($matches[5] > 59) {
-                return false;
-            }
-        }
+		if (!isset($matches[5])) {
+			$matches[5] = 0;
+		} else {
+			if ($matches[5] > 59) {
+				return false;
+			}
+		}
             
 		$effort = ($matches[2] * $factor) + ($matches[3] * 3600) + ($matches[5] * 60);
 		return $effort;
