@@ -1,21 +1,24 @@
 <?php
-/**
-* initial czech translation by Petr Stasiak
-*
-* @author Petr Stasiak
-* @see FS#1844
-*
-*/
-
+//
+// This file is auto generated with langedit.php
+// Characters are UTF-8 encoded
+// 
+// Be careful when editing this file manually, some text editors
+// may convert text to UCS-2 or similar (16-bit) which is NOT
+// readable by the PHP parser
+// 
+// Furthermore, nothing else than the language array is saved
+// when using the langedit.php editor!
+//
 $translation = array(
 'edituser'                => 'Upravit uživatele',
+'accountenabled'          => 'Účet povolen',
 'username'                => 'Přihlašovací jméno',
 'realname'                => 'Skutečné jméno',
 'emailaddress'            => 'Emailová adresa',
 'jabberid'                => 'Jabber ID',
 'notifytype'              => 'Typ upozornění',
 'group'                   => 'Skupina',
-'accountenabled'          => 'Účet povolen',
 'updatedetails'           => 'Aktualizovat detaily',
 'setglobally'             => 'Tato předvolba je nastavena globálně.',
 'usergroupmanage'         => 'Nastavení uživatelů a skupin',
@@ -38,7 +41,7 @@ $translation = array(
 'oslist'                  => 'Seznam operačních systémů',
 'resolutionlist'          => 'Seznam řešení',
 'versionlist'             => 'Seznam verzí',
-'severitylist'            => 'Seznam priorit',
+'severitylist'            => 'Seznam severít',
 'listnote'                => 'Pozor:  Vypnutí "zobrazit" může ovlivnit některé požadavky v režimu úpravy. Změna pole "Název" změní všechny požadavky tohoto jména. Položky, které nemohou být odstraněny, jsou buď chráněny, protože jsou potřebné pro správnou funkci nebo se používají v požadavcích.',
 'name'                    => 'Jméno',
 'order'                   => 'Třídění',
@@ -123,7 +126,7 @@ $translation = array(
 'viewattachments'         => 'Zobrazit přílohy',
 'createattachments'       => 'Vytvořit přílohy',
 'deleteattachments'       => 'Vymazat přílohy',
-'viewhistory'             => 'Zobrazit hystorii',
+'viewhistory'             => 'Zobrazit historii',
 'closeowntasks'           => 'Uzavřít vlastní požadavky',
 'closeothertasks'         => 'Uzavřít úkoly, které uživatel nevlastní',
 'assigntoself'            => 'Přiřadit mi požadavky, které doposud nejsou',
@@ -194,7 +197,7 @@ $translation = array(
 'status'                  => 'Status',
 'assignedto'              => 'Přiřazeno k ',
 'operatingsystem'         => 'Operační systém',
-'severity'                => 'Priorita',
+'severity'                => 'Severita',
 'reportedversion'         => 'Hlášená verze',
 'dueinversion'            => 'Vyskytuje se ve verzi',
 'undecided'               => 'Nerozhodný',
@@ -375,7 +378,7 @@ $translation = array(
 'hidemessage'             => '(upozornit mě později)',
 'saveas'                  => 'Uložit hledání jako',
 'nosearches'              => 'Nejsou uložená hledání',
-'saving'                   => 'Ukládání...',
+'saving'                  => 'Ukládání...',
 'votes'                   => 'Podpory',
 'allclosedtasks'          => 'Všechny uzavřené požadavky',
 'password'                => 'Heslo',
@@ -383,15 +386,9 @@ $translation = array(
 'rememberme'              => 'Zapamatovat si mě',
 'lostpassword'            => 'Zapomenuté heslo?',
 'lostpwforfs'             => 'Zapomenuté heslo pro Flyspray',
-'lostpwmsg1'              => 'Dobrý den.
-
-Zapoměl jsem přístupové heslo do systému hlášení chyb Flyspray',
-'lostpwmsg2'              => ', prosím vytvořte mi nové heslo.
-
-Uživatel: ',
-'regards'                 => '
-
-S pozdravem,',
+'lostpwmsg1'              => "Dobrý den.\n\nZapoměl jsem přístupové heslo do systému hlášení chyb Flyspray",
+'lostpwmsg2'              => ", prosím vytvořte mi nové heslo.\n\nUživatel: ",
+'regards'                 => "\n\nS pozdravem,",
 'yourusername'            => ' vaše jméno ',
 'locale'                  => 'cs',
 'filenotexist'            => 'Soubor neexistje, nebo nemáte přístupová práva.',
@@ -419,12 +416,7 @@ S pozdravem,',
 'permissions'             => 'Zobrazení práv',
 'hide'                    => 'Skrýt',
 'pendingreq'              => 'PM požadavků čeká',
-'errorpage'               => 'Flyspray nemůže zobrazit Vámi požadovanou stránku.
-                                 požádal jste o úkol, který neexistuje, nebo
-                                 nemáte právo k zobrazení této stránky.<br /><br />
-                                 Možná se pokoušíte o napadení systému SQL injekcí.
-                                 Pokud je to tak, styďte se a uvažujte o své osobě!
-                                 Až se vrátíte, už to nezkoušejte!',
+'errorpage'               => "Flyspray nemůže zobrazit Vámi požadovanou stránku.\n                                 požádal jste o úkol, který neexistuje, nebo\n                                 nemáte právo k zobrazení této stránky.<br /><br />\n                                 Možná se pokoušíte o napadení systému SQL injekcí.\n                                 Pokud je to tak, styďte se a uvažujte o své osobě!\n                                 Až se vrátíte, už to nezkoušejte!",
 'permissionsforproject'   => 'Práva pro ',
 'switchto'                => 'Přepnout na',
 'lastsearch'              => 'Poslední hledání',
@@ -611,12 +603,12 @@ S pozdravem,',
 'feedimgurl'              => 'ULR obrázku pro RSS (nechte prázdné pokud nechcete obrázky)',
 'notifysubject'           => 'Předmět pro upozornění',
 'notifysubjectinfo'       => '(%p = název projektu, %s = souhrn požadavků, %t = id požadavku, %a = akce, %u = uživatel)',
-'priority6'               => 'Nápad',
-'priority5'               => 'Bezodkladný',
-'priority4'               => 'Akutní',
-'priority3'               => 'Vysoká',
-'priority2'               => 'Normální',
-'priority1'               => 'Nízká',
+'priority6'               => 'Velmi vysoká',
+'priority5'               => 'Vysoká',
+'priority4'               => 'Střední',
+'priority3'               => 'Nízká',
+'priority2'               => 'Velmi nízká',
+'priority1'               => 'Odložit',
 'sendcode'                => 'Odeslat kód!',
 'entercode'               => 'Zadejte potvrzovací kód přijatý v informační zprávě. Nezapomeňte také zadat heslo k Vašemu účtu.',
 'confirmationcode'        => 'Potvrzovací kód',
@@ -698,18 +690,14 @@ S pozdravem,',
 'addusergroup'            => 'Přidat uživatele do této skupiny',
 'groupmembers'            => 'Uživatelé ve skupině',
 'deleteuser'              => 'Vymazat uživatele',
-'userdeleted'             => 'Uživatel odstraněn',
+'userdeleted'             => 'Uživatel smazán',
 'autoassign'              => 'Automaticky přiřadit požadavky vlastníkovi kategorie',
 'ssl'                     => 'SSL',
-'updatewrong'             => 'Máte povolenu kontrolu aktualizací, ale došl k chybě během pokusu
-                             kontaktovat aktualizační server, buď Váš hostitel neumožňuje odchozí spojení,
-                             nebo došlo k jiné chybě způsobené sítí.
-                             Prosím navštivte stránky flyspray pro kontrolu, zda používáte aktuální verzi.',
+'updatewrong'             => "Máte povolenu kontrolu aktualizací, ale došl k chybě během pokusu\n                             kontaktovat aktualizační server, buď Váš hostitel neumožňuje odchozí spojení,\n                             nebo došlo k jiné chybě způsobené sítí.\n                             Prosím navštivte stránky flyspray pro kontrolu, zda používáte aktuální verzi.",
 'deleteproject'           => 'Vymazat projekt a přesunout obsah do',
 'projectdeleted'          => 'Projekt byl vymazán',
 'feedforall'              => 'RSS pro všechny projekty',
 'usercreated'             => 'Uživatel vytvořen',
-'userdeleted'             => 'Uživatel smazán',
 'created'                 => 'Vytvořen',
 'deleted'                 => 'Smazán',
 'userid'                  => 'ID uživatele',
@@ -740,7 +728,7 @@ S pozdravem,',
 'startat'                 => 'Zahájen od',
 'hasattachment'           => 'Má přílohu',
 'private'                 => 'Soukromý',
-'watching'                => 'Sledovaný',
+'watching'                => 'Sledování',
 'alreadyvotedthistask'    => 'tento požadavek jste již podpořil',
 'alreadyvotedthisday'     => 'dnes již podpořeno',
 'visibility'              => 'Viditelnost',
@@ -753,8 +741,7 @@ S pozdravem,',
 'couldnotaddusernotif'    => 'Nelze přidat uživatele do seznamu upozornění.',
 'defaulttask'             => 'Výchozí popis požadavku',
 'all'                     => 'vše',
-'events.useraddedtoassignees' => 'Uživatel přidán do nabyvatelů',
-'vote(s)'                 => 'hlasování',
+'events.useraddedtoassignees'=> 'Uživatel přidán do nabyvatelů',
 'eventlog'                => 'Log událostí',
 'assignmentchanged'       => 'Přiřazení změněno',
 'detailedinfo'            => 'Detailní informace',
@@ -843,7 +830,13 @@ S pozdravem,',
 'notaskdependencies'      => 'Tento úkol nezávisí na žádném dalším požadavku.',
 'dependson'               => 'Závislosti aktivní',
 'blocks'                  => 'Bloky',
-'newdependency'           => 'Nová závislost:'
+'newdependency'           => 'Nová závislost:',
+'effort'                  => 'Čas',
+'efforttracking'          => 'Sledování času',
+'estimatedeffort'         => 'Odhadovaný čas',
+'totalestimatedeffort'    => 'Celkový odhadovaný čas',
+'addmultipletasks'        => 'Přidat několik požadavků',
+'myassignedtasks'         => 'Mé přidělené úkoly',
 );
 
 ?>
