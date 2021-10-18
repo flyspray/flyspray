@@ -1,15 +1,11 @@
 <?php
-//
-// This file is auto generated with langedit.php
-// Characters are UTF-8 encoded
-// 
-// Be careful when editing this file manually, some text editors
-// may convert text to UCS-2 or similar (16-bit) which is NOT
-// readable by the PHP parser
-// 
-// Furthermore, nothing else than the language array is saved
-// when using the langedit.php editor!
-//
+/**
+* initial czech translation by Petr Stasiak
+*
+* @author Petr Stasiak
+* @see FS#1844
+*
+*/
 $translation = array(
 'edituser'                => 'Upravit uživatele',
 'accountenabled'          => 'Účet povolen',
@@ -416,7 +412,7 @@ $translation = array(
 'permissions'             => 'Zobrazení práv',
 'hide'                    => 'Skrýt',
 'pendingreq'              => 'PM požadavků čeká',
-'errorpage'               => "Flyspray nemůže zobrazit Vámi požadovanou stránku.\n                                 požádal jste o úkol, který neexistuje, nebo\n                                 nemáte právo k zobrazení této stránky.<br /><br />\n                                 Možná se pokoušíte o napadení systému SQL injekcí.\n                                 Pokud je to tak, styďte se a uvažujte o své osobě!\n                                 Až se vrátíte, už to nezkoušejte!",
+'errorpage'               => "Flyspray nemůže zobrazit Vámi požadovanou stránku.\npožádal jste o úkol, který neexistuje, nebo\nnemáte právo k zobrazení této stránky.<br /><br />\nMožná se pokoušíte o napadení systému SQL injekcí.\nPokud je to tak, styďte se a uvažujte o své osobě!\nAž se vrátíte, už to nezkoušejte!",
 'permissionsforproject'   => 'Práva pro ',
 'switchto'                => 'Přepnout na',
 'lastsearch'              => 'Poslední hledání',
@@ -693,7 +689,7 @@ $translation = array(
 'userdeleted'             => 'Uživatel smazán',
 'autoassign'              => 'Automaticky přiřadit požadavky vlastníkovi kategorie',
 'ssl'                     => 'SSL',
-'updatewrong'             => "Máte povolenu kontrolu aktualizací, ale došl k chybě během pokusu\n                             kontaktovat aktualizační server, buď Váš hostitel neumožňuje odchozí spojení,\n                             nebo došlo k jiné chybě způsobené sítí.\n                             Prosím navštivte stránky flyspray pro kontrolu, zda používáte aktuální verzi.",
+'updatewrong'             => "Máte povolenu kontrolu aktualizací, ale došl k chybě během pokusu\nkontaktovat aktualizační server, buď Váš hostitel neumožňuje odchozí spojení,\nnebo došlo k jiné chybě způsobené sítí.\nProsím navštivte stránky flyspray pro kontrolu, zda používáte aktuální verzi.",
 'deleteproject'           => 'Vymazat projekt a přesunout obsah do',
 'projectdeleted'          => 'Projekt byl vymazán',
 'feedforall'              => 'RSS pro všechny projekty',
