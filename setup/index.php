@@ -16,6 +16,9 @@ define('APPLICATION_PATH', dirname(BASEDIR));
 define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
+# option for developers
+#define('DEBUG_EXCEPTION', true);
+
 require_once OBJECTS_PATH.'/fix.inc.php';
 require_once OBJECTS_PATH.'/class.gpc.php';
 require_once OBJECTS_PATH.'/class.flyspray.php';
