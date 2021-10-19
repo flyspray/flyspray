@@ -1999,66 +1999,123 @@ switch ($action = Req::val('action'))
         $_SESSION['SUCCESS'] = L('groupupdated');
         break;
 
-        // ##################
-        // updating a list
-        // ##################
-    case 'update_list':
-        if (!$user->perms('manage_project') || !isset($list_table_name)) {
-            break;
-        }
-
-        $listnames    = Post::val('list_name');
-        $listposition = Post::val('list_position');
-        $listshow     = Post::val('show_in_list');
-        $listdelete   = Post::val('delete');
-        if($lt=='tag'){
-                $listclass = Post::val('list_class');
-        }
-	foreach ($listnames as $id => $listname) {
-        	if ($listname != '') {
-			if (!isset($listshow[$id])) {
-				$listshow[$id] = 0;
-			}
-
-			$check = $db->query("SELECT COUNT(*)
-                                       FROM $list_table_name
-                                      WHERE (project_id = 0 OR project_id = ?)
-                                        AND $list_column_name = ?
-                                        AND $list_id <> ?",
-                                    array($proj->id, $listnames[$id], $id)
-			);
-			$itemexists = $db->fetchOne($check);
-
-			if ($itemexists) {
-				Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
-				return;
-			}
-
-			if($lt=='tag'){
-				$update = $db->query("UPDATE $list_table_name
-					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
-					WHERE $list_id=? AND project_id=?",
-					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
-				);
-			} else{
-				$update = $db->query("UPDATE $list_table_name
-					SET $list_column_name=?, list_position=?, show_in_list=?
-					WHERE $list_id=? AND project_id=?",
-					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
-				);
-			}
-		} else {
-			Flyspray::show_error(L('fieldsmissing'));
+	/**
+	 * updating a list
+	 */
+	case 'update_list':
+		if (!$user->perms('manage_project') || !isset($list_table_name)) {
+			break;
 		}
-	}
 
-        if (is_array($listdelete) && count($listdelete)) {
-            $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
-            $db->query("DELETE FROM $list_table_name WHERE project_id = ? AND ($deleteids)", array($proj->id));
-        }
+		if (isset($_POST['list_name']) && is_array($_POST['list_name'])) {
+			$listnames = array_filter($_POST['list_name'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			break;
+		}
 
-        $_SESSION['SUCCESS'] = L('listupdated');
-        break;
+		if (isset($_POST['list_position']) && is_array($_POST['list_position'])) {
+			$listposition = array_filter($_POST['list_position'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listposition = array();
+		}
+
+		if (isset($_POST['show_in_list']) && is_array($_POST['show_in_list'])) {
+			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listshow = array();
+		}
+
+		if (isset($_POST['delete']) && is_array($_POST['delete'])) {
+			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listdelete = array();
+		}
+
+		if ($lt === 'tag') {
+			if (isset($_POST['list_class']) && is_array($_POST['list_class'])) {
+				$listclass = array_filter($_POST['list_class'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
+			} else {
+				$listclass = array();
+			}
+		}
+
+		if ($lt === 'version') {
+			if (isset($_POST['version_tense']) && is_array($_POST['version_tense'])) {
+				$listtense = array_filter($_POST['version_tense'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
+			} else {
+				$listtense = array();
+			}
+		}
+
+		$updated = 0;
+		$deleted = 0;
+		foreach ($listnames as $id => $listname) {
+			if ($listname != '') {
+				# fallback position for entry if wasn't valid
+				if (!isset($listposition[$id])) {
+					$listposition[$id] = 1;
+				}
+				if (!isset($listshow[$id])) {
+					$listshow[$id] = 0;
+				}
+
+				$check = $db->query("SELECT COUNT(*)
+					FROM $list_table_name
+					WHERE (project_id = 0 OR project_id = ?)
+					AND $list_column_name = ?
+					AND $list_id <> ?",
+					array($proj->id, $listnames[$id], $id)
+				);
+				$itemexists = $db->fetchOne($check);
+
+				if ($itemexists) {
+					Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+					# TODO maybe show count of updated entries before this name collision occured ..
+					return;
+				}
+
+				if ($lt === 'tag'){
+					# skip updating an entry if no valid class string submitted
+					if (isset($listclass[$id])) {
+						$update = $db->query("UPDATE $list_table_name
+						SET $list_column_name=?, list_position=?, show_in_list=?, class=?
+						WHERE $list_id=? AND project_id=?",
+						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
+						);
+						$updated += $db->affectedRows();
+					}
+				} elseif ($lt === 'version') {
+					# skip updating an entry if no valid tense submitted
+					if (isset($listtense[$id])) {
+						$update = $db->query("UPDATE $list_table_name
+						SET $list_column_name=?, list_position=?, show_in_list=?, version_tense=?
+						WHERE $list_id = ? AND project_id = ?",
+						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), intval($listtense[$id]), $id, $proj->id)
+						);
+						$updated += $db->affectedRows();
+					}
+				} else {
+					$update = $db->query("UPDATE $list_table_name
+						SET $list_column_name=?, list_position=?, show_in_list=?
+						WHERE $list_id=? AND project_id=?",
+						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
+					);
+					$updated += $db->affectedRows();
+				}
+			} else {
+				Flyspray::show_error(L('fieldsmissing'));
+			}
+		}
+
+		if (is_array($listdelete) && count($listdelete)) {
+			$deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
+			$db->query("DELETE FROM $list_table_name WHERE project_id = ? AND ($deleteids)", array($proj->id));
+			$deleted = $db->affectedRows();
+		}
+
+		# TODO tell user $updated and $deleted count
+		$_SESSION['SUCCESS'] = L('listupdated');
+		break;
 
         // ##################
         // adding a list item
@@ -2100,58 +2157,6 @@ switch ($action = Req::val('action'))
         array($proj->id, Post::val('list_name'), $position, '1'));
 
         $_SESSION['SUCCESS'] = L('listitemadded');
-        break;
-
-        // ##################
-        // updating the version list
-        // ##################
-    case 'update_version_list':
-        if (!$user->perms('manage_project') || !isset($list_table_name)) {
-            break;
-        }
-
-        $listnames    = Post::val('list_name');
-        $listposition = Post::val('list_position');
-        $listshow     = Post::val('show_in_list');
-        $listtense    = Post::val('version_tense');
-        $listdelete   = Post::val('delete');
-
-        foreach ($listnames as $id => $listname) {
-            if (is_numeric($listposition[$id]) && $listnames[$id] != '') {
-                if (!isset($listshow[$id])) {
-                    $listshow[$id] = 0;
-                }
-
-                $check = $db->query("SELECT COUNT(*)
-                                       FROM $list_table_name
-                                      WHERE (project_id = 0 OR project_id = ?)
-                                        AND $list_column_name = ?
-                                        AND $list_id <> ?",
-                                    array($proj->id, $listnames[$id], $id));
-                $itemexists = $db->fetchOne($check);
-
-                if ($itemexists) {
-                    Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
-                    return;
-                }
-
-                $update = $db->query("UPDATE  $list_table_name
-                                         SET  $list_column_name = ?, list_position = ?,
-                                              show_in_list = ?, version_tense = ?
-                                       WHERE  $list_id = ? AND project_id = ?",
-                array($listnames[$id], intval($listposition[$id]),
-                    intval($listshow[$id]), intval($listtense[$id]), $id, $proj->id));
-            } else {
-                Flyspray::show_error(L('fieldsmissing'));
-            }
-        }
-
-        if (is_array($listdelete) && count($listdelete)) {
-            $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
-            $db->query("DELETE FROM $list_table_name WHERE project_id = ? AND ($deleteids)", array($proj->id));
-        }
-
-        $_SESSION['SUCCESS'] = L('listupdated');
         break;
 
         // ##################
