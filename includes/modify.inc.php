@@ -2051,6 +2051,10 @@ switch ($action = Req::val('action'))
 		$deleted = 0;
 		foreach ($listnames as $id => $listname) {
 			if ($listname != '') {
+				# fallback position for entry if wasn't valid
+				if (!isset($listposition[$id])) {
+					$listposition[$id] = 1;
+				}
 				if (!isset($listshow[$id])) {
 					$listshow[$id] = 0;
 				}
@@ -2066,29 +2070,38 @@ switch ($action = Req::val('action'))
 
 				if ($itemexists) {
 					Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+					# TODO maybe show count of updated entries before this name collision occured ..
 					return;
 				}
 
 				if ($lt === 'tag'){
-					$update = $db->query("UPDATE $list_table_name
+					# skip updating an entry if no valid class string submitted
+					if (isset($listclass[$id])) {
+						$update = $db->query("UPDATE $list_table_name
 						SET $list_column_name=?, list_position=?, show_in_list=?, class=?
 						WHERE $list_id=? AND project_id=?",
 						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
-					);
+						);
+						$updated += $db->affectedRows();
+					}
 				} elseif ($lt === 'version') {
-					$update = $db->query("UPDATE $list_table_name
+					# skip updating an entry if no valid tense submitted
+					if (isset($listtense[$id])) {
+						$update = $db->query("UPDATE $list_table_name
 						SET $list_column_name=?, list_position=?, show_in_list=?, version_tense=?
 						WHERE $list_id = ? AND project_id = ?",
 						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), intval($listtense[$id]), $id, $proj->id)
-					);
+						);
+						$updated += $db->affectedRows();
+					}
 				} else {
 					$update = $db->query("UPDATE $list_table_name
 						SET $list_column_name=?, list_position=?, show_in_list=?
 						WHERE $list_id=? AND project_id=?",
 						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
 					);
+					$updated += $db->affectedRows();
 				}
-				$updated += $db->affectedRows();
 			} else {
 				Flyspray::show_error(L('fieldsmissing'));
 			}
