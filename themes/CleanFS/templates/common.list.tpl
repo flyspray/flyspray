@@ -149,11 +149,7 @@ switch ($list_type){
     <tr>
       <td colspan="<?= ($tcols-2) ?>"></td>
       <td colspan="2" class="buttons">
-        <?php if ($list_type == 'version'): ?>
-        <input type="hidden" name="action" value="update_version_list" />
-        <?php else: ?>
         <input type="hidden" name="action" value="update_list" />
-        <?php endif; ?>
         <input type="hidden" name="list_type" value="<?php echo Filters::noXSS($list_type); ?>" />
         <input type="hidden" name="project" value="<?php echo Filters::noXSS($proj->id); ?>" />
         <button type="submit"><?= eL('update') ?></button>
