@@ -2234,25 +2234,24 @@ switch ($action = Req::val('action'))
 		} else {
 			break;
 		}
-		
-		
+
 		#$listshow = Post::val('show_in_list');
 		if (isset($_POST['show_in_list']) && is_array($_POST['show_in_list'])) {
 			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listshow = array();
 		}
-		
+
 		#$listdelete = Post::val('delete');
 		if (isset($_POST['delete']) && is_array($_POST['delete'])) {
 			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listdelete = array();
 		}
-		
+
 		#$listowners = Post::val('category_owner');
 		if (isset($_POST['category_owner']) && is_array($_POST['category_owner'])) {
-			$listowners = array_filter($_POST['category_owner'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOT$
+			$listowners = array_filter($_POST['category_owner'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listowners = array();
 		}
