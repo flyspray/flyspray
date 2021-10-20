@@ -2202,83 +2202,121 @@ switch ($action = Req::val('action'))
         $_SESSION['SUCCESS'] = L('listitemadded');
         break;
 
-        // ##################
-        // updating the category list
-        // ##################
-    case 'update_category':
-        if (!$user->perms('manage_project')) {
-            break;
-        }
+	/**
+	 * updating the category list
+	 */
+	case 'update_category':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
 
-        $listnames    = Post::val('list_name');
-        $listshow     = Post::val('show_in_list');
-        $listdelete   = Post::val('delete');
-        $listlft      = Post::val('lft');
-        $listrgt      = Post::val('rgt');
-        $listowners   = Post::val('category_owner');
+		$listnames = Post::val('list_name');
+		$listshow = Post::val('show_in_list');
+		$listdelete = Post::val('delete');
+		$listlft = Post::val('lft');
+		$listrgt = Post::val('rgt');
+		$listowners = Post::val('category_owner');
 
-        foreach ($listnames as $id => $listname) {
-            if ($listname != '') {
-                if (!isset($listshow[$id])) {
-                    $listshow[$id] = 0;
-                }
+		foreach ($listnames as $id => $listname) {
+			if ($listname != '') {
+				if (!isset($listshow[$id])) {
+					$listshow[$id] = 0;
+				}
 
-                // Check for duplicates on the same sub-level under same parent category.
-                // First, we'll have to find the right parent for the current category.
-                $sql = $db->query('SELECT *
+				// Check for duplicates on the same sub-level under same parent category.
+				// First, we'll have to find the right parent for the current category.
+				$sql = $db->query('SELECT *
                                      FROM {list_category}
                                     WHERE project_id = ? AND lft < ? and rgt > ?
                                       AND lft = (SELECT MAX(lft) FROM {list_category} WHERE lft < ? and rgt > ?)',
-                                  array($proj->id, intval($listlft[$id]), intval($listrgt[$id]), intval($listlft[$id]), intval($listrgt[$id])));
+					array(
+						$proj->id,
+						intval($listlft[$id]),
+						intval($listrgt[$id]),
+						intval($listlft[$id]),
+						intval($listrgt[$id])
+					)
+				);
+				$parent = $db->fetchRow($sql);
 
-                $parent = $db->fetchRow($sql);
+				$check = $db->query('
+					SELECT COUNT(*)
+					FROM {list_category} c
+					WHERE project_id = ?
+					AND category_name = ?
+					AND lft > ?
+					AND rgt < ?
+					AND category_id <> ?
+					AND NOT EXISTS (
+						SELECT *
+						FROM {list_category}
+						WHERE project_id = ?
+						AND lft > ?
+						AND rgt < ?
+						AND lft < c.lft
+						AND rgt > c.rgt
+					)',
+					array(
+						$proj->id,
+						$listname,
+						$parent['lft'],
+						$parent['rgt'],
+						intval($id),
+						$proj->id,
+						$parent['lft'],
+						$parent['rgt']
+					)
+				);
+				$itemexists = $db->fetchOne($check);
 
-                $check = $db->query('SELECT COUNT(*)
-                                      FROM {list_category} c
-                                     WHERE project_id = ? AND category_name = ? AND lft > ? AND rgt < ?
-                                       AND category_id <> ?
-                            AND NOT EXISTS (SELECT *
-                                              FROM {list_category}
-                                             WHERE project_id = ?
-                                               AND lft > ? AND rgt < ?
-                                               AND lft < c.lft AND rgt > c.rgt)',
-                                array($proj->id, $listname, $parent['lft'], $parent['rgt'], intval($id), $proj->id, $parent['lft'], $parent['rgt']));
-                $itemexists = $db->fetchOne($check);
+				#echo "<pre>" . $parent['category_name'] . "," . $listname . ", " . intval($id) . ", " . intval($listlft[$id]) . ", " . intval($listrgt[$id]) . ", " . $itemexists ."</pre>";
 
-                // echo "<pre>" . $parent['category_name'] . "," . $listname . ", " . intval($id) . ", " . intval($listlft[$id]) . ", " . intval($listrgt[$id]) . ", " . $itemexists ."</pre>";
+				if ($itemexists) {
+					Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
+					return;
+				}
 
-                if ($itemexists) {
-                    Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
-                    return;
-                }
+				$update = $db->query('
+					UPDATE {list_category}
+					SET
+						category_name = ?,
+						show_in_list = ?,
+						category_owner = ?,
+						lft = ?,
+						rgt = ?
+					WHERE category_id = ?
+					AND project_id = ?',
+					array(
+						$listname,
+						intval($listshow[$id]),
+						Flyspray::userNameToId($listowners[$id]),
+						intval($listlft[$id]),
+						intval($listrgt[$id]),
+						intval($id),
+						$proj->id
+					)
+				);
 
+				// Correct visibility for sub categories
+				if ($listshow[$id] == 0) {
+					foreach ($listnames as $key => $value) {
+						if ($listlft[$key] > $listlft[$id] && $listrgt[$key] < $listrgt[$id]) {
+							$listshow[$key] = 0;
+						}
+					}
+				}
+			} else {
+				Flyspray::show_error(L('fieldsmissing'));
+			}
+		}
 
-                $update = $db->query('UPDATE  {list_category}
-                                         SET  category_name = ?,
-                                              show_in_list = ?, category_owner = ?,
-                                              lft = ?, rgt = ?
-                                       WHERE  category_id = ? AND project_id = ?',
-                array($listname, intval($listshow[$id]), Flyspray::UserNameToId($listowners[$id]), intval($listlft[$id]), intval($listrgt[$id]), intval($id), $proj->id));
-                // Correct visibility for sub categories
-                if ($listshow[$id] == 0) {
-                    foreach ($listnames as $key => $value) {
-                        if ($listlft[$key] > $listlft[$id] && $listrgt[$key] < $listrgt[$id]) {
-                            $listshow[$key] = 0;
-                        }
-                    }
-                }
-            } else {
-                Flyspray::show_error(L('fieldsmissing'));
-            }
-        }
+		if (is_array($listdelete) && count($listdelete)) {
+			$deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
+			$db->query("DELETE FROM {list_category} WHERE project_id = ? AND ($deleteids)", array($proj->id));
+		}
 
-        if (is_array($listdelete) && count($listdelete)) {
-            $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
-            $db->query("DELETE FROM {list_category} WHERE project_id = ? AND ($deleteids)", array($proj->id));
-        }
-
-        $_SESSION['SUCCESS'] = L('listupdated');
-        break;
+		$_SESSION['SUCCESS'] = L('listupdated');
+		break;
 
         // ##################
         // adding a category list item
