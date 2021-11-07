@@ -1,16 +1,16 @@
 <?php
-/*******************************************************************************
- * File:              sk.php
- * Authors:           Mancuska Martin (borgcube) http://blog.borg.sk/
- *                    Pokorny Fridolin (fridex) http://fridex.yw.sk
- *                    Jan Callus(callus) jan.callus@gmail.com
- *                    Miroslav Hofbauer
- * Description:
- * Slovak translation of web-based bug tracking system FlySpray.
- * http://flyspray.org/
+/**
+ * Slovak translation of web-based bug tracking system Flyspray.
  *
- * Last modified:     10/30/2021
- ******************************************************************************/
+ * @author Mancuska Martin (borgcube)
+ * @author Pokorny Fridolin (fridex)
+ * @author Jan Callus (callus) <jan.callus@gmail.com>
+ * @author Miroslav Hofbauer
+ * 
+ * @see https://flyspray.org/
+ *
+ * Last modified: 2021-10-30
+ */
 
 $translation = array(
 'edituser'                => 'Edituj užívateľa',
