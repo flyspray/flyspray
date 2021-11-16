@@ -692,7 +692,7 @@ switch ($action = Req::val('action'))
 		// self duplicate check
 		if (Post::val('resolution_reason') == RESOLUTION_DUPLICATE) {
 			preg_match("/\b(?:FS#|bug )(\d+)\b/", Post::val('closure_comment', ''), $dupe_of);
-			if ($task['task_id'] == $dupe_of[1]) {
+			if (isset($dupe_of[1]) && $task['task_id'] == $dupe_of[1]) {
 				Flyspray::show_error(L('circularduplicate'));
 				break;
 			}
