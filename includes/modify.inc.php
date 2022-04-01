@@ -869,7 +869,7 @@ switch ($action = Req::val('action'))
 		}
 
 		if (Post::val('manual_effort')) {
-			if ($effort->addEffort(Post::val('effort_to_add'), $proj)) {
+			if ($effort->addEffort(Post::val('effort_to_add'), $proj, Post::val('effort_description'))) {
 				$_SESSION['SUCCESS'] = L('efforttrackingadded');
 			}
 		}
