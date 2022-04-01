@@ -824,66 +824,62 @@ switch ($action = Req::val('action'))
 		#Flyspray::redirect(createURL('details', $task['task_id']));
 		break;
 
-        // ##################
-        // adding a comment
-        // ##################
-    case 'details.addcomment':
-        if (!Backend::add_comment($task, Post::val('comment_text'))) {
-            Flyspray::show_error(L('nocommententered'));
-            break;
-        }
-
-        if (Post::val('notifyme') == '1') {
-            // If the user wanted to watch this task for changes
-            Backend::add_notification($user->id, $task['task_id']);
-        }
-
-	$_SESSION['SUCCESS'] = L('commentaddedmsg');
-	Flyspray::redirect(createURL('details', $task['task_id']));
-	break;
-
-        // ##################
-        // Tracking
-        // ##################
-    case 'details.efforttracking':
-
-        require_once BASEDIR . '/includes/class.effort.php';
-        $effort = new effort($task['task_id'],$user->id);
-
-
-        if(Post::val('start_tracking')){
-            if($effort->startTracking())
-            {
-                $_SESSION['SUCCESS'] = L('efforttrackingstarted');
-            }
-            else
-            {
-                $_SESSION['ERROR'] = L('efforttrackingnotstarted');
-            }
-        }
-
-        if(Post::val('stop_tracking')){
-            $effort->stopTracking();
-            $_SESSION['SUCCESS'] = L('efforttrackingstopped');
-        }
-
-        if(Post::val('cancel_tracking')){
-            $effort->cancelTracking();
-            $_SESSION['SUCCESS'] = L('efforttrackingcancelled');
-        }
-
-	if(Post::val('manual_effort')){
-		if($effort->addEffort(Post::val('effort_to_add'), $proj)){
-			$_SESSION['SUCCESS'] = L('efforttrackingadded');
+	/**
+	 * adding a comment
+	 */
+	case 'details.addcomment':
+		if (!Backend::add_comment($task, Post::val('comment_text'))) {
+			Flyspray::show_error(L('nocommententered'));
+			break;
 		}
-	}
 
-        Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
-        break;
+		if (Post::val('notifyme') == '1') {
+			// If the user wanted to watch this task for changes
+			Backend::add_notification($user->id, $task['task_id']);
+		}
 
-        // ##################
-        // sending a new user a confirmation code
-        // ##################
+		$_SESSION['SUCCESS'] = L('commentaddedmsg');
+		Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
+
+	/**
+	 * effort tracking
+	 */
+	case 'details.efforttracking':
+
+		require_once BASEDIR . '/includes/class.effort.php';
+		$effort = new effort($task['task_id'], $user->id);
+
+		if (Post::val('start_tracking')) {
+			if ($effort->startTracking()) {
+				$_SESSION['SUCCESS'] = L('efforttrackingstarted');
+			} else {
+				$_SESSION['ERROR'] = L('efforttrackingnotstarted');
+			}
+		}
+
+		if (Post::val('stop_tracking')) {
+			$effort->stopTracking();
+			$_SESSION['SUCCESS'] = L('efforttrackingstopped');
+		}
+
+		if (Post::val('cancel_tracking')) {
+			$effort->cancelTracking();
+			$_SESSION['SUCCESS'] = L('efforttrackingcancelled');
+		}
+
+		if (Post::val('manual_effort')) {
+			if ($effort->addEffort(Post::val('effort_to_add'), $proj, Post::val('effort_description'))) {
+				$_SESSION['SUCCESS'] = L('efforttrackingadded');
+			}
+		}
+
+		Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
+		break;
+
+	/**
+	 * sending a new user a confirmation code
+	 */
 	case 'register.sendcode':
 		if (!$user->can_register()) {
 			break;
