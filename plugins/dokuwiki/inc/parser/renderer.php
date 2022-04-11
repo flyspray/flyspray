@@ -10,12 +10,12 @@ if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../')
 require_once DOKU_INC . 'inc/parser/renderer.php';
 require_once DOKU_INC . 'inc/pluginutils.php';
 
-class Doku_Renderer {
+class Doku_Renderer
+{
     var $info = array(
         'cache' => TRUE, // may the rendered result cached?
         'toc'   => TRUE, // render the TOC?
     );
-
 
     function nocache() {
         $this->info['cache'] = FALSE;
@@ -26,7 +26,8 @@ class Doku_Renderer {
     }
 
     //handle plugin rendering
-    function plugin($name,$data){
+    function plugin($name,$data)
+    {
         $plugin =& plugin_load('syntax',$name);
         if($plugin != null){
             // determine mode from renderer class name - format = "Doku_Renderer_<mode>"
@@ -39,11 +40,11 @@ class Doku_Renderer {
      * handle nested render instructions
      * this method (and nest_close method) should not be overloaded in actual renderer output classes
      */
-    function nest($instructions) {
-
-      foreach ( $instructions as $instruction ) {
+    function nest($instructions)
+    {
+      foreach ($instructions as $instruction) {
         // execute the callback against ourself
-        call_user_func_array(array(&$this, $instruction[0]),$instruction[1]);
+        call_user_func_array(array(&$this, $instruction[0]), $instruction[1]);
       }
     }
 
@@ -169,9 +170,9 @@ class Doku_Renderer {
     function externallink($link, $title = NULL) {}
 
     // $link is the original link - probably not much use
-    // $wikiName is an indentifier for the wiki
+    // $wikiName is an identifier for the wiki
     // $wikiUri is the URL fragment to append to some known URL
-    function interwikilink($link, $title = NULL, $wikiName, $wikiUri) {}
+    function interwikilink($link, $title, $wikiName, $wikiUri) {}
 
     // Link to file on users OS, $title could be an array (media)
     function filelink($link, $title = NULL) {}
@@ -179,16 +180,16 @@ class Doku_Renderer {
     // Link to a Windows share, , $title could be an array (media)
     function windowssharelink($link, $title = NULL) {}
 
-//  function email($address, $title = NULL) {}
+    //function email($address, $title = NULL) {}
     function emaillink($address, $name = NULL) {}
 
     function internalmedialink (
-        $src,$title=NULL,$align=NULL,$width=NULL,$height=NULL,$cache=NULL
-        ) {}
+        $src, $title=NULL, $align=NULL, $width=NULL, $height=NULL, $cache=NULL
+    ) {}
 
     function externalmedialink(
-        $src,$title=NULL,$align=NULL,$width=NULL,$height=NULL,$cache=NULL
-        ) {}
+        $src, $title=NULL, $align=NULL, $width=NULL, $height=NULL, $cache=NULL
+    ) {}
 
     function table_open($maxcols = NULL, $numrows = NULL){}
 

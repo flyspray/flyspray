@@ -425,20 +425,20 @@ class Doku_Lexer {
     }
 
     /**
-     *    Sends the matched token and any leading unmatched
-     *    text to the parser changing the lexer to a new
-     *    mode if one is listed.
-     *    @param string $unmatched    Unmatched leading portion.
-     *    @param string $matched      Actual token match.
-     *    @param string $mode         Mode after match. A boolean
-     *                                false mode causes no change.
-     *    @param int $pos         Current byte index location in raw doc
-     *                                thats being parsed
-     *    @return boolean             False if there was any error
-     *                                from the parser.
-     *    @access private
+     * Sends the matched token and any leading unmatched
+     * text to the parser changing the lexer to a new
+     * mode if one is listed.
+     *
+     * @param string $unmatched unmatched leading portion
+     * @param string $matched actual token match
+     * @param string $mode mode after match. A boolean false mode causes no change.
+     * @param int $initialPos
+     * @param int $matchPos Current byte index location in raw doc thats being parsed.
+     *
+     * @return boolean False if there was any error from the parser.
      */
-    function _dispatchTokens($unmatched, $matched, $mode = false, $initialPos, $matchPos) {
+    protected function _dispatchTokens($unmatched, $matched, $mode, $initialPos, $matchPos)
+    {
         if (! $this->_invokeParser($unmatched, DOKU_LEXER_UNMATCHED, $initialPos) ){
             return false;
         }

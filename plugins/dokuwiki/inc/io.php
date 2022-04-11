@@ -20,7 +20,6 @@
  * $data[0]    ns: The colon separated namespace path minus the trailing page name.
  * $data[1]    ns_type: 'pages' or 'media' namespace tree.
  *
- * @todo use safemode hack
  * @author  Andreas Gohr <andi@splitbrain.org>
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
@@ -282,10 +281,9 @@ function io_deleteFromFile($file,$badline,$regex=false){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function io_lock($file){
+function io_lock($file)
+{
   global $conf;
-  // no locking if safemode hack
-  if($conf['safemodehack']) return;
 
   $lockDir = $conf['lockdir'].'/'.md5($file);
   @ignore_user_abort(1);
@@ -308,10 +306,9 @@ function io_lock($file){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function io_unlock($file){
+function io_unlock($file)
+{
   global $conf;
-  // no locking if safemode hack
-  if($conf['safemodehack']) return;
 
   $lockDir = $conf['lockdir'].'/'.md5($file);
   @rmdir($lockDir);
@@ -378,57 +375,18 @@ function io_makeFileDir($file){
  * @author  <saint@corenova.com>
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-function io_mkdir_p($target){
+function io_mkdir_p($target)
+{
   global $conf;
   if (@is_dir($target)||empty($target)) return 1; // best case check first
   if (@file_exists($target) && !is_dir($target)) return 0;
   //recursion
   if (io_mkdir_p(substr($target,0,strrpos($target,'/')))){
-    if($conf['safemodehack']){
-      $dir = preg_replace('/^'.preg_quote(realpath($conf['ftp']['root']),'/').'/','', $target);
-      return io_mkdir_ftp($dir);
-    }else{
-      $ret = @mkdir($target,$conf['dmode']); // crawl back up & create dir tree
-      if($ret && $conf['dperm']) chmod($target, $conf['dperm']);
-      return $ret;
-    }
+    $ret = @mkdir($target,$conf['dmode']); // crawl back up & create dir tree
+    if($ret && $conf['dperm']) chmod($target, $conf['dperm']);
+    return $ret;
   }
   return 0;
-}
-
-/**
- * Creates a directory using FTP
- *
- * This is used when the safemode workaround is enabled
- *
- * @author <andi@splitbrain.org>
- */
-function io_mkdir_ftp($dir){
-  global $conf;
-
-  if(!function_exists('ftp_connect')){
-    msg("FTP support not found - safemode workaround not usable",-1);
-    return false;
-  }
-
-  $conn = @ftp_connect($conf['ftp']['host'],$conf['ftp']['port'],10);
-  if(!$conn){
-    msg("FTP connection failed",-1);
-    return false;
-  }
-
-  if(!@ftp_login($conn, $conf['ftp']['user'], $conf['ftp']['pass'])){
-    msg("FTP login failed",-1);
-    return false;
-  }
-
-  //create directory
-  $ok = @ftp_mkdir($conn, $dir);
-  //set permissions
-  @ftp_site($conn,sprintf("CHMOD %04o %s",$conf['dmode'],$dir));
-
-  @ftp_close($conn);
-  return $ok;
 }
 
 /**

@@ -151,7 +151,7 @@ class ADODB2_postgres extends ADODB_DataDict
 			}
 			// SERIAL is not a true type in PostgreSQL and is only allowed when creating a new table.
 			// See https://www.postgresql.org/docs/13/datatype-numeric.html#DATATYPE-SERIAL 8.1.4. Serial Types
-			elseif (preg_match('/^([^ ]+) .*SERIAL/i',$v,$matches)) {
+			elseif (preg_match('/^([^ ]+) .*SERIAL/i', $v, $matches)) {
 				list(, $colname, $default) = $matches;
 				$sql[] = 'CREATE SEQUENCE '.$tabname.'_'.$colname.'_seq';
 				$sql[] = $alter.$colname.' INTEGER';
@@ -195,7 +195,7 @@ class ADODB2_postgres extends ADODB_DataDict
 		if ($has_alter_column) {
 			$tabname = $this->tableName($tabname);
 			$sql = array();
-			list($lines,$pkey) = $this->_genFields($flds);
+			list($lines, $pkey) = $this->_genFields($flds);
 			$set_null = false;
 			foreach ($lines as $v) {
 				$alter = 'ALTER TABLE ' . $tabname . $this->alterCol . ' ';
@@ -220,7 +220,7 @@ class ADODB2_postgres extends ADODB_DataDict
 
 				if (preg_match('/^([^ ]+) .*DEFAULT (\'[^\']+\'|\"[^\"]+\"|[^ ]+)/', $v, $matches)) {
 					$existing = $this->metaColumns($tabname);
-					list(,$colname,$default) = $matches;
+					list(, $colname, $default) = $matches;
 					$alter .= $colname;
 					if ($this->connection) {
 						$old_coltype = $this->connection->metaType($existing[strtoupper($colname)]);
@@ -253,8 +253,8 @@ class ADODB2_postgres extends ADODB_DataDict
 
 				} else {
 					// drop default?
-					preg_match ('/^\s*(\S+)\s+(.*)$/', $v, $matches);
-					list (,$colname,$rest) = $matches;
+					preg_match('/^\s*(\S+)\s+(.*)$/', $v, $matches);
+					list(, $colname, $rest) = $matches;
 					$alter .= $colname;
 					$sql[] = $alter . ' TYPE ' . $rest;
 				}
@@ -329,15 +329,20 @@ class ADODB2_postgres extends ADODB_DataDict
 		foreach ($this->metaColumns($tabname) as $fld) {
 			if (!$dropflds || !in_array($fld->name, $dropflds)) {
 				// we need to explicit convert varchar to a number to be able to do an AlterColumn of a char column to a nummeric one
-				if (preg_match('/'.$fld->name.' (I|I2|I4|I8|N|F)/i', $tableflds, $matches) &&
-					in_array($fld->type, array('varchar','char','text','bytea'))) {
+				if (
+					preg_match('/'.$fld->name.' (I|I2|I4|I8|N|F)/i', $tableflds, $matches)
+					&& in_array($fld->type, array('varchar', 'char', 'text', 'bytea'))
+				) {
 					$copyflds[] = "to_number($fld->name,'S9999999999999D99')";
 				} else {
 					$copyflds[] = $fld->name;
 				}
 				// identify the sequence name and the fld its on
-				if ($fld->primary_key && $fld->has_default &&
-					preg_match("/nextval\('([^']+)'::text\)/", $fld->default_value, $matches)) {
+				if (
+					$fld->primary_key
+					&& $fld->has_default
+					&& preg_match("/nextval\('([^']+)'::text\)/", $fld->default_value, $matches)
+				) {
 					$seq_name = $matches[1];
 					$seq_fld = $fld->name;
 				}
@@ -357,10 +362,20 @@ class ADODB2_postgres extends ADODB_DataDict
 		}
 		$aSql[] = "DROP TABLE $tempname";
 		// recreate the indexes, if they not contain one of the dropped columns
-		foreach($this->metaIndexes($tabname) as $idx_name => $idx_data) {
-			if (substr($idx_name,-5) != '_pkey' && (!$dropflds || !count(array_intersect($dropflds,$idx_data['columns'])))) {
-				$aSql = array_merge($aSql,$this->createIndexSQL($idx_name, $tabname, $idx_data['columns'],
-					$idx_data['unique'] ? array('UNIQUE') : false));
+		foreach ($this->metaIndexes($tabname) as $idx_name => $idx_data) {
+			if (
+				substr($idx_name,-5) != '_pkey'
+				&& (!$dropflds || !count(array_intersect($dropflds,$idx_data['columns'])))
+			) {
+				$aSql = array_merge(
+					$aSql,
+					$this->createIndexSQL(
+						$idx_name,
+						$tabname,
+						$idx_data['columns'],
+						$idx_data['unique'] ? array('UNIQUE') : false
+					)
+				);
 			}
 		}
 		$aSql[] = 'COMMIT';
@@ -591,7 +606,11 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 					if ($mt == 'X') {
 						$ml = $v['SIZE'];
 					}
-					if (($mt != $v['TYPE']) || ($ml != $fsize || $sc != $fprec) || (isset($v['AUTOINCREMENT']) && $v['AUTOINCREMENT'] != $obj->auto_increment)) {
+					if (
+						($mt != $v['TYPE'])
+						|| ($ml != $fsize || $sc != $fprec)
+						|| (isset($v['AUTOINCREMENT']) && $v['AUTOINCREMENT'] != $obj->auto_increment)
+					) {
 						$modifiedcols[$k] = $v;
                                         }
 				} else {

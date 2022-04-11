@@ -1,13 +1,13 @@
 <div class="userSelectWidget">
-<label for="find_user" class="inline"><?php echo Filters::noXSS(L('find')); ?>:</label>
-<input placeholder="<?php echo Filters::noXSS(L('user')); ?>" type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
-<a class="button" href="javascript:unselectAll()"><?php echo Filters::noXSS(L('noone')); ?></a>
+<label for="find_user" class="inline"><?= eL('find') ?>:</label>
+<input placeholder="<?= eL('user') ?>" type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
+<a class="button" href="javascript:unselectAll()"><?= eL('noone') ?></a>
 <br />
 <select size="8" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
 <?php foreach ($userlist as $group => $users): ?>
-	<optgroup <?php echo ($users[0][2]==0 ? 'class="globalgroup" title="'.(Filters::noXSS(L('globalgroup'))).'" ':''); ?>label="<?php echo Filters::noXSS($users[0][3]); ?>">
+	<optgroup <?php echo ($users[0][2]==0 ? 'class="globalgroup" title="'.(eL('globalgroup')).'" ':''); ?>label="<?php echo Filters::noXSS($users[0][3]); ?>">
 	<?php foreach ($users as $info): ?>
-		<option value="<?php echo Filters::noXSS($info[0]); ?>" <?php if (in_array($info[0], $assignees)): ?>selected="selected"<?php endif; ?>><?php echo Filters::noXSS($info[1]); ?></option>
+		<option value="<?php echo Filters::noXSS($info[0]); ?>"<?php if (in_array($info[0], $assignees)): ?> selected="selected"<?php endif; ?>><?php echo Filters::noXSS($info[1]); ?></option>
 	<?php endforeach; ?>
 	</optgroup>
 <?php endforeach; ?>

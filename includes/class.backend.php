@@ -1760,7 +1760,7 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             }
         }
 
-		if (array_get($args, 'string')) {
+		if (array_get($args, 'string') && !is_array(array_get($args, 'string'))) {
 			$words = explode(' ', strtr(array_get($args, 'string'), '()', '  '));
 			$comments = '';
 			$where_temp = array();

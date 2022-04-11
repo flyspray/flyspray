@@ -10,7 +10,7 @@ $permicons=array(
 'view_current_effort_done'=>'<span class="fa fa-stack"><i class="fa fa-clock-o fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'track_effort'=>'<span class="fa fa-stack"><i class="fa fa-clock-o fa-stack-2x"></i><i class="fa fa-eye fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'open_new_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-plus fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
-'add_multiple_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-plus fa-stack" style="padding-top:8px;padding-top:8px;"></i></span>',
+'add_multiple_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-plus fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'modify_own_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-pencil fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'modify_all_tasks'=>'<span class="fa fa-stack"><i class="fa fa-tasks fa-stack-2x"></i><i class="fa fa-pencil fa-stack" style="padding-top:8px;padding-left:12px"></i></span>',
 'close_own_tasks'=>'<i class="fa fa-check fa-lg"></i>',
