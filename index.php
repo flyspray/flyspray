@@ -97,8 +97,14 @@ header('Content-Style-Type: text/css');
 header('Content-type: text/html; charset=utf-8');
 
 $csp->add('img-src', "'self'");
-# a bit unsure if * is ok (data: http: https:)
-#$csp->add('img-src', "*");
+/**
+ * For CKEditor 4.16+ as it adds some inline image data when editing a code section.         
+ * Check if newer CKEditor versions still require this.
+ */
+if ($conf['general']['syntax_plugin'] == 'html') {
+	$csp->add('img-src', "data:");
+}
+
 $csp->add('font-src', "'self'");
 $csp->add('style-src', "'self'");
 $csp->add('style-src', "'unsafe-inline'");
