@@ -859,7 +859,7 @@ switch ($action = Req::val('action'))
 		}
 
 		if (Post::val('stop_tracking')) {
-			$effort->stopTracking();
+			$effort->stopTracking($proj, Post::val('stop_description'));
 			$_SESSION['SUCCESS'] = L('efforttrackingstopped');
 		}
 
