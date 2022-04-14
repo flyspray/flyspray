@@ -39,7 +39,7 @@ class effort
 	 * Manually add effort to the effort table for this task and user.
 	 *
 	 * @param string $effort_to_add int amount of effort in hh:mm to add to effort table.
-	 * @param int $proj a bit redundant as it can be received by task_id, maybe deprecate it someday..
+	 * @param object $proj a bit redundant as it can be received by task_id, maybe deprecate it someday..
 	 * @param string $description optional description, e.g. for writing bills out of tracked effort
 	 *
 	 * @return bool
@@ -96,17 +96,21 @@ class effort
 	 * Stops tracking the current tracking request and then updates the actual hours field on the table, this
 	 * is useful as both stops constant calculation from start/end timestamps and provides a quick aggregation
 	 * method as we only need to deal with one field.
-	 */
-	public function stopTracking()
+	 *
+	 * @param object $proj a bit redundant as it can be received by task_id, maybe deprecate it someday ..
+	 * @param string $description optional description, e.g. for writing bills out of tracked effort
+	*/
+	public function stopTracking($proj, $description=null)
 	{
 		global $db;
 
 		$time = time();
 
 		$sql = $db->query('SELECT start_timestamp FROM {effort}
-			WHERE user_id='.$this->_userId.'
-			AND task_id='.$this->_task_id.'
-			AND end_timestamp IS NULL;');
+			WHERE user_id=?
+			AND task_id=?
+			AND end_timestamp IS NULL',
+			array($this->_userId, $this->_task_id);
 
 		$result = $db->fetchRow($sql);
 		$start_time = $result[0];
@@ -115,10 +119,11 @@ class effort
 		// Round to full minutes upwards.
 		$effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
  
-		$sql = $db->query("UPDATE {effort} SET end_timestamp = ".$time.", effort = ".$effort."
-			WHERE user_id=".$this->_userId."
-			AND task_id=".$this->_task_id."
-			AND end_timestamp IS NULL;");
+		$sql = $db->query("UPDATE {effort} SET end_timestamp=?, effort=?, description=?,
+			WHERE user_id=?
+			AND task_id=?
+			AND end_timestamp IS NULL",
+			array($time, $effort, $description, $this->_userId, $this->_task_id));
 	}
 
 	/**
