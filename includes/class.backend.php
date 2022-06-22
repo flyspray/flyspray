@@ -1712,6 +1712,8 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             'comments' => 'num_comments',
             'private' => 'mark_private',
             'supertask' => 't.supertask_id',
+	    'effort' => 'effort',
+            'estimatedeffort' => 'estimated_effort'
         );
 
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)
