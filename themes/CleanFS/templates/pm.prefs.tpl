@@ -209,13 +209,13 @@
           </select>
         </li>
 
-        <li>
-          <label><?php echo Filters::noXSS(L('visiblecolumns')); ?></label>
+        <li class="doubleselect">
+          <label><?= eL('visiblecolumns') ?></label>
           <?php echo tpl_double_select('visible_columns', $columnnames, $selectedcolumns, false); ?>
         </li>
 
-        <li>
-          <label><?php echo Filters::noXSS(L('visiblefields')); ?></label>
+        <li class="doubleselect">
+          <label><?= eL('visiblefields') ?></label>
           <?php // Set the selectable field names
           $fieldnames = array(
             'parent' => L('parent'),
