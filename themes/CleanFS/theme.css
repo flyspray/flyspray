@@ -1269,6 +1269,24 @@ ul.slim .userSelectWidget select {width:100%;}
   *display: inline; /* target IE7 only */
   vertical-align: middle;
 }
+.double_select.visible_columns .dualselect_selectable{
+	height:440px;
+}
+.double_select.visible_columns .dualselect_selected {
+	height:auto;
+}
+.double_select.visible_columns .dualselect_selected select{
+	height:440px;
+}
+.double_select.visible_fields .dualselect_selectable {
+	height:300px;
+}
+.double_select.visible_fields .dualselect_selected {
+	height:auto;
+}
+.double_select.visible_fields .dualselect_selected select{
+	height:300px;
+}
 .double_select .dualselect_buttons {
   width: 16%;
   display: -moz-inline-stack; /* optional */
