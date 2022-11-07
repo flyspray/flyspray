@@ -39,4 +39,31 @@ CKEDITOR.editorConfig = function( config ) {
 	// h2 for task title
 	// But better allow them also for task description and comment for backward compatibility.
 	config.format_tags = 'p;h1;h2;h3;h4;h5;pre';
+	
+	config.mentions=[
+		{
+			minChars: 0,
+			marker: '@',
+			feed: function( options, callback ) {
+				var xhr = new XMLHttpRequest();
+
+				xhr.onreadystatechange = function() {
+					if ( xhr.readyState == 4 ) {
+						if ( xhr.status == 200 ) {
+							callback( JSON.parse( this.responseText ) );
+						} else {
+							callback( [] );
+						}
+					}
+				}
+
+				// @todo send project id to get the best matching users for the task/comment.
+				params= 'username=' + encodeURIComponent( options.query );
+
+				xhr.open( 'POST', 'js/callbacks/usersearch.php');
+				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xhr.send(params);
+			}
+		}
+	];
 };
