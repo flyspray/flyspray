@@ -21,7 +21,7 @@ yourdomain {
 		path /.htaccess
 		path /includes/*
 		path /attachments/*
-		path_regexp /(plugins|themes|vendor)/.*\.(php|pl|py|cgi|twig|sh)$
+		path_regexp /(plugins|themes|vendor)/.*\.(php|pl|py|cgi|tpl|twig|sh)$
 	}
 	respond @privatepaths 403
 
