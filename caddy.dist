@@ -8,6 +8,8 @@
 	}
 }
 
+# or set port :8080
+# or set domain with port together yourdomain:8080
 yourdomain {
 
 	encode gzip zstd
@@ -41,6 +43,21 @@ yourdomain {
 	@taskrule1 path_regexp taskrule1 ^task/([0-9]+)$
 	rewrite @taskrule1 index.php?do=details&task_id={re.taskrule1.1}
 
+
+	# admin TODO
+	@adminrule1 path_regexp adminrule1 ^/admin/([a-zA-Z]+)$
+	rewrite @adminrule1 index.php?do=admin&area={re.adminrule1.1}
+
+	@adminrule2 path_regexp adminrule2 ^/admin/editgroup/([0-9]+)$
+	rewrite @adminrule2 index.php?do=admin&area=editgroup&id={re.adminrule2.1}
+
+
+	# project TODO
+	@pmrule1 path_regexp pmrule1 ^/pm/proj([0-9]+)/([a-zA-Z]+)$
+	rewrite @pmrule1 index.php?do=pm&project={re.pmrule1.1}&area={re.pmrule1.2}
+
+	@pmrule2 path_regexp pmrule2 ^/pm/editgroup/([0-9]+)$
+	rewrite @pmrule2 index.php?do=pm&area=editgroup&id={re.pmrule2.1}
+
 #	respond "Down due to migration..be back soon" 503
 }
-
