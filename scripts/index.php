@@ -421,7 +421,7 @@ function export_task_list()
             'status'     => 'status_name',
             'openedby'   => 'opened_by_name',
             'assignedto' => 'assigned_to_name',
-            'lastedit'   => 'max_date',
+            'lastedit'   => 'last_edited_time',
             'reportedin' => 'product_version',
             'dueversion' => 'closedby_version',
             'duedate'    => 'due_date',
@@ -467,15 +467,19 @@ function export_task_list()
 	$output = fopen('php://output', 'w');
 	$headings= array(
 		'ID',
+    'Project',
 		'Category',
 		'Task Type',
 		'Severity',
+		'Priority',
 		'Summary',
 		'Status',
 		'Progress',
 		'date_opened',
 		'date_closed',
 		'due_date',
+    'lastedit',
+    'assignedto',
 		'supertask_id'
 	);
 	if($user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
@@ -489,15 +493,19 @@ function export_task_list()
 	foreach ($tasks as $task) {
 		$row = array(
 			$task['task_id'],
+      $task['project_title'],
 			$task['category_name'],
 			$task['task_type'],
 			$fs->severities[ $task['task_severity'] ],
+      $fs->priorities[ $task['task_priority'] ],
 			$task['item_summary'],
 			$task['status_name'],
 			$task['percent_complete'],
 			$task['date_opened'],
 			$task['date_closed'],
 			$task['due_date'],
+      $task['last_edited_time'],
+      $task['assigned_to_name'],
 			$task['supertask_id']
 		);
 		if( $user->perms('view_estimated_effort') && $proj->id>0 && $proj->prefs['use_effort_tracking']){
