@@ -310,8 +310,11 @@ abstract class Backend
         }
 
 	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
+    $properties = array();
+    if (isSet($conf['html']['allowed_css_properties']))
+      $properties = explode(',', $conf['html']['allowed_css_properties']);
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		$purifierconfig->set('CSS.AllowedProperties', array());
+		$purifierconfig->set('CSS.AllowedProperties', $properties);
 		if ($fs->prefs['relnofollow']) {
 			$purifierconfig->set('HTML.Nofollow', true);
 		}
@@ -1086,8 +1089,11 @@ abstract class Backend
 
 	# dokuwiki syntax plugin filters on output
 	if ($conf['general']['syntax_plugin'] != 'dokuwiki' && isset($sql_args['detailed_desc'])) {
-		$purifierconfig = HTMLPurifier_Config::createDefault();
-		$purifierconfig->set('CSS.AllowedProperties', array());
+    $properties = array();
+    if (isSet($conf['html']['allowed_css_properties']))
+      $properties = explode(',', $conf['html']['allowed_css_properties']);
+    $purifierconfig = HTMLPurifier_Config::createDefault();
+		$purifierconfig->set('CSS.AllowedProperties', $properties);
 		if ($fs->prefs['relnofollow']) {
 			$purifierconfig->set('HTML.Nofollow', true);
 		}

@@ -420,8 +420,11 @@ switch ($action = Req::val('action'))
 
 	# dokuwiki syntax plugin filters on output
 	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
+    $properties = array();
+    if (isSet($conf['html']['allowed_css_properties']))
+      $properties = explode(',', $conf['html']['allowed_css_properties']);
 		$purifierconfig = HTMLPurifier_Config::createDefault();
-		$purifierconfig->set('CSS.AllowedProperties', array());
+		$purifierconfig->set('CSS.AllowedProperties', $properties);
 		if ($fs->prefs['relnofollow']) {
 			$purifierconfig->set('HTML.Nofollow', true);
 		}
@@ -478,17 +481,17 @@ switch ($action = Req::val('action'))
 				}
 			}
 		}
-		$assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
+        $assignees_changed = count(array_diff($task['assigned_to'], $assignees)) + count(array_diff($assignees, $task['assigned_to']));
 		
-		if ($user->perms('edit_assignments') && $assignees_changed) {
+        if ($user->perms('edit_assignments') && $assignees_changed) {
 			// TODO: only update assignee changes without deletion
 			// So date of assignment is kept if table {assigned} gets a timestamp field 'added' someday.
-			// Delete the current assignees for this task
+            // Delete the current assignees for this task
 			$db->query('DELETE FROM {assigned} WHERE task_id = ?', array($task['task_id']));
 			foreach ($assignees as $val) {
-				$db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id', 'task_id'));
-			}
-		}
+                $db->replace('{assigned}', array('user_id'=> $val, 'task_id'=> $task['task_id']), array('user_id','task_id'));
+            }
+        }
 
 		# FIXME what if we move to different project, but tag(s) is/are defined for the old project only (not global)?
 		# FIXME what if we move to different project and tag input field is deactivated/not shown in edit task page?
@@ -654,15 +657,15 @@ switch ($action = Req::val('action'))
             }
         }
 
-		Backend::add_comment($task, Post::val('comment_text'), $time);
+        Backend::add_comment($task, Post::val('comment_text'), $time);
 		if (isset($_POST['delete_att']) && is_array($_POST['delete_att'])) {
 			Backend::delete_files($_POST['delete_att']);
 		}
-		Backend::upload_files($task['task_id'], '0', 'usertaskfile');
+        Backend::upload_files($task['task_id'], '0', 'usertaskfile');
 		if (isset($_POST['delete_link']) && is_array($_POST['delete_link'])) {
 			Backend::delete_links($_POST['delete_link']);
 		}
-		Backend::upload_links($task['task_id'], '0', 'userlink');
+        Backend::upload_links($task['task_id'], '0', 'userlink');
 
 		$_SESSION['SUCCESS'] = L('taskupdated');
 		# report minor/soft errors too that does not hindered saving task
@@ -827,55 +830,55 @@ switch ($action = Req::val('action'))
 	/**
 	 * adding a comment
 	 */
-	case 'details.addcomment':
-		if (!Backend::add_comment($task, Post::val('comment_text'))) {
-			Flyspray::show_error(L('nocommententered'));
-			break;
-		}
+    case 'details.addcomment':
+        if (!Backend::add_comment($task, Post::val('comment_text'))) {
+            Flyspray::show_error(L('nocommententered'));
+            break;
+        }
 
-		if (Post::val('notifyme') == '1') {
-			// If the user wanted to watch this task for changes
-			Backend::add_notification($user->id, $task['task_id']);
-		}
+        if (Post::val('notifyme') == '1') {
+            // If the user wanted to watch this task for changes
+            Backend::add_notification($user->id, $task['task_id']);
+        }
 
-		$_SESSION['SUCCESS'] = L('commentaddedmsg');
-		Flyspray::redirect(createURL('details', $task['task_id']));
-		break;
+	$_SESSION['SUCCESS'] = L('commentaddedmsg');
+	Flyspray::redirect(createURL('details', $task['task_id']));
+	break;
 
 	/**
 	 * effort tracking
 	 */
-	case 'details.efforttracking':
+    case 'details.efforttracking':
 
-		require_once BASEDIR . '/includes/class.effort.php';
-		$effort = new effort($task['task_id'], $user->id);
+        require_once BASEDIR . '/includes/class.effort.php';
+        $effort = new effort($task['task_id'],$user->id);
 
-		if (Post::val('start_tracking')) {
+        if(Post::val('start_tracking')){
 			if ($effort->startTracking()) {
-				$_SESSION['SUCCESS'] = L('efforttrackingstarted');
+                $_SESSION['SUCCESS'] = L('efforttrackingstarted');
 			} else {
-				$_SESSION['ERROR'] = L('efforttrackingnotstarted');
-			}
-		}
+                $_SESSION['ERROR'] = L('efforttrackingnotstarted');
+            }
+        }
 
-		if (Post::val('stop_tracking')) {
-			$effort->stopTracking();
-			$_SESSION['SUCCESS'] = L('efforttrackingstopped');
-		}
+        if(Post::val('stop_tracking')){
+            $effort->stopTracking();
+            $_SESSION['SUCCESS'] = L('efforttrackingstopped');
+        }
 
-		if (Post::val('cancel_tracking')) {
-			$effort->cancelTracking();
-			$_SESSION['SUCCESS'] = L('efforttrackingcancelled');
-		}
+        if(Post::val('cancel_tracking')){
+            $effort->cancelTracking();
+            $_SESSION['SUCCESS'] = L('efforttrackingcancelled');
+        }
 
-		if (Post::val('manual_effort')) {
+	if(Post::val('manual_effort')){
 			if ($effort->addEffort(Post::val('effort_to_add'), $proj, Post::val('effort_description'))) {
-				$_SESSION['SUCCESS'] = L('efforttrackingadded');
-			}
+			$_SESSION['SUCCESS'] = L('efforttrackingadded');
 		}
+	}
 
-		Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
-		break;
+        Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
+        break;
 
 	/**
 	 * sending a new user a confirmation code
@@ -1292,62 +1295,62 @@ switch ($action = Req::val('action'))
         // ##################
         // Bulk User Edit Form
         // ##################
-	case 'admin.editallusers':
+    case 'admin.editallusers':
 
-		if (!($user->perms('is_admin'))) {
-			break;
-		}
- 
+        if (!($user->perms('is_admin'))) {
+            break;
+        }
+
 		if(isset($_POST['checkedUsers']) && is_array($_POST['checkedUsers'])) {
 			$userids= $_POST['checkedUsers'];
 		} else {
-			break;
-		}
+		break;
+	}
 
-		$users=array();
+	$users=array();
 
-		foreach ($userids as $uid) {
-			if( ctype_digit($uid) ) {
-				if( $user->id == $uid ){
-					Flyspray::show_error(L('nosuicide'));
-				} else{
-					$users[]=$uid;
-				}
+	foreach ($userids as $uid) {
+		if( ctype_digit($uid) ) {
+			if( $user->id == $uid ){
+				Flyspray::show_error(L('nosuicide'));
 			} else{
-				Flyspray::show_error(L('invalidinput'));
-				break 2;
+				$users[]=$uid;
 			}
+		} else{
+			Flyspray::show_error(L('invalidinput'));
+			break 2;
 		}
+	}
 
-		if (count($users) == 0){
-			Flyspray::show_error(L('nouserselected'));
-			break;
-		}
+  	if (count($users) == 0){
+            Flyspray::show_error(L('nouserselected'));
+            break;
+        }
 
-		// Make array of users to modify
-		$ids = "(" . $users[0];
+        // Make array of users to modify
+        $ids = "(" . $users[0];
 		for ($i = 1 ; $i < count($users) ; $i++) {
-			$ids .= ", " . $users[$i];
-		}
-		$ids .= ")";
+            $ids .= ", " . $users[$i];
+        }
+        $ids .= ")";
 
-		// Grab the action
+        // Grab the action
 		if (isset($_POST['enable'])) {
-			$sql = $db->query("UPDATE {users} SET account_enabled = 1 WHERE user_id IN $ids");
+            $sql = $db->query("UPDATE {users} SET account_enabled = 1 WHERE user_id IN $ids");
 		} else if (isset($_POST['disable'])) {
-			$sql = $db->query("UPDATE {users} SET account_enabled = 0 WHERE user_id IN $ids");
+            $sql = $db->query("UPDATE {users} SET account_enabled = 0 WHERE user_id IN $ids");
 		} else if (isset($_POST['delete'])) {
-			//$sql = $db->query("DELETE FROM {users} WHERE user_id IN $ids");
-			foreach ($users as $uid) {
-				Backend::delete_user($uid);
-			}
-		}
+            //$sql = $db->query("DELETE FROM {users} WHERE user_id IN $ids");
+            foreach ($users as $uid) {
+                Backend::delete_user($uid);
+            }
+        }
 
 		/** Show success message and exit
 		 * @todo show better success message: action - enabled, disabled deleted and how many users affected.
 		 */
-		$_SESSION['SUCCESS'] = L('usersupdated');
-		break;
+        $_SESSION['SUCCESS'] = L('usersupdated');
+        break;
 
         // ##################
         //  adding a new group
@@ -1998,10 +2001,10 @@ switch ($action = Req::val('action'))
 	/**
 	 * updating a list
 	 */
-	case 'update_list':
-		if (!$user->perms('manage_project') || !isset($list_table_name)) {
-			break;
-		}
+    case 'update_list':
+        if (!$user->perms('manage_project') || !isset($list_table_name)) {
+            break;
+        }
 
 		if (isset($_POST['list_name']) && is_array($_POST['list_name'])) {
 			$listnames = array_filter($_POST['list_name'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
@@ -2025,7 +2028,7 @@ switch ($action = Req::val('action'))
 			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listdelete = array();
-		}
+        }
 
 		if ($lt === 'tag') {
 			if (isset($_POST['list_class']) && is_array($_POST['list_class'])) {
@@ -2045,39 +2048,39 @@ switch ($action = Req::val('action'))
 
 		$updated = 0;
 		$deleted = 0;
-		foreach ($listnames as $id => $listname) {
-			if ($listname != '') {
+	foreach ($listnames as $id => $listname) {
+        	if ($listname != '') {
 				# fallback position for entry if wasn't valid
 				if (!isset($listposition[$id])) {
 					$listposition[$id] = 1;
 				}
-				if (!isset($listshow[$id])) {
-					$listshow[$id] = 0;
-				}
+			if (!isset($listshow[$id])) {
+				$listshow[$id] = 0;
+			}
 
-				$check = $db->query("SELECT COUNT(*)
-					FROM $list_table_name
-					WHERE (project_id = 0 OR project_id = ?)
-					AND $list_column_name = ?
-					AND $list_id <> ?",
-					array($proj->id, $listnames[$id], $id)
-				);
-				$itemexists = $db->fetchOne($check);
+			$check = $db->query("SELECT COUNT(*)
+                                       FROM $list_table_name
+                                      WHERE (project_id = 0 OR project_id = ?)
+                                        AND $list_column_name = ?
+                                        AND $list_id <> ?",
+                                    array($proj->id, $listnames[$id], $id)
+			);
+			$itemexists = $db->fetchOne($check);
 
-				if ($itemexists) {
-					Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
+			if ($itemexists) {
+				Flyspray::show_error(sprintf(L('itemexists'), $listnames[$id]));
 					# TODO maybe show count of updated entries before this name collision occured ..
-					return;
-				}
+				return;
+			}
 
 				if ($lt === 'tag'){
 					# skip updating an entry if no valid class string submitted
 					if (isset($listclass[$id])) {
-						$update = $db->query("UPDATE $list_table_name
-						SET $list_column_name=?, list_position=?, show_in_list=?, class=?
-						WHERE $list_id=? AND project_id=?",
-						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
-						);
+				$update = $db->query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?, class=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $listclass[$id], $id, $proj->id)
+				);
 						$updated += $db->affectedRows();
 					}
 				} elseif ($lt === 'version') {
@@ -2090,28 +2093,28 @@ switch ($action = Req::val('action'))
 						);
 						$updated += $db->affectedRows();
 					}
-				} else {
-					$update = $db->query("UPDATE $list_table_name
-						SET $list_column_name=?, list_position=?, show_in_list=?
-						WHERE $list_id=? AND project_id=?",
-						array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
-					);
+			} else{
+				$update = $db->query("UPDATE $list_table_name
+					SET $list_column_name=?, list_position=?, show_in_list=?
+					WHERE $list_id=? AND project_id=?",
+					array($listnames[$id], intval($listposition[$id]), intval($listshow[$id]), $id, $proj->id)
+				);
 					$updated += $db->affectedRows();
-				}
-			} else {
-				Flyspray::show_error(L('fieldsmissing'));
 			}
+		} else {
+			Flyspray::show_error(L('fieldsmissing'));
 		}
+	}
 
-		if (is_array($listdelete) && count($listdelete)) {
-			$deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
-			$db->query("DELETE FROM $list_table_name WHERE project_id = ? AND ($deleteids)", array($proj->id));
+        if (is_array($listdelete) && count($listdelete)) {
+            $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
+            $db->query("DELETE FROM $list_table_name WHERE project_id = ? AND ($deleteids)", array($proj->id));
 			$deleted = $db->affectedRows();
-		}
+        }
 
 		# TODO tell user $updated and $deleted count
-		$_SESSION['SUCCESS'] = L('listupdated');
-		break;
+        $_SESSION['SUCCESS'] = L('listupdated');
+        break;
 
         // ##################
         // adding a list item
@@ -2201,27 +2204,27 @@ switch ($action = Req::val('action'))
 	/**
 	 * updating the category list
 	 */
-	case 'update_category':
-		if (!$user->perms('manage_project')) {
-			break;
-		}
+    case 'update_category':
+        if (!$user->perms('manage_project')) {
+            break;
+        }
 
-		$listnames = Post::val('list_name');
-		$listshow = Post::val('show_in_list');
-		$listdelete = Post::val('delete');
-		$listlft = Post::val('lft');
-		$listrgt = Post::val('rgt');
-		$listowners = Post::val('category_owner');
+        $listnames    = Post::val('list_name');
+        $listshow     = Post::val('show_in_list');
+        $listdelete   = Post::val('delete');
+        $listlft      = Post::val('lft');
+        $listrgt      = Post::val('rgt');
+        $listowners   = Post::val('category_owner');
 
-		foreach ($listnames as $id => $listname) {
-			if ($listname != '') {
-				if (!isset($listshow[$id])) {
-					$listshow[$id] = 0;
-				}
+        foreach ($listnames as $id => $listname) {
+            if ($listname != '') {
+                if (!isset($listshow[$id])) {
+                    $listshow[$id] = 0;
+                }
 
-				// Check for duplicates on the same sub-level under same parent category.
-				// First, we'll have to find the right parent for the current category.
-				$sql = $db->query('SELECT *
+                // Check for duplicates on the same sub-level under same parent category.
+                // First, we'll have to find the right parent for the current category.
+                $sql = $db->query('SELECT *
                                      FROM {list_category}
                                     WHERE project_id = ? AND lft < ? and rgt > ?
                                       AND lft = (SELECT MAX(lft) FROM {list_category} WHERE lft < ? and rgt > ?)',
@@ -2233,20 +2236,20 @@ switch ($action = Req::val('action'))
 						intval($listrgt[$id])
 					)
 				);
-				$parent = $db->fetchRow($sql);
+                $parent = $db->fetchRow($sql);
 
 				$check = $db->query('
 					SELECT COUNT(*)
-					FROM {list_category} c
+                                      FROM {list_category} c
 					WHERE project_id = ?
 					AND category_name = ?
 					AND lft > ?
 					AND rgt < ?
-					AND category_id <> ?
+                                       AND category_id <> ?
 					AND NOT EXISTS (
 						SELECT *
-						FROM {list_category}
-						WHERE project_id = ?
+                                              FROM {list_category}
+                                             WHERE project_id = ?
 						AND lft > ?
 						AND rgt < ?
 						AND lft < c.lft
@@ -2263,14 +2266,14 @@ switch ($action = Req::val('action'))
 						$parent['rgt']
 					)
 				);
-				$itemexists = $db->fetchOne($check);
+                $itemexists = $db->fetchOne($check);
 
 				#echo "<pre>" . $parent['category_name'] . "," . $listname . ", " . intval($id) . ", " . intval($listlft[$id]) . ", " . intval($listrgt[$id]) . ", " . $itemexists ."</pre>";
 
-				if ($itemexists) {
-					Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
-					return;
-				}
+                if ($itemexists) {
+                    Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
+                    return;
+                }
 
 				$update = $db->query('
 					UPDATE {list_category}
@@ -2293,26 +2296,26 @@ switch ($action = Req::val('action'))
 					)
 				);
 
-				// Correct visibility for sub categories
-				if ($listshow[$id] == 0) {
-					foreach ($listnames as $key => $value) {
-						if ($listlft[$key] > $listlft[$id] && $listrgt[$key] < $listrgt[$id]) {
-							$listshow[$key] = 0;
-						}
-					}
-				}
-			} else {
-				Flyspray::show_error(L('fieldsmissing'));
-			}
-		}
+                // Correct visibility for sub categories
+                if ($listshow[$id] == 0) {
+                    foreach ($listnames as $key => $value) {
+                        if ($listlft[$key] > $listlft[$id] && $listrgt[$key] < $listrgt[$id]) {
+                            $listshow[$key] = 0;
+                        }
+                    }
+                }
+            } else {
+                Flyspray::show_error(L('fieldsmissing'));
+            }
+        }
 
-		if (is_array($listdelete) && count($listdelete)) {
-			$deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
-			$db->query("DELETE FROM {list_category} WHERE project_id = ? AND ($deleteids)", array($proj->id));
-		}
+        if (is_array($listdelete) && count($listdelete)) {
+            $deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
+            $db->query("DELETE FROM {list_category} WHERE project_id = ? AND ($deleteids)", array($proj->id));
+        }
 
-		$_SESSION['SUCCESS'] = L('listupdated');
-		break;
+        $_SESSION['SUCCESS'] = L('listupdated');
+        break;
 
         // ##################
         // adding a category list item
@@ -2486,20 +2489,23 @@ switch ($action = Req::val('action'))
         // ##################
         // editing a comment
         // ##################
-	case 'editcomment':
-		if (!($user->perms('edit_comments') || $user->perms('edit_own_comments'))) {
-			break;
-		}
+    case 'editcomment':
+        if (!($user->perms('edit_comments') || $user->perms('edit_own_comments'))) {
+            break;
+        }
 
-		$where = '';
+        $where = '';
 
 		$comment_text=Post::val('comment_text');
 		$previous_text=Post::val('previous_text');
 
 		# dokuwiki syntax plugin filters on output
 		if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
+      $properties = array();
+      if (isSet($conf['html']['allowed_css_properties']))
+        $properties = explode(',', $conf['html']['allowed_css_properties']);
 			$purifierconfig = HTMLPurifier_Config::createDefault();
-			$purifierconfig->set('CSS.AllowedProperties', array());
+			$purifierconfig->set('CSS.AllowedProperties', $properties);
 			if ($fs->prefs['relnofollow']) {
 				$purifierconfig->set('HTML.Nofollow', true);
 			}
@@ -2510,31 +2516,31 @@ switch ($action = Req::val('action'))
 
 		$params = array($comment_text, time(), Post::val('comment_id'), $task['task_id']);
 
-		if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
-			$where = ' AND user_id = ?';
-			array_push($params, $user->id);
-		}
+        if ($user->perms('edit_own_comments') && !$user->perms('edit_comments')) {
+            $where = ' AND user_id = ?';
+            array_push($params, $user->id);
+        }
 
-		$db->query("UPDATE {comments}
-			SET comment_text = ?, last_edited_time = ?
+        $db->query("UPDATE  {comments}
+                       SET  comment_text = ?, last_edited_time = ?
 			WHERE comment_id = ?
 			AND task_id = ?
 			$where", $params);
-		$db->query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
+        $db->query("DELETE FROM {cache} WHERE  topic = ? AND type = ?", array(Post::val('comment_id'), 'comm'));
 
-		Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text, Post::val('comment_id'));
+        Flyspray::logEvent($task['task_id'], 5, $comment_text, $previous_text, Post::val('comment_id'));
 
-		Backend::upload_files($task['task_id'], Post::val('comment_id'));
+        Backend::upload_files($task['task_id'], Post::val('comment_id'));
 		if (isset($_POST['delete_att']) && is_array($_POST['delete_att'])) {
 			Backend::delete_files($_POST['delete_att']);
 		}
-		Backend::upload_links($task['task_id'], Post::val('comment_id'));
+        Backend::upload_links($task['task_id'], Post::val('comment_id'));
 		if (isset($_POST['delete_link']) && is_array($_POST['delete_link'])) {
 			Backend::delete_links($_POST['delete_link']);
 		}
 
-		$_SESSION['SUCCESS'] = L('editcommentsaved');
-		break;
+        $_SESSION['SUCCESS'] = L('editcommentsaved');
+        break;
 
         // ##################
         // deleting a comment
@@ -2544,9 +2550,9 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        $result = $db->query('SELECT task_id, comment_text, user_id, date_added
-                                FROM {comments}
-                               WHERE comment_id = ?',
+        $result = $db->query('SELECT  task_id, comment_text, user_id, date_added
+                                FROM  {comments}
+                               WHERE  comment_id = ?',
         array(Post::val('comment_id')));
         $comment = $db->fetchRow($result);
 

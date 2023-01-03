@@ -736,6 +736,10 @@ class Setup extends Flyspray
       $config[] = 'syntax_plugin = "'.$syntax_plugin.'" ; dokuwiki, none, or html';
       $config[] = "update_check = \"1\" ; Boolean. 0=off, 1=on";
       $config[] = "\n";
+      $config[] = '[html]';
+      $config[] = "allowed_css_properties = \"\"; names separated by ',' for example 'color,height' ";
+      $config[] = "allowed_tags = \"\"; names separated by ',' for example 'span,em' ";
+      $config[] = "\n";
       $config[] = "[attachments]";
       $config[] = "zip = \"application/zip\" ; MIME-type for ZIP files";
       $config[] = "\n";
