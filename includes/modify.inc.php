@@ -421,7 +421,7 @@ switch ($action = Req::val('action'))
 	# dokuwiki syntax plugin filters on output
 	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
     $properties = array();
-    if (isSet($conf['html']['allowed_css_properties']))
+    if (isset($conf['html']['allowed_css_properties']))
       $properties = explode(',', $conf['html']['allowed_css_properties']);
 		$purifierconfig = HTMLPurifier_Config::createDefault();
 		$purifierconfig->set('CSS.AllowedProperties', $properties);
@@ -2502,7 +2502,7 @@ switch ($action = Req::val('action'))
 		# dokuwiki syntax plugin filters on output
 		if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
       $properties = array();
-      if (isSet($conf['html']['allowed_css_properties']))
+      if (isset($conf['html']['allowed_css_properties']))
         $properties = explode(',', $conf['html']['allowed_css_properties']);
 			$purifierconfig = HTMLPurifier_Config::createDefault();
 			$purifierconfig->set('CSS.AllowedProperties', $properties);

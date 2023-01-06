@@ -1070,7 +1070,7 @@ class TextFormatter
 				$text, $type, $id, $instructions);
 		} else {
       $tags = '';
-      if (isSet($conf['html']['allowed_tags']))
+      if (isset($conf['html']['allowed_tags']))
         foreach (explode(',', $conf['html']['allowed_tags']) as $tag)
           $tag .= "<$tag></$tag>";
 			$text=strip_tags($text, $tags . '<br><br/><p><h2><h3><h4><h5><h5><h6><blockquote><a><img><u><b><strong><s><ins><del><ul><ol><li><table><caption><tr><col><colgroup><td><th><thead><tfoot><tbody><pre><code><hr>');
