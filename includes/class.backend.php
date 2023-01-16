@@ -1309,6 +1309,23 @@ abstract class Backend
         return true;
     }
 
+	/**
+	 * replacement of modify.inc.php's 'task.bulkupdate' to make testing possible
+	 *
+	 * @param array $args usually $_POST
+	 *
+	 * @todo port and review stuff from modify.inc.php
+	 */
+	public static function updateTasks($args)
+	{
+		global $db, $user, $proj;
+		
+		
+		// affected rows, affected deleted and added assignments
+		
+		return false;
+	}
+
     /**
      * Returns an array of tasks (respecting pagination) and an ID list (all tasks)
      *
