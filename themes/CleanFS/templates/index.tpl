@@ -454,13 +454,17 @@ foreach ($tasks as $task): ?>
                 <?php } ?>
                 <label for="bulk_percent"><?= eL('percentcomplete') ?></label>
                 <select id="bulk_percent" name="bulk_percent_complete">
-                    <?php $percentCompleteList = array();$percentCompleteList[0]=L('notspecified'); for ($i = 1; $i<=101; $i+=10) $percentCompleteList[$i-1] =''.($i-1).'%'; ?>
-                    <?php echo tpl_options($percentCompleteList); ?>
-
+		<?php
+			$percentCompleteList[] = array('', L('notspecified'));
+			for ($i = 0; $i<=100; $i+=10) {
+				$percentCompleteList[] = array($i, $i.'%');
+			}
+			echo tpl_options($percentCompleteList); 
+		?>
                 </select>
             </li>
 
-            <!-- Task Type-->
+            <!-- Task Type -->
             <?php if (in_array('tasktype', $fields)) { ?>
             <li>
                 <?php } else { ?>
