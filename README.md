@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray)
 
+## 2022-02-03: Old hoster stopped hosting flyspray.org.
+I will do migration the hosting of bugs.flyspray.org this weekend. peterdd
+
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
 
 www.flyspray.org
