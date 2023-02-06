@@ -577,10 +577,14 @@ if (!$user->can_view_task($task_details)) {
 		}
 
 		// Sub-Tasks
+		$sort = strtoupper(Req::enum('subsort', array('desc', 'asc')));
+		$orderby = Req::val('suborder');
+		if ($orderby) $orderby = 'ORDER BY ' . $orderby . ' ' . $sort;
+
 		$subtasks = $db->query('SELECT t.*, p.project_title
                                  FROM {tasks} t
 			    LEFT JOIN {projects} p ON t.project_id = p.project_id
-                                WHERE t.supertask_id = ?',
+                                WHERE t.supertask_id = ? ' . $orderby,
                                 array($task_id));
 		$subtasks_cleaned = Flyspray::weedOutTasks($user, $db->fetchAllArray($subtasks));
 
