@@ -1348,7 +1348,10 @@ ul.slim .userSelectWidget select {width:100%;}
 .list .ctense {width:80px;}
 .list input[id^='listname'], .list input[id^='listposition'] {width:100%;}
 #catTable .first{ white-space:nowrap;min-width:120px;}
-#listTable thead#globalentries td {background-color: #eee;}
+#listTable thead#globalentries td,
+#idtablesys tbody td {
+	background-color: #eee;
+}
 #listpositionnew {width:100%;}
 
 .perms tbody th[title] {text-decoration: underline dotted;}
