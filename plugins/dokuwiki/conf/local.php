@@ -18,6 +18,8 @@ $conf['target']['extern']    = '';
 $conf['target']['media']     = '';
 $conf['target']['windows']   = '';
 
-# 
+#
+$conf['typography'] = 0;
+$conf['camelcase'] = 0;
 $conf['savedir'] = './data'; # just to silence unset warning
 $conf['lockdir'] = $conf['savedir']; # just to silence unset warning
