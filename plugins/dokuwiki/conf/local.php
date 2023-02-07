@@ -1,3 +1,5 @@
+<?php
+
 /**
  * dokuwiki settings for Flyspray project, task, and comment descriptions
  */
