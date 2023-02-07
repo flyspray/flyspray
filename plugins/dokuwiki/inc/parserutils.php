@@ -491,6 +491,7 @@ function p_get_first_heading($id){
  */
 function p_xhtml_cached_geshi($code, $language)
 {
+	global $conf;
 	$cache = getCacheName($language.$code,".code");
 
 	if (
