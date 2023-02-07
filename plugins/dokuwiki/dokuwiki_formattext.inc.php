@@ -62,8 +62,9 @@ class dokuwiki_TextFormatter
 		$conf['cachedir'] = FS_CACHE_DIR; # for dokuwiki
 		$conf['fperm'] = 0600;
 		$conf['dperm'] = 0700;
-		$conf['sepchar'] = '_'; # for dokuwiki parserutils
 
+		include_once BASEDIR . '/plugins/dokuwiki/conf/local.php';
+		
 		// Loop through the instructions
 		foreach ($instructions as $instruction) {
 			// Execute the callback against the Renderer
