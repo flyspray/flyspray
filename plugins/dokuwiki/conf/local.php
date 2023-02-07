@@ -17,3 +17,7 @@ $conf['target']['interwiki'] = '';
 $conf['target']['extern']    = '';
 $conf['target']['media']     = '';
 $conf['target']['windows']   = '';
+
+# 
+$conf['savedir'] = './data'; # just to silence unset warning
+$conf['lockdir'] = $conf['savedir']; # just to silence unset warning
