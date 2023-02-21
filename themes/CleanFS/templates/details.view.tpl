@@ -838,6 +838,29 @@ function quick_edit(elem, id)
 	<caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
 	<thead>
 	<tr>
+		<th colspan="9">
+			<div class="progress_bar_container" style="display: block; width: auto; margin-bottom: 1em">
+				<?php
+				$subStatuses = []; $listStatuses = $proj->listTaskStatuses();
+				foreach ($subtasks as $subtaskOrgin) {
+					$subtask = $fs->getTaskDetails($subtaskOrgin['task_id']);
+					$subStatuses[$subtask['status_name']]++;
+				}
+				?>
+				<?php $offset = 0; $cR = 128; $cB = 256; $cG = 128; $colorStep = 128 / count($listStatuses); ?>
+				<?php foreach ($listStatuses as $status): ?>
+					<?php $cB -= $colorStep; $cG += $colorStep; ?>
+					<?php $background = sprintf("#%02x%02x%02x", $cR, round($cG - 1), round($cB - 1)); ?>
+					<?php if (!isset($subStatuses[$status['status_name']])) continue; ?>
+					<?php $count = $subStatuses[$status['status_name']]; ?>
+					<?php $width = $count / count($subtasks) * 100; ?>
+					<div class="progress_bar" style="margin-left: <?php echo round($offset, 2) ?>%; width: <?php echo round($width, 2) ?>%; background: <?= $background ?>">&nbsp;<?= Filters::noXSS($status['status_name']) ?> (<?= $count ?>)</div>
+					<?php $offset += $width; ?>
+				<?php endforeach; ?>
+			</div>
+		</th>
+	</tr>
+	<tr>
 		<th>
 			<a href="<?php echo Filters::noXSS(createURL('details', $task_details['task_id'], null, array('subsort' => (Req::val('suborder') == 'task_id' && Req::val('subsort') == 'desc') ? 'asc' : 'desc', 'suborder' => 'task_id') + $_GET) . '#subtask_table'); ?>">
 				<?= eL('id') ?>
