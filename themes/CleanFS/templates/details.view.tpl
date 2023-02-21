@@ -844,6 +844,7 @@ function quick_edit(elem, id)
 				$subStatuses = []; $listStatuses = $proj->listTaskStatuses();
 				foreach ($subtasks as $subtaskOrgin) {
 					$subtask = $fs->getTaskDetails($subtaskOrgin['task_id']);
+					if (!isset($subStatuses[$subtask['status_name']])) $subStatuses[$subtask['status_name']] = 0;
 					$subStatuses[$subtask['status_name']]++;
 				}
 				?>
