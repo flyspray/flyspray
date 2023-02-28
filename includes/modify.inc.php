@@ -421,6 +421,7 @@ switch ($action = Req::val('action'))
 	# dokuwiki syntax plugin filters on output
 	if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 		$purifierconfig = HTMLPurifier_Config::createDefault();
+    $purifierconfig->set('Cache.SerializerPath', 'cache');
 		$purifierconfig->set('CSS.AllowedProperties', array());
 		if ($fs->prefs['relnofollow']) {
 			$purifierconfig->set('HTML.Nofollow', true);
@@ -2499,6 +2500,7 @@ switch ($action = Req::val('action'))
 		# dokuwiki syntax plugin filters on output
 		if ($conf['general']['syntax_plugin'] != 'dokuwiki') {
 			$purifierconfig = HTMLPurifier_Config::createDefault();
+      $purifierconfig->set('Cache.SerializerPath', 'cache');
 			$purifierconfig->set('CSS.AllowedProperties', array());
 			if ($fs->prefs['relnofollow']) {
 				$purifierconfig->set('HTML.Nofollow', true);
