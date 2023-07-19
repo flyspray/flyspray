@@ -49,11 +49,11 @@ class syntax_plugin_mention extends DokuWiki_Syntax_Plugin
  
 	/**
 	* Connect pattern to lexer
+	*
 	*/
 	function connectTo($mode)
 	{
-		// Word boundaries?
-		$this->Lexer->addSpecialPattern('@[a-zA-Z0-9]+', $mode, 'plugin_mention');
+		$this->Lexer->addSpecialPattern('@[a-zA-Z0-9_\.\-]+', $mode, 'plugin_mention');
 	}
  
 	/**

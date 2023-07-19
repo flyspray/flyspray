@@ -1309,6 +1309,145 @@ abstract class Backend
         return true;
     }
 
+	/**
+	 * @param array $p usually $_POST by modify.inc.php
+	 *
+	 * @todo test and real use
+	*/
+	public static function updateTasks($p)
+	{
+		global $db;		
+
+		$task_ids=filter_var($p['ids'], FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY);
+		if (!$task_ids){
+			return false;
+		}
+		
+		$columns = array();
+		$values = array();
+
+		// determine the task properties that should been changed
+		$status=filter_var($p['bulk_status'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($status > 0 ){
+			$columns[] = 'item_status';
+			$values[] = $status;
+		}
+
+		if (isset($p['bulk_percent_complete'])) {
+			$percentcomplete=filter_var($p['bulk_percent_complete'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+			if ($percentcomplete !='' && $percentcomplete >= 0){
+				$columns[] = 'percent_complete';
+				$values[] = $percentcomplete;
+			}
+		}
+
+		$tasktype=filter_var($p['bulk_task_type'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($tasktype > 0){
+			$columns[] = 'task_type';
+			$values[] = $tasktype;
+		}
+
+		$category=filter_var($p['bulk_category'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($category > 0){
+			$columns[] = 'product_category';
+			$values[] = $category;
+		}
+
+		$os=filter_var($p['bulk_os'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($os > 0){
+			$columns[] = 'operating_system';
+			$values[] = $os;
+		}
+
+		$severity=filter_var($p['bulk_severity'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($severity  > 0){
+			$columns[] = 'task_severity';
+			$values[] = $severity;
+		}
+
+		$priority=filter_var($p['bulk_priority'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($priority>0){
+			$columns[] = 'task_priority';
+			$values[] = $priority;
+		}
+
+		$reportedver=filter_var($p['bulk_reportedver'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($reportedver > 0){
+			$columns[] = 'product_version';
+			$values[] = $reportedver;
+		}
+
+		$dueversion=filter_var($p['bulk_due_version'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR);
+		if ($dueversion > 0){
+			$columns[] = 'closedby_version';
+			$values[] = $dueversion;
+		}
+
+		# TODO Does the user has similiar rights in current and target projects?
+		# TODO Does a task has subtasks? What happens to them? What if they are open/closed?
+		# But: Allowing task dependencies between tasks in different projects is a feature!
+		if ($targetproject=filter_var($p['bulk_projects'], FILTER_VALIDATE_INT, FILTER_REQUIRE_SCALAR) > 0){
+			array_push($columns, 'project_id');
+			array_push($values, $targetproject);
+		}
+
+		# TODO: empty text =>no change, 0 =>unset duedate?
+		if ($p['bulk_due_date']==='0'){
+			$columns[] = 'due_date';
+			$values[] = 0;
+		} elseif ($p['bulk_due_date']){
+			$columns[] = 'due_date';
+			$values[] = Flyspray::strtotime($p['bulk_due_date']);
+		}
+
+		$affectedtasks=0;
+		// only process if at least one of the task fields should be changed
+		if (count($columns)>0){
+
+			$valuesAndTasks = array_merge_recursive($values, $task_ids);
+
+			// execute the database update on all selected queries
+			$update = $db->query("UPDATE {tasks}
+				SET  ".join('=?, ', $columns)."=?
+				WHERE". substr(str_repeat(' task_id = ? OR ', count($task_ids)), 0, -3), $valuesAndTasks);
+			$affectedtasks=$db->affectedRows();
+		}
+
+		$affecteddeleteassigned=0;
+		$affectedaddassigned=0;
+
+		// assignments
+		if (isset($p['bulk_assignment'])){
+			$assigned_ids = filter_var($p['bulk_assignment'], FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY);
+
+			// Delete the current assignees for the selected tasks
+			$db->query("DELETE FROM {assigned} WHERE". substr(str_repeat(' task_id = ? OR ', count($task_ids)), 0, -3), $task_ids);	
+			$affecteddeleteassigned=$db->affectedRows();
+
+			// Convert assigned_to and store them in the 'assigned' table
+			foreach ($task_ids as $id){
+				// iterate the users that are selected on the user list.
+				foreach ($assigned_ids as $assignee){
+					// if 'noone' has been selected then dont do the database update.
+					if ($assignee > 0){
+						// insert the task and user id's into the assigned table.
+						$db->query('
+							INSERT INTO {assigned} (task_id, user_id)
+							VALUES (?, ?)', 
+							array($id,$assignee));
+						$affectedaddassigned+=$db->affectedRows();
+					}
+				}
+			}
+		}
+
+		// set success message
+		$_SESSION['SUCCESS'] = L('tasksupdated').' tasks updated:'.$affectedtasks.' delass:'.$affecteddeleteassigned.' addass:'.$affectedaddassigned;
+		#$_SESSION['SUCCESS'] .= print_r($columns, true);
+
+		return true;
+	}
+
     /**
      * Returns an array of tasks (respecting pagination) and an ID list (all tasks)
      *
@@ -1712,6 +1851,8 @@ LEFT JOIN {cache} cache ON t.task_id=cache.topic AND cache.type=\'task\' ';
             'comments' => 'num_comments',
             'private' => 'mark_private',
             'supertask' => 't.supertask_id',
+	    'effort' => 'effort',
+            'estimatedeffort' => 'estimated_effort'
         );
 
         // make sure that only columns can be sorted that are visible (and task severity, since it is always loaded)

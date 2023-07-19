@@ -1269,6 +1269,24 @@ ul.slim .userSelectWidget select {width:100%;}
   *display: inline; /* target IE7 only */
   vertical-align: middle;
 }
+.double_select.visible_columns .dualselect_selectable{
+	height:440px;
+}
+.double_select.visible_columns .dualselect_selected {
+	height:auto;
+}
+.double_select.visible_columns .dualselect_selected select{
+	height:440px;
+}
+.double_select.visible_fields .dualselect_selectable {
+	height:300px;
+}
+.double_select.visible_fields .dualselect_selected {
+	height:auto;
+}
+.double_select.visible_fields .dualselect_selected select{
+	height:300px;
+}
 .double_select .dualselect_buttons {
   width: 16%;
   display: -moz-inline-stack; /* optional */
@@ -1330,7 +1348,10 @@ ul.slim .userSelectWidget select {width:100%;}
 .list .ctense {width:80px;}
 .list input[id^='listname'], .list input[id^='listposition'] {width:100%;}
 #catTable .first{ white-space:nowrap;min-width:120px;}
-#listTable thead#globalentries td {background-color: #eee;}
+#listTable thead#globalentries td,
+#idtablesys tbody td {
+	background-color: #eee;
+}
 #listpositionnew {width:100%;}
 
 .perms tbody th[title] {text-decoration: underline dotted;}

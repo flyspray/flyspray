@@ -1,4 +1,4 @@
-<div class="double_select">
+<div class="double_select <?php echo Filters::noXSS($name); ?>">
   <select class="dualselect_selectable" id="l<?php echo Filters::noXSS($id); ?>" multiple="multiple"
     ondblclick="dualSelect(this, 'r', '<?php echo Filters::noJsXSS($id); ?>')">%s</select>
   <div class="dualselect_buttons">

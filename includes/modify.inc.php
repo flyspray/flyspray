@@ -824,66 +824,62 @@ switch ($action = Req::val('action'))
 		#Flyspray::redirect(createURL('details', $task['task_id']));
 		break;
 
-        // ##################
-        // adding a comment
-        // ##################
-    case 'details.addcomment':
-        if (!Backend::add_comment($task, Post::val('comment_text'))) {
-            Flyspray::show_error(L('nocommententered'));
-            break;
-        }
-
-        if (Post::val('notifyme') == '1') {
-            // If the user wanted to watch this task for changes
-            Backend::add_notification($user->id, $task['task_id']);
-        }
-
-	$_SESSION['SUCCESS'] = L('commentaddedmsg');
-	Flyspray::redirect(createURL('details', $task['task_id']));
-	break;
-
-        // ##################
-        // Tracking
-        // ##################
-    case 'details.efforttracking':
-
-        require_once BASEDIR . '/includes/class.effort.php';
-        $effort = new effort($task['task_id'],$user->id);
-
-
-        if(Post::val('start_tracking')){
-            if($effort->startTracking())
-            {
-                $_SESSION['SUCCESS'] = L('efforttrackingstarted');
-            }
-            else
-            {
-                $_SESSION['ERROR'] = L('efforttrackingnotstarted');
-            }
-        }
-
-        if(Post::val('stop_tracking')){
-            $effort->stopTracking();
-            $_SESSION['SUCCESS'] = L('efforttrackingstopped');
-        }
-
-        if(Post::val('cancel_tracking')){
-            $effort->cancelTracking();
-            $_SESSION['SUCCESS'] = L('efforttrackingcancelled');
-        }
-
-	if(Post::val('manual_effort')){
-		if($effort->addEffort(Post::val('effort_to_add'), $proj)){
-			$_SESSION['SUCCESS'] = L('efforttrackingadded');
+	/**
+	 * adding a comment
+	 */
+	case 'details.addcomment':
+		if (!Backend::add_comment($task, Post::val('comment_text'))) {
+			Flyspray::show_error(L('nocommententered'));
+			break;
 		}
-	}
 
-        Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
-        break;
+		if (Post::val('notifyme') == '1') {
+			// If the user wanted to watch this task for changes
+			Backend::add_notification($user->id, $task['task_id']);
+		}
 
-        // ##################
-        // sending a new user a confirmation code
-        // ##################
+		$_SESSION['SUCCESS'] = L('commentaddedmsg');
+		Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
+
+	/**
+	 * effort tracking
+	 */
+	case 'details.efforttracking':
+
+		require_once BASEDIR . '/includes/class.effort.php';
+		$effort = new effort($task['task_id'], $user->id);
+
+		if (Post::val('start_tracking')) {
+			if ($effort->startTracking()) {
+				$_SESSION['SUCCESS'] = L('efforttrackingstarted');
+			} else {
+				$_SESSION['ERROR'] = L('efforttrackingnotstarted');
+			}
+		}
+
+		if (Post::val('stop_tracking')) {
+			$effort->stopTracking();
+			$_SESSION['SUCCESS'] = L('efforttrackingstopped');
+		}
+
+		if (Post::val('cancel_tracking')) {
+			$effort->cancelTracking();
+			$_SESSION['SUCCESS'] = L('efforttrackingcancelled');
+		}
+
+		if (Post::val('manual_effort')) {
+			if ($effort->addEffort(Post::val('effort_to_add'), $proj, Post::val('effort_description'))) {
+				$_SESSION['SUCCESS'] = L('efforttrackingadded');
+			}
+		}
+
+		Flyspray::redirect(createURL('details', $task['task_id']).'#effort');
+		break;
+
+	/**
+	 * sending a new user a confirmation code
+	 */
 	case 'register.sendcode':
 		if (!$user->can_register()) {
 			break;
@@ -3133,143 +3129,63 @@ switch ($action = Req::val('action'))
 
         Notifications::NotificationsHaveBeenRead($validids);
         break;
-    case 'task.bulkupdate':
-        # TODO check if the user has the right to do each action on each task id he send with the form!
-        # TODO check if tasks have open subtasks before closing
-        # TODO SQL Transactions with rollback function if something went wrong in the middle of bulk action
-        # disabled by default and if currently allowed only for admins until proper checks are done
-        if(isset($fs->prefs['massops']) && $fs->prefs['massops']==1 && $user->perms('is_admin')){
+case 'task.bulkupdate':
 
-        // TODO: Log events in a later version.
+	# TODO check if the user has the right to do each action on each task id he send with the form!
+	# TODO check if tasks have open subtasks before closing
+	# TODO SQL Transactions with rollback function if something went wrong in the middle of bulk action
+	# disabled by default and if currently allowed only for admins until proper checks are done
 
-        if(Post::val('updateselectedtasks') == "true") {
-            //process quick actions
-            switch(Post::val('bulk_quick_action'))
-            {
-                case 'bulk_take_ownership':
-                    Backend::assign_to_me(Post::val('user_id'),Post::val('ids'));
-                    break;
-                case 'bulk_start_watching':
-                    Backend::add_notification(Post::val('user_id'),Post::val('ids'));
-                    break;
-                case 'bulk_stop_watching':
-                    Backend::remove_notification(Post::val('user_id'),Post::val('ids'));
-                    break;
-            }
+	if (isset($fs->prefs['massops']) && $fs->prefs['massops']==1 && $user->perms('is_admin')){
 
-            //Process the tasks.
-            $columns = array();
-            $values = array();
+		// TODO: Log events in a later version.
 
-            //determine the tasks properties that have been modified.
-            if(!Post::val('bulk_status')==0){
-                array_push($columns,'item_status');
-                array_push($values, Post::val('bulk_status'));
-            }
-            if(!Post::val('bulk_percent_complete')==0){
-                array_push($columns,'percent_complete');
-                array_push($values, Post::val('bulk_percent_complete'));
-            }
-            if(!Post::val('bulk_task_type')==0){
-                array_push($columns,'task_type');
-                array_push($values, Post::val('bulk_task_type'));
-            }
-            if(!Post::val('bulk_category')==0){
-                array_push($columns,'product_category');
-                array_push($values, Post::val('bulk_category'));
-            }
-            if(!Post::val('bulk_os')==0){
-                array_push($columns,'operating_system');
-                array_push($values, Post::val('bulk_os'));
-            }
-            if(!Post::val('bulk_severity')==0){
-                array_push($columns,'task_severity');
-                array_push($values, Post::val('bulk_severity'));
-            }
-            if(!Post::val('bulk_priority')==0){
-                array_push($columns,'task_priority');
-                array_push($values, Post::val('bulk_priority'));
-            }
-            if(!Post::val('bulk_reportedver')==0){
-                array_push($columns,'product_version');
-                array_push($values, Post::val('bulk_reportedver'));
-            }
-            if(!Post::val('bulk_due_version')==0){
-                array_push($columns,'closedby_version');
-                array_push($values, Post::val('bulk_due_version'));
-            }
-            # TODO Does the user has similiar rights in current and target projects?
-            # TODO Does a task has subtasks? What happens to them? What if they are open/closed?
-            # But: Allowing task dependencies between tasks in different projects is a feature!
-            if(!Post::val('bulk_projects')==0){
-                array_push($columns,'project_id');
-                array_push($values, Post::val('bulk_projects'));
-            }
-            if(!is_null(Post::val('bulk_due_date'))){
-                array_push($columns,'due_date');
-                array_push($values, Flyspray::strtotime(Post::val('bulk_due_date')));
-            }
+		$task_ids=filter_var($_POST['ids'], FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY);
 
-            //only process if one of the task fields has been updated.
-            if(!array_count_values($columns)==0 && Post::val('ids')){
-                //add the selected task id's to the query string
-                $task_ids = Post::val('ids');
-                $valuesAndTasks = array_merge_recursive($values,$task_ids);
+		if (Post::val('updateselectedtasks') == 'true') {
 
-                //execute the database update on all selected queries
-                $update = $db->query("UPDATE  {tasks}
-                                     SET  ".join('=?, ', $columns)."=?
-                                   WHERE". substr(str_repeat(' task_id = ? OR ', count(Post::val('ids'))), 0, -3), $valuesAndTasks);
-            }
+			// process quick actions
+			switch(Post::val('bulk_quick_action')){
+			case 'bulk_take_ownership':
+				Backend::assign_to_me(Post::val('user_id'), Post::val('ids'));
+				break;
+			case 'bulk_start_watching':
+				Backend::add_notification(Post::val('user_id'), Post::val('ids'));
+				break;
+			case 'bulk_stop_watching':
+				Backend::remove_notification(Post::val('user_id'), Post::val('ids'));
+				break;
+			}
 
-            //Set the assignments
-            if(Post::val('bulk_assignment')){
-                // Delete the current assignees for the selected tasks
-                $db->query("DELETE FROM {assigned} WHERE". substr(str_repeat(' task_id = ? OR ', count(Post::val('ids'))), 0, -3),Post::val('ids'));
+			$updateresult=Backend::updateTasks($_POST);
+			break;
 
-                // Convert assigned_to and store them in the 'assigned' table
-                foreach ((array)Post::val('ids') as $id){
-                    //iterate the users that are selected on the user list.
-                    foreach ((array) Post::val('bulk_assignment') as $assignee){
-                        //if 'noone' has been selected then dont do the database update.
-                        if(!$assignee == 0){
-                            //insert the task and user id's into the assigned table.
-                            $db->query('INSERT INTO  {assigned}
-                                             (task_id,user_id)
-                                     VALUES  (?, ?)',array($id,$assignee));
-                        }
-                    }
-                }
-            }
+		} else {
+			// bulk close
+			if (!Post::val('resolution_reason')) {
+				Flyspray::show_error(L('noclosereason'));
+				break;
+			}
 
-            // set success message
-            $_SESSION['SUCCESS'] = L('tasksupdated');
-            break;
-        }
-        //bulk close
-        else {
-            if (!Post::val('resolution_reason')) {
-                Flyspray::show_error(L('noclosereason'));
-                break;
-            }
-            $task_ids = Post::val('ids');
-            foreach($task_ids as $task_id) {
-                $task = Flyspray::getTaskDetails($task_id);
-                if (!$user->can_close_task($task)) {
-                    continue;
-                }
+			foreach ($task_ids as $task_id) {
+				$task = Flyspray::getTaskDetails($task_id);
+				if (!$user->can_close_task($task)) {
+					continue;
+				}
 
-                if ($task['is_closed']) {
-                    continue;
-                }
+				if ($task['is_closed']) {
+					continue;
+				}
 
-                Backend::close_task($task_id, Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
-            }
-            $_SESSION['SUCCESS'] = L('taskclosedmsg');
-            break;
-        }
-        } # end if massopsenabled
-        else{
-        	Flyspray::show_error(L('massopsdisabled'));
-        }
-    }
+				Backend::close_task($task_id, Post::val('resolution_reason'), Post::val('closure_comment', ''), Post::val('mark100', false));
+			}
+			$_SESSION['SUCCESS'] = L('taskclosedmsg');
+			break;
+		}
+
+	} # end if massopsenabled
+	else{
+		Flyspray::show_error(L('massopsdisabled'));
+	}
+
+} // end switch

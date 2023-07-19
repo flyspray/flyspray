@@ -120,6 +120,10 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
     {
         if ($mode == 'xhtml') {
             global $conf;
+            # workaround for php8.0+ , sometimes $data is null
+            if(!is_array($data)){ 
+                return false;
+            }
             $id = $data[0];
             $name = $data[1];
            
