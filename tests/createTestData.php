@@ -378,9 +378,17 @@ function createTestData()
 	$codes=array('','php','xml','sql','html');
 	
 	echo "Creating $maxtasks tasks: ";
-	# task id 1 is the single 'default task' after a fresh install.
-	$prevtaskopened = 1; # TODO use information_schema info about next auto_increment value of table {tasks}
-	$firsttaskid = $prevtaskopened + 1;
+	if ($conf['database']['dbtype'] == 'mysql' or $conf['database']['dbtype'] == 'mysqli') {
+		$sqlid=$db->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME=?",
+			array($conf['database']['dbname'], $conf['database']['dbprefix'].'tasks')
+		);
+		$firsttaskid = $db->fetchOne($sqlid);
+		$prevtaskopened = $firsttaskid - 1;
+	} else {
+		# TODO similiar for Postgresql and other (PDO?)
+		$prevtaskopened = 1; 
+		$firsttaskid = $prevtaskopened + 1;
+	}
 	$finaltaskid=$maxtasks + $prevtaskopened;
 
 	for ($i = $firsttaskid; $i <= $finaltaskid; $i++) {
