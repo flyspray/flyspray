@@ -472,17 +472,20 @@ function createTestData()
 								$wd.= ($v % 2) ? $vocals[rand(0, count($vocals)-1)] : $conso[rand(0, count($conso)-1)];
 								$v++;
 							}
-							if (rand(0,100)<1) {
+							if (rand(0,100) < 1) {
 								$wd='FS#'.rand(2,$i);
 							}
-							if (rand(0,100)<2) {
-								$wd='//'.$wd.'//';
+							if (rand(0,100) < 2) {
+								$wd = ($conf['general']['syntax_plugin'] === 'html') ? '<em>'.$wd.'</em>' : '//'.$wd.'//';
 							}
-							if (rand(0,100)<2) {
-								$wd='**'.$wd.'**';
+							if (rand(0,100) < 2) {
+								$wd = ($conf['general']['syntax_plugin'] === 'html') ? '<strong>'.$wd.'</strong>' : '**'.$wd.'**';
 							}
-							if (rand(0,100)<2) {
-								$wd='__'.$wd.'__';
+							# underline without meaning/semantic IMHO I consider unwanted, but our dokuwiki plugin has it enabled.. 
+							if ($conf['general']['syntax_plugin'] === 'dokuwiki') {
+								if (rand(0,100) < 2) {
+									$wd='__'.$wd.'__';
+								}
 							}
 							$clausepart.=$wd.' ';	
 						}
@@ -493,15 +496,30 @@ function createTestData()
 						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
 					}
 				}
+				if ($conf['general']['syntax_plugin'] === 'html') {
+					$para='<p>'.$para.'</p>';
+				}
 			} elseif ($type==1) {
-				# dokuwiki list
-				$para.="  * listitem\n  * listitem\n  * listitem3";
-				if (rand(0, 5) < 1) {
-					$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+				if ($conf['general']['syntax_plugin'] === 'html') {
+					$para.='<ul><li>listitem</li><li>listitem2</li><li>listitem3';
+					if (rand(0, 5) < 1) {
+						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+					}
+					$para.='</li></ul>';
+				} else {
+					# dokuwiki list
+					$para.="  * listitem\n  * listitem\n  * listitem3";
+					if (rand(0, 5) < 1) {
+						$para.=' random mention of @dev'.rand(1, $maxdevelopers).' ';
+					}
 				}
 			} elseif ($type==2) {
-				# dokuwiki code
-				$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
+				if ($conf['general']['syntax_plugin'] === 'html') {
+					$para.='<pre><code class="language-'.$codes[rand(0, count($codes)-1)].'"> some signs&lt;&lt;y&lt;&gt;&gt;&gt;&gt; """</code></pre>';
+				} else {
+					# dokuwiki code
+					$para.='<code '.$codes[rand(0, count($codes)-1)].'> some signs<<y<>>> """</code>';
+				}
 			}
 			$descr.=$para."\n\n";
 		}
