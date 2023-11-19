@@ -37,7 +37,13 @@ header("Pragma: no-cache");
 	<title>Flyspray Install - Third Party Packages needed</title>
 	<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
 </head>
-<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
+<body>
+<div id="header">
+  <div id="logo">
+    <h1><a href="./" title="Flyspray - The Bug Killer!">The Bug Killer!</a></h1>
+  </div>
+</div>
+<div id="content">
 <h2>It seems you try to install a development version of Flyspray.</h2>
 <h2><?php echo L('needcomposer'); ?></h2>
 <p style="margin-top:50px;">Use ssh to login to your server, move to the root directory of your unpacked flyspray sources and execute this:</p>
@@ -58,11 +64,13 @@ php composer.phar install
 </div>
 
 <p>Or take an official release, which contains all needed external packages bundled.</p>
+
+<a href="./" class="button positive">Retry</a>
+
 <h2>README.md</h2>
-<div id="content">
-	<pre>
-	<?php echo file_get_contents('../README.md'); ?>
-	</pre>
+<pre>
+<?php echo file_get_contents('../README.md'); ?>
+</pre>
 </div>
 </body>
 </html>
