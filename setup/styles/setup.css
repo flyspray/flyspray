@@ -141,7 +141,6 @@ input:required {border: 1px solid #f90;}
 	font-weight: bold;
 	color: #565656;
 	cursor: pointer;
-	max-width:300px;
 	text-align:center;
 }
 
