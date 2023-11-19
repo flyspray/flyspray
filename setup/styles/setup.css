@@ -131,7 +131,6 @@ input:required {border: 1px solid #f90;}
 .button, button, input[type="submit"] {
 	font-size: 2em;
 	display: inline-block;
-	display: block;
 	margin: 0.5em auto;
 	padding: 0.2em 1em;
 	border: 1px solid #bbb;
@@ -143,6 +142,7 @@ input:required {border: 1px solid #f90;}
 	color: #565656;
 	cursor: pointer;
 	max-width:300px;
+	text-align:center;
 }
 
 body a.button.positive, body button.positive {
