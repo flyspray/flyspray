@@ -128,11 +128,26 @@ input:required {border: 1px solid #f90;}
   min-width:150px;
 }
 
-.button {
-  display: block;
-  font-size: 3em;
-  margin: 0.5em auto;
-  cursor:pointer;
+.button, button, input[type="submit"] {
+	font-size: 2em;
+	display: inline-block;
+	display: block;
+	margin: 0.5em auto;
+	padding: 0.2em 1em;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	box-shadow: 0px 1px 1px #ddd;
+	font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+	text-decoration: none;
+	font-weight: bold;
+	color: #565656;
+	cursor: pointer;
+	max-width:300px;
+}
+
+body a.button.positive, body button.positive {
+	color: #fff;
+	background-color: #5f9729;
 }
 
 .error {
