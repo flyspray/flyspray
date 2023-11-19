@@ -49,6 +49,74 @@ if (Get::has('export_list')) {
         $perpage = -1;
 }
 
+# Reduce searchform parameters for shorter tasklink URLs after performing a search.
+if (isset($_GET['type']) && is_array($_GET['type']) && count($_GET['type'])===1 && current($_GET['type'])==='') {
+	unset($_GET['type']);
+}
+if (isset($_GET['sev']) && is_array($_GET['sev']) && count($_GET['sev'])===1 && current($_GET['sev'])==='') {
+	unset($_GET['sev']);
+}
+if (isset($_GET['pri']) && is_array($_GET['pri']) && count($_GET['pri'])===1 && current($_GET['pri'])==='') {
+	unset($_GET['pri']);
+}
+if (isset($_GET['due']) && is_array($_GET['due']) && count($_GET['due'])===1 && current($_GET['due'])==='') {
+	unset($_GET['due']);
+}
+if (isset($_GET['cat']) && is_array($_GET['cat']) && count($_GET['cat'])===1 && current($_GET['cat'])==='') {
+	unset($_GET['cat']);
+}
+if (isset($_GET['reported']) && is_array($_GET['reported']) && count($_GET['reported'])===1 && current($_GET['reported'])==='') {
+	unset($_GET['reported']);
+}
+// 'open' is default, '' means all tasks (open and closed)
+if (isset($_GET['status']) && is_array($_GET['status']) && count($_GET['status'])===1 && current($_GET['status'])==='open') {
+	unset($_GET['status']);
+}
+if (isset($_GET['percent']) && is_array($_GET['percent']) && count($_GET['percent'])===1 && current($_GET['percent'])==='') {
+	unset($_GET['percent']);
+}
+
+if(!Get::val('string')){
+	unset($_GET['string']);
+}
+
+# users
+if(!Get::val('opened')){
+	unset($_GET['opened']);
+}
+if(!Get::val('dev')){
+	unset($_GET['dev']);
+}
+if(!Get::val('closed')){
+	unset($_GET['closed']);
+}
+
+# dates
+if(!Get::val('duedatefrom')){
+	unset($_GET['duedatefrom']);
+}
+if(!Get::val('duedateto')){
+	unset($_GET['duedateto']);
+}
+if(!Get::val('changedfrom')){
+	unset($_GET['changedfrom']);
+}
+if(!Get::val('changedto')){
+	unset($_GET['changedto']);
+}
+if(!Get::val('openedfrom')){
+	unset($_GET['openedfrom']);
+}
+if(!Get::val('openedto')){
+	unset($_GET['openedto']);
+}
+if(!Get::val('closedfrom')){
+	unset($_GET['closedfrom']);
+}
+if(!Get::val('closedto')){
+	unset($_GET['closedto']);
+}
+
 list($tasks, $id_list, $totalcount, $forbiddencount) = Backend::get_task_list($_GET, $visible, $offset, $perpage);
 
 if (Get::has('export_list')) {

@@ -134,7 +134,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="type"><?= eL('tasktype') ?></label>
                         <select name="type[]" id="type" multiple="multiple" size="8">
-                            <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), Get::val('type', '')); ?>
+                            <?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), isset($_GET['type'])?$_GET['type']:''); ?>
                         </select>
                     </div>
 
@@ -146,7 +146,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="sev"><?= eL('severity') ?></label>
                         <select name="sev[]" id="sev" multiple="multiple" size="8">
-                            <?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, Get::val('sev', '')); ?>
+                            <?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, isset($_GET['sev'])?$_GET['sev']:''); ?>
                         </select>
                     </div>
 
@@ -158,7 +158,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="pri"><?= eL('priority') ?></label>
                         <select name="pri[]" id="pri" multiple="multiple" size="8">
-                            <?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, Get::val('pri', '')); ?>
+                            <?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, isset($_GET['pri'])?$_GET['pri']:''); ?>
                         </select>
                     </div>
 
@@ -170,7 +170,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="due"><?= eL('dueversion') ?></label>
                         <select name="due[]" id="due" multiple="multiple" size="8">
-                            <?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), Get::val('due', '')); ?>
+                            <?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), isset($_GET['due'])?$_GET['due']:''); ?>
                         </select>
                     </div>
 
@@ -182,7 +182,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="reported"><?= eL('reportedversion') ?></label>
                         <select name="reported[]" id="reported" multiple="multiple" size="8">
-                            <?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), Get::val('reported', '')); ?>
+                            <?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), isset($_GET['reported'])?$_GET['reported']:''); ?>
                         </select>
                     </div>
 
@@ -194,7 +194,7 @@
 		    <?php } ?>
                         <label class="default multisel" for="cat"><?= eL('category') ?></label>
                         <select name="cat[]" id="cat" multiple="multiple" size="8">
-                            <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), Get::val('cat', '')); ?>
+                            <?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), isset($_GET['cat'])?$_GET['cat']:''); ?>
                         </select>
                     </div>
 
@@ -209,7 +209,7 @@
                             <?php echo tpl_options(array('' => L('allstatuses')) +
                             array('open' => L('allopentasks')) +
                             array('closed' => L('allclosedtasks')) +
-                            $proj->listTaskStatuses(), Get::val('status', 'open')); ?>
+                            $proj->listTaskStatuses(), isset($_GET['status'])?$_GET['status']:'open'); ?>
                         </select>
                     </div>
 
@@ -223,13 +223,13 @@
                         <!-- legacy: tpl_options()
                         <select name="percent[]" id="percent" multiple="multiple" size="12">
                             <?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
-                            <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, Get::val('percent', '')); ?>
+                            <?php echo tpl_options(array('' => L('anyprogress')) + $percentages, isset($_GET['percent'])?$_GET['percent']:''); ?>
                         </select>
                         -->
 <?php
 # new: use of tpl_select() which provides much more control
 # maybe move some of the php code from here to scripts/index.php ...
-$selected=Get::val('percent', '');
+$selected=isset($_GET['percent'])?$_GET['percent']:'';
 $selected = is_array($selected) ? $selected : (array) $selected;
 $percentages = array();
 $percentages[]=array('value'=>'', 'label'=>L('anyprogress') );
@@ -635,4 +635,4 @@ foreach ($tasks as $task): ?>
 </div>
 </form>
 </div>
-<?php endif; /* isset($_GET['string'] || $total */ ?>
+<?php endif; /* isset($_GET['string']) || $total */ ?>
