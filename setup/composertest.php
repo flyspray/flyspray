@@ -35,7 +35,7 @@ header("Pragma: no-cache");
 <head>
 	<meta charset='utf-8'>
 	<title>Flyspray Install - Third Party Packages needed</title>
-	<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="styles/setup.css" type="text/css" media="screen">	
 </head>
 <body>
 <div id="header">
