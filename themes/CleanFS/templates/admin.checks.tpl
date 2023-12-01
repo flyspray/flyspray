@@ -26,9 +26,13 @@
 <td><?= Filters::noXSS($reg['email_address']) ?></td>
 </tr>
 <?php endforeach; ?>
-<?php endif; ?>
 </tbody>
 </table>
+<?php endif; ?>
+
+<?php if(isset($legacyusernamessummary)): ?>
+<?= $legacyusernamessummary ?>
+<?php endif; ?>
 
 <?php if(isset($fstables)): ?>
 <style>
