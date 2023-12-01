@@ -13,7 +13,7 @@
   <?php if (!empty($fs->prefs['jabber_server']) && (( !$user->isAnon() && !$fs->prefs['hide_emails'] && !$theuser->infos['hide_my_email']) || $user->perms('is_admin')) ): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('jabberid')); ?></th>
-    <td><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></td>
+    <td><a href="xmpp:<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>"><?php echo Filters::noXSS($theuser->infos['jabber_id']); ?></a></td>
   </tr>
   <?php endif; ?>
   <tr>
