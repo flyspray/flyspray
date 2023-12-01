@@ -12,11 +12,12 @@ define('BASEDIR', dirname(dirname(__FILE__)));
 $conf = @parse_ini_file(Flyspray::get_config_path(), true);
 
 // $baseurl
-// htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
 if (isset($conf['general']['force_baseurl']) && $conf['general']['force_baseurl'] != '') {
     $baseurl = $conf['general']['force_baseurl'];
+    rtrim($baseurl, '/\\') . '/';
 } else {
     if (!isset($webdir)) {
+        // htmlspecialchars because PHP_SELF is user submitted data, and can be used as an XSS vector.
         $webdir = dirname(htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'utf-8'));
         if (!$webdir) {
             $webdir = dirname($_SERVER['SCRIPT_NAME']);
