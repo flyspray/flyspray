@@ -1,5 +1,5 @@
 <?php
-$language=array(
+$translation = array(
 'installFSdevelop'   => 'Parece que estás instalando una versión de desarrollo de Flyspray.',
 'needcomposer'       => 'Es necesario instalar algunas librerías usando Composer.',
 'installcomposer'    => 'Ejecutar Composer',
