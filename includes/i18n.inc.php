@@ -126,7 +126,7 @@ function load_translations(){
 	}
 
 	if(!isset($lang_code) || $lang_code=='' || $lang_code=='project'){
-		if($proj->prefs['lang_code']){
+		if(is_object($proj) && $proj->prefs['lang_code']){
 			$lang_code = $proj->prefs['lang_code'];
 		}else{
 			$lang_code = 'en';
