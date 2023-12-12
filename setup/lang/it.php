@@ -1,5 +1,5 @@
 <?php
-$language=array(
+$translation = array(
 'needcomposer'       => 'Sono richieste alcune librerie installate da Composer.',
 'installcomposer'    => 'Esegui Composer',
 'performupgrade'     => 'Esegui Aggiornamento',
