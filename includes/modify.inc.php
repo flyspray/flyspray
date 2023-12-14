@@ -1770,7 +1770,7 @@ switch ($action = Req::val('action'))
                 }
 
                 if ($user->infos['oauth_uid'] && Post::val('changepass')) {
-                    Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($uesr->infos['oauth_provider'])));
+                    Flyspray::show_error(sprintf(L('oauthreqpass'), ucfirst($user->infos['oauth_provider'])));
                     break;
                 }
 
