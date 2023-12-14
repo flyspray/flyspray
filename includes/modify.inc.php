@@ -1762,6 +1762,15 @@ switch ($action = Req::val('action'))
                     break;
                 }
 
+                /**
+                 * 'global' means user prefers Flyspray's global language setting.
+                 * 'project' use per project setting if set instead of user a language setting with fallback to global.
+                 */
+                if (!preg_match('/^(global|project|browser|[a-z]{2,3}(_[a-z]{2,3})?)$/', Post::val('lang_code', 'en'))) {
+                        Flyspray::show_error(L('invalidlanguagecode'));
+                        break;
+                }
+
                 # current CleanFS template skips oldpass input requirement for admin accounts: if someone is able to catch an admin session he could simply create another admin acc for example.
                 #if ( (!$user->perms('is_admin') || $user->id == Post::val('user_id')) && !Post::val('oldpass')
                 if ( !$user->perms('is_admin') && !Post::val('oldpass') && (Post::val('changepass') || Post::val('confirmpass')) ) {
