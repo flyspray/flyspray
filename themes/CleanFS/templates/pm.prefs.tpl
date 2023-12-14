@@ -23,7 +23,7 @@
 		<li>
 		<label for="langcode"><?= eL('language') ?></label>
 			<select id="langcode" name="lang_code">
-			<?php echo tpl_options(Flyspray::listLangs(), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
+			<?php echo tpl_options(array_merge(array('global'), Flyspray::listLangs()), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
 			</select>
 		</li>     
 		<?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
