@@ -1766,7 +1766,7 @@ switch ($action = Req::val('action'))
                  * 'global' means user prefers Flyspray's global language setting.
                  * 'project' use per project setting if set instead of user a language setting with fallback to global.
                  */
-                if (!preg_match('/^(global|project|browser|[a-z]{2,3}(_[a-z]{2,3})?)$/', Post::val('lang_code', 'en'))) {
+                if (!preg_match('/^(project|[a-z]{2,3}(_[a-z]{2,3})?)$/', Post::val('lang_code', 'en'))) {
                         Flyspray::show_error(L('invalidlanguagecode'));
                         break;
                 }
