@@ -125,10 +125,14 @@ function load_translations(){
 		}
 	}
 
-	if(!isset($lang_code) || $lang_code=='' || $lang_code=='project'){
-		if(is_object($proj) && $proj->prefs['lang_code']){
-			$lang_code = $proj->prefs['lang_code'];
-		}else{
+	if (!isset($lang_code) || $lang_code=='' || $lang_code=='project') {
+		if (is_object($proj) && $proj->prefs['lang_code']) {
+			if ($proj->prefs['lang_code'] === 'global') {
+				$lang_code = $fs->prefs['lang_code'];
+			} else {
+				$lang_code = $proj->prefs['lang_code'];
+			}
+		} else {
 			$lang_code = 'en';
 		}
 	}
@@ -142,7 +146,7 @@ function load_translations(){
 	if ($lang_code != 'en' && is_readable($translation)) {
 		include_once $translation;
 		$language = is_array($translation) ? array_merge($language, $translation) : $language;
-                FlySprayI18N::init($lang_code, $language);
+		FlySprayI18N::init($lang_code, $language);
 	} elseif ( 'en'!=substr($lang_code, 0, strpos($lang_code, '_')) && is_readable(BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php') ){
 		# fallback 'de_AT' to 'de', but not for 'en_US'
 		$translation=BASEDIR.'/lang/'.(substr($lang_code, 0, strpos($lang_code, '_'))).'.php';
