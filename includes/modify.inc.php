@@ -1673,8 +1673,18 @@ switch ($action = Req::val('action'))
 			)
 		);
 		$args = array_merge($args, array_map(array('Post', 'num'), $ints));
+
 		$cols[] = 'notify_types';
-		$args[] = implode(' ', (array) Post::val('notify_types'));
+		$notify_types = array();
+		if (isset($_POST['notify_types']) && is_array($_POST['notify_types'])) {
+			foreach ($_POST['notify_types'] as $notify_type_id) {
+				if (is_numeric($notify_type_id)) {
+					$notify_types[] = $notify_type_id;
+				}
+			}
+		}
+		$args[] = implode(' ', $notify_types);
+	
 		$cols[] = 'last_updated';
 		$args[] = time();
 		$cols[] = 'disp_intro';
