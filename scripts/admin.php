@@ -208,6 +208,23 @@ switch ($area = Req::val('area', 'prefs')) {
 		$regcount=$db->fetchOne($statregistrations);
 		$page->assign('regcount', $regcount);
 
+		# stats of unsent xmpp notification_messages
+		$xmppmessagecount=$db->query("SELECT COUNT(*) AS count FROM {notification_recipients}
+			WHERE notify_method='j'");
+
+		$page->assign('xmppmessagecount', $db->fetchRow($xmppmessagecount)['count']);
+
+		# 10 of the unsent xmpp messages with count of recipients
+		$xmppmessages=$db->query("
+			SELECT m.message_id, COUNT(r.recipient_id) AS rcount, time_created, message_subject
+			FROM {notification_messages} m
+			LEFT JOIN {notification_recipients} r ON m.message_id=r.message_id
+			WHERE notify_method='j'
+			GROUP BY m.message_id
+			LIMIT 10"
+		);
+		$page->assign('xmppmessages', $db->fetchAllArray($xmppmessages));
+
 		# show oldest unfinished user registrations
 		$registrations=$db->query('SELECT reg_time, user_name, email_address FROM {registrations}
 			ORDER BY reg_time ASC
