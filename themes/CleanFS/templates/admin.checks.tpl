@@ -45,6 +45,16 @@
 <?php if(isset($xmppmessagecount)): ?>
 <div class="div">
 <p><?= $xmppmessagecount.' unsent xmpp messages' ?></p>
+
+<?php echo tpl_form(Filters::noXSS(createUrl($baseurl))); ?>
+<input type="hidden" name="action" value="admin.xmppcleanup"/>
+<?php if(isset($olderyear) && $olderyear>0): ?>
+<button type="submit" name="xmppcleanup" value="year">delete <?= $olderyear ?> unsent xmpp notifications older 1 year</button> 
+<?php endif; ?>
+<?php if(isset($oldermonth) && $oldermonth>0): ?>
+<button type="submit" name="xmppcleanup" value="month">delete <?= $oldermonth ?> unsent xmpp notifications older 1 month</button> 
+<?php endif; ?>
+</form>
 <table>
 <thead>
 <tr>
