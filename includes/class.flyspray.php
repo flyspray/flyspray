@@ -27,7 +27,7 @@ class Flyspray
 	 * For making releases on github use github's recommended versioning e.g. 'v1.0-beta' --> release files are then named v1.0-beta.zip and v1.0-beta.tar.gz and unzips to a flyspray-1.0-beta/ directory.
 	 * Well, looks like a mess but hopefully consolidate this in future. Maybe use version_compare() everywhere in future instead of an own invented Flyspray::base_version()
 	 */
-	public $version = '1.0-rc11 dev';
+	public $version = '1.0-rc11';
 
 	/**
 	 * Flyspray preferences
