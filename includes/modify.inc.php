@@ -3147,6 +3147,46 @@ switch ($action = Req::val('action'))
 
         Notifications::NotificationsHaveBeenRead($validids);
         break;
+
+	case 'admin.xmppcleanup':
+		if (!$user->perms('is_admin')) {
+			break;
+		}
+
+		if (isset($_POST['xmppcleanup']) && is_string($_POST['xmppcleanup'])) {
+			if ($_POST['xmppcleanup'] === 'year') {
+				if ($db->dbtype == 'pgsql') {
+					// recipient_id is chronologic
+					$recipientres = $db->query("SELECT recipient_id
+						FROM {notification_recipients} r
+						JOIN {notification_messages} m ON r.message_id=m.message_id
+						WHERE r.notify_method='j'
+						AND to_timestamp(time_created) < (CURRENT_TIMESTAMP - INTERVAL '1 year')
+						ORDER BY recipient_id DESC LIMIT 1");
+					$recipientrow=$db->fetchRow($recipientres);
+				} else {
+					// recipient_id is chronologic
+					$recipientres = $db->query("SELECT recipient_id
+						FROM {notification_recipients} r
+						JOIN {notification_messages} m ON r.message_id=m.message_id
+						WHERE r.notify_method='j'
+						AND FROM_UNIXTIME(time_created) < (CURRENT_TIMESTAMP - INTERVAL 1 year)
+						ORDER BY recipient_id DESC LIMIT 1");
+					$recipientrow = $db->fetchRow($recipientres);
+				}
+
+				if ($recipientrow) {
+					$db->query("DELETE FROM {notification_recipients} WHERE notify_method='j' AND recipient_id <=?", array($recipientrow[0]));
+					$deleted = $db->affectedRows();
+					$_SESSION['SUCCESS'] = $deleted == 1 ? '1 deleted unsent xmpp notification.': 'Deleted '.$deleted.' unsent xmpp notifications.';
+					Flyspray::redirect(createURL('admin', 'checks'));
+				}
+				// TODO delete also the related notification_messages, but only I if that have no other recipient method entries (like notify_method='o' for 'online')  
+			}
+		}
+		Flyspray::redirect(createURL('admin', 'checks'));
+		break;
+
 case 'task.bulkupdate':
 
 	# TODO check if the user has the right to do each action on each task id he send with the form!
