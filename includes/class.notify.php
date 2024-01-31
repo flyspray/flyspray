@@ -34,9 +34,9 @@ class Notifications
 
 		if (isset($to[0])) {
 			foreach ($to[0] as $recipient) {
-				if (!empty($recipient['lang'])) {
+				if (!empty($recipient['lang']) && $recipient['lang'] != 'project') {
 					$lang = $recipient['lang'];
-				} else if (!empty($proj_lang)) {
+				} else if (!empty($proj_lang) && $proj_lang !='global') {
 					$lang = $proj_lang;
 				} else {
 					$lang = $fs->prefs['lang_code'];
@@ -423,7 +423,7 @@ class Notifications
 		}
 
 		// Make plaintext URLs into hyperlinks, but don't disturb existing ones!
-		$htmlbody = preg_replace("/(?<!\")(https?:\/\/)([a-z0-9\-.]+\.[a-z\-]+(:[0-9]+)?([\/]([a-z0-9_\/\-.?&%=+#])*)*)/i", '<a href="$1$2">$2</a>', $body);
+		$htmlbody = preg_replace("/(?<![\"\'])(https?:\/\/)([a-z0-9\-.]+\.[a-z\-]+(:[0-9]+)?([\/]([a-z0-9_\/\-.?&%=+#])*)*)/i", '<a href="$1$2">$1$2</a>', $body);
 		$htmlbody = str_replace("\n","<br>", $htmlbody);
 
 		// Those constants used were introduced in 5.4.

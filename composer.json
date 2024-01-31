@@ -29,7 +29,7 @@
         "adodb/adodb-php": "5.21.4",
         "jamiebicknell/sparkline": "1.*",
         "ezyang/htmlpurifier": "~4.12",
-        "dapphp/securimage": "3.6.6",
+        "dapphp/securimage": "3.6.8",
         "league/oauth2-client": "~0.12" 
     },
     "require-dev": {

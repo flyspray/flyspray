@@ -208,6 +208,58 @@ switch ($area = Req::val('area', 'prefs')) {
 		$regcount=$db->fetchOne($statregistrations);
 		$page->assign('regcount', $regcount);
 
+		# stats of unsent xmpp notification_messages
+		# counts also possible orphaned entries (deleted entries in {notification_messages}) because adodb xmlschema does not have foreign key constraints feature.
+		$xmppmessagecount=$db->query("SELECT COUNT(*) AS count FROM {notification_recipients}
+			WHERE notify_method='j'");
+
+		$page->assign('xmppmessagecount', $db->fetchRow($xmppmessagecount)['count']);
+
+		# 10 of the unsent xmpp messages with count of recipients
+		$xmppmessages=$db->query("
+			SELECT m.message_id, COUNT(r.recipient_id) AS rcount, time_created, message_subject
+			FROM {notification_messages} m
+			LEFT JOIN {notification_recipients} r ON m.message_id=r.message_id
+			WHERE notify_method='j'
+			GROUP BY m.message_id
+			LIMIT 10"
+		);
+		$page->assign('xmppmessages', $db->fetchAllArray($xmppmessages));
+
+		# use join instead of left join here
+		if ($db->dbtype=='pgsql') {
+			$oldyear=$db->query("SELECT count(*)
+				FROM {notification_messages} m
+				JOIN {notification_recipients} r ON r.message_id=m.message_id
+				WHERE r.notify_method='j'
+				AND to_timestamp(time_created) < (CURRENT_TIMESTAMP - INTERVAL '1 year')");
+		} else {
+			# mysql/mariadb
+			$oldyear=$db->query("SELECT count(*)
+				FROM {notification_messages} m
+				JOIN {notification_recipients} r ON r.message_id=m.message_id
+				WHERE r.notify_method='j'
+				AND from_unixtime(time_created) < (CURRENT_TIMESTAMP - INTERVAL 1 year)");
+		}
+		$page->assign('olderyear', $db->fetchRow($oldyear)[0]);
+
+		if ($db->dbtype=='pgsql') {
+			$oldmonth=$db->query("SELECT count(*)
+				FROM {notification_messages} m
+				JOIN {notification_recipients} r ON r.message_id=m.message_id
+				WHERE r.notify_method='j'
+				AND to_timestamp(time_created) < (CURRENT_TIMESTAMP - INTERVAL '1 month')");
+		} else {
+			# mysql/mariadb
+			$oldmonth=$db->query("SELECT count(*)
+				FROM {notification_messages} m
+				JOIN {notification_recipients} r ON r.message_id=m.message_id
+				WHERE r.notify_method='j'
+				AND from_unixtime(time_created) < (CURRENT_TIMESTAMP - INTERVAL 1 month)");
+		}
+		$page->assign('oldermonth', $db->fetchRow($oldmonth)[0]);
+
+
 		# show oldest unfinished user registrations
 		$registrations=$db->query('SELECT reg_time, user_name, email_address FROM {registrations}
 			ORDER BY reg_time ASC

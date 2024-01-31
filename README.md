@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray)
 
+### 2023-02-03: Old hoster stopped hosting flyspray.org
+
 Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
 
 www.flyspray.org
@@ -44,18 +46,18 @@ https://www.flyspray.org/manual/install
 
 #### Installing from prepackaged releases that include also needed 3rd party libraries
 
-    tar xzf flyspray-1.0-rc10.tgz
+    tar xzf flyspray-1.0-rc11.tgz
 
-Rename folder flyspray-1.0-rc10 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc11 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Installing from source releases via command line
 
-    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc10.tar.gz | tar xz
-    cd flyspray-1.0-rc10
+    curl -L https://github.com/Flyspray/flyspray/archive/v1.0-rc11.tar.gz | tar xz
+    cd flyspray-1.0-rc11
     curl -sS https://getcomposer.org/installer | php
     php composer.phar install --no-dev
     
-Rename folder flyspray-1.0-rc10 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
+Rename folder flyspray-1.0-rc11 to shorter name or move to webroot if you want and point your webbrowser there and follow the configuration instructions.
 
 #### Windows users can download Windows installer on https://getcomposer.org/download/
     If you downloaded the installer, make sure to include it to shell when asked.

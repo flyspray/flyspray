@@ -82,8 +82,11 @@ class Database
 		}
 		$this->dbtype = $dbtype;
 		$this->dbprefix = $dbprefix;
+		if (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix)) {
+			die('Check your dbprefix setting in flyspray.conf.php');
+		}
 		$ADODB_COUNTRECS = false;
-    
+
 		/** 20160408 peterdd: hack to enable database socket usage with adodb-5.20.3
 		 *  For instance on german 1und1 managed linux servers, e.g. $dbhost='localhost:/tmp/mysql5.sock'
 		 */
@@ -96,7 +99,7 @@ class Database
 				ini_set('pdo_mysql.default_socket',$dbsocket);
 			}
 		}
-        
+
 		# adodb for pdo is a bit different then the others at the moment (adodb 5.20.4)
 		# see https://adodb.org/dokuwiki/doku.php?id=v5:database:pdo
 		if ($this->dbtype=='pdo_mysql') {
@@ -108,11 +111,8 @@ class Database
 			$this->dblink->connect($dbhost, $dbuser, $dbpass, $dbname);
 		}
 
-		if ($this->dblink === false || (!empty($this->dbprefix) && !preg_match('/^[a-z][a-z0-9_]+$/i', $this->dbprefix))) {
-			die(
-				'Flyspray was unable to connect to the database. '
-				.'Check your settings in flyspray.conf.php'
-			);
+		if (!$this->dblink->isConnected()) {
+			die('Flyspray was unable to connect to the database. Check your settings in flyspray.conf.php and check if the database server is running and reachable for Flyspray.');
 		}
 		$this->dblink->setFetchMode(ADODB_FETCH_BOTH);
 

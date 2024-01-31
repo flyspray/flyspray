@@ -78,8 +78,9 @@ switch (Req::val('order')) {
         $orderby = "h.event_date {$sort}, h.event_type {$sort}";
 }
 
-if( is_array(Req::val('events')) ){
-	foreach (Req::val('events') as $eventtype) {
+$eventids=filter_input(INPUT_GET, 'events', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+if($eventids){
+	foreach ($eventids as $eventtype) {
 		$where[] = 'h.event_type = ?';
 		$params[] = $eventtype;
 	}

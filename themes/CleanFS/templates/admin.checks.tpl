@@ -1,14 +1,25 @@
 <div id="toolbox">
+<style>
+#toolbox div.div {
+	border:1px solid #999;
+	margin-top:1em;
+	margin-bottom:1em;
+}
+</style>
 <div>PHP version: <?php echo PHP_VERSION; ?></div>
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
 <div>ADOdb version: <?php if(isset($adodbversion)) { echo Filters::noXSS($adodbversion); } ?></div>
 <div>Swiftmailer version: <?php if(isset($swiftmailerversion)) { echo Filters::noXSS($swiftmailerversion); } ?></div>
 <div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
+
+<div class="div">
 <div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
+</div>
 
 <?php if(isset($registrations)): ?>
+<div class="div">
 <h4><?= $regcount ?> unfinished registrations</h4>
 <table>
 <thead>
@@ -26,9 +37,50 @@
 <td><?= Filters::noXSS($reg['email_address']) ?></td>
 </tr>
 <?php endforeach; ?>
-<?php endif; ?>
 </tbody>
 </table>
+</div>
+<?php endif; ?>
+
+<?php if(isset($xmppmessagecount)): ?>
+<div class="div">
+<p><?= $xmppmessagecount.' unsent xmpp messages' ?></p>
+
+<?php echo tpl_form(Filters::noXSS(createUrl($baseurl))); ?>
+<input type="hidden" name="action" value="admin.xmppcleanup"/>
+<?php if(isset($olderyear) && $olderyear>0): ?>
+<button type="submit" name="xmppcleanup" value="year">delete <?= $olderyear ?> unsent xmpp notifications older 1 year</button> 
+<?php endif; ?>
+<?php if(isset($oldermonth) && $oldermonth>0): ?>
+<button type="submit" name="xmppcleanup" value="month">delete <?= $oldermonth ?> unsent xmpp notifications older 1 month</button> 
+<?php endif; ?>
+</form>
+<table>
+<thead>
+<tr>
+<th>message_id</th>
+<th>Recipients</th>
+<th>time_created</th>
+<th>message_subject</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($xmppmessages as $xmppm): ?>
+<tr>
+<td><?= $xmppm['message_id'] ?></td>
+<td><?= $xmppm['rcount'] ?></td>
+<td><?= formatDate($xmppm['time_created'], true) ?></td>
+<td><?= Filters::noXSS($xmppm['message_subject']) ?></td>
+</tr>
+<?php endforeach; ?>
+<tbody>
+</table>
+</div>
+<?php endif; ?>
+
+<?php if(isset($legacyusernamessummary)): ?>
+<?= $legacyusernamessummary ?>
+<?php endif; ?>
 
 <?php if(isset($fstables)): ?>
 <style>

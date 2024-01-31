@@ -117,7 +117,7 @@ if (
         <?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
     <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
-	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.'/'.$fs->prefs['logo']); ?>" /><?php } ?>
+	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.$fs->prefs['logo']); ?>" /><?php } ?>
 	<span><?php if($user->can_select_project($proj->id)){ echo Filters::noXSS($proj->prefs['project_title']); } ?></span>
     </a></h1>
     <?php $this->display('links.tpl'); ?>

@@ -79,10 +79,7 @@
       <li>
             <label for="langcode"><?= eL('language') ?></label>
             <select id="langcode" name="lang_code">
-                <?php 
-                #echo tpl_options(array_merge(array('browser', 'project'), Flyspray::listLangs()), Req::val('lang_code', $theuser->infos['lang_code']), true);
-                echo tpl_options( Flyspray::listLangs(), Req::val('lang_code', $theuser->infos['lang_code']), true);
-                ?>
+            <?= tpl_options(array_merge(array('project'), Flyspray::listLangs()), Post::val('lang_code', $theuser->infos['lang_code']), true); ?>
             </select>
         </li>
       <li>

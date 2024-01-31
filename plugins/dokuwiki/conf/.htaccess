@@ -1,3 +1,10 @@
 ## no access to the conf directory
-order allow,deny
-deny from all
+# Apache 2.4
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+Deny from all
+</IfModule>

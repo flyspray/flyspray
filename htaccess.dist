@@ -1,7 +1,7 @@
 #############################################################################
 ##### Flyspray .htaccess Config. To be used with Apache Server ###
 ##### Check for Mod-Rewrite module ############################################
-#### rename this file to .htaccess to use these features
+#### Rename this file to .htaccess to use these features
 ###############################################################################
 
 AddDefaultCharset utf-8
@@ -45,15 +45,27 @@ php_value filter.default "unsafe_raw"
 php_flag always_populate_raw_post_data Off
 </IfModule>
 
+# Apache 2.4
+<IfModule mod_authz_core.c>
 # We only use POST GET and HEAD (implicit)
 <LimitExcept POST GET>
-	Deny From All
+	Require all denied
 </LimitExcept>
-
 # hide possible development files
 <Files ~ "^composer\.(json|lock|phar)$">
-	deny from all
+	Require all denied
 </Files>
+</IfModule>
+
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+<LimitExcept POST GET>
+	Deny from all
+</LimitExcept>
+<Files ~ "^composer\.(json|lock|phar)$">
+	Deny from all
+</Files>
+</IfModule>
 
 # Some hostings have autocorrection of minor misspelled URLs enabled.
 # We do not want that for Flyspray as it could lead to subtile unwanted behavior.

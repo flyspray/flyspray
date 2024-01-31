@@ -5,12 +5,15 @@ class dokuwiki_TextFormatter
 	{
 		global $conf, $baseurl, $db, $fs;
 
-		// Unfortunately dokuwiki also uses $conf
+		// Unfortunately dokuwiki also uses global var $conf
 		$fs_conf = $conf;
 		$conf = array();
 
 		// Dokuwiki generates some notices
-		error_reporting(E_ALL ^ E_NOTICE);
+		#error_reporting(E_ALL ^ E_NOTICE);
+		# hide deprecated warnings on PHP 8.2 until are addressed in sources
+		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+
 		if (!$instructions) {
 			include_once BASEDIR . '/plugins/dokuwiki/inc/parser/parser.php';
 		}
@@ -19,6 +22,14 @@ class dokuwiki_TextFormatter
 
 		// Create a renderer
 		$Renderer = new Doku_Renderer_XHTML();
+
+		$conf = $fs_conf;
+		$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
+		$conf['cachedir'] = FS_CACHE_DIR; # for dokuwiki
+		$conf['fperm'] = 0600;
+		$conf['dperm'] = 0700;
+
+		include_once BASEDIR . '/plugins/dokuwiki/conf/local.php';
 
 		if (!is_string($instructions) || strlen($instructions) < 1) {
 			$modes = p_get_parsermodes();
@@ -53,12 +64,6 @@ class dokuwiki_TextFormatter
 		$Renderer->entities = getEntities();
 		$Renderer->acronyms = getAcronyms();
 		$Renderer->interwiki = getInterwiki();
-
-		$conf = $fs_conf;
-		$conf['relnofollow']= $fs->prefs['relnofollow']; # ugly workaround
-		$conf['cachedir'] = FS_CACHE_DIR; // for dokuwiki
-		$conf['fperm'] = 0600;
-		$conf['dperm'] = 0700;
 
 		// Loop through the instructions
 		foreach ($instructions as $instruction) {
