@@ -266,6 +266,29 @@ switch ($area = Req::val('area', 'prefs')) {
 			LIMIT 50');
 		$page->assign('registrations', $db->fetchAllArray($registrations));
 
+		/** check if all category tree sets (1 tree set per project + 1 global) are in an ok state (no crossing node lft-rgt)
+		* example:
+		*  1------------------------------------18
+		*    2-3  4-----9 10-11 12------------17
+		*           5---8          13-14 15-16
+		*            6-7
+		*
+		* example of a bad state:
+		* node1 4------9
+		* node2  5------10
+		*/
+		$treeerrors = $db->query("SELECT c1.project_id, COUNT(*) AS count
+			FROM {list_category} c1
+			JOIN {list_category} c2 ON c1.project_id=c2.project_id
+			WHERE c1.lft<c2.lft
+			AND c1.rgt>c2.lft
+			AND c1.rgt<c2.rgt
+			GROUP BY c1.project_id");
+		if ($db->countRows($treeerrors)) {
+			$treeerrors=$db->fetchAllArray($treeerrors);
+			$page->assign('cattreeerrors', $treeerrors);
+		}
+
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
 			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.

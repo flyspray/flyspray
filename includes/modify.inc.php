@@ -2224,12 +2224,47 @@ switch ($action = Req::val('action'))
 			break;
 		}
 
-		$listnames = Post::val('list_name');
-		$listshow = Post::val('show_in_list');
-		$listdelete = Post::val('delete');
-		$listlft = Post::val('lft');
-		$listrgt = Post::val('rgt');
-		$listowners = Post::val('category_owner');
+		# 'Nested Set' structure updates relies on correctly sent tree structure from client.
+		# Netherless we should check before any sql update done.
+		if (isset($_POST['list_name']) && is_array($_POST['list_name'])) {
+			foreach ($_POST['list_name'] as $key => $val) {
+				if (!is_int($key)) {
+					break 2;
+				};
+				if (!is_string($val)) {
+					break 2;
+				};
+				if (!isset($_POST['lft'][$key]) || !isset($_POST['rgt'][$key])) {
+					break 2;
+				}
+				if (!is_numeric($_POST['lft'][$key]) || !is_numeric($_POST['rgt'][$key])) {
+					break 2;
+				}
+			}
+			$listnames = $_POST['list_name'];
+			$listlft = $_POST['lft'];
+			$listrgt = $_POST['rgt'];
+		} else {
+			break;
+		}
+
+		if (isset($_POST['show_in_list']) && is_array($_POST['show_in_list'])) {
+			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listshow = array();
+		}
+
+		if (isset($_POST['delete']) && is_array($_POST['delete'])) {
+			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listdelete = array();
+		}
+
+		if (isset($_POST['category_owner']) && is_array($_POST['category_owner'])) {
+			$listowners = array_filter($_POST['category_owner'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
+		} else {
+			$listowners = array();
+		}
 
 		foreach ($listnames as $id => $listname) {
 			if ($listname != '') {
@@ -2239,10 +2274,18 @@ switch ($action = Req::val('action'))
 
 				// Check for duplicates on the same sub-level under same parent category.
 				// First, we'll have to find the right parent for the current category.
-				$sql = $db->query('SELECT *
-                                     FROM {list_category}
-                                    WHERE project_id = ? AND lft < ? and rgt > ?
-                                      AND lft = (SELECT MAX(lft) FROM {list_category} WHERE lft < ? and rgt > ?)',
+				$sql = $db->query('
+					SELECT *
+					FROM {list_category}
+					WHERE project_id = ?
+					AND lft < ?
+					AND rgt > ?
+					AND lft = (
+						SELECT MAX(lft)
+						FROM {list_category}
+						WHERE lft < ?
+						AND rgt > ?
+					)',
 					array(
 						$proj->id,
 						intval($listlft[$id]),
