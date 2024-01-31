@@ -73,7 +73,7 @@
 <td><?= Filters::noXSS($xmppm['message_subject']) ?></td>
 </tr>
 <?php endforeach; ?>
-<tbody>
+</tbody>
 </table>
 </div>
 <?php endif; ?>
@@ -81,6 +81,29 @@
 <?php if(isset($legacyusernamessummary)): ?>
 <?= $legacyusernamessummary ?>
 <?php endif; ?>
+
+<div class="div">
+<?php if(isset($cattreeerrors)): ?>
+<table>
+<thead>
+<tr>
+<th>project_id</th>
+<th>Category Tree Anomalies</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($cattreeerrors as $caterr): ?>
+<tr>
+<td><?= $caterr['project_id'] ?></td>
+<td><?= $caterr['count'] ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php else: ?>
+<p>No category tree errors found.</p>
+<?php endif; ?>
+</div>
 
 <?php if(isset($fstables)): ?>
 <style>
