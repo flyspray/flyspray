@@ -46,6 +46,14 @@ $categories = $proj->listCategories($proj->id, false, false, false);
 if ( count($categories) ){
   $root = $categories[0];
   unset($categories[0]);
+
+  if ((count($categories)*6 + 4) > ini_get('max_input_vars')) {
+?>
+<div class="error">A category tree update of this size requires sending more than <strong><?= ini_get('max_input_vars') ?></strong> key-value pairs (PHP ini setting <i>max_input_vars</i>).
+But the current size for an update requires up to <?= (count($categories)*6 + 4) ?> key-value pairs.
+Increase <strong>max_input_vars</strong> PHP ini setting before doing any update of this category tree! Otherwise you maybe get a messed up category tree in the database!</div>
+<?php   
+  }
 } else{
   $root=array();
 }
