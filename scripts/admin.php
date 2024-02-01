@@ -289,6 +289,31 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('cattreeerrors', $treeerrors);
 		}
 
+		// another state that should never happen in a nested set model.
+		$rgtbelowequallft = $db->query("SELECT COUNT(*) FROM {list_category} WHERE rgt <= lft");
+		$rgtbelowequallft = $db->fetchOne($rgtbelowequallft);
+		$page->assign('cattreelftrgt', $rgtbelowequallft);
+
+		/** another check: in a nested set model there must lft and rgt number together be unique
+		 * WIP TODO
+		 */
+		/*
+		$cattreenonunique = $db->query("SELECT project_id, nestedsetnumber, COUNT(*) AS cnt
+  			FROM (
+     				SELECT project_id, lft AS nestedsetnumber FROM {list_category}
+     				UNION
+	 			SELECT project_id, rgt FROM {list_category}
+     			) AS sets
+			GROUP BY project_id, nestedsetnumber
+   			HAVING cnt>1
+   			ORDER BY project_id, nestedsetnumber"
+		);
+  		if ($db->countRows($cattreenonunique)) {
+			$cattreenonunique = $db->fetchAllArray($cattreenonunique);
+	  		$page->assign('cattreenonunique', $cattreenonunique);
+		}
+		*/
+
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
 			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
