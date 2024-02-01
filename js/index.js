@@ -10,7 +10,10 @@ function searchInit() {
     Event.observe('searchthisproject','click',function() {$('reset').remove();});
   }
 
-  document.getElementById('search').addEventListener('submit', trimBeforeSearchSubmit);
+  let search =document.getElementById('search');
+  if (search !== null) {
+    search.addEventListener('submit', trimBeforeSearchSubmit);
+  }
 }
 
 // convenience for users with enabled javascript in browser
