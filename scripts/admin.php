@@ -292,7 +292,9 @@ switch ($area = Req::val('area', 'prefs')) {
 		// another state that should never happen in a nested set model.
 		$rgtbelowequallft = $db->query("SELECT COUNT(*) FROM {list_category} WHERE rgt <= lft");
 		$rgtbelowequallft = $db->fetchOne($rgtbelowequallft);
-		$page->assign('cattreelftrgt', $rgtbelowequallft);
+		if ($rgtbelowequallft > 0) {
+			$page->assign('cattreelftrgt', $rgtbelowequallft);
+		}
 
 		// another check: in a nested set model there must lft and rgt number together be unique
 		$cattreenonunique = $db->query("SELECT project_id, lft, COUNT(*) c
