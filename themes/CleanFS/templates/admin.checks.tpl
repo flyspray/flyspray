@@ -133,6 +133,7 @@
 </tbody>
 </table>
 <?php endif; ?>
+</div>
 
 <?php if(isset($fstables)): ?>
 <style>
