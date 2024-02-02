@@ -289,6 +289,28 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('cattreeerrors', $treeerrors);
 		}
 
+		// another state that should never happen in a nested set model.
+		$rgtbelowequallft = $db->query("SELECT COUNT(*) FROM {list_category} WHERE rgt <= lft");
+		$rgtbelowequallft = $db->fetchOne($rgtbelowequallft);
+		if ($rgtbelowequallft > 0) {
+			$page->assign('cattreelftrgt', $rgtbelowequallft);
+		}
+
+		// another check: in a nested set model there must lft and rgt number together be unique
+		$cattreenonunique = $db->query("SELECT project_id, lft, COUNT(*) c
+			FROM (
+				SELECT project_id, category_id, lft FROM {list_category}
+				UNION
+				SELECT project_id, category_id, rgt AS lft FROM {list_category}
+			) AS t
+			GROUP BY project_id, lft
+			HAVING COUNT(*)>1
+			ORDER BY project_id, lft");
+		if ($db->countRows($cattreenonunique)) {
+			$cattreenonunique = $db->fetchAllArray($cattreenonunique);
+			$page->assign('cattreenonunique', $cattreenonunique);
+		}
+
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
 			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
@@ -351,7 +373,7 @@ switch ($area = Req::val('area', 'prefs')) {
 		} elseif ($db->dbtype=='pgsql') {
 			$fsdb=$db->query("SELECT datcollate AS default_collation_name, datctype AS default_character_set_name FROM pg_database WHERE datname=?", array($db->dblink->database));
                         $page->assign('fsdb', $db->fetchRow($fsdb));
-			
+
 			$fstables=$db->query("SELECT table_name, '' AS table_collation, table_type, '' AS create_options, '-' AS table_comment
 				FROM INFORMATION_SCHEMA.tables
 				WHERE table_catalog=? AND table_name LIKE '".$db->dbprefix."%'
@@ -369,7 +391,7 @@ switch ($area = Req::val('area', 'prefs')) {
 		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
-		
+
 		# swiftmailer 5.4.* version not set for class when installed with composer, so test for a VERSION file in swiftmailer directory first:
 		if (file_exists('./vendor/swiftmailer/swiftmailer/VERSION')) {
 			$page->assign('swiftmailerversion', file_get_contents('./vendor/swiftmailer/swiftmailer/VERSION'));
@@ -377,7 +399,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			# maybe	later versions get it right
 			$page->assign('swiftmailerversion', Swift::VERSION);
 		}
-		
+
 		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
 	default:

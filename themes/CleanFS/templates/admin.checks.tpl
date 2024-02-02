@@ -83,6 +83,38 @@
 <?php endif; ?>
 
 <div class="div">
+<?php if (isset($cattreelftrgt) or isset($cattreenonunique) or isset($cattreeerrors)): ?>
+<div class="error">Category errors detected:</div>
+<?php else: ?>
+<p>No category tree errors found.</p>
+<?php endif; ?>
+
+<?php if(isset($cattreelftrgt)): ?>
+<div class="error"><?= $cattreelftrgt ?> rgt not greater lft value errors detected.</div>
+<?php endif; ?>
+
+<?php if(isset($cattreenonunique)): ?>
+<div class="error">lft-rgt nonunique detected.</div>
+<table>
+<thead>
+<tr>
+<th>project_id</th>
+<th>bad lft/rgt values</th>
+<th>count</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($cattreenonunique as $nonunique): ?>
+<tr>
+<td><?= $nonunique['project_id'] ?></td>
+<td><?= $nonunique['lft'] ?></td>
+<td><?= $nonunique['c'] ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php endif; ?>
+
 <?php if(isset($cattreeerrors)): ?>
 <table>
 <thead>
@@ -100,8 +132,6 @@
 <?php endforeach; ?>
 </tbody>
 </table>
-<?php else: ?>
-<p>No category tree errors found.</p>
 <?php endif; ?>
 </div>
 
