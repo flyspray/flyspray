@@ -321,7 +321,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			SELECT COUNT(*)
 			FROM {tasks} t
 			LEFT JOIN {list_category} c ON t.product_category=c.category_id
-			WHERE t.project_id <> c.project_id
+			WHERE (t.project_id <> c.project_id AND c.project_id >0)
 			OR c.project_id IS NULL");
 		$wrongtaskcatscount = $db->fetchOne($wrongtaskcatscount);
 		$page->assign('wrongtaskcategoriescount', $wrongtaskcatscount);
@@ -330,7 +330,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			SELECT t.task_id, t.product_category, t.project_id AS tpid, c.project_id AS cpid, t.is_closed
 			FROM {tasks} t
 			LEFT JOIN {list_category} c ON t.product_category=c.category_id
-			WHERE t.project_id <> c.project_id
+			WHERE (t.project_id <> c.project_id AND c.project_id >0)
 			OR c.project_id IS NULL
 			ORDER BY t.project_id, t.is_closed, t.task_id desc
 			LIMIT 20");
