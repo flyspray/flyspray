@@ -135,6 +135,39 @@
 <?php endif; ?>
 </div>
 
+<?php if ($wrongtaskcategoriescount) : ?>
+<div>
+<div class="error"><p>There are <?= $wrongtaskcategoriescount ?> tasks with a bad product_category value, either having a category id thats from another project or there is no category with this id anymore.</p>
+<?php if ($wrongtaskcategoriescount >20): ?>
+<span>This shows 20 of that as example.</span>
+<?php endif; ?>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>task_id</th>
+<th>task project_id</th>
+<th>category project_id</th>
+<th>task cat_id</th>
+<th>closed</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($wrongtaskcategories as $wtc): ?>
+<tr>
+<td><?= $wtc['task_id'] ?></td>
+<td><?= $wtc['tpid'] ?></td>
+<td><?= $wtc['cpid'] ?></td>
+<td><?= $wtc['product_category'] ?></td>
+<td><?= $wtc['is_closed'] ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+</div>
+<?php endif; ?>
+
 <?php if(isset($fstables)): ?>
 <style>
 #toggledbinfo { display:none; }
