@@ -311,6 +311,31 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('cattreenonunique', $cattreenonunique);
 		}
 
+		/** check if tasks have wrong category id, eg. after moving task to other project without changing to a global category or target project category.
+		 * Or if a category was deleted while having tasks related to it.
+		 * This may happen because older Flyspray version didn't warn while moving or user just overruled it, forcing the move to other project
+		 * or just deleting a category. May be tolerable for old closed task for example, depends if you care about that.
+		 * At least there is now a query that tells you about that.
+		 */
+		$wrongtaskcatscount = $db->query("
+			SELECT COUNT(*)
+			FROM {tasks} t
+			LEFT JOIN {list_category} c ON t.product_category=c.category_id
+			WHERE t.project_id <> c.project_id
+			OR c.project_id IS NULL");
+		$wrongtaskcatscount = $db->fetchOne($wrongtaskcatscount);
+		$page->assign('wrongtaskcategoriescount', $wrongtaskcatscount);
+
+		$wrongtaskcats = $db->query("
+			SELECT t.task_id, t.product_category, t.project_id AS tpid, c.project_id AS cpid, t.is_closed
+			FROM {tasks} t
+			LEFT JOIN {list_category} c ON t.product_category=c.category_id
+			WHERE t.project_id <> c.project_id
+			OR c.project_id IS NULL
+			ORDER BY t.project_id, t.is_closed, t.task_id desc
+			LIMIT 20");
+		$page->assign('wrongtaskcategories', $db->fetchAllArray($wrongtaskcats));
+
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
 			# contrary to MariaDB 10.4.17, MYSQL 8.0.22 returns fields from information_schema always in UPPERCASE, so explicit use AS as workaround.
