@@ -1,11 +1,3 @@
-[![Build Status](https://travis-ci.org/Flyspray/flyspray.svg?branch=master)](https://travis-ci.org/Flyspray/flyspray)
-
-### 2023-02-03: Old hoster stopped hosting flyspray.org
-
-Please do not use Github for your bug reports or feature request. Instead use our live bug tracker at https://bugs.flyspray.org
-
-www.flyspray.org
-
 # Flyspray Bug Tracking System
 
 Flyspray is an uncomplicated, web-based bug and task tracking system.
