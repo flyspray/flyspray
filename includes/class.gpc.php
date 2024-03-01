@@ -147,7 +147,7 @@ abstract class Cookie
  *
  * This is a simple class for safe input validation
  * no mixed stuff here, functions returns always the same type.
- * @author Cristian Rodriguez R <judas.iscariote@flyspray.org>
+ * @author Cristian Rodriguez R
  * @license BSD
  * @notes this intented to be used by Flyspray internals functions/methods
  * please DO NOT use this in templates , if the code processing the input there 
