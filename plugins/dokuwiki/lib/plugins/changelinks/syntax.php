@@ -2,8 +2,8 @@
 /**
  * Change-Interwikilinks Plugin
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Florian Schmitz floele at gmail dot com
+ * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author Florian Schmitz
  */
  
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
@@ -22,7 +22,7 @@ class syntax_plugin_changelinks extends DokuWiki_Syntax_Plugin {
     function getInfo(){
         return array(
             'author' => 'Florian Schmitz',
-            'email'  => 'floele@gmail.com',
+            'email'  => '',
             'date'   => '2005-12-18',
             'name'   => 'Change-Interwikilinks Plugin',
             'desc'   => 'Changes the functionality of interwikilinks',
