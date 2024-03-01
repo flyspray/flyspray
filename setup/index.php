@@ -3,7 +3,7 @@
 // | Installer - there is still a lot to clean up, but it works
 // +----------------------------------------------------------------------
 // | Copyright (C) 2005 by Jeffery Fernandez <developer@jefferyfernandez.id.au>
-// | Copyright (C) 2006-2007 by Cristian Rodriguez and Florian Schmitz <floele@gmail.com>
+// | Copyright (C) 2006-2007 by Cristian Rodriguez and Florian Schmitz
 // +----------------------------------------------------------------------
 
 @set_time_limit(0);
