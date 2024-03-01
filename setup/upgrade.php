@@ -2,8 +2,8 @@
 // +----------------------------------------------------------------------
 // | PHP Source
 // +----------------------------------------------------------------------
-// | Copyright (C) 2006  by Cristian Rodriguez R <judas.iscariote@flyspray.org>
-// | Copyright (C) 2007  by Florian  Florian Schmitz <floele@flyspray.org>
+// | Copyright (C) 2006  by Cristian Rodriguez R
+// | Copyright (C) 2007  by Florian Schmitz
 // +----------------------------------------------------------------------
 // |
 // | Copyright: See COPYING file that comes with this distribution
