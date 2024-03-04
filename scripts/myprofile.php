@@ -19,7 +19,7 @@ if ($user->isAnon()) {
 # or a task is closed now
 # maybe add 'AND t.is_closed<>1' if we want only show votes of active tasks, that are taken for the votes limit.
 # How can a user unvote such now unvisible tasks to get back under his voting limit for the project?
-$votes=$db->query('
+$votes = $db->query('
   SELECT v.*, t.project_id, t.item_summary, t.task_type, t.is_closed, p.project_title
   FROM {votes} v
   JOIN {tasks} t ON t.task_id=v.task_id
@@ -28,9 +28,22 @@ $votes=$db->query('
   ORDER BY t.project_id, t.task_id',
   $user->id
 );
-$votes=$db->fetchAllArray($votes);
-
+$votes = $db->fetchAllArray($votes);
 $page->assign('votes', $votes);
+
+// assuming this feature is used sparsely we do not set a limit yet
+$myreminderq = $db->query('
+  SELECT r.*, t.project_id, t.item_summary, t.task_type, t.is_closed, p.project_title
+  FROM {reminders} r
+  JOIN {tasks} t ON t.task_id=r.task_id
+  LEFT JOIN {projects} p ON p.project_id=t.project_id
+  WHERE r.to_user_id = ?
+  ORDER BY t.project_id, t.task_id',
+  $user->id
+);
+$myreminders = $db->fetchAllArray($myreminderq);
+$page->assign('myreminders', $myreminders);
+
 $page->assign('groups', Flyspray::listGroups());
 $page->assign('project_groups', Flyspray::listGroups($proj->id));
 $page->assign('theuser', $user);
