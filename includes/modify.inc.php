@@ -2700,23 +2700,35 @@ switch ($action = Req::val('action'))
         // removing a reminder
         // ##################
     case 'deletereminder':
-        if (!$user->perms('manage_project') || !is_array(Post::val('reminder_id'))) {
+        if (!$user->perms('manage_project') || !is_array($_POST['reminder_id'])) {
             break;
         }
 
-        foreach (Post::val('reminder_id') as $reminder_id) {
-            $sql = $db->query('SELECT to_user_id FROM {reminders} WHERE reminder_id = ?',
-                              array($reminder_id));
-            $reminder = $db->fetchOne($sql);
-            $db->query('DELETE FROM {reminders} WHERE reminder_id = ? AND task_id = ?',
-                       array($reminder_id, $task['task_id']));
-            if ($db && $db->affectedRows()) {
-                Flyspray::logEvent($task['task_id'], 18, $reminder);
-            }
-        }
+		$errors = 0;
+		foreach ($_POST['reminder_id'] as $reminder_id) {
+			if (!is_string($reminder_id) or !is_numeric($reminder_id) or $reminder_id<1) {
+				$errors++;
+			}
+		}
 
-        $_SESSION['SUCCESS'] = L('reminderdeletedmsg');
-        break;
+		if ($errors > 0) {
+			$_SESSION['ERROR'] = L('invalidinput');
+			break;
+		}
+
+		foreach ($_POST['reminder_id'] as $reminder_id) {
+			$sql = $db->query('SELECT to_user_id FROM {reminders} WHERE reminder_id = ?',
+				array($reminder_id));
+			$reminder = $db->fetchOne($sql);
+			$db->query('DELETE FROM {reminders} WHERE reminder_id = ? AND task_id = ?',
+				array($reminder_id, $task['task_id']));
+			if ($db && $db->affectedRows()) {
+				Flyspray::logEvent($task['task_id'], 18, $reminder);
+			}
+		}
+
+		$_SESSION['SUCCESS'] = L('reminderdeletedmsg');
+		break;
 
         // ##################
         // change a bunch of users' groups
