@@ -2647,20 +2647,55 @@ switch ($action = Req::val('action'))
         // adding a reminder
         // ##################
     case 'details.addreminder':
-        $how_often  = Post::val('timeamount1', 1) * Post::val('timetype1');
-        $start_time = Flyspray::strtotime(Post::val('timeamount2', 0));
 
-        $userId = Flyspray::usernameToId(Post::val('to_user_id'));
-        if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, $userId)) {
-            Flyspray::show_error(L('usernotexist'));
-            break;
-        }
+	$errors = array();
+	// TODO Naming of the vars of this form is terrible, fix in later (1.1?) version.
 
-        // TODO: Log event in a later version.
+	// repeats
+	if (!is_string($_POST['timeamount1']) or intval($_POST['timeamount1'])<1) {
+		$errors['addreminder_minimalrepeaterror'] = 1;
+	}
 
-        $_SESSION['SUCCESS'] = L('reminderaddedmsg');
-        break;
+	// at least 1 hour (3600sec) minimal interval submitted
+	if (!is_string($_POST['timetype1']) or intval($_POST['timetype1'])<3600) {
+		$errors['addreminder_minimalintervalerror'] = 1;
+	}
 
+	// startdate
+	if (!is_string($_POST['timeamount2'])) {
+		$errors['addreminder_starterror'] = 1;
+	}
+
+	if (!is_string($_POST['to_user_id'])) {
+		$errors['addreminder_datetimeerror'] = 1;
+	}
+
+	if (count($errors)>0) {
+		$_SESSION['ERRORS'] = $errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
+		$_SESSION['ERROR'] = L('invalidinput');
+		# pro and contra http 303 redirect here:
+		# - good: browser back button works, browser history.
+		# -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
+		#Flyspray::redirect(createURL('details', $task['task_id']));
+		break;
+	}
+
+	$to_user_id = Flyspray::usernameToId(Post::val('to_user_id'));
+	$start_time = Flyspray::strtotime(Post::val('timeamount2', 0));
+	$how_often = intval(Post::val('timeamount1', 1)) * Post::val('timetype1');
+
+	if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, $to_user_id)) {
+		Flyspray::show_error(L('usernotexist'));
+		break;
+	}
+
+	// log event is written by Backend::add_reminder()
+	$_SESSION['SUCCESS'] = L('reminderaddedmsg');
+	// Do we need to jump to the reminder tab/anchor #remind on task detail page? error and success messages are shown currently at the top. (may change)
+	// redirect on success after POST so browser backbutton works.
+	Flyspray::redirect(createURL('details', $task['task_id']));
+	break;
+	
         // ##################
         // removing a reminder
         // ##################
