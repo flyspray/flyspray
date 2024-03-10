@@ -2226,7 +2226,7 @@ switch ($action = Req::val('action'))
 
 		$errors=array();
 
-		# 'Nested Set Model' structure updates relies on correctly sent tree structure from client.
+		# Flyspray's 'Nested Set Model' structure updates relies on correctly sent tree structure from client.
 		# Netherless we must check before any sql update is done.
 		if (isset($_POST['list_name']) && is_array($_POST['list_name'])) {
 			foreach ($_POST['list_name'] as $key => $val) {
@@ -2265,14 +2265,14 @@ switch ($action = Req::val('action'))
 
 		// sends "1" for each show_in_list
 		if (isset($_POST['show_in_list']) && is_array($_POST['show_in_list'])) {
-			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && $val==="1"));}, ARRAY_FILTER_USE_BOTH);
+			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && $val==="1");}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listshow = array();
 		}
 
 		// sends "1" for each delete
 		if (isset($_POST['delete']) && is_array($_POST['delete'])) {
-			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && $val==="1"));}, ARRAY_FILTER_USE_BOTH);
+			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && $val==="1");}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listdelete = array();
 		}
