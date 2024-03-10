@@ -2224,20 +2224,35 @@ switch ($action = Req::val('action'))
 			break;
 		}
 
-		# 'Nested Set' structure updates relies on correctly sent tree structure from client.
-		# Netherless we should check before any sql update done.
+		$errors=array();
+
+		# 'Nested Set Model' structure updates relies on correctly sent tree structure from client.
+		# Netherless we must check before any sql update is done.
 		if (isset($_POST['list_name']) && is_array($_POST['list_name'])) {
 			foreach ($_POST['list_name'] as $key => $val) {
 				if (!is_int($key)) {
+					$errors[]='invalid category id';
 					break 2;
 				};
-				if (!is_string($val)) {
+				if (!is_string($val) or $val == '') {
+					$errors[]='invalid or missing category name';
 					break 2;
 				};
-				if (!isset($_POST['lft'][$key]) || !isset($_POST['rgt'][$key])) {
+				if (!isset($_POST['lft'][$key]) || !isset($_POST['rgt'][$key]) ) {
+					$errors[]='missing lft or rgt';
 					break 2;
 				}
-				if (!is_numeric($_POST['lft'][$key]) || !is_numeric($_POST['rgt'][$key])) {
+				if (!is_numeric($_POST['lft'][$key]) || ($_POST['lft'][$key] < 1)) {
+					$errors[]='invalid lft';
+					break 2;
+				}
+				if (!is_numeric($_POST['rgt'][$key]) || ($_POST['rgt'][$key] < 1)) {
+					$errors[]='invalid rgt';
+					break 2;
+				}
+				// someone artifically fiddled with it, should normally never happen (broken frontend js)
+				if ($_POST['lft'][$key] >= $_POST['rgt'][$key]) {
+					$errors[]='invalid lft >= rgt';
 					break 2;
 				}
 			}
@@ -2248,29 +2263,130 @@ switch ($action = Req::val('action'))
 			break;
 		}
 
+		// sends "1" for each show_in_list
 		if (isset($_POST['show_in_list']) && is_array($_POST['show_in_list'])) {
-			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+			$listshow = array_filter($_POST['show_in_list'], function($val, $key) { return (is_int($key) && $val==="1"));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listshow = array();
 		}
 
+		// sends "1" for each delete
 		if (isset($_POST['delete']) && is_array($_POST['delete'])) {
-			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
+			$listdelete = array_filter($_POST['delete'], function($val, $key) { return (is_int($key) && $val==="1"));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listdelete = array();
 		}
 
+		// empty string is ok, checking if only allowed username characters are used is dicarded/postponed as I learned there exist historic registrations
+		// with umlauts/accents (e.g. french names) so a bit unsure what to allow.
 		if (isset($_POST['category_owner']) && is_array($_POST['category_owner'])) {
 			$listowners = array_filter($_POST['category_owner'], function($val, $key) { return (is_int($key) && is_string($val));}, ARRAY_FILTER_USE_BOTH);
 		} else {
 			$listowners = array();
 		}
 
+		// TODO read the existing project category-ids tree from database to compare with the $listnames ids.
+		// "SELECT category_id FROM {list_category} WHERE project_id=?"
+		// Both arrays must contain the same category_ids, no more or less. Use of some array_diff* maybe?
+		// Otherwise tree changed meanwhile or the form was sent incomplete (hitting PHP limits like max_input_vars, that cut $_POST)
+/**
+*
+* Some thoughts by peterdd to the future:
+*
+* The variant of the 'nested set model' used by Flyspray is unknown to me and just sits here in modify.inc.php and other Flyspray files. No author, documentation or links. 
+* Currently no idea how and if the prototypejs tree/list frontend fills gaps or how it handles given incomplete or broken trees and then always send fixed trees? (ideally)
+* 
+*
+* The sent form writes the full tree and each category_id must match an existing category_id in the db (check project_id too!).
+* Otherwise someone else deleted or added category nodes meanwhile.
+*
+* Example 'delete':
+* 1. User A opens form, makes changes
+* 2. User B deletes a node (gaps will currently NOT be closed, in this case it might be ok, depends on frontend javascript how it handles gaps in nested tree)
+*    The theory that I read always closed the gaps after deleting a node. mmh.
+*    That's 'expensive', as:
+*    The nodes inside the deleted node must lft=lft-1,rgt=rgt-1. (see example with '5 nodes':subtree shift one level up, think 'grandmother takes care of children if mother dies')
+*    All parents of deleted node rgt=rgt-2
+*    All nodes behind the deleted node must lft=lft-2,rgt=rgt-2.
+*    But 'expensive' is relative as Flyspray also writes the whole tree on update.
+*
+*    3 nodes:(1-6)root,(2-3),(4-5): a 'leave' with lft=5,rgt=6 delete:
+*
+*    1    6       1    6       1  4
+*    |----|       |----|       |--|
+*    |2345|  ---> |23  |   --->|23|
+*    |[][]|       |[]  |       |[]|
+*    |----|       |----|       |--|
+*               Flyspray     nested set model theory
+*               (keeps gap)  (gap closed)
+*
+*    5 nodes: a 'parent'(2-7) with 2 kids(3-4)(5-6) delete:
+*
+*    1       10        1      10        1      8
+*    |--------|       |--------|        |------|
+*    |2    789|  ---> | 3456 89|   ---> |234567|
+*    ||----|[]|       | [][] []|        |[][][]|
+*    ||3456|  |       |--------|        |------|
+*    ||[][]|  |
+*    ||----|  |
+*    |--------|
+*                     Flyspray          nested set model theory
+*                     (keeps 2 gaps)    (gaps closed)
+*
+* 3. User B send the update form
+*    The SQL tries to update also the deleted row, but will not be found. This is ok in this case when gaps not closed.
+*
+* Example 'add':
+* 1. User A opens form, makes changes in browser
+* 2. User B adds a node SOMEWHERE in the tree.
+* 3. User A send the update form
+* The sent by A form updates the old nodes. But now the ADDED row shares the same lft and rgt with 1 or 2 other rows! And the tree is not expanded(reverted)!
+*
+* Example 1 concurrent editing:
+* 1. User A opens form, makes changes in browser
+* 2. User B opens form, makes changes in browser
+* 3. User B sends the form
+* 4. User A sends the form
+* Result: Changes of B(ordering,name,assignee,show_in_list) lost.
+*
+* Example 2 concurrent editing:
+* 1. User A opens form, makes changes in browser
+* 2. User B opens form, makes changes in browser
+* 3. User A sends the form
+* 4. User B sends the form
+* Result: Changes of A(ordering,name,assignee,show_in_list) lost.
+*
+* How to prevent harm by concurrent editing (aside social coordination)?
+* (SQL Transaction might not be available. For instance when Mysql MYISAM tables are used.)
+* Ideas:
+* A Set a 'locked by userid' with timestamp per project category tree when the first user opens the category page.
+*    Other Users can open category page only in readonly mode.
+*    Someone has to unlock if user never sent the form (like Joomla do/did I remember) or unlock after a fixed time.
+*    Problem: Same first user opens another browser tab...
+*
+* B Set a 'lastmodified and lastmodifiedby' per category tree. When the user opens the category form it has this timestamp.
+*   If the user sends the form with this timestamp and does not match the lastmodified date of the category tree on the server, someone
+*   (someone else or same user in other browser/browser tab) changed the category tree meanwhile and the form get rejected.
+*
+* C Regular AJAX to inform user on the category page if meanwhile a category change occured. (overengineered? bandwidth? interval?)
+* 
+* Variant B sounds 'okeyish' for me if a full tree update is really fast( nobody read and send form before the first update finishes).
+* Add a cattreelastmodified field to flyspray_projects?
+* Or better not pollute this table as I think this applies in some mild form to the simpler list_* tables (version,os,resolution,..) too.
+* For instance: flyspray_lock(project_id int, tablename(without prefix) string, lastmodified (timestamp/datetime?), lastmodifiedby int) ?
+* Add the cattreelastmodified entry before a SQL treeupdate really starts. And maybe overwrite cattreelastmodified when finished?
+* At form validation the sent cattreelastmodified is compared with the cattreelastmodified in the flyspray_projects table. If not match they not match form is rejected.
+*/
+
 		foreach ($listnames as $id => $listname) {
 			if ($listname != '') {
 				if (!isset($listshow[$id])) {
 					$listshow[$id] = 0;
 				}
+/**
+* peterdd: deactivated the duplicate-category-name-on-same-subtree-and-level-check here, because:
+* - 'a half overwritten nested set tree - then abort' could mess up a not matching a valid nested set tree (lft,rgt) anymore.
+* - The duplicate name check belongs to the form data and must be made for the complete tree BEFORE any SQL update to the category tree.
 
 				// Check for duplicates on the same sub-level under same parent category.
 				// First, we'll have to find the right parent for the current category.
@@ -2332,7 +2448,9 @@ switch ($action = Req::val('action'))
 					Flyspray::show_error(sprintf(L('categoryitemexists'), $listname, $parent['category_name']));
 					return;
 				}
-
+* end of commented out 'dup check in the write'-foreach.
+*/
+				
 				$update = $db->query('
 					UPDATE {list_category}
 					SET
@@ -2367,6 +2485,12 @@ switch ($action = Req::val('action'))
 			}
 		}
 
+		/**
+		 * The lack of filling gaps of a nested set tree after deletion here is MAYBE intended.
+   		 *
+   		 * The theory of nested set model (what I read about) closes them always after a deletion.
+      		 * But they do not know that Flyspray does a brutal whole project categories 'sql update' with a submitted category update form.
+		 */
 		if (is_array($listdelete) && count($listdelete)) {
 			$deleteids = "$list_id = " . join(" OR $list_id =", array_map('intval', array_keys($listdelete)));
 			$db->query("DELETE FROM {list_category} WHERE project_id = ? AND ($deleteids)", array($proj->id));
