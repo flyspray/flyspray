@@ -168,6 +168,52 @@
 </div>
 <?php endif; ?>
 
+<?php if(isset($categorytrees)): ?>
+<style>
+#cattrees{
+	display:flex;
+	flex-wrap:wrap;  
+}
+.cattree {
+	position: relative;
+	margin-left:-10px;
+}
+.cattree i {
+	position: absolute;
+	height: 20px;
+	border: 1px solid rgba(0,0,0,0.2);
+}
+.cattree i:before{
+	content:attr(data-lft);
+	font-size:8px;
+	position:absolute;
+	left:-4px;
+	top:-10px;
+	color:#600;
+}
+.cattree i:after{
+	content:attr(data-rgt);
+	font-size:8px;
+	position:absolute;
+	right:-4px;
+	top:-10px;
+	color:#009;
+}
+<?= $levelallcss ?>
+</style>
+<div id="cattrees">
+<?php foreach ($categorytrees as $cattree): ?>
+<div class="box">
+<h4><?= $cattree['project_id']==0 ?'global': 'project_id' ?> <?= $cattree['project_id'] ?></h4>
+<div class="cattree p<?= $cattree['project_id'] ?>">
+<style><?= $cattree['css'] ?></style>
+<?= $cattree['html'] ?>
+</div>
+</div><?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+
 <?php if(isset($fstables)): ?>
 <style>
 #toggledbinfo { display:none; }
