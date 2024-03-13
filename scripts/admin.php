@@ -266,75 +266,16 @@ switch ($area = Req::val('area', 'prefs')) {
 			LIMIT 50');
 		$page->assign('registrations', $db->fetchAllArray($registrations));
 
-		/** check if all category tree sets (1 tree set per project + 1 global) are in an ok state (no crossing node lft-rgt)
-		* example:
-		*  1------------------------------------18
-		*    2-3  4-----9 10-11 12------------17
-		*           5---8          13-14 15-16
-		*            6-7
-		*
-		* example of a bad state:
-		* node1 4------9
-		* node2  5------10
-		*/
-		$treeerrors = $db->query("SELECT c1.project_id, COUNT(*) AS count
-			FROM {list_category} c1
-			JOIN {list_category} c2 ON c1.project_id=c2.project_id
-			WHERE c1.lft<c2.lft
-			AND c1.rgt>c2.lft
-			AND c1.rgt<c2.rgt
-			GROUP BY c1.project_id");
-		if ($db->countRows($treeerrors)) {
-			$treeerrors=$db->fetchAllArray($treeerrors);
-			$page->assign('cattreeerrors', $treeerrors);
-		}
-
-		// another state that should never happen in a nested set model.
-		$rgtbelowequallft = $db->query("SELECT COUNT(*) FROM {list_category} WHERE rgt <= lft");
-		$rgtbelowequallft = $db->fetchOne($rgtbelowequallft);
-		if ($rgtbelowequallft > 0) {
-			$page->assign('cattreelftrgt', $rgtbelowequallft);
-		}
-
-		// another check: in a nested set model there must lft and rgt number together be unique
-		$cattreenonunique = $db->query("SELECT project_id, lft, COUNT(*) c
-			FROM (
-				SELECT project_id, category_id, lft FROM {list_category}
-				UNION
-				SELECT project_id, category_id, rgt AS lft FROM {list_category}
-			) AS t
-			GROUP BY project_id, lft
-			HAVING COUNT(*)>1
-			ORDER BY project_id, lft");
-		if ($db->countRows($cattreenonunique)) {
-			$cattreenonunique = $db->fetchAllArray($cattreenonunique);
-			$page->assign('cattreenonunique', $cattreenonunique);
-		}
-
-		/** check if tasks have wrong category id, eg. after moving task to other project without changing to a global category or target project category.
-		 * Or if a category was deleted while having tasks related to it.
-		 * This may happen because older Flyspray version didn't warn while moving or user just overruled it, forcing the move to other project
-		 * or just deleting a category. May be tolerable for old closed task for example, depends if you care about that.
-		 * At least there is now a query that tells you about that.
-		 */
-		$wrongtaskcatscount = $db->query("
-			SELECT COUNT(*)
-			FROM {tasks} t
-			LEFT JOIN {list_category} c ON t.product_category=c.category_id
-			WHERE (t.project_id <> c.project_id AND c.project_id >0)
-			OR c.project_id IS NULL");
-		$wrongtaskcatscount = $db->fetchOne($wrongtaskcatscount);
-		$page->assign('wrongtaskcategoriescount', $wrongtaskcatscount);
-
-		$wrongtaskcats = $db->query("
-			SELECT t.task_id, t.product_category, t.project_id AS tpid, c.project_id AS cpid, t.is_closed
-			FROM {tasks} t
-			LEFT JOIN {list_category} c ON t.product_category=c.category_id
-			WHERE (t.project_id <> c.project_id AND c.project_id >0)
-			OR c.project_id IS NULL
-			ORDER BY t.project_id, t.is_closed, t.task_id desc
-			LIMIT 20");
-		$page->assign('wrongtaskcategories', $db->fetchAllArray($wrongtaskcats));
+		/**
+                * $db and $page are passed by reference for these category checks.
+                * $page will be modified, $db only be used for SELECT queries.
+                */
+                require_once(BASEDIR .'/includes/CategoriesNestedSetChecks.php');
+                CategoriesNestedSetChecks::checkOverlapped($db, $page);
+                CategoriesNestedSetChecks::checkFlipped($db, $page);
+                CategoriesNestedSetChecks::checkLftRgtUnique($db, $page);
+                CategoriesNestedSetChecks::checkTasks($db, $page);
+                CategoriesNestedSetChecks::drawGraphs($db, $page);
 
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
