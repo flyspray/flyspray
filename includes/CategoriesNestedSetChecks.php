@@ -215,7 +215,7 @@ class CategoriesNestedSetChecks
 		}
 		$levelprcss[$lastprojectid].='div.cattree.p'.$lastprojectid.' {min-height:'.(20+$maxlevel*($heightfactor+ 2*$gapfactor)).'px;min-width:'.($maxrgt*10).'px;}';
 
-		$cattreeshtml[$t['project_id']]=array(
+		$cattreeshtml[$lastprojectid]=array(
 			'html'=>$cattreehtml,
 			'project_id'=>$lastprojectid,
 			'css'=>$levelprcss[$lastprojectid]
