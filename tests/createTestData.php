@@ -1,12 +1,11 @@
 <?php
 
-/*
+/**
 * For Flyspray development tests only!
 *
 * Script for simulating Flyspray with many testdata like many projets, hundreds of users, thousands of tasks and thousands comments ..
-* 
-* TODO:
-# replace some hardcoded IDs by getting the appropriate ids from db instead (autoincrement values of user groups for example)
+*
+* @todo
 # add some supertask_id to some tasks (use flyspray functions/api that should check if legal - no loops of any hop depth, permissions, cross project, existing task)
 # add some related task relations
 # add some dependencies to some tasks (flyspray should check legal - watch for logic deadlocks)
@@ -33,14 +32,38 @@
 # * add some code segments for GeShi - some languages are harder to parse than others!
 # tags:
 # * remove some tags from tasks
-
-* Maybe someday parts of it are moved to phpunit testing in future, so can automatic tested by travis-ci.
-*
 */
 
 # Only use this script after a fresh Flyspray install (1 project id=1 , 1 user with id=1, 1 task with id=1 existing)
 # choose dokuwiki during setup
 #createTestData();
+
+
+#categoryDemo();
+function categoryDemo()
+{
+	define('IN_FS', 1);
+	$now=microtime(true); # simple performance times
+	require_once dirname(__FILE__) . '/../vendor/autoload.php';
+	require_once dirname(__FILE__) . '/../includes/CategoriesNestedSetChecks.php';
+
+	$conf = parse_ini_file('../flyspray.conf.php', true) or die('Cannot open config file.');
+
+	global $db;
+
+	$db = new Database;
+	$db->dbOpenFast($conf['database']);
+
+	$GLOBALS['RANDOP'] = 'RAND()';
+
+	if ($db->dblink->dataProvider == 'postgres') {
+		$GLOBALS['RANDOP'] = 'RANDOM()';
+	}
+	$last=$now;$now=microtime(true);echo round($now-$last,6)." s database connection\n";
+
+	add_categories(0, 20);
+}
+
 
 # temp: just wrapped that code in a function so it is not run by phpunit
 function createTestData()
@@ -52,11 +75,13 @@ function createTestData()
 		die('Please call it only from commandline');
 	}
 
-	global $db, $fs, $conf, $proj, $user, $notify, $language;
+	global $db, $fs, $conf, $proj, $user, $notify, $language, $RANDOP;
 
 	# Use this only on a new test installation, code does not work on
 	# an existing one, and never will.
 
+	# bypass some unique index by appending timestamp per run
+	$timestamp=time();
 
  ### Simulation Settings ###
 	# Set conservative data as default, setup bigger values for further performance tests.
@@ -64,20 +89,24 @@ function createTestData()
 
 	$years=10;
 	$timerange=3600*24*365*$years;
-	
+
 	$maxprojects = 3;
 	# ca 100 tasks/sec, 100 comments/sec on an old laptop with Flyspray 1.0-rc7 with mysqli setup in a virtual machine as thumb rule
 	$maxtasks = 1000; # absolute number, e.g. 1000
 	$maxcomments = 1000; # absolute number, e.g. 10000
-	$maxattachments = 500; # only emulated yet, e.g. 500
+	$maxattachments = 50; # only emulated yet, e.g. 500
 	$maxversions = 3; # per project, e.g. 5
 	$maxcorporates = 3; # mmhh
-	
+
+	$maxdevgroups=1; # adds global groups
+
+	$maxcategories=100; # per added project
+
 	# spread some user with different permissions
 	$maxcorporateusers = 20; # absolute number, e.g. 20
 	$maxadmins = 2;
 	$maxmanagers = 2;
-	$maxdevelopers = 500; # a bit higher for due they have more rights, can have more relations with tasks
+	$maxdevelopers = 50; # a bit higher for due they have more rights, can have more relations with tasks
 	$maxindividualusers = 50;
 	$maxviewers = 50;
 
@@ -93,7 +122,7 @@ function createTestData()
 		'organize conference',
 		'send invitations'
         );
-	
+
 	error_reporting(E_ALL);
 
 	define('IN_FS', 1);
@@ -106,6 +135,7 @@ function createTestData()
 	require_once dirname(__FILE__) . '/../includes/i18n.inc.php';
 	require_once dirname(__FILE__) . '/../includes/class.tpl.php';
 	require_once dirname(__FILE__) . '/../vendor/autoload.php';
+	require_once dirname(__FILE__) . '/../includes/CategoriesNestedSetChecks.php';
 
 	$conf = parse_ini_file('../flyspray.conf.php', true) or die('Cannot open config file.');
 
@@ -138,7 +168,9 @@ function createTestData()
 		$time_zone = 0; // Assign different one!
 		$email = null; // $user_name . '@example.com';
 
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 1, 1);
+		$admingroupid=1;
+
+		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $admingroupid, 1);
 	}
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxadmins." admins created\n";
 
@@ -149,7 +181,8 @@ function createTestData()
 		$time_zone = 0; // Assign different one!
 		$email = null; // $user_name . '@example.com';
 
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 2, 1);
+		$pmgroupid=2; // In a default Flyspray install thist group is named 'Developers', mmhh..
+		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $pmgroupid, 1);
 	}
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxmanagers." managers created\n";
 
@@ -157,59 +190,64 @@ function createTestData()
 	// Show more columns by default, trying to make database or flyspray crash under stress.
 	$db->query("UPDATE {prefs} SET pref_value = 'id project category tasktype severity summary status openedby dateopened progress comments attachments votes' WHERE pref_name = 'visible_columns'");
 
+	// add another global project manager group just for test
+	$db->query("INSERT INTO {groups} "
+        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
+        . "VALUES('PMgroup 1".$timestamp."', 'Manager Group 1', 0, 1, 1, 0, 1, 1, 1, 1, 1)");
+	$managergroups[]=$db->insert_id();
+
 	// Add 3 different global developer groups with different
 	// view rights first, then assign developers to them at random.
-
-	$db->query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 1', 'Developer Group 1', 0, 1, 1, 0, 1, 1, 1, 1, 1)");
-
-	$db->query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 2', 'Developer Group 2', 0, 1, 1, 0, 0, 1, 1, 1, 1)");
-
-	$db->query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,group_open,view_comments,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,modify_own_tasks) "
-        . "VALUES('Developer Group 3', 'Developer Group 3', 0, 1, 1, 0, 0, 0, 1, 1, 1)");
+	$devgroups=array();
+	// fits into current only max 20 char field for group_name: 10 chars + 10 digits timestamp
+	for($i=1; $i<=$maxdevgroups; $i++) {
+		$db->query("INSERT INTO {groups} "
+		. "(group_name, group_desc, project_id, group_open, view_comments, manage_project, view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks, modify_own_tasks) "
+		. "VALUES('Devs".$i.'_'.$timestamp."', 'Developer Group 1', 0, 1, 1, 0, 1, 1, 1, 1, 1)");
+		$devgroups[]=$db->insert_id();
+	}
 
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '."3 global dev groups created\n";
 
 
 	// Add also general groups for corporate users, individual users and viewers.
 	// Allow only login. Not so relaxed with them bastards.
-	$db->query("INSERT INTO {groups} "
-	        . "(group_name,group_desc,project_id,group_open) "
-	        . "VALUES('Corporate Users', 'Corporate Users', 0, 1)");
 
 	$db->query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,group_open) "
-        . "VALUES('Trusted Users', 'Trusted Users', 0, 1)");
+		. "(group_name,group_desc,project_id,group_open) "
+		. "VALUES('Corpusers ".$timestamp."', 'Corporate Users', 0, 1)");
+	$corpgroup=$db->insert_id();
 
 	$db->query("INSERT INTO {groups} "
-        . "(group_name,group_desc,project_id,group_open) "
-        . "VALUES('Non-trusted Users', 'Non-trusted Users', 0, 1)");
+		. "(group_name,group_desc,project_id,group_open) "
+		. "VALUES('TrstUsers ".$timestamp."', 'Trusted Users', 0, 1)");
+	$trustedgroup=$db->insert_id();
+
+	$db->query("INSERT INTO {groups} "
+		. "(group_name,group_desc,project_id,group_open) "
+		. "VALUES('UntrUsers ".$timestamp."', 'Non-trusted Users', 0, 1)");
+	$nontrustedgroup=$db->insert_id();
+
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '."3 global user groups created\n";
 
-
-	for ($i = 1; $i <= $maxdevelopers; $i++) {
+	for ($i = 0; $i < $maxdevelopers; $i++) {
 		$user_name = "dev$i";
 		$real_name = "Developer $i";
 		$password = $user_name;
 		$time_zone = 0;
 		$email = null; // $user_name . '@example.com';
-		$group = rand(7, 9);
 
-		if($i==1){
+		if ($i==0) {
 			$registered = time() - rand($timerange-3600, $timerange);
-		}else{
+		} else{
 			$registered = $prevuserreg + rand(0, 0.9*2*$timerange/$maxdevelopers); # 0.9 to be sure not in future
                 }
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
-		# a bit	weired,	but simple UPDATE {users} SET register_date = ? WHERE user_id = (SELECT MAX(user_id) FROM {users}) doesn't work	for mysql
-		$db->query('UPDATE {users} SET register_date = ? WHERE user_id = (SELECT user_id FROM (SELECT * FROM {users}) AS tempusers ORDER BY user_id DESC LIMIT 1)',
-                        array($registered) );
-		$prevuserreg=$registered;
+		if (Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, array_rand($devgroups), 1)) {
+			$db->query('UPDATE {users} SET register_date = ? WHERE user_name = ?', array($registered, $username));
+			$prevuserreg=$registered;
+		}
 	}
+
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxdevelopers." dev users created\n";
 
 	$tags=array(
@@ -223,12 +261,18 @@ function createTestData()
                 array('name'=>'darkred', 'color'=>'#600'),
                 array('name'=>'darkblue', 'color'=>'#006')
         );
-	
+
 	// add some projects and some tag definitions
 	$tgcounter=0;
 	$project_id=0;
+	$ppre=$db->query("SELECT MAX(project_id) FROM {projects}", array());
+	$proffset=$db->fetchOne($ppre);
+
+	$tpre=$db->query("SELECT MAX(task_id) FROM {tasks}", array());
+	$taskidoffset=$db->fetchOne($tpre);
+
 	for ($i = 1; $i <= $maxprojects; $i++) {
-		$projname = 'Product '.($i+1);
+		$projname = 'Product '.($proffset+$i);
 
 		$db->query('
 			INSERT INTO {projects} (
@@ -259,11 +303,19 @@ function createTestData()
 				'')
 		);
 		$project_id=$db->insert_Id();
+
+		# add root node
+		// maybe the class can handle this automagic adding the root node if not exists.
+		$db->query("insert into {list_category}(project_id,category_name,lft,rgt,show_in_list) values(?,'root',1,2,0)", array($project_id));
+		echo 'root category for '.$project_id." added.\n";
+		add_categories($project_id, $maxcategories);
+
+		# add other project data
 		add_project_data($project_id);
 
 		for ($t=0; $t<count($tags); $t++){
 			$db->query("INSERT INTO {list_tag} (project_id, tag_name, show_in_list, class) VALUES (?, ?, ?, ?)",
-				array($project_id, $tags[$t]['name'].($i+1), rand(0,1), $tags[$t]['color'])
+				array($project_id, $tags[$t]['name'].$i, rand(0,1), $tags[$t]['color'])
 			);
 			$tgcounter++;
 		}
@@ -273,7 +325,7 @@ function createTestData()
 
 	// Assign some developers to project manager or project developer groups
 	for ($i = 1; $i <= $maxprojects; $i++) {
-		$projid = $i + 1;
+		$projid = $proffset + $i;
 		$sql = $db->query('SELECT group_id FROM {groups} WHERE project_id = ? AND manage_project = 1', array($projid));
 		$pmgroup = $db->fetchOne($sql);
 		$sql = $db->query('SELECT group_id FROM {groups} WHERE project_id = ? AND manage_project = 0', array($projid));
@@ -284,9 +336,9 @@ function createTestData()
 		$pmlimit = $pmlimit < 1 ? 1 : $pmlimit;
 		$pdlimit = $pdlimit < 1 ? 1 : $pdlimit;
 
-		$sql = $db->query("SELECT user_id FROM {users_in_groups} WHERE group_id in (7, 8, 9) ORDER BY $RANDOP limit $pmlimit");
+		$sql = $db->query("SELECT user_id FROM {users_in_groups} WHERE group_id in (".implode(',',$managergroups).") ORDER BY $RANDOP limit $pmlimit");
 		$pms = $db->fetchCol($sql);
-		$sql = $db->query("SELECT user_id FROM {users_in_groups} WHERE group_id in (8, 9) ORDER BY $RANDOP limit $pdlimit");
+		$sql = $db->query("SELECT user_id FROM {users_in_groups} WHERE group_id in (".implode(',',$devgroups).") ORDER BY $RANDOP limit $pdlimit");
 		$pds = $db->fetchCol($sql);
 
 		foreach ($pms as $pm) {
@@ -303,14 +355,14 @@ function createTestData()
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxprojects." projects assigned some developers to project groups\n";
 
 	for ($i = 1; $i <= $maxcorporateusers; $i++) {
-	    $user_name = "cu$i";
+	    $user_name = 'cu'.$i.'_'.$timestamp;
 	    $real_name = "Corporate user $i";
 	    $password = $user_name;
 	    $time_zone = 0; // Assign different ones!
 	    $email = null; // $user_name . '@example.com';
 	    $group = 10;
 
-	    Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+	    Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $corpgroup, 1);
 	}
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxcorporateusers." corp users created\n";
 
@@ -319,13 +371,13 @@ function createTestData()
 	for ($i = 1; $i <= $maxcorporates; $i++) {
 		for ($j = 1; $j <= $maxprojects; $j++) {
 			if (rand(1, 20) == 1) {
-				$projid = $j + 1;
+				$projid = $proffset + $j;
 				$db->query("INSERT INTO {groups} "
 	                    . "(group_name,group_desc,project_id,manage_project,view_tasks, view_groups_tasks, view_own_tasks,open_new_tasks,add_comments,create_attachments,group_open,view_comments) "
 	                    . "VALUES('Corporate $i', 'Corporate $i Users', $projid, 0, 0, 1, 1, 1, 1, 1,1,1)");
 				$group_id = $db->insert_ID();
 				for ($k = $i; $k <= $maxcorporateusers; $k += $maxcorporates) {
-					$username = "cu$k";
+					$username = 'cu'.$k.'_'.$timestamp;
 					$sql = $db->query('SELECT user_id FROM {users} WHERE user_name = ?', array($username));
 					$user_id = $db->fetchOne($sql);
 					$db->query('INSERT INTO {users_in_groups} (user_id, group_id) VALUES (?, ?)', array($user_id, $group_id));
@@ -335,32 +387,27 @@ function createTestData()
 	}
 	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxcorporates." corporate usergroups created\n";
 
-	// And also those individual users...
 	for ($i = 1; $i <= $maxindividualusers; $i++) {
-		$user_name = "iu$i";
+		$user_name = 'iu'.$i.'_'.$timestamp;
 		$real_name = "Individual user $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
 		$email = null; // $user_name . '@example.com';
-		$group = rand(11, 12);
 
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $trustedgroup, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." indi users created\n";
+	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." trusted users created\n";
 
-
-	// That's why we need some more global groups with different viewing rights
-	for ($i = 1; $i <= $maxindividualusers; $i++) {
-		$user_name = "basic$i";
+	for ($i = 1; $i <= $maxviewers; $i++) {
+		$user_name = 'basic'.$i.'_'.$timestamp;
 		$real_name = "Basic $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
 		$email = null; // $user_name . '@example.com';
-		$group = 4;
 
-		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
+		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $nontrustedgroup, 1);
 	}
-	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxindividualusers." basic users created\n";
+	$last=$now;$now=microtime(true);echo round($now-$last,6).': '.$maxviewers." basic users created\n";
 
 
 	// Must recreate, so rights for new projects get loaded. Otherwise,
@@ -376,7 +423,7 @@ function createTestData()
 	$paralen=array(1,5); # sentences per paragraph
 	$parts=array(1,10); # parts per task description (paragraphs or lists or code..)
 	$codes=array('','php','xml','sql','html');
-	
+
 	echo "Creating $maxtasks tasks: ";
 	if ($conf['database']['dbtype'] == 'mysql' or $conf['database']['dbtype'] == 'mysqli') {
 		$sqlid=$db->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_NAME=?",
@@ -386,13 +433,13 @@ function createTestData()
 		$prevtaskopened = $firsttaskid - 1;
 	} else {
 		# TODO similiar for Postgresql and other (PDO?)
-		$prevtaskopened = 1; 
+		$prevtaskopened = $taskidoffset;
 		$firsttaskid = $prevtaskopened + 1;
 	}
 	$finaltaskid=$maxtasks + $prevtaskopened;
 
 	for ($i = $firsttaskid; $i <= $finaltaskid; $i++) {
-		$project_id = rand(2, $maxprojects + 1); # project id 1 is default project which we exclude.
+		$project_id = $proffset + rand(1, $maxprojects); # project id 1 is default project which we exclude.
 		if ($i === $firsttaskid) {
 			$opened = time() - rand($timerange-(30*24*3600), $timerange);
 		} else {
@@ -405,7 +452,7 @@ function createTestData()
 			JOIN {users_in_groups} uig ON u.user_id=uig.user_id
 			JOIN {groups} g ON g.group_id = uig.group_id AND g.open_new_tasks = 1 AND (g.project_id = 0 OR g.project_id = ?)
 			WHERE g.group_id NOT IN (1)
-			AND u.register_date < ? 
+			AND u.register_date < ?
 			ORDER BY $RANDOP LIMIT 1", array($project_id, $opened)
 		);
 		$reporter = $db->fetchOne($sql);
@@ -435,7 +482,7 @@ function createTestData()
 		if ($args['item_status']==5 or $args['item_status']==6) {
 			$args['percent_complete'] = rand(4,9)*10;
 		}
-		
+
 		/**
 		 * @todo 'product_version'
 		 * @todo 'operating_system'
@@ -487,7 +534,7 @@ function createTestData()
 									$wd='__'.$wd.'__';
 								}
 							}
-							$clausepart.=$wd.' ';	
+							$clausepart.=$wd.' ';
 						}
 						$sent.=$clausepart;
 						$sent.=($c+1 < $dcommas) ? ', ': '.';
@@ -551,9 +598,10 @@ function createTestData()
 	$last=$now; $now=microtime(true); echo round($now-$last, 6).': '.$maxtasks." tasks created\n";
 
 	echo "Creating $maxcomments comments: \n";
-        $maxtask=$task_id;
+	$maxtaskid=$task_id;
+
 	for ($i = 1; $i <= $maxcomments; $i++) {
-		$taskid = rand(2, $maxtask);
+		$taskid = rand(($taskidoffset+1), $maxtaskid);
 		$task = Flyspray::getTaskDetails($taskid);
 		$project_id = $task['project_id'];
 		# XXX only allow comments after task created date and also later as existing comments in that task.
@@ -582,10 +630,10 @@ function createTestData()
 		$comment_id=Backend::add_comment($task, $comment);
 		$db->query('UPDATE {comments} SET user_id = ?, date_added = ? WHERE comment_id = ?',
 			array($reporter->id, $added, $comment_id));
-		
+
 		if ($i%500 == 0){
-                        echo $i.' mem:'.memory_get_usage()."\n";
-                }
+			echo $i.' mem:'.memory_get_usage()."\n";
+		}
 	} # end for maxcomments
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxcomments." comments created\n";
 
@@ -611,6 +659,7 @@ function createTestData()
 			$user_id, $date_added));
 	}
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '.$maxattachments." pseudo attachments created\n";
+
 	echo "\nTestdata filled in ".round($now-$start,1)." s.\n\n";
 	$db->dbClose();
 } // end function createTestData
@@ -728,16 +777,6 @@ function add_project_data($pid = 0)
 		" . join(',', $cols) . ")
 		VALUES ( " . $db->fill_placeholders($cols, 3) . ")", $args);
 
-	$db->query("INSERT INTO {list_category}
-		( project_id, category_name,
-		show_in_list, category_owner, lft, rgt)
-		VALUES ( ?, ?, 1, 0, 1, 4)", array($pid, 'root'));
-
-	$db->query("INSERT INTO {list_category}
-		( project_id, category_name,
-		show_in_list, category_owner, lft, rgt )
-		VALUES ( ?, ?, 1, 0, 2, 3)", array($pid, 'Backend / Core'));
-
 	$os = 1;
 	$db->query("INSERT INTO {list_os}
 		( project_id, os_name, list_position, show_in_list )
@@ -754,3 +793,17 @@ function add_project_data($pid = 0)
 		);
 	}
 } # end function add_project_data
+
+function add_categories($projectid, $quantity)
+{
+	global $db, $RANDOP;
+	echo 'add '.$quantity.' categories for project '.$projectid.":\n";
+	$ctree=new Flyspray\CategoriesNestedSetDB($db,$projectid);
+	for ($i=0; $i<$quantity; $i++) {
+		$catsql = $db->query("SELECT category_id FROM {list_category} WHERE project_id=? ORDER BY $RANDOP LIMIT 1", array($projectid));
+		$parentnodeid=$db->fetchOne($catsql);
+		$newcatid=$ctree->addChildNode($parentnodeid, 'parent'.$parentnodeid, true);
+		#echo $newcatid.' inserted into parent category '.$parentnodeid." of project $projectid\n";
+	}
+	echo $quantity.' categories for project '.$projectid." added\n";
+}
