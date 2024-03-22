@@ -105,14 +105,14 @@ switch ($area = Req::val('area', 'prefs')) {
 			} elseif (isset($_GET['status']) && $_GET['status']==='0') {
 				$listopts['status']=0;
 			}
-			
+
 			if (isset($_GET['namesearch']) && is_string($_GET['namesearch']) && $_GET['namesearch'] != '') {
 				$listopts['namesearch'] = '%'.$_GET['namesearch'].'%';
 				$namesearch=$_GET['namesearch'];
-			} else { 
+			} else {
 				$namesearch=false;
 			}
-			
+
 			if (isset($_GET['mailsearch']) && is_string($_GET['mailsearch']) && $_GET['mailsearch'] != '') {
 				$listopts['mailsearch'] = '%'.$_GET['mailsearch'].'%';
 				$mailsearch=$_GET['mailsearch'];
@@ -136,7 +136,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('usercount', $users['count']);
 			$page->uses('showstats', 'showltf', 'perpage', 'pagenum', 'offset', 'namesearch', 'mailsearch');
 		}
-		
+
 	case 'cat':
 	case 'groups':
 	case 'newuser':
@@ -270,12 +270,12 @@ switch ($area = Req::val('area', 'prefs')) {
                 * $db and $page are passed by reference for these category checks.
                 * $page will be modified, $db only be used for SELECT queries.
                 */
-                require_once(BASEDIR .'/includes/CategoriesNestedSetChecks.php');
-                CategoriesNestedSetChecks::checkOverlapped($db, $page);
-                CategoriesNestedSetChecks::checkFlipped($db, $page);
-                CategoriesNestedSetChecks::checkLftRgtUnique($db, $page);
-                CategoriesNestedSetChecks::checkTasks($db, $page);
-                CategoriesNestedSetChecks::drawGraphs($db, $page);
+		require_once(BASEDIR .'/includes/CategoriesNestedSetChecks.php');
+		Flyspray\CategoriesNestedSetDBChecks::checkOverlapped($db, $page);
+		Flyspray\CategoriesNestedSetDBChecks::checkFlipped($db, $page);
+		Flyspray\CategoriesNestedSetDBChecks::checkLftRgtUnique($db, $page);
+		Flyspray\CategoriesNestedSetDBChecks::checkTasks($db, $page);
+		Flyspray\CategoriesNestedSetDBChecks::drawGraphs($db, $page);
 
 		$sinfo=$db->dblink->serverInfo();
 		if( ($db->dbtype=='mysqli' || $db->dbtype=='mysql') && isset($sinfo['version'])) {
