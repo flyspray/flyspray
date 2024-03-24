@@ -231,8 +231,8 @@ function createTestData()
 	$last=$now; $now=microtime(true); echo round($now-$last,6).': '."3 global user groups created\n";
 
 	for ($i = 0; $i < $maxdevelopers; $i++) {
-		$user_name = "dev$i";
-		$real_name = "Developer $i";
+		$user_name = 'dev'.$i.'_'.$timestamp;
+		$real_name = 'Developer '.$i.' '.$timestamp;
 		$password = $user_name;
 		$time_zone = 0;
 		$email = null; // $user_name . '@example.com';
@@ -242,8 +242,8 @@ function createTestData()
 		} else{
 			$registered = $prevuserreg + rand(0, 0.9*2*$timerange/$maxdevelopers); # 0.9 to be sure not in future
                 }
-		if (Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, array_rand($devgroups), 1)) {
-			$db->query('UPDATE {users} SET register_date = ? WHERE user_name = ?', array($registered, $username));
+		if (Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $devgroups[array_rand($devgroups)], 1)) {
+			$db->query('UPDATE {users} SET register_date = ? WHERE user_name = ?', array($registered, $user_name));
 			$prevuserreg=$registered;
 		}
 	}
