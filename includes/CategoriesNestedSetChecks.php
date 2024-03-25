@@ -378,24 +378,30 @@ class CategoriesNestedSetDBChecks
 			}
 		}
 
-
+		/** used abbreviations for the self joins:
+		* c = category
+		* a = anchestors
+		* d = descendants
+		* da = anchestors of descendants
+		*/
 		$sqlcattrees=$db->query("
-			SELECT cat.project_id, cat.category_id, cat.category_name, cat.lft, cat.rgt, cat.level, (1+MAX(childs.childlevel)-cat.level) AS height
+			SELECT cat.project_id, cat.category_id, cat.category_name, cat.lft, cat.rgt, cat.level,
+			COALESCE(MAX(descendants.level), cat.level) AS depth,
+			(1+COALESCE(MAX(descendants.level), cat.level)-cat.level) AS height
 			FROM (
-				SELECT c.project_id, c.category_id, c.category_name, c.lft, c.rgt, COUNT(parent.category_id) AS level
+				SELECT c.project_id, c.category_id, c.category_name, c.lft, c.rgt, COUNT(a.category_id) level
 				FROM {list_category} c
-				LEFT JOIN {list_category} parent ON parent.project_id=c.project_id AND c.lft>parent.lft AND c.rgt<parent.rgt
+				LEFT JOIN {list_category} a ON c.project_id=a.project_id AND a.lft<c.lft AND a.rgt>c.lft
 				GROUP BY c.category_id
 			) cat
 			LEFT JOIN (
-				SELECT c1.project_id, c1.category_id,c1.category_name,c1.lft,c1.rgt, COUNT(c2.category_id) AS childlevel
-				FROM {list_category} c1
-				LEFT JOIN {list_category} c2 ON c2.project_id=c1.project_id AND c1.lft>c2.lft AND c1.rgt<c2.rgt
-				GROUP BY c1.category_id
-			) childs ON childs.project_id=cat.project_id AND childs.lft>cat.lft AND childs.rgt<cat.rgt
-			GROUP BY cat.category_id
-			ORDER BY cat.project_id,cat.lft");
-
+				SELECT c.project_id, c.category_id, c.lft, c.rgt, COUNT(da.category_id) AS level
+				FROM {list_category} c
+				LEFT JOIN {list_category} da ON c.project_id=da.project_id AND da.lft<c.lft AND da.rgt>c.rgt
+				GROUP BY c.category_id
+			) descendants ON descendants.project_id=cat.project_id AND descendants.lft>cat.lft AND descendants.rgt<cat.rgt
+			GROUP BY cat.project_id, cat.category_id, cat.category_name, cat.lft, cat.rgt, cat.level
+			ORDER BY cat.project_id, cat.lft");
 
 		while ($t = $db->fetchRow($sqlcattrees)) {
 			if ($lastprojectid != $t['project_id']) {
