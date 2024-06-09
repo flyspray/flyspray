@@ -2489,12 +2489,13 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
-        if (!is_array(Post::val('related_id'))) {
+        if (!isset($_POST['related_id']) or !is_array($_POST['related_id'])) {
             Flyspray::show_error(L('formnotcomplete'));
             break;
         }
+        $listremoverelated = array_filter($_POST['related_id'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
 
-        foreach (Post::val('related_id') as $related) {
+        foreach ($listremoverelated as $related) {
             $sql = $db->query('SELECT this_task, related_task FROM {related} WHERE related_id = ?',
                               array($related));
             $db->query('DELETE FROM {related} WHERE related_id = ? AND (this_task = ? OR related_task = ?)',
