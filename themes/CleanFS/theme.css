@@ -923,6 +923,7 @@ max-width:40em;
 #comments h4 {margin:1em 0 0.5em 0;}
 .userlist th {background-color: #e0e0e0;}
 .userlist tbody tr:nth-child(2n) td {background-color: #f1f1f1;}
+.userlist.history a img {vertical-align:middle;height:20px;}
 #related .related {display:inline-block;vertical-align:top;margin-right: 0;}
 #submenu {margin-bottom: 0;height: 25px;}
 #submenu a {
