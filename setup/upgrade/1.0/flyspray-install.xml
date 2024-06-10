@@ -1364,7 +1364,7 @@
     <query>INSERT INTO prefs VALUES (DEFAULT, 'active_oauths', '');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'only_oauth_reg', '0');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'enable_avatars', '1');</query>
-    <query>INSERT INTO prefs VALUES (DEFAULT, 'max_avatar_size', '50');</query>
+    <query>INSERT INTO prefs VALUES (DEFAULT, 'max_avatar_size', '320');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_order_by', 'id');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'default_order_by_dir', 'desc');</query>
     <query>INSERT INTO prefs VALUES (DEFAULT, 'url_rewriting', '0');</query>

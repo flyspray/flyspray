@@ -1469,6 +1469,15 @@ switch ($action = Req::val('action'))
 		$_POST['default_order_by']=$_POST['default_order_by'].' '.$_POST['default_order_by_dir'];
 	}
 
+		$fstpl_tmp = new FSTpl();
+		$avatar_sizes = $fstpl_tmp->get_avatar_sizes();
+
+		if (!array_key_exists('max_avatar_size', $_POST)) {
+			$_POST['max_avatar_size'] = (string) 320;
+		}
+		else {
+			$_POST['max_avatar_size'] = (string) $fstpl_tmp->get_nearest_avatar_size($_POST['max_avatar_size']);
+		}
 
         foreach ($settings as $setting) {
             $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?',

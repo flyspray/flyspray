@@ -120,6 +120,7 @@ class Tpl
 class FSTpl extends Tpl
 {
     public $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
+	protected $_avatar_sizes = [ 128, 144, 192, 240, 256, 288, 320, 360, 384, 480, 512, 576, 640, 720, 800, 1024 ];
 
     public function get_image($name, $base = true)
 	{
@@ -141,6 +142,35 @@ class FSTpl extends Tpl
         return '';
     }
 
+	function get_avatar_sizes()
+	{
+		return $this->_avatar_sizes;
+	}
+
+	function get_nearest_avatar_size($size)
+	{
+		$size = (int) $size;
+		$sizes = $this->_avatar_sizes;
+		sort($sizes);
+		$max = end($sizes);
+		$min = reset($sizes);
+
+		if ($size < $min) {
+			return $min;
+		}
+
+		if ($size > $max) {
+			return $max;
+		}
+
+		foreach ($sizes as $s) {
+			if ($s >= $size) {
+				return $s;
+			}
+		}
+
+		return end($sizes);
+	}
 }
 
 /**
@@ -623,6 +653,28 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
     $page->assign('value', $value);
     $page->assign('attrs', $attrs);
     $page->display('common.userselect.tpl');
+}
+
+/**
+ * Creates the options for avatar sizes
+ *
+ * @selected The value that should by selected by default
+ * @return html formatted options for a select tag
+**/
+function tpl_avatar_sizes($selected)
+{
+	$fstpl_tmp = new FSTpl();
+	$avatar_sizes = $fstpl_tmp->get_avatar_sizes();
+	sort($avatar_sizes);
+
+	$size_list = [];
+
+	// Required by tpl_options() behavior
+	foreach ($avatar_sizes as $size) {
+		$size_list[$size] = $size;
+	}
+
+	return tpl_options($size_list, $selected);
 }
 
 /**
