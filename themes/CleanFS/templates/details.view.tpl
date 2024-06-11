@@ -401,7 +401,7 @@ function quick_edit(elem, id)
 			<?php foreach ($assigned_users as $userid): ?>
 				<?php if($fs->prefs['enable_avatars'] == 1): ?>
 				<tr>
-					<td><?php echo tpl_userlinkavatar($userid, $fs->prefs['max_avatar_size'] / 2); ?></td>
+					<td><?php echo tpl_userlinkavatar($userid, 24); ?></td>
 					<td><?php echo tpl_userlink($userid); ?></td>
 				</tr>
 				<?php else: ?>
