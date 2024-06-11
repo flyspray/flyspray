@@ -61,12 +61,24 @@ if ($proj->prefs['use_tags']) {
 		array($proj->id)
 	);
 	$taglist=$db->fetchAllArray($restaglist);
-	
 }
 $page->assign('taglist', $taglist);
 
 $page->assign('userlist', $userlist);
 $page->assign('old_assigned', '');
+
+$addanothertask = 0;
+
+if (!$user->isAnon() && array_key_exists('addanothertask', $_SESSION) && $_SESSION['addanothertask'] == 1) {
+	$addanothertask = 1;
+}
+
+// Clear the "addanothertask" flag here so it can't linger in the session
+if (array_key_exists('addanothertask', $_SESSION)) {
+	unset($_SESSION['addanothertask']);
+}
+
+$page->assign('addanothertask', $addanothertask);
 $page->pushTpl('newtask.tpl');
 
 ?>
