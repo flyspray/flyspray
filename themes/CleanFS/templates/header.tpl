@@ -31,7 +31,11 @@ if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match( '/Android [23]\.\d|Android 
 <link rel="stylesheet" type="text/css" media="screen" href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/oldwebkitsiblingfix.css'; ?>" />
 <?php endif; ?>
 <link media="print" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'theme_print.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>theme_print.css" rel="stylesheet" type="text/css" />
-<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/fontawesome.min.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/v4-font-face.min.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/regular.min.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/brands.min.css" rel="stylesheet" type="text/css" />
+<link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/solid.min.css" rel="stylesheet" type="text/css" />
 <?php 
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
