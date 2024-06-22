@@ -66,6 +66,19 @@ function showhidestuff(boxid) {
 	break;
    }
 }
+
+function showhidestuff_c(c) {
+    var els = $$('.' + c);
+	for (var i of els) {
+		if (i.visible()) {
+			i.hide();
+		}
+		else {
+			i.show();
+		}
+	}
+}
+
 function setUpTasklistTable() {
   if (!$('tasklist_table')) {
     // No tasklist on the page
