@@ -68,6 +68,7 @@ if (($do === 'details' or $do === 'newtask') && $proj->prefs['use_tags']): ?>
 <?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
 <link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'adminpm.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>adminpm.css"></link>
+<script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/adminpm.js"></script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
