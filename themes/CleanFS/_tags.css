@@ -12,8 +12,8 @@ Your customized tags.css will stay untouched during Flyspray upgrades and reflec
 .tag.temail, t3 {background-color:#009;color:#fff;}
 
 /* some public icons */
-.tag:before {font-family:fontawesome;}
-.tag.tphone:before {content:'\f098';}
-.tag.tfax:before {content:'\f1ac';}
-.tag.temail:before {content:'\f0e0';}
+.tag:before {font-family:"Font Awesome 6 Free";font-weight: 900;}
+.tag.tphone:before {content:'\f098';} /* fa-phone-square */
+.tag.tfax:before {content:'\f1ac';} /* fa-fax */
+.tag.temail:before {content:'\f0e0';} /* fa-envelope */
 .tag.tphone:after, .tag.tphone:after {content:'';} /* hide the title again */

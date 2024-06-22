@@ -44,7 +44,8 @@ tr .pri1:before, tr .pri2:before, tr .pri3:before, tr .pri4:before, tr .pri5:bef
   border-bottom: #ccc dotted 1px;
   bottom: 0;
   box-sizing: border-box;
-  font-family: fontawesome;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
   position: absolute;
   visibility: visible;
   width: 100%;
@@ -64,6 +65,6 @@ tr .sev5:before {content:"\f0e7";color:#600;} /*fa-bolt*/
 
 tr .pri1:before {content:"\f236";color:#ccc;} /*fa-bed*/
 tr .pri2:before {content:"";color:#ccc;}
-tr .pri3:before {content:"\f04b";color:#f90;font-size:10px;} /*fa-forward*/
-tr .pri4:before {content:"\f04b\f04b";color:#c60;font-size:10px;} /*fa-forward*/
-tr .pri5:before {content:"\f04b\f04b\f04b";color:#900;font-size:10px;} /*fa-forward*/
+tr .pri3:before {content:"\f04b";color:#f90;font-size:10px;} /*fa-play*/
+tr .pri4:before {content:"\f04b\f04b";color:#c60;font-size:10px;} /*fa-play (2)*/
+tr .pri5:before {content:"\f04b\f04b\f04b";color:#900;font-size:10px;} /*fa-play (3)*/

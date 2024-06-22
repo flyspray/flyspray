@@ -112,7 +112,10 @@ input.collapsestatus:checked + .col .task {display:none;}
 .typ4,
 .typ5,
 .typ6 {
-	font-family:fontawesome;
+	font-family:"Font Awesome 6 Free";
+	font-variant: normal;
+	font-weight: 900;
+	font-style: normal;
 }
 
 /* demo coloring for some basic kanban volumns */
