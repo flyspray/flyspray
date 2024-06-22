@@ -551,8 +551,12 @@ class Doku_Renderer_xhtml extends Doku_Renderer
 
         if ( !$isImage ) {
             $class='urlextern';
+            $before_children = '';
+            $after_children = ' <span class="fas fa-arrow-up-right-from-square"></span>';
         } else {
             $class='media';
+            $before_children = '';
+            $after_children = '';
         }
 
         //prepare for formating
@@ -563,6 +567,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer
         $link['more']   = '';
         $link['class']  = $class;
         $link['url']    = $url;
+        $link['before_children'] = $before_children;
+        $link['after_children'] = $after_children;
 
         $link['name']   = $name;
         $link['title']  = $this->_xmlEntities($url);
@@ -953,7 +959,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer
         if(!empty($link['style']))  $ret .= ' style="'.$link['style'].'"';
         if(!empty($link['more']))   $ret .= ' '.$link['more'];
         $ret .= '>';
+        if(!empty($link['before_children']))   $ret .= $link['before_children'];
         $ret .= $link['name'];
+        if(!empty($link['after_children']))   $ret .= $link['after_children'];
         $ret .= '</a>';
         $ret .= $link['suf'];
         return $ret;

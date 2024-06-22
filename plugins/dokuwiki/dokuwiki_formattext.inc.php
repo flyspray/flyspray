@@ -130,7 +130,7 @@ class dokuwiki_TextFormatter
 
 		$out.='<a tabindex="-1" title="'.eL('editorunorderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  * \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ul fa-lg"></i></a>';
 		$out.='<a tabindex="-1" title="'.eL('editororderedli').'" href="javascript:void(0);" onclick="replaceText(\'\n  - \', \''.$textareaId.'\'); return false;"><i class="fa fa-list-ol fa-lg"></i></a>';
-		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><hr class="editorhr"/></a>';
+		$out.='<a tabindex="-1" title="'.eL('editorhorizontalrule').'" href="javascript:void(0);" onclick="replaceText(\'----\', \''.$textareaId.'\'); return false;"><i class="editorhr fa fa-minus fa-2x"></i></a>';
 		#$out.='<span class="divider"></span>';
 		$out.='<a tabindex="-1" title="'.eL('editorlink').'" href="javascript:void(0);" onclick="surroundText(\'[[https://\', \']]\', \''.$textareaId.'\'); return false;"><i class="fa fa-link fa-lg"></i></a>';
 

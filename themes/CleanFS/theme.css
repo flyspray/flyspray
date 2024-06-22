@@ -698,7 +698,7 @@ div#fineprint {
 	text-align:center;
 	border-radius:3px;
 	background-color:transparent;
-	border:1px solid transparent;
+	border:1px solid #e1e1e1;
 	vertical-align:bottom;
 	color:#555;
 }
