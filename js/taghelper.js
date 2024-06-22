@@ -9,14 +9,14 @@ function taghelperevents() {
 
 	tags.addEventListener('change', renderTags);
 
-	var availtags=document.querySelectorAll('#availtaglist i');
+	var availtags=document.querySelectorAll('#availtaglist > span.tag');
 	if (availtags) {
 		var atcount=availtags.length;
 		for (let i = 0; i < atcount; i++) {
 			availtags[i].addEventListener('click', addTag);
 		}
 	}
-	var addedtags = document.querySelector('#tagrender i');
+	var addedtags = document.querySelector('#tagrender span');
 	if (addedtags) {
 		var addcount = addedtags.length;
 		for (let j = 0; j < addcount; j++) {
@@ -42,10 +42,10 @@ function renderTags(event) {
 
 	for (tag of taglist) {
 		if (tag!='') {
-			var newtag = document.createElement('i');
+			var newtag = document.createElement('span');
 			newtag.setAttribute('title', tag);
 			newtag.setAttribute('class', 'tag');
-			newtag.content='X';
+			newtag.textContent=tag;
 			// todo: get tagid, and class/style info from available tag list
 			var addedtag=tagrenderarea.appendChild(newtag);
 			addedtag.addEventListener('click', removeTag);
@@ -65,7 +65,7 @@ function addTag(event) {
 		// exists
 		return false;
 	} else {
-		if (tags !='') {                        
+		if (tags !='') {
 			document.getElementById('tags').value += ';' + event.target.getAttribute('title');
 		} else {
 			document.getElementById('tags').value += event.target.getAttribute('title');

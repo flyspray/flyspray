@@ -448,47 +448,129 @@ function tpl_tag($id, $showid=false, $added=null, $addedby=null)
 	}
 
 	if(isset($alltags[$id])){
-		$out='<i class="tag t'.$id;
-		if( isset($alltags[$id]['class']) && preg_match('/^#([0-9a-f]{3}){1,2}$/i', $alltags[$id]['class']) ) {
-			$out.= '" style="background-color:'.$alltags[$id]['class'];
-			# max only calc once per tag per request
-			# assumes theme css of default tag font color is #000
-			if(!isset($alltags[$id]['fcolor'])){
-				$bg = hex2RGB($alltags[$id]['class']);
-				# from https://www.w3.org/TR/AERT/#color-contrast
-				$brightness=(299*$bg['r'] + 587*$bg['g'] + 114*$bg['b']) / 1000;
-				if($brightness<126){
-					$out.=';color:#fff';
-					$alltags[$id]['fcolor']='#fff';
-				}else{
-					$alltags[$id]['fcolor']='';
-				}
-			} else if( $alltags[$id]['fcolor']==='#fff'){
-				$out.=';color:#fff';
-			}
-			$out.='"';
+		$tag = &$alltags[$id];
+		$tag_class = $tag['class'];
+		$tag_icon = null;
+		$tag_bgcolor = null;
+
+		if (array_key_exists('icon', $tag)) {
+			$tag_icon = $tag['icon'];
 		} else {
-			$out.= (isset($alltags[$id]['class']) ? ' '.htmlspecialchars($alltags[$id]['class'], ENT_QUOTES, 'utf-8') : '').'"';
+			$icon_match = [];
+			$tag_has_icon = preg_match('/\b(fa-[\w-]+)\b/i', $tag_class, $icon_match);
+
+			if ($tag_has_icon == 1) {
+				if (array_key_exists(1, $icon_match)) {
+					$tag_icon = $icon_match[1];
+					$tag['icon'] = $tag_icon;
+				}
+			}
+		}
+
+		if (array_key_exists('bgcolor', $alltags[$id])) {
+			$tag_bgcolor = $alltags[$id]['bgcolor'];
+		} else {
+			$bgcolor_match = [];
+			$tag_has_bgcolor = preg_match('/(#([0-9a-f]{3}|[0-9a-f]{6})\b)/i', $tag_class, $bgcolor_match);
+
+			if ($tag_has_bgcolor == 1) {
+				if (array_key_exists(1, $bgcolor_match)) {
+					$tag_bgcolor = $bgcolor_match[1];
+					$tag['bgcolor'] = $tag_bgcolor;
+				}
+			}
+		}
+
+		$tag_style = [];
+		$tag_classes = ['tag', 't' . $id];
+
+		if (array_key_exists('bgcolor', $tag)) {
+			$tag_style['background-color'] = $tag['bgcolor'];
+		}
+
+		if (array_key_exists('fcolor', $tag) && $tag['fcolor'] != '') {
+			$tag_style['color'] = $tag['fcolor'];
+		}
+
+		if (array_key_exists('background-color', $tag_style) && !array_key_exists('color', $tag_style)) {
+			$bg = hex2RGB($alltags[$id]['bgcolor']);
+			# from https://www.w3.org/TR/AERT/#color-contrast
+			$brightness=(299*$bg['r'] + 587*$bg['g'] + 114*$bg['b']) / 1000;
+
+			if ($brightness < 126) {
+				$tag['fcolor'] = '#fff';
+				$tag_style['color'] = $tag['fcolor'];
+			}
+		}
+
+		// strip all colors from class
+		$tag_class = preg_replace('/#([0-9a-f]{3}|[0-9a-f]{6})\b/i', '', $tag_class);
+
+		// strip all fa classes from classes
+		$tag_class = preg_replace('/\bfa-[\w_-]+/i', '', $tag_class);
+
+		trim($tag_class);
+		$tag_class = preg_replace('/\s+/', ' ', $tag_class);
+		$tag_class = explode(' ', $tag_class);
+
+
+		if (count($tag_class) > 0) {
+			$tag_classes = array_merge($tag_classes, $tag_class);
+		}
+
+		$tag_classes = array_filter($tag_classes);
+		array_unique($tag_classes);
+
+		$out='<span';
+
+		if (count($tag_classes) > 0) {
+			$out .= ' class="' . implode(' ', $tag_classes) . '"';
+		}
+
+		if (count($tag_style) > 0) {
+			$out .= ' style="';
+
+			foreach ($tag_style as $prop => $val) {
+				$out .= $prop . ': ' . $val . ';';
+			}
+
+			$out .= '"';
 		}
 
 		if (is_null($added) && is_null($addedby)) {
 			if ($showid) {
-				$out.='>'.$id.'</i>';
+				$out.= ' title="' . $id . '"';
 			} else {
-				$out.=' title="'.htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8').'"></i>';
+				$out.=' title="' . htmlspecialchars($tag['tag_name'], ENT_QUOTES, 'utf-8') . '"';
 			}
+		}
+
+		$out .= '>';
+
+		if (array_key_exists('icon', $tag)) {
+			$out .= '<span class="fas ' . $tag['icon'] . '" style="color: inherit;"></span> ';
+		}
+
+		if ($showid) {
+			$out .= $id;
 		} else {
+			$out .= htmlspecialchars($tag['tag_name'], ENT_QUOTES, 'utf-8');
+		}
+
+		if (!is_null($added) || !is_null($addedby)) {
 			# task details view contains more details
-			$out .= '>';
-			$out .= htmlspecialchars($alltags[$id]['tag_name'], ENT_QUOTES, 'utf-8');
+			$out .= '<span class="tag-credit">';
 			if ($added>0) {
 				$out .= '<span class="added">'.formatDate($added).'</span>';
 			}
 			if ($addedby>0) {
 				$out .= '<span class="addedby">'.tpl_userlink($addedby).'</span>';
 			}
-			$out .= '</i>';
+			$out .= '</span>';
 		}
+
+		$out .= '</span>';
+
 		return $out;
 	}
 }

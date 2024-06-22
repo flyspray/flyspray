@@ -845,16 +845,22 @@ max-width:40em;
 .details .tag {
 	position:relative;
 }
-.details .tag .tag-credit { display:none; position:absolute; z-index:100;left:0;top:1.5em;background: #f9f9f9; color: #000;white-space: nowrap;border:1px solid #e1e1e1;border-radius: 3px;padding: .2em .5em;}
+.details .tag .tag-credit {
+	display:none;
+	position:absolute;
+	z-index:100;
+	left:0;
+	top:1.5em;
+	background: #f9f9f9;
+	color: #000;
+	white-space: nowrap;
+	border:1px solid #e1e1e1;
+	border-radius: 3px;
+	padding: .2em .5em;
+}
 .details .tag .tag-credit > * { display: inline-block;}
-.details .tag span.added { margin-right: 1em;/*display:none; position:absolute; left:0;top:1.2em;color: #000;*/}
-.details .tag span.addedby {/*display:none; position:absolute; left:0;top:2.2em;*/}
+.details .tag span.added { margin-right: 1em;}
 .details .tag:hover .tag-credit {display: block;}
-/*.details .tag:hover span.added {display:block;}*/
-/*.details .tag:hover span.addedby {display:block;}*/
-
-/* .tag:before {font-family:"Font Awesome 6 Free"; padding-right:3px;} */
-/*.tag:after {content:attr(title);}*/
 /* style your tags by their tag_id, may be managed by tag list management in admin/project settings */
 /*
 .tag.t1{background-color:#666;}

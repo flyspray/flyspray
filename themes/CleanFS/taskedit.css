@@ -21,28 +21,29 @@ label#availtagshide {display:none;}
 	display:none;
 	background-color:#eee;
 }
-#availtaglist i.tag {
+#availtaglist span.tag {
 	cursor:pointer;
 	display:inline-block;
 	margin:0.3em;
 	border:1px solid transparent;
 }
 
-#availtaglist i.tag::before {
-	content: '+';
+#availtaglist span.tag::after {
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	content: '\f0fe';
 	border-radius:3px;
-	padding-top:0;
+	padding-top:0.1em;
 	padding-bottom:0.2em;
-	padding-left:0.4em;
-	padding-right:0.4em;
+	padding-left:0.3em;
+	padding-right:0.3em;
 	vertical-align:text-bottom;
-	margin-right:0.2em;
-	opacity:0.5;
-	color:rgba(0,0,0,0.5);
+	margin-left:0.5em;
+	opacity:0.75;
+	color: #090;
+	background: #fff;
 }
-#availtaglist i.tag:hover::before {
-	background-color:#fff;
-	color:#000;
+#availtaglist span.tag:hover::after {
 	opacity:1;
 }
 input#availtags:checked ~ #availtaglist {
@@ -54,12 +55,26 @@ input#availtags:checked ~ #availtaglist {
 	margin:0.2em;
 	border:1px solid transparent;
 }
+#tagrender .tag::after {
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	content: '\f2d3';
+	border-radius:3px;
+	padding-top:0.1em;
+	padding-bottom:0.2em;
+	padding-left:0.3em;
+	padding-right:0.3em;
+	vertical-align:text-bottom;
+	margin-left:0.5em;
+	opacity:0.75;
+	color: #900;
+	background: #fff;
+
+}
 #tagrender .tag:hover {
-	border-color:rgba(200,0,0,1);
+	border-color:#900;
+	color: #900;
 }
 #tagrender .tag:hover::after {
-	background-color:rgba(200,0,0,1);
-}
-#tagrender .tag::after {
-	content: attr(title)' x';
+	opacity: 1;
 }
