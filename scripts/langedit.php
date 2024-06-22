@@ -111,7 +111,7 @@ if(!file_exists($lang.'.php') && !file_exists('.'.$lang.'.php.work')) {
 	}
 
 	if(!is_array(@$translation)){
-		echo "<b>Warning: </b>the translation file does not contain the \$translation array, a new file will be created: <code>$lang.php</code>\n";
+		echo "<strong>Warning: </strong>the translation file does not contain the \$translation array, a new file will be created: <code>$lang.php</code>\n";
 	}
 }
 
@@ -148,24 +148,36 @@ if(isset($_POST['confirm'])) {
 }
 
 // One form for all buttons and inputs
-echo '<a class="button" href="?do=langdiff">Overview</a>';
+echo "<h3>Translate " . $lang . "</h3>\n";
+echo '<div><a class="button" href="?do=langdiff">Overview</a></div>';
 echo "<form action=\"$self&do=langedit&begin=$begin". ($show_empty? "&empty=": "") . "\" method=\"post\">\n";
-echo "<table cellspacing=0 cellpadding=1>\n<tr><td colspan=3>";
+echo "<div class=\"box\">\n";
+echo "<p>Total translations: $count (" . ceil($count / $limit) . " pages).</p>\n";
+
 // Make page links
+echo "<div class=\"pages\">\n";
+
+$pg = 0;
+
 for($p = 0; $p < $count; $p += $limit){
+	$pg++;
+
 	if($p){
 		echo " | ";
 	}
 	$bgn = $p+1;
 	$end = min($p+$limit, $count);
 	if($p != $begin || $search || $show_empty) {
-		echo "<a href=\"$self&begin=$bgn\">$bgn&hellip;$end</a>\n";  // Show all links when searching or display all missing strings
+		// Show all links when searching or display all missing strings
+		echo "<a href=\"$self&begin=$bgn\">" . ($pg) . "</a>\n";
 	} else {
-		echo "<b>$bgn&hellip;$end</b>\n";
+		echo "<strong>" . ($pg) . "</strong>\n";
 	}
 }
 ?>
-</td><td>
+</div>
+</div>
+<div class="box">
 <input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
 <input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''; ?> title="Confirm all changes and replace the original language file">
 <br>
@@ -180,8 +192,18 @@ if($lang != 'en') {
   echo '<input type="submit" name="empty" value="Show missing" title="Show all texts that have no translation">';
 }
 ?>
-</td></tr>
-<tr><th colspan=2>Key</th><th>English</th><th>Translation:<?php echo $lang; ?></th></tr>
+
+
+</div>
+<div class="box">
+<table>
+<thead>
+<tr>
+	<th colspan="2">Key</th>
+	<th>English</th>
+	<th>Translation:<?php echo $lang; ?></th>
+</tr>
+</thead>
 <?php
 $i = 0;  // Counter to find offset
 $j = 0;  // Counter for background shading
@@ -232,6 +254,7 @@ Syntax for <b>\</b> is <b>\\</b> and for line feed type <b>\\n</b> in single lin
 <td style="text-align: right;"><i>langedit by <a href="mailto:larserik@softpoint.nu">larserik@softpoint.nu</a></i></td>
 </tr>
 </table>
+</div>
 <?php
 
 $content = ob_get_contents();

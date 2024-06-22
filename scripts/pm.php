@@ -16,7 +16,10 @@ if (!$user->perms('manage_project') || !$proj->id) {
     Flyspray::show_error(16);
 }
 
-switch ($area = Req::val('area', 'prefs')) {
+$area = Req::val('area', 'prefs');
+$page->uses('area');
+
+switch ($area) {
     case 'pendingreq':
         $sql = $db->query("SELECT  *
                              FROM  {admin_requests} ar
@@ -49,10 +52,8 @@ switch ($area = Req::val('area', 'prefs')) {
     case 'cat':
     case 'status':
     case 'newgroup':
-
         $page->setTitle($fs->prefs['page_title'] . L('pmtoolbox'));
-        $page->pushTpl('pm.menu.tpl');
-        $page->pushTpl('pm.'.$area.'.tpl');
+        $page->pushTpl('pm.tpl');
         break;
 
     default:

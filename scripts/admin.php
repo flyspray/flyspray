@@ -19,7 +19,7 @@ if (!$user->perms('is_admin')) {
 
 $proj = new Project(0);
 
-$page->pushTpl('admin.menu.tpl');
+$page->pushTpl('admin.tpl');
 
 /**
  * @param string $colname user column, use the string used also for translations, so use 'emailaddress' instead of user db field 'email_address'.
@@ -57,7 +57,10 @@ function tpl_userlistheading($colname)
 	return $html;
 }
 
-switch ($area = Req::val('area', 'prefs')) {
+$area = Req::val('area', 'prefs');
+$page->uses('area');
+
+switch ($area) {
 	case 'users':
 		$id = Flyspray::usernameToId(Req::val('user_name'));
 		if (!$id) {
@@ -105,14 +108,14 @@ switch ($area = Req::val('area', 'prefs')) {
 			} elseif (isset($_GET['status']) && $_GET['status']==='0') {
 				$listopts['status']=0;
 			}
-			
+
 			if (isset($_GET['namesearch']) && is_string($_GET['namesearch']) && $_GET['namesearch'] != '') {
 				$listopts['namesearch'] = '%'.$_GET['namesearch'].'%';
 				$namesearch=$_GET['namesearch'];
-			} else { 
+			} else {
 				$namesearch=false;
 			}
-			
+
 			if (isset($_GET['mailsearch']) && is_string($_GET['mailsearch']) && $_GET['mailsearch'] != '') {
 				$listopts['mailsearch'] = '%'.$_GET['mailsearch'].'%';
 				$mailsearch=$_GET['mailsearch'];
@@ -136,7 +139,7 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('usercount', $users['count']);
 			$page->uses('showstats', 'showltf', 'perpage', 'pagenum', 'offset', 'namesearch', 'mailsearch');
 		}
-		
+
 	case 'cat':
 	case 'groups':
 	case 'newuser':
@@ -158,7 +161,6 @@ switch ($area = Req::val('area', 'prefs')) {
 	case 'version':
 	case 'newgroup':
 		$page->setTitle($fs->prefs['page_title'] . L('admintoolboxlong'));
-		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
 
 	case 'translations':
@@ -425,7 +427,6 @@ switch ($area = Req::val('area', 'prefs')) {
 			$page->assign('swiftmailerversion', Swift::VERSION);
 		}
 
-		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
 	default:
 		Flyspray::show_error(6);

@@ -1281,8 +1281,8 @@ function tpl_draw_perms($perms)
 	);
 
 	$yesno = array(
-		'<td class="bad fa fa-ban" title="'.eL('no').'"></td>',
-		'<td class="good fa fa-check" title="'.eL('yes').'"></td>'
+		'<td class="bad" title="'.eL('no').'"><span class="fas fa-ban"></span></td>',
+		'<td class="good" title="'.eL('yes').'"><span class="fas fa-check"></span></td>'
 	);
 
     # 20150307 peterdd: This a temporary hack

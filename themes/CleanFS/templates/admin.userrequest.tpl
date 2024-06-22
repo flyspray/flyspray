@@ -1,4 +1,4 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
   <h3><?php echo Filters::noXSS(L('pendingrequests')); ?></h3>
   
   <?php if (!count($pendings)): ?>

@@ -72,14 +72,10 @@ body a.button.positive, body button.positive,
 body a.button.positive, body button.positive, .pagenums .active {
 	color: #fff;
 }
-
-#disp_intro:not(:checked) ~ .disp_introdep{
-        background-color:#ddd;
-}
-#disp_intro:not(:checked) ~ .disp_introdep select,
-#disp_intro:not(:checked) ~ .disp_introdep textarea{
-        background-color:#eee;
-        color:#666;
+ul li.hide-intro, .disp_introdep.hide-intro {
+	display: none;
+	visibility: hidden;
+	margin: 0;
 }
 
 /*
@@ -598,18 +594,24 @@ td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a
 }
 td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_assignedto > a:hover::after {color:#000;background-color:rgba(255,255,255,0.9);}
 
+#pma_wrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	margin-bottom: 10px;
+	min-height: 550px
+}
 #toolbox {
-  margin: 10px 0px 10px 0px;
+  margin: 0px;
   padding: 10px;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
-  margin-left: 120px;
   min-height: 450px;
-  height: 1%; /* Fix for IE bug */
   padding: 20px;
+  flex: 1 1 auto;
 }
 #toolbox div.tab {
-  margin: 10px 0px 10px 0px;
+  margin: 0px 0px 10px 0px;
   padding: 10px;
   border: solid 1px #e1e1e1;
   border-radius: 3px;
@@ -619,20 +621,26 @@ td.task_openedby > a:hover::after, td.task_editedby > a:hover::after, td.task_as
   padding-bottom: 5px;
   border-bottom: 1px solid #ddd;
 }
-#toolboxmenu {position: relative;float: left;padding-top: 10px;}
+#toolboxmenu {
+  margin-right: -1px;
+  z-index: 1;
+}
 #toolboxmenu a {
   display: block;
   border: 1px solid #d4d4d4;
-  /*border-right: none; */
   padding: 1em 5px;
   margin-left: 10px;
   width: 100px;
-  text-align: center;
   background: #e5e5e5;
   color: #3c4041;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  margin-bottom: 2px;
 }
+#toolboxmenu a > span:first-child {
+	margin-right: .35em;
+}
+#toolboxmenu > a:first-child {margin-top: 10px;}
 #toolboxmenu a:hover {background-color: #d6d8d9; /*color: $inverse_link;*/ }
 #toolboxmenu a.active {
   margin-left: 0;
@@ -1223,7 +1231,6 @@ fieldset.advsearch_dates label {margin: 0 5px;}
 fieldset.advsearch_users .multisel {position: absolute;white-space: nowrap;}
 fieldset.advsearch_users input {margin-top: 1.5em;}
 /* --------------------------- FORMS -----------------------*/
-.bulkuser {padding-left: 120px;}
 
 .bulkedituser td.inactive{color:#888;}
 .account_header {background-color: #ddd;}
@@ -1633,6 +1640,40 @@ button.fakelinkbutton:visited {
 	.taskrange {padding-left:10px;}
 	div.comment_container .comment {width:98%;}
         div.comment_container .comment_header_infos {max-width: unset;}
+	#pma_wrapper {
+		flex-direction: column;
+	}
+	#pma_wrapper #toolboxmenu {
+		margin-right: 0;
+		margin-bottom: 10px;
+	}
+	#pma_wrapper #toolboxmenu a {
+		border-radius: 3px;
+		width: 2.5em;
+	}
+	#pma_wrapper #toolboxmenu a.active {
+		border-width: 2px 1px 1px 1px;
+		border-color: #78bf34 #78bf34 #78bf34 #78bf34;
+		border-right: 1px solid #78bf34;
+	}
+
+	#pma_wrapper #toolboxmenu a > span:first-child {
+		font-size: 2em;
+		margin-right: 0;
+	}
+	#pma_wrapper #toolboxmenu a > span:last-child {
+		display: none;
+		visibility: hidden;
+	}
+	#pma_wrapper #toolboxmenu > a:first-child {
+		margin-top: 0;
+	}
+
+	#pma_wrapper #toolbox {
+		border-radius: 3px 3px 3px 3px;
+		margin-bottom: 0;
+		padding: 10px 5px;
+	}
 }
 
 @media only screen and (max-width: 480px) and (orientation: portrait) {

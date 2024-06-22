@@ -1,4 +1,4 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
   <h3><?php echo Filters::noXSS(L('createnewproject')); ?></h3>
   <?php echo tpl_form(CreateURL('admin', 'newproject')); ?>
     <div>

@@ -1,12 +1,12 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
 <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?= eL('preferences') ?></h3>
 <?php echo tpl_form(createUrl('pm', 'prefs', $proj->id)); ?>
 <ul id="submenu">
-	<li><a href="#general"><?= eL('general') ?></a></li>
-	<li><a href="#lookandfeel"><?= eL('lookandfeel') ?></a></li>
-	<li><a href="#notifications"><?= eL('notifications') ?></a></li>
-	<li><a href="#feeds"><?= eL('feeds') ?></a></li>
-	<li><a href="#effort"><?= eL('efforttracking') ?></a></li>
+	<li><a href="#general"><span class="fas fa-sliders"></span><span><?= eL('general') ?></span></a></li>
+	<li><a href="#lookandfeel"><span class="fas fa-eye"></span><span><?= eL('lookandfeel') ?></span></a></li>
+	<li><a href="#notifications"><span class="fas fa-bell"></span><span><?= eL('notifications') ?></span></a></li>
+	<li><a href="#feeds"><span class="fas fa-rss"></span><span><?= eL('feeds') ?></span></a></li>
+	<li><a href="#effort"><span class="fas fa-hourglass-half"></span><span><?= eL('efforttracking') ?></span></a></li>
 </ul>
 
 <div id="general" class="tab">
@@ -21,14 +21,17 @@
 			<?php echo tpl_userselect('default_cat_owner', Post::val('default_cat_owner', $proj->prefs['default_cat_owner']), 'defaultcatowner'); ?>
 		</li>
 		<li>
-		<label for="langcode"><?= eL('language') ?></label>
+			<label for="langcode"><?= eL('language') ?></label>
 			<select id="langcode" name="lang_code">
 			<?php echo tpl_options(array_merge(array('global'), Flyspray::listLangs()), Post::val('lang_code', $proj->prefs['lang_code']), true); ?>
 			</select>
 		</li>     
-		<?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
-		<label for="disp_intro"><?= eL('dispintro') ?></label>
-		<li class="disp_introdep">
+		<li>
+			<?php echo tpl_checkbox('disp_intro', Post::val('disp_intro', $proj->prefs['disp_intro']), 'disp_intro'); ?>
+			<label for="disp_intro"><?= eL('dispintro') ?></label>
+		</li>
+		<li<?php echo ($proj->prefs['disp_intro'] == 1 ? '' : ' class="hide-intro"'); ?>>
+		<div class="disp_introdep<?php echo ($proj->prefs['disp_intro'] == 1 ? '' : ' hide-intro'); ?>">
 			<label class="labeltextarea" for="intromesg"><?= eL('intromessage') ?></label>
 			<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 			<div class="hide preview" id="preview"></div>
@@ -56,6 +59,7 @@
           $selectedPages = explode(' ', $proj->prefs['pages_intro_msg']);
           echo tpl_double_select('pages_intro_msg', $pages, $selectedPages, false, false);
         ?>
+		</div>
 		</li>
 		<li>
 			<label class="labeltextarea" for="default_task"><?= eL('defaulttask') ?></label>

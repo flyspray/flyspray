@@ -1,7 +1,7 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
 <h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?= eL('groupmanage') ?></h2>
-<?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo createURL('admin', 'newuser', $proj->id); ?>"><i class="fa fa-user-plus fa-lg fa-fw"></i> <?= eL('newuser') ?></a><?php endif; ?>
-<a class="button" href="<?php echo Filters::noXSS(createURL('pm', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?= eL('newgroup') ?></a>
+<?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo createURL('admin', 'newuser', $proj->id); ?>"><span class="fas fa-user-plus fa-lg fa-fw"></span> <?= eL('newuser') ?></a><?php endif; ?>
+<a class="button" href="<?php echo Filters::noXSS(createURL('pm', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a>
 
 <form style="display:inline-block" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 <label for="edit_user"><?= eL('edituser') ?></label>
@@ -44,9 +44,11 @@ $perm_fields = array(
 );
 
 $yesno = array(
-  '<td class="perm-no" title="'.eL('no').'">-</td>',
-  '<td class="perm-yes" title="'.eL('yes').'"><i class="good fa fa-check fa-lg"></i></td>'
+  '<td class="perm-no" title="'.eL('no').'"><span class="fas fa-ban fa-2x"></span></td>',
+  '<td class="perm-yes" title="'.eL('yes').'"><span class="good fas fa-check fa-2x"></span></td>'
 );
+
+require_once 'permicons.tpl';
 
 $merge = array_merge($groups, $globalgroups);
 
@@ -61,7 +63,7 @@ foreach ($merge as $group) {
 	if($group['project_id'] != 0) {
 		$gnames.='<td><a class="button" title="'.eL('editgroup').'" href="'.(createURL('editgroup', $group['group_id'], 'pm')).'">'
 		.Filters::noXSS($group['group_name'])
-		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
+		.'<span class="fas fa-pencil fa-lg fa-fw"></span></a></td>';
 	} else {
 		$gnames.='<th title="'.eL('globalgroup').'">'.Filters::noXSS($group['group_name']).'</th>';
 	}
@@ -95,14 +97,30 @@ foreach ($merge as $group) {
 <tbody>
 <?php foreach ($perm_fields as $p): ?>
 <tr<?php
+
+$perm_everybody = false;
+
+if (
+	(($p=='view_tasks' || $p=='view_groups_tasks' || $p=='view_own_tasks') && $proj->prefs['others_view'])
+	||
+	($p=='view_roadmap' && $proj->prefs['others_viewroadmap'])
+	||
+	($p=='open_new_tasks' && $proj->prefs['anon_open'])
+)
+{
+	$perm_everybody = true;
+}
+
 # TODO view_own_tasks
 echo (($p=='view_tasks' || $p=='view_groups_tasks' || $p=='view_own_tasks') && $proj->prefs['others_view']) ? ' class="everybody"':'';
 echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="everybody"':'';
 echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="everybody"':'';
 ?>>
-<th<?php echo ($p=='modify_own_tasks') ? ' title="Fields allowed to change: '.implode(', ', $proj->prefs['basic_fields']).'"':''; ?>><?php echo eL(str_replace('_', '', $p)); ?></th>
+<th>
+<?php echo ($p=='modify_own_tasks' ? '<span class="modify-own fas fa-user-pen fa-2x" title="' . eL('Fields allowed to change: ') . implode(', ', $proj->prefs['basic_fields']) . '"></span>' : ''); ?>
+<?php echo ($perm_everybody ? '<span class="everybody fas fa-circle-exclamation fa-2x" title="' . eL('Allowed for everybody - project setting overrules this group setting!') . '"></span> ' : ''); ?><?php echo eL(str_replace('_', '', $p)); ?>
+</th>
 <?php
-require_once 'permicons.tpl';
 $i=0;
 
 foreach ($perms[$p] as $val) {

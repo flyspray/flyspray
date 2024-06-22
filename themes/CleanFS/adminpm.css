@@ -31,15 +31,38 @@ input[value="0"]:checked ~ div.btn-group label#s_disabled {background-color:#f96
 .bulkedituser { 
         margin-top:0.5em;
 }
-
+.bulkedituser .account_enabled .fas {color: #090}
+.bulkedituser .account_disabled .fas {color: #900}
 .perms {border-collapse:collapse;margin-top:20px;display:block;}
 .perms tbody tr:hover {background-color:#eee;}
 .perms td, .perms th{border:1px solid #999;}
 .perms thead th, .perms thead td {text-align:center;}
 .perms tbody th{text-align:right;}
-.perms tbody td{width:100px;text-align:center;}
+.perms tbody td{width:10em;text-align:center;}
 .perms tbody span i:first-child {color: #090;}
 .group.globalgroup {background-color:#ddd;}
 .group.globalgroup.inactive {background-color:#ccc;}
-.perm-no { color:#999; }
+.perms .perm-no, .perms .perm-no * { color:#999; }
 .perm-yes {}
+.perms td .fa-stack *:nth-child(2) {padding-top:8px;padding-left:12px;
+        text-shadow: 0px 0px .2em #fff,
+                     0px 0px .2em #fff,
+                     0px 0px .2em #fff,
+                     0px 0px .2em #fff,
+                     0px 0px .2em #fff,
+                     0px 0px .2em #fff;}
+.perms tr:hover .fa-stack *:nth-child(2) {
+        text-shadow: 0px 0px .2em #eee,
+                     0px 0px .2em #eee,
+                     0px 0px .2em #eee,
+                     0px 0px .2em #eee,
+                     0px 0px .2em #eee,
+                     0px 0px .2em #eee;}
+
+
+.perms thead td a.button .fa,
+.perms thead td a.button .fas,
+.perms thead td a.button .fa-solid,
+.perms thead td a.button .far,
+.perms thead td a.button .fa-regular {margin-right: 0; margin-left: .35em; }
+#toolboxmenu a > * { color: inherit;}

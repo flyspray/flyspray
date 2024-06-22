@@ -1,4 +1,4 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
 <h3><?= eL('tags') ?></h3>
 <p>Some tag settings are configured in the preferences area of each project.</p>
 <p>There are still some usability improvements on the TODO list.</p>

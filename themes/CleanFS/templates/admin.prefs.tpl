@@ -38,15 +38,15 @@ function ShowHidePassword(id) {
         }
     }
 </script>
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
 <h3><?= eL('admintoolboxlong') ?> :: <?= eL('preferences') ?></h3>
 <?php echo tpl_form(createURL('admin', 'prefs')); ?>
   <ul id="submenu">
-   <li><a href="#general"><?= eL('general') ?></a></li>
-   <li><a href="#lookandfeel"><?= eL('lookandfeel') ?></a></li>
-   <li><a href="#userregistration"><?= eL('userregistration') ?></a></li>
-   <li><a href="#notifications"><?= eL('notifications') ?></a></li>
-   <li><a href="#antispam"><?= eL('antispam') ?></a></li>
+   <li><a href="#general"><span class="fas fa-sliders"></span><span><?= eL('general') ?></span></a></li>
+   <li><a href="#lookandfeel"><span class="fas fa-eye"></span><span><?= eL('lookandfeel') ?></span></a></li>
+   <li><a href="#userregistration"><span class="fas fa-user-plus"></span><span><?= eL('userregistration') ?></span></a></li>
+   <li><a href="#notifications"><span class="fas fa-bell"></span><span><?= eL('notifications') ?></span></a></li>
+   <li><a href="#antispam"><span class="fas fa-envelopes-bulk"></span><span><?= eL('antispam') ?></span></a></li>
   </ul>
 
 <div id="general" class="tab">
@@ -344,13 +344,13 @@ function testEmail(){
 			if(xmlHttp.status == 200){
 				if(xmlHttp.responseText=='ok'){
 					target.style["background-color"]='#66ff00';
-					target.innerHTML = '<i class="fa fa-check fa-2x"></i> '+xmlHttp.responseText;
+					target.innerHTML = '<span class="fas fa-check fa-2x"></span> '+xmlHttp.responseText;
 				} else{
-					target.innerHTML = '<i class="fa fa-warning fa-2x" style="color:#ff0"></i>' + xmlHttp.responseText;
+					target.innerHTML = '<span class="fas fa-triangle-exclamation fa-2x" style="color:#ff0"></span>' + xmlHttp.responseText;
 					target.style["background-color"]='#ff6600';
 				}
 			} else{
-				target.innerHTML = '<i class="fa fa-warning fa-2x" style="color:#ff0"></i>' + xmlHttp.responseText;
+				target.innerHTML = '<span class="fas fa-triangle-exclamation fa-2x" style="color:#ff0"></span>' + xmlHttp.responseText;
 				target.style["background-color"]='#ff6600';
 			}
 		}

@@ -12,48 +12,48 @@ if(!$user->perms('manage_project')) {
 ob_start();
 
 ?>
+<div id="toolbox" class="toolbox_translations">
+<h3><?php echo eL('translations'); ?></h3>
 <style type="text/css">
 	pre {
 		margin: 0;
 	}
-	table {
+	table.overview {
 		border-collapse: collapse;
+		width: 100%;
+		max-width: 400px;
 	}
-	.progress_bar_container {
+	table.overview .progress_bar_container {
 		height: 20px;
 	}
-	.progress_bar_container span:first-child {
+	table.overview .progress_bar_container span:first-child {
 		display: inline-block;
 		margin-top: 2px;
 		z-index:101;
 		color:#000;
 	}
-	.overview {
-		margin-left: auto;
-		margin-right: auto;
-	}
 	.overview td, .overview th {
 		border: none;
 		padding: 0;
 	}
-	a.button {
+	.overview a.button {
 		padding: 2px 10px 2px 10px;
 		margin: 2px;
 	}
-	table th {
+	table.overview th {
 		text-align: center;
 	}
-	table th, table td {
+
+	table.overview th, table.overview td {
 		vertical-align: middle;
-		border: 1px solid #ccc;
-		padding: 2px;
 	}
 	tr:hover td, tr:hover th {
 		background : #e0e0e0;
 	}
+
 </style>
 <?php
-require_once dirname(dirname(__FILE__)) . '/includes/fix.inc.php';
+require_once BASEDIR . '/includes/fix.inc.php';
 /*
  * Usage: Open this file like ?do=langdiff?lang=de in your browser.
  *    "de" represents your language code.
@@ -64,14 +64,14 @@ if (preg_match('/[^a-zA-Z_]/', $lang)) {
 }
 
 # reload en.php if flyspray did it before!
-require 'lang/en.php';
+require BASEDIR . '/lang/en.php';
 // while the en.php and $lang.php both define $language, the english one should be kept
 $orig_language = $language;
 
-$translationfile = 'lang/' . "$lang.php";
-if ($lang != 'en' && file_exists($translationfile)) {
+$translationfile = '/lang/' . "$lang.php";
+if ($lang != 'en' && file_exists(BASEDIR . $translationfile)) {
 	# reload that file if flyspray did it before!
-        include $translationfile;
+        include BASEDIR . $translationfile;
 	if (isset($_GET['sort']) && $_GET['sort'] == 'key') {
 		ksort($orig_language);
 	} elseif (isset($_GET['sort']) && $_GET['sort'] == 'en') {
@@ -141,7 +141,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 	$max = count($english);
 	$langfiles = array();
 	$workfiles = array();
-	if ($handle = opendir('lang')) {
+	if ($handle = opendir(BASEDIR . '/lang')) {
 		$languages = array();
 		while (false !== ($file = readdir($handle))) {
 			if ($file != "."
@@ -152,7 +152,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 			&& !(substr($file, -5) == '.safe') ) {
 				# if a .$lang.php.work file but no $lang.php exists yet
 				if (substr($file, -5) == '.work') {
-					if(!is_file('lang/' . substr($file, 1, -5))) {
+					if(!is_file(BASEDIR . '/lang/' . substr($file, 1, -5))) {
 						$workfiles[] = $file;
 					}
 				} else {
@@ -167,7 +167,7 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		<tbody>';
 		foreach($langfiles as $lang) {
 			unset($translation);
-			require 'lang/' . $lang; # file $language variable
+			require BASEDIR . '/lang/' . $lang; # file $language variable
 			$i = 0;
 			$empty = 0;
 			foreach ($orig_language as $key => $val) {
@@ -184,9 +184,9 @@ if ($lang != 'en' && file_exists($translationfile)) {
 				echo '
 					<tr>
 					<td><a href="?do=langdiff&lang='.substr($lang,0,-4).'">'.$lang.'</a></td>
-					<td><a href="?do=langdiff&lang='.substr($lang,0,-4).'" class="progress_bar_container">
+					<td><div class="progress_bar_container">
 					<span class="progress">'.$progress.' %</span>
-					<span style="width:'.$progress.'%" class="progress_bar"></span></a>
+					<span style="width:'.$progress.'%" class="progress_bar"></span></div>
 					</td>
 					<td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">'.L('translate').' '.substr($lang,0,-4).'</a></td>
 					</tr>';
@@ -205,9 +205,12 @@ if ($lang != 'en' && file_exists($translationfile)) {
 		echo '</tbody></table>';
 	}
 }
-
+echo "</div>\n";
 $content = ob_get_contents();
 ob_end_clean();
 
 $page->uses('content');
-$page->pushTpl('admin.translation.tpl');
+
+if ($do == 'langdiff') {
+	$page->pushTpl('admin.translation.tpl');
+}

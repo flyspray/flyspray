@@ -1,4 +1,4 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
 <style>
 #toolbox div.div {
 	border:1px solid #999;

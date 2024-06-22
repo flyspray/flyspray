@@ -1,12 +1,12 @@
-<div id="toolbox">
+<div id="toolbox" class="toolbox_<?php echo $area; ?>">
   <ul id="submenu">
    <li><a href="#users_tab"><?= eL('users') ?></a></li>
    <li><a href="#groups_tab"><?= eL('globalgroups') ?></a></li>
   </ul>
   <div id="users_tab" class="tab">
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuser', $proj->id)); ?>"><i class="good fa fa-user-plus fa-lg fa-fw"></i><?= eL('newuser') ?></a>
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuserbulk', $proj->id)); ?>"><i class="good fa fa-user-times fa-lg fa-fw"></i><?= eL('newuserbulk') ?></a>
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'editallusers', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?= eL('editallusers') ?></a>
+    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuser', $proj->id)); ?>"><span class="good fas fa-user-plus fa-lg fa-fw"></span><?= eL('newuser') ?></a>
+    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuserbulk', $proj->id)); ?>"><span class="good fas fa-user-xmark fa-lg fa-fw"></span><?= eL('newuserbulk') ?></a>
+    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'editallusers', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('editallusers') ?></a>
     <div class="groupedit">
       <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
               <label for="edit_user"><?= eL('edituser') ?></label>
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div id="groups_tab" class="tab">
-<div><a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newgroup', $proj->id)); ?>"><i class="fa fa-group fa-lg fa-fw"></i><?= eL('newgroup') ?></a></div>
+<div><a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a></div>
 
 <?php
 $perm_fields = array(
@@ -55,8 +55,8 @@ $perm_fields = array(
 );
 
 $yesno = array(
-        '<td class="perm-no" title="'.eL('no').'">-</td>',
-        '<td class="perm-yes" title="'.eL('yes').'"><i class="good fa fa-check fa-lg"></i></td>'
+        '<td class="perm-no" title="'.eL('no').'"><span class="fas fa-ban fa-2x"></span></td>',
+        '<td class="perm-yes" title="'.eL('yes').'"><span class="good fas fa-check fa-2x"></span></td>'
 );
 
 $perms=array();
@@ -69,7 +69,7 @@ foreach ($groups as $group) {
 	$gmembers.='<td>'.$group['users'].'</td>';
 	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(createURL('editgroup', $group['group_id'], 'admin'))).'">'
 		.Filters::noXSS($group['group_name'])
-		.'<i class="fa fa-pencil fa-lg fa-fw"></i></a></td>';
+		.'<span class="fas fa-pencil fa-lg fa-fw"></span></a></td>';
 	$gdesc   .='<td>'.Filters::noXSS($group['group_desc']).'</td>';
 	foreach ($group as $key => $val) {
 		if (!is_numeric($key) && in_array($key, $perm_fields)) {
