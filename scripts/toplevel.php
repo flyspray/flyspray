@@ -28,9 +28,14 @@ if(count($projects)>0){
   $stats = array();
   $assigned_to_myself = array();
   $projprefs = array();
+  $projinactive = 0;
 
   # Most wanted tasks for each project
   foreach ($projects as $project) {
+    if($project['project_is_active'] != 1){
+        $projinactive++;
+    }
+
     # means 'can view tasks' ..
     if($user->can_view_project($project['project_id'])){
       $sql = $db->query('SELECT v.task_id, count(*) AS num_votes
@@ -67,7 +72,7 @@ if(count($projects)>0){
     }
 
     $projprefs[$project['project_id']] = $prefs;
-  
+
     if($user->perms('view_estimated_effort', $project['project_id']) ){
       if ($prefs['use_effort_tracking']) {
         $sql = $db->query('
@@ -94,7 +99,7 @@ if(count($projects)>0){
       $assigned_to_myself[$project['project_id']] = $db->fetchAllArray($sql);
     }
   }
-  $page->uses('most_wanted', 'stats', 'projects', 'assigned_to_myself', 'projprefs');
+  $page->uses('most_wanted', 'stats', 'projects', 'assigned_to_myself', 'projprefs', 'projinactive');
   $page->setTitle($fs->prefs['page_title'] . $proj->prefs['project_title'] . ': ' . L('toplevel'));
   $page->pushTpl('toplevel.tpl');
 } else{
