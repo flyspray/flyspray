@@ -21,12 +21,16 @@ if (isset($_SESSION['ua'])) {
 }
 ?>
 <input type="checkbox" id="s_shortcuts" />
-<label for="s_shortcuts" id="shortcutlabel"><i class="fa fa-keyboard-o"></i> <?= eL('keyboardshortcuts') ?></label>
+<label for="s_shortcuts" id="shortcutlabel"><span class="far fa-keyboard"></span> <?= eL('keyboardshortcuts') ?></label>
 <label for="s_shortcuts" id="shortcutsmodal"></label>
 <div id="shortcuts">
-<label for="s_shortcuts" id="shortcutclose"><i class="fa fa-close fa-2x"></i></label>
+<div>
 <h3><?= eL('availablekeybshortcuts') ?></h3>
-<h4></h4>
+<label for="s_shortcuts" id="shortcutclose"><span class="fas fa-close fa-2x"></span></label>
+</div>
+
+
+<h4><?= el('general') ?></h4>
 <ul>
 <li><?= $modifier ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
 <li><?= $modifier ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>

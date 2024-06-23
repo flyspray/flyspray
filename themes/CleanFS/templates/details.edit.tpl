@@ -182,8 +182,8 @@ li.errorinput{background-color:#fc9;}
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-			<label for="availtags" class="button" id="availtagsshow"><i class="fa fa-plus"></i></label>
-			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
+			<label for="availtags" class="button" id="availtagsshow"><span class="fas fa-plus"></span></label>
+			<label for="availtags" class="button" id="availtagshide"><span class="fas fa-minus"></span></label>
 		</div>
 		<div id="tagrender"></div>
 		<fieldset id="availtaglist">
@@ -224,7 +224,7 @@ li.errorinput{background-color:#fc9;}
 		<br />
 		<span style="display: none"><?php /* this span is shown/copied by javascript when adding links */ ?>
 			<input tabindex="8" class="text" type="text" maxlength="150" name="userlink[]" />
-			<a href="javascript://" tabindex="9" class="button fa fa-remove fa-lg" title="<?= eL('remove') ?>" onclick="removeLinkField(this, 'addlinkbox');"></a><br />
+			<a href="javascript://" tabindex="9" class="button fas fa-xmark fa-lg" title="<?= eL('remove') ?>" onclick="removeLinkField(this, 'addlinkbox');"></a><br />
 		</span>
 	<?php endif; ?>
 	</div>
@@ -247,7 +247,7 @@ li.errorinput{background-color:#fc9;}
 		<br />
 		<span style="display: none"><?php /* this span is shown/copied by javascript when adding files */ ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
-			<a href="javascript://" tabindex="6" class="button fa fa-remove fa-lg" title="<?= eL('remove') ?>" onclick="removeUploadField(this);"></a><br />
+			<a href="javascript://" tabindex="6" class="button fas fa-xmark fa-lg" title="<?= eL('remove') ?>" onclick="removeUploadField(this);"></a><br />
 		</span>
 	<?php endif; ?>
 	</div>
@@ -256,8 +256,8 @@ li.errorinput{background-color:#fc9;}
 		<input type="checkbox" id="s_addcomment" />
 		<label for="s_addcomment" title="<?= eL('addcomment') ?>">
 		<span class="fa-stack">
-		<i class="fa fa-comment-o fa-stack-2x"></i>
-		<i class="fa fa-plus fa-stack-1x"></i>
+		<span class="far fa-comment fa-stack-2x"></span>
+		<span class="fas fa-plus fa-stack-1x"></span>
 		</span>
 		</label>
 		<div id="edit_add_comment">

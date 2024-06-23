@@ -202,8 +202,8 @@
 		<div id="edit_tags">
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags','')); ?>" />
-			<label for="availtags" class="button" id="availtagsshow"><i class="fa fa-plus"></i></label>
-			<label for="availtags" class="button" id="availtagshide"><i class="fa fa-minus"></i></label>
+			<label for="availtags" class="button" id="availtagsshow"><i class="fas fa-plus"></i></label>
+			<label for="availtags" class="button" id="availtagshide"><i class="fas fa-minus"></i></label>
 		</div>
 		<div id="tagrender"></div>
 		<fieldset id="availtaglist">

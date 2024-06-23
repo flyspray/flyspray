@@ -69,21 +69,14 @@
 <?php if (!($user->isAnon() &&  (count($fs->projects) == 0 || ($proj->id >0 && !$user->can_view_project($proj->id)))) ): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-  <button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
-  <input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
-   maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
-  <input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
-  <input type="hidden" name="do" value="index"/>
-  <button type="submit" name="export_list" value="1" id="exporttasklist" title="<?= eL('exporttasklist') ?>"><i class="fa fa-download"></i></button>
-<style>
-#sc2,#s_searchstate{display:none;}
-#searchstateactions{color:#999;display:block;cursor:pointer;}
-#s_searchstate:checked ~ #sc2 {display:block;}
-#s_searchstate ~ label::before { content: "\25bc";}
-#s_searchstate:checked ~ label::before { content: "\25b2";}
-</style>
-<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
-<label id="searchstateactions" for="s_searchstate"><?= eL('advanced') ?></label>
+	<button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
+	<input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
+	 maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
+	<input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
+	<input type="hidden" name="do" value="index"/>
+	<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
+	<label id="searchstateactions" class="button" for="s_searchstate"><?= eL('advanced') ?></label>
+	<button type="submit" name="export_list" value="1" id="exporttasklist" title="<?= eL('exporttasklist') ?>"><span class="fas fa-download"></span> <?= eL('exporttasklist') ?></button>
 <div id="sc2" class="switchcontent">
 <?php if (!$user->isAnon()): ?>
 <fieldset>
@@ -354,7 +347,7 @@ echo tpl_select(
 <tr>
 	<th class="caret"></th>
 	<?php if (!$user->isAnon() && $proj->id !=0 && $total): ?>
-	<th class="ttcolumn"><a title="<?= eL('toggleselected') ?>" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();"></a></th>
+	<th class="ttcolumn"><a title="<?= eL('toggleselected') ?>" href="javascript:ToggleSelected('massops')" onclick="massSelectBulkEditCheck();"><span class="fas fa-exchange"></span></a></th>
 	<?php
 	endif;
 	foreach ($visible as $col):
@@ -370,7 +363,7 @@ $maxrender=25;
 $taskcount=0;
 foreach ($tasks as $task): ?>
 <tr id="task<?php echo $task['task_id']; ?>" class="severity<?php echo $task['task_severity'];  echo $task['is_closed'] ==1 ? ' closed': '';?>">
-	<td class="caret"></td>
+	<td class="caret"><span class="fas"></span></td>
 	<?php if (!$user->isAnon() && $proj->id !=0): ?>
 	<td class="ttcolumn"><input class="ticktask" type="checkbox" name="ids[]" onclick="BulkEditCheck()" value="<?php echo $task['task_id']; ?>"/></td>
 	<?php

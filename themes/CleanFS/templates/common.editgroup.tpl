@@ -160,7 +160,7 @@
       </tr>
       <?php endif; ?>
       <tr>
-        <td><label for="add_user"><i class="fa fa-user"></i> <?php echo Filters::noXSS(L('addusergroup')); ?></label></td>
+        <td><label for="add_user"><span class="fas fa-user-plus"></span> <?php echo Filters::noXSS(L('addusergroup')); ?></label></td>
         <td>
             <?php echo tpl_userselect('uid', '', 'add_user'); ?>
         </td>
@@ -202,9 +202,9 @@
       <td><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>
       <td><?php echo Filters::noXSS($usr['real_name']); ?></td>
       <?php if ($usr['account_enabled']) : ?>
-      <td class="imgcol"><i class="fa fa-check" style="color:#090" title="<?php echo L('yes'); ?>"></i></td>
+      <td class="imgcol"><span class="fas fa-check" style="color:#090" title="<?php echo L('yes'); ?>"></span></td>
       <?php else: ?>
-      <td class="imgcol"><i class="fa fa-ban" style="color:#900" title="<?php echo L('no'); ?>"></i></td>
+      <td class="imgcol"><span class="fas fa-ban" style="color:#900" title="<?php echo L('no'); ?>"></span></td>
       <?php endif; ?>
     </tr>
     <?php

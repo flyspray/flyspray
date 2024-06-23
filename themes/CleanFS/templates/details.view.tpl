@@ -243,15 +243,15 @@ function quick_edit(elem, id)
 					target.getElementsByTagName('span')[0].innerHTML = text;
 					target.getElementsByClassName('progress_bar')[0].style.width = text;
 				} else {
-					target.innerHTML = text + ' <i class="fa fa-check"></i>';
+					target.innerHTML = text + ' <i class="fas fa-check"></i>';
 				}
-				//target.className='fa fa-check';
-				//elem.className='fa fa-check';
+				//target.className='fas fa-check';
+				//elem.className='fas fa-check';
 				show_hide(elem, false);
 			} else {
 				// TODO show error message returned from the server and let quickedit form open
-				//target.className='fa fa-warning';
-				elem.className='fa fa-warning';
+				//target.className='fas fa-triangle-exclamation';
+				elem.className='fas fa-triangle-exclamation';
 			}
 		}
 	}
@@ -765,7 +765,7 @@ function quick_edit(elem, id)
 		<input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
 		<input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<input type="hidden" name="action" value="removedep" />
-		<button type="submit" title="<?= eL('remove') ?>" class="fa fa-unlink fa-lg"></button>
+		<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
 		</form>
 	</td>
 	</tr>
@@ -817,7 +817,7 @@ function quick_edit(elem, id)
 			<input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
 			<input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 			<input type="hidden" name="action" value="removedep" />
-			<button type="submit" title="<?= eL('remove') ?>" class="fa fa-unlink fa-lg"></button>
+			<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
 		</form>
 		</td>
 		</tr>
@@ -875,7 +875,7 @@ function quick_edit(elem, id)
 		<td><?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 			<input type="hidden" name="subtaskid" value="<?php echo Filters::noXSS($subtask['task_id']); ?>" />
 			<input type="hidden" name="action" value="removesubtask" />
-			<button type="submit" title="<?= eL('remove') ?>" class="fa fa-unlink fa-lg"></button>
+			<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
 			</form>
 		</td>
 		</tr>

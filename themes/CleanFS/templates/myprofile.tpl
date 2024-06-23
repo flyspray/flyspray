@@ -26,7 +26,7 @@
 <td><?php echo tpl_form(Filters::noXSS(createURL('myprofile', $vote['task_id']))); ?>
 <input type="hidden" name="action" value="removevote" />
 <input type="hidden" name="task_id" value="<?php echo $vote['task_id'] ?>" />
-<button type="submit" title="<?= eL('removevote') ?>"><span class="fa fa-trash"></span></button>
+<button type="submit" title="<?= eL('removevote') ?>"><span class="fas fa-trash-can"></span></button>
 </form></td>
 </tr>
 <?php endforeach; ?>

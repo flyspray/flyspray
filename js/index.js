@@ -120,6 +120,7 @@ var Caret = {
     }
     if (Caret.currentRow) {
       Element.addClassName(Caret.currentRow,'current_row');
+      Element.addClassName(Caret.currentRow.children[0].children[0],'fa-chevron-right');
       Event.observe(document,'keydown',Caret.keypress);
     }
   },
@@ -137,14 +138,18 @@ var Caret = {
     switch (e.keyCode) {
       case 74:       // user pressed "j" move down
           Element.removeClassName(Caret.currentRow,'current_row');
+          Element.removeClassName(Caret.currentRow.children[0].children[0],'fa-chevron-right');
           Caret.nextRow();
           Element.addClassName(Caret.currentRow,'current_row');
+          Element.addClassName(Caret.currentRow.children[0].children[0],'fa-chevron-right');
           Event.stop(e);
           break;
       case 75:      // user pressed "k" move up
           Element.removeClassName(Caret.currentRow,'current_row');
+          Element.removeClassName(Caret.currentRow.children[0].children[0],'fa-chevron-right');
           Caret.previousRow();
           Element.addClassName(Caret.currentRow,'current_row');
+          Element.addClassName(Caret.currentRow.children[0].children[0],'fa-chevron-right');
           Event.stop(e);
           break;
       case 79:     // user pressed "o" open task
@@ -184,6 +189,6 @@ var Caret = {
       window.location = $('previous').href;
       return;
     }
-    
+
   }
 };

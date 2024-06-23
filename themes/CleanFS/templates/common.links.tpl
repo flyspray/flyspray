@@ -2,7 +2,7 @@
   <div class="links">
    <?php echo Filters::noXSS(L('referencelinks')); ?><br>
    <?php foreach ($links as $link): ?>
-    <a href="<?php echo Filters::noXSS($link['url']); ?>"><?php echo Filters::noXSS($link['url']); ?></a><br>
+    <p><span class="fas fa-link"></span> <a href="<?php echo Filters::noXSS($link['url']); ?>"><?php echo Filters::noXSS($link['url']); ?></a></p>
    <?php endforeach; ?>
   </div>
 <?php elseif (count($links)): ?>

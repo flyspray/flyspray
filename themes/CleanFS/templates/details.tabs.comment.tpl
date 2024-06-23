@@ -24,13 +24,13 @@
 					}
 					?>
 					<?php if ($user->perms('edit_comments') || ($user->perms('edit_own_comments') && $comment['user_id'] == $user->id)): ?>
-						<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=editcomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;id=<?php echo Filters::noXSS($comment['comment_id']); ?>" title="<?php echo Filters::noXSS(L('edit')); ?>"><span class="fa fa-pencil fa-lg" style="margin-right: 10px;"></span></a>
+						<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?do=editcomment&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>&amp;id=<?php echo Filters::noXSS($comment['comment_id']); ?>" title="<?php echo Filters::noXSS(L('edit')); ?>"><span class="fas fa-pencil fa-lg" style="margin-right: 10px;"></span></a>
 					<?php endif; ?>
 					<?php if ($user->perms('delete_comments')): ?>
 						<input type="hidden" name="action" value="details.deletecomment"/>
 						<input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>"/>
 						<?php $confirm = (isset($comment_attachments[$comment['comment_id']])) ? sprintf(L('confirmdeletecomment'), L('attachementswilldeleted')) : sprintf(L('confirmdeletecomment'), '')  ?>
-						<button type="submit" class="fakelinkbutton" onclick="return confirm('<?php echo Filters::noJsXSS($confirm); ?>');" title="<?= eL('delete') ?>"><span class="fa fa-remove fa-lg"></span></button>
+						<button type="submit" class="fakelinkbutton" onclick="return confirm('<?php echo Filters::noJsXSS($confirm); ?>');" title="<?= eL('delete') ?>"><span class="fas fa-xmark fa-lg"></span></button>
 					<?php endif; ?>
 				</form>
 				</div>
