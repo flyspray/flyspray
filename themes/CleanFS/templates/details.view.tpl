@@ -1,215 +1,232 @@
 <div id="actionbar">
 <?php if ($task_details['is_closed']): /* if task is closed */ ?>
-	<?php if ($user->can_close_task($task_details)):
-		echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="reopen" />
-		<button><?php echo L('reopenthistask'); ?></button>
-		</form>
+	<?php if ($user->can_close_task($task_details)): ?>
+		<div class="actionitem" id="reopentaskitem">
+			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+			<input type="hidden" name="action" value="reopen" />
+			<button><?php echo L('reopenthistask'); ?></button>
+			</form>
+		</div>
 	<?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
-		<button class="submit main" onclick="showhidestuff('requestreopen');"><?= eL('reopenrequest') ?></button>
-		<div id="requestreopen" class="popup hide">
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
-		<input type="hidden" name="action" value="requestreopen" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<label for="reason"><?= eL('reasonforreq') ?></label>
-		<textarea id="reason" name="reason_given"></textarea><br/>
-		<button type="submit"><?= eL('submitreq') ?></button>
-		</form>
+		<div class="actionitem" id="requestreopenitem">
+			<button class="submit main" onclick="showhidestuff('requestreopen');"><?= eL('reopenrequest') ?></button>
+			<div id="requestreopen" class="popup hide">
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
+				<input type="hidden" name="action" value="requestreopen" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<label for="reason"><?= eL('reasonforreq') ?></label>
+				<textarea id="reason" name="reason_given"></textarea><br/>
+				<button type="submit"><?= eL('submitreq') ?></button>
+				</form>
+			</div>
 		</div>
 	<?php endif; ?>
 <?php else:  /* if task is open */ ?>
 	<?php if ($user->can_close_task($task_details) && !$d_open): ?>
+	<div class="actionitem" id="closetaskitem">
 		<a href="<?php echo Filters::noXSS(createURL('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))); ?>"
 		id="closetask" class="button main" accesskey="y"
 		onclick="showhidestuff('closeform');return false;"> <?= eL('closetask') ?></a>
 
 		<div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
-		<input type="hidden" name="action" value="details.close"/>
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-		<select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
-			<option value="0"><?= eL('selectareason') ?></option>
-			<?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
-		</select>
-		<button type="submit"><?= eL('closetask') ?></button>
-		<br/>
-		<label class="text" for="closure_comment"><?= eL('closurecomment') ?></label>
-		<textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
-		<?php if($task_details['percent_complete'] != '100'): ?>
-			<div>
-			<?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')), 'mark100'); ?>
-			<label for="mark100"><?= eL('mark100') ?></label>
-			</div>
-		<?php endif; ?>
-		</form>
+			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
+			<input type="hidden" name="action" value="details.close"/>
+			<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+			<select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
+				<option value="0"><?= eL('selectareason') ?></option>
+				<?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
+			</select>
+			<button type="submit"><?= eL('closetask') ?></button>
+			<br/>
+			<label class="text" for="closure_comment"><?= eL('closurecomment') ?></label>
+			<textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+			<?php if($task_details['percent_complete'] != '100'): ?>
+				<div>
+					<?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')), 'mark100'); ?>
+					<label for="mark100"><?= eL('mark100') ?></label>
+				</div>
+			<?php endif; ?>
+			</form>
 		</div>
+	</div>
 	<?php elseif (!$d_open && !$user->isAnon() && !Flyspray::adminRequestCheck(1, $task_details['task_id'])): ?>
+	<div class="actionitem" id="requestcloseitem">
 		<a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?= eL('requestclose') ?></a>
 		<div id="closeform" class="popup hide">
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), 'form3', null, null, 'id="formclosetask"'); ?>
-		<input type="hidden" name="action" value="requestclose"/>
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-		<label for="reason"><?= eL('reasonforreq') ?></label>
-		<textarea id="reason" name="reason_given"></textarea><br/>
-		<button type="submit"><?= eL('submitreq') ?></button>
-		</form>
+			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), 'form3', null, null, 'id="formclosetask"'); ?>
+			<input type="hidden" name="action" value="requestclose"/>
+			<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+			<label for="reason"><?= eL('reasonforreq') ?></label>
+			<textarea id="reason" name="reason_given"></textarea><br/>
+			<button type="submit"><?= eL('submitreq') ?></button>
+			</form>
 		</div>
-
+	</div>
 	<?php elseif(!$user->isAnon()): ?>
+	<div class="actionitem" id="requestclosedisableditem">
 		<a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?= eL('closetask') ?>
-		<span class="custom info">
-			<em><?= eL('information') ?></em>
-			<br>
-			<?= eL('taskclosedisabled') ?>
-			<br>
+			<span class="custom info">
+				<em><?= eL('information') ?></em>
+				<br>
+				<?= eL('taskclosedisabled') ?>
+				<br>
 			<?php
-			foreach ($deps as $dependency) {
-				echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
-			}
+				foreach ($deps as $dependency) {
+					echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
+				}
 			?>
-		</span>
+			</span>
 		</a>
+	</div>
 	<?php endif; ?>
 
 	<?php if ($user->can_edit_task($task_details)): ?>
+	<div class="actionitem" id="edittaskitem">
 		<a id="edittask" class="button" accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?= eL('edittask') ?></a>
+	</div>
 	<?php endif; ?>
 
 	<?php if ($user->can_take_ownership($task_details)): ?>
+	<div class="actionitem" id="assigntomeitem">
 		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), null, null, null, 'style="display:inline"'); ?>
 		<input type="hidden" name="action" value="takeownership" />
 		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<button type="submit" id="own"><?= eL('assigntome') ?></button>
 		</form>
+	</div>
 	<?php endif; ?>
 
 	<?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
+	<div class="actionitem" id="addmetoassigneesitem">
 		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'style="display:inline"'); ?>
 		<input type="hidden" name="action" value="addtoassignees" />
 		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 		<button type="submit" id="own_add"><?= eL('addmetoassignees') ?></button>
 		</form>
-	<?php endif; ?>
-
-	<input type="checkbox" id="s_quickactions" />
-	<label class="button main" id="actions" for="s_quickactions"><?= eL('quickaction') ?></label>
-	<div id="actionsform">
-	<ul>
-	<?php if ($user->can_edit_task($task_details)): ?>
-	<li>
-		<a accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?= eL('edittask') ?></a>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_set_task_parent($task_details)): ?>
-	<li>
-		<input type="checkbox" id="s_parent" /><label for="s_parent"><?= eL('setparent') ?></label>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
-		<?= eL('parenttaskid') ?>
-		<input type="hidden" name="action" value="details.setparent" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
-		<button type="submit" name="submit"><?= eL('set') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_associate_task($task_details)): ?>
-	<li><input type="checkbox" id="s_associate"/><label for="s_associate"><?= eL('associatesubtask') ?></label>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
-		<?= eL('associatetaskid') ?>
-		<input type="hidden" name="action" value="details.associatesubtask"/>
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-		<input class="text" type="text" value="" id="associate_subtask_id" name="associate_subtask_id" size="5" maxlength="10"/>
-		<button type="submit" name="submit"><?= eL('set') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($proj->id && $user->perms('open_new_tasks')): ?>
-	<li>
-		<a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?= eL('addnewsubtask') ?></a>
-	</li>
-	<?php endif; ?>
-	    
-	<li>
-		<a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?= eL('depgraph') ?></a>
-	</li>
-
-	<?php if ($user->can_add_task_dependency($task_details)): ?>
-	<li>
-		<input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><?= eL('adddependenttask') ?></label>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
-		<input type="hidden" name="action" value="details.newdep" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<label for="dep_task_id"><?= eL('newdependency') ?></label>
-		FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
-		<button type="submit" name="submit"><?= eL('add') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_take_ownership($task_details)): ?>
-	<li>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="takeownership" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<button type="submit"><?= eL('assigntome') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
-	<li>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="addtoassignees" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<button type="submit"><?= eL('addmetoassignees') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_vote($task_details) > 0): ?>
-	<li>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="details.addvote" />
-		<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<button type="submit"><?= eL('voteforthistask') ?></button>
-		</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if (!$user->isAnon() && !$watched): ?>
-	<li>
-	<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="action" value="details.add_notification" />
-		<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>" />
-		<button type="submit"><?= eL('watchthistask') ?></button>
-	</form>
-	</li>
-	<?php endif; ?>
-
-	<?php if ($user->can_change_private($task_details)): ?>
-	<li>
-	<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<?php if ($task_details['mark_private']): ?>
-		<input type="hidden" name="action" value="makepublic"/>
-		<button><?php echo eL('makepublic') ?></button>
-		<?php elseif (!$task_details['mark_private']): ?>
-		<input type="hidden" name="action" value="makeprivate"/>
-		<button><?php echo eL('privatethistask') ?></button>
-		<?php endif; ?>
-	</form>
-	</li>
-	<?php endif; ?>
-	</ul>
 	</div>
-<?php endif; ?>
+	<?php endif; ?>
+
+	<div class="actionitem" id="quickactionsitem">
+		<input type="checkbox" id="s_quickactions" />
+		<label class="button main" id="actions" for="s_quickactions"><?= eL('quickaction') ?></label>
+		<div id="actionsform">
+			<ul>
+			<?php if ($user->can_edit_task($task_details)): ?>
+			<li>
+				<a accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?= eL('edittask') ?></a>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_set_task_parent($task_details)): ?>
+			<li>
+				<input type="checkbox" id="s_parent" /><label for="s_parent"><?= eL('setparent') ?></label>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
+				<?= eL('parenttaskid') ?>
+				<input type="hidden" name="action" value="details.setparent" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+				<button type="submit" name="submit"><?= eL('set') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_associate_task($task_details)): ?>
+			<li><input type="checkbox" id="s_associate"/><label for="s_associate"><?= eL('associatesubtask') ?></label>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
+				<?= eL('associatetaskid') ?>
+				<input type="hidden" name="action" value="details.associatesubtask"/>
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
+				<input class="text" type="text" value="" id="associate_subtask_id" name="associate_subtask_id" size="5" maxlength="10"/>
+				<button type="submit" name="submit"><?= eL('set') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($proj->id && $user->perms('open_new_tasks')): ?>
+			<li>
+				<a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?= eL('addnewsubtask') ?></a>
+			</li>
+			<?php endif; ?>
+	    
+			<li>
+				<a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?= eL('depgraph') ?></a>
+			</li>
+
+			<?php if ($user->can_add_task_dependency($task_details)): ?>
+			<li>
+				<input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><?= eL('adddependenttask') ?></label>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
+				<input type="hidden" name="action" value="details.newdep" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<label for="dep_task_id"><?= eL('newdependency') ?></label>
+				FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
+				<button type="submit" name="submit"><?= eL('add') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_take_ownership($task_details)): ?>
+			<li>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+				<input type="hidden" name="action" value="takeownership" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<button type="submit"><?= eL('assigntome') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_add_to_assignees($task_details) && !empty($task_details['assigned_to'])): ?>
+			<li>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+				<input type="hidden" name="action" value="addtoassignees" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<button type="submit"><?= eL('addmetoassignees') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_vote($task_details) > 0): ?>
+			<li>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+				<input type="hidden" name="action" value="details.addvote" />
+				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<button type="submit"><?= eL('voteforthistask') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if (!$user->isAnon() && !$watched): ?>
+			<li>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+				<input type="hidden" name="action" value="details.add_notification" />
+				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+				<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>" />
+				<button type="submit"><?= eL('watchthistask') ?></button>
+				</form>
+			</li>
+			<?php endif; ?>
+
+			<?php if ($user->can_change_private($task_details)): ?>
+			<li>
+				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+				<?php if ($task_details['mark_private']): ?>
+					<input type="hidden" name="action" value="makepublic"/>
+					<button><?php echo eL('makepublic') ?></button>
+				<?php elseif (!$task_details['mark_private']): ?>
+					<input type="hidden" name="action" value="makeprivate"/>
+					<button><?php echo eL('privatethistask') ?></button>
+				<?php endif; ?>
+				</form>
+			</li>
+			<?php endif; ?>
+			</ul>
+		</div>
+	</div>
+	<?php endif; ?>
 </div>
 <!-- end actionbar -->
 
@@ -266,25 +283,27 @@ function quick_edit(elem, id)
 <?php $fields = explode(' ', $proj->prefs['visible_fields']); ?>
 
 <div id="taskdetails">
-	<span id="navigation">
-	<?php if ($prev_id): ?>
-	<?php echo tpl_tasklink($prev_id, L('previoustask'), false, array('id'=>'prev', 'accesskey' => 'p')); ?>
-	<?php endif; ?>
-
-	<?php if ($prev_id): ?> | <?php endif; ?>
-	<?php if(isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'project'):
-		$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']);
-	?>
-	<a href="<?php echo Filters::noXSS(createURL('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?= eL('tasklist') ?></a>
-	<?php endif; ?>
-	<?php if ($next_id): ?>
-	<?php echo tpl_tasklink($next_id, L('nexttask'), false, array('id'=>'next', 'accesskey' => 'n')); ?>
-	<?php endif; ?>
-	</span>
-
 	<div id="taskfields">
+		<?php if ($prev_id || $next_id): ?>
+		<div id="navigation">
+			<?php if ($prev_id): ?>
+				<?php echo tpl_tasklink($prev_id, L('previoustask'), false, array('id'=>'prev', 'accesskey' => 'p')); ?>
+			<?php endif; ?>
+
+			<?php if ($prev_id && $next_id): ?> | <?php endif; ?>
+			<?php if(isset($_COOKIE['tasklist_type']) && $_COOKIE['tasklist_type'] == 'project'):
+				$params = $_GET; unset($params['do'], $params['action'], $params['task_id'], $params['switch'], $params['project']);
+			?>
+			<a href="<?php echo Filters::noXSS(createURL('project', $proj->id, null, array('do' => 'index') + $params)); ?>"><?= eL('tasklist') ?></a>
+			<?php endif; ?>
+			<?php if ($next_id): ?>
+				<?php echo tpl_tasklink($next_id, L('nexttask'), false, array('id'=>'next', 'accesskey' => 'n')); ?>
+			<?php endif; ?>
+		</div>
+		<?php endif; ?>
+
 	<?php if($user->can_edit_task($task_details)) : ?>
-		<div id="intromessage" align="center"><?= eL('clicktoedit') ?></div>
+		<div id="quickedithint" align="center"><?= eL('clicktoedit') ?></div>
 	<?php endif; ?>
 
 	<ul class="fieldslist">
@@ -304,16 +323,15 @@ function quick_edit(elem, id)
 		</span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="status" name="item_status">
-			 		<?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
+					<?php echo tpl_options($proj->listTaskStatuses(), Req::val('item_status', $task_details['item_status'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'status')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a onclick="show_hide(this.parentNode.parentNode, false)" href="javascript:void(0)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -329,17 +347,16 @@ function quick_edit(elem, id)
 			</div>
 		</span>
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="percent" name="percent_complete">
 					<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
 					<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'percent')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -350,12 +367,11 @@ function quick_edit(elem, id)
 		<span class="label"><?= eL('tasktype') ?></span>
 		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif; ?> class="value"><?php echo Filters::noXSS($task_details['tasktype_name']); ?></span>
  		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none;">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="tasktype" name="task_type">
 					<?php echo tpl_options($proj->listTaskTypes(), Req::val('task_type', $task_details['task_type'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'tasktype')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
@@ -375,16 +391,15 @@ function quick_edit(elem, id)
 			<?php echo Filters::noXSS($task_details['category_name']); ?>
 		</span>
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="category" name="product_category">
 					<?php echo tpl_options($proj->listCategories(), Req::val('product_category', $task_details['product_category'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'category')" href="javascript:void(0)" class="button"><?= L('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 		</li>
         <?php endif; ?>
@@ -421,16 +436,15 @@ function quick_edit(elem, id)
 		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['os_name']); ?></span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="os" name="operating_system">
 					<?php echo tpl_options($proj->listOs(), Req::val('operating_system', $task_details['operating_system'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'os')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -442,16 +456,15 @@ function quick_edit(elem, id)
 		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['severity_name']); ?></span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 			<select id="severity" name="task_severity">
 				<?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
 			</select>
-			<br/>
 			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 			<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -463,17 +476,16 @@ function quick_edit(elem, id)
 		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif; ?> class="value"><?php echo Filters::noXSS($task_details['priority_name']); ?></span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="priority" name="task_priority">
-			 		<?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
+					<?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'priority')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
-        	<?php endif; ?>
+		</div>
+		<?php endif; ?>
         </li>
 	<?php endif; ?>
 
@@ -486,16 +498,15 @@ function quick_edit(elem, id)
 		</span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="reportedver" name="product_version">
 					<?php echo tpl_options($proj->listVersions(false, 2, $task_details['product_version']), Req::val('reportedver', $task_details['product_version'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'reportedver')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -512,17 +523,16 @@ function quick_edit(elem, id)
 			<?php endif; ?>
 		</span>
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<select id="dueversion" name="closedby_version">
 					<option value="0"><?= eL('undecided') ?></option>
 					<?php echo tpl_options($proj->listVersions(false, 3), Req::val('closedby_version', $task_details['closedby_version'])); ?>
 				</select>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'dueversion')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -557,14 +567,13 @@ function quick_edit(elem, id)
 		</span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
-		<span style="display:none">
-			<div style="float:right">
+		<div class="editvalue">
+			<div>
 				<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'due_date')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-		</span>
+		</div>
 		<?php endif; ?>
 	</li>
 	<?php endif; ?>
@@ -584,14 +593,13 @@ function quick_edit(elem, id)
 			?>
 			</span>
 			<?php if ($user->can_edit_task($task_details)): ?>
-			<span style="display:none">
-			<div style="float:right">
+			<div class="editvalue">
+			<div>
 				<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>"/>
-				<br/>
 				<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
-			</span>
+			</div>
 			<?php endif; ?>
 		</li>
 		<?php endif; ?>
@@ -605,7 +613,9 @@ function quick_edit(elem, id)
 				$total_effort += $details['effort'];
 			}
 			?>
-			<span class="value"><?php echo effort::secondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?></span>
+			<span class="value">
+				<?php echo effort::secondsToString($total_effort, $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']); ?>
+			</span>
 		</li>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -613,7 +623,7 @@ function quick_edit(elem, id)
 	<!-- Votes -->
 	<?php if (in_array('votes', $fields)): ?>
 	<li class="votes">
-        	<span class="label"><?= eL('votes') ?></span>
+		<span class="label"><?= eL('votes') ?></span>
 		<span class="value">
 		<?php if (count($votes)): ?>
 			<a href="javascript:showhidestuff('showvotes')"><?php echo Filters::noXSS(count($votes)); ?> </a>
@@ -694,7 +704,7 @@ function quick_edit(elem, id)
 	<?php if ($task_details['last_edited_by']): ?>
 		<br/>
 		<?= eL('editedby') ?> <?php echo tpl_userlink($task_details['last_edited_by']); ?>
-        	-
+			-
 		<span title="<?php echo Filters::noXSS(formatDate($task_details['last_edited_time'], true)); ?>"><?php echo Filters::noXSS(formatDate($task_details['last_edited_time'], false)); ?></span>
 	<?php endif; ?>
 	</div>
@@ -705,9 +715,9 @@ function quick_edit(elem, id)
 	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
 	</h2>
 
-	<span class="tags"><?php foreach($tags as $tag): ?>
+	<div class="tags"><?php foreach($tags as $tag): ?>
 		<?= tpl_tag($tag['tag_id'], false, $tag['added'], $tag['added_by']) ?>
-		<?php endforeach; ?></span>
+		<?php endforeach; ?></div>
 	<div id="taskdetailstext"><?php echo $task_text; ?></div>
 
 	<?php
@@ -719,8 +729,16 @@ function quick_edit(elem, id)
 		$links = $proj->listTaskLinks($task_details['task_id']);
 		$this->display('common.links.tpl', 'links', $links);
 	?>
+
+	<?php if (!$task_details['supertask_id'] == 0) {
+		$supertask = Flyspray::getTaskDetails($task_details['supertask_id'], true);
+		if ($user->can_view_task($supertask)) {
+			?><p class="supertask"><span class ="fas fa-circle-info fa-2x"></span> <?php echo eL('taskissubtaskof').' '.tpl_tasklink($supertask);?></p><?php
+		}
+	} ?>
 </div>
 
+<?php if(!count($deps)==0 || !count($blocks)==0 || !count($subtasks)==0): ?>
 <div id="taskinfo">
 <?php if(!count($deps)==0): ?>
 	<table id="dependency_table" class="table" width="100%">
@@ -747,11 +765,16 @@ function quick_edit(elem, id)
 	<td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->severities[$dependency['task_severity']] ?></td>
 	<td><?php
 		$assignedcount=count($dependency['assigned_to']);
-		for ($i=0; $i< $assignedcount; $i++) {
-			if ($i>0) {
-				echo ", ";
+		if ($assignedcount> 0) {
+			for ($i=0; $i< $assignedcount; $i++) {
+				if ($i>0) {
+					echo ", ";
+				}
+				echo $dependency['assigned_to'][$i];
 			}
-			echo $dependency['assigned_to'][$i];
+		}
+		else {
+			echo eL('noone');
 		}
 	?></td>
 	<td class="task_progress">
@@ -800,12 +823,17 @@ function quick_edit(elem, id)
 		<td class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>"><?php echo $fs->severities[$dependency['task_severity']] ?></td>
 		<td><?php
 		$depassignedcount = count($dependency['assigned_to']);
-		for ($i = 0; $i < $depassignedcount; $i++) {
-			if ($i>0) {
-				echo ", ";
+		if ($depassignedcount > 0) {
+			for ($i = 0; $i < $depassignedcount; $i++) {
+				if ($i>0) {
+					echo ", ";
+				}
+				echo $dependency['assigned_to'][$i];
 			}
-			echo $dependency['assigned_to'][$i];
-		} ?></td>
+		} else {
+			echo eL('noone');
+		}
+		?></td>
 		<td class="task_progress">
 			<div class="progress_bar_container">
 			<span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
@@ -826,13 +854,6 @@ function quick_edit(elem, id)
 	</table>
 <?php endif; ?>
 
-<?php if (!$task_details['supertask_id'] == 0) {
-	$supertask = Flyspray::getTaskDetails($task_details['supertask_id'], true);
-	if ($user->can_view_task($supertask)) {
-		echo eL('taskissubtaskof').' '.tpl_tasklink($supertask);
-	}
-}
-?>
 <?php if(!count($subtasks)==0): ?>
 	<table id="subtask_table" class="table" width="100%">
 	<caption><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></caption>
@@ -842,7 +863,7 @@ function quick_edit(elem, id)
 		<th><?= eL('project') ?></th>
 		<th><?= eL('summary') ?></th>
 		<th><?= eL('priority') ?></th>
-                <th><?= eL('severity') ?></th>
+		<th><?= eL('severity') ?></th>
 		<th><?= eL('assignedto') ?></th>
 		<th><?= eL('progress') ?></th>
 		<th></th>
@@ -859,11 +880,16 @@ function quick_edit(elem, id)
 		<td class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>"><?php echo $fs->severities[$subtask['task_severity']] ?></td>
 		<td><?php
 			$subassignedcount = count($subtaskOrgin['assigned_to']);
-			for ($i=0; $i < $subassignedcount; $i++) {
-				if ($i>0) {
-					echo ", ";
+			if ($subassignedcount > 0) {
+				for ($i=0; $i < $subassignedcount; $i++) {
+					if ($i>0) {
+						echo ", ";
+					}
+					echo $subtaskOrgin['assigned_to'][$i];
 				}
-				echo $subtaskOrgin['assigned_to'][$i];
+			}
+			else {
+				echo eL('noone');
 			}
 		?></td>
 		<td class="task_progress">
@@ -884,28 +910,38 @@ function quick_edit(elem, id)
 	</table>
 <?php endif; ?>
 </div>
+<?php endif; ?>
 </div>
 
 <?php if ($task_details['is_closed']): ?>
 <div id="taskclosed">
-	<?= eL('closedby') ?>&nbsp;&nbsp;<?php echo tpl_userlink($task_details['closed_by']); ?><br/>
-	<?php echo Filters::noXSS(formatDate($task_details['date_closed'], true)); ?><br/>
-	<strong><?= eL('reasonforclosing') ?></strong> &nbsp;<?php echo Filters::noXSS($task_details['resolution_name']); ?><br/>
+	<p>
+		<?= eL('closedby') ?> <?php echo tpl_userlink($task_details['closed_by']); ?>
+	</p>
+	<p>
+		<?php echo Filters::noXSS(formatDate($task_details['date_closed'], true)); ?>
+	</p>
+	<p>
+		<strong><?= eL('reasonforclosing') ?></strong> <?php echo Filters::noXSS($task_details['resolution_name']); ?>
+	</p>
 	<?php if ($task_details['closure_comment']): ?>
+	<p>
 		<strong><?= eL('closurecomment') ?></strong>
-		&nbsp;<?php echo wordwrap(TextFormatter::render($task_details['closure_comment']), 40, "\n", true); ?>
+	</p>
+	<div>
+		<?php echo wordwrap(TextFormatter::render($task_details['closure_comment']), 40, "\n", true); ?>
+	</div>
 	<?php endif; ?>
 </div>
 <?php endif; ?>
 
+<?php if (count($penreqs)): ?>
 <div id="actionbuttons">
-	<?php if (count($penreqs)): ?>
-		<div class="pendingreq">
+	<div class="pendingreq">
 		<strong><?php echo Filters::noXSS(formatDate($penreqs[0]['time_submitted'])); ?>: <?= eL('request'.$penreqs[0]['request_type']) ?></strong>
 		<?php if ($penreqs[0]['reason_given']): ?>
-        		<?= eL('reasonforreq') ?>: <?php echo Filters::noXSS($penreqs[0]['reason_given']); ?>
+			<?= eL('reasonforreq') ?>: <?php echo Filters::noXSS($penreqs[0]['reason_given']); ?>
 		<?php endif; ?>
-		</div>
-	<?php endif; ?>
+	</div>
 </div>
-<div class="clear"></div>
+<?php endif; ?>

@@ -34,7 +34,7 @@
 <?php $return = '&return_to=' . base64_encode($_SERVER['REQUEST_URI']);?>
 <div id="login_oauth">
     <?php
-    	  if ($fs->prefs['active_oauths']):
+        if ($fs->prefs['active_oauths']):
           $providers = explode(' ', $fs->prefs['active_oauths']);
           foreach($providers as $provider): ?>
               <a class="btn-<?php echo $provider; ?>" href="index.php?do=oauth&provider=<?php echo $provider . $return; ?>">

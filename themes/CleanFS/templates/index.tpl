@@ -48,6 +48,29 @@
     {
         document.getElementById('bulk_assignment').options.length = 0;
     }
+
+    function exclusiveBlockerCheck(e)
+    {
+        var me = e.target;
+        var other = $(me.id == 'only_primary' ? 'only_blocker' : 'only_primary');
+
+		if(me.checked)
+        {
+			other.disable().checked = false;
+		}
+		else
+        {
+			other.enable();
+		}
+	}
+
+    document.observe('dom:loaded', function()
+    {
+        $$('#only_primary, #only_blocker').each(function(s)
+        {
+            s.observe('click', exclusiveBlockerCheck)
+        });
+    });
 </script>
 
 <?php if(isset($update_error)): ?>
@@ -86,39 +109,46 @@
 </fieldset>
 <?php endif; ?>
 <fieldset class="advsearch_misc">
-   <legend><?= eL('miscellaneous') ?></legend>
-   <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
-                    <label class="left" for="sic"><?= eL('searchcomments') ?></label>
-
-                    <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
-                    <label class="left" for="search_in_details"><?= eL('searchindetails') ?></label>
-
-                    <?php echo tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa'); ?>
-                    <label class="left" for="sfa"><?= eL('searchforall') ?></label>
-
-                    <?php echo tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched'); ?>
-                    <label class="left" for="only_watched"><?= eL('taskswatched') ?></label>
-
-                    <?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?>
-                    <label class="left" for="only_primary"><?= eL('onlyprimary') ?></label>
-
-		<?php echo tpl_checkbox('only_blocker', Get::has('only_blocker'), 'only_blocker'); ?>
-		<label class="left" for="only_blocker" id="blockerlabel"><?= eL('onlyblocker') ?></label>
-		<span id="blockerornoblocker"><?= eL('blockerornoblocker') ?></span>
-		<style>
-		#blockerornoblocker {display:none;color:#c00;}
-		#only_primary:checked ~ #only_blocker:checked ~ #blockerornoblocker {display:inline;}
-		</style>
-		
-                    <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
-                    <label class="left" for="has_attachment"><?= eL('hasattachment') ?></label>
-
-                    <?php echo tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks'); ?>
-                    <label class="left" for="hide_subtasks"><?= eL('hidesubtasks') ?></label>
-                </fieldset>
+    <legend><?= eL('miscellaneous') ?></legend>
+    <div class="searchfieldwrap">
+        <div>
+            <?php echo tpl_checkbox('search_in_comments', Get::has('search_in_comments'), 'sic'); ?>
+            <label class="left" for="sic"><?= eL('searchcomments') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('search_in_details', Get::has('search_in_details'), 'search_in_details'); ?>
+            <label class="left" for="search_in_details"><?= eL('searchindetails') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('search_for_all', Get::has('search_for_all'), 'sfa'); ?>
+            <label class="left" for="sfa"><?= eL('searchforall') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('only_watched', Get::has('only_watched'), 'only_watched'); ?>
+            <label class="left" for="only_watched"><?= eL('taskswatched') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('only_primary', Get::has('only_primary'), 'only_primary'); ?>
+            <label class="left" for="only_primary"><?= eL('onlyprimary') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('only_blocker', Get::has('only_blocker'), 'only_blocker'); ?>
+            <label class="left" for="only_blocker" id="blockerlabel"><?= eL('onlyblocker') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('has_attachment', Get::has('has_attachment'), 'has_attachment'); ?>
+            <label class="left" for="has_attachment"><?= eL('hasattachment') ?></label>
+        </div>
+        <div>
+            <?php echo tpl_checkbox('hide_subtasks', Get::has('hide_subtasks'), 'hide_subtasks'); ?>
+            <label class="left" for="hide_subtasks"><?= eL('hidesubtasks') ?></label>
+        </div>
+    </div>
+</fieldset>
 
                 <fieldset class="advsearch_task">
                     <legend><?= eL('taskproperties') ?></legend>
+                    <div class="searchfieldwrap">
             <!-- Task Type -->
 		    <?php if (!$filter || in_array('tasktype', $fields)) { ?>
                     <div class="search_select">
@@ -255,23 +285,31 @@ echo tpl_select(
 );
 ?>
                     </div>
-                    <div class="clear"></div>
+                    </div>
                 </fieldset>
 
                 <fieldset class="advsearch_users">
                     <legend><?= eL('users') ?></legend>
+                    <div class="searchfieldwrap">
+                    <div>
                     <label class="default multisel" for="opened"><?= eL('openedby') ?></label>
                     <?php echo tpl_userselect('opened', Get::val('opened'), 'opened', array('placeholder'=>' ')); ?>
-
+                    </div>
 		<?php if (!$filter || in_array('assignedto', $fields)) { ?>
+                    <div>
                     <label class="default multisel" for="dev"><?= eL('assignedto') ?></label>
                     <?php echo tpl_userselect('dev', Get::val('dev'), 'dev', array('placeholder'=>' ')); } ?>
+                    </div>
+                    <div>
                     <label class="default multisel" for="closed"><?= eL('closedby') ?></label>
                     <?php echo tpl_userselect('closed', Get::val('closed'), 'closed', array('placeholder'=>' ')); ?>
+                    </div>
+                    </div>
                 </fieldset>
 
                 <fieldset class="advsearch_dates">
                     <legend><?= eL('dates') ?></legend>
+                    <div class="searchfieldwrap">
             <!-- Due Date -->
 		    <?php if (!$filter || in_array('duedate', $fields)) { ?>
                     <div class="dateselect">
@@ -292,6 +330,7 @@ echo tpl_select(
                     <div class="dateselect">
                         <?php echo tpl_datepicker('closedfrom', L('selectclosedfrom')); ?>
                         <?php echo tpl_datepicker('closedto', L('selectclosedto')); ?>
+                    </div>
                     </div>
                 </fieldset>
             </div>
@@ -409,7 +448,7 @@ foreach ($tasks as $task): ?>
 <!-- Grab fields wanted for this project so we only show those specified in the settings -->
 <div id="bulk_edit_selectedItems" style="display:none">
     <fieldset>
-        <legend><b><?= eL('updateselectedtasks') ?></b></legend>
+        <legend><?= eL('updateselectedtasks') ?></legend>
         <ul class="form_elements slim">
             <input type="hidden" name="action" value="task.bulkupdate" />
             <input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>"/>
@@ -608,18 +647,23 @@ foreach ($tasks as $task): ?>
         <button type="submit" name="updateselectedtasks" value="true"><?= eL('updateselectedtasks') ?></button>
     </fieldset>
     <fieldset>
-	<legend><b><?php echo L('closeselectedtasks'); ?></b></legend>
+	<legend><?php echo L('closeselectedtasks'); ?></legend>
             <div>
+                <div>
                 <select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
                     <option value="0"><?= eL('selectareason') ?></option>
                     <?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
                 </select>
                 <button type="submit" name="updateselectedtasks" value="false"><?php echo L('closetasks'); ?></button>
-                <br/>
+                </div>
+                <div>
                 <label class="default text" for="closure_comment"><?= eL('closurecomment') ?></label>
                 <textarea class="text" id="closure_comment" name="closure_comment" rows="3"
                           cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+                </div>
+                <div>
                 <label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;&nbsp;<?php echo Filters::noXSS(L('mark100')); ?></label>
+                </div>
             </div>
     </fieldset>
 

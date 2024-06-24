@@ -6,7 +6,7 @@
     <button type="button" onmouseup="dualSelect('r', 'l', '<?php echo Filters::noJsXSS($id); ?>')">&#x25c0; <?php echo eL('remove'); ?></button>
   </div>
   <div class="dualselect_selected">
-    <?php if($updown): ?><button type="button" onmouseup="selectMove('<?php echo Filters::noJsXSS($id); ?>', -1)">&#x25b2;</button><br /><?php endif; ?>
+    <?php if($updown): ?><button type="button" onmouseup="selectMove('<?php echo Filters::noJsXSS($id); ?>', -1)">&#x25b2;</button><?php endif; ?>
     <select id="r<?php echo Filters::noXSS($id); ?>" multiple="multiple"
       ondblclick="dualSelect(this, 'l', '<?php echo Filters::noJsXSS($id); ?>')">%s</select>
     <?php if($updown): ?><button type="button" onmouseup="selectMove('<?php echo Filters::noJsXSS($id); ?>', 1)">&#x25bc;</button><?php endif; ?>

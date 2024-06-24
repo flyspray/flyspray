@@ -26,13 +26,13 @@ function toggleCheckbox(id)
 <fieldset>
 <legend><?= eL('accountfilter') ?></legend>
 <div style="margin-bottom:1em;">
-<div style="display:inline-block">
+<div style="display: inline-block;margin-bottom: 1em;">
+        <label for="usersearchtext" style=""><?= eL('name') ?>:</label>
         <input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
-        <label for="usersearchtext" style="padding-top:0.3em;float:left;padding-right:0.5em"><?= eL('name') ?>:</label>
 </div>
-<div style="display:inline-block">
+<div style="display: inline-block;margin-bottom: 1em;">
+        <label for="mailsearchtext" style=""><?= eL('email') ?>:</label>
         <input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
-        <label for="mailsearchtext" style="padding-top:0.3em;float:left;margin-left:2em;padding-right:0.5em"><?= eL('email') ?>:</label>
 </div>
 </div>
 <div>

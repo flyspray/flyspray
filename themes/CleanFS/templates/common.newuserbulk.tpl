@@ -17,14 +17,14 @@ endif; ?>
       <b><?php echo Filters::noXSS(L('bulkuserstoadd')); ?>:</b>
     </li>
     <table class="bulkuser">
+    <thead>
       <tr>
-        <td><label for="realname"><?php echo Filters::noXSS(L('realname')); ?></label></td>
-        <td><label for="username"><?php echo Filters::noXSS(L('username')); ?></label></td>
-        <td><label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label></td>
+        <th><?php echo Filters::noXSS(L('realname')); ?></th>
+        <th><?php echo Filters::noXSS(L('username')); ?></th>
+        <th><?php echo Filters::noXSS(L('emailaddress')); ?></th>
       </tr>
-    <br />
-
-
+    </thead>
+    <tbody>
 <?php for ($i = 0 ; $i < 10 ; $i++) { ?>
     <!-- User <?php echo Filters::noXSS($i); ?> -->
     <tr>
@@ -34,13 +34,11 @@ endif; ?>
     <tr>
      <tr></tr>
 <?php } ?>
+    </tbody>
     </table>
 
-
-    <br />
-
     <li>
-      <b><?php echo Filters::noXSS(L('optionsforallusers')); ?>:</b>
+      <strong><?php echo Filters::noXSS(L('optionsforallusers')); ?>:</strong>
     </li>
     <li>
       <label for="notify_type"><?php echo Filters::noXSS(L('notifications')); ?></label>

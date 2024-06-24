@@ -3,6 +3,7 @@
   <div class="attachments">
   <span class="fas fa-paperclip fa-2x"></span>
   <?php foreach ($attachments as $attachment): ?>
+    <div class="attachment_container">
     <?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
     <a title="<?php echo Filters::noXSS($attachment['orig_name']); ?>" href="?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>" <?php if (substr($attachment['file_type'], 0, 5) == 'image'): ?>rel="lightbox[bug]"<?php endif; ?>>
     <?php else: ?>
@@ -43,7 +44,7 @@
     if(file_exists(BASEDIR . '/attachments/' . $attachment['file_name']) && substr($attachment['file_type'], 0, 5) == 'image' ): ?>
     <a class="fas fa-download" title="Download <?php echo Filters::noXSS($attachment['orig_name']); ?>" href="?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>&amp;dl"></a>
     <?php endif; ?>
-    <br />
+    </div>
   <?php endforeach; ?>
   </div>
   <?php elseif (count($attachments)): ?>

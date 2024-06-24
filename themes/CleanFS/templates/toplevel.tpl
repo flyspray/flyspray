@@ -22,22 +22,20 @@ display: block;
 position: relative;
 width: 160px;
 }
-#s_inactive {display:none;}
-#s_inactive ~ .box {display: none;}
-#s_inactive:checked ~ .box {display: inline-block;}
 </style>
+<?php if ($projinactive > 0) { ?>
+<div id="actionbar">
+    <a class="button" onclick="showhidestuff_c('project-inactive');"><?php echo Filters::noXSS(L('showinactive')); ?></a>
+</div>
+<?php } ?>
+<div id="projects">
 <?php
 # $projects are now sorted active first, then inactive
 $lastprojectactive=1;
 foreach ($projects as $project): ?>
-  <?php if( count($projects)>1 && $lastprojectactive==1 && $project['project_is_active']==0) : ?>
-    <div style="clear:both;padding-top:20px;border-bottom:1px solid #999;"></div>
-    <input type="checkbox" id="s_inactive" />
-    <label class="button" style="display:block;width:100px;" for="s_inactive"><?php echo Filters::noXSS(L('showinactive')); ?></label>
-  <?php endif; ?>
   <?php $lastprojectactive=$project['project_is_active']; ?>
 
-<div class="box<?php if ($project_count == 1) echo ' single-project' ?>">
+<div id="project_<?php echo $project['project_id']; ?>" class="box<?php if ($project_count == 1) echo ' single-project'; if ($project['project_is_active'] == 0) echo ' project-inactive'; ?>"<?php if ($project['project_is_active'] == 0) echo ' style="display: none;"'; ?>>
 <h2><a href="<?php echo Filters::noXSS(CreateUrl('project', $project['project_id'])); ?>"><?php echo Filters::noXSS($project['project_title']); ?></a></h2>
 
 <table class="toplevel">
@@ -45,14 +43,17 @@ foreach ($projects as $project): ?>
   <tr>
     <th><?php echo Filters::noXSS(L('viewtasks')); ?></th>
     <td>
+      <div>
       <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'')); ?>"><?php echo Filters::noXSS(L('All')); ?></a> -
       <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('status[]'=>'open')); ?>"><?php echo Filters::noXSS(L('open')); ?></a> -
       <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('openedfrom'=>'-1 week')); ?>"><?php echo Filters::noXSS(L('recentlyopened')); ?></a>
+      </div>
       <?php if (!$user->isAnon()): ?>
-        <br />
+        <div>
         <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('dev'=>$user->id, 'devsm'=>'userid')); ?>"><?php echo Filters::noXSS(L('assignedtome')); ?></a> -
         <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('only_watched'=>1)); ?>"><?php echo Filters::noXSS(L('taskswatched')); ?></a> -
         <a href="<?php echo CreateURL('tasklist', $project['project_id'], null, array('opened'=>$user->id, 'openedsm'=>'userid')); ?>"><?php echo Filters::noXSS(L('tasksireported')); ?></a>
+        </div>
       <?php endif; ?>
     </td>
     
@@ -83,12 +84,12 @@ foreach ($projects as $project): ?>
 if($user->can_view_project($project['project_id']) ) : ?>
   <tr>
     <th><?php echo Filters::noXSS(L('activity')); ?></th>
-  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
+    <td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=project"/></span></td>
   </tr>
   <?php if (!$user->isAnon()): ?> 
   <tr>
     <th><?php echo Filters::noXSS(L('myactivity')); ?></th>
-  	<td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
+    <td><span class="activity" title="red line=today"><img width="160px" height="25px" src="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?line=0066CC&amp;do=activity&amp;user_id=<?php echo Filters::noXSS($user->id); ?>&amp;project_id=<?php echo Filters::noXSS($project['project_id']); ?>&amp;graph=user"/></span></td>
   </tr>
   <?php endif; ?>
 <?php endif; ?>
@@ -146,17 +147,21 @@ if($user->can_view_project($project['project_id']) ) : ?>
   <tr>
     <th><?php echo Filters::noXSS(L('feeds')); ?></th>
     <td>
-        <b><?php echo Filters::noXSS(L('rss')); ?> 1.0</b> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> - 
+        <div>
+        <strong><?php echo Filters::noXSS(L('rss')); ?> 1.0</strong> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> - 
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;topic=edit&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('edited')); ?></a> - 
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss1&amp;topic=clo&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('closed')); ?></a>
-        <br />
-        <b><?php echo Filters::noXSS(L('rss')); ?> 2.0</b> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> - 
+        </div>
+        <div>
+        <strong><?php echo Filters::noXSS(L('rss')); ?> 2.0</strong> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> - 
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;topic=edit&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('edited')); ?></a> -
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=rss2&amp;topic=clo&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('closed')); ?></a>
-        <br />
-        <b><?php echo Filters::noXSS(L('atom')); ?></b> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> -
+        </div>
+        <div>
+        <strong><?php echo Filters::noXSS(L('atom')); ?></strong> <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('opened')); ?></a> -
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;topic=edit&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('edited')); ?></a> -
         <a href="<?php echo Filters::noXSS($baseurl); ?>feed.php?feed_type=atom&amp;topic=clo&amp;project=<?php echo Filters::noXSS($project['project_id']); ?>"><?php echo Filters::noXSS(L('closed')); ?></a>
+        </div>
     </td>
   </tr>
 <?php endif; ?>
@@ -165,5 +170,4 @@ if($user->can_view_project($project['project_id']) ) : ?>
 <?php
 endforeach;
 ?>
-
-<div class="clear"></div>
+</div>

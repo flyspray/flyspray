@@ -9,54 +9,75 @@
 # Should we show that dropdown-list even if the field is not in the $fields-array to give the user the chance to resolve the issue?
 # The field list dropdown is not a secret for webtech-people, it is just not visible by css display:none;
 ?>
-<style>
-/* can be moved to default theme.css later, when the multiple errors/messages-feature is matured. currently used only here. */
-.errorinput{color:#c00 !important;}
-li.errorinput{background-color:#fc9;}
-.errorinput::before{display:block;content: attr(title);}
-</style>
 <div id="taskdetails">
 	<input type="hidden" name="action" value="details.update" />
 	<input type="hidden" name="edit" value="1" />
 	<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 	<input type="hidden" name="edit_start_time" value="<?php echo Filters::noXSS(Req::val('edit_start_time', time())); ?>" />
 	<div id="taskfields">
-	<ul class="form_elements slim">
+	<ul class="fieldslist">
 	<!-- Status -->
-	<li<?php
+	<li class="<?php
 		# show the tasktype if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invalidstatus']) ? ' class="errorinput"' : (in_array('status', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidstatus']) ? '<span class="errorinput" style="display:block;">'.eL('invalidstatus').'</span>' : ''; ?>
-		<label for="status"><?= eL('status') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidstatus'])
+			? 'errorinput' : (
+				in_array('status', $fields) ? '' : ' hidden'
+		); ?>">
+		<label for="status" class="label"><?= eL('status') ?></label>
+		<span class="value">
 		<?php echo tpl_select($statusselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invalidstatus'])) { ?>
+		<span class="errormessage"><?= eL('invalidstatus') ?></span>
+		 <?php } ?>
+		</span>
 	</li>
 	<!-- Progress -->
-	<li<?php echo in_array('progress', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="percent"<?php echo isset($_SESSION['ERRORS']['invalidprogress']) ? ' class="errorinput" title="'.eL('invalidprogress').'"':''; ?>><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
+	<li class="<?php echo isset($_SESSION['ERRORS']['invalidprogress']) ? 'errorinput' : ''; echo in_array('progress', $fields) ? '' : ' hidden'; ?>">
+		<label for="percent" class="label"><?php echo Filters::noXSS(L('percentcomplete')); ?></label>
+		<span class="value">
 		<select id="percent" name="percent_complete" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<?php $arr = array(); for ($i = 0; $i<=100; $i+=10) $arr[$i] = $i.'%'; ?>
 		<?php echo tpl_options($arr, Req::val('percent_complete', $task_details['percent_complete'])); ?>
 		</select>
+		<?php if (isset($_SESSION['ERRORS']['invalidprogress'])) { ?>
+		 <span class="errormessage"><?= eL('invalidprogress') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Task Type -->
-	<li<?php
+	<li class="<?php
 		# show the tasktype if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invalidtasktype']) ? ' class="errorinput"' : (in_array('tasktype', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidtasktype']) ? '<span class="errorinput" style="display:block;">'.eL('invalidtasktype').'</span>' : ''; ?>
-		<label for="tasktype"><?= eL('tasktype') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidtasktype'])
+			? 'errorinput' : (
+				in_array('tasktype', $fields) ? '' : ' hidden'
+		); ?>">
+		<label for="tasktype" class="label"><?= eL('tasktype') ?></label>
+		<span class="value">
 		<?php echo tpl_select($tasktypeselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invalidtasktype'])) { ?>
+		<span class="errormessage"><?= eL('invalidtasktype') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Category -->
-	<li<?php
+	<li class="<?php
 		# show the category if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invalidcategory']) ? ' class="errorinput"' : (in_array('category', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidcategory']) ? '<span class="errorinput" style="display:block;">'.eL('invalidcategory').'</span>' : ''; ?>
-		<label for="category"><?= eL('category') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidcategory'])
+			? 'errorinput' : (
+				in_array('category', $fields) ? '' : ' hidden'
+		); ?>">
+		<label for="category" class="label"><?= eL('category') ?></label>
+		<span class="value">
 		<?php echo tpl_select($catselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invalidcategory'])) { ?>
+		<span class="errormessage"><?= eL('invalidcategory') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Assigned To -->
-	<li<?php echo in_array('assignedto', $fields) ? '' : ' style="display:none"'; ?>>
-		<label><?= eL('assignedto') ?></label>
+	<li class="wideitem<?php echo in_array('assignedto', $fields) ? '' : ' hidden'; ?>">
+		<label class="label"><?= eL('assignedto') ?></label>
+		<span class="value">
 		<?php if ($user->perms('edit_assignments')): ?>
 			<input type="hidden" name="old_assigned" value="<?php echo Filters::noXSS($old_assigned); ?>" />
 		<?php $this->display('common.multiuserselect.tpl'); ?>
@@ -69,63 +90,101 @@ li.errorinput{background-color:#fc9;}
 				<?php endforeach;
 			endif;
 		endif; ?>
+		</span>
 	</li>
 	<!-- OS -->
-	<li<?php
+	<li class="<?php
 		# show the os if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invalidos']) ? ' class="errorinput"' : (in_array('os', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidos']) ? '<span class="errorinput" style="display:block;">'.eL('invalidos').'</span>' : ''; ?>
-		<label for="os"><?= eL('operatingsystem') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidos'])
+			? 'errorinput' : (
+				in_array('os', $fields) ? '' : ' hidden'
+		); ?>">
+		<label for="os" class="label"><?= eL('operatingsystem') ?></label>
+		<span class="value">
 		<?php echo tpl_select($osselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invalidos'])) { ?>
+		<span class="errormessage"><?= eL('invalidos') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Severity -->
-	<li<?php echo in_array('severity', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="severity"<?php echo isset($_SESSION['ERRORS']['invalidseverity']) ? ' class="errorinput" title="'.eL('invalidseverity').'"':''; ?>><?php echo Filters::noXSS(L('severity')); ?></label>
+	<li class="<?php echo isset($_SESSION['ERRORS']['invalidseverity']) ? 'errorinput' : ''; echo in_array('severity', $fields) ? '' : ' hidden'; ?>">
+		<label for="severity" class="label"><?php echo Filters::noXSS(L('severity')); ?></label>
+		<span class="value">
 		<select id="severity" name="task_severity">
-		 <?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
+		<?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
 		</select>
+		<?php if (isset($_SESSION['ERRORS']['invalidseverity'])) { ?>
+		<span class="errormessage"><?= eL('invalidseverity') ?>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Priority -->
 	<li<?php echo in_array('priority', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="priority"<?php echo isset($_SESSION['ERRORS']['invalidpriority']) ? ' class="errorinput" title="'.eL('invalidpriority').'"':''; ?>><?php echo Filters::noXSS(L('priority')); ?></label>
+		<label for="priority" class="label<?php echo isset($_SESSION['ERRORS']['invalidpriority']) ? ' errorinput' : ''; ?>"<?php echo isset($_SESSION['ERRORS']['invalidpriority']) ? ' title="'.eL('invalidpriority').'"':''; ?>><?php echo Filters::noXSS(L('priority')); ?></label>
+		<span class="value">
 		<select id="priority" name="task_priority" <?php echo tpl_disableif(!$user->perms('modify_all_tasks')) ?>>
 		<?php echo tpl_options($fs->priorities, Req::val('task_priority', $task_details['task_priority'])); ?>
 		</select>
+		</span>
 	</li>
 	<!-- Reported In -->
-	<li<?php
+	<li class="<?php
 		# show the reportedversion if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? ' class="errorinput"' : (in_array('reportedin', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidreportedversion']) ? '<span class="errorinput" style="display:block;">'.eL('invalidreportedversion').'</span>' : ''; ?>
-		<label for="reportedver"><?= eL('reportedversion') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidreportedversion'])
+			? 'errorinput' : (
+				in_array('reportedin', $fields) ? '' : 'hidden'
+		); ?>">
+		<label for="reportedver" class="label"><?= eL('reportedversion') ?></label>
+		<span class="value">
 		<?php echo tpl_select($reportedversionselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invalidreportedversion'])) { ?>
+		<span class="errormessage"><?= eL('invalidreportedversion') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Due Version -->
-	<li<?php
+	<li class="<?php
 		# show the dueversion if invalid when moving tasks - even if not in the visible list.
-		echo isset($_SESSION['ERRORS']['invaliddueversion']) ? ' class="errorinput"' : (in_array('dueversion', $fields) ? '' : ' style="display:none"'); ?>>
-		<?php echo isset($_SESSION['ERRORS']['invaliddueversion']) ? '<span class="errorinput" style="display:block;">'.eL('invaliddueversion').'</span>' : ''; ?>
-		<label for="dueversion"><?= eL('dueinversion') ?></label>
+		echo isset($_SESSION['ERRORS']['invaliddueversion'])
+			? 'errorinput' : (
+				in_array('dueversion', $fields) ? '' : ' hidden'
+		); ?>">
+		<label for="dueversion" class="label"><?= eL('dueinversion') ?></label>
+		<span class="value">
 		<?php echo tpl_select($dueversionselect); ?>
+		<?php if (isset($_SESSION['ERRORS']['invaliddueversion'])) { ?>
+		<span class="errormessage"><?= eL('invaliddueversion') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Due Date -->
-	<li<?php echo (in_array('duedate', $fields) && $user->perms('modify_all_tasks')) ? '' : ' style="display:none"'; ?>>
-		<label for="due_date"><?= eL('duedate') ?></label>
+	<li class="<?php echo isset($_SESSION['ERRORS']['invaliddue_date']) ? 'errorinput' : ''; echo (in_array('duedate', $fields) && $user->perms('modify_all_tasks')) ? '' : ' hidden'; ?>">
+		<label for="due_date" class="label"><?= eL('duedate') ?></label>
+		<span class="value">
 		<?php echo tpl_datepicker('due_date', '', Req::val('due_date', $task_details['due_date'])); ?>
+		<?php if (isset($_SESSION['ERRORS']['invaliddue_date'])) { ?>
+		<span class="errormessage"><?= eL('invalidduedate') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	<!-- Private -->
 	<?php if ($user->can_change_private($task_details)): ?>
-	<li<?php echo in_array('private', $fields) ? '' : ' style="display:none"'; ?>>
-		<label for="private"><?= eL('private') ?></label>
+	<li<?php echo in_array('private', $fields) ? '' : ' class="hidden"'; ?>>
+		<label for="private" class="label"><?= eL('private') ?></label>
+		<span class="value">
 		<?php echo tpl_checkbox('mark_private', Req::val('mark_private', $task_details['mark_private']), 'private'); ?>
+		</span>
 	</li>
 	<?php endif; ?>
 
 	<?php if ($proj->prefs['use_effort_tracking'] && $user->perms('view_estimated_effort')): ?>
 	<li>
-		<label for="estimated_effort"><?= eL('estimatedeffort') ?></label>
+		<label for="estimated_effort" class="label"><?= eL('estimatedeffort') ?></label>
+		<span class="value">
 		<input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="10" value="<?php echo Filters::noXSS(effort::secondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])); ?>" />
 		<?= eL('hours') ?>
+		</span>
 	</li>
 	<?php endif; ?>
 
@@ -149,14 +208,19 @@ li.errorinput{background-color:#fc9;}
 	?>
 
 	<!-- If there is only one choice of projects, then don't bother showing it -->
-	<li<?php
+	<li class="<?php
 		# show the targetproject selector if invalid when moving tasks
-		echo isset($_SESSION['ERRORS']['invalidtargetproject']) ? ' class="errorinput"' : ''; ?>>
-		<?php echo isset($_SESSION['ERRORS']['invalidtargetproject']) ? '<span class="errorinput" style="display:block;">'.eL('invalidtargetproject').'</span>' : ''; ?>
-		<label for="project_id"><?= eL('attachedtoproject') ?></label>
+		echo isset($_SESSION['ERRORS']['invalidtargetproject'])
+			? 'errorinput' : ''; ?>">
+		<label for="project_id" class="label"><?= eL('attachedtoproject') ?></label>
+		<span class="value">
 		<select name="project_id" id="project_id">
 		<?php echo tpl_options($fs->projects, Req::val('project_id', $proj->id)); ?>
 		</select>
+		<?php if (isset($_SESSION['ERRORS']['invalidtargetproject'])) { ?>
+		<span class="errormessage"><?= eL('invalidtargetproject') ?></span>
+		<?php } ?>
+		</span>
 	</li>
 	</ul>
 	<div id="fineprint">
@@ -187,12 +251,12 @@ li.errorinput{background-color:#fc9;}
 		</div>
 		<div id="tagrender"></div>
 		<fieldset id="availtaglist">
-                <legend><?= eL('tagsavail') ?></legend>
-                <?php
-                foreach ($taglist as $tagavail) {
-                        echo tpl_tag($tagavail['tag_id']); 
-                } ?>
-                </fieldset>
+			<legend><?= eL('tagsavail') ?></legend>
+			<?php
+			foreach ($taglist as $tagavail) {
+				echo tpl_tag($tagavail['tag_id']);
+			} ?>
+		</fieldset>
 	<?php endif; ?>
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
@@ -208,7 +272,7 @@ li.errorinput{background-color:#fc9;}
 		<button type="reset"><?= eL('reset') ?></button>
 	<?php endif; ?>
 	<br />
-
+	<div id="attachmentsbox">
 	<div id="addlinkbox">
 	<?php
 	$links = $proj->listTaskLinks($task_details['task_id']);
@@ -244,12 +308,13 @@ li.errorinput{background-color:#fc9;}
 		<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
 			<?= eL('attachanotherfile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
 		</button>
-		<br />
+
 		<span style="display: none"><?php /* this span is shown/copied by javascript when adding files */ ?>
 			<input tabindex="5" class="file" type="file" size="55" name="usertaskfile[]" />
 			<a href="javascript://" tabindex="6" class="button fas fa-xmark fa-lg" title="<?= eL('remove') ?>" onclick="removeUploadField(this);"></a><br />
 		</span>
 	<?php endif; ?>
+	</div>
 	</div>
 	<div class="buttons">
 		<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
