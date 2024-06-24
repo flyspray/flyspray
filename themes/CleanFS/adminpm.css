@@ -39,7 +39,7 @@ input[value="0"]:checked ~ div.btn-group label#s_disabled {background-color:#f96
 .perms thead th, .perms thead td {text-align:center;}
 .perms tbody th{text-align:right;}
 .perms tbody td{width:10em;text-align:center;}
-.perms tbody span i:first-child {color: #090;}
+.perms tbody span span:first-child {color: #090;}
 .group.globalgroup {background-color:#ddd;}
 .group.globalgroup.inactive {background-color:#ccc;}
 .perms .perm-no, .perms .perm-no * { color:#999; }
