@@ -23,31 +23,33 @@ function toggleCheckbox(id)
 <option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
 </select>
 </fieldset>
-<fieldset>
-<legend><?= eL('accountfilter') ?></legend>
-<div style="margin-bottom:1em;">
-<div style="display: inline-block;margin-bottom: 1em;">
+<fieldset id="user_filters">
+	<legend><?= eL('accountfilter') ?></legend>
+    <div>
         <label for="usersearchtext" style=""><?= eL('name') ?>:</label>
         <input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
-</div>
-<div style="display: inline-block;margin-bottom: 1em;">
+    </div>
+    <div>
         <label for="mailsearchtext" style=""><?= eL('email') ?>:</label>
         <input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
-</div>
-</div>
-<div>
-	<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
-	<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
-	<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
-	<span><?= eL('accountstatus') ?>:</span>
-	<div class="btn-group" style="display:inline-block">
-	<label
-	class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label><label 
-	class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label><label
-	class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+    </div>
+    <div id="accountstatuswrap">
+		<label><?= eL('accountstatus') ?>:</label>
+		<div class="btn-group">
+
+			<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
+			<label class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label>
+
+			<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
+			<label class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label>
+
+			<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
+			<label class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+
+		</div>
 	</div>
-</div>
-<p><button type="submit"><?= eL('search') ?></button></p>
+
+	<p><button type="submit"><?= eL('search') ?></button></p>
 </fieldset>
 </form>
 <?php if ($usercount): ?>
