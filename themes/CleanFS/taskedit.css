@@ -1,24 +1,33 @@
 /* taskedit.css used for the task details edit page */
+#tagsinputwrap {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 10px;
+}
+#taskdetailsfull > div {
+	margin-bottom: 10px;
+}
 input#tags {
-	max-width:80%;
+	flex: 1 1 auto;
 }
-input#availtags {
-	display:none;
+#tagstoggle {
+	flex: 0 0 auto;
+	margin: 0;
 }
-
-label#availtagsshow {display:inline-block;}
-label#availtagshide {display:none;}
-
-#availtags:checked + div label#availtagsshow {
-	display:none;
+#tags_info {
+	margin: 1em 0;
+	border: 1px solid #e1e1e1;
+	border-radius: 3px;
+	padding: .25em;
 }
-
-#availtags:checked ~ div label#availtagshide {
-	display:inline-block;
+#tags_info > span {
+	color: #999;
+	vertical-align: middle;
+	margin-right: .35em;
 }
-
 #availtaglist {
-	display:none;
+/*	display:none;*/
 	background-color:#eee;
 }
 #availtaglist span.tag {
@@ -49,6 +58,9 @@ label#availtagshide {display:none;}
 input#availtags:checked ~ #availtaglist {
 	display:block;
 }
+#tagrender:empty {
+	display: none;
+}
 #tagrender .tag {
 	cursor:pointer;
 	display:inline-block;
@@ -77,4 +89,7 @@ input#availtags:checked ~ #availtaglist {
 }
 #tagrender .tag:hover::after {
 	opacity: 1;
+}
+#attachmentsbox {
+	margin: 0 0 10px 0;
 }

@@ -89,7 +89,7 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 
 // developers or advanced users only
 //define('DEBUG_SQL',true);
-//define('DEBUG_EXCEPTION', true);
+define('DEBUG_EXCEPTION', true);
 
 # 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php.
 //define('JABBER_DEBUG', true);

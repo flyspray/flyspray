@@ -9,6 +9,11 @@ function taghelperevents() {
 
 	tags.addEventListener('change', renderTags);
 
+	tagstoggle = document.getElementById('tagstoggle');
+	if (tagstoggle) {
+		tagstoggle.addEventListener('click', toggleTags);
+	}
+
 	var availtags=document.querySelectorAll('#availtaglist > span.tag');
 	if (availtags) {
 		var atcount=availtags.length;
@@ -24,6 +29,23 @@ function taghelperevents() {
 		}
 	}
 }
+
+function toggleTags(event) {
+	event.stop();
+	var me = this;
+	var mystateicon = me.childElements()[1]; // the caret icon: up/down
+	var is_open = $(mystateicon).hasClassName('fa-caret-up');
+
+	if (is_open) {
+		$('availtaglist').hide();
+		mystateicon.removeClassName('fa-caret-up').addClassName('fa-caret-down');
+	}
+	else {
+		$('availtaglist').show();
+		mystateicon.removeClassName('fa-caret-down').addClassName('fa-caret-up');
+	}
+}
+
 
 function renderTags(event) {
 	var tags = document.getElementById('tags');
@@ -49,7 +71,6 @@ function renderTags(event) {
 			// todo: get tagid, and class/style info from available tag list
 			var addedtag=tagrenderarea.appendChild(newtag);
 			addedtag.addEventListener('click', removeTag);
-			console.log(newtag);
 		}
 	}
 }

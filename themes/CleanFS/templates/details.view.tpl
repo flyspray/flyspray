@@ -715,7 +715,7 @@ function quick_edit(elem, id)
 	FS#<?php echo Filters::noXSS($task_details['task_id']); ?> - <?php echo Filters::noXSS($task_details['item_summary']); ?>
 	</h2>
 
-	<div class="tags"><?php foreach($tags as $tag): ?>
+	<div class="tags box"><?php foreach($tags as $tag): ?>
 		<?= tpl_tag($tag['tag_id'], false, $tag['added'], $tag['added_by']) ?>
 		<?php endforeach; ?></div>
 	<div id="taskdetailstext"><?php echo $task_text; ?></div>

@@ -215,20 +215,32 @@
       </div>
 
       <div id="taskdetailsfull">
-		<h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> :: <?= eL('newtask') ?></h3>
+      <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> :: <?= eL('newtask') ?></h3>
+      <div>
         <label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
-        <input id="itemsummary" required="required" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
+        <div id="itemsummarywrap">
+          <input id="itemsummary" required="required" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
             name="item_summary" maxlength="100" />
+        </div>
+      </div>
 	<?php if ($proj->prefs['use_tags']): ?>
-		<input type="checkbox" id="availtags">
+      <div>
 		<div id="edit_tags">
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
+            <div id="tagsinputwrap">
 			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags','')); ?>" />
-			<label for="availtags" class="button" id="availtagsshow"><i class="fas fa-plus"></i></label>
-			<label for="availtags" class="button" id="availtagshide"><i class="fas fa-minus"></i></label>
+            <button id="tagstoggle"><span class="fas fa-tags"></span><span class="fas fa-caret-down"></span></button>
+          </div>
 		</div>
-		<div id="tagrender"></div>
-		<fieldset id="availtaglist">
+      </div>
+
+      <div id="tags_info">
+        <span class="fas fa-circle-exclamation fa-2x"></span>
+		  <?= eL('tagsinfo') ?>
+      </div>
+
+		<div id="tagrender" class="box"></div>
+		<fieldset id="availtaglist" style="display: none;">
                 <legend><?= eL('tagsavail') ?></legend>
                 <?php
                 foreach ($taglist as $tagavail) {
@@ -236,13 +248,15 @@
                 } ?>
                 </fieldset>
 	<?php endif; ?>
+
+      <div id="descwrap">
         <?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
         <div class="hide preview" id="preview"></div>
         <button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
         <?php endif; ?>
         <?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task'])); ?>
 
-      <p class="buttons">
+        <p class="buttons">
           <?php if ($user->isAnon()): ?>
           <label class="inline" for="anon_email"><?= eL('youremail') ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30" required="required" value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
           <?php endif; ?>
@@ -256,8 +270,8 @@
           &nbsp;&nbsp;<input class="text" type="checkbox" id="notifyme" name="notifyme"
           value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?= eL('notifyme') ?></label>
           <?php endif; ?>
-      </p>
-
+        </p>
+      </div>
         <?php if ($user->perms('create_attachments')): ?>
         <div id="attachmentsbox">
         <div id="uploadfilebox">
@@ -296,9 +310,9 @@
         </div>
         <?php endif; ?>
 
-<button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?= eL('addthistask') ?></button>
+      <div class="buttons">
+        <button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?= eL('addthistask') ?></button>
       </div>
-
-    <div class="clear"></div>
+      </div>
   </div>
 </form>

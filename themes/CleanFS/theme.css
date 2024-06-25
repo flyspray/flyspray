@@ -1043,7 +1043,9 @@ max-width:40em;
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {padding: 1em 1em 2em;flex: 1 1 auto; max-width: 50%;}
-#itemsummary, #tags {width:100%;box-sizing:border-box;height:auto;margin-bottom:10px;margin-top:8px;}
+#itemsummary {width:calc(100% - 6px);box-sizing:border-box;vertical-align: middle;height:auto;}
+#tags {vertical-align: middle;display: inline-block !important;}
+.tags:empty {display: none;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
 .descbox td, .descbox th, #taskdetailstext td, #taskdetailstext th{border:1px solid #999;}
 #taskdetailsfull p.supertask {

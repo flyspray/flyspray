@@ -234,23 +234,33 @@
 	</div>
 </div>
 <div id="taskdetailsfull">
-	<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:
-		<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
-	</label>
+	<div>
+		<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:</label>
+		<div id="itemsummarywrap">
+			<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
+		</div>
+	</div>
+
 	<?php if ($proj->prefs['use_tags']): ?>
 		<?php
 		foreach($tags as $tag): $tagnames[]= Filters::noXSS($tag['tag']); endforeach;
 		isset($tagnames) ? $tagstring=implode(';',$tagnames) : $tagstring='';
 		?>
-		<input type="checkbox" id="availtags">
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
-			<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
-			<label for="availtags" class="button" id="availtagsshow"><span class="fas fa-plus"></span></label>
-			<label for="availtags" class="button" id="availtagshide"><span class="fas fa-minus"></span></label>
+			<div id="tagsinputwrap">
+				<input placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
+				<button id="tagstoggle"><span class="fas fa-tags"></span><span class="fas fa-caret-down"></span></button>
+			</div>
 		</div>
-		<div id="tagrender"></div>
-		<fieldset id="availtaglist">
+
+		<div id="tags_info">
+			<span class="fas fa-circle-exclamation fa-2x"></span>
+			<?= eL('tagsinfo') ?>
+		</div>
+
+		<div id="tagrender" class="box"></div>
+		<fieldset id="availtaglist" style="display: none;">
 			<legend><?= eL('tagsavail') ?></legend>
 			<?php
 			foreach ($taglist as $tagavail) {
@@ -258,6 +268,8 @@
 			} ?>
 		</fieldset>
 	<?php endif; ?>
+
+	<div id="descwrap">
 	<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 		<div class="hide preview" id="preview"></div>
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
@@ -271,7 +283,8 @@
 	<?php else: ?>
 		<button type="reset"><?= eL('reset') ?></button>
 	<?php endif; ?>
-	<br />
+	</div>
+
 	<div id="attachmentsbox">
 	<div id="addlinkbox">
 	<?php
@@ -335,6 +348,5 @@
 		<a class="button" href="<?php echo Filters::noXSS(createUrl('details', $task_details['task_id'])); ?>"><?= eL('canceledit') ?></a>
 	</div>
 </div>
-<div class="clear"></div>
 </div>
 </form>
