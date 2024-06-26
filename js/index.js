@@ -14,6 +14,24 @@ function searchInit() {
   if (search !== null) {
     search.addEventListener('submit', trimBeforeSearchSubmit);
   }
+
+  let advsearch = document.getElementById('searchstateactions');
+  if (advsearch !== null) {
+    advsearch.observe('click', function (e) {
+       var me = $(this);
+       var arrow = $(me.childElements()[0]);
+       var sc2 = $('sc2');
+       var s_searchstate = $('s_searchstate');
+
+       if (arrow.hasClassName('fa-caret-up')) {
+         arrow.removeClassName('fa-caret-up').addClassName('fa-caret-down');
+         sc2.hide();
+       } else {
+         arrow.removeClassName('fa-caret-down').addClassName('fa-caret-up');
+         sc2.show();
+       }
+    });
+  }
 }
 
 // convenience for users with enabled javascript in browser

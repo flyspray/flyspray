@@ -92,15 +92,17 @@
 <?php if (!($user->isAnon() &&  (count($fs->projects) == 0 || ($proj->id >0 && !$user->can_view_project($proj->id)))) ): ?>
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+<div id="sc1">
 	<button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
 	<input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
 	 maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
 	<input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
 	<input type="hidden" name="do" value="index"/>
 	<input id="s_searchstate" type="checkbox" name="advancedsearch"<?php if(Req::val('advancedsearch')): ?> checked="checked"<?php endif; ?>/>
-	<label id="searchstateactions" class="button" for="s_searchstate"><?= eL('advanced') ?></label>
+	<label id="searchstateactions" class="button" for="s_searchstate"><?= eL('advanced') ?><span class="fas fa-caret-<?= (Req::val('advancedsearch') ? 'up' : 'down') ?> fa-lg"></span></label>
 	<button type="submit" name="export_list" value="1" id="exporttasklist" title="<?= eL('exporttasklist') ?>"><span class="fas fa-download"></span> <?= eL('exporttasklist') ?></button>
-<div id="sc2" class="switchcontent">
+</div>
+<div id="sc2" class="switchcontent"<?php if(!Req::val('advancedsearch')): ?> style="display: none;"<?php endif; ?>>
 <?php if (!$user->isAnon()): ?>
 <fieldset>
   <div class="save_search"><label for="save_search" id="lblsaveas"><?= eL('saveas') ?></label>

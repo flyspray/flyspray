@@ -514,11 +514,12 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-#sc2,#s_searchstate{display:none;}
+#sc1 {display: flex; flex-direction:row;flex-wrap: nowrap;gap: 10px 0;}
+#sc1 > button, #sc1 > .button { margin-top: 0; margin-bottom: 0; }
+#sc1 > button:last-child { margin-left: auto;}
+#s_searchstate{display:none;}
 #searchstateactions{margin-left: 2em;}
-#s_searchstate:checked ~ #sc2 {display:block;}
-#s_searchstate ~ label::before { content: "\25bc";margin-right: .35em;}
-#s_searchstate:checked ~ label::before { content: "\25b2";}
+#searchstateactions > span { margin-left: .35em; }
 
 #search fieldset {
     margin: 10px 0px 10px 0px;
@@ -571,7 +572,6 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   float: none;
 }
 #search #exporttasklist {
-  margin-left: 2em;
 }
 #intromessage {
   margin: 10px 0px 10px 0px;
@@ -1952,6 +1952,7 @@ fieldset { margin-left: 5px;margin-right: 5px;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
 #pmcontrol {margin:0;display:block;padding:5px;}
+#sc1 {flex-wrap: wrap;}
 #task_id {width:120px;}
 #projectselector {position:absolute;top:0;right:0;margin:0;text-align:center;max-width:40%;}
 #projectselector select{height:40px;padding-right:4px;max-width:100%;}
