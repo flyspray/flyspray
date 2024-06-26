@@ -2,8 +2,10 @@
 <div id="login_input">
 	<input placeholder="<?php echo Filters::noXSS(L('username')); ?>" class="text" type="text" id="lbl_user_name" name="user_name" size="17" maxlength="32" />
 	<input placeholder="<?php echo Filters::noXSS(L('password')); ?>" class="password" type="password" id="lbl_password" name="password" size="17" maxlength="100" />
-	<label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
-	<input type="checkbox" id="lbl_remember" name="remember_login" />
+	<div>
+		<label for="lbl_remember"><?php echo Filters::noXSS(L('rememberme')); ?></label>
+		<input type="checkbox" id="lbl_remember" name="remember_login" />
+	</div>
 	<input type="hidden" name="return_to" value="<?php echo Filters::noXSS($_SERVER['REQUEST_URI']); ?>" />
 	<input type="submit" value="<?php echo Filters::noXSS(L('login')); ?>" name="login" id="login_button" />
 </div>

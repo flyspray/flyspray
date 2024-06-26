@@ -1349,7 +1349,6 @@ a#show_loginbox {margin-right: 5px;}
 #login_input {text-align: center;}
 #login_links {text-align: center;}
 #login_oauth {margin-top: 10px;}
-#loginbox #login label {color: #222;}
 #loginbox #login a {color: #222;text-decoration: underline;}
 #loginbox #login a:hover {color: #fff;}
 form#login {position: relative;}
@@ -1358,7 +1357,14 @@ form#login #lbl_user_name, form#login #lbl_password {
   margin: 10px auto;
   padding: 5px 2px;
 }
-form#login label {width: 50px;color: #ddd;width: 100px;margin: 0 2px 0 20px;}
+form#login label {width: 50px;color: #222;width: 100px;margin: 0 2px 0 20px;}
+form#login #login_input > div:focus-within label {
+	color: #5f9729; /* accent green */
+}
+form#login #login_input > div:focus-within input {
+/*	outline: 2px solid #5f9729;*/ /* accent green */
+}
+
 form#login #links {position: absolute;top: 30px;left: 20px;}
 form#login #links a {padding: 3px 7px;}
 form#login #links a:hover {
