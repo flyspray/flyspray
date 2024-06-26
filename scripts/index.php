@@ -158,31 +158,46 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 {
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
+    $sorticonbase = '<span class="fas %s fa-lg"></span>';
     $class   = $colname;
-    $html    = eL($colname);
+    $html    = '<span>' . eL($colname) . '</span>';
+    $afterhtml = '';
 /*
     if ($colname == 'comments' || $colname == 'attachments') {
         $html = sprintf($imgbase, $page->get_image(substr($colname, 0, -1)), $html);
     }
 */
 	if ($colname == 'attachments') {
-		$html='<i class="fa fa-paperclip fa-lg" title="'.$html.'"></i>';
+		$html='<span class="fas fa-paperclip fa-lg" title="'.$html.'"></span>';
 	}
 	if ($colname == 'comments') {
-		$html='<i class="fa fa-comments fa-lg" title="'.$html.'"></i>';
+		$html='<span class="fas fa-comments fa-lg" title="'.$html.'"></span>';
 	}
 	if ($colname == 'votes') {
-		$html='<i class="fa fa-star-o fa-lg" title="'.$html.'"></i>';
+		$html='<span class="far fa-star fa-lg" title="'.$html.'"></span>';
 	}
 
     if (Get::val('order') == $colname) {
         $class .= ' orderby';
         $sort1  = Get::safe('sort', 'desc') == 'desc' ? 'asc' : 'desc';
+        $sort1now = ($sort1 == 'asc' ? 'desc' : 'asc');
+        $icon = 'fa-' . ($sort1 == 'asc' ? 'arrow-down-wide-short' : 'arrow-up-short-wide');
         $sort2  = Get::safe('sort2', 'desc');
         $order2 = Get::safe('order2');
-        $html  .= '&nbsp;&nbsp;'.sprintf($imgbase, $page->get_image(Get::val('sort')), Get::safe('sort'));
-    }
-    else {
+        $class .= " $sort1now";
+        $html .= sprintf($sorticonbase, $icon);
+    } else {
+        if (Get::val('order2') == $colname) {
+            $class .= ' orderby2';
+            $sort2  = Get::safe('sort2', 'desc') == 'desc' ? 'asc' : 'desc';
+            $sort2now = ($sort2 == 'asc' ? 'desc' : 'asc');
+            $order2 = Get::safe('order2');
+            $icon2 = 'fa-' . ($sort2 == 'asc' ? 'arrow-down-wide-short' : 'arrow-up-short-wide');
+            $class .= " $sort2now";
+
+            $afterhtml .= sprintf($sorticonbase, $icon2);
+        }
+
         $sort1  = 'desc';
         if (in_array($colname,
                     array('project', 'tasktype', 'category', 'openedby', 'assignedto')))
@@ -200,11 +215,11 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 	unset($params['do']);
 	unset($params['project']);
 	unset($params['switch']);
-	# resorting a search result should show always the first results 
+	# resorting a search result should show always the first results
         unset($params['pagenum']);
-	
-	$html = sprintf('<a title="%s" href="%s">%s</a>',
-		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html);
+
+	$html = sprintf('<a title="%s" href="%s">%s</a>%s',
+		eL('sortthiscolumn'), Filters::noXSS(createURL('tasklist', $proj->id, null, $params )), $html, $afterhtml);
 
 	return sprintf($format, ' class="'.$class.'"', $html);
 }

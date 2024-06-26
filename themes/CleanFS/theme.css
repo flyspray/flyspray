@@ -657,6 +657,28 @@ a {text-decoration: none;}
 }*/
 
 #tasklist_table thead th {line-height:1;}
+
+#tasklist_table thead th .fa,
+#tasklist_table thead th .fas,
+#tasklist_table thead th .fa-solid,
+#tasklist_table thead th .far,
+#tasklist_table thead th .fa-regular,
+#tasklist_table thead th .fa-brand {
+	margin-left: .35em;
+}
+#tasklist_table thead th a .fa:only-child,
+#tasklist_table thead th a .fas:only-child,
+#tasklist_table thead th a .fa-solid:only-child,
+#tasklist_table thead th a .far:only-child,
+#tasklist_table thead th a .fa-regular:only-child,
+#tasklist_table thead th a .fa-brand:only-child
+{
+	margin-left: 0;
+}
+#tasklist_table thead th a + * {
+	color: #999;
+}
+
 #tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
 .task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
