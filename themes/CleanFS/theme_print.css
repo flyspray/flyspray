@@ -45,7 +45,6 @@ a:link:after, a:visited:after {content:" (" attr(href) ")";font-size:90%;}
 #remind >fieldset,
 #notify >form,
 #notify button,
-#s_shortcuts,
-#s_quickactions {
+#s_shortcuts {
 display: none;
 }

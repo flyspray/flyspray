@@ -64,7 +64,6 @@ body a.button.positive, body button.positive,
 #pm-menu-list a.active, #pm-menu-list a.active:hover,
 #menu-list a.active, #menu-list a.active:hover,
 #s_loginbox:checked ~ #show_loginbox,
-#s_quickactions:checked ~ #actions,
 #menu-list a#show_loginbox:hover,
 .pagenums .active {
 	background-color: #5f9729;
@@ -77,7 +76,10 @@ ul li.hide-intro, .disp_introdep.hide-intro {
 	visibility: hidden;
 	margin: 0;
 }
-
+.button-active, .button-active:hover {
+	background: #5f9729 !important;
+	color: #fff !important;
+}
 /*
  highlight advanced search fields that have input 
  no pure CSS styling of options of multiselects possible (it was back in time in some web browsers, a shame!)
@@ -277,10 +279,10 @@ a:hover {color: #6699cc;}
   background: #000;
   border-radius: 3px;
 }
-#s_loginbox, #s_quickactions { display: none;}
-#loginbox, #actionsform { display: none;}
-#s_loginbox:checked ~ #loginbox, #s_quickactions:checked ~ #actionsform { display: block; }
-tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox, #s_quickactions:checked ~ #actions {
+#s_loginbox { display: none;}
+#loginbox { display: none;}
+#s_loginbox:checked ~ #loginbox { display: block; }
+tr.active, #menu-list a.active, #s_loginbox:checked ~ #show_loginbox {
   color: #fff;
   border-radius: 3px;
 }
@@ -1844,7 +1846,7 @@ span.warning {
 #globoslink .fa, #projoslink .fa{padding-right: 3px;}
 /* typical colorings for task type and permissions */
 .fa-bug{color:#c30;}
-.fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
+.perms .fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
 .fa-exclamation-triangle{color:#c00;}
 .fa-check{color:#090;}
 .global.fa-check{color:#990;} /* got permission by global settings, not project settings */

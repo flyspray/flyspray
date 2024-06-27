@@ -8,10 +8,12 @@ function detailsInit() {
   var arr = /(#)(\d+)/.exec(title);
   if( arr != null){
     sessionStorage.setItem('current_task', arr[2]);
-    
+
     // make sure the page is not in edit mode, 'details' is id of description textarea
     if (!document.getElementById('details')) {
       Event.observe(document,'keydown',keyboardNavigation);
+
+      Event.observe('actions', 'click', toggleQuickEdit);
     }
   }
 }
@@ -42,5 +44,17 @@ function keyboardNavigation(e) {
           Event.stop(e);
         }
         break;
+  }
+}
+function toggleQuickEdit(e) {
+  var me = $(this);
+  var qm = $('actionsform');
+
+  if (qm.visible()) {
+    qm.hide();
+    me.removeClassName('button-active');
+  } else {
+    qm.show();
+    me.addClassName('button-active');
   }
 }

@@ -109,9 +109,8 @@
 	<?php endif; ?>
 
 	<div class="actionitem" id="quickactionsitem">
-		<input type="checkbox" id="s_quickactions" />
-		<label class="button main" id="actions" for="s_quickactions"><?= eL('quickaction') ?></label>
-		<div id="actionsform">
+		<button id="actions"><?= eL('quickaction') ?></button>
+		<div id="actionsform" style="display: none;">
 			<ul>
 			<?php if ($user->can_edit_task($task_details)): ?>
 			<li>
