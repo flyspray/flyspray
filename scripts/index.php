@@ -161,6 +161,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     $sorticonbase = '<span class="fas %s fa-lg"></span>';
     $class   = $colname;
     $html    = '<span>' . eL($colname) . '</span>';
+    $title = el($colname);
     $afterhtml = '';
 /*
     if ($colname == 'comments' || $colname == 'attachments') {
@@ -168,13 +169,13 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
     }
 */
 	if ($colname == 'attachments') {
-		$html='<span class="fas fa-paperclip fa-lg" title="'.$html.'"></span>';
+		$html='<span class="fas fa-paperclip fa-lg" title="'.$title.'"></span>';
 	}
 	if ($colname == 'comments') {
-		$html='<span class="fas fa-comments fa-lg" title="'.$html.'"></span>';
+		$html='<span class="fas fa-comments fa-lg" title="'.$title.'"></span>';
 	}
 	if ($colname == 'votes') {
-		$html='<span class="far fa-star fa-lg" title="'.$html.'"></span>';
+		$html='<span class="far fa-star fa-lg" title="'.$title.'"></span>';
 	}
 
     if (Get::val('order') == $colname) {
