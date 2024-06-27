@@ -114,13 +114,13 @@
 			<ul>
 			<?php if ($user->can_edit_task($task_details)): ?>
 			<li>
-				<a accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"> <?= eL('edittask') ?></a>
+				<a accesskey="e" href="<?php echo Filters::noXSS(createURL('edittask', $task_details['task_id'])); ?>"><span class="fas fa-pen fa-lg"></span><?= eL('edittask') ?></a>
 			</li>
 			<?php endif; ?>
 
 			<?php if ($user->can_set_task_parent($task_details)): ?>
 			<li>
-				<input type="checkbox" id="s_parent" /><label for="s_parent"><?= eL('setparent') ?></label>
+				<input type="checkbox" id="s_parent" /><label for="s_parent"><span class="fas fa-turn-up fa-flip-horizontal fa-lg"></span><?= eL('setparent') ?></label>
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="setparentform"'); ?>
 				<?= eL('parenttaskid') ?>
 				<input type="hidden" name="action" value="details.setparent" />
@@ -132,7 +132,7 @@
 			<?php endif; ?>
 
 			<?php if ($user->can_associate_task($task_details)): ?>
-			<li><input type="checkbox" id="s_associate"/><label for="s_associate"><?= eL('associatesubtask') ?></label>
+			<li><input type="checkbox" id="s_associate"/><label for="s_associate"><span class="fas fa-turn-down fa-lg"></span><?= eL('associatesubtask') ?></label>
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="associateform"'); ?>
 				<?= eL('associatetaskid') ?>
 				<input type="hidden" name="action" value="details.associatesubtask"/>
@@ -145,17 +145,17 @@
 
 			<?php if ($proj->id && $user->perms('open_new_tasks')): ?>
 			<li>
-				<a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><?= eL('addnewsubtask') ?></a>
+				<a href="<?php echo Filters::noXSS(createURL('newtask', $proj->id, $task_details['task_id'])); ?>"><span class="fas fa-square-plus fa-lg"></span><?= eL('addnewsubtask') ?></a>
 			</li>
 			<?php endif; ?>
 	    
 			<li>
-				<a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><?= eL('depgraph') ?></a>
+				<a href="<?php echo Filters::noXSS(createURL('depends', $task_details['task_id'])); ?>"><span class="fas fa-diagram-project fa-lg"></span><?= eL('depgraph') ?></a>
 			</li>
 
 			<?php if ($user->can_add_task_dependency($task_details)): ?>
 			<li>
-				<input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><?= eL('adddependenttask') ?></label>
+				<input type="checkbox" id="s_adddependent"/><label for="s_adddependent"><span class="fas fa-clipboard-check fa-lg"></span><?= eL('adddependenttask') ?></label>
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="adddepform"'); ?>
 				<input type="hidden" name="action" value="details.newdep" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -172,7 +172,7 @@
 				<input type="hidden" name="action" value="takeownership" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-				<button type="submit"><?= eL('assigntome') ?></button>
+				<button type="submit"><span class="fas fa-person-circle-check fa-lg"></span><?= eL('assigntome') ?></button>
 				</form>
 			</li>
 			<?php endif; ?>
@@ -183,7 +183,7 @@
 				<input type="hidden" name="action" value="addtoassignees" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-				<button type="submit"><?= eL('addmetoassignees') ?></button>
+				<button type="submit"><span class="fas fa-person-circle-plus fa-lg"></span><?= eL('addmetoassignees') ?></button>
 				</form>
 			</li>
 			<?php endif; ?>
@@ -193,7 +193,7 @@
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 				<input type="hidden" name="action" value="details.addvote" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-				<button type="submit"><?= eL('voteforthistask') ?></button>
+				<button type="submit"><span class="fas fa-star fa-lg"></span><?= eL('voteforthistask') ?></button>
 				</form>
 			</li>
 			<?php endif; ?>
@@ -204,7 +204,7 @@
 				<input type="hidden" name="action" value="details.add_notification" />
 				<input type="hidden" name="ids" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 				<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>" />
-				<button type="submit"><?= eL('watchthistask') ?></button>
+				<button type="submit"><span class="fas fa-eye fa-lg"></span><?= eL('watchthistask') ?></button>
 				</form>
 			</li>
 			<?php endif; ?>
@@ -214,10 +214,10 @@
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 				<?php if ($task_details['mark_private']): ?>
 					<input type="hidden" name="action" value="makepublic"/>
-					<button><?php echo eL('makepublic') ?></button>
+					<button><span class="fas fa-door-open"></span><?php echo eL('makepublic') ?></button>
 				<?php elseif (!$task_details['mark_private']): ?>
 					<input type="hidden" name="action" value="makeprivate"/>
-					<button><?php echo eL('privatethistask') ?></button>
+					<button><span class="fas fa-door-closed fa-lg"></span><?php echo eL('privatethistask') ?></button>
 				<?php endif; ?>
 				</form>
 			</li>

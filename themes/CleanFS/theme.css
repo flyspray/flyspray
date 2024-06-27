@@ -1670,6 +1670,26 @@ div#closeform {
   font-size:12px;
   box-shadow:none;
 }
+#actionsform a > .fas,
+#actionsform a > .fa-solid,
+#actionsform a > .far,
+#actionsform a > .fa-regular,
+#actionsform a > .fa-brand,
+#actionsform label > .fas,
+#actionsform label > .fa-solid,
+#actionsform label > .far,
+#actionsform label > .fa-regular,
+#actionsform label > .fa-brand,
+#actionsform button > .fas,
+#actionsform button > .fa-solid,
+#actionsform button > .far,
+#actionsform button > .fa-regular,
+#actionsform button > .fa-brand {
+	margin-right: 1em;
+}
+#actionsform >ul > li > form > button {
+	font-family: inherit;
+}
 #actionsform ul li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
 #actionsform li:hover ul {
