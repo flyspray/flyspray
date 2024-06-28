@@ -55,9 +55,6 @@ input#tags {
 #availtaglist span.tag:hover::after {
 	opacity:1;
 }
-input#availtags:checked ~ #availtaglist {
-	display:block;
-}
 #tagrender:empty {
 	display: none;
 }
