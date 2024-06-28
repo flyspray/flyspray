@@ -13,7 +13,25 @@ function detailsInit() {
     if (!document.getElementById('details')) {
       Event.observe(document,'keydown',keyboardNavigation);
 
-      Event.observe('actions', 'click', toggleQuickEdit);
+      if (document.getElementById('actions')) {
+          Event.observe('actions', 'click', function (e) { showhidestuff('actionsform') } );
+      }
+
+      if (document.getElementById('closetask')) {
+          Event.observe('closetask', 'click', function (e) { showhidestuff('closeform') } );
+      }
+
+      if (document.getElementById('reqclosetask')) {
+          Event.observe('reqclosetask', 'click', function (e) { showhidestuff('requestreopen') } );
+      }
+
+      if (document.getElementById('reqclosetask')) {
+          Event.observe('reqclose', 'click', function (e) { showhidestuff('closeform') } );
+      }
+
+      if (document.getElementById('reqclosedisabled')) {
+        Event.observe('reqclosedisabled', 'click', function (e) { showhidestuff('reqclosedinfo') } );
+      }
     }
   }
 }
@@ -44,17 +62,5 @@ function keyboardNavigation(e) {
           Event.stop(e);
         }
         break;
-  }
-}
-function toggleQuickEdit(e) {
-  var me = $(this);
-  var qm = $('actionsform');
-
-  if (qm.visible()) {
-    qm.hide();
-    me.removeClassName('button-active');
-  } else {
-    qm.show();
-    me.addClassName('button-active');
   }
 }

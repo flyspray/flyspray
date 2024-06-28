@@ -9,7 +9,7 @@
 		</div>
 	<?php elseif (!$user->isAnon() && !Flyspray::adminRequestCheck(2, $task_details['task_id'])): ?>
 		<div class="actionitem" id="requestreopenitem">
-			<button class="submit main" onclick="showhidestuff('requestreopen');"><?= eL('reopenrequest') ?></button>
+			<button class="submit main" id="reqclosetask"><?= eL('reopenrequest') ?></button>
 			<div id="requestreopen" class="popup hide">
 				<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),'form3',null,null,'id="formclosetask"'); ?>
 				<input type="hidden" name="action" value="requestreopen" />
@@ -25,8 +25,7 @@
 	<?php if ($user->can_close_task($task_details) && !$d_open): ?>
 	<div class="actionitem" id="closetaskitem">
 		<a href="<?php echo Filters::noXSS(createURL('details', $task_details['task_id'], null, array('showclose' => !Req::val('showclose')))); ?>"
-		id="closetask" class="button main" accesskey="y"
-		onclick="showhidestuff('closeform');return false;"> <?= eL('closetask') ?></a>
+		id="closetask" class="button main" accesskey="y"><?= eL('closetask') ?></a>
 
 		<div id="closeform" class="<?php if (Req::val('action') != 'details.close' && !Req::val('showclose')): ?>hide <?php endif; ?>popup">
 			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])),null,null,null,'id="formclosetask"'); ?>
@@ -51,7 +50,7 @@
 	</div>
 	<?php elseif (!$d_open && !$user->isAnon() && !Flyspray::adminRequestCheck(1, $task_details['task_id'])): ?>
 	<div class="actionitem" id="requestcloseitem">
-		<a href="#close" id="reqclose" class="button main" onclick="showhidestuff('closeform');"><?= eL('requestclose') ?></a>
+		<a id="reqclose" class="button main"><?= eL('requestclose') ?></a>
 		<div id="closeform" class="popup hide">
 			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])), 'form3', null, null, 'id="formclosetask"'); ?>
 			<input type="hidden" name="action" value="requestclose"/>
@@ -64,19 +63,18 @@
 	</div>
 	<?php elseif(!$user->isAnon()): ?>
 	<div class="actionitem" id="requestclosedisableditem">
-		<a href="#closedisabled" id="reqclose" class="tooltip button disabled main"><?= eL('closetask') ?>
-			<span class="custom info">
-				<em><?= eL('information') ?></em>
-				<br>
-				<?= eL('taskclosedisabled') ?>
-				<br>
-			<?php
-				foreach ($deps as $dependency) {
-					echo "FS#".$dependency['task_id']." : ".$dependency['item_summary']."</br>";
-				}
-			?>
-			</span>
-		</a>
+		<a id="reqclosedisabled" class="button"><?= eL('closetask') ?><span class="fas fa-exclamation-triangle fa-lg"></span></a>
+		<div id="reqclosedinfo" class="popup hide">
+			<h4><span class="fas fa-circle-info fa-lg"></span><?= eL('information') ?></h4>
+			<p><?= eL('taskclosedisabled') ?></p>
+			<ul>
+		<?php
+			foreach ($deps as $dependency) {
+				echo "<li>" . tpl_tasklink($dependency['task_id']) ."</li>";
+			}
+		?>
+			</ul>
+		</div>
 	</div>
 	<?php endif; ?>
 

@@ -1626,11 +1626,16 @@ div#closeform {
   box-shadow: 0px 1px 1px #ddd;
   padding: 10px;
   position: absolute;
-  right: 0px;
   top: 100%;
   margin-top: 0;
   z-index:300;
   width: 380px;
+}
+div#requestreopen {
+  left: 0px;
+}
+div#closeform {
+  right: 0px;
 }
 /* 'quick actions' on the right side */
 #actionsform {
@@ -1823,22 +1828,33 @@ table.assignedto img {padding-top: 2px;width: 25px;height:25px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}
-a.tooltip span {
-    z-index:10;display:none; padding:14px 20px;
-    margin-top:60px; margin-left:-160px;
-    width:240px; line-height:16px;
+a#reqclosedisabled {
+	color: #c00;
 }
-a.tooltip:hover span{
-    display:inline; position:absolute;
-    border:2px solid #FFF;  color:#EEE;
-    background:#000;
+a#reqclosedisabled span {
+	margin-left: .35em;
 }
+#reqclosedinfo {
+    z-index:10;
+/*     display:none; */
+    padding:.5em 1em 1em;
+    min-width:240px;
+	max-width:380px;
+    line-height:16px;
+    top: 100%;
+    left: 0;
+    border-radius:3px;
+    box-shadow: 0px 0px 8px 4px #ccc;
+    position:absolute;
+    border: 1px solid #d4d4d4;
+    color:#222;
+    background:#f9f9f9;
+}
+#reqclosedinfo h4 span {
+	margin-right: .35em;
+}
+
 .callout {z-index:20;position:absolute;border:0;top:-14px;left:120px;}
-a.tooltip span{
-    border-radius:2px;
-    box-shadow: 0px 0px 8px 4px #666;
-    opacity: 0.8;
-}
 /* for float box in ticket list */
 .descbox {
 	display:none;
