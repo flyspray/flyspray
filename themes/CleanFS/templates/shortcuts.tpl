@@ -20,9 +20,8 @@ if (isset($_SESSION['ua'])) {
 	$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
 }
 ?>
-<input type="checkbox" id="s_shortcuts" />
-<label for="s_shortcuts" id="shortcutlabel"><span class="far fa-keyboard"></span> <?= eL('keyboardshortcuts') ?></label>
-<label for="s_shortcuts" id="shortcutsmodal"></label>
+<label id="shortcutslabel"><span class="far fa-keyboard fa-lg"></span> <?= eL('keyboardshortcuts') ?></label>
+<div id="shortcutsmodal"></div>
 <div id="shortcuts">
 <div>
 <h3><?= eL('availablekeybshortcuts') ?></h3>

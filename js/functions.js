@@ -1,5 +1,14 @@
-// Set up the task list onclick handler
-addEvent(window,'load',setUpTasklistTable);
+// Set up common document behavior
+addEvent(window,'load',commonInit);
+
+function commonInit() {
+    // Set up the task list onclick handler
+    if ($('tasklist_table')) {
+        setUpTasklistTable();
+    }
+
+    setUpShortcutsModal();
+}
 function Disable(formid)
 {
    document.formid.buSubmit.disabled = true;
@@ -77,6 +86,29 @@ function showhidestuff_c(c) {
 			i.show();
 		}
 	}
+}
+
+function setUpShortcutsModal() {
+	var lbl = $('shortcutslabel');
+    var mdl = $('shortcutsmodal');
+    var sc = $('shortcuts');
+    var scx = $$('#shortcuts label')[0];
+
+    if (!lbl || !mdl || !sc || !scx) {
+        return;
+    }
+
+    [mdl, scx].each(function (i) {
+        $(i).observe('click', function(e) {
+            hidestuff('shortcutsmodal');
+            hidestuff('shortcuts');
+        });
+    });
+
+    lbl.observe('click', function(e) {
+        showstuff('shortcutsmodal');
+        showstuff('shortcuts');
+    });
 }
 
 function setUpTasklistTable() {

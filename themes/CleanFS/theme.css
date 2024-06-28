@@ -888,7 +888,7 @@ table.inline th {
 	padding:4px;
 }
 
-#shortcutlabel { cursor:pointer;padding-left:1em;}
+#shortcutslabel { cursor:pointer;padding-left:1em;}
 #shortcutclose { cursor:pointer;}
 #shortcuts {
   display:none;
@@ -926,8 +926,6 @@ table.inline th {
   z-index: 99;
   cursor:pointer;
 }
-#s_shortcuts {display:none;}
-#s_shortcuts:checked ~ #shortcuts, #s_shortcuts:checked ~ #shortcutsmodal {display: block;}
 #shortcuts > ul {
     list-style: outside none none;
     margin: 0 0 1em;
