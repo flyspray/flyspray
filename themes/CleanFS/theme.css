@@ -1699,17 +1699,18 @@ div#closeform {
     display: block;
     position: absolute;
 }
-#edit_add_comment{display:none;}
+#toggle_add_comment > span {
+	margin-left: .35em;
+}
 #setparentform, #associateform, #adddepform {
 	display:none;
 	background: #363a3b;
 	color:#fff;
 	padding-left: 5px;
 }
-#s_parent, #s_associate, #s_adddependent, #s_addcomment {
+#s_parent, #s_associate, #s_adddependent {
 	display:none;
 }
-#s_addcomment:checked ~ #edit_add_comment,
 #s_parent:checked ~ #setparentform,
 #s_associate:checked ~ #associateform,
 #s_adddependent:checked ~ #adddepform{

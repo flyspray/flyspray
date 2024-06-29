@@ -329,21 +329,18 @@
 	<?php endif; ?>
 	</div>
 	</div>
-	<div class="buttons">
-		<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
-		<input type="checkbox" id="s_addcomment" />
-		<label for="s_addcomment" title="<?= eL('addcomment') ?>">
-		<span class="fa-stack">
-		<span class="far fa-comment fa-stack-2x"></span>
-		<span class="fas fa-plus fa-stack-1x"></span>
-		</span>
-		</label>
-		<div id="edit_add_comment">
-		<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
-		<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="2"></textarea>
+
+	<?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
+	<div>
+		<label class="button" id="toggle_add_comment"><?= eL('addcomment') ?><span class="fas fa-comment"></span></label>
+		<div id="edit_add_comment" style="display:none;">
+			<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
+			<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="6" disabled="disabled"></textarea>
 		</div>
-		<br />
-		<?php endif; ?>
+	</div>
+	<?php endif; ?>
+
+	<div class="buttons">
 		<button type="submit" class="positive" accesskey="s" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checksave.php?time=<?php echo Filters::noXSS(time()); ?>&amp;task_id=<?php echo Filters::noXSS($task_details['task_id']); ?>', '<?php echo Filters::noJsXSS(L('alreadyedited')); ?>', 'taskeditform')"><?php echo Filters::noXSS(L('savedetails')); ?></button>
 		<a class="button" href="<?php echo Filters::noXSS(createUrl('details', $task_details['task_id'])); ?>"><?= eL('canceledit') ?></a>
 	</div>

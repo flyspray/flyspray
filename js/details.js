@@ -32,6 +32,30 @@ function detailsInit() {
       if (document.getElementById('reqclosedisabled')) {
         Event.observe('reqclosedisabled', 'click', function (e) { showhidestuff('reqclosedinfo') } );
       }
+    } else {
+      // when in edit mode
+      if (document.getElementById('toggle_add_comment')) {
+        $('toggle_add_comment').observe('click', function (e) {
+          var eac = $('edit_add_comment');
+          var ct = $('comment_text');
+
+          if (eac.visible()) {
+            $(eac).hide();
+            $(ct).disabled = true;
+            var cv = $(ct).value.trim();
+
+            if (cv != '') {
+              $(this).childElements()[0].style.color = '#900';
+            } else {
+              $(this).childElements()[0].style.color = null;
+            }
+          } else {
+            $(eac).show();
+            $(ct).disabled = false;
+            $(ct).focus();
+          }
+        });
+      }
     }
   }
 }
