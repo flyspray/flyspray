@@ -106,8 +106,6 @@ option:checked { background:linear-gradient(#693, #693); }
 #toolboxmenu a {background-color:#444;color:#ccc;border-color:#333;}
 #toolboxmenu a:hover {background-color:#333;color:#eee;border-color:#222;}
 #toolboxmenu a.active {color:#fff;border-color:#555;border-left-color:#78bf34;}
-#disp_intro:not(:checked) ~ .disp_introdep { background-color:#666;}
-#disp_intro:not(:checked) ~ .disp_introdep select, #disp_intro:not(:checked) ~ .disp_introdep textarea{ background-color:#444;color:#666;}
 .double_select .dualselect_selectable {background-color:#333;color:#fff;}
 select, .double_select .dualselect_selected select {background-color:#444;color:#fff;border-color:#666;}
 .button, button, input[type="submit"]{
