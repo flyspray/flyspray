@@ -1,11 +1,4 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-<style>
-#toolbox div.div {
-	border:1px solid #999;
-	margin-top:1em;
-	margin-bottom:1em;
-}
-</style>
 <div>PHP version: <?php echo PHP_VERSION; ?></div>
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
@@ -13,13 +6,13 @@
 <div>Swiftmailer version: <?php if(isset($swiftmailerversion)) { echo Filters::noXSS($swiftmailerversion); } ?></div>
 <div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
 
-<div class="div">
+<div class="box">
 <div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
 </div>
 
 <?php if(isset($registrations)): ?>
-<div class="div">
+<div class="box">
 <h4><?= $regcount ?> unfinished registrations</h4>
 <table>
 <thead>
@@ -43,7 +36,7 @@
 <?php endif; ?>
 
 <?php if(isset($xmppmessagecount)): ?>
-<div class="div">
+<div class="box">
 <p><?= $xmppmessagecount.' unsent xmpp messages' ?></p>
 
 <?php echo tpl_form(Filters::noXSS(createUrl($baseurl))); ?>
@@ -82,7 +75,7 @@
 <?= $legacyusernamessummary ?>
 <?php endif; ?>
 
-<div class="div">
+<div class="box">
 <?php if (isset($cattreelftrgt) or isset($cattreenonunique) or isset($cattreeerrors)): ?>
 <div class="error">Category errors detected:</div>
 <?php else: ?>
