@@ -7,6 +7,20 @@ function commonInit() {
         setUpTasklistTable();
     }
 
+	if ($('toggle_inactive')) {
+		$('toggle_inactive').observe('click', function (e) {
+			showhidestuff_c('project-inactive');
+
+			var i = $(this).childElements()[0];
+
+			if ($$('.project-inactive')[0].visible()) {
+				$(i).removeClassName('fa-eye').addClassName('fa-eye-slash');
+			} else {
+				$(i).removeClassName('fa-eye-slash').addClassName('fa-eye');
+			}
+		});
+	}
+
     setUpShortcutsModal();
 }
 function Disable(formid)

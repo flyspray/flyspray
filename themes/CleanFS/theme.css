@@ -588,17 +588,126 @@ body.toplevel #content #projects {
   flex-wrap: wrap;
   margin: 10px 0;
 }
-#content #projects .box {
+#content #projects > .box:not(:only-child) {
   width: 480px;
   margin: 0;
 }
-#content #projects .project-inactive { background: #f1f1f1;}
-#content #projects .box table { width: 100%; }
-#content #projects .box table tr > :first-child { width: 35%; }
-body.toplevel #content #projects > .box:only-child {
-  max-width: none;
-  flex: 1 0 auto;
+#content #projects .project-inactive,
+#content #projects .project-inactive .box { background: #f1f1f1; }
+body.toplevel #actionbar > a > span.fas:last-child,
+body.toplevel #actionbar > a > span.far:last-child,
+body.toplevel #actionbar > a > span.fa-solid:last-child,
+body.toplevel #actionbar > a > span.fa-regular:last-child,
+body.toplevel #actionbar > a > span.fa-brands:last-child {
+	margin-left: .35em;
 }
+#projects > div.box > h3,
+#projects > div.box > h4 {
+	margin: 1em 0;
+}
+.projectboxsectionswrap {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+body.toplevel #content #projects > .box:not(:only-child) .projectboxsectionswrap {
+	display: flex;
+	flex-direction: column;
+}
+.projectboxsectionswrap > .projectboxsection {
+	box-shadow: 0 1px 1px #ddd;
+	margin: 0;
+	box-sizing: border-box;
+}
+.project-buttons {
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.projectfeedswrap {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+.projectfeeds {
+	display:flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	gap: 10px;
+}
+.projectfeeds > :first-child {
+	margin: 0;
+}
+.projectfeeds > div {
+	display:flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.projectfeeds > div a {
+	display: block;
+}
+/* single-project */
+body.toplevel #content #projects > .box:only-child { /* single-project */
+  max-width: none;
+  flex: 1 1 auto;
+}
+body.toplevel #content #projects > .box:only-child > .projectboxsectionswrap {
+	flex-wrap: row !important;
+}
+
+body.toplevel #content #projects > .box:only-child .projectsection-tasks {
+	flex: 10 0 49%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-stats {
+	flex: 10 0 49%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-mostwanted {
+	flex: 1 0 20%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-assignedtome {
+	flex: 1 0 20%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-activity {
+	flex: 1 0 20%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-stats > div > * {
+	display: inline-block;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-efforttracking {
+	flex: 1 0 20%;
+}
+body.toplevel #content #projects > .box:only-child .projectsection-feeds {
+	flex: 10 0 100%;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds {
+	flex-direction: row;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds > :first-child {
+	margin: 0;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds > div {
+	flex-direction: row;
+}
+.activity::after {
+	content: "\25B4";
+	position: absolute;
+	right: -3px;
+	bottom:-5px;
+	text-align: right;
+	color:#c00;
+}
+.activity img{
+	padding-right:1px;
+	background-color:#c00;
+	border: 1px solid #e1e1e1;
+}
+.activity {
+	display: block;
+	position: relative;
+	width: 160px;
+}
+
 body.myprofile .box {display:inline-block;vertical-align:top;}
 body.myprofile .box .permissions {
 	display:flex;
@@ -2019,12 +2128,35 @@ fieldset { margin-left: 5px;margin-right: 5px;}
 #tasklist {padding:0;}
 .pagenums a.distancefar {display:none;}
 .pagenums .distancefargap::after {content:'…';padding-left:0.5em;padding-right:0.5em;}
-table.toplevel th, table.toplevel td {display:block;}
-body.toplevel .box {margin:0 0 10px 0;}
-body.toplevel.p0 .box {width:100%;}
 div.box, p.box {padding:0;}
-#projects > .box { padding: 10px;}
+table.toplevel th, table.toplevel td {display:block;}
+body.toplevel #projects > .box {margin:0 0 0 0;}
+body.toplevel.p0 .box {width:100%;}
+#projects .box { padding: 5px;}
 #projects > .box table {margin-bottom: 0;}
+body.toplevel #projects > div .projectboxsectionswrap {
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+body.toplevel #projects > div .projectboxsectionswrap h3 {
+	padding-left: 0;
+}
+
+body.toplevel #content #projects > .box .projectboxsectionswrap > .projectboxsection {
+	flex: 1 1 100%;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds {
+	flex-direction: column;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds > :first-child {
+	margin: 0;
+}
+body.toplevel #content #projects > .box:only-child .projectfeeds > div {
+	flex-direction: column;
+}
+body.toplevel #content #projects > .box .projectsection-stats > div > * {
+	display: inline-block;
+}
 #event1 td {display:block;}
 body.admin {background-color:#300;} /* experimental: danger zone */
 body.admin h1#title {background-color: #900;background-image: none;} /* danger zone */
