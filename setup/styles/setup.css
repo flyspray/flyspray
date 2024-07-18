@@ -1,7 +1,8 @@
 body {
   margin:0; padding:0;
-  font-family: Verdana, sans-serif;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size:13px;
+  background-color: #fff;
 }
 a { text-decoration: none; }
 input:required {border: 1px solid #f90;}
