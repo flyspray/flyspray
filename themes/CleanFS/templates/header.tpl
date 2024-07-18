@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" href="<?php echo Filters::noXSS($this->get_image('favicon')); ?>" />
 <?php endif; ?>
 <link rel="index" id="indexlink" type="text/html" href="<?php echo Filters::noXSS($baseurl); ?>" />
-<?php 
+<?php
 /** @todo: This was added around Flyspray 0.9.8 by floele to help search engines find all public visible projects of a Flyspray installation.
  * Probably because the project select is a drop down select, not simple links.
  * What are the alternatives to not list all public projects in the HTML head section of all pages?
@@ -31,7 +31,7 @@ foreach ($fs->projects as $project): ?>
 <link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/regular.min.css" rel="stylesheet" type="text/css" />
 <link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/brands.min.css" rel="stylesheet" type="text/css" />
 <link href="<?= Filters::noXSS($baseurl) ?>themes/CleanFS/solid.min.css" rel="stylesheet" type="text/css" />
-<?php 
+<?php
 # include an optional, customized css file for tag styling (all projects, loads even for guests)
 if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <link href="<?php echo Filters::noXSS($this->themeUrl()); ?>tags.css" rel="stylesheet" type="text/css" />
@@ -53,8 +53,8 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
 <?php if ('details' == $do && $user->can_view_project($proj->id)): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/details.js"></script>
 <?php endif; ?>
-<?php 
-/** 
+<?php
+/**
  * @todo load only for taskedit page, not task view (currently 'edit=yep' getparam)
  */
 if (($do === 'details' or $do === 'newtask') && $proj->prefs['use_tags']): ?>
@@ -103,24 +103,24 @@ if (
 	&& isset($fs->prefs['captcha_recaptcha_secret']) && $fs->prefs['captcha_recaptcha_secret']!=''
 ): ?>
 	<?php
-	if ( 
+	if (
 		   ($do=='register')
 		|| ($do=='newtask' && $user->isAnon())
-	): ?>  
+	): ?>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<?php endif; ?>
-<?php endif; ?> 
+<?php endif; ?>
 </head>
 <body onload="<?php
-        if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])):
-        ?>/* window.setTimeout('Effect.Fade(\'successanderrors\', {duration:.3})', 10000); */
-        <?php endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
+	if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])):
+	?>/* window.setTimeout('Effect.Fade(\'successanderrors\', {duration:.3})', 10000); */ <?php
+	endif ?>" class="<?php echo (isset($do) ? Filters::noXSS($do) : 'index').' p'.$proj->id; ?>">
 
-    <h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
+	<h1 id="title"><a href="<?php echo Filters::noXSS($baseurl); ?>">
 	<?php if($fs->prefs['logo']) { ?><img src="<?php echo Filters::noXSS($baseurl.$fs->prefs['logo']); ?>" /><?php } ?>
 	<span><?php if($user->can_select_project($proj->id)){ echo Filters::noXSS($proj->prefs['project_title']); } ?></span>
-    </a></h1>
-    <?php $this->display('links.tpl'); ?>
+	</a></h1>
+	<?php $this->display('links.tpl'); ?>
 
 	<?php if (isset($_SESSION['SUCCESS']) || isset($_SESSION['ERROR']) || isset($_SESSION['ERRORS'])): ?>
 	<div id="successanderrors" onclick="this.style.display='none'">

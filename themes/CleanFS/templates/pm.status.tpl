@@ -1,5 +1,6 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-  <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('taskstatuses')); ?></h3>
+	<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('taskstatuses')); ?></h2>
+
 <?php
 $this->assign('list_type', 'status');
 $this->assign('rows', $proj->listTaskStatuses(true));

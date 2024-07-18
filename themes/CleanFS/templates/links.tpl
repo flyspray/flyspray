@@ -5,8 +5,8 @@ if ($user->isAnon()):
 	# 20150211 peterdd: pure css toggle using checked status, no js needed
 	?><li class="first">
 	<input type="checkbox" id="s_loginbox" />
-        <label for="s_loginbox" id="show_loginbox" accesskey="l"><?= eL('login') ?></label>
-        <div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
+		<label for="s_loginbox" id="show_loginbox" accesskey="l"><?= eL('login') ?></label>
+		<div id="loginbox" class="popup"><?php $this->display('loginbox.tpl'); ?></div>
 	</li><?php
 else: ?><li>
 		<a id="profilelink" <?php if($do == 'myprofile'): ?> class="active"<?php endif; ?> href="<?php echo Filters::noXSS(createURL('myprofile')); ?>" title="<?php echo Filters::noXSS(L('editmydetails')); ?> <?php echo Filters::noXSS($user->infos['real_name']); ?> (<?php echo Filters::noXSS($user->infos['user_name']); ?>)"><span class="fas fa-user fa-lg"></span></a>
@@ -94,7 +94,7 @@ endif; ?>
 		file_exists(BASEDIR . '/scripts/gantt.php')
 		&& $proj->id
 		&& $user->perms('view_roadmap')
-		&& (isset($proj->prefs['use_gantt']) && $proj->prefs['use_gantt'])        
+		&& (isset($proj->prefs['use_gantt']) && $proj->prefs['use_gantt'])
 	): ?><li><a id="gantt"
 		<?php if($do == 'gantt'): ?> class="active" <?php endif; ?>
 		href="<?php echo Filters::noXSS(createURL('gantt', $proj->id)); ?>" title="<?= eL('gantt') ?>"><span class="fas fa-bars-progress fa-lg"></span><?= eL('gantt'); ?></a>
@@ -103,7 +103,7 @@ endif; ?>
 	if(
 		file_exists(BASEDIR . '/scripts/kanban.php')
 		&& $proj->id
-		&& $user->perms('view_roadmap')	
+		&& $user->perms('view_roadmap')
 		&& (isset($proj->prefs['use_kanban']) && $proj->prefs['use_kanban'])
 	): ?><li><a id="kanban"
 		<?php if($do == 'kanban'): ?> class="active" <?php endif; ?>
@@ -129,8 +129,8 @@ endif; ?>
 	</ul>
 	<div id="pmcontrol">
 		<div id="projectselector"><?php
-                # $fs->projects is filtered with can_select_project() for the current user/guest in index.php
-                if(count($fs->projects)>0): ?>
+			# $fs->projects is filtered with can_select_project() for the current user/guest in index.php
+			if(count($fs->projects)>0): ?>
 			<form id="projectselectorform" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 				<select name="project" onchange="document.getElementById('projectselectorform').submit()">
 				<?php echo tpl_options(array_merge(array(0 => L('allprojects')), $fs->projects), $proj->id); ?>
@@ -151,8 +151,8 @@ endif; ?>
 			</form>
 		<?php endif; ?></div>
 		<div id="showtask"><?php
-                # $fs->projects is filtered with can_select_project() for the current user/guest in index.php
-                if(count($fs->projects)>0): ?>
+			# $fs->projects is filtered with can_select_project() for the current user/guest in index.php
+			if(count($fs->projects)>0): ?>
 			<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 				<noscript><button type="submit"><?= eL('showtask') ?> #</button></noscript>
 				<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" placeholder="<?= eL('showtask') ?> #" />

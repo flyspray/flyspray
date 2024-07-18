@@ -1,12 +1,13 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-  <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('tasktypeed')); ?></h3>
-  <?php
-  $this->assign('list_type', 'tasktype');
-  $this->assign('rows', $proj->listTaskTypes(true));
+	<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('tasktypeed')); ?></h2>
 
-  $systemwide = new Project(0);
-  $this->assign('sysrows', $systemwide->listTaskTypes(true));
+<?php
+$this->assign('list_type', 'tasktype');
+$this->assign('rows', $proj->listTaskTypes(true));
 
-  $this->display('common.list.tpl');
-  ?>
+$systemwide = new Project(0);
+$this->assign('sysrows', $systemwide->listTaskTypes(true));
+
+$this->display('common.list.tpl');
+?>
 </div>

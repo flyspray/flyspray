@@ -1,9 +1,10 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-  <h3><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('resed')); ?></h3>
+	<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?php echo Filters::noXSS(L('resed')); ?></h2>
+
 <?php
 $this->assign('list_type', 'resolution');
 $this->assign('rows', $proj->listResolutions(true));
-  
+
 $systemwide = new Project(0);
 $this->assign('sysrows', $systemwide->listResolutions(true));
 

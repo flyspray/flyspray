@@ -1,4 +1,5 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-<h3><?= eL('admintoolboxlong') ?> :: <?= eL('editgroup') ?></h3>
-<?php $this->display('common.editgroup.tpl'); ?>
+	<h2><?= eL('admintoolboxlong') ?> :: <?= eL('editgroup') ?></h2>
+
+	<?php $this->display('common.editgroup.tpl'); ?>
 </div>
