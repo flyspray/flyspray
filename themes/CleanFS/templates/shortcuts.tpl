@@ -14,7 +14,7 @@ if (isset($_SESSION['ua'])) {
 	} else {
 		# all others
 		$modifier='<kbd>Alt</kbd>';
-	}	
+	}
 } else {
 	# fallback
 	$modifier='<kbd>Alt</kbd> + <kbd>⇧ Shift</kbd>';
@@ -23,35 +23,41 @@ if (isset($_SESSION['ua'])) {
 <label id="shortcutslabel"><span class="far fa-keyboard fa-lg"></span> <?= eL('keyboardshortcuts') ?></label>
 <div id="shortcutsmodal"></div>
 <div id="shortcuts">
-<div>
-<h3><?= eL('availablekeybshortcuts') ?></h3>
-<label for="s_shortcuts" id="shortcutclose"><span class="fas fa-close fa-2x"></span></label>
-</div>
+	<div>
+		<h3><?= eL('availablekeybshortcuts') ?></h3>
+		<label for="s_shortcuts" id="shortcutclose"><span class="fas fa-close fa-2x"></span></label>
+	</div>
 
+	<h4><?= el('general') ?></h4>
 
-<h4><?= el('general') ?></h4>
-<ul>
-<li><?= $modifier ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
-<li><?= $modifier ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>
-<li><?= $modifier ?> + <kbd>m</kbd> <?= eL('mysearch') ?></li>
-<li><?= $modifier ?> + <kbd>t</kbd> <?= eL('focustaskidsearch') ?></li>
-</ul>
-<h4><?= eL('tasklist') ?></h4>
-<ul>
-<li><kbd>o</kbd> <?= eL('openselectedtask') ?></li>
-<li><kbd>j</kbd> <?= eL('movecursordown') ?></li>
-<li><kbd>k</kbd> <?= eL('movecursorup') ?></li>
-</ul>
-<h4><?= eL('taskdetails') ?></h4>
-<ul>
-<li><kbd>n</kbd> <?= eL('nexttask') ?></li>
-<li><kbd>p</kbd> <?= eL('previoustask') ?></li>
-<li><?= $modifier ?> + <kbd>e</kbd> <kbd>↵ Enter</kbd> <?= eL('edittask') ?></li>
-<li><?= $modifier ?> + <kbd>w</kbd> <?= eL('watchtask') ?></li>
-<li><?= $modifier ?> + <kbd>y</kbd> <?= eL('closetask') ?></li>
-</ul>
-<h4><?= eL('taskediting') ?></h4>
-<ul>
-<li><?= $modifier ?> + <kbd>s</kbd> <?= eL('savetask') ?></li>
-</ul>
+	<ul>
+		<li><?= $modifier ?> + <kbd>l</kbd> <?= eL('logindialoglogout') ?></li>
+		<li><?= $modifier ?> + <kbd>a</kbd> <?= eL('addnewtask') ?></li>
+		<li><?= $modifier ?> + <kbd>m</kbd> <?= eL('mysearch') ?></li>
+		<li><?= $modifier ?> + <kbd>t</kbd> <?= eL('focustaskidsearch') ?></li>
+	</ul>
+
+	<h4><?= eL('tasklist') ?></h4>
+
+	<ul>
+		<li><kbd>o</kbd> <?= eL('openselectedtask') ?></li>
+		<li><kbd>j</kbd> <?= eL('movecursordown') ?></li>
+		<li><kbd>k</kbd> <?= eL('movecursorup') ?></li>
+	</ul>
+
+	<h4><?= eL('taskdetails') ?></h4>
+
+	<ul>
+		<li><kbd>n</kbd> <?= eL('nexttask') ?></li>
+		<li><kbd>p</kbd> <?= eL('previoustask') ?></li>
+		<li><?= $modifier ?> + <kbd>e</kbd> <kbd>↵ Enter</kbd> <?= eL('edittask') ?></li>
+		<li><?= $modifier ?> + <kbd>w</kbd> <?= eL('watchtask') ?></li>
+		<li><?= $modifier ?> + <kbd>y</kbd> <?= eL('closetask') ?></li>
+	</ul>
+
+	<h4><?= eL('taskediting') ?></h4>
+
+	<ul>
+		<li><?= $modifier ?> + <kbd>s</kbd> <?= eL('savetask') ?></li>
+	</ul>
 </div>
