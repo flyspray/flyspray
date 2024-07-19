@@ -25,10 +25,10 @@ if ((!$user->isAnon() && !$user->perms('view_roadmap')) || ($user->isAnon() && $
 	$page->setTitle($fs->prefs['page_title'] . L('roadmap'));
 
 	// Get milestones
-	$milestones = $db->query('SELECT   version_id, version_name
+	$milestones = $db->query('SELECT   version_id, version_name, version_tense
                           FROM     {list_version}
-                          WHERE    (project_id = ? OR project_id=0) AND version_tense = 3
-                          ORDER BY list_position ASC',
+                          WHERE    (project_id = ? OR project_id=0) AND version_tense > 1
+                          ORDER BY version_tense ASC, list_position ASC',
 		array($proj->id));
 
 	$data = array();
@@ -66,7 +66,7 @@ while ($row = $db->fetchRow($milestones)) {
     }
 
     $data[] = array('id' => $row['version_id'], 'open_tasks' => $tasks, 'percent_complete' => $percent_complete,
-        'all_tasks' => $all_tasks, 'name' => $row['version_name']);
+        'all_tasks' => $all_tasks, 'name' => $row['version_name'], 'tense' => $row['version_tense']);
 } # end while
 
 	if (Get::val('txt')) {
