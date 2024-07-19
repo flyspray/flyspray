@@ -63,6 +63,19 @@ $page->assign('theuser', $user);
 
 $sort = strtoupper(Req::enum('sort', array('desc', 'asc')));
 
+$perpage = Get::num('event_number', 50);
+$pagenum = Get::num('pagenum', 1);
+
+if ($perpage < 1) {
+	$perpage = 50;
+}
+
+if ($pagenum < 1) {
+	$pagenum = 1;
+}
+
+$offset = $perpage * ($pagenum - 1);
+
 $where = array();
 $params = array();
 $orderby = '';
@@ -79,6 +92,14 @@ switch (Req::val('order')) {
 }
 
 $eventids=filter_input(INPUT_GET, 'events', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+
+if (is_null($eventids)) {
+    $eventids = [];
+}
+
+$historycount = 0;
+$histories = [];
+
 if($eventids){
 	foreach ($eventids as $eventtype) {
 		$where[] = 'h.event_type = ?';
@@ -109,15 +130,27 @@ if($eventids){
 		}
 	}
 
+	$sqlcount = $db->query("SELECT count(*) FROM (
+                      SELECT h.*
+                        FROM  {history} h
+                   LEFT JOIN {tasks} t ON h.task_id = t.task_id
+                       WHERE $where
+                    ) hc", $params);
+
+	$historycount = $db->fetchOne($sqlcount);
+
 	$histories = $db->query("SELECT h.*
                         FROM  {history} h
                    LEFT JOIN {tasks} t ON h.task_id = t.task_id
                         WHERE $where
-                     ORDER BY $orderby", $params, Req::num('event_number', -1));
+                     ORDER BY $orderby", $params, $perpage, $offset);
+
 	$histories = $db->fetchAllArray($histories);
 }
 
-$page->uses('histories', 'sort');
+$page->assign('historycount', $historycount);
+$page->uses('perpage','pagenum','offset');
+$page->uses('histories', 'sort','eventids');
 
 $page->pushTpl('reports.tpl');
 ?>
