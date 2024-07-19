@@ -2165,10 +2165,17 @@ switch ($action = Req::val('action'))
             return;
         }
 
-        $db->query("INSERT INTO  $list_table_name
-                                 (project_id, $list_column_name, list_position, show_in_list)
-                         VALUES  (?, ?, ?, ?)",
-        array($proj->id, Post::val('list_name'), $position, '1'));
+        if ($lt != 'tag') {
+            $db->query("INSERT INTO  $list_table_name
+                                     (project_id, $list_column_name, list_position, show_in_list)
+                             VALUES  (?, ?, ?, ?)",
+            array($proj->id, Post::val('list_name'), $position, '1'));
+        } else {
+            $db->query("INSERT INTO  $list_table_name
+                                     (project_id, $list_column_name, list_position, show_in_list, class)
+                             VALUES  (?, ?, ?, ?, ?)",
+            array($proj->id, Post::val('list_name'), $position, '1', Post::val('list_class')));
+        }
 
         $_SESSION['SUCCESS'] = L('listitemadded');
         break;
