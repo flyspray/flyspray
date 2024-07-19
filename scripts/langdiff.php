@@ -50,7 +50,10 @@ ob_start();
 	tr:hover td, tr:hover th {
 		background : #e0e0e0;
 	}
-
+table.overview td > a > span {
+	color: #5f9729;
+	font-weight: bold;
+}
 </style>
 <?php
 require_once BASEDIR . '/includes/fix.inc.php';
@@ -188,7 +191,7 @@ if ($lang != 'en' && file_exists(BASEDIR . $translationfile)) {
 					<span class="progress">'.$progress.' %</span>
 					<span style="width:'.$progress.'%" class="progress_bar"></span></div>
 					</td>
-					<td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">'.L('translate').' '.substr($lang,0,-4).'</a></td>
+					<td><a class="button" href="?do=langedit&lang='.substr($lang,0,-4).'">'.L('translate').' <span>'.substr($lang,0,-4).'</span></a></td>
 					</tr>';
 			} else {
 				echo '<tr><td>en.php</td><td>is reference and fallback</td><td><a class="button" href="?do=langedit&lang=' . substr($lang, 0, -4) . '">Edit ' . substr($lang, 0, -4).'</a></td></tr>';
