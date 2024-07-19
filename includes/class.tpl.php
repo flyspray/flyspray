@@ -1291,7 +1291,7 @@ function tpl_draw_perms($perms)
     $projpermnames='';
 
     foreach ($perms as $projperm){
-        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th>'.($i==0? '<th>'.L('permissions').'</th>' : '').'</tr></thead><tbody>';
+        $html .= '<table class="perms"><thead><tr><th>'.($i==0? 'global' : L('project').' '.$i).'</th>'.($i==0? '<th>'.L('viewpermissions').'</th>' : '').'</tr></thead><tbody>';
         foreach ($projperm as $key => $val) {
             if (!is_numeric($key) && in_array($key, $perm_fields)) {
                $html .= '<tr>';
@@ -1306,7 +1306,7 @@ function tpl_draw_perms($perms)
         $html.= '</tbody></table>';
         $i++;
     }
-    $html.='<table class="perms"><thead><th>'.L('permissions').'</th></thead><tbody>'.$projpermnames.'</tbody></table>';
+    $html.='<table class="perms"><thead><th>'.L('viewpermissions').'</th></thead><tbody>'.$projpermnames.'</tbody></table>';
     $html.='<style>.perms tr{height:30px;}</style>';
     # end 20150307
     return $html;
