@@ -79,8 +79,9 @@ class effort
 		global $db;
 
 		// check if the user is already tracking time against this task.
-		$result = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.' AND user_id='.$this->_userId.' AND end_timestamp IS NULL;');
-		if ($db->countRows($result)>0) {
+		$active_tracking = $this->countActiveTracking(true);
+
+		if ($active_tracking > 0) {
 			return false;
 		} else {
 			$db->query('INSERT INTO  {effort}
@@ -90,6 +91,32 @@ class effort
 			);
 			return true;
 		}
+	}
+
+	/**
+	 * Counts active tracking effort, optionally by the current user.
+	 *
+	 * @return int Returns Success or Failure of the action.
+	 */
+	public function countActiveTracking($by_user = false)
+	{
+		global $db;
+
+		$by_user = (bool) $by_user;
+
+		// check if the user is already tracking time against this task.
+		$sql = 'SELECT count(*) as val FROM {effort} WHERE task_id = ? AND end_timestamp IS NULL';
+		$params = [$this->_task_id];
+
+		if ($by_user) {
+			$sql .=  ' AND user_id= ?';
+			$params[] = $this->_userId;
+		}
+
+		$result = $db->query($sql, $params);
+		$result = $db->fetchCol($result);
+
+		return $result[0];
 	}
 
 	/**
@@ -114,7 +141,7 @@ class effort
 
 		// Round to full minutes upwards.
 		$effort = ($seconds % 60 == 0 ? $seconds : floor($seconds / 60) * 60 + 60);
- 
+
 		$sql = $db->query("UPDATE {effort} SET end_timestamp = ".$time.", effort = ".$effort."
 			WHERE user_id=".$this->_userId."
 			AND task_id=".$this->_task_id."
@@ -127,7 +154,7 @@ class effort
 	public function cancelTracking()
 	{
 		global $db;
-    
+
 		# 2016-07-04: also remove invalid finished 0 effort entries that were accidently possible up to Flyspray 1.0-rc
 		$db->query('DELETE FROM {effort}
 			WHERE user_id='.$this->_userId.'
@@ -155,9 +182,9 @@ class effort
 	 */
 	public static function secondsToString($seconds, $factor, $format)
 	{
-		if ($seconds == 0) {
-			return '';
-		}
+		//if ($seconds == 0) {
+		//	return '';
+		//}
 
 		$factor = ($factor == 0 ? 86400 : $factor);
 
