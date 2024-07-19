@@ -109,9 +109,22 @@ switch ($action = Req::val('action'))
             if ($user->isAnon()) {
                 Flyspray::redirect(createURL('details', $task_id, null, array('task_token' => $token)));
             } else {
-                Flyspray::redirect(createURL('details', $task_id));
+                if (Post::val('addanother') != 1) {
+                    if (array_key_exists('addanothertask', $_SESSION)) {
+                        unset($_SESSION['addanothertask']);
+                    }
+
+                    Flyspray::redirect(createURL('details', $task_id));
+                } else {
+                    $_SESSION['addanothertask'] = 1;
+                    Flyspray::redirect(createURL('newtask', Post::val('project_id')));
+                }
             }
         } else {
+            if (array_key_exists('addanothertask', $_SESSION)) {
+                unset($_SESSION['addanothertask']);
+            }
+
             Flyspray::show_error(L('databasemodfailed'));
             break;
         }
