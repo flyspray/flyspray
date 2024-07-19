@@ -19,7 +19,7 @@ foreach ($col as $task): ?>
 	<span class="typ<?= $task['task_type'] ?>" title="<?= Filters::noXSS($task['tasktype_name']) ?>"></span>
 	<a href="<?= createUrl('details', $task['task_id']) ?>"><?= Filters::noXSS($task['item_summary']) ?></a>
 	<?php if($task['assignedids']): ?>
-	<div class="assignedto"><?= tpl_userlinkavatar($task['assignedids'], 20) ?></div>
+	<div class="assignedto"><?= tpl_userlinkavatar($task['assignedids'], 24) ?></div>
 	<?php endif; ?>
 	</div>
 <?php endforeach; ?>

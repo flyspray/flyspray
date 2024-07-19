@@ -507,6 +507,7 @@ body.myprofile .box {display:inline-block;vertical-align:top;}
 body.myprofile .box .permissions {
 	display:flex;
 }
+body.myprofile label[for="profileimage"] + a img {max-width: 240px;}
 .permissions thead th {
 	height:3em;
 }
@@ -923,7 +924,7 @@ max-width:40em;
 #comments h4 {margin:1em 0 0.5em 0;}
 .userlist th {background-color: #e0e0e0;}
 .userlist tbody tr:nth-child(2n) td {background-color: #f1f1f1;}
-.userlist.history a img {vertical-align:middle;height:20px;}
+.userlist.history a img {vertical-align:middle;height:24px;}
 #related .related {display:inline-block;vertical-align:top;margin-right: 0;}
 #submenu {margin-bottom: 0;height: 25px;}
 #submenu a {
@@ -956,7 +957,7 @@ div.tab {margin: 10px 1ex 10px 0;padding: 1ex 1ex 0;}
 * html .tab div.clear {clear: none;height: 14em;}
 div.comment_container {margin: 5px;}
 div.comment_container .comment_avatar {	min-width: 50px;display: inline-block;}
-div.comment_container .comment_avatar .av_comment img { width: 50px; height: 50px }
+div.comment_container .comment_avatar .av_comment img { width: 48px; height: 48px }
 div.comment_container .comment {
 	position: relative;
 	display: inline-block;
@@ -1520,8 +1521,8 @@ div.denyform {
 	color:HighlightText;
 }
 .autocomplete img, .autocomplete .noavatar{
-	width:25px;
-	height:25px;
+	width:24px;
+	height:24px;
 	display:inline-block;
 }
 
@@ -1539,7 +1540,7 @@ table.assignedto td {
 	padding-right: 5px;
 	vertical-align: middle;
 }
-table.assignedto img {padding-top: 2px;width: 25px;height:25px;}
+table.assignedto img {padding-top: 2px;width: 24px;height:24px;}
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}
