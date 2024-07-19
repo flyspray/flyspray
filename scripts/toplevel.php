@@ -104,5 +104,8 @@ if(count($projects)>0){
   $page->pushTpl('toplevel.tpl');
 } else{
   # mmh what we want to show anon users with only the 'create anon task' permission enabled?...
+
+  # Redirect here instead of by meta refresh in the template
+  Flyspray::redirect(createURL('index', 0));
 }
 ?>

@@ -1,10 +1,6 @@
 <?php $project_count = count($projects);
 
-/* If user has no projects, just redirect them to the index page of All Projects */
-if (!$project_count): ?>
-	<meta http-equiv="Refresh" content="0;url=/index.php?project=0&do=index" />
-<?php endif; ?>
-<?php if ($projinactive > 0) { ?>
+if ($projinactive > 0) { ?>
 <div id="actionbar">
 	<a id="toggle_inactive" class="button"><?php echo Filters::noXSS(L('showinactive')); ?><span class="fas fa-eye"></span></a>
 </div>
