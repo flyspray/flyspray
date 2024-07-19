@@ -11,7 +11,7 @@ var itemdragstart = function(e){
 	// give original item a different css look, like opacity:0.4
 	console.log(dragged);
 
-	cols=document.querySelectorAll('.kanbanboard .col');
+	cols=document.querySelectorAll('.kanbanboard .collist');
 	colslength=cols.length;
 	for (let i = 0; i < colslength; i++) {
 		cols[i].classList.add("dropzone");
@@ -27,7 +27,7 @@ var itemdrag = function(e){
 }
 
 var itemdragend= function() {
-	cols=document.querySelectorAll('.kanbanboard .col');
+	cols=document.querySelectorAll('.kanbanboard .collist');
 	colslength=cols.length;
 	for (let i = 0; i < colslength; i++) {
 		cols[i].classList.remove("dropzone");
@@ -37,7 +37,7 @@ var itemdragend= function() {
 document.addEventListener('DOMContentLoaded', eventregistering);
 
 function eventregistering(){
-	tasks=document.querySelectorAll('.kanbanboard .col .task');
+	tasks=document.querySelectorAll('.kanbanboard .collist .task');
 	taskslength=tasks.length;
 	for (var i = 0; i < taskslength; i++) {
 		tasks[i].addEventListener("click", stoppropag);
@@ -48,7 +48,7 @@ function eventregistering(){
 		tasks[i].addEventListener("dragend", itemdragend);
 	}
 
-	cols=document.querySelectorAll('.kanbanboard .col');
+	cols=document.querySelectorAll('.kanbanboard .collist');
 	colslength=tasks.length;
 	for (var i = 0; i < cols.length; i++) {
 		cols[i].addEventListener("dragenter", function () {
@@ -81,4 +81,23 @@ function eventregistering(){
 			event.target.appendChild( dragged );
 		}
 	}, false);
+
+	switches = document.querySelectorAll('.kanbanboard .col > .colname > label');
+
+	for (i = 0; i < switches.length; i++) {
+		switches[i].addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var t = this.parentNode.parentNode;
+			var fa = this.children[0];
+
+			if (t.classList.contains('collapsed')) {
+				t.classList.remove('collapsed');
+				fa.classList.replace('fa-maximize', 'fa-minimize');
+			} else {
+				t.classList.add('collapsed');
+				fa.classList.replace('fa-minimize', 'fa-maximize');
+			}
+		});
+	}
 }

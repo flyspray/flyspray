@@ -4,26 +4,35 @@
 <div class="kanbanboard">
 <?php
 $c=count($stati);
-for ($i=0; $i < $c; $i++): ?>
-<input type="checkbox" class="collapsestatus" id="s_collapse<?= $i ?>">
-<div class="col">
-<?php
-$col = $cols[$i][0]; // tasks
-$tcount = $cols[$i][2]; // taskcount
+
+for ($i = 0; $i < $c; $i++):
 ?>
-<div class="colname status<?= $stati[$i]['status_id'] ?>"><?= ($tcount>0) ? '<span>'.$tcount.'</span>':'' ?><?= Filters::noXSS($stati[$i]['status_name']) ?></div>
-<label for="s_collapse<?= $i ?>"><i class="fas fa-minimize"></i></label>
+	<div class="col">
 <?php
-foreach ($col as $task): ?>
-	<div class="task"<?= $user->can_edit_task($task) ? ' draggable="true"':''; ?>>
-	<span class="typ<?= $task['task_type'] ?>" title="<?= Filters::noXSS($task['tasktype_name']) ?>"></span>
-	<a href="<?= createUrl('details', $task['task_id']) ?>"><?= Filters::noXSS($task['item_summary']) ?></a>
-	<?php if($task['assignedids']): ?>
-	<div class="assignedto"><?= tpl_userlinkavatar($task['assignedids'], 20) ?></div>
-	<?php endif; ?>
+	$col = $cols[$i][0]; // tasks
+	$tcount = $cols[$i][2]; // taskcount
+?>
+		<div class="colname status<?= $stati[$i]['status_id'] ?>">
+			<span><?= $tcount ?></span>
+			<span><?= Filters::noXSS($stati[$i]['status_name']) ?></span>
+			<label id="switcher_<?= $i ?>"><span class="fas fa-minimize fa-lg"></span></label>
+		</div>
+		<div class="collist">
+<?php
+	foreach ($col as $task): ?>
+		<div class="task"<?= $user->can_edit_task($task) ? ' draggable="true"':''; ?>>
+			<span class="typ<?= $task['task_type'] ?>" title="<?= Filters::noXSS($task['tasktype_name']) ?>"></span>
+			<a href="<?= createUrl('details', $task['task_id']) ?>"><?= Filters::noXSS($task['item_summary']) ?></a>
+			<?php if($task['assignedids']): ?>
+			<div class="assignedto"><?= tpl_userlinkavatar($task['assignedids'], 24) ?></div>
+			<?php endif; ?>
+		</div>
+<?php
+	endforeach;
+?>
+		</div>
 	</div>
-<?php endforeach; ?>
-</div>
-<label for="s_collapse<?= $i ?>"><i class="fas fa-maximize"></i></label>
-<?php endfor; ?>
+<?php
+endfor;
+?>
 </div>
