@@ -58,13 +58,17 @@ if(is_readable(BASEDIR.'/themes/'.$this->_theme.'tags.css')): ?>
  * @todo load only for taskedit page, not task view (currently 'edit=yep' getparam)
  */
 if (($do === 'details' or $do === 'newtask') && $proj->prefs['use_tags']): ?>
-<link media="screen" rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'taskedit.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>taskedit.css"></link>
+<link media="screen" rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'taskedit.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>taskedit.css" />
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/taghelper.js"></script>
 <?php endif; ?>
 <?php if ( $do == 'pm' || $do == 'admin'): ?>
-<link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'adminpm.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>adminpm.css"></link>
+<link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.'adminpm.css')) ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl).'themes/CleanFS/' ; ?>adminpm.css" />
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/adminpm.js"></script>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/tablecontrol.js"></script>
+<?php else: ?>
+<?php if (is_readable(BASEDIR . '/themes/'.$this->_theme.$do.'.css') || is_readable(BASEDIR . '/themes/CleanFS/'.$do.'.css')): ?>
+<link rel="stylesheet" type="text/css" href="<?php echo (is_readable(BASEDIR . '/themes/'.$this->_theme.$do.'.css') ? Filters::noXSS($this->themeUrl()) : Filters::noXSS($baseurl) .'themes/CleanFS/') . $do; ?>.css" />
+<?php endif; ?>
 <?php endif; ?>
 <?php if ( $do == 'depends'): ?>
 <script type="text/javascript" src="<?php echo Filters::noXSS($baseurl); ?>js/jit/jit.js"></script>

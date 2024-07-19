@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="<?php echo Filters::noXSS($this->themeUrl()); ?>custom_example.css"></link>
-<link rel="stylesheet" href="<?php echo Filters::noXSS($this->themeUrl()); ?>kanban.css"></link>
+<link rel="stylesheet" href="<?php echo Filters::noXSS($this->themeUrl()); ?>custom_example.css" />
 <script type="text/javascript" src="js/kanban.js"></script>
 <div class="kanbanboard">
 <?php
