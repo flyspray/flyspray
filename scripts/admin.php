@@ -86,7 +86,7 @@ switch ($area) {
 	case 'editallusers':
 		// looks a bit dumb, maybe replace that big switch-case fallthrough construct
 		if ($area == 'editallusers') {
-			$perpage = 250; # take care of the PHP max_input_vars / (your form vars per user row in html output)
+			$perpage = 50; # take care of the PHP max_input_vars / (your form vars per user row in html output)
 			$pagenum = Get::num('pagenum', 1);
 			if ($pagenum < 1) {
 				$pagenum = 1;
