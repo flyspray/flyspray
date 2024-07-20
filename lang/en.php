@@ -1155,5 +1155,6 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'effortformathint'        => 'hh:mm',
 'tasknoreminders'         => 'No reminders set on this task.',
 'flyspraychecks'          => 'Flyspray Checks',
+'noprofileimageselected'  => 'No profile image selected.',
 );
 ?>
