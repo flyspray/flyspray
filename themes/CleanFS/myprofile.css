@@ -1,0 +1,65 @@
+#dashboard, #permissions, #editprofile {
+	margin: 0px 0px 10px 0px;
+	padding: 10px;
+	border: solid 1px #e1e1e1;
+	border-radius: 3px;
+	background-color: #fff;
+}
+#dashboard > .dashboardwrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+#content #editprofile #editprofilewrap {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 10px;
+	max-width: 1010px;
+}
+#editprofilewrap > fieldset {
+	flex: 1 1 45%;
+	margin: 0;
+	max-width: 500px;
+}
+#editprofile input[type=text],
+#editprofile input[type=password] {
+	width: 90%;
+	max-width: 18em;
+}
+
+@media only screen and (max-width: 480px) and (orientation: portrait) {
+
+#dashboard, #permissions, #editprofile {
+	margin: 0 5px;
+	padding: 5px;
+}
+
+#editprofile {
+	width: auto;
+}
+
+#content #editprofile #editprofilewrap {
+	flex-direction: column;
+/*	align-items: flex-start;*/
+/*	align-content: flex-start;*/
+}
+
+#editprofilewrap > fieldset {
+	flex: 0 1 auto;
+	width: auto;
+	padding: 10px 5px;
+}
+
+#editprofile ul.form_elements li {
+/*	flex-wrap: wrap;*/
+/*	flex-direction: column;*/
+/*	gap: 0;*/
+}
+
+#content #editprofile ul.form_elements > li > label {
+	max-width: 150px;
+}
+
+
