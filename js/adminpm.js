@@ -171,20 +171,20 @@ function adminInitPrefs(admin_type) {
 	disp_intro = $('disp_intro');
 	disp_intro.observe('change', function(e) {
 		var me = e.element();
-		var disp_introdep = $$('.disp_introdep')[0];
+		var disp_introdep = $$('.disp_introdep');
 
-		if (me.checked) {
-			if (disp_introdep.hasClassName('hide-intro')) {
-				disp_introdep.toggleClassName('hide-intro', false);
-				disp_introdep.parentNode.toggleClassName('hide-intro', false);
+		disp_introdep.each(function(i) {
+			if (me.checked) {
+				if (i.hasClassName('hide-intro')) {
+					i.toggleClassName('hide-intro', false);
+				}
 			}
-		}
-		else {
-			if (!disp_introdep.hasClassName('hide-intro')) {
-				disp_introdep.toggleClassName('hide-intro', true);
-				disp_introdep.parentNode.toggleClassName('hide-intro', true);
+			else {
+				if (!i.hasClassName('hide-intro')) {
+					i.toggleClassName('hide-intro', true);
+				}
 			}
-		}
+		});
 	});
 
 	/*

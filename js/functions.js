@@ -204,22 +204,20 @@ function addUploadFields(id) {
 
 function addLinkField(id) {
      if(!id) {
-	 id = 'addlinkbox';
+         id = 'addlinkbox';
      }
      var el = $(id);
      var span = el.getElementsByTagName('span')[0];
      if('none' == span.style.display) {
-
          span.style.display = 'inline';
 
          $(id + '_addalink').style.display = 'none';
-	 $(id + '_addanotherlink').style.display = 'inline';
-      } else {
-
-        var newBox = span.cloneNode(true);
-        newBox.getElementsByTagName('input')[0].value = '';
-        el.appendChild(newBox);
-      }
+         $(id + '_addanotherlink').style.display = 'inline';
+    } else {
+          var newBox = span.cloneNode(true);
+          newBox.getElementsByTagName('input')[0].value = '';
+          el.appendChild(newBox);
+    }
 }
 
 function checkok(url, message, form) {
@@ -238,7 +236,7 @@ function removeUploadField(element, id) {
     id = 'uploadfilebox';
   }
   var el = $(id);
-  var span = el.getElementsByTagName('span');
+  var span = $(el).childElements().grep(new Selector('span.newitem'));
   if (1 == span.length) {
     // Clear and hide the box
     span[0].style.display='none';
@@ -256,7 +254,8 @@ function removeLinkField(element, id) {
         id = 'addlinkbox';
     }
     var el = $(id);
-    var span = el.getElementsByTagName('span');
+    var span = $(el).childElements().grep(new Selector('span.newitem'));
+
     if (1 == span.length) {
        span[0].style.display='none';
        span[0].getElementsByTagName('input')[0].value = '';
