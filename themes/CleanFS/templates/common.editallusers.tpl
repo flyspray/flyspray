@@ -12,54 +12,68 @@ function toggleCheckbox(id)
 }
 </script>
 <form action="<?php echo Filters::noXSS(createURL($do, 'editallusers'));?>" method="get">
-<input type="hidden" name="do" value="admin" />
-<input type="hidden" name="area" value="editallusers" />
-<fieldset>
-<legend>Columns</legend>
-<div class="warning">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
-<select name="showfields[]" multiple="multiple" size="3">
-<option value="-">---basic---</option>
-<option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
-<option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
-</select>
-</fieldset>
-<fieldset id="user_filters">
-	<legend><?= eL('accountfilter') ?></legend>
-    <div>
-        <label for="usersearchtext" style=""><?= eL('name') ?>:</label>
-        <input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
-    </div>
-    <div>
-        <label for="mailsearchtext" style=""><?= eL('email') ?>:</label>
-        <input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
-    </div>
-    <div id="accountstatuswrap">
-		<label><?= eL('accountstatus') ?>:</label>
-		<div class="btn-group">
+	<fieldset>
+		<legend><?= eL('accountfilter') ?></legend>
 
-			<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
-			<label class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label>
+		<div class="warning">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
 
-			<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
-			<label class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label>
+		<ul class="form_elements">
+			<li>
+				<label for="showfields"><?= eL('columns'); ?></label>
+				<div class="valuewrap">
+					<select name="showfields[]" id="showfields" multiple="multiple" size="3">
+						<option value="-">---basic---</option>
+						<option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
+						<option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
+					</select>
+				</div>
+			</li>
+			<li>
+				<label for="usersearchtext" style=""><?= eL('name') ?>:</label>
+				<div class="valuewrap">
+					<input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
+				</div>
+			</li>
+			<li>
+				<label for="mailsearchtext" style=""><?= eL('email') ?>:</label>
+				<div class="valuewrap">
+					<input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
+				</div>
+			</li>
+			<li>
+				<label><?= eL('accountstatus') ?></label>
+				<div class="valuewrap">
+					<div class="btn-group">
+						<input type="radio" id="status_all" name="status" value=""<?= Get::val('status')=='' ? ' checked="checked"':'' ?>>
+						<label class="userstatus" id="s_all" for="status_all"><?= eL('showaccountsall') ?></label>
 
-			<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
-			<label class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+						<input type="radio" id="status_enabled" name="status" value="1"<?= Get::val('status')==='1' ? ' checked="checked"':'' ?>>
+						<label class="userstatus" id="s_enabled" for="status_enabled"><?= eL('showaccountsenabled') ?></label>
 
+						<input type="radio" id="status_disabled" name="status" value="0"<?= Get::val('status')==='0' ? ' checked="checked"':'' ?>>
+						<label class="userstatus" id="s_disabled" for="status_disabled"><?= eL('showaccountsdisabled') ?></label>
+					</div>
+				</div>
+			</li>
+		</ul>
+
+		<div class="buttons">
+			<input type="hidden" name="do" value="admin" />
+			<input type="hidden" name="area" value="editallusers" />
+			<button type="submit"><?= eL('search') ?></button>
 		</div>
-	</div>
-
-	<p><button type="submit"><?= eL('search') ?></button></p>
-</fieldset>
+	</fieldset>
 </form>
+
 <?php if ($usercount): ?>
 <div class="pagination">
-	<span><?php echo sprintf('Showing Users %d - %d of %d', $offset + 1, ($offset + $perpage > $usercount ? $usercount : $offset + $perpage), $usercount); ?></span>
+	<p><?php echo sprintf('Showing Users %d - %d of %d', $offset + 1, ($offset + $perpage > $usercount ? $usercount : $offset + $perpage), $usercount); ?></p>
+
 	<?php echo pagenums($pagenum, $perpage, $usercount, 'admin', 'editallusers'); ?>
 </div>
-<?php 
+<?php
 if ($do == 'admin'): echo tpl_form(Filters::noXSS(createURL($do, 'editallusers')), null, null, null, 'id="editallusers"');
-               else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']), null, null, null, 'id="editallusers"');
+			   else: echo tpl_form(Filters::noXSS($_SERVER['SCRIPT_NAME']), null, null, null, 'id="editallusers"');
 endif;
 if ($do == 'admin'): ?>
 	<input type="hidden" name="action" value="admin.editallusers" />
@@ -129,43 +143,39 @@ if ($do == 'admin'): ?>
 
 <!-- TODO Should still add these to bulk edit, but hasn't been done yet
 <ul class="form_elements">
-<li class="required">
-      <label for="notify_type"><?= eL('notifications') ?></label>
-      <select id="notify_type" name="notify_type">
-        <?php echo tpl_options($fs->getNotificationOptions(), Req::val('notify_type')); ?>
+	<li class="required">
+		<label for="notify_type"><?= eL('notifications') ?></label>
+		<select id="notify_type" name="notify_type">
+		<?php echo tpl_options($fs->getNotificationOptions(), Req::val('notify_type')); ?>
+		</select>
+	</li>
+	<li>
+		<label for="time_zone"><?= eL('timezone') ?></label>
+		<select id="time_zone" name="time_zone">
+		<?php
+			$times = array();
+			for ($i = -12; $i <= 13; $i++) {
+				$times[$i] = L('GMT') . (($i == 0) ? ' ' : (($i > 0) ? '+' . $i : $i));
+			}
+			?>
+		<?php echo tpl_options($times, Req::val('time_zone', 0)); ?>
+		</select>
+	</li>
 
-      </select>
-</li>
-<li>
-      <label for="time_zone"><?= eL('timezone') ?></label>
-      <select id="time_zone" name="time_zone">
-        <?php
-          $times = array();
-          for ($i = -12; $i <= 13; $i++) {
-            $times[$i] = L('GMT') . (($i == 0) ? ' ' : (($i > 0) ? '+' . $i : $i));
-          }
-        ?>
-        <?php echo tpl_options($times, Req::val('time_zone', 0)); ?>
-
-      </select>
-</li>
-
-    <?php if (isset($groups)): ?>
-    <li>
-      <label for="groupin"><?= eL('globalgroup') ?></label>
-      <select id="groupin" class="adminlist" name="group_in">
-        <?php echo tpl_options($groups, Req::val('group_in')); ?>
-
-      </select>
-    </li>
-    <?php endif; ?>
-
-  </ul>
-  <p><button type="submit" id="buSubmit"><?= eL('updateaccounts') ?></button></p>
+	<?php if (isset($groups)): ?>
+	<li>
+		<label for="groupin"><?= eL('globalgroup') ?></label>
+		<select id="groupin" class="adminlist" name="group_in">
+		<?php echo tpl_options($groups, Req::val('group_in')); ?>
+		</select>
+	</li>
+	<?php endif; ?>
+</ul>
+<p><button type="submit" id="buSubmit"><?= eL('updateaccounts') ?></button></p>
 -->
 </form>
 <div class="pagination">
-	<span><?php echo sprintf('Showing Users %d - %d of %d', $offset + 1, ($offset + $perpage > $usercount ? $usercount : $offset + $perpage), $usercount); ?></span>
+	<p><?php echo sprintf('Showing Users %d - %d of %d', $offset + 1, ($offset + $perpage > $usercount ? $usercount : $offset + $perpage), $usercount); ?></p>
 	<?php echo pagenums($pagenum, $perpage, $usercount, 'admin', 'editallusers'); ?>
 </div>
 <?php else: ?>
