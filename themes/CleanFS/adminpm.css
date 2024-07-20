@@ -17,7 +17,7 @@ fieldset#user_filters > div > :first-child {
 	padding-top: 2px;
 	color: #555;
 }
-fieldset#user_filters > #accountstatuswrap > .btn-group {
+.btn-group {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -30,7 +30,7 @@ label.userstatus {
         margin:0;
         max-width:100px;
         border-radius:0;
-        background-color:#ccc;
+        background-color:#e1e1e1;
         color:#444;
         cursor:pointer;
 }
@@ -53,7 +53,9 @@ input#status_enabled:checked ~ label[for=status_enabled] {background-color:#cf6;
 input#status_disabled:checked ~ label[for=status_disabled] {background-color:#f96; color:#000;}
 
 .bulkedituser { 
-        margin-top:0.5em;
+	margin: 1em 0;
+	width: 100%;
+	max-width: 800px;
 }
 .bulkedituser .account_enabled .fas {color: #090}
 .bulkedituser .account_disabled .fas {color: #900}
@@ -61,7 +63,7 @@ input#status_disabled:checked ~ label[for=status_disabled] {background-color:#f9
 .perms tbody tr:hover {background-color:#eee;}
 .perms td, .perms th{border:1px solid #999;}
 .perms thead th, .perms thead td {text-align:center;}
-.perms tbody th{text-align:right;}
+.perms tbody th{text-align:right; white-space: nowrap;}
 .perms tbody td{width:10em;text-align:center;}
 .perms tbody span span:first-child {color: #090;}
 .group.globalgroup {background-color:#ddd;}
@@ -96,3 +98,4 @@ input#status_disabled:checked ~ label[for=status_disabled] {background-color:#f9
 	border-radius: 3px;
 	max-width: 750px;
 }
+.tab p, #toolbox p {max-width: 800px;}
