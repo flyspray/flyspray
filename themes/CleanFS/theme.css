@@ -2143,10 +2143,6 @@ div.denyform {
 }
 
 #actionbuttons {
-	margin-left: 300px;
-	margin-top: 15px;
-	min-height: 50px;
-	padding: 8px 5px;
 }
 table.assignedto {border:0px;border-collapse: collapse;margin-bottom: 0;}
 table.assignedto tr {height: 30px;}
@@ -2420,7 +2416,7 @@ form #taskfields {width:100%;}
 form #taskdetailsfull {margin:0;top:auto;}
 form #taskdetailsfull button.positive {margin-left:auto;margin-right:auto;width:60%;}
 #attachmentsbox {flex-direction: column;}
-#attachmentsbox > div {width: 100%;}
+#attachmentsbox > div {width: auto;}
 #comments, #related, #notify, #remind, #effort, #history{padding:5px;}
 div.comment_container {margin:5px 0;}
 div.comment_container .comment_avatar .av_comment img {width: 32px;height: 32px;}
