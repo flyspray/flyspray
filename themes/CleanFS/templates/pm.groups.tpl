@@ -1,15 +1,20 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?= eL('groupmanage') ?></h2>
-<?php if ($user->perms('is_admin')): ?><a class="button" href="<?php echo createURL('admin', 'newuser', $proj->id); ?>"><span class="fas fa-user-plus fa-lg fa-fw"></span> <?= eL('newuser') ?></a><?php endif; ?>
-<a class="button" href="<?php echo Filters::noXSS(createURL('pm', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a>
+	<h2><?php echo Filters::noXSS($proj->prefs['project_title']); ?> : <?= eL('groupmanage') ?></h2>
 
-<form style="display:inline-block" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-<label for="edit_user"><?= eL('edituser') ?></label>
-<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
-<button type="submit"><?= eL('edit') ?></button>
-<input type="hidden" name="do" value="user" />
-<input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
-</form>
+	<div>
+	<?php if ($user->perms('is_admin')): ?>
+		<a class="button" href="<?php echo createURL('admin', 'newuser', $proj->id); ?>"><span class="fas fa-user-plus fa-lg fa-fw"></span> <?= eL('newuser') ?></a>
+	<?php endif; ?>
+		<a class="button" href="<?php echo Filters::noXSS(createURL('pm', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a>
+		<form style="display:inline-block" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+			<label for="edit_user"><?= eL('edituser') ?></label>
+			<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
+			<button type="submit"><?= eL('edit') ?></button>
+			<input type="hidden" name="do" value="user" />
+			<input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
+		</form>
+	</div>
+
 <?php
 # 'group_open 'is not relevant for project groups, so lets not add it here.
 $perm_fields = array(
@@ -77,21 +82,21 @@ foreach ($merge as $group) {
 ?>
 <table class="perms">
 <colgroup>
-<col></col>
-<?php echo $cols; ?>
+	<col></col>
+	<?php echo $cols; ?>
 </colgroup>
 <thead>
 <tr>
-<th><?= eL('groupmembers') ?></th>
-<?php echo $gmembers; ?>
+	<th><?= eL('groupmembers') ?></th>
+	<?php echo $gmembers; ?>
 </tr>
 <tr>
-<th><?= eL('group') ?></th>
-<?php echo $gnames; ?>
+	<th><?= eL('group') ?></th>
+	<?php echo $gnames; ?>
 </tr>
 <tr>
-<th><?= eL('description') ?></th>
-<?php echo $gdesc; ?>
+	<th><?= eL('description') ?></th>
+	<?php echo $gdesc; ?>
 </tr>
 </thead>
 <tbody>
@@ -117,8 +122,8 @@ echo ($p=='view_roadmap'   && $proj->prefs['others_viewroadmap']) ?' class="ever
 echo ($p=='open_new_tasks' && $proj->prefs['anon_open']) ?         ' class="everybody"':'';
 ?>>
 <th>
-<?php echo ($p=='modify_own_tasks' ? '<span class="modify-own fas fa-user-pen fa-2x" title="' . eL('Fields allowed to change: ') . implode(', ', $proj->prefs['basic_fields']) . '"></span>' : ''); ?>
-<?php echo ($perm_everybody ? '<span class="everybody fas fa-circle-exclamation fa-2x" title="' . eL('Allowed for everybody - project setting overrules this group setting!') . '"></span> ' : ''); ?><?php echo eL(str_replace('_', '', $p)); ?>
+	<?php echo ($p=='modify_own_tasks' ? '<span class="modify-own fas fa-user-pen fa-lg" title="' . eL('Fields allowed to change: ') . implode(', ', $proj->prefs['basic_fields']) . '"></span>' : ''); ?>
+	<?php echo ($perm_everybody ? '<span class="everybody fas fa-circle-exclamation fa-lg" title="' . eL('Allowed for everybody - project setting overrules this group setting!') . '"></span> ' : ''); ?><?php echo eL(str_replace('_', '', $p)); ?>
 </th>
 <?php
 $i=0;
