@@ -1,7 +1,7 @@
 <?php echo tpl_form( $do=='myprofile' ? Filters::noXSS(createUrl('myprofile')) : Filters::noXSS(createUrl('edituser', $theuser->id))); ?>
 <div id="editprofilewrap">
 	<fieldset>
-		<legend><?= eL('account') ?>: <?php echo $do; ?></legend>
+		<legend><?= eL('account') ?></legend>
 
 	<ul class="form_elements">
 		<li>
