@@ -1,4 +1,5 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
+	<h2><?= eL('flyspraychecks'); ?></h2>
 <div>PHP version: <?php echo PHP_VERSION; ?></div>
 <?php if(isset($utf8mb4upgradable)) { echo '<div class="error">'.Filters::noXSS($utf8mb4upgradable).'</div>'; } ?>
 <?php if(isset($oldmysqlversion)) { echo '<div class="error">'.Filters::noXSS($oldmysqlversion).'</div>'; } ?>
@@ -7,13 +8,13 @@
 <div>HTMLPurifier version: <?php if(isset($htmlpurifierversion)) { echo Filters::noXSS($htmlpurifierversion); } ?></div>
 
 <div class="box">
-<div>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></div>
+<h3>passwdcrypt: <?php echo Filters::noXSS($passwdcrypt); ?></h3>
 <?php if(isset($hashlengths)) { echo '<div>password hash lengths: '.$hashlengths.'</div>'; } ?>
 </div>
 
 <?php if(isset($registrations)): ?>
 <div class="box">
-<h4><?= $regcount ?> unfinished registrations</h4>
+<h3><?= $regcount ?> unfinished registrations</h3>
 <table>
 <thead>
 <tr>
@@ -37,15 +38,15 @@
 
 <?php if(isset($xmppmessagecount)): ?>
 <div class="box">
-<p><?= $xmppmessagecount.' unsent xmpp messages' ?></p>
+<h3><?= $xmppmessagecount.' unsent xmpp messages' ?></h3>
 
 <?php echo tpl_form(Filters::noXSS(createUrl($baseurl))); ?>
 <input type="hidden" name="action" value="admin.xmppcleanup"/>
 <?php if(isset($olderyear) && $olderyear>0): ?>
-<button type="submit" name="xmppcleanup" value="year">delete <?= $olderyear ?> unsent xmpp notifications older 1 year</button> 
+<button type="submit" name="xmppcleanup" value="year">delete <?= $olderyear ?> unsent xmpp notifications older 1 year</button>
 <?php endif; ?>
 <?php if(isset($oldermonth) && $oldermonth>0): ?>
-<button type="submit" name="xmppcleanup" value="month">delete <?= $oldermonth ?> unsent xmpp notifications older 1 month</button> 
+<button type="submit" name="xmppcleanup" value="month">delete <?= $oldermonth ?> unsent xmpp notifications older 1 month</button>
 <?php endif; ?>
 </form>
 <table>
@@ -76,6 +77,7 @@
 <?php endif; ?>
 
 <div class="box">
+<h3>Categories Status</h3>
 <?php if (isset($cattreelftrgt) or isset($cattreenonunique) or isset($cattreeerrors)): ?>
 <div class="error">Category errors detected:</div>
 <?php else: ?>
@@ -179,7 +181,7 @@
 <input type="checkbox" id="toggledbinfo" name="toggledbinfo" checked="checked" />
 <label for="toggledbinfo" class="button" id="toggledbinfolabel"></label>
 <div id="dbinfo">
-	<pre><?php global $db; echo Filters::noXSS(print_r($db->dblink, true)); ?></pre>       
+	<pre><?php global $db; echo Filters::noXSS(print_r($db->dblink, true)); ?></pre>
 </div>
 <br/>
 <input type="checkbox" id="togglefields" name="togglefields" checked="checked" />
@@ -213,7 +215,7 @@ foreach($fsfields as $f):
 	# Show table info row if not yet for that field
 	# This logic fails if there exists a table within $fstables without fields in $fsfields
 	# But for our usecase this should be ok.
-	if ($lasttable != $f['table_name']): 
+	if ($lasttable != $f['table_name']):
 		$ti++;
 	?>
 	<tr class="dbtable">

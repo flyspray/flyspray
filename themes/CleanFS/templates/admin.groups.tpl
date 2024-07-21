@@ -1,25 +1,39 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
-  <ul id="submenu">
-   <li><a href="#users_tab"><?= eL('users') ?></a></li>
-   <li><a href="#groups_tab"><?= eL('globalgroups') ?></a></li>
-  </ul>
-  <div id="users_tab" class="tab">
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuser', $proj->id)); ?>"><span class="good fas fa-user-plus fa-lg fa-fw"></span><?= eL('newuser') ?></a>
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuserbulk', $proj->id)); ?>"><span class="good fas fa-user-xmark fa-lg fa-fw"></span><?= eL('newuserbulk') ?></a>
-    <a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'editallusers', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('editallusers') ?></a>
-    <div class="groupedit">
-      <form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
-              <label for="edit_user"><?= eL('edituser') ?></label>
-              <?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
-              <button type="submit"><?= eL('edit') ?></button>
-              <input type="hidden" name="do" value="admin" />
-              <input type="hidden" name="area" value="users" />
-              <input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
-      </form>
-    </div>
-  </div>
-  <div id="groups_tab" class="tab">
-<div><a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a></div>
+	<ul id="submenu">
+		<li><a href="#users_tab"><?= eL('users') ?></a></li>
+		<li><a href="#groups_tab"><?= eL('globalgroups') ?></a></li>
+	</ul>
+
+	<div id="users_tab" class="tab">
+		<div class="buttons">
+			<a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuser', $proj->id)); ?>"><span class="good fas fa-user-plus fa-lg fa-fw"></span><?= eL('newuser') ?></a>
+			<a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newuserbulk', $proj->id)); ?>"><span class="good fas fa-user-xmark fa-lg fa-fw"></span><?= eL('newuserbulk') ?></a>
+			<a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'editallusers', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('editallusers') ?></a>
+		</div>
+
+		<div class="groupedit">
+			<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
+				<ul class="form_elements">
+					<li>
+						<label for="edit_user"><?= eL('edituser') ?></label>
+						<div class="valuewrap">
+							<div class="valuemulti">
+								<?php echo tpl_userselect('user_name', '', 'edit_user'); ?>
+								<button type="submit"><?= eL('edit') ?></button>
+								<input type="hidden" name="do" value="admin" />
+								<input type="hidden" name="area" value="users" />
+								<input type="hidden" name="project" value="<?php echo $proj->id; ?>" />
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+		</div>
+	</div>
+	<div id="groups_tab" class="tab">
+		<div>
+			<a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a>
+		</div>
 
 <?php
 $perm_fields = array(
@@ -55,8 +69,8 @@ $perm_fields = array(
 );
 
 $yesno = array(
-        '<td class="perm-no" title="'.eL('no').'"><span class="fas fa-ban fa-2x"></span></td>',
-        '<td class="perm-yes" title="'.eL('yes').'"><span class="good fas fa-check fa-2x"></span></td>'
+	'<td class="perm-no" title="'.eL('no').'"><span class="fas fa-ban fa-2x"></span></td>',
+	'<td class="perm-yes" title="'.eL('yes').'"><span class="good fas fa-check fa-2x"></span></td>'
 );
 
 $perms=array();
@@ -78,52 +92,53 @@ foreach ($groups as $group) {
 	}
 }
 ?>
-<table class="perms">
-<colgroup>
-<col></col>
+		<table class="perms">
+		<colgroup>
+			<col></col>
 <?php echo $cols; ?>
-</colgroup>
-<thead>
-<tr>
-<th><?= eL('groupmembers') ?></th>
-<?php echo $gmembers; ?>
-</tr>
-<tr>
-<th><?= eL('group') ?></th>
-<?php echo $gnames; ?>
-</tr>
-<tr>
-<th><?= eL('description') ?></th>
-<?php echo $gdesc; ?>
-</tr>
-</thead>
-<tbody>
+		</colgroup>
+		<thead>
+		<tr>
+			<th><?= eL('groupmembers') ?></th>
+			<?php echo $gmembers; ?>
+		</tr>
+		<tr>
+			<th><?= eL('group') ?></th>
+			<?php echo $gnames; ?>
+		</tr>
+		<tr>
+			<th><?= eL('description') ?></th>
+			<?php echo $gdesc; ?>
+		</tr>
+		</thead>
+		<tbody>
 <?php foreach ($perm_fields as $p): ?>
-<tr>
-	<th><?php echo eL(str_replace('_', '', $p)); ?></th>
-<?php
-require_once 'permicons.tpl';
-$i=0;
+		<tr>
+			<th><?php echo eL(str_replace('_', '', $p)); ?></th>
+	<?php
+		require_once 'permicons.tpl';
+		$i=0;
 
-# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
-foreach ($perms[$p] as $val) {
-        if ($perms['is_admin'][$i]==1 && $val == 0) {
-                if (isset($permicons[$p])) {
-                        echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
-                } else {
-                        echo $yesno[1];
-                }
-        } elseif ($val==1 && isset($permicons[$p])) {
-                echo '<td>'.$permicons[$p].'</td>';
-        } else {
-                echo $yesno[$val];
-        }
-        $i++;
-}
-?>
-</tr>
+		# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+		foreach ($perms[$p] as $val) {
+			if ($perms['is_admin'][$i]==1 && $val == 0) {
+				if (isset($permicons[$p])) {
+					echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
+				} else {
+					echo $yesno[1];
+				}
+			} elseif ($val==1 && isset($permicons[$p])) {
+				echo '<td>'.$permicons[$p].'</td>';
+			} else {
+				echo $yesno[$val];
+			}
+
+			$i++;
+		}
+	?>
+		</tr>
 <?php endforeach; ?>
-</tbody>
-</table>
-</div>
+		</tbody>
+		</table>
+	</div>
 </div>
