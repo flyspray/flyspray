@@ -1,11 +1,21 @@
-<h3><?php echo Filters::noXSS(L('lostpw')); ?></h3>
+<h2><?php echo Filters::noXSS(L('lostpw')); ?></h2>
+
 <div class="box">
-    <p><?php echo Filters::noXSS(L('lostpwexplain')); ?></p>
-    <?php echo tpl_form(Filters::noXSS(createUrl('lostpw'))); ?>
-        <p><b><?php echo Filters::noXSS(L('username')); ?></b>
-        <input type="hidden" name="action" value="lostpw.sendmagic" />
-        <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" name="user_name" size="20" maxlength="32" />
-        <button type="submit"><?php echo Filters::noXSS(L('sendlink')); ?></button>
-        </p>
-    </form>
+	<p><?php echo Filters::noXSS(L('lostpwexplain')); ?></p>
+
+	<?php echo tpl_form(Filters::noXSS(createUrl('lostpw'))); ?>
+	<ul class="form_elements">
+		<li>
+			<label for="user_name"><strong><?php echo Filters::noXSS(L('username')); ?></strong></label>
+			<div class="valuewrap">
+				<input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" name="user_name" id="user_name" size="20" maxlength="32" />
+			</div>
+		</li>
+	</ul>
+
+	<div class="buttons">
+		<button type="submit"><?php echo Filters::noXSS(L('sendlink')); ?></button>
+		<input type="hidden" name="action" value="lostpw.sendmagic" />
+	</div>
+	</form>
 </div>
