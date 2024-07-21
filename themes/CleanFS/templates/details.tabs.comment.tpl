@@ -38,12 +38,16 @@
 			</div>
 			<div class="commenttext">
 				<?php echo TextFormatter::render($comment['comment_text'], 'comm', $comment['comment_id'], $comment['content']); ?>
-				<?php if (isset($comment_links[$comment['comment_id']])) {
-					$this->display('common.links.tpl', 'links', $comment_links[$comment['comment_id']]);
-				} ?>
-				<?php if (isset($comment_attachments[$comment['comment_id']])) {
-					$this->display('common.attachments.tpl', 'attachments', $comment_attachments[$comment['comment_id']]);
-				} ?>
+				<?php if (isset($comment_links[$comment['comment_id']]) || isset($comment_attachments[$comment['comment_id']])): ?>
+				<div id="attachmentsbox">
+					<?php if (isset($comment_links[$comment['comment_id']])) {
+						$this->display('common.links.tpl', 'links', $comment_links[$comment['comment_id']]);
+					} ?>
+					<?php if (isset($comment_attachments[$comment['comment_id']])) {
+						$this->display('common.attachments.tpl', 'attachments', $comment_attachments[$comment['comment_id']]);
+					} ?>
+				</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>
@@ -64,47 +68,55 @@
 					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
 				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
-				<div id="addlinkbox">
-					<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addalink') ?></button>
-					<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addanotherlink') ?></button>
-					<span style="display: none">
-						<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
-						<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
-					</span>
-					<noscript>
-						<span>
+				<div id="attachmentsbox">
+					<div id="addlinkbox">
+						<?php if ($user->perms('create_attachments')): ?>
+						<div>
+							<button id="addlinkbox_addalink" tabindex="10" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addalink') ?></button>
+							<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addanotherlink') ?></button>
+						</div>
+						<span class="newitem" style="display: none">
 							<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
-							<a href="javascript://" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><?= eL('remove') ?></a><br />
+							<a href="javascript://" class="button" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 						</span>
-					</noscript>
-				</div>
-				<?php if ($user->perms('create_attachments')): ?>
-				<div id="uploadfilebox">
-					<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
-						<?= eL('uploadafile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
-					</button>
-					<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
-						<?= eL('attachanotherfile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
-					</button>
-					<span style="display: none;"><!-- this span is shown/copied in javascript when adding files -->
-						<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-						<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?= eL('remove') ?></a><br />
-					</span>
-					<noscript>
-						<span>
+						<noscript>
+							<span>
+								<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+								<a href="javascript://" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
+							</span>
+						</noscript>
+						<?php endif; ?>
+					</div>
+					<div id="uploadfilebox">
+					<?php if ($user->perms('create_attachments')): ?>
+						<button id="uploadfilebox_attachafile" tabindex="7" type="button" onclick="addUploadFields()">
+							<?= eL('uploadafile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
+						</button>
+						<button id="uploadfilebox_attachanotherfile" tabindex="7" style="display: none" type="button" onclick="addUploadFields()">
+							<?= eL('attachanotherfile') ?> (<?= eL('max') ?> <?php echo Filters::noXSS($fs->max_file_size); ?> <?= eL('MiB') ?>)
+						</button>
+						<span class="newtiem" style="display: none;"><!-- this span is shown/copied in javascript when adding files -->
 							<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-							<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?= eL('remove') ?></a><br />
+							<a href="javascript://" class="button" title="<?= eL('remove') ?>" tabindex="6" onclick="removeUploadField(this);"><span class="fas fa-xmark fa-lg"></span></a>
 						</span>
-					</noscript>
+						<noscript>
+							<span>
+								<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
+								<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?= eL('remove') ?></a><br />
+							</span>
+						</noscript>
+					<?php endif; ?>
+					</div>
 				</div>
-				<?php endif; ?>
 				<?php if (!$watched): ?>
 					<div>
 						<?php echo tpl_checkbox('notifyme', Req::val('notifyme', !(Req::val('action') == 'details.addcomment')), 'notifyme'); ?>
 						<label class="left" for="notifyme"><?= eL('notifyme') ?></label>
 					</div>
 				<?php endif; ?>
-				<button class="button positive" accesskey="s" tabindex="9" type="submit"><?= eL('addcomment') ?></button>
+				<div class="buttons">
+					<button class="button positive" accesskey="s" tabindex="9" type="submit"><?= eL('addcomment') ?></button>
+				</div>
 				</form>
 			</div>
 		</div>
