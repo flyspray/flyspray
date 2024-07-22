@@ -31,14 +31,22 @@ $get_users = $db->query('SELECT real_name, user_name, profile_image
 	WHERE u.user_name LIKE ? OR u.real_name LIKE ?',
 	array($searchterm, $searchterm), 20);
 
-$html = '<ul class="autocomplete">';
+$html = '<ul>' . "\n";
 
 while ($row = $db->fetchRow($get_users)) {
    $data = array_map(array('Filters','noXSS'), $row);
-   $html .= '<li title="' . $data['real_name'] . '">'.($data['profile_image']!='' ? '<img src="avatars/'.$data['profile_image'].'" />' : '<span class="noavatar"></span>' ). $data['user_name'] . '<span class="informal"> ' . $data['real_name'] . '</span></li>';
+   $html .= "\t" . '<li title="' . $data['real_name'] . '"><span>' .
+      (
+         $data['profile_image'] != ''
+         ?
+         '<img src="avatars/'.$data['profile_image'].'" />'
+         :
+         '<span class="noavatar"><span class="fas fa-user fa-lg"></span></span>'
+      ) .
+      $data['user_name'] . '<span class="informal"> ' . $data['real_name'] . '</span></span></li>' . "\n";
 }
 
-$html .= '</ul>';
+$html .= '</ul>' . "\n";
 
 echo $html;
 

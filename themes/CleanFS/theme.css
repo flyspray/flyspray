@@ -1661,7 +1661,7 @@ ul.form_elements {
 	margin: 0 0 1em 0;
 	max-width: 800px;
 }
-ul.form_elements li {
+ul.form_elements > li {
 	margin-bottom: 10px;
 	display: flex;
 	flex-direction: row;
@@ -2102,44 +2102,75 @@ div.denyform {
 #rassigned_to {height: 12em; }
 
 /* Stuff for the autocomplete lists {{{ */
+.autocompletewrap {
+	display: inline-block;
+	position: relative;
+}
 .autocomplete {
 	background-color:#fff;
-	position: absolute;
-	width: auto !important;
 	box-shadow:0 5px 7px #ccc;
 	padding: 0px;
-	margin:-1px 0 0;
+	margin: -1px 0 0;
 	text-align:left;
 	display:block;
+	border: 1px solid #e1e1e1;
+	border-radius: 0 0 3px 3px;
+	box-sizing: border-box;
+	overflow: hidden;
+	min-width: 200px;
+	z-index: 100;
 }
 .autocomplete ul {
 	list-style-type: none;
 	margin: 0px;
 	padding: 0px;
+	min-width: 100%;
+	color: #000;
 }
 .autocomplete ul li {
 	list-style-type: none;
 	display: block;
 	margin: 0;
-	padding:0;
-	height: 24px;
 	white-space:nowrap;
-	vertical-align:middle;
-	padding: .2em .5em;
+	padding: .2em;
+	box-sizing: border-box;
+	width: 100%;
+}
+.autocomplete ul li > span {
+	display: inline-block;
+	font-weight: bold;
 }
 .autocomplete ul li span.informal {
 	color: #333;
+	font-weight: normal;
 }
 .autocomplete ul li.selected {
 	background-color: #5F9729;
 	cursor:pointer;
-	color:HighlightText;
+	color: #fff;
+}
+.autocomplete ul li.selected span.informal {
+	color: inherit;
+	font-weight: normal;
 }
 .autocomplete img, .autocomplete .noavatar{
 	width:24px;
 	height:24px;
 	display:inline-block;
 	margin-right: .5em;
+	text-align: center;
+	vertical-align: middle;
+	color: #999;
+	background: #e1e1e1;
+}
+.autocomplete img {
+	background: none;
+}
+.autocomplete ul li.selected span.noavatar {
+	color: #333;
+}
+ .autocomplete .noavatar > span {
+	 padding-top: .8em;
 }
 
 #actionbuttons {

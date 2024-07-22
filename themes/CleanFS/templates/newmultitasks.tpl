@@ -168,7 +168,7 @@ if (!isset($supertask_id)) {
 		newrow.querySelector('input[name^=item_summary]').value = summary;
 		newrow.querySelector('input[name^=detailed_desc]').value = details;
 		newrow.querySelector('input[name^=assigned_to]').name = 'assigned_to[' + nextid + ']';
-		newrow.querySelector('span[id^=assigned_to]').id = 'assigned_to_' + nextid + '_complete';
+		newrow.querySelector('div[id^=assigned_to]').id = 'assigned_to_' + nextid + '_complete';
 
 		newrow_script = newrow.querySelector('script');
 		var res = newrow_script.innerHTML.replaceAll(/(assigned_to|find_user)_\d+/g, '$1_' + nextid);
