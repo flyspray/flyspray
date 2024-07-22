@@ -941,9 +941,11 @@ div#fineprint {
 #controlBox .inner > a {
   display: inline-block;
   color: #555;
+  cursor: not-allowed;
 }
 #controlBox.active .inner > a {
   color: #5f9729;
+  cursor: pointer;
 }
 #controlBox.active .inner a:hover {
   color: #78bf34;
@@ -952,6 +954,7 @@ div#fineprint {
 #controlBox > .inner > a:last-child {
 	display: block;
 	margin: 0 auto;
+	width: 2.8em;
 }
 
 .dokuwiki_toolbar {
