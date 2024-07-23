@@ -15,17 +15,38 @@ function toggleCheckbox(id)
 	<fieldset>
 		<legend><?= eL('accountfilter') ?></legend>
 
-		<div class="warning">Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.</div>
-
 		<ul class="form_elements">
 			<li>
-				<label for="showfields"><?= eL('columns'); ?></label>
+				<label><?= eL('columns'); ?></label>
 				<div class="valuewrap">
-					<select name="showfields[]" id="showfields" multiple="multiple" size="3">
-						<option value="-">---basic---</option>
-						<option value="stats"<?php echo $showstats? ' selected="selected"':'';?>>statistics</option>
-						<option value="ltf"<?php echo $showltf? ' selected="selected"':'';?>>language, timezone, dateformat</option>
-					</select>
+					<div class="checksetwrap">
+<?php
+$fields = [
+	[
+		'stats',
+		'stats',
+		eL('statistics'),
+		($showstats == 1)
+	],
+	[
+		'ltf',
+		'ltf',
+		el('langtzdateformat'),
+		($showltf == 1)
+	],
+];
+
+foreach ($fields as $f) {
+?>
+						<div class="checkwrap">
+ 							<?php echo tpl_checkbox('showfields[]', ($f[3] ? ' checked="checked"' : ''), 'showfields_' . $f[0], $f[1]); ?>
+							<label for="<?php echo 'showfields_' . $f[0]; ?>"><?php echo $f[2]; ?></lable>
+						</div>
+<?php
+}
+?>
+					</div>
+					<div class="note"><?= el('noteuserstatistics') ?></div>
 				</div>
 			</li>
 			<li>

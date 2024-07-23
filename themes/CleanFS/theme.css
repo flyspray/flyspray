@@ -1647,6 +1647,32 @@ fieldset.advsearch_dates label {margin: 0 5px;}
 .search_select .multisel { white-space: nowrap;}
 .search_select select {margin-top: 1.5em;height:158px;}
 fieldset.advsearch_users .multisel { white-space: nowrap;}
+.checksetwrap {
+	border: 1px solid #e1e1e1;
+	border-radius: 3px;
+	padding: 5px;
+	flex: 0 1 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+/* 	min-width: 150px; */
+/* background: #fef; */
+max-height: 20em;
+overflow-y: scroll;
+}
+.checksetwrap .checkwrap {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 5px;
+/* background: #cfc; */
+}
+.checksetwrap .checkwrap label {
+	flex: 0 1 100%;
+	white-space: nowrap;
+/* background: #fc9; */
+}
+
 /* --------------------------- FORMS -----------------------*/
 
 .bulkedituser td.inactive{color:#888;}
@@ -1678,6 +1704,7 @@ ul.form_elements > li > label {
 	min-height:25px;
 	vertical-align: middle;
 	color: #555;
+	flex: 0 0 auto;
 }
 ul.form_elements > li > label.minimal {
 	width: auto;
@@ -1760,10 +1787,25 @@ ul.form_elements > li > label + .valuewrap .valuemultipair > label:first-child {
 ul.form_elements > li > label + .valuewrap .valuemultipair > label:not(:first-child) {
 	margin-left: 5px;
 }
-
+ul.form_elements > li > label + .valuewrap .checksetwrap {
+	border: none;
+	padding: 0;
+	border-radius: 0;
+	max-height: unset;
+	overflow-y: unset;
+}
 ul.form_elements.profile > li > label {
 	font-weight: bold;
 }
+ul.form_elements > li > label + .valuewrap > .note,
+ul.form_elements > li > label + .valuewrap > .errormessage {
+	max-width: 590px;
+}
+ul.form_elements > li.wide-element > label + .valuewrap > .note,
+ul.form_elements > li.wide-element > label + .valuewrap > .errormessage {
+	max-width: none;
+}
+
 #profileimagewrap {
 	display: flex;
 	flex-direction: row;
@@ -2473,5 +2515,8 @@ ul.form_elements table.bulkuser input[type=password]
 .tab .tab_form_elements > div > .wideitem textarea {
 	width: calc(100% - 12px);
 }
-
+.checksetwrap {
+	background: #ccf;
+	max-height: none;
+	overflow-y: unset;
 }

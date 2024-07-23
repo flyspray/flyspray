@@ -1091,6 +1091,54 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
 	return ($attr ? $html. join_attrs($attr) : $html) . '/>';
 }
 
+
+/**
+ * Builds a list of checkboxes sharing a name
+ *
+ * @baseName string Basis of label/checkbox name and id attributes
+ * @options array Checkbox details
+ * @selected mixed (null|array) values to be selected
+ * @labelIsValue Use the value as the label
+ *
+ * FIXME: subject to the same FIXME as tpl_options()
+*/
+function tpl_checkboxlist($baseName, $options, $selected = null, $labelIsValue = false)
+{
+	// doesn't cover the full spec, but enough for our purposes
+	if (preg_match('/^[a-z_:][a-z0-9\._-]*$/i', $baseName) !== 1) {
+		return '';
+	}
+
+	// force $selected to be an array.
+	// this allows multi-selects to have multiple selected options.
+	$selected = is_array($selected) ? $selected : (array) $selected;
+	$options = is_array($options) ? $options : (array) $options;
+	$html = '';
+
+	foreach ($options as $idx => $data) {
+		if (is_array($data)) {
+			$value = $data[0];
+			$label = $data[1];
+		} else{
+			$value=$idx;
+			$label=$data;
+		}
+
+		$label = htmlspecialchars($label, ENT_QUOTES, 'utf-8');
+		$value = $labelIsValue ? $label : htmlspecialchars($value, ENT_QUOTES, 'utf-8');
+
+		$html .= '<div class="checkwrap"><input type="checkbox" name="' . $baseName . '[]" id="' .
+			$baseName . '_' . ($value == '' ? 'none' : $value) .
+			'" value="' . $value . '" ' . (in_array($value, $selected) ? 'checked="checked"' : '');
+		$html .= ' />' . "\n";
+		$html .= '<label for="' . $baseName . '_' . ($value == '' ? 'none' : $value) . '">' .
+			htmlspecialchars($label, ENT_QUOTES, 'utf-8') . '</label>' . "\n";
+		$html .= '</div>' . "\n";
+	}
+	return $html;
+}
+
+
 /**
  * Image display
  */

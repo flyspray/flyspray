@@ -345,34 +345,34 @@
 			</div>
 		</li>
 		<li>
-			<label for="notify_types"><?php echo Filters::noXSS(L('notifytypes')); ?></label>
+			<label><?php echo Filters::noXSS(L('notifytypes')); ?></label>
 			<div class="valuewrap">
-				<select id="notify_types" size="17" multiple="multiple" name="notify_types[]">
-				<?php
-					echo tpl_options(
-						array(
-							0 => L('none'),
-							NOTIFY_TASK_OPENED     => L('taskopened'),
-							NOTIFY_TASK_CHANGED    => L('pm.taskchanged'),
-							NOTIFY_TASK_CLOSED     => L('taskclosed'),
-							NOTIFY_TASK_REOPENED   => L('pm.taskreopened'),
-							NOTIFY_DEP_ADDED       => L('pm.depadded'),
-							NOTIFY_DEP_REMOVED     => L('pm.depremoved'),
-							NOTIFY_COMMENT_ADDED   => L('commentadded'),
-							NOTIFY_ATT_ADDED       => L('attachmentadded'),
-							NOTIFY_REL_ADDED       => L('relatedadded'),
-							NOTIFY_OWNERSHIP       => L('ownershiptaken'),
-							NOTIFY_PM_REQUEST      => L('pmrequest'),
-							NOTIFY_PM_DENY_REQUEST => L('pmrequestdenied'),
-							NOTIFY_NEW_ASSIGNEE    => L('newassignee'),
-							NOTIFY_REV_DEP         => L('revdepadded'),
-							NOTIFY_REV_DEP_REMOVED => L('revdepaddedremoved'),
-							NOTIFY_ADDED_ASSIGNEES => L('assigneeadded')
-						),
-						Post::val('notify_types', Flyspray::int_explode(' ', $proj->prefs['notify_types']))
-					);
-				?>
-				</select>
+				<div class="checksetwrap">
+<?php
+$notify_opts = array(
+	// 0 => L('none'),
+	NOTIFY_TASK_OPENED     => L('taskopened'),
+	NOTIFY_TASK_CHANGED    => L('pm.taskchanged'),
+	NOTIFY_TASK_CLOSED     => L('taskclosed'),
+	NOTIFY_TASK_REOPENED   => L('pm.taskreopened'),
+	NOTIFY_DEP_ADDED       => L('pm.depadded'),
+	NOTIFY_DEP_REMOVED     => L('pm.depremoved'),
+	NOTIFY_COMMENT_ADDED   => L('commentadded'),
+	NOTIFY_ATT_ADDED       => L('attachmentadded'),
+	NOTIFY_REL_ADDED       => L('relatedadded'),
+	NOTIFY_OWNERSHIP       => L('ownershiptaken'),
+	NOTIFY_PM_REQUEST      => L('pmrequest'),
+	NOTIFY_PM_DENY_REQUEST => L('pmrequestdenied'),
+	NOTIFY_NEW_ASSIGNEE    => L('newassignee'),
+	NOTIFY_REV_DEP         => L('revdepadded'),
+	NOTIFY_REV_DEP_REMOVED => L('revdepaddedremoved'),
+	NOTIFY_ADDED_ASSIGNEES => L('assigneeadded')
+);
+$notify_vals = Post::val('notify_types', Flyspray::int_explode(' ', $proj->prefs['notify_types']));
+
+echo tpl_checkboxlist('notify_types', $notify_opts, $notify_vals);
+?>
+				</div>
 			</div>
 		</li>
 	</ul>

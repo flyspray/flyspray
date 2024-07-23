@@ -159,10 +159,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="type"><?= eL('tasktype') ?></label>
-						<select name="type[]" id="type" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('alltasktypes')) + $proj->listTaskTypes(), isset($_GET['type'])?$_GET['type']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('tasktype') ?></label>
+						<div class="checksetwrap">
+<?php
+	$tasktype_opts = array('' => L('alltasktypes')) + $proj->listTaskTypes();
+	$tasktype_vals = isset($_GET['type']) ? $_GET['type'] : [''];
+
+	echo tpl_checkboxlist('type', $tasktype_opts, $tasktype_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Severity -->
@@ -171,10 +176,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="sev"><?= eL('severity') ?></label>
-						<select name="sev[]" id="sev" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('allseverities')) + $fs->severities, isset($_GET['sev'])?$_GET['sev']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('severity') ?></label>
+						<div class="checksetwrap">
+<?php
+	$sev_opts = array('' => L('allseverities')) + $fs->severities;
+	$sev_vals = isset($_GET['sev']) ? $_GET['sev'] : [''];
+
+	echo tpl_checkboxlist('sev', $sev_opts, $sev_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Priority -->
@@ -183,10 +193,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="pri"><?= eL('priority') ?></label>
-						<select name="pri[]" id="pri" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('allpriorities')) + $fs->priorities, isset($_GET['pri'])?$_GET['pri']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('priority') ?></label>
+						<div class="checksetwrap">
+<?php
+	$pri_opts = array('' => L('allpriorities')) + $fs->priorities;
+	$pri_vals = isset($_GET['pri']) ? $_GET['pri'] : [''];
+
+	echo tpl_checkboxlist('pri', $pri_opts, $pri_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Due Version -->
@@ -195,10 +210,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="due"><?= eL('dueversion') ?></label>
-						<select name="due[]" id="due" multiple="multiple" size="8">
-							<?php echo tpl_options(array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false)), isset($_GET['due'])?$_GET['due']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('dueversion') ?></label>
+						<div class="checksetwrap">
+<?php
+	$dueversion_opts = array_merge(array('' => L('dueanyversion'), 0 => L('unassigned')), $proj->listVersions(false));
+	$dueversion_vals = isset($_GET['due']) ? $_GET['due'] : [''];
+
+	echo tpl_checkboxlist('due', $dueversion_opts, $dueversion_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Reportedin -->
@@ -207,10 +227,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="reported"><?= eL('reportedversion') ?></label>
-						<select name="reported[]" id="reported" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('anyversion')) + $proj->listVersions(false), isset($_GET['reported'])?$_GET['reported']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('reportedversion') ?></label>
+						<div class="checksetwrap">
+<?php
+	$reported_opts = array('' => L('anyversion')) + $proj->listVersions(false);
+	$reported_vals = isset($_GET['reported']) ? $_GET['reported'] : [''];
+
+	echo tpl_checkboxlist('due', $reported_opts, $reported_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Category -->
@@ -219,10 +244,15 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="cat"><?= eL('category') ?></label>
-						<select name="cat[]" id="cat" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('allcategories')) + $proj->listCategories(), isset($_GET['cat'])?$_GET['cat']:''); ?>
-						</select>
+						<label class="multisel"><?= eL('category') ?></label>
+						<div class="checksetwrap">
+<?php
+	$cat_opts = array('' => L('allcategories')) + $proj->listCategories();
+	$cat_vals = isset($_GET['cat']) ? $_GET['cat'] : [''];
+
+	echo tpl_checkboxlist('cat', $cat_opts, $cat_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Status -->
@@ -231,13 +261,19 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="status"><?= eL('status') ?></label>
-						<select name="status[]" id="status" multiple="multiple" size="8">
-							<?php echo tpl_options(array('' => L('allstatuses')) +
-							array('open' => L('allopentasks')) +
-							array('closed' => L('allclosedtasks')) +
-							$proj->listTaskStatuses(), isset($_GET['status'])?$_GET['status']:'open'); ?>
-						</select>
+						<label class="multisel"><?= eL('status') ?></label>
+						<div class="checksetwrap">
+<?php
+	$status_opts = array(
+		'' => L('allstatuses')) +
+		array('open' => L('allopentasks')) +
+		array('closed' => L('allclosedtasks')) +
+		$proj->listTaskStatuses();
+	$status_vals = isset($_GET['status']) ? $_GET['status'] : ['open'];
+
+	echo tpl_checkboxlist('status', $status_opts, $status_vals);
+?>
+						</div>
 					</div>
 
 			<!-- Progress -->
@@ -246,49 +282,32 @@
 			<?php } else { ?>
 			<div style="display:none">
 			<?php } ?>
-						<label class="default multisel" for="percent"><?= eL('percentcomplete') ?></label>
-						<!-- legacy: tpl_options()
-						<select name="percent[]" id="percent" multiple="multiple" size="12">
-							<?php $percentages = array(); for ($i = 0; $i <= 100; $i += 10) $percentages[$i] = $i; ?>
-							<?php echo tpl_options(array('' => L('anyprogress')) + $percentages, isset($_GET['percent'])?$_GET['percent']:''); ?>
-						</select>
-						-->
+						<label class="multisel" for="percent"><?= eL('percentcomplete') ?></label>
+						<div class="checksetwrap">
 <?php
-# new: use of tpl_select() which provides much more control
-# maybe move some of the php code from here to scripts/index.php ...
-$selected=isset($_GET['percent'])?$_GET['percent']:'';
-$selected = is_array($selected) ? $selected : (array) $selected;
+$selected = isset($_GET['percent']) ? $_GET['percent'] : [''];
 $percentages = array();
-$percentages[]=array('value'=>'', 'label'=>L('anyprogress') );
-if(in_array('', $selected, true)){
-		$percentages[0]['attr']['selected']='selected';
-}
+$percentages[''] = L('anyprogress');
+
 for($i = 0; $i <= 100; $i += 10){
+	$percentages[] = [0 => $i, 1 => $i . '%'];
+/*
 	$opt = array();
 	$opt['value'] = $i;
 	$opt['label'] = $i;
-	# goes to theme.css ..
-	# styling of html select options probably works only in a few browsers (at least firefox), but where it works it can be an added value.
-	$opt['attr']=array('style'=>'background:linear-gradient(90deg,#0c0 0%,#0c0 '.$i.'%, #fff '.$i.'%, #fff 100%)');
-	$opt['attr']=array('class'=>'percent'.$i);
-	if(in_array("$i", $selected)){
-		$opt['attr']['selected']='selected';
-	}
-	$percentages[]=$opt;
+	$opt['attr'] = array(
+		'style'=>'background:linear-gradient(90deg,#acdc7d 0%,#78bf34 '.$i.'%, transparent '.$i.'%, transparent 100%)',
+		'class'=>'percent'.$i
+	);
+	$percentages[] = $opt;
+*/
 }
-echo tpl_select(
-	array(
-		'name'=>'percent[]',
-		'attr'=>array(
-			'id'=>'percent',
-			'multiple'=>'multiple',
-			'size'=>12
-		),
-		'options'=>$percentages
-	)
-);
+
+echo tpl_checkboxlist('percent', $percentages, $selected);
 ?>
+						</div>
 					</div>
+
 					</div>
 				</fieldset>
 

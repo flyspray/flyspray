@@ -1676,15 +1676,24 @@ switch ($action = Req::val('action'))
 
 		$cols[] = 'notify_types';
 		$notify_types = array();
+
+		// FIXME: These should be validated against the defined constants
 		if (isset($_POST['notify_types']) && is_array($_POST['notify_types'])) {
 			foreach ($_POST['notify_types'] as $notify_type_id) {
 				if (is_numeric($notify_type_id)) {
-					$notify_types[] = $notify_type_id;
+					$notify_types[] = (int) $notify_type_id;
 				}
 			}
 		}
+
+		// Remove all others if 0 present, or ensure 0 is present if none
+		// were submitted
+		if (in_array(0, $notify_types) || count($notify_types) == 0) {
+			$notify_types = array(0);
+		}
+
 		$args[] = implode(' ', $notify_types);
-	
+
 		$cols[] = 'last_updated';
 		$args[] = time();
 		$cols[] = 'disp_intro';

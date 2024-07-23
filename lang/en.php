@@ -1156,5 +1156,9 @@ Depending on the configuration at Google - "reCAPTCHA V2" or "Invisible reCAPTCH
 'tasknoreminders'         => 'No reminders set on this task.',
 'flyspraychecks'          => 'Flyspray Checks',
 'noprofileimageselected'  => 'No profile image selected.',
+'basic'                   => 'Basic',
+'statistics'              => 'Statistics',
+'langtzdateformat'        => 'Language, Time Zone, Date Format',
+'noteuserstatistics'      => 'Note: Choosing the "statistics" option here can result in a slow SQL query depending on your amount of existing tasks and users! The other options are fast.',
 );
 ?>
