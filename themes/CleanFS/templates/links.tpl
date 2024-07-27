@@ -117,13 +117,13 @@ endif; ?>
 	if ($proj->id && isset($pm_pendingreq_num) && $pm_pendingreq_num):
 	?><li>
 		<a class="pendingreq attention"
-		href="<?php echo Filters::noXSS(createURL('pm', 'pendingreq', $proj->id)); ?>"><span class="pendingreq"><?php echo Filters::noXSS($pm_pendingreq_num); ?></span> <?= eL('pendingreq') ?></a>
+		href="<?php echo Filters::noXSS(createURL('pm', 'pendingreq', $proj->id)); ?>" title="<?= eL('pendingreq') ?>"><span class="pendingreq"><?php echo Filters::noXSS($pm_pendingreq_num); ?> <span class="fas fa-user-tie fa-lg"></span></span><span> <?= eL('pendingreq') ?></span></a>
 		</li><?php
 	endif;
 	if ($user->perms('is_admin') && isset($admin_pendingreq_num) && $admin_pendingreq_num):
 	?><li>
 		<a class="pendingreq attention"
-		href="<?php echo Filters::noXSS(createURL('admin', 'userrequest')); ?>"><span class="pendingreq"><?php echo Filters::noXSS($admin_pendingreq_num); ?></span> <?= eL('adminrequestswaiting') ?></a>
+		href="<?php echo Filters::noXSS(createURL('admin', 'userrequest')); ?>" title="<?= eL('adminrequestswaiting') ?>"><span class="pendingreq"><?php echo Filters::noXSS($admin_pendingreq_num); ?> <span class="fas fa-flag fa-lg"></span></span><span> <?= eL('adminrequestswaiting') ?></span></a>
 	</li><?php
 	endif; ?>
 	</ul>

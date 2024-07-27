@@ -346,11 +346,11 @@ div#mysearches td {vertical-align: middle;}
         text-decoration: none; border-left: dotted 1px #3c4041; border-top-left-radius: 3px; border-top-right-radius: 3px;
         background-repeat: no-repeat; background-position: 12px 50%;
 }
-#pm-menu-list li a .fa,
-#pm-menu-list li a .fas,
-#pm-menu-list li a .fa-solid,
-#pm-menu-list li a .far,
-#pm-menu-list li a .fa-regular { margin-right: .35em; color: #afafaf}
+#pm-menu-list li a > .fa,
+#pm-menu-list li a > .fas,
+#pm-menu-list li a > .fa-solid,
+#pm-menu-list li a > .far,
+#pm-menu-list li a > .fa-regular { margin-right: .35em; color: #afafaf}
 #pm-menu-list a:hover { background-color: #000; border-left: 1px solid #000;}
 #pm-menu-list li a.active .fa,
 #pm-menu-list li a.active .fas,
@@ -364,14 +364,19 @@ div#mysearches td {vertical-align: middle;}
 }
 #pm-menu-list li a.pendingreq.attention span.pendingreq {
         display: inline-block;
-        padding: 0 .25em;
-        margin-right: .5em;
+        padding: .3em .5em;
+        margin: -.4em;
         border-radius: 3px;
         background: #5f9729;
         color: #fff;
         text-align: right;
 }
+#pm-menu-list li a.pendingreq.attention:hover span.pendingreq {
+background: #78bf34;
+}
 
+#pm-menu-list li a.pendingreq.attention span.pendingreq > span { margin-left: .35em; }
+#pm-menu-list li a.pendingreq.attention > span + span { display: none; }
 #pm-menu-list li:first-child a {border-left: none;}
 /*
 #toplevellink {background-image: url("img/gray/folder_stroke_12x12.png");}
@@ -2415,6 +2420,7 @@ fieldset { margin-left: 5px;margin-right: 5px;}
 #pm-menu-list {z-index:110;padding:0;display:none;width:100%;position:absolute;background-color:#333;top:3.5em;left:-100%;transition:0.5s;}
 #pm-menu-list li {display:block;border-top:1px dotted #3c4041;}
 #pm-menu-list a {border:none;border-radius:0;margin:0;}
+#pm-menu-list li a.pendingreq.attention > span + span { display: inline-block; margin-left: 1em; }
 #pmcontrol {margin:0;display:block;padding:5px;}
 #sc1 {flex-wrap: wrap;}
 #task_id {width:120px;}
