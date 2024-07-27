@@ -2225,15 +2225,10 @@ div.denyform {
 
 #actionbuttons {
 }
-table.assignedto {border:0px;border-collapse: collapse;margin-bottom: 0;}
-table.assignedto tr {height: 30px;}
-table.assignedto td {
-	margin:0px;
-	padding:0px;
-	padding-right: 5px;
-	vertical-align: middle;
-}
-table.assignedto img {padding-top: 2px;width: 25px;height:25px;}
+ul.assignedto { margin: 0; padding: 0; list-style: none;}
+ul.assignedto > li + li { margin-top: .5em;}
+ul.assignedto > li > span * { vertical-align: middle; display: inline-block;}
+ul.assignedto > li > span > a + a { margin-left: .25em; }
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:30px;}
 a.tooltip:hover {text-decoration:none;}

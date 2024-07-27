@@ -215,7 +215,7 @@
 
 		<div id="profileimagewrap">
 			<div id="profileimagedisplay">
-				<?php echo tpl_userlinkavatar($theuser->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?>
+				<?php echo tpl_userlinkavatar($theuser->id, 160, 'av_comment'); ?>
 			</div>
 		</div>
 

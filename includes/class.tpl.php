@@ -383,8 +383,14 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 	static $avacache=array();
 
 	if( !($uid>0) ){
-                return '<i class="fa fa-user"></i>';
-        }
+		return '<span class="fa fa-user"></span>';
+	}
+
+	if ($fs->prefs['max_avatar_size'] > 0) {
+		$size = min($size, $fs->prefs['max_avatar_size']);
+	}
+
+	$size = max(24, $size);
 
 	if($uid>0 && (empty($avacache[$uid]) || !isset($avacache[$uid][$size]))){
 		if (!isset($avacache[$uid]['uname'])) {
@@ -401,7 +407,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 		}
 
 		if (is_file(BASEDIR.'/avatars/'.$avacache[$uid]['profile_image'])) {
-			$image = '<img src="'.$baseurl.'avatars/'.$avacache[$uid]['profile_image'].'"/>';
+			$image = '<img src="'.$baseurl.'avatars/'.$avacache[$uid]['profile_image'].'" style="width: ' . $size . 'px;height: '.$size.'px;" />';
 		} else {
 			if (isset($fs->prefs['gravatars']) && $fs->prefs['gravatars'] == 1) {
 				$email = md5(strtolower(trim($avacache[$uid]['email'])));
@@ -409,7 +415,7 @@ function tpl_userlinkavatar($uid, $size, $class='', $style='')
 				$imgurl = '//www.gravatar.com/avatar/'.$email.'?d='.urlencode($default).'&s='.$size;
 				$image = '<img src="'.$imgurl.'"/>';
 			} else {
-				$image = '<i class="fa fa-user" style="font-size:'.$size.'px"></i>';
+				$image = '<span class="fa fa-user" style="font-size:'.$size.'px; width: '.$size.'px;height: '.$size.'px;"></span>';
 			}
 		}
 		if (isset($avacache[$uid]['uname'])) {

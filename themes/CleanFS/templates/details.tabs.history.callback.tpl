@@ -26,7 +26,7 @@
 	</td>
 <?php if($fs->prefs['enable_avatars'] == 1) { ?>
 	<td>
-		<?php echo tpl_userlinkavatar($history['user_id'], $fs->prefs['max_avatar_size'] / 2); ?> <?php echo tpl_userlink($history['user_id']); ?>
+		<?php echo tpl_userlinkavatar($history['user_id'], 24) ?> <?php echo tpl_userlink($history['user_id']); ?>
 	</td>
 <?php } else { ?>
 	<td>

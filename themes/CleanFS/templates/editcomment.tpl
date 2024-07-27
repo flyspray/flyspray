@@ -1,6 +1,6 @@
 <div class="box">
 	<div class="comment_container">
-		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?></div>
+		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, 48, 'av_comment'); ?></div>
 		<div class="comment">
 			<div class="comment_header">
 				<div class="comment_header_actions">

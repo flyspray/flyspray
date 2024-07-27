@@ -405,22 +405,22 @@ function quick_edit(elem, id)
 	<?php if (in_array('assignedto', $fields)): ?>
 	<li>
 		<span class="label"><?= eL('assignedto') ?></span>
-		<span class="value assignedto">
+		<span class="value">
 		<?php if (empty($assigned_users)): ?>
 			<?= eL('noone') ?>
 		<?php else: ?>
-			<table class="assignedto">
+			<ul class="assignedto">
 			<?php foreach ($assigned_users as $userid): ?>
+				<li>
+				<span>
 				<?php if($fs->prefs['enable_avatars'] == 1): ?>
-				<tr>
-					<td><?php echo tpl_userlinkavatar($userid, $fs->prefs['max_avatar_size'] / 2); ?></td>
-					<td><?php echo tpl_userlink($userid); ?></td>
-				</tr>
-				<?php else: ?>
-					<tr><td class="assignedto_name"><?php echo tpl_userlink($userid); ?></td></tr>
+					<?php echo tpl_userlinkavatar($userid, 24); ?>
 				<?php endif; ?>
+					<?php echo tpl_userlink($userid); ?>
+				</span>
+				</li>
 			<?php endforeach; ?>
-			</table>
+			</ul>
 		<?php endif; ?>
 		</span>
 	</li>
