@@ -102,7 +102,7 @@
 						<noscript>
 							<span>
 								<input tabindex="5" class="file" type="file" size="55" name="userfile[]" />
-								<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?= eL('remove') ?></a><br />
+								<a href="javascript://" tabindex="6" onclick="removeUploadField(this);"><?= eL('remove') ?></a>
 							</span>
 						</noscript>
 					<?php endif; ?>

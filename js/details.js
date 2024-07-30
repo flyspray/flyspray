@@ -21,12 +21,12 @@ function detailsInit() {
           Event.observe('closetask', 'click', function (e) { showhidestuff('closeform') } );
       }
 
-      if (document.getElementById('reqclosetask')) {
-          Event.observe('reqclosetask', 'click', function (e) { showhidestuff('requestreopen') } );
+      if (document.getElementById('reqreopentask')) {
+          Event.observe('reqreopentask', 'click', function (e) { showhidestuff('requestreopen') } );
       }
 
       if (document.getElementById('reqclosetask')) {
-          Event.observe('reqclose', 'click', function (e) { showhidestuff('closeform') } );
+          Event.observe('reqclosetask', 'click', function (e) { showhidestuff('reqcloseform') } );
       }
 
       if (document.getElementById('reqclosedisabled')) {

@@ -247,6 +247,8 @@ div.popup {
   margin-top: 5px;
   padding: 5px;
   box-shadow: 0px 1px 2px #f9f9f9;
+  z-index: 100;
+  border-radius: 3px;
 }
 /* text-align "ta" */
 .ta-e { /* right */
@@ -1001,6 +1003,9 @@ div#fineprint {
   padding: 0;
   color: #555;
 }
+div#fineprint > p {
+  margin-bottom: .5em;
+}
 #controlBox .inner > a {
   display: inline-block;
   color: #555;
@@ -1032,7 +1037,7 @@ div#fineprint {
 	height:28px;
 	text-align:center;
 	border-radius:3px;
-	background-color:transparent;
+	background-color:#fff;
 	border:1px solid #e1e1e1;
 	vertical-align:bottom;
 	color:#555;
@@ -1235,7 +1240,7 @@ max-width:40em;
   margin-right: 0;
   padding-left: 0;
 }
-#taskfields ul.fieldslist li {
+#taskfields ul.fieldslist > li {
   padding-top: 2px;
   padding-bottom: 2px;
   overflow: auto;
@@ -1245,29 +1250,29 @@ max-width:40em;
   flex-wrap: nowrap;
   gap: 10px;
 }
-#taskfields ul.fieldslist li.hidden {
+#taskfields ul.fieldslist > li.hidden {
   display: none;
 }
-#taskfields ul.fieldslist li.wideitem {
+#taskfields ul.fieldslist > li.wideitem {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   gap: 0px;
 }
-#taskfields ul.fieldslist li.wideitem :nth-child(2) > label { display: block; }
-#taskfields ul.fieldslist li.wideitem :nth-child(2) input[type=text] { display: inline-block;width: 15em; }
-#taskfields ul.fieldslist li.wideitem :nth-child(2) select[multiple] { display: block;width: 100%; }
-#taskfields ul.fieldslist li > :first-child {
+#taskfields ul.fieldslist > li.wideitem :nth-child(2) > label { display: block; }
+#taskfields ul.fieldslist > li.wideitem :nth-child(2) input[type=text] { display: inline-block;width: 15em; }
+#taskfields ul.fieldslist > li.wideitem :nth-child(2) select[multiple] { display: block;width: 100%; }
+#taskfields ul.fieldslist > li > :first-child {
   display: block;
   width: 45%;
   text-align: right;
   color: #888;
   flex: 0 0 auto;
 }
-#taskfields ul.fieldslist li > :not(:first-child) { width: 100%;flex: 1 1 auto; }
-#taskfields ul.fieldslist li > .editvalue { display: none;}
-#taskfields ul.fieldslist li > .editvalue > div > :first-child { display: block;}
-#taskfields ul.fieldslist li .value {display:block;cursor: pointer;}
+#taskfields ul.fieldslist > li > :not(:first-child) { width: 100%;flex: 1 1 auto; }
+#taskfields ul.fieldslist > li > .editvalue { display: none;}
+#taskfields ul.fieldslist > li > .editvalue > div > :first-child { display: block;}
+#taskfields ul.fieldslist > li .value {display:block;cursor: pointer;}
 #taskfields ul.fieldslist > li:nth-child(2n-1) {background-color: #f1f1f1;}
 #taskdetails #showvotes {
   position: absolute;
@@ -1279,7 +1284,6 @@ max-width:40em;
 }
 .fieldslist .reopened{display:inline-block;font-size:10px;line-height:10px;vertical-align:middle;width:60px;}
 #taskdetailsfull {padding: 1em 1em 2em;flex: 1 1 auto; width: calc(50% - 170px); max-width: 50%;}
-#itemsummary {width:calc(100% - 6px);box-sizing:border-box;vertical-align: middle;height:auto;}
 #tags {vertical-align: middle;display: inline-block !important;}
 .tags:empty {display: none;}
 .descbox table, #taskdetailstext table{border-collapse:collapse; border:1px solid #999;}
@@ -1308,7 +1312,7 @@ max-width:40em;
 #taskinfo table td:last-child {
   width: .1%;
 }
-#taskinfo table td > div.otherprojtitle {
+td > div.otherprojtitle {
   font-weight: bold;
 }
 #taskinfo table td button, #taskinfo table td .button {
@@ -2056,6 +2060,10 @@ div#closeform {
     right: 0px;
     top: 100%;
     z-index: 200;
+    border: 1px solid #e1e1e1;
+    background: #363a3b;
+    overflow: hidden;
+    width: 300px;
 }
 #actionsform ul {
     font-size: 12px;
@@ -2064,16 +2072,15 @@ div#closeform {
     list-style: none;
 }
 #actionsform li {
-	border-top: 1px solid #fff;
 	display: block;
 	position: relative;
-	background: #363a3b;
 	color:#fff;
 	padding: 0px;
 }
-#actionsform li:first-child{border-radius: 4px 4px 0 0;}
-#actionsform li:last-child{border-radius: 0 0 4px 4px;}
-#actionsform li a, #actionsform li label, #actionsform li button{
+#actionsform li + li{
+ border-top: 1px solid #fff;
+}
+#actionsform li > a, #actionsform li > label, #actionsform li button.actionbutton {
   display: block;
   text-decoration: none;
   color: #fff;
@@ -2106,7 +2113,7 @@ div#closeform {
 #actionsform >ul > li > form > button {
 	font-family: inherit;
 }
-#actionsform ul li:hover { background: #617F8A; }
+#actionsform ul > li:hover { background: #617F8A; }
 #actionsform li:hover ul {display:none;}
 #actionsform li:hover ul {
     display: block;
@@ -2204,13 +2211,14 @@ div.denyform {
 	border: 1px solid #E1E1E1;
 	margin-top:5px;
 	display:block;
-	width:380px;
+	width:360px;
 	height:auto;
 	padding:5px 5px 5px 5px;
 	z-index: 100;
 	box-shadow: 0 2px 2px #ccc;
 }
 div.denyform textarea{ display: block; }
+div#reqcloseform { width: 360px; }
 /*#notify_types {height: 10em;}*/
 #rassigned_to {height: 12em; }
 
