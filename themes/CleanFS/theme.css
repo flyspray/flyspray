@@ -248,7 +248,65 @@ div.popup {
   padding: 5px;
   box-shadow: 0px 1px 2px #f9f9f9;
 }
-
+/* text-align "ta" */
+.ta-e { /* right */
+	text-align: end;
+}
+.ta-s { /* left */
+	text-align: start;
+}
+.ta-c {
+	text-align: center;
+}
+.ta-j {
+	text-align: justify;
+}
+.ta-ja {
+	text-align: justify-all;
+}
+.ta-mp {
+	text-align: match-parent;
+}
+/* make table cells shrink/expand */
+th.narrow, td.narrow {
+	width: .1%;
+	white-space: nowrap;
+}
+th.wide, td.wide {
+	width: 50%;
+}
+/* form inputs "fi" */
+.fi-xxx-small {
+	width: 2em !important;
+}
+.fi-xx-small {
+	width: 3em !important;
+}
+.fi-x-small {
+	width: 6em !important;
+}
+.fi-small {
+	width: 10em !important;
+}
+.fi-medium {
+	width: 15em !important;
+}
+.fi-large {
+	width: 20em !important;
+}
+.fi-x-large {
+	width: 30em !important;
+}
+.fi-xx-large {
+	width: 40em !important;
+}
+.fi-stretch {
+	width: calc(100% - 6px) !important;
+}
+/* textarea "txta" */
+.txta-small { height: 7em; background: #fdf; }
+.txta-medium { height: 10em; background: #dff; }
+.txta-large { height: 20em; background: #ffd; }
 /* ------------------ STYLE -------------------- */
 body {background: #f9f9f9; /* direction:rtl;*/}
 a {color: #336699;}
@@ -1501,7 +1559,7 @@ div.comment_container .commentlink:hover {background-image: url(img/black/commen
 	padding-top: 1em;
 }
 
-textarea {width: 99%;}
+textarea {width: calc(100% - 6px);border:1px solid #ccc;border-radius: 3px;}
 #events {
   margin: 10px 0px 10px 0px;
   padding: 10px;
@@ -1748,7 +1806,7 @@ ul.form_elements.checks_list > li > label {
 ul.form_elements label.inline {display: inline;vertical-align:middle;}
 ul.form_elements label.labeltextarea {/*width:auto;display:block;text-align:left;*/}
 ul.form_elements input, ul.form_elements select {vertical-align: middle;}
-ul.form_elements .valuewrap > input[type="text"], ul.form_elements .valuewrap > input[type="password"] {width:250px;}
+ul.form_elements .valuewrap > input[type="text"], ul.form_elements .valuewrap > input[type="password"] {width:20em;}
 ul.form_elements > li.wide-element {
 	flex-direction: column;
 }
@@ -1831,10 +1889,14 @@ ul.slim input[type="text"], ul.slim input[type="password"] {width:auto;}
 ul.slim label {width:110px;}
 ul.form_elements li.required > label {
 	font-weight: bold;
-	text-decoration: underline;
+	text-decoration: underline #900;
 }
 ul.form_elements li.required label::after {
-	content: ' *';
+	content: '*';
+	display: inline-block;
+	text-decoration: none;
+	margin-left: .25em;
+	color: #900;
 }
 ul.form_elements span.note {}
 ul.wide label {width:250px;}
@@ -2148,6 +2210,7 @@ div.denyform {
 	z-index: 100;
 	box-shadow: 0 2px 2px #ccc;
 }
+div.denyform textarea{ display: block; }
 /*#notify_types {height: 10em;}*/
 #rassigned_to {height: 12em; }
 
@@ -2520,4 +2583,10 @@ ul.form_elements table.bulkuser input[type=password]
 	background: #ccf;
 	max-height: none;
 	overflow-y: unset;
+}
+.fi-x-large {
+	width: 20em !important;
+}
+.fi-xx-large {
+	width: 20em !important;
 }

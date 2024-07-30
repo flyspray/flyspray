@@ -8,7 +8,7 @@
 		<li>
 			<label for="user_name"><strong><?php echo Filters::noXSS(L('username')); ?></strong></label>
 			<div class="valuewrap">
-				<input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" name="user_name" id="user_name" size="20" maxlength="32" />
+				<input class="text fi-medium" type="text" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" name="user_name" id="user_name" size="20" maxlength="32" />
 			</div>
 		</li>
 	</ul>

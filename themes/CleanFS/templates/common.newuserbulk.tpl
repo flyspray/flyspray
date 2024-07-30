@@ -17,9 +17,9 @@ endif; ?>
 <?php for ($i = 0 ; $i < 10 ; $i++) { ?>
 	<!-- User <?php echo Filters::noXSS($i); ?> -->
 	<tr>
-		<td><input id="realname" name="real_name<?php echo Filters::noXSS($i); ?>" class="text" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" type="text" size="20" maxlength="100" onblur="this.form.elements['user_name<?php echo Filters::noXSS($i); ?>'].value = this.form.elements['real_name<?php echo Filters::noXSS($i); ?>'].value.replace(/ /g,'');"/></td>
-		<td><input id="username" name="user_name<?php echo Filters::noXSS($i); ?>" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" class="text" type="text" size="20" maxlength="32"  onblur="checkname(this.value); "/></td>
-		<td><input id="emailaddress" name="email_address<?php echo Filters::noXSS($i); ?>" class="text" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" /></td>
+		<td><input id="realname" name="real_name<?php echo Filters::noXSS($i); ?>" class="text fi-medium" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" type="text" size="20" maxlength="100" onblur="this.form.elements['user_name<?php echo Filters::noXSS($i); ?>'].value = this.form.elements['real_name<?php echo Filters::noXSS($i); ?>'].value.replace(/ /g,'');"/></td>
+		<td><input id="username" name="user_name<?php echo Filters::noXSS($i); ?>" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" class="text fi-small" type="text" size="20" maxlength="32"  onblur="checkname(this.value); "/></td>
+		<td><input id="emailaddress" name="email_address<?php echo Filters::noXSS($i); ?>" class="text fi-medium" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" /></td>
 	</tr>
 <?php } ?>
 	</tbody>

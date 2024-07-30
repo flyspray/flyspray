@@ -17,7 +17,7 @@ endif; ?>
 			<?php endif; ?>
 			<label for="username"><?= eL('username') ?></label>
 			<div class="valuewrap">
-				<input id="username" name="user_name" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" required="required" type="text" size="20" maxlength="32" onblur="checkname(this.value);" />
+				<input id="username" name="user_name" class="fi-medium" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" required="required" type="text" size="20" maxlength="32" onblur="checkname(this.value);" />
 				<span id="errormessage"></span>
 			</div>
 		</li>
@@ -26,7 +26,7 @@ endif; ?>
 		<li>
 			<label for="userpass"><?= eL('password') ?></label>
 			<div class="valuewrap">
-				<input id="userpass" class="password" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" />
+				<input id="userpass" class="password fi-medium" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" />
 				<span class="note"><em><?php echo Filters::noXSS(L('minpwsize')); ?></em></span>
 				<span class="note"><?= eL('leaveemptyauto') ?></span>
 			</div>
@@ -35,7 +35,7 @@ endif; ?>
 		<li>
 			<label for="userpass2"><?= eL('confirmpass') ?></label>
 			<div class="valuewrap">
-				<input id="userpass2" class="password" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" /><br />
+				<input id="userpass2" class="password fi-medium" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" />
 			</div>
 		</li>
 		<?php endif; ?>
@@ -44,14 +44,14 @@ endif; ?>
 		<li class="required">
 			<label for="realname"><?= eL('realname') ?></label>
 			<div class="valuewrap">
-				<input id="realname" name="real_name" required="required" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" type="text" size="20" maxlength="100" />
+				<input id="realname" name="real_name" required="required" class="fi-large" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" type="text" size="20" maxlength="100" />
 			</div>
 		</li>
 
 		<li class="required">
 			<label for="emailaddress"><?= eL('emailaddress') ?></label>
 			<div class="valuewrap">
-				<input id="emailaddress" name="email_address" required="required" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" />
+				<input id="emailaddress" name="email_address" required="required" class="fi-large" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" type="text" size="20" maxlength="100" />
 				<!-- <em><?= eL('validemail') ?></em> -->
 			</div>
 		</li>
@@ -60,7 +60,7 @@ endif; ?>
 		<li>
 			<label for="verifyemailaddress"><?= eL('verifyemailaddress') ?></label>
 			<div class="valuewrap">
-				<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" required="required" type="text" size="20" maxlength="100" />
+				<input id="verifyemailaddress" class="fi-large" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" required="required" type="text" size="20" maxlength="100" />
 			</div>
 		</li>
 	<?php endif; ?>
@@ -69,7 +69,7 @@ endif; ?>
 		<li>
 			<label for="jabberid"><?= eL('jabberid') ?></label>
 			<div class="valuewrap">
-				<input id="jabberid" name="jabber_id" type="text" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" size="20" maxlength="100" />
+				<input id="jabberid" name="jabber_id" type="text" class="fi-medium" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" size="20" maxlength="100" />
 			</div>
 		</li>
 	<?php endif ?>

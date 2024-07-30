@@ -45,17 +45,23 @@
 			<div id="closeform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 			<?php echo tpl_form(Filters::noXSS(createURL('pm', 'pendingreq', $proj->id))); ?>
 				<div>
-					<input type="hidden" name="action" value="details.close"/>
-					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>"/>
+					<div>
 					<select class="adminlist" name="resolution_reason" onmouseup="event.stopPropagation();">
 						<option value="0"><?= eL('selectareason') ?></option>
 						<?php echo tpl_options($proj->listResolutions(), Req::val('resolution_reason')); ?>
 					</select>
-					<button type="submit"><?= eL('closetask') ?></button>
-					<br/>
+					</div>
+					<div>
 					<label class="default text" for="closure_comment"><?= eL('closurecomment') ?></label>
-					<textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
-					<label><?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close'))); ?>&nbsp;<?= eL('mark100') ?></label>
+					<textarea class="text txta-small" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+					</div>
+					<?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')), ('mark100_' . Filters::noXSS($req['request_id']))); ?>
+					<label for="<?php echo 'mark100_' . Filters::noXSS($req['request_id']); ?>"><?= eL('mark100') ?></label>
+					<div class="buttons">
+					<input type="hidden" name="action" value="details.close"/>
+					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>"/>
+					<button type="submit"><?= eL('closetask') ?></button>
+					</div>
 				</div>
 			</form>
 			</div>
@@ -70,12 +76,13 @@
 			<div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 			<?php echo tpl_form(Filters::noXSS(createUrl('pm', 'pendingreq', $proj->id))); ?>
 				<div>
+					<label for="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>" class="inline"><?= eL('reasonfordeinal') ?></label>
+					<textarea class="txta-small" cols="40" rows="5" name="deny_reason" id="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>"></textarea>
+					<div class="buttons">
 					<input type="hidden" name="action" value="denypmreq" />
 					<input type="hidden" name="req_id" value="<?php echo Filters::noXSS($req['request_id']); ?>" />
-					<label for="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>" class="inline"><?= eL('reasonfordeinal') ?></label><br />
-					<textarea cols="40" rows="5" name="deny_reason" id="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>"></textarea>
-					<br />
 					<button type="submit"><?= eL('deny') ?></button>
+					<div>
 				</div>
 			</form>
 			</div>

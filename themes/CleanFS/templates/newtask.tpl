@@ -189,7 +189,7 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			<li>
 				<label for="estimated_effort"><?= eL('estimatedeffort') ?></label>
 				<span class="value">
-				<input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="0" />
+				<input id="estimated_effort" name="estimated_effort" class="text fi-x-small ta-e" type="text" size="5" maxlength="100" value="0:00" />
 				<?= eL('hours') ?>
 				</span>
 			</li>
@@ -219,7 +219,7 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			<label class="severity<?php echo Filters::noXSS(Req::val('task_severity', 2)); ?> summary" id="edit_summary" for="itemsummary"><?php echo Filters::noXSS(L('summary')); ?></label>
 			<div id="itemsummarywrap">
 				<input id="itemsummary" required="required" placeholder="<?= eL('summary') ?>" title="<?= eL('tooltipshorttasktitle') ?>" type="text" value="<?php echo Filters::noXSS(Req::val('item_summary')); ?>"
-					name="item_summary" maxlength="100" />
+					name="item_summary" maxlength="100" class="fi-stretch" />
 			</div>
 		</div>
 		<?php if ($proj->prefs['use_tags']): ?>
@@ -227,7 +227,7 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			<div id="edit_tags">
 				<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 				<div id="tagsinputwrap">
-					<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags','')); ?>" />
+					<input title="<?= eL('tagsinfo') ?>" placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" class="fi-stretch" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags','')); ?>" />
 					<button id="tagstoggle"><span class="fas fa-tags"></span><span class="fas fa-caret-down"></span></button>
 				</div>
 			</div>
@@ -253,24 +253,27 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			<div class="hide preview" id="preview"></div>
 			<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 		<?php endif; ?>
-		<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $proj->prefs['default_task'])); ?>
-
-			<p class="buttons">
-				<?php if ($user->isAnon()): ?>
-				<label class="inline" for="anon_email"><?= eL('youremail') ?></label><input type="text" class="text" id="anon_email" name="anon_email" size="30" required="required" value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" /><br />
-				<?php endif; ?>
-				<?php if (!$user->perms('modify_all_tasks')): ?>
-				<input type="hidden" name="item_status"	 value="1" />
-				<input type="hidden" name="task_priority" value="2" />
-				<?php endif; ?>
-				<input type="hidden" name="action" value="newtask.newtask" />
-				<input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
-				<?php if (!$user->isAnon()): ?>
-				&nbsp;&nbsp;<input class="text" type="checkbox" id="notifyme" name="notifyme"
-				value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?= eL('notifyme') ?></label>
-				<?php endif; ?>
-			</p>
+		<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details', 'class' => 'richtext txta-large'), Req::val('detailed_desc', $proj->prefs['default_task'])); ?>
 		</div>
+
+		<ul class="form_elements" style="margin-top: 2em;">
+			<?php if ($user->isAnon()): ?>
+			<li>
+				<label class="inline" for="anon_email"><?= eL('youremail') ?></label>
+				<div clas="valuewrap">
+					<input type="text" class="text fi-large" id="anon_email" name="anon_email" size="30" required="required" value="<?php echo Filters::noXSS(Req::val('anon_email')); ?>" />
+				</div>
+			</li>
+			<?php endif; ?>
+			<?php if (!$user->isAnon()): ?>
+			<li>
+				<label class="inline left" for="notifyme"><?= eL('notifyme') ?></label>
+				<div class="valuewrap">
+					<input class="text" type="checkbox" id="notifyme" name="notifyme" value="1" checked="checked" />
+			</li>
+			<?php endif; ?>
+		</ul>
+
 		<?php if ($user->perms('create_attachments')): ?>
 		<div id="attachmentsbox">
 			<div id="addlinkbox">
@@ -280,12 +283,12 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 				</div>
 
 				<span class="newitem" style="display: none">
-					<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+					<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="150" name="userlink[]" />
 					<a href="javascript://" class="button" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 				</span>
 				<noscript>
 					<span>
-						<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+						<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="150" name="userlink[]" />
 						<a href="javascript://" class="button" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 					</span>
 				</noscript>
@@ -315,6 +318,12 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 		<?php endif; ?>
 
 		<div class="buttons">
+			<?php if (!$user->perms('modify_all_tasks')): ?>
+			<input type="hidden" name="item_status"	 value="1" />
+			<input type="hidden" name="task_priority" value="2" />
+			<?php endif; ?>
+			<input type="hidden" name="action" value="newtask.newtask" />
+			<input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
 			<button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?= eL('addthistask') ?></button>
 		</div>
 	</div>

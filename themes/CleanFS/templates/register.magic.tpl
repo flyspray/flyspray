@@ -13,13 +13,13 @@
 			<li>
 				<label for="confirmation_code"><?= eL('confirmationcode') ?></label>
 				<div class="valuewrap">
-					<input id="confirmation_code" class="text" name="confirmation_code" value="<?php echo Filters::noXSS(Req::val('confirmation_code')); ?>" type="text" size="20" maxlength="20" />
+					<input id="confirmation_code" class="text fi-x-large" name="confirmation_code" value="<?php echo Filters::noXSS(Req::val('confirmation_code')); ?>" type="text" size="20" maxlength="20" />
 				</div>
 			</li>
 			<li>
 				<label for="user_pass"><?= eL('password') ?></label>
 				<div class="valuewrap">
-					<input id="user_pass" class="password" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" />
+					<input id="user_pass" class="password fi-medium" name="user_pass" value="<?php echo Filters::noXSS(Req::val('user_pass')); ?>" type="password" size="20" maxlength="100" />
 					<span class="note"><em><?= eL('minpwsize') ?></em></span>
 				</div>
 			</li>
@@ -27,7 +27,7 @@
 			<li>
 				<label for="user_pass2"><?= eL('confirmpass') ?></label>
 				<div class="valuewrap">
-					<input id="user_pass2" class="password" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" />
+					<input id="user_pass2" class="password fi-medium" name="user_pass2" value="<?php echo Filters::noXSS(Req::val('user_pass2')); ?>" type="password" size="20" maxlength="100" />
 				</div>
 			</li>
 			<?php endif; ?>

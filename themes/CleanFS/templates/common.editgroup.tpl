@@ -26,13 +26,13 @@
 	<li>
 		<label for="groupname"><?php echo Filters::noXSS(L('groupname')); ?></label>
 		<div class="valuewrap">
-			<input id="groupname" class="text" type="text" name="group_name" size="20" maxlength="20" value="<?php echo Filters::noXSS(Req::val('group_name', $group_details['group_name'])); ?>" />
+			<input id="groupname" class="text fi-large" type="text" name="group_name" size="20" maxlength="20" value="<?php echo Filters::noXSS(Req::val('group_name', $group_details['group_name'])); ?>" />
 		</div>
 	</li>
 	<li>
 		<label for="groupdesc"><?php echo Filters::noXSS(L('description')); ?></label>
 		<div class="valuewrap">
-			<input id="groupdesc" class="text" type="text" name="group_desc" size="50" maxlength="100" value="<?php echo Filters::noXSS(Req::val('group_desc', $group_details['group_desc'])); ?>" />
+			<input id="groupdesc" class="text fi-xx-large" type="text" name="group_desc" size="50" maxlength="100" value="<?php echo Filters::noXSS(Req::val('group_desc', $group_details['group_desc'])); ?>" />
 		</div>
 	</li>
 </ul>

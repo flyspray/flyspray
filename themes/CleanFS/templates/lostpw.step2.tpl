@@ -6,14 +6,14 @@
 		<li>
 			<label for="pass1"><?php echo Filters::noXSS(L('changepass')); ?></label>
 			<div class="valuewrap">
-				<input class="password" id="pass1" type="password" value="<?php echo Filters::noXSS(Req::val('pass1')); ?>" name="pass1" size="20" />
+				<input class="password fi-medium" id="pass1" type="password" value="<?php echo Filters::noXSS(Req::val('pass1')); ?>" name="pass1" size="20" />
 			</div>
 		</li>
 <?php if($fs->prefs['repeat_password']): ?>
 		<li>
 			<label for="pass2"><?php echo Filters::noXSS(L('confirmpass')); ?></label>
 			<div class="valuewrap">
-				<input class="password" id="pass2" type="password" value="<?php echo Filters::noXSS(Req::val('pass2')); ?>" name="pass2" size="20" />
+				<input class="password fi-medium" id="pass2" type="password" value="<?php echo Filters::noXSS(Req::val('pass2')); ?>" name="pass2" size="20" />
 			</div>
 		</li>
 	</ul>

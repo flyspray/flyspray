@@ -35,7 +35,7 @@
 				<div class="hide preview" id="preview"></div>
 				<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
-				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text'), $comment['comment_text']); ?>
+				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('id' => 'comment_text', 'class' => 'richtext txta-medium'), $comment['comment_text']); ?>
 				<div id="attachmentsbox">
 					<div id="addlinkbox">
 						<?php $links = $proj->listLinks($comment['comment_id'], $comment['task_id']);
@@ -50,11 +50,11 @@
 							</button>
 						</div>
 						<span class="newitem" style="display: none">
-							<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+							<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="100" name="userlink[]" />
 							<a href="javascript://" tabindex="9" class="button" title="<?php echo Filters::noXSS(L('remove')); ?>" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 						</span>
 						<noscript>
-						<input tabindex="8" class="text" type="text" size="28" maxlength="100" name="userlink[]" />
+						<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="100" name="userlink[]" />
 						</noscript>
 						<?php endif; ?>
 					</div>

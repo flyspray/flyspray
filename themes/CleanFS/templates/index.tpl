@@ -107,7 +107,7 @@
 <fieldset>
 	<div class="save_search">
 		<label for="save_search" id="lblsaveas"><?= eL('saveas') ?></label>
-		<input class="text" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/>
+		<input class="text fi-medium" type="text" value="<?php echo Filters::noXSS(Get::val('search_name')); ?>" id="save_search" name="search_name" size="15"/>
 		<button onclick="savesearch('<?php echo Filters::escapeqs($_SERVER['QUERY_STRING']); ?>', '<?php echo Filters::noJsXSS($baseurl); ?>', '<?= eL('saving') ?>', '<?php echo Filters::noJsXSS($_SESSION['csrftoken']); ?>')" type="button"><?= eL('OK') ?></button>
 	</div>
 </fieldset>
@@ -681,7 +681,7 @@ foreach ($tasks as $task): ?>
 				</div>
 				<div>
 				<label class="default text" for="closure_comment"><?= eL('closurecomment') ?></label>
-				<textarea class="text" id="closure_comment" name="closure_comment" rows="3"
+				<textarea class="text txta-medium" id="closure_comment" name="closure_comment" rows="3"
 						  cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
 				</div>
 				<div>

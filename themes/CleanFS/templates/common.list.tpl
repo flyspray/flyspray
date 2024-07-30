@@ -167,17 +167,17 @@
 	</td>
 <?php endif; ?>
 	<td>
-		<input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
+		<input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
 			value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
 	</td>
 <?php if ($list_type == 'tag'): ?>
 	<td>
-		<input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row['tag_id']); ?>]"
+		<input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row['tag_id']); ?>]"
 			value="<?php echo Filters::noXSS($row['class']); ?>" />
 	</td>
 <?php endif; ?>
-	<td title="<?= eL('ordertip') ?>">
-		<input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
+	<td title="<?= eL('ordertip') ?>" class="narrow">
+		<input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text ta-e fi-xxx-small" type="text" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
 	</td>
 	<td title="<?= eL('showtip') ?>">
 		<?php echo tpl_checkbox('show_in_list[' . $row[$list_type.'_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines); ?>
@@ -232,21 +232,21 @@
 		<li>
 			<label for="listnamenew"><?= eL('name'); ?></label>
 			<div class="valuewrap">
-				<input id="listnamenew" type="text" maxlength="40" value="<?php echo Filters::noXSS(Req::val('list_name')); ?>" name="list_name" />
+				<input id="listnamenew" type="text" class="fi-large" maxlength="40" value="" name="list_name" />
 			</div>
 		</li>
 <?php if ($list_type == 'tag'): ?>
 		<li>
 			<label for="listclassnew">CSS Classes or #rgb</label>
 			<div class="valuewrap">
-				<input id="listclassnew" type="text" value="<?php echo Filters::noXSS(Req::val('list_class')); ?>" name="list_class" />
+				<input id="listclassnew" type="text" class="fi-large" value="" name="list_class" />
 			</div>
 		</li>
 <?php endif; ?>
 		<li>
 			<label for="listpositionnew"><?= eL('order'); ?></label>
 			<div class="valuewrap">
-				<input id="listpositionnew" type="text" maxlength="3" value="<?php echo Filters::noXSS(Req::val('list_position')); ?>" name="list_position" />
+				<input id="listpositionnew" class="fi-xxx-small ta-e" type="text" maxlength="3" value="" name="list_position" />
 			</div>
 		</li>
 		<li>

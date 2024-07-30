@@ -3,13 +3,13 @@
 	<li class="required">
 		<label for="groupname"><?php echo Filters::noXSS(L('groupname')); ?></label>
 		<div class="valuewrap">
-			<input id="groupname" class="required text" type="text" value="<?php echo Filters::noXSS(Req::val('group_name')); ?>" name="group_name" size="20" maxlength="20" />
+			<input id="groupname" class="required text fi-large" type="text" value="<?php echo Filters::noXSS(Req::val('group_name')); ?>" name="group_name" size="20" maxlength="20" />
 		</div>
 	</li>
 	<li>
 		<label for="groupdesc"><?php echo Filters::noXSS(L('description')); ?></label>
 		<div class="valuewrap">
-			<input id="groupdesc" class="text" type="text" value="<?php echo Filters::noXSS(Req::val('group_desc')); ?>" name="group_desc" size="50" maxlength="100" />
+			<input id="groupdesc" class="text fi-xx-large" type="text" value="<?php echo Filters::noXSS(Req::val('group_desc')); ?>" name="group_desc" size="50" maxlength="100" />
 		</div>
 	</li>
 </ul>

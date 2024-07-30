@@ -14,7 +14,7 @@
 		<li>
 		<label for="realname"><?= eL('realname') ?></label>
 		<div class="valuewrap">
-			<input id="realname" type="text" name="real_name" maxlength="100"
+			<input id="realname" type="text" name="real_name" maxlength="100" class="fi-medium"
 			value="<?php echo Filters::noXSS(Req::val('real_name', $theuser->infos['real_name'])); ?>" />
 		</div>
 		</li>
@@ -22,7 +22,7 @@
 		<li>
 		<label for="emailaddress"><?= eL('emailaddress') ?></label>
 		<div class="valuewrap">
-			<input id="emailaddress" type="text" name="email_address" maxlength="100" value="<?php echo Filters::noXSS(Req::val('email_address', $theuser->infos['email_address'])); ?>" />
+			<input id="emailaddress" type="text" name="email_address" maxlength="100" class="fi-medium" value="<?php echo Filters::noXSS(Req::val('email_address', $theuser->infos['email_address'])); ?>" />
 		</div>
 		</li>
 
@@ -167,7 +167,7 @@
 				<li>
 					<label for="oldpass"><?= eL('oldpass') ?></label>
 					<div class="valuewrap">
-						<input id="oldpass" type="password" name="oldpass" value="" maxlength="100" />
+						<input id="oldpass" type="password" name="oldpass" class="fi-medium" value="" maxlength="100" />
 					</div>
 				</li>
 			<?php endif; ?>
@@ -175,7 +175,7 @@
 			<li>
 				<label for="changepass"><?= eL('changepass') ?></label>
 				<div class="valuewrap">
-					<input id="changepass" type="password" name="changepass" value="" maxlength="100" />
+					<input id="changepass" type="password" name="changepass" class="fi-medium" value="" maxlength="100" />
 				</div>
 			</li>
 
@@ -183,7 +183,7 @@
 				<li>
 					<label for="confirmpass"><?= eL('confirmpass') ?></label>
 					<div class="valuewrap">
-						<input id="confirmpass" type="password" name="confirmpass" value="" maxlength="100" />
+						<input id="confirmpass" type="password" name="confirmpass" class="fi-medium" value="" maxlength="100" />
 				</div>
 				</li>
 			<?php endif; ?>
@@ -195,7 +195,7 @@
 		<li>
 		<label for="jabberid"><?= eL('jabberid') ?></label>
 		<div class="valuewrap">
-			<input id="jabberid" type="text" name="jabber_id" maxlength="100"
+			<input id="jabberid" type="text" name="jabber_id" maxlength="100" class="fi-medium"
 			value="<?php echo Filters::noXSS(Req::val('jabber_id', $theuser->infos['jabber_id'])); ?>" />
 			<input type="hidden" name="old_jabber_id" value="<?php echo Filters::noXSS($theuser->infos['jabber_id']); ?>" />
 		</div>

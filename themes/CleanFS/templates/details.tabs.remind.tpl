@@ -66,7 +66,7 @@ if ($row['how_often'] < 86400) {
 				<label for="timeamount1"><?php echo Filters::noXSS(L('thisoften')); ?></label>
 				<div class="valuewrap">
 					<div class="valuemulti">
-						<input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('timeamount1')); ?>" id="timeamount1" name="timeamount1" size="3" maxlength="3" />
+						<input class="text fi-xx-small" type="text" value="<?php echo Filters::noXSS(Req::val('timeamount1')); ?>" id="timeamount1" name="timeamount1" size="3" maxlength="3" />
 						<select class="adminlist" name="timetype1">
 						<?php echo tpl_options(array(3600 => L('hours'), 86400 => L('days'), 604800 => L('weeks')), Req::val('timetype1')); ?>
 						</select>
@@ -82,7 +82,7 @@ if ($row['how_often'] < 86400) {
 			<li class="wide-element">
 				<label for="reminder_message"><?php echo Filters::noXSS(L('message')); ?></label>
 				<div class="valuewrap">
-					<textarea class="text" id="reminder_message" name="reminder_message" rows="10" cols="72"><?php echo Filters::noXSS(Req::val('reminder_message', L('defaultreminder') . "\n\n" . CreateURL('details', $task_details['task_id']))); ?></textarea>
+					<textarea class="text txta-medium" id="reminder_message" name="reminder_message" rows="10" cols="72"><?php echo Filters::noXSS(Req::val('reminder_message', L('defaultreminder') . "\n\n" . CreateURL('details', $task_details['task_id']))); ?></textarea>
 				</div>
 			</li>
 		</ul>

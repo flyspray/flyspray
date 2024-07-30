@@ -67,7 +67,7 @@
 				<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 					<button tabindex="9" type="button" onclick="showPreview('comment_text', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
-				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text')); ?>
+				<?php echo TextFormatter::textarea('comment_text', 10, 72, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'comment_text', 'class' => 'richtext txta-medium')); ?>
 				<div id="attachmentsbox">
 					<div id="addlinkbox">
 						<?php if ($user->perms('create_attachments')): ?>
@@ -76,12 +76,12 @@
 							<button id="addlinkbox_addanotherlink" tabindex="10" style="display: none" type="button" onclick="addLinkField('addlinkbox')"><?= eL('addanotherlink') ?></button>
 						</div>
 						<span class="newitem" style="display: none">
-							<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+							<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="150" name="userlink[]" />
 							<a href="javascript://" class="button" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 						</span>
 						<noscript>
 							<span>
-								<input tabindex="8" class="text" type="text" size="28" maxlength="150" name="userlink[]" />
+								<input tabindex="8" class="text fi-large" type="text" size="28" maxlength="150" name="userlink[]" />
 								<a href="javascript://" title="<?= eL('remove') ?>" tabindex="9" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 							</span>
 						</noscript>

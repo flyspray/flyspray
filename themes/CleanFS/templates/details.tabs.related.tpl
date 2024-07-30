@@ -67,7 +67,7 @@
 			<label for="related_task_input"><?php echo Filters::noXSS(L('addnewrelated')); ?> </label>
 			<div class="valuewrap">
 				<div class="valuemulti">
-					FS# <input name="related_task" id="related_task_input" type="text" class="text" size="10" maxlength="10" />
+					FS# <input name="related_task" id="related_task_input" type="text" class="text fi-x-small" size="10" maxlength="10" />
 					<input type="hidden" name="action" value="details.add_related" />
 					<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 					<button type="submit" onclick="return checkok('<?php echo Filters::noJsXSS($baseurl); ?>js/callbacks/checkrelated.php?related_task=' + $('related_task_input').value + '&amp;project=<?php echo Filters::noXSS($proj->id); ?>', '<?php echo Filters::noJsXSS(L('relatedproject')); ?>', 'formaddrelatedtask')"><?php echo Filters::noXSS(L('add')); ?></button>

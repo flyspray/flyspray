@@ -155,7 +155,7 @@ endif; ?>
 			if(count($fs->projects)>0): ?>
 			<form action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 				<noscript><button type="submit"><?= eL('showtask') ?> #</button></noscript>
-				<input id="task_id" name="show_task" class="text" type="text" size="10" accesskey="t" placeholder="<?= eL('showtask') ?> #" />
+				<input id="task_id" name="show_task" class="text fi-x-small" type="text" size="10" accesskey="t" placeholder="<?= eL('showtask') ?> #" />
 			</form>
 		<?php endif; ?></div>
 	</div>

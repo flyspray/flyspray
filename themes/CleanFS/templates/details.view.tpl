@@ -15,7 +15,7 @@
 				<input type="hidden" name="action" value="requestreopen" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 				<label for="reason"><?= eL('reasonforreq') ?></label>
-				<textarea id="reason" name="reason_given"></textarea><br/>
+				<textarea id="reason" name="reason_given" class="txta-small"></textarea>
 				<button type="submit"><?= eL('submitreq') ?></button>
 				</form>
 			</div>
@@ -38,7 +38,7 @@
 			<button type="submit"><?= eL('closetask') ?></button>
 			<br/>
 			<label class="text" for="closure_comment"><?= eL('closurecomment') ?></label>
-			<textarea class="text" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
+			<textarea class="text txta-small" id="closure_comment" name="closure_comment" rows="3" cols="25"><?php echo Filters::noXSS(Req::val('closure_comment')); ?></textarea>
 			<?php if($task_details['percent_complete'] != '100'): ?>
 				<div>
 					<?php echo tpl_checkbox('mark100', Req::val('mark100', !(Req::val('action') == 'details.close')), 'mark100'); ?>
@@ -56,7 +56,7 @@
 			<input type="hidden" name="action" value="requestclose"/>
 			<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
 			<label for="reason"><?= eL('reasonforreq') ?></label>
-			<textarea id="reason" name="reason_given"></textarea><br/>
+			<textarea id="reason" class="txta-small" name="reason_given"></textarea>
 			<button type="submit"><?= eL('submitreq') ?></button>
 			</form>
 		</div>
@@ -123,7 +123,7 @@
 				<?= eL('parenttaskid') ?>
 				<input type="hidden" name="action" value="details.setparent" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-				<input class="text" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
+				FS# <input class="text fi-x-small" type="text" value="" id="supertask_id" name="supertask_id" size="5" maxlength="10" />
 				<button type="submit" name="submit"><?= eL('set') ?></button>
 				</form>
 			</li>
@@ -135,7 +135,7 @@
 				<?= eL('associatetaskid') ?>
 				<input type="hidden" name="action" value="details.associatesubtask"/>
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>"/>
-				<input class="text" type="text" value="" id="associate_subtask_id" name="associate_subtask_id" size="5" maxlength="10"/>
+				FS# <input class="text fi-x-small" type="text" value="" id="associate_subtask_id" name="associate_subtask_id" size="5" maxlength="10"/>
 				<button type="submit" name="submit"><?= eL('set') ?></button>
 				</form>
 			</li>
@@ -158,7 +158,7 @@
 				<input type="hidden" name="action" value="details.newdep" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
 				<label for="dep_task_id"><?= eL('newdependency') ?></label>
-				FS# <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
+				FS# <input class="text fi-x-small" type="text" value="<?php echo Filters::noXSS(Req::val('dep_task_id')); ?>" id="dep_task_id" name="dep_task_id" size="5" maxlength="10" />
 				<button type="submit" name="submit"><?= eL('add') ?></button>
 				</form>
 			</li>
@@ -592,7 +592,7 @@ function quick_edit(elem, id)
 			<?php if ($user->can_edit_task($task_details)): ?>
 			<div class="editvalue">
 			<div>
-				<input type="text" size="15" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>"/>
+				<input type="text" size="15" class="fi-x-small ta-e" id="estimatedeffort" name="estimated_effort" value="<?php echo effort::SecondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format']); ?>" />
 				<a onclick="quick_edit(this.parentNode.parentNode, 'estimatedeffort')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
 				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>

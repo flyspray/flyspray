@@ -188,7 +188,7 @@
 	<li>
 		<label for="estimated_effort"><?= eL('estimatedeffort') ?></label>
 		<span class="value">
-		<input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="10" value="<?php echo Filters::noXSS(effort::secondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])); ?>" />
+		<input id="estimated_effort" name="estimated_effort" class="text fi-x-small ta-e" type="text" size="5" maxlength="10" value="<?php echo Filters::noXSS(effort::secondsToEditString($task_details['estimated_effort'], $proj->prefs['hours_per_manday'], $proj->prefs['estimated_effort_format'])); ?>" />
 		<?= eL('hours') ?>
 		</span>
 	</li>
@@ -245,7 +245,7 @@
 	<div>
 		<label for="itemsummary"<?php echo isset($_SESSION['ERRORS']['summaryrequired']) ? ' class="summary errorinput" title="'.eL('summaryrequired').'"':' class="summary"'; ?>>FS#<?php echo Filters::noXSS($task_details['task_id']); ?> <?php echo Filters::noXSS(L('summary')); ?>:</label>
 		<div id="itemsummarywrap">
-			<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
+			<input placeholder="<?= eL('summary') ?>" type="text" name="item_summary" id="itemsummary" class="fi-stretch" maxlength="100" value="<?php echo Filters::noXSS(Req::val('item_summary', $task_details['item_summary'])); ?>" />
 		</div>
 	</div>
 
@@ -257,7 +257,7 @@
 		<div>
 			<label for="tags" title="<?= eL('tagsinfo') ?>"><?= eL('tags') ?>:</label>
 			<div id="tagsinputwrap">
-				<input placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
+				<input placeholder="<?= eL('tags') ?>" type="text" name="tags" id="tags" class="fi-stretch" maxlength="200" value="<?php echo Filters::noXSS(Req::val('tags', $tagstring)); ?>" />
 				<button id="tagstoggle"><span class="fas fa-tags"></span><span class="fas fa-caret-down"></span></button>
 			</div>
 		</div>
@@ -282,7 +282,7 @@
 		<div class="hide preview" id="preview"></div>
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 	<?php endif; ?>
-	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
+	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details', 'class' => 'richtext txta-large'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
 	<br />
 	<?php
 	/* Our CKEditor 4.16 setup has undo/redo plugin and the reset button in this template has no functionality if javascript is enabled */
@@ -299,7 +299,7 @@
 	$links = $proj->listTaskLinks($task_details['task_id']);
 	$this->display('common.editlinks.tpl', 'links', $links); ?>
 	<?php if ($user->perms('create_attachments')): ?>
-		<input id="link1" tabindex="8" class="text" type="text" maxlength="150" name="userlink[]" />
+		<input id="link1" tabindex="8" class="text fi-large" type="text" maxlength="150" name="userlink[]" />
 		<script>
 		// hide the fallback input field if javascript is enabled
 		document.getElementById("link1").style.display='none';
@@ -313,7 +313,7 @@
 			</button>
 		</div>
 		<span class="newitem" style="display: none"><?php /* this span is shown/copied by javascript when adding links */ ?>
-			<input tabindex="8" class="text" type="text" maxlength="150" name="userlink[]" />
+			<input tabindex="8" class="text fi-large" type="text" maxlength="150" name="userlink[]" />
 			<a href="javascript://" tabindex="9" class="button" title="<?= eL('remove') ?>" onclick="removeLinkField(this, 'addlinkbox');"><span class="fas fa-xmark fa-lg"></span></a>
 		</span>
 	<?php endif; ?>
@@ -349,7 +349,7 @@
 		<label class="button" id="toggle_add_comment"><?= eL('addcomment') ?><span class="fas fa-comment"></span></label>
 		<div id="edit_add_comment" style="display:none;">
 			<label for="comment_text"><?php echo Filters::noXSS(L('comment')); ?></label>
-			<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" cols="50" rows="6" disabled="disabled"></textarea>
+			<textarea accesskey="r" tabindex="8" id="comment_text" name="comment_text" class="txta-small" cols="50" rows="6" disabled="disabled"></textarea>
 		</div>
 	</div>
 	<?php endif; ?>

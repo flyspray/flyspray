@@ -6,7 +6,7 @@
 			<li class="required">
 				<label for="username"><?php echo Filters::noXSS(L('username')); ?></label>
 				<div class="valuewrap">
-					<input class="text" value="<?php echo Filters::noXSS($username); ?>" id="user_name" name="username" type="text" size="20" maxlength="32"  />
+					<input class="text" value="<?php echo Filters::noXSS($username); ?>" id="user_name" name="username" type="text" size="20" maxlength="32" class="fi-medium" />
 					<span class="note"><?php echo Filters::noXSS(L('validusername')); ?></span>
 					<span class="errormessage"><?php echo Filters::noXSS(L('usernametaken')); ?></span>
 				</div>

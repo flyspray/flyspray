@@ -1,6 +1,6 @@
 <div class="userSelectWidget">
 	<label for="find_user" class="inline"><?= eL('find') ?>:</label>
-	<input placeholder="<?= eL('user') ?>" type="text" class="text" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
+	<input placeholder="<?= eL('user') ?>" type="text" class="text fi-medium" value="<?php echo Filters::noXSS(Post::val('find_user')); ?>" name="find_user" id="find_user" onkeyup="return entercheck(event)" />
 	<a class="button" href="javascript:unselectAll()"><?= eL('noone') ?></a>
 	<select size="8" name="rassigned_to[]" id="rassigned_to" multiple="multiple">
 	<?php foreach ($userlist as $group => $users): ?>

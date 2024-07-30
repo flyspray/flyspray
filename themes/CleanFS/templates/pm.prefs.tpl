@@ -14,7 +14,7 @@
 		<li>
 			<label for="projecttitle"><?= eL('projecttitle') ?></label>
 			<div class="valuewrap">
-			<input id="projecttitle" name="project_title" class="text" type="text" maxlength="100"
+			<input id="projecttitle" name="project_title" class="fi-x-large" type="text" maxlength="100"
 				value="<?php echo Filters::noXSS(Post::val('project_title', $proj->prefs['project_title'])); ?>" />
 			</div>
 		</li>
@@ -50,7 +50,7 @@
 				'intro_message',
 				8,
 				70,
-				array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'),
+				array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg', 'class' => 'richtext txta-large'),
 				Post::val('intro_message', $proj->prefs['intro_message'])
 				); ?>
 				</div>
@@ -86,7 +86,7 @@
 			<div class="hide preview" id="preview_taskdesc"></div>
 			<button tabindex="9" type="button" onclick="showPreview('default_task', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview_taskdesc')"><?php echo Filters::noXSS(L('preview')); ?></button>
 			<?php endif; ?>
-			<?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task'), Post::val('default_task', $proj->prefs['default_task'])); ?>
+			<?php echo TextFormatter::textarea('default_task', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'default_task', 'class' => 'richtext txta-large'), Post::val('default_task', $proj->prefs['default_task'])); ?>
 			</div>
 			</div>
 		</li>
@@ -320,28 +320,28 @@
 		<li>
 			<label for="notify_subject"><?php echo Filters::noXSS(L('notifysubject')); ?></label>
 			<div class="valuewrap">
-			<input id="notify_subject" class="text" name="notify_subject" type="text" value="<?php echo Filters::noXSS(Post::val('notify_subject', $proj->prefs['notify_subject'])); ?>" />
+			<input id="notify_subject" class="fi-x-large" name="notify_subject" type="text" value="<?php echo Filters::noXSS(Post::val('notify_subject', $proj->prefs['notify_subject'])); ?>" />
 			<span><?php echo Filters::noXSS(L('notifysubjectinfo')); ?></span>
 			</div>
 		</li>
 		<li>
 			<label for="emailaddress"><?php echo Filters::noXSS(L('emailaddress')); ?></label>
 			<div class="valuewrap">
-			<input id="emailaddress" name="notify_email" class="text" type="text" value="<?php echo Filters::noXSS(Post::val('notify_email', $proj->prefs['notify_email'])); ?>" />
+			<input id="emailaddress" name="notify_email" class="fi-large" type="text" value="<?php echo Filters::noXSS(Post::val('notify_email', $proj->prefs['notify_email'])); ?>" />
 			</div>
 		</li>
 		<?php if (!empty($fs->prefs['jabber_server'])): ?>
 		<li>
 			<label for="jabberid"><?php echo Filters::noXSS(L('jabberid')); ?></label>
 			<div class="valuewrap">
-				<input id="jabberid" class="text" name="notify_jabber" type="text" value="<?php echo Filters::noXSS(Post::val('notify_jabber', $proj->prefs['notify_jabber'])); ?>" />
+				<input id="jabberid" class="fi-large" name="notify_jabber" type="text" value="<?php echo Filters::noXSS(Post::val('notify_jabber', $proj->prefs['notify_jabber'])); ?>" />
 			</div>
 		</li>
 		<?php endif ?>
 		<li>
 			<label for="notify_reply"><?php echo Filters::noXSS(L('replyto')); ?></label>
 			<div class="valuewrap">
-				<input id="notify_reply" name="notify_reply" class="text" type="text" value="<?php echo Filters::noXSS(Post::val('notify_reply', $proj->prefs['notify_reply'])); ?>" />
+				<input id="notify_reply" name="notify_reply" class="fi-large" type="text" value="<?php echo Filters::noXSS(Post::val('notify_reply', $proj->prefs['notify_reply'])); ?>" />
 			</div>
 		</li>
 		<li>
@@ -383,13 +383,13 @@ echo tpl_checkboxlist('notify_types', $notify_opts, $notify_vals);
 		<li>
 			<label for="feed_description"><?php echo Filters::noXSS(L('feeddescription')); ?></label>
 			<div class="valuewrap">
-				<input id="feed_description" class="text" name="feed_description" type="text" value="<?php echo Filters::noXSS(Post::val('feed_description', $proj->prefs['feed_description'])); ?>" />
+				<input id="feed_description" class="fi-x-large" name="feed_description" type="text" value="<?php echo Filters::noXSS(Post::val('feed_description', $proj->prefs['feed_description'])); ?>" />
 			</div>
 		</li>
 		<li>
 			<label for="feed_img_url"><?php echo Filters::noXSS(L('feedimgurl')); ?></label>
 			<div class="valuewrap">
-				<input id="feed_img_url" class="text" name="feed_img_url" type="text" value="<?php echo Filters::noXSS(Post::val('feed_img_url', $proj->prefs['feed_img_url'])); ?>" />
+				<input id="feed_img_url" class="fi-x-large" name="feed_img_url" type="text" value="<?php echo Filters::noXSS(Post::val('feed_img_url', $proj->prefs['feed_img_url'])); ?>" />
 			</div>
 		</li>
 	</ul>
@@ -405,7 +405,7 @@ echo tpl_checkboxlist('notify_types', $notify_opts, $notify_vals);
 		<li>
 			<label for="hours_per_manday"><?php echo Filters::noXSS(L('hourspermanday')); ?></label>
 			<div class="valuewrap">
-				<input id="hours_per_manday" class="text" name="hours_per_manday" type="text" value="<?php
+				<input id="hours_per_manday" class="ta-e fi-xx-small" name="hours_per_manday" type="text" value="<?php
 					$seconds = Post::val('hours_per_manday', $proj->prefs['hours_per_manday']);
 					// Post::val is in HH:mm format, $proj->prefs in seconds.
 					if (!preg_match('/^\d+$/', $seconds)) {

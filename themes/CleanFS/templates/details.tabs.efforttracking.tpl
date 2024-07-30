@@ -13,13 +13,13 @@
 			<li>
 				<label for="effort_to_add"><?= eL('effortamount') ?></label>
 				<div class="valuewrap">
-					<input id="effort_to_add" name="effort_to_add" class="text" type="text" size="5" maxlength="100" value="00:00" title="hh:mm"/>
+					<input id="effort_to_add" name="effort_to_add" class="text fi-x-small ta-e" type="text" size="5" maxlength="100" value="00:00" title="hh:mm"/>
 				</div>
 			</li>
 			<li>
 				<label for="effort_description"><?= eL('description') ?></label>
 				<div class="valuewrap">
-					<input type="text" name="effort_description" size="10" />
+					<input type="text" name="effort_description" class="fi-x-large" size="10" />
 					<span class="note"><?= eL('noteoptional') ?></span>
 				</div>
 			</li>

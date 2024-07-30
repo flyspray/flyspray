@@ -52,13 +52,13 @@ foreach ($fields as $f) {
 			<li>
 				<label for="usersearchtext" style=""><?= eL('name') ?>:</label>
 				<div class="valuewrap">
-					<input type="text" name="namesearch" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
+					<input type="text" name="namesearch" class="fi-large" value="<?php echo empty($namesearch) ? '' : Filters::noXSS($namesearch); ?>" id="usersearchtext" placeholder="search user">
 				</div>
 			</li>
 			<li>
 				<label for="mailsearchtext" style=""><?= eL('email') ?>:</label>
 				<div class="valuewrap">
-					<input type="text" name="mailsearch" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
+					<input type="text" name="mailsearch" class="fi-large" value="<?php echo empty($mailsearch) ? '' : Filters::noXSS($mailsearch); ?>" id="mailsearchtext" placeholder="search mail address">
 				</div>
 			</li>
 			<li>

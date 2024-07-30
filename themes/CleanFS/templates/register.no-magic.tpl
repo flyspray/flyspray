@@ -8,26 +8,26 @@
 </style>
 
 	<ul class="form_elements">
-		<li>
+		<li class="required">
 			<label for="username"><?= eL('username') ?></label>
 			<div class="valuewrap">
-				<input required="required" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" id="username" name="user_name" type="text" size="20" maxlength="32" onblur="checkname(this.value);" />
+				<input required="required" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" id="username" name="user_name" type="text" size="20" maxlength="32" class="fi-medium" onblur="checkname(this.value);" />
 				<span class="note"><?= eL('validusername') ?></span>
 				<strong><span id="errormessage"></span></strong>
 			</div>
 		</li>
 
-		<li>
+		<li class="required">
 			<label for="realname"><?= eL('realname') ?></label>
 			<div class="valuewrap">
-				<input required="required" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" id="realname" name="real_name" type="text" size="30" maxlength="100" />
+				<input required="required" value="<?php echo Filters::noXSS(Req::val('real_name')); ?>" id="realname" name="real_name" type="text" size="30" maxlength="100" class="fi-medium" />
 			</div>
 		</li>
 
-		<li>
+		<li class="required">
 			<label for="emailaddress"><?= eL('emailaddress') ?></label>
 			<div class="valuewrap">
-				<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" required="required" type="text" size="20" maxlength="100" />
+				<input id="emailaddress" value="<?php echo Filters::noXSS(Req::val('email_address')); ?>" name="email_address" required="required" type="text" size="20" maxlength="100" class="fi-medium" />
 <?php
 			/* multiple email addresses now disabled at registration, so do not show that multiple addresses hint anymore.
 			 * 1. Would require separate email verification (roundtrip with magic verification code) for each email address.
@@ -38,10 +38,10 @@
 			</div>
 		</li>
 		<?php if ($fs->prefs['repeat_emailaddress']): ?>
-		<li>
+		<li class="required">
 			<label for="verifyemailaddress"><?= eL('verifyemailaddress') ?></label>
 			<div class="valuewrap">
-				<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" required="required" type="text" size="20" maxlength="100" />
+				<input id="verifyemailaddress" value="<?php echo Filters::noXSS(Req::val('verify_email_address')); ?>" name="verify_email_address" required="required" type="text" size="20" maxlength="100" class="fi-medium" />
 			</div>
 		</li>
 		<?php endif ?>
@@ -50,7 +50,7 @@
 		<li>
 			<label for="jabberid"><?= eL('jabberid') ?></label>
 			<div class="valuewrap">
-				<input id="jabberid" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" name="jabber_id" type="text" size="20" maxlength="100" />
+				<input id="jabberid" value="<?php echo Filters::noXSS(Req::val('jabber_id')); ?>" name="jabber_id" type="text" size="20" maxlength="100" class="fi-medium" />
 			</div>
 		</li>
 		<?php endif ?>

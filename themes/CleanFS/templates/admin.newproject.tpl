@@ -10,7 +10,7 @@
 		<li>
 			<label for="projecttitle"><?php echo Filters::noXSS(L('projecttitle')); ?></label>
 			<div class="valuewrap">
-				<input id="projecttitle" name="project_title" value="<?php echo Filters::noXSS(Req::val('project_title')); ?>" type="text" class="required text" size="40" maxlength="100" />
+				<input id="projecttitle" name="project_title" value="<?php echo Filters::noXSS(Req::val('project_title')); ?>" type="text" class="required text fi-x-large" size="40" maxlength="100" />
 			</div>
 		</li>
 		<li>
@@ -36,7 +36,7 @@
 					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 						<div class="hide preview" id="preview"></div>
 					<?php endif; ?>
-					<?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Req::val('intro_message', $proj->prefs['intro_message'])); ?>
+					<?php echo TextFormatter::textarea('intro_message', 9, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg', 'class' => 'richtext txta-large'), Req::val('intro_message', $proj->prefs['intro_message'])); ?>
 					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 					<button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 					<?php endif; ?>

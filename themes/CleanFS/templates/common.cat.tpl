@@ -113,21 +113,21 @@ foreach ($categories as $row):
 		<input type="hidden" name="lft[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['lft']); ?>" />
 		<input type="hidden" name="rgt[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['rgt']); ?>" />
 		<span class="depthmark"><?php echo str_repeat('&rarr;', intval($row['depth'])); ?></span>
-		<input id="categoryname<?php echo Filters::noXSS($countlines); ?>" class="text" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['category_name']); ?>" />
+		<input id="categoryname<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['category_name']); ?>" />
 	</td>
-	<td title="<?php echo Filters::noXSS(L('categoryownertip')); ?>">
+	<td title="<?php echo Filters::noXSS(L('categoryownertip')); ?>" class="narrow">
 		<?php echo tpl_userselect('category_owner[' . $row['category_id'] . ']' . $countlines, $row['category_owner'], 'categoryowner' . $countlines); ?>
 	</td>
-	<td title="<?php echo Filters::noXSS(L('listshowtip')); ?>">
+	<td title="<?php echo Filters::noXSS(L('listshowtip')); ?>" class="ta-c">
 		<?php echo tpl_checkbox('show_in_list[' . $row['category_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines); ?>
 	</td>
-	<td title="<?php echo Filters::noXSS(L('listdeletetip')); ?>">
+	<td title="<?php echo Filters::noXSS(L('listdeletetip')); ?>" class="ta-c">
 		<input id="delete<?php echo Filters::noXSS($row['category_id']); ?>" type="checkbox"
 		<?php if ($row['used_in_tasks']): ?>disabled="disabled"<?php endif; ?>
 		name="delete[<?php echo Filters::noXSS($row['category_id']); ?>]" value="1" />
 	</td>
-	<td>
-		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?>
+	<td class="ta-e">
+		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:'&mdash;'; ?>
 	</td>
 </tr>
 <?php
@@ -170,7 +170,7 @@ if (count($categories)): ?>
 		<li>
 			<label for="listnamenew"><?= eL('name'); ?></label>
 			<div class="valuewrap">
-				<input id="listnamenew" class="text" type="text" maxlength="40" name="list_name" />
+				<input id="listnamenew" class="text fi-large" type="text" maxlength="40" name="list_name" />
 			</div>
 		</li>
 		<li>

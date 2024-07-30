@@ -85,7 +85,7 @@ function testEmail(){
 		<li>
 			<label for="pagetitle"><?= eL('pagetitle') ?></label>
 			<div class="valuewrap">
-				<input id="pagetitle" name="page_title" type="text" class="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
+				<input id="pagetitle" name="page_title" type="text" class="text fi-x-large" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['page_title']); ?>" />
 			</div>
 		</li>
 		<li>
@@ -159,7 +159,7 @@ function testEmail(){
 		<li>
 			<label for="max_avatar_size"><?= eL('maxavatarsize') ?></label>
 			<div class="valuewrap">
-				<input id="max_avatar_size" name="max_avatar_size" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_avatar_size']); ?>" />
+				<input id="max_avatar_size" name="max_avatar_size" type="text" class="text fi-xx-small ta-e" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_avatar_size']); ?>" />
 			</div>
 		</li>
 		<li>
@@ -207,19 +207,19 @@ function testEmail(){
 		<li>
 			<label for="days_before_alert"><?= eL('daysbeforealert') ?></label>
 			<div class="valuewrap">
-				<input id="days_before_alert" name="days_before_alert" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['days_before_alert']); ?>" />
+				<input id="days_before_alert" name="days_before_alert" type="text" class="text fi-xx-small ta-e" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['days_before_alert']); ?>" />
 			</div>
 		</li>
 		<li>
 			<label for="max_vote_per_day"><?= eL('maxvoteperday') ?></label>
 			<div class="valuewrap">
-				<input id="max_vote_per_day" name="max_vote_per_day" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_vote_per_day']); ?>" />
+				<input id="max_vote_per_day" name="max_vote_per_day" type="text" class="text fi-xx-small ta-e" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_vote_per_day']); ?>" />
 			</div>
 		</li>
 		<li>
 			<label for="votes_per_project"><?= eL('votesperproject') ?></label>
 			<div class="valuewrap">
-				<input id="votes_per_project" name="votes_per_project" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['votes_per_project']); ?>" />
+				<input id="votes_per_project" name="votes_per_project" type="text" class="text fi-xx-small ta-e" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['votes_per_project']); ?>" />
 			</div>
 		</li>
 		<li class="wide-element">
@@ -243,7 +243,7 @@ function testEmail(){
 					<div class="hide preview" id="preview"></div>
 					<button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 				<?php endif; ?>
-				<?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
+				<?php echo TextFormatter::textarea('intro_message', 8, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg', 'class' => 'richtext txta-large'), Post::val('intro_message', $fs->prefs['intro_message'])); ?>
 				</div>
 			</div>
 		</li>
@@ -358,13 +358,13 @@ function testEmail(){
 		<li class="recaptchaconf">
 			<label for="captcha_recaptcha_sitekey">sitekey</label>
 			<div class="valuewrap">
-				<input id="captcha_recaptcha_sitekey" class="text" type="text" name="captcha_recaptcha_sitekey" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_sitekey']) ? $fs->prefs['captcha_recaptcha_sitekey']:''); ?>" />
+				<input id="captcha_recaptcha_sitekey" class="text fi-large" type="text" name="captcha_recaptcha_sitekey" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_sitekey']) ? $fs->prefs['captcha_recaptcha_sitekey']:''); ?>" />
 			</div>
 		</li>
 		<li class="recaptchaconf">
 			<label for="captcha_recaptcha_secret">secret</label>
 			<div class="valuewrap">
-				<input id="captcha_recaptcha_secret" class="text" type="text" name="captcha_recaptcha_secret" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_secret']) ? $fs->prefs['captcha_recaptcha_secret']:''); ?>" />
+				<input id="captcha_recaptcha_secret" class="text fi-large" type="text" name="captcha_recaptcha_secret" value="<?php echo Filters::noXSS(isset($fs->prefs['captcha_recaptcha_secret']) ? $fs->prefs['captcha_recaptcha_secret']:''); ?>" />
 			</div>
 		</li>
 	</ul>
@@ -388,14 +388,14 @@ function testEmail(){
 			<li>
 				<label for="adminemail"><?php echo Filters::noXSS(L('fromaddress')); ?></label>
 				<div class="valuewrap">
-					<input id="adminemail" name="admin_email" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
+					<input id="adminemail" name="admin_email" class="text fi-large" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['admin_email']); ?>" />
 				</div>
 			</li>
 			<li>
 				<label for="smtpserv"><?php echo Filters::noXSS(L('smtpserver')); ?></label>
 				<div class="valuewrap">
 					<div class="valuemulti">
-						<input id="smtpserv" name="smtp_server" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
+						<input id="smtpserv" name="smtp_server" class="text fi-large" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_server']); ?>" />
 					<?php if (extension_loaded('openssl')) : ?>
 						<div class="valuemultipair">
 							<?php echo tpl_checkbox('email_ssl', $fs->prefs['email_ssl'], 'email_ssl'); ?>
@@ -412,13 +412,13 @@ function testEmail(){
 			<li>
 				<label for="smtpuser"><?php echo Filters::noXSS(L('smtpuser')); ?></label>
 				<div class="valuewrap">
-					<input id="smtpuser" name="smtp_user" class="text" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
+					<input id="smtpuser" name="smtp_user" class="text fi-medium" type="text" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_user']); ?>" />
 				</div>
 			</li>
 			<li>
 				<label for="smtppass"><?php echo Filters::noXSS(L('smtppass')); ?></label>
 				<div class="valuewrap">
-					<input id="smtppass" name="smtp_pass" class="text" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
+					<input id="smtppass" name="smtp_pass" class="text fi-medium" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['smtp_pass']); ?>" />
 				</div>
 			</li>
 			<li>
@@ -442,7 +442,7 @@ function testEmail(){
 				<label for="jabberserver"><?php echo Filters::noXSS(L('jabberserver')); ?></label>
 				<div class="valuewrap">
 					<div class="valuemulti">
-						<input id="jabberserver" class="text" type="text" name="jabber_server" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_server']); ?>" />
+						<input id="jabberserver" class="text fi-large" type="text" name="jabber_server" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_server']); ?>" />
 						<div class="valuemultipair">
 						<?php if(extension_loaded('openssl')) : ?>
 							<label for="jabber_ssl"><?php echo Filters::noXSS(L('ssl')); ?> / <?php echo Filters::noXSS(L('tls')); ?></label>
@@ -457,20 +457,20 @@ function testEmail(){
 			<li>
 				<label for="jabberport"><?php echo Filters::noXSS(L('jabberport')); ?></label>
 				<div class="valuewrap">
-					<input id="jabberport" class="text" type="text" name="jabber_port" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
+					<input id="jabberport" class="text fi-xx-small ta-e" type="text" name="jabber_port" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_port']); ?>" />
 				</div>
 			</li>
 
 			<li>
 				<label for="jabberusername"><?php echo Filters::noXSS(L('jabberuser')); ?></label>
 				<div class="valuewrap">
-					<input id="jabberusername" class="text" type="text" name="jabber_username" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
+					<input id="jabberusername" class="text fi-medium" type="text" name="jabber_username" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_username']); ?>" />
 				</div>
 			</li>
 			<li>
 				<label for="jabberpassword"><?php echo Filters::noXSS(L('jabberpass')); ?></label>
 				<div class="valuewrap">
-					<input id="jabberpassword" name="jabber_password" class="text" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
+					<input id="jabberpassword" name="jabber_password" class="text fi-medium" type="password" maxlength="100" value="<?php echo Filters::noXSS($fs->prefs['jabber_password']); ?>" />
 				</div>
 			</li>
 			<li>
@@ -618,7 +618,7 @@ function testEmail(){
 			<label class="labeltextarea"><?php echo Filters::noXSS(L('generalintegration')); ?></label>
 			<div class="valuewrap">
 				<div class="richtextwrap">
-				<?php echo TextFormatter::textarea('general_integration', 8, 70, array('id'=>'general_integration'), Post::val('general_integration', $fs->prefs['general_integration'])); ?>
+				<?php echo TextFormatter::textarea('general_integration', 8, 70, array('id'=>'general_integration', 'class' => 'richtext txta-large'), Post::val('general_integration', $fs->prefs['general_integration'])); ?>
 				</div>
 			</div>
 		</li>
@@ -629,7 +629,7 @@ function testEmail(){
 			<label class="labeltextarea"><?php echo Filters::noXSS(L('footerintegration')); ?></label>
 			<div class="valuewrap">
 				<div class="richtextwrap">
-				<?php echo TextFormatter::textarea('footer_integration', 8, 70, array('id'=>'footer_integration'), Post::val('footer_integration', $fs->prefs['footer_integration'])); ?>
+				<?php echo TextFormatter::textarea('footer_integration', 8, 70, array('id'=>'footer_integration', 'class' => 'richtext txta-large'), Post::val('footer_integration', $fs->prefs['footer_integration'])); ?>
 				</div>
 			</div>
 		</li>

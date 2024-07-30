@@ -35,12 +35,13 @@
 			<div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 				<?php echo tpl_form(Filters::noXSS(CreateUrl('admin','userrequest'))); ?>
 				<div>
+					<label for="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>" class="inline"><?php echo Filters::noXSS(L('reasonfordeinal')); ?></label>
+					<textarea class="txta-small" cols="40" rows="5" name="deny_reason" id="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>"></textarea>
+					<div class="buttons">
 					<input type="hidden" name="action" value="denyuserreq" />
 					<input type="hidden" name="req_id" value="<?php echo Filters::noXSS($req['request_id']); ?>" />
-					<label for="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>" class="inline"><?php echo Filters::noXSS(L('reasonfordeinal')); ?></label><br />
-					<textarea cols="40" rows="5" name="deny_reason" id="deny_reason<?php echo Filters::noXSS($req['request_id']); ?>"></textarea>
-					<br />
 					<button type="submit"><?php echo Filters::noXSS(L('deny')); ?></button>
+					</div>
 				</div>
 				</form>
 			</div>
