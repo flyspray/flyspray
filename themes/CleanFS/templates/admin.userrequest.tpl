@@ -25,13 +25,13 @@
 		<td><?php echo Filters::noXSS($req['reason_given']); ?></td>
 		<td>
 			<?php echo tpl_form(Filters::noXSS(CreateUrl('edituser', $req['submitted_by'])), null, null, null, 'style="display:inline"'); ?>
-				<input type="submit" class="button" value="<?php echo Filters::noXSS(L('accept')); ?>">
 				<input type="hidden" name="action" value="approve.user"/>
 				<input type="hidden" name="user_id" value="<?php echo $req['submitted_by']; ?>"/>
 				<input type="hidden" name="account_enabled" value="1"/>
+				<button type="submit" class="button"><span class="fas fa-circle-check"></span><?php echo Filters::noXSS(L('accept')); ?></button>
 			</form>
 
-			<a class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><?php echo Filters::noXSS(L('deny')); ?></a>
+			<a class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><span class="fas fa-square-xmark"></span><?php echo Filters::noXSS(L('deny')); ?> ...</a>
 			<div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 				<?php echo tpl_form(Filters::noXSS(CreateUrl('admin','userrequest'))); ?>
 				<div>

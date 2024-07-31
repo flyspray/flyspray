@@ -93,8 +93,8 @@
 <?php $filter = false; if($proj->id > 0) { $filter = true; $fields = explode( ' ', $proj->prefs['visible_fields'] );} ?>
 <form id="search" action="<?php echo Filters::noXSS($baseurl); ?>index.php" method="get">
 <div id="sc1">
-	<button id="searchthisproject" type="submit"><?= eL('searchthisproject') ?></button>
-	<input class="text" id="searchtext" name="string" type="text" size="20" placeholder=" "
+	<button id="searchthisproject" type="submit"><span class="fas fa-magnifying-glass"></span> <?= eL('searchthisproject') ?></button>
+	<input class="text fi-large" id="searchtext" name="string" type="text" size="20" placeholder=" "
 	 maxlength="100" value="<?php echo Filters::noXSS(Get::val('string')); ?>" accesskey="q"/>
 	<input type="hidden" name="project" value="<?php echo Filters::noXSS(Get::num('project', $proj->id)); ?>"/>
 	<input type="hidden" name="do" value="index"/>
@@ -472,18 +472,20 @@ foreach ($tasks as $task): ?>
 <div id="bulk_edit_selectedItems" style="display:none">
 	<fieldset>
 		<legend><?= eL('updateselectedtasks') ?></legend>
-		<ul class="form_elements slim">
+		<ul class="form_elements">
 			<input type="hidden" name="action" value="task.bulkupdate" />
 			<input type="hidden" name="user_id" value="<?php echo Filters::noXSS($user->id); ?>"/>
 			<!-- Quick Actions -->
 			<li>
 				<label for="bulk_quick_action"><?= eL('quickaction') ?></label>
-				<select name="bulk_quick_action" id="bulk_quick_action">
-					<option value="0"><?= eL('notspecified') ?></option>
-					<option value="bulk_start_watching"><?= eL('watchtasks') ?></option>
-					<option value="bulk_stop_watching"><?= eL('stopwatchingtasks') ?></option>
-					<option value="bulk_take_ownership"><?= eL('assigntaskstome') ?></option>
-				</select>
+				<div class="valuewrap">
+					<select name="bulk_quick_action" id="bulk_quick_action">
+						<option value="0"><?= eL('notspecified') ?></option>
+						<option value="bulk_start_watching"><?= eL('watchtasks') ?></option>
+						<option value="bulk_stop_watching"><?= eL('stopwatchingtasks') ?></option>
+						<option value="bulk_take_ownership"><?= eL('assigntaskstome') ?></option>
+					</select>
+				</div>
 			</li>
 			<!-- Status -->
 			<?php if (in_array('status', $fields)) { ?>
@@ -493,12 +495,13 @@ foreach ($tasks as $task): ?>
 				<?php } ?>
 
 				<label for="bulk_status"><?= eL('status') ?></label>
-				<select id="bulk_status" name="bulk_status">
-					<?php $statusList = $proj->listTaskStatuses(); ?>
-					<?php array_unshift($statusList,L('notspecified')); ?>
-					<?php echo tpl_options($statusList); ?>
-
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_status" name="bulk_status">
+						<?php $statusList = $proj->listTaskStatuses(); ?>
+						<?php array_unshift($statusList,L('notspecified')); ?>
+						<?php echo tpl_options($statusList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Progress -->
@@ -508,7 +511,8 @@ foreach ($tasks as $task): ?>
 			<li style="display:none">
 				<?php } ?>
 				<label for="bulk_percent"><?= eL('percentcomplete') ?></label>
-				<select id="bulk_percent" name="bulk_percent_complete">
+				<div class="valuewrap">
+					<select id="bulk_percent" name="bulk_percent_complete">
 		<?php
 			$percentCompleteList[] = array('', L('notspecified'));
 			for ($i = 0; $i<=100; $i+=10) {
@@ -516,7 +520,8 @@ foreach ($tasks as $task): ?>
 			}
 			echo tpl_options($percentCompleteList);
 		?>
-				</select>
+					</select>
+				</div>
 			</li>
 
 			<!-- Task Type -->
@@ -528,10 +533,11 @@ foreach ($tasks as $task): ?>
 				<?php $taskTypeList = $proj->listTaskTypes(); ?>
 				<?php array_unshift($taskTypeList,L('notspecified')); ?>
 				<label for="bulk_tasktype"><?= eL('tasktype') ?></label>
-				<select id="bulk_tasktype" name="bulk_task_type">
-					<?php echo tpl_options($taskTypeList); ?>
-				</select>
-
+				<div class="valuewrap">
+					<select id="bulk_tasktype" name="bulk_task_type">
+						<?php echo tpl_options($taskTypeList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Category -->
@@ -543,10 +549,11 @@ foreach ($tasks as $task): ?>
 				<?php $categoryTypeList = $proj->listCategories(); ?>
 				<?php array_unshift($categoryTypeList,L('notspecified')); ?>
 				<label for="bulk_category"><?php echo Filters::noXSS(L('category')); ?></label>
-				<select id="bulk_category" name="bulk_category">
-					<?php echo tpl_options($categoryTypeList); ?>
-				</select>
-
+				<div class="valuewrap">
+					<select id="bulk_category" name="bulk_category">
+						<?php echo tpl_options($categoryTypeList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Assigned To-->
@@ -558,15 +565,17 @@ foreach ($tasks as $task): ?>
 						$noone[0]=array(0,L('noone'));
 						array_unshift($userlist, $noone);
 				?>
-				<select size="8" style="height: 200px;" name="bulk_assignment[]" id="bulk_assignment" multiple>
-					<?php foreach ($userlist as $group => $users): ?>
-					<optgroup <?php if($group == '0'){ ?> label='<?= eL('pleaseselect') ?> ... ' <?php } else { ?> label='<?php echo Filters::noXSS($group); ?>' <?php } ?> >
-						<?php foreach ($users as $info): ?>
-						<option value="<?php echo Filters::noXSS($info[0]); ?>"><?php echo Filters::noXSS($info[1]); ?></option>
+				<div class="valuewrap">
+					<select size="8" style="height: 200px;" name="bulk_assignment[]" id="bulk_assignment" multiple>
+						<?php foreach ($userlist as $group => $users): ?>
+						<optgroup <?php if($group == '0'){ ?> label='<?= eL('pleaseselect') ?> ... ' <?php } else { ?> label='<?php echo Filters::noXSS($group); ?>' <?php } ?> >
+							<?php foreach ($users as $info): ?>
+							<option value="<?php echo Filters::noXSS($info[0]); ?>"><?php echo Filters::noXSS($info[1]); ?></option>
+							<?php endforeach; ?>
+						</optgroup>
 						<?php endforeach; ?>
-					</optgroup>
-					<?php endforeach; ?>
-				</select>
+					</select>
+				</div>
 				<?php endif; ?>
 			</li>
 
@@ -579,9 +588,11 @@ foreach ($tasks as $task): ?>
 				<?php $osTypeList = $proj->listOs(); ?>
 				<?php array_unshift($osTypeList,L('notspecified')); ?>
 				<label for="bulk_os"><?= eL('operatingsystem') ?></label>
-				<select id="bulk_os" name="bulk_os">
-					<?php echo tpl_options($osTypeList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_os" name="bulk_os">
+						<?php echo tpl_options($osTypeList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Severity -->
@@ -593,9 +604,11 @@ foreach ($tasks as $task): ?>
 				<?php $severityTypeList = array_reverse($fs->severities); ?>
 				<?php array_unshift($severityTypeList,L('notspecified')); ?>
 				<label for="bulk_severity"><?= eL('severity') ?></label>
-				<select id="bulk_severity" name="bulk_severity">
-					<?php echo tpl_options($severityTypeList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_severity" name="bulk_severity">
+						<?php echo tpl_options($severityTypeList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Priority -->
@@ -608,9 +621,11 @@ foreach ($tasks as $task): ?>
 				<?php $priorityTypeList = array_reverse($fs->priorities); ?>
 				<?php array_unshift($priorityTypeList,L('notspecified')); ?>
 				<label for="bulk_priority"><?= eL('priority') ?></label>
-				<select id="bulk_priority" name="bulk_priority">
-					<?php echo tpl_options($priorityTypeList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_priority" name="bulk_priority">
+						<?php echo tpl_options($priorityTypeList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Reported In -->
@@ -622,9 +637,11 @@ foreach ($tasks as $task): ?>
 				<?php $reportedVerList = $proj->listVersions(); ?>
 				<?php array_unshift($reportedVerList,L('notspecified')); ?>
 				<label for="bulk_reportedver"><?= eL('reportedversion') ?></label>
-				<select id="bulk_reportedver" name="bulk_reportedver">
-					<?php echo tpl_options($reportedVerList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_reportedver" name="bulk_reportedver">
+						<?php echo tpl_options($reportedVerList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Due -->
@@ -637,9 +654,11 @@ foreach ($tasks as $task): ?>
 				<?php array_unshift($dueInVerList,L('undecided')); ?>
 				<?php array_unshift($dueInVerList,L('notspecified')); ?>
 				<label for="bulk_dueversion"><?= eL('dueinversion') ?></label>
-				<select id="bulk_dueversion" name="bulk_due_version">
-					<?php echo tpl_options($dueInVerList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_dueversion" name="bulk_due_version">
+						<?php echo tpl_options($dueInVerList); ?>
+					</select>
+				</div>
 			</li>
 
 			<!-- Due Date -->
@@ -649,7 +668,9 @@ foreach ($tasks as $task): ?>
 			<li style="display:none">
 				<?php } ?>
 				<label for="bulk_due_date"><?= eL('duedate') ?></label>
+				<div class="valuewrap">
 				<?php echo tpl_datepicker('bulk_due_date'); ?>
+				</div>
 			</li>
 
 			<!-- Projects -->
@@ -662,9 +683,11 @@ foreach ($tasks as $task): ?>
 				<?php $projectsList = $fs->listProjects(); ?>
 				<?php array_unshift($projectsList,L('notspecified')); ?>
 				<label for="bulk_projects"><?= eL('attachedtoproject') ?></label>
-				<select id="bulk_projects" name="bulk_projects">
-					<?php echo tpl_options($projectsList); ?>
-				</select>
+				<div class="valuewrap">
+					<select id="bulk_projects" name="bulk_projects">
+						<?php echo tpl_options($projectsList); ?>
+					</select>
+				</div>
 			</li>
 		</ul>
 		<button type="submit" name="updateselectedtasks" value="true"><?= eL('updateselectedtasks') ?></button>

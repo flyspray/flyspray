@@ -5,8 +5,8 @@
 
 	<?php echo tpl_form(Filters::noXSS(createUrl('lostpw'))); ?>
 	<ul class="form_elements">
-		<li>
-			<label for="user_name"><strong><?php echo Filters::noXSS(L('username')); ?></strong></label>
+		<li class="required">
+			<label for="user_name"><?php echo Filters::noXSS(L('username')); ?></label>
 			<div class="valuewrap">
 				<input class="text fi-medium" type="text" value="<?php echo Filters::noXSS(Req::val('user_name')); ?>" name="user_name" id="user_name" size="20" maxlength="32" />
 			</div>

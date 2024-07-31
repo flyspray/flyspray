@@ -10,7 +10,7 @@
 	</td>
 	<td class="searches_delete">
 		<a href="javascript:deletesearch('<?php echo Filters::noXSS($search['id']); ?>','<?php echo Filters::noJsXSS($baseurl); ?>')" class="button">
-			<span title="<?php echo Filters::noXSS(L('delete')); ?>" class="fas fa-trash-can fa-lg"></span>
+			<span title="<?php echo Filters::noXSS(L('delete')); ?>" class="fas fa-trash-can"></span>
 		</a>
 	</td>
 </tr>

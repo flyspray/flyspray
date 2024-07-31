@@ -1,13 +1,9 @@
 <div id="toolbox" class="toolbox_<?php echo $area; ?>">
 	<h2><?php echo Filters::noXSS(L('createnewproject')); ?></h2>
 	<?php echo tpl_form(CreateURL('admin', 'newproject')); ?>
-	<div>
-		<input type="hidden" name="action" value="admin.newproject" />
-		<input type="hidden" name="area" value="newproject" />
-	</div>
 
 	<ul class="form_elements">
-		<li>
+		<li class="required">
 			<label for="projecttitle"><?php echo Filters::noXSS(L('projecttitle')); ?></label>
 			<div class="valuewrap">
 				<input id="projecttitle" name="project_title" value="<?php echo Filters::noXSS(Req::val('project_title')); ?>" type="text" class="required text fi-x-large" size="40" maxlength="100" />
@@ -35,10 +31,10 @@
 					<div class="richtextwrap">
 					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
 						<div class="hide preview" id="preview"></div>
+						<button tabindex="8" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 					<?php endif; ?>
 					<?php echo TextFormatter::textarea('intro_message', 9, 70, array('accesskey' => 'r', 'tabindex' => 8, 'id' => 'intromesg', 'class' => 'richtext txta-large'), Req::val('intro_message', $proj->prefs['intro_message'])); ?>
 					<?php if (defined('FLYSPRAY_HAS_PREVIEW')): ?>
-					<button tabindex="9" type="button" onclick="showPreview('intromesg', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 					<?php endif; ?>
 					</div>
 				</div>
@@ -70,6 +66,8 @@
 	</ul>
 
 	<div class="buttons">
+		<input type="hidden" name="action" value="admin.newproject" />
+		<input type="hidden" name="area" value="newproject" />
 		<button type="submit" class="positive"><?php echo Filters::noXSS(L('createthisproject')); ?></button>
 	</div>
 	</form>

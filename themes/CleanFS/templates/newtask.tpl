@@ -183,9 +183,9 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			</li>
 			<?php endif; ?>
 
-			<?php if($proj->prefs['use_effort_tracking']) {
-				if ($user->perms('view_effort')) {
-					?>
+			<?php
+				if($proj->prefs['use_effort_tracking'] && $user->perms('view_estimated_effort')) {
+			?>
 			<li>
 				<label for="estimated_effort"><?= eL('estimatedeffort') ?></label>
 				<span class="value">
@@ -195,7 +195,7 @@ $fields = explode( ' ', $proj->prefs['visible_fields'] );
 			</li>
 			<?php
 				}
-			} ?>
+			?>
 
 			<?php if ($user->perms('manage_project')): ?>
 			<!-- Private -->

@@ -90,10 +90,20 @@
 		<?php else: ?>
 			<?php if (empty($assigned_users)): ?>
 				<?= eL('noone') ?>
-			<?php else:
-				foreach ($assigned_users as $userid): ?>
-					<?php echo tpl_userlink($userid); ?><br />
-				<?php endforeach;
+			<?php else: ?>
+			<ul class="assignedto">
+			<?php foreach ($assigned_users as $userid): ?>
+				<li>
+				<span>
+				<?php if($fs->prefs['enable_avatars'] == 1): ?>
+					<?php echo tpl_userlinkavatar($userid, 24); ?>
+				<?php endif; ?>
+					<?php echo tpl_userlink($userid); ?>
+				</span>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+			<?php
 			endif;
 		endif; ?>
 		</span>
@@ -283,7 +293,6 @@
 		<button tabindex="9" type="button" onclick="showPreview('details', '<?php echo Filters::noJsXSS($baseurl); ?>', 'preview')"><?php echo Filters::noXSS(L('preview')); ?></button>
 	<?php endif; ?>
 	<?php echo TextFormatter::textarea('detailed_desc', 15, 70, array('id' => 'details', 'class' => 'richtext txta-large'), Req::val('detailed_desc', $task_details['detailed_desc'])); ?>
-	<br />
 	<?php
 	/* Our CKEditor 4.16 setup has undo/redo plugin and the reset button in this template has no functionality if javascript is enabled */
 	if ($conf['general']['syntax_plugin'] == 'html'): ?>
