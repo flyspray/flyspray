@@ -266,7 +266,7 @@ function quick_edit(elem, id)
 					target.getElementsByTagName('span')[0].innerHTML = text;
 					target.getElementsByClassName('progress_bar')[0].style.width = text;
 				} else {
-					target.innerHTML = text + ' <i class="fas fa-check"></i>';
+					target.innerHTML = text + ' <span class="fas fa-check"></span>';
 				}
 				//target.className='fas fa-check';
 				//elem.className='fas fa-check';

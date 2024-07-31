@@ -30,10 +30,10 @@ function tpl_userlistheading($colname)
 	if (isset($_GET['order']) && $_GET['order'] === $colname) {
 		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
 			$sort1 = 'asc';
-			$coltitle .=' <i class="fa fa-sort-desc"></i>';
+			$coltitle .=' <span class="fa fa-sort-desc"></span>';
 		} else {
 			$sort1 = 'desc';
-			$coltitle .=' <i class="fa fa-sort-asc"></i>';
+			$coltitle .=' <span class="fa fa-sort-asc"></span>';
 		}
 	} else {
 		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {

@@ -112,7 +112,7 @@ if ($lang != 'en' && file_exists(BASEDIR . $translationfile)) {
 	if ($i > 0) {
 		echo '<p>'.$i.' entries can be removed from this translation.</p>';
 	} else {
-		echo '<p><i class="fa fa-check fa-2x"></i> None</p>';
+		echo '<p><span class="fa fa-check fa-2x"></span> None</p>';
 	}
 	echo '<h2><a name="compare"></a>Direct comparison between English and ' . htmlspecialchars(strtoupper($lang)) . '</h2>';
 	echo '<table>
