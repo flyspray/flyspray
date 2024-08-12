@@ -102,7 +102,7 @@
 			<label for="defaultdueversion"><?php echo Filters::noXSS(L('defaultdueinversion')); ?></label>
 			<select id="defaultdueversion" name="default_due_version">
 			<option value="0"><?= eL('undecided') ?></option>
-			<?php echo tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version']), true); ?>
+			<?php echo tpl_options($proj->listVersions(false, 3), Post::val('default_due_version', $proj->prefs['default_due_version'])); ?>
 			</select>
 		</li>
 		<li>
