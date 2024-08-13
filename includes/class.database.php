@@ -130,8 +130,10 @@ class Database
 			$this->dblink->setCharSet('utf8');
 		}
 
-		// enable debug if constant DEBUG_SQL is defined.
-		!defined('DEBUG_SQL') || $this->dblink->debug = true;
+		// enable debug if constant DEBUG_SQL is defined AND true
+		if (defined('DEBUG_SQL') && DEBUG_SQL) {
+			$this->dblink->debug = true;
+		}
             
 		if ($dbtype === 'mysql' || $dbtype === 'mysqli') {
 			$dbinfo = $this->dblink->serverInfo();
