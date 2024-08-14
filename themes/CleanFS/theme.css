@@ -959,6 +959,21 @@ table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 }
 /* end eventlist table columns */
 
+#taskefforthistory {
+	width: 100%;
+	max-width: 800px;
+}
+
+#taskefforthistory th { white-space: nowrap; padding: 4px 5px; }
+#taskefforthistory td.effort_date, #taskefforthistory td.effort_effort  { white-space: nowrap; width: .1%; }
+#taskefforthistory td.effort_user { white-space: background: #ffc;
+nowrap; width: 20%; }
+#taskefforthistory td.effort_effort { text-align: right; }
+#taskefforthistory td.effort_description { white-space: nowrap; }
+#taskefforthistory td.effort_actions { white-space: nowrap; width: .1%; padding: 4px 5px; }
+#taskefforthistory td:last-child button > span:first-child { margin-right: .35em; }
+#taskefforthistory td:nth-child(3) span.fas { margin-right: .35em; color: #090; }
+#taskefforthistory tr.active-effort { background: #cfc; }
 #taskeventhistory, table.taskeventhistorydetails { width: 100%;	max-width: 800px; }
 #taskeventhistory th { white-space: nowrap; padding: 4px 5px; }
 #taskeventhistory td.taskevent_date { white-space: nowrap; width: .1%; }

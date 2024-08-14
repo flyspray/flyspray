@@ -3,7 +3,7 @@
 <?php if ($user->perms('track_effort')) { ?>
 	<?php if ($effort->countActiveTracking(true) == 0): ?>
 	<div class="buttons">
-		<button type="submit" name="start_tracking" value="true"><?= eL('starteffort') ?></button>
+		<button type="submit" name="start_tracking" value="true"><span class="fas fa-stopwatch"></span> <?= eL('starteffort') ?></button>
 	</div>
 	<?php endif; ?>
 
@@ -32,25 +32,24 @@
 	</fieldset>
 <?php } ?>
 
-
-	<table class="userlist history">
+	<table id="taskefforthistory">
 	<thead>
 	<tr>
-		<th><?= eL('date') ?></th>
-		<th><?= eL('user') ?></th>
-		<th><?= eL('effort') ?> (H:M)</th>
-		<th></th>
-		<th><?= eL('description') ?></th>
+		<th class="date"><?= eL('date') ?></th>
+		<th class="user"><?= eL('user') ?></th>
+		<th class="effort"><?= eL('effort') ?> (H:M)</th>
+		<th class="description"><?= eL('description') ?></th>
+		<th class="actions"></th>
 	</tr>
 	</thead>
 	<tbody>
 <?php foreach($effort->details as $details): ?>
-	<tr>
-		<td><?php echo Filters::noXSS(formatDate($details['date_added'], true)); ?></td>
-		<td><?php echo tpl_userlink($details['user_id']); ?></td>
-		<td>
+	<tr<?= (is_null($details['end_timestamp']) ? ' class="active-effort"' : '') ?>>
+		<td class="effort_date"><?php echo Filters::noXSS(formatDate($details['date_added'], true)); ?></td>
+		<td class="effort_user"><?php echo tpl_userlink($details['user_id']); ?></td>
+		<td class="effort_effort">
 		<?php if($details['effort'] == 0 && $details['end_timestamp']==false): ?>
-			<?= eL('trackinginprogress') ?> (<?php
+			<span class="fas fa-stopwatch fa-lg" title="<?= eL('trackinginprogress') ?>"></span> (<?php
 				// $details['start_timestamp'] = time();
 
 				echo effort::secondsToString(
@@ -63,14 +62,14 @@
 			echo effort::secondsToString($details['effort'], $proj->prefs['hours_per_manday'], $proj->prefs['current_effort_done_format']);
 		endif; ?>
 		</td>
-		<td>
-			<?php if($user->id == $details['user_id'] & is_null($details['end_timestamp'])): ?>
-			<button type="submit" name="stop_tracking" value="true"><span class="fas fa-circle-stop"></span><?= eL('endeffort') ?></button>
-			<button type="submit" name="cancel_tracking" value="true"><span class="fas fa-trash-can"></span><?= eL('cleareffort') ?></button>
-			<?php endif; ?>
-		</td>
-		<td>
+		<td class="effort_description">
 			<?= Filters::noXSS($details['description']) ?>
+		</td>
+		<td class="effort_actions"><?php /* TODO: make this never empty */ ?>
+			<?php if($user->id == $details['user_id'] && is_null($details['end_timestamp'])): ?>
+			<button type="submit" name="stop_tracking" value="true"><span class="fas fa-circle-stop"></span> <?= eL('endeffort') ?></button>
+			<button type="submit" name="cancel_tracking" value="true"><span class="fas fa-trash-can"></span> <?= eL('cleareffort') ?></button>
+			<?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
