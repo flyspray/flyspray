@@ -855,6 +855,39 @@ a {text-decoration: none;}
 }*/
 
 #tasklist_table thead th {line-height:1;}
+/* begin itemlist table columns */
+table.listtable { width: 100%; max-width: 800px; }
+table.listtable th, table.listtable td { box-sizing: border-box; padding: 4px 5px; }
+table.listtable th.id { width: .1%; min-width: 5%; }
+table.listtable th.name {  }
+table.listtable th.styling { width: 30%; }
+table.listtable th.owner { width: 20%; }
+table.listtable th.order { min-width: 3.5em; width: .1%; }
+table.listtable th.show { width: .1%; }
+table.listtable th.tense { width: 15%; }
+table.listtable th.usage { width: .1%; }
+table.listtable th.actions { width: .1%; }
+table.listtable > tbody > tr > td.listitem_id { text-align: right; width: .1%; min-width: 5%; }
+table.listtable > tbody > tr > td.listitem_name { white-space: nowrap; }
+table.listtable > tbody > tr > td.listitem_styling { width: 30%; }
+table.listtable > tbody > tr > td.listitem_owner { width: 20%; }
+table.listtable > tbody > tr > td.listitem_order { text-align: right; min-width: 3.5em; width: .1%; }
+table.listtable > tbody > tr > td.listitem_show { text-align: center; width: .1%; }
+table.listtable > tbody > tr > td.listitem_tense { width: 15%; }
+table.listtable > tbody > tr > td.listitem_usage { text-align: right; width: .1%; }
+table.listtable > tbody > tr > td.listitem_actions { text-align: center; width: .1%; }
+table.listtable.interactive > tbody > tr > td.listitem_id { text-align: right; }
+table.listtable.interactive > tbody > tr > td.listitem_name { }
+table.listtable.interactive > tbody > tr > td.listitem_styling {  }
+table.listtable.interactive > tbody > tr > td.listitem_order { text-align: right; }
+table.listtable.interactive > tbody > tr > td.listitem_show { text-align: center; }
+table.listtable.interactive > tbody > tr > td.listitem_tense {  }
+table.listtable.interactive > tbody > tr > td.listitem_usage { text-align: right; }
+table.listtable.interactive > tbody > tr > td.listitem_actions { text-align: center; }
+table.listtable.listtable_category tr > :first-child { white-space:nowrap; display: flex;flex-direction:row; flex-wrap: nowrap; }
+table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
+/* end itemlist table columns */
+
 #taskeventhistory, table.taskeventhistorydetails { width: 100%;	max-width: 800px; }
 #taskeventhistory th { white-space: nowrap; padding: 4px 5px; }
 #taskeventhistory td.taskevent_date { white-space: nowrap; width: .1%; }
@@ -2014,22 +2047,6 @@ ul.slim .userSelectWidget select {width:100%;}
 .errorinput, .errormessage, li.errorinput > label:first-child {color:#c00 !important;}
 li.errorinput{background-color:#fc9 !important;}
 .errormessage {display:block;}
-
-/* list management */
-.list .cname {width:200px;}
-.list .cuser {width:100px;}
-.list .corder {width:50px;}
-.list .cshow {width:50px;}
-.list .ctense {width:80px;}
-.list input[id^='listname'], .list input[id^='listposition'], .list input[id^='listclass'] {width:100%;}
-#catTable tr > th.text:first-child, #idtablesys tr > th.text:first-child  {width: 65% !important;}
-#catTable tr > th.text:not(:first-child), #idtablesys tr > th.text:not(:first-child) {width: 35% !important;}
-#catTable .first{ white-space:nowrap;}
-#catTable .depthmark{ letter-spacing: .2em;}
-#listTable thead#globalentries td,
-#idtablesys tbody td {
-	background-color: #eee;
-}
 
 .perms .everybody > * { background-color: #6c6; }
 .perms .everybody .fa-stack *:nth-child(2),

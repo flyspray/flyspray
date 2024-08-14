@@ -3,21 +3,14 @@
 if ($do=='pm'):
 ?>
 <h3><?php echo Filters::noXSS(L('categoriesglobal')); ?></h3>
-<table class="list" id="idtablesys">
-<colgroup>
-	<col class="cname" />
-	<col class="cowner" />
-	<col class="cshow" />
-	<col class="cdelete" />
-	<col class="cusage" />
-</colgroup>
+<table id="idtablesys" class="listtable listtable_category">
 <thead>
 <tr>
-	<th class="text"><?php echo Filters::noXSS(L('name')); ?></th>
-	<th class="text"><?php echo Filters::noXSS(L('owner')); ?></th>
-	<th><?php echo Filters::noXSS(L('show')); ?></th>
-	<th><?php echo Filters::noXSS(L('delete')); ?></th>
-	<th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+	<th class="name"><?php echo Filters::noXSS(L('name')); ?></th>
+	<th class="owner"><?php echo Filters::noXSS(L('owner')); ?></th>
+	<th class="show"><?php echo Filters::noXSS(L('show')); ?></th>
+	<th class="usage"><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+	<th class="actions"><?php echo Filters::noXSS(L('delete')); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -29,11 +22,11 @@ if ($do=='pm'):
 			$syscountlines++;
 ?>
 <tr>
-	<td class="first"><span class="depthmark"><?php echo str_repeat('&rarr;', $row['depth']); ?></span><?php echo Filters::noXSS($row['category_name']); ?></td>
-	<td><?php echo ($row['category_owner']==0)? '': Filters::noXSS($row['category_owner']); ?></td>
-	<td title="<?php echo Filters::noXSS(L('showtip')); ?>"><?php echo $row['show_in_list']; ?></td>
-	<td>&nbsp;</td>
-	<td><?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?></td>
+	<td class="listitem_name"><span class="depthmark"><?php echo str_repeat('&rarr;', $row['depth']); ?></span><?php echo Filters::noXSS($row['category_name']); ?></td>
+	<td class="listitem_owner"><?php echo ($row['category_owner'] == 0)? '&mdash;' : Filters::noXSS($row['category_owner']); ?></td>
+	<td class="listitem_show" title="<?php echo Filters::noXSS(L('showtip')); ?>"><span class="fas fa-<?php echo ($row['show_in_list'] == 1 ? 'check' : 'ban'); ?>"></span></td>
+	<td class="listitem_usage"><?php echo $row['used_in_tasks'] > 0 ? $row['used_in_tasks'] : '&mdash;'; ?></td>
+	<td class="listitem_actions"><span class="fas fa-ban"></span></td>
 </tr>
 <?php
 		endforeach;
@@ -93,14 +86,14 @@ endif;
 
 echo tpl_form(Filters::noXSS(CreateURL($do, 'cat', $proj->id)));
 ?>
-<table class="list" id="catTable">
+<table id="catTable" class="listtable interactive listtable_category">
 <thead>
 <tr>
-	<th class="text"><?php echo Filters::noXSS(L('name')); ?></th>
-	<th class="text"><?php echo Filters::noXSS(L('owner')); ?></th>
-	<th><?php echo Filters::noXSS(L('show')); ?></th>
-	<th><?php echo Filters::noXSS(L('delete')); ?></th>
-	<th><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+	<th class="name"><?php echo Filters::noXSS(L('name')); ?></th>
+	<th class="owner"><?php echo Filters::noXSS(L('owner')); ?></th>
+	<th class="show"><?php echo Filters::noXSS(L('show')); ?></th>
+	<th class="usage"><?php echo Filters::noXSS(L('usedintasks')); ?></th>
+	<th class="actions"><?php echo Filters::noXSS(L('delete')); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -109,25 +102,25 @@ foreach ($categories as $row):
 	$countlines++;
 ?>
 <tr class="depth<?php echo Filters::noXSS($row['depth']); ?>">
-	<td class="first">
+	<td class="listitem_name">
 		<input type="hidden" name="lft[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['lft']); ?>" />
 		<input type="hidden" name="rgt[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['rgt']); ?>" />
 		<span class="depthmark"><?php echo str_repeat('&rarr;', intval($row['depth'])); ?></span>
 		<input id="categoryname<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row['category_id']); ?>]" value="<?php echo Filters::noXSS($row['category_name']); ?>" />
 	</td>
-	<td title="<?php echo Filters::noXSS(L('categoryownertip')); ?>" class="narrow">
+	<td title="<?php echo Filters::noXSS(L('categoryownertip')); ?>" class="listitem_owner">
 		<?php echo tpl_userselect('category_owner[' . $row['category_id'] . ']' . $countlines, $row['category_owner'], 'categoryowner' . $countlines); ?>
 	</td>
-	<td title="<?php echo Filters::noXSS(L('listshowtip')); ?>" class="ta-c">
+	<td title="<?php echo Filters::noXSS(L('listshowtip')); ?>" class="listitem_show">
 		<?php echo tpl_checkbox('show_in_list[' . $row['category_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines); ?>
 	</td>
-	<td title="<?php echo Filters::noXSS(L('listdeletetip')); ?>" class="ta-c">
+	<td class="listitem_usage">
+		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:'&mdash;'; ?>
+	</td>
+	<td title="<?php echo Filters::noXSS(L('listdeletetip')); ?>" class="listitem_actions">
 		<input id="delete<?php echo Filters::noXSS($row['category_id']); ?>" type="checkbox"
 		<?php if ($row['used_in_tasks']): ?>disabled="disabled"<?php endif; ?>
 		name="delete[<?php echo Filters::noXSS($row['category_id']); ?>]" value="1" />
-	</td>
-	<td class="ta-e">
-		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:'&mdash;'; ?>
 	</td>
 </tr>
 <?php

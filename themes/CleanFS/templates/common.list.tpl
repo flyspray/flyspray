@@ -8,58 +8,31 @@
 		$tcols=$tcols+2;
 	}
 ?>
-<?php if (count($rows)): ?>
-<div id="controlBox">
-	<div class="grip"></div>
-	<div class="inner">
-		<a href="#" id="controlBoxUp" title="Up"><span class="fas fa-square-caret-up fa-3x"></span></a>
-		<a href="#" id="controlBoxDown" title="Down"><span class="fas fa-square-caret-down fa-3x"></span></a>
-	</div>
-</div>
-<?php endif; ?>
 <?php echo tpl_form(Filters::noXSS(createURL($do, $list_type, $proj->id))); ?>
-<table class="list" id="listTable">
-<colgroup>
-	<?php if ($list_type == 'tag'): ?>
-	<col class="ctag" />
-	<?php endif; ?>
-	<col class="cname" />
-	<?php if ($list_type == 'tag'): ?>
-	<col class="cclasses" />
-	<?php endif; ?>
-	<col class="corder" />
-	<col class="cshow" />
-	<?php if ($list_type == 'version'): ?>
-	<col class="ctense" />
-	<?php endif; ?>
-	<col class="cdelete" />
-	<col class="cusage" />
-</colgroup>
+<?php if($do != 'admin'): ?>
+<h3><?= eL('systemvalues') ?></h3>
+
+<table id="globalListTable" class="listtable listtable_<?= $list_type ?>">
 <?php if ($do=='pm'): ?>
 <thead>
 <tr>
-	<th colspan="<?= $tcols ?>"><?= eL('systemvalues') ?></th>
-</tr>
-</thead>
-<thead>
-<tr>
 <?php if ($list_type == 'tag'): ?>
-	<th>ID</th>
+	<th class="id">ID</th>
 <?php endif; ?>
-	<th class="text"><?= eL('name') ?></th>
+	<th class="name"><?= eL('name') ?></th>
 <?php if ($list_type == 'tag'): ?>
-	<th class="text">CSS Classes</th>
+	<th class="styling">CSS Classes</th>
 <?php endif; ?>
-	<th><?= eL('order') ?></th>
-	<th><?= eL('show') ?></th>
+	<th class="order"><?= eL('order') ?></th>
+	<th class="show"><?= eL('show') ?></th>
 <?php if ($list_type == 'version'): ?>
-	<th><?= eL('tense') ?></th>
+	<th class="tense"><?= eL('tense') ?></th>
 <?php endif; ?>
-	<th><?= eL('delete'); ?></th>
-	<th><?= eL('usedintasks') ?></th>
+	<th class="usage"><?= eL('usedintasks') ?></th>
+	<th class="actions"><?= eL('delete'); ?></th>
 </tr>
 </thead>
-<thead id="globalentries">
+<tbody id="globalentries">
 <?php if (isset($sysrows) && count($sysrows)): ?>
 <?php
 	$syscountlines=-1;
@@ -67,53 +40,54 @@
 	foreach ($sysrows as $row):
 		$syscountlines++;
 		$classtype=''; $class='';
+
 		switch ($list_type){
 			case 'tag':
-					$classtype='tag';
-					$class='t';
-					break;
+				$classtype='tag';
+				$class='t';
+				break;
 			case 'tasktype':
-					$classtype='task_tasktype';
-					$class='typ'.$row[$list_type.'_id'];
-					break;
+				$classtype='task_tasktype';
+				$class='typ'.$row[$list_type.'_id'];
+				break;
 			case 'status':
-					$classtype='task_status';
-					$class='sta'.$row[$list_type.'_id'];
-					break;
+				$classtype='task_status';
+				$class='sta'.$row[$list_type.'_id'];
+				break;
 			default:
-					$classtype='task_'.$list_type;
-					$class=substr($list_type, 0, 3).$row[$list_type.'_id'];
+				$classtype='task_'.$list_type;
+				$class=substr($list_type, 0, 3).$row[$list_type.'_id'];
 		}
 ?>
 <tr>
 <?php if ($list_type == 'tag'): ?>
-	<td>
+	<td class="listitem_id">
 		<?php echo tpl_tag($row['tag_id'], true); ?>
 	</td>
 <?php endif; ?>
-	<td<?= ($list_type!='tag') ? ' class="'.$classtype.' '.$class.'"':'' ?>>
+	<td class="listitem_name<?= ($list_type!='tag') ? ' '.$classtype.' '.$class:'' ?>">
 		<?= ($list_type=='tag') ? tpl_tag($row['tag_id']) : Filters::noXSS($row[$list_type.'_name']); ?>
 	</td>
 <?php if ($list_type == 'tag'): ?>
-	<td>
+	<td class="listitem_styling">
 		<?php echo Filters::noXSS($row['class']); ?>
 	</td>
 <?php endif; ?>
-	<td title="<?= eL('ordertip') ?>">
+	<td class="listitem_order" title="<?= eL('ordertip') ?>">
 		<?php echo Filters::noXSS($row['list_position']); ?>
 	</td>
-	<td title="<?= eL('showtip') ?>">
-		<?php echo $row['show_in_list']; ?>
+	<td class="listitem_show" title="<?= eL('showtip') ?>">
+		<span class="fas fa-<?php echo ($row['show_in_list'] == 1 ? 'check' : 'ban'); ?>"></span>
 	</td>
 <?php if ($list_type == 'version'): ?>
-	<td title="<?= eL('listtensetip') ?>">
+	<td class="listitem_tense" title="<?= eL('listtensetip') ?>">
 		<?php echo $row[$list_type.'_tense']; ?>
 	</td>
 <?php endif; ?>
-	<td><span class="fas fa-ban"></span></td>
-	<td>
-		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?>
+	<td class="listitem_usage">
+		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:'&mdash;'; ?>
 	</td>
+	<td class="listitem_actions"><span class="fas fa-ban"></span></td>
 </tr>
 <?php
 	endforeach;
@@ -125,86 +99,106 @@
 	</td>
 </tr>
 <?php endif; ?>
-</thead>
+</tbody>
 <?php endif; ?>
-<thead>
-<tr>
-	<th colspan="<?= $tcols ?>">
-		<?= $do=='pm' ? eL('projectvalues') : eL('systemvalues') ?>
-	</th>
-</tr>
-</thead>
+</table>
+<?php endif; ?>
+
+<h3><?= $do=='pm' ? eL('projectvalues') : eL('systemvalues') ?></h3>
+
+<?php if (count($rows)): ?>
+<div id="controlBox">
+	<div class="grip"></div>
+	<div class="inner">
+		<a href="#" id="controlBoxUp" title="Up"><span class="fas fa-square-caret-up fa-3x"></span></a>
+		<a href="#" id="controlBoxDown" title="Down"><span class="fas fa-square-caret-down fa-3x"></span></a>
+	</div>
+</div>
+<?php endif; ?>
+
+<table id="listTable" class="listtable interactive listtable_<?= $list_type ?>">
 <thead>
 <tr>
 <?php if ($list_type == 'tag'): ?>
-	<th>ID</th>
+	<th class="id">ID</th>
 <?php endif; ?>
-	<th class="text"><?= eL('name') ?></th>
+	<th class="name"><?= eL('name') ?></th>
 <?php if ($list_type == 'tag'): ?>
-	<th class="text" title="CSS Classes or a #rgb or #rrggbb color. For instance #c00 for a red background">
+	<th class="styling" title="CSS Classes or a #rgb or #rrggbb color. For instance #c00 for a red background">
 		CSS Classes or #rgb
 	</th>
 <?php endif; ?>
-	<th><?= eL('order') ?></th>
-	<th><?= eL('show') ?></th>
+	<th class="order"><?= eL('order') ?></th>
+	<th class="show"><?= eL('show') ?></th>
 <?php if ($list_type == 'version'): ?>
-	<th><?= eL('tense') ?></th>
+	<th class="tense"><?= eL('tense') ?></th>
 <?php endif; ?>
-	<th><?= eL('delete') ?></th>
-	<th><?= eL('usedintasks') ?></th>
+	<th class="usage"><?= eL('usedintasks') ?></th>
+	<th class="actions"><?= eL('delete') ?></th>
 </tr>
 </thead>
 <tbody>
-<?php
+<?php if (count($rows)):
 	$countlines = -1;
 	foreach ($rows as $row):
 	$countlines++;
 ?>
 <tr<?= ($list_type == 'resolution' && $row[$list_type.'_id'] == RESOLUTION_DUPLICATE ) ? ' class="nodelete" title="fixed duplicate resolution status"':'' ?>>
 <?php if ($list_type == 'tag'): ?>
-	<td>
+	<td class="listitem_id">
 		<?php echo tpl_tag($row['tag_id'], true); ?>
 	</td>
 <?php endif; ?>
-	<td>
+	<td class="listitem_name">
 		<input id="listname<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_name[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]"
 			value="<?php echo Filters::noXSS($row[$list_type.'_name']); ?>" />
 	</td>
 <?php if ($list_type == 'tag'): ?>
-	<td>
+	<td class="listitem_styling">
 		<input id="listclass<?php echo Filters::noXSS($countlines); ?>" class="text fi-stretch" type="text" maxlength="40" name="list_class[<?php echo Filters::noXSS($row['tag_id']); ?>]"
 			value="<?php echo Filters::noXSS($row['class']); ?>" />
 	</td>
 <?php endif; ?>
-	<td title="<?= eL('ordertip') ?>" class="narrow">
+	<td title="<?= eL('ordertip') ?>" class="listitem_order">
 		<input id="listposition<?php echo Filters::noXSS($countlines); ?>" class="text ta-e fi-xxx-small" type="text" maxlength="3" name="list_position[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="<?php echo Filters::noXSS($row['list_position']); ?>" />
 	</td>
-	<td title="<?= eL('showtip') ?>">
+	<td title="<?= eL('showtip') ?>" class="listitem_show">
 		<?php echo tpl_checkbox('show_in_list[' . $row[$list_type.'_id'] . ']', $row['show_in_list'], 'showinlist'.$countlines); ?>
 	</td>
 <?php if ($list_type == 'version'): ?>
-	<td title="<?= eL('listtensetip') ?>">
+	<td title="<?= eL('listtensetip') ?>" class="listitem_tense">
 		<select id="tense<?php echo Filters::noXSS($countlines); ?>" name="<?php echo Filters::noXSS($list_type); ?>_tense[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]">
 		<?php echo tpl_options(array(1=>L('past'), 2=>L('present'), 3=>L('future')), $row[$list_type.'_tense']); ?>
 		</select>
 	</td>
 <?php endif; ?>
 
+	<td class="listitem_usage">
+		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:'&mdash;'; ?>
+	</td>
+
 <?php if ($row['used_in_tasks'] || ($list_type == 'status' && $row[$list_type.'_id'] < 7) || ($list_type == 'resolution' && $row[$list_type.'_id'] == RESOLUTION_DUPLICATE ) ): ?>
-	<td title="<?= eL('nodeletetip') ?>">
+	<td title="<?= eL('nodeletetip') ?>" class="listitem_actions">
 		<span class="fas fa-ban"></span>
 	</td>
 <?php else: ?>
-	<td title="<?= eL('deletetip') ?>">
+	<td title="<?= eL('deletetip') ?>" class="listitem_actions">
 		<input id="delete<?php echo Filters::noXSS($row[$list_type.'_id']); ?>" type="checkbox" name="delete[<?php echo Filters::noXSS($row[$list_type.'_id']); ?>]" value="1" />
 	</td>
 <?php endif; ?>
 
-	<td>
-		<?php echo $row['used_in_tasks'] >0 ? $row['used_in_tasks']:''; ?>
+</tr>
+<?php
+	endforeach;
+	else:
+?>
+<tr>
+	<td colspan="<?= $tcols; ?>">
+		<?= eL('novalues') ?>
 	</td>
 </tr>
-<?php endforeach; ?>
+
+<?php endif; ?>
 </tbody>
 </table>
 
