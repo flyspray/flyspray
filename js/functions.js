@@ -456,11 +456,17 @@ function allow(booler){
 }
 function getHistory(task_id, baseurl, field, details)
 {
-    var url = baseurl + 'js/callbacks/gethistory.php?task_id=' + task_id;
-    if (details) {
-        url += '&details=' + details;
+    var target = $(field);
+    if (field == 'history' || (field != 'history' && target.empty())) {
+        var url = baseurl + 'js/callbacks/gethistory.php?task_id=' + task_id;
+        if (details) {
+            url += '&details=' + details;
+        }
+        var myAjax = new Ajax.Updater(field, url, { method: 'get'});
     }
-    var myAjax = new Ajax.Updater(field, url, { method: 'get'});
+    else {
+        target.toggle();
+    }
 }
 
 /*********  Permissions popup  ***********/

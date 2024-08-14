@@ -143,7 +143,7 @@ function event_description($history) {
                     }
                     break;
                 case 'detailed_desc':
-                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');showTabById('history', true);\">" . eL('details') . '</a>';
+                    $field = "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'taskevent_details_{$history['history_id']}', '{$history['history_id']}');showTabById('history', true);\" title=\"" . eL('toggleview') . "\">" . eL('details') . '</a>';
                     if (!empty($details)) {
                         $details_previous = TextFormatter::render($old_value);
                         $details_new =  TextFormatter::render($new_value);
@@ -159,7 +159,7 @@ function event_description($history) {
             }
             $return .= eL('fieldchanged').": {$field}";
             if ($old_value || $new_value) {
-                 $return .= " ({$old_value} &rarr; {$new_value})";
+                 $return .= " <span>{$old_value}</span> &rarr; <span>{$new_value}</span>";
             }
             break;
     case '1':      //Task opened
@@ -177,7 +177,7 @@ function event_description($history) {
             $return .= '<a href="#comments">' . eL('commentadded') . '</a>';
             break;
     case '5':      //Comment edited
-            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".eL('commentedited')."</a>";
+            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'taskevent_details_{$history['history_id']}', '{$history['history_id']}');\" title=\"" . eL('toggleview') . "\">".eL('commentedited')."</a>";
             if ($history['c_date_added']) {
                  $return .= " (".eL('commentby').' ' . tpl_userlink($history['c_user_id']) . " - " . formatDate($history['c_date_added'], true) . ")";
             }
@@ -187,7 +187,7 @@ function event_description($history) {
             }
             break;
     case '6':     //Comment deleted
-            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'history', '{$history['history_id']}');\">".eL('commentdeleted')."</a>";
+            $return .= "<a href=\"javascript:getHistory('{$history['task_id']}', '$baseurl', 'taskevent_details_{$history['history_id']}', '{$history['history_id']}');\" title=\"" . eL('toggleview') . "\">".eL('commentdeleted')."</a>";
             if ($new_value != '' && $history['field_changed'] != '') {
                  $return .= " (". eL('commentby'). ' ' . tpl_userlink($new_value) . " - " . formatDate($history['field_changed'], true) . ")";
             }

@@ -1,5 +1,5 @@
 <?php if ($details && count($histories)): ?>
-<table class="userlist history">
+<table class="taskeventhistorydetails">
 <tr>
 	<th><?php echo Filters::noXSS(L('previousvalue')); ?></th>
 	<th><?php echo Filters::noXSS(L('newvalue')); ?></th>
@@ -10,31 +10,42 @@
 </tr>
 </table>
 <?php else: ?>
-<table class="userlist history">
+<table id="taskeventhistory">
 <thead>
 <tr>
-	<th><?php echo Filters::noXSS(L('eventdate')); ?></th>
-	<th><?php echo Filters::noXSS(L('user')); ?></th>
-	<th><?php echo Filters::noXSS(L('event')); ?></th>
+	<th class="date"><?php echo Filters::noXSS(L('eventdate')); ?></th>
+	<th class="user"><?php echo Filters::noXSS(L('user')); ?></th>
+	<th class="event"><?php echo Filters::noXSS(L('event')); ?></th>
 </tr>
 </thead>
 <tbody>
 <?php foreach($histories as $history): ?>
 <tr>
-	<td>
-		<?php echo Filters::noXSS(formatDate($history['event_date'], false)); ?>
+	<td class="taskevent_date">
+		<?php echo Filters::noXSS(formatDate($history['event_date'], true)); ?>
 	</td>
-<?php if($fs->prefs['enable_avatars'] == 1) { ?>
-	<td>
+	<td class="taskevent_user">
+<?php if($fs->prefs['enable_avatars'] == 1): ?>
 		<?php echo tpl_userlinkavatar($history['user_id'], 24) ?> <?php echo tpl_userlink($history['user_id']); ?>
-	</td>
-<?php } else { ?>
-	<td>
+<?php else: ?>
 		<?php echo tpl_userlink($history['user_id']); ?>
+<?php endif; ?>
 	</td>
-<?php } ?>
-	<td>
-		<?php echo event_description($history); ?>
+	<td class="taskevent_event">
+		<?php
+			echo event_description($history);
+
+			if (
+				($history['event_type'] == 3 && $history['field_changed'] != '')
+				||
+				$history['event_type'] == 5
+				||
+				$history['event_type'] == 6
+			){ ?>
+		<div id="taskevent_details_<?= $history['history_id'] ?>" class="box"></div>
+		<?php
+			}
+		?>
 	</td>
 </tr>
 <?php endforeach; ?>
