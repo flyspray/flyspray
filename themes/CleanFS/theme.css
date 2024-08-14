@@ -959,6 +959,18 @@ table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 }
 /* end eventlist table columns */
 
+#taskreminders {
+	width: 100%;
+	max-width: 800px;
+}
+#taskreminders th { white-space: nowrap; padding: 4px 5px; }
+#taskreminders td { padding: 4px 5px; }
+#taskreminders td.reminder_ttcolumn { width: .1%; text-align: center; }
+#taskreminders td.reminder_user { white-space: nowrap; width: 20%; }
+#taskreminders td.reminder_startdate { white-space: nowrap; width: .1%; }
+#taskreminders td.reminder_frequency { white-space: nowrap; width: .1%; text-align: right; }
+#taskreminders td.reminder_mesasge {  }
+
 #taskefforthistory {
 	width: 100%;
 	max-width: 800px;

@@ -2,26 +2,26 @@
 <div id="remind" class="tab">
 	<?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#remind'); ?>
 <?php if (count($reminders)): ?>
-	<table id="reminders" class="userlist">
+	<table id="taskreminders">
 	<thead>
 	<tr>
-		<th>
-			<a class="toggle_selected" title="<?php echo Filters::noXSS(L('toggleselected')); ?>" href="javascript:ToggleSelected('reminders')"></a>
+		<th class="ttcolumn">
+			<a class="toggle_selected" title="<?php echo Filters::noXSS(L('toggleselected')); ?>" href="javascript:ToggleSelected('taskreminders')"><span class="fas fa-exchange"></span></a>
 		</th>
-		<th><?php echo Filters::noXSS(L('user')); ?></th>
-		<th><?php echo Filters::noXSS(L('startat')); ?></th>
-		<th><?php echo Filters::noXSS(L('frequency')); ?></th>
-		<th class="text"><?php echo Filters::noXSS(L('message')); ?></th>
+		<th class="user"><?php echo Filters::noXSS(L('user')); ?></th>
+		<th class="startdate"><?php echo Filters::noXSS(L('startat')); ?></th>
+		<th class="frequency"><?php echo Filters::noXSS(L('frequency')); ?></th>
+		<th class="message"><?php echo Filters::noXSS(L('message')); ?></th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php foreach ($reminders as $row): ?>
 	<tr>
-		<td class="ttcolumn">
+		<td class="reminder_ttcolumn">
 			<input type="checkbox" name="reminder_id[]" <?php echo tpl_disableif(!$user->can_edit_task($task_details)); ?> value="<?php echo Filters::noXSS($row['reminder_id']); ?>" />
 		</td>
-		<td><?php echo tpl_userlink($row['user_id']); ?></td>
-		<td><?php echo Filters::noXSS(formatDate($row['start_time'])); ?></td>
+		<td class="reminder_user"><?php echo tpl_userlink($row['user_id']); ?></td>
+		<td class="reminder_startdate"><?php echo Filters::noXSS(formatDate($row['start_time'])); ?></td>
 <?php
 // Work out the unit of time to display
 if ($row['how_often'] < 86400) {
@@ -32,8 +32,8 @@ if ($row['how_often'] < 86400) {
 	$how_often = $row['how_often'] / 604800 . ' ' . L('weeks');
 }
 ?>
-		<td><?php echo Filters::noXSS($how_often); ?></td>
-		<td><?php echo TextFormatter::render($row['reminder_message']); ?></td>
+		<td class="reminder_frequency"><?php echo Filters::noXSS($how_often); ?></td>
+		<td class="reminder_message"><?php echo TextFormatter::render($row['reminder_message']); ?></td>
 	</tr>
 	<?php endforeach; ?>
 	</tbody>
