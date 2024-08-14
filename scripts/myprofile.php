@@ -44,6 +44,15 @@ $myreminderq = $db->query('
 $myreminders = $db->fetchAllArray($myreminderq);
 $page->assign('myreminders', $myreminders);
 
+$projects = [
+	0 => new Project(0)
+];
+
+foreach ($fs->projects as $p) {
+	$projects[$p['project_id']] = new Project($p['project_id']);
+}
+
+$page->assign('projects', $projects);
 $page->assign('groups', Flyspray::listGroups());
 $page->assign('project_groups', Flyspray::listGroups($proj->id));
 $page->assign('theuser', $user);

@@ -7,7 +7,7 @@
 <ul id="submenu">
 	<li id="dashboardtab"><a href="#dashboard"><span class="fas fa-gauge"></span><span>Dashboard</span></a></li>
 	<li id="editprofiletab"><a href="#editprofile"><span class="fas fa-user-pen"></span><span><?= eL('editmydetails') ?></span></a></li>
-	<li id="permissionstab"><a href="#permissions"><span class="fas fa-key"></span><span><?php echo eL('permissionsforproject').' '.$proj->prefs['project_title']; ?></span></a></li>
+	<li id="permissionstab"><a href="#permissions"><span class="fas fa-key"></span><span><?php echo eL('permissions'); ?></span></a></li>
 	<li id="historytab"><a href="#history"><span class="fas fa-timeline"></span><span><?php echo eL('history'); ?></span></a></li>
 </ul>
 
@@ -82,7 +82,122 @@
 </div>
 
 <div id="permissions" class="tab">
-	<div class="permissions"><?php echo tpl_draw_perms($user->perms); ?></div>
+<?php
+
+// TODO: display group memberships
+
+$perm_fields = array(
+	'is_admin',
+	'manage_project',
+	'view_tasks',
+	'view_groups_tasks', // TODO: What is the definition of "group's task" and how does it effect project views?
+	'view_own_tasks',    // TODO: What is the definition of "own task" and how does it effect project views?
+	'open_new_tasks',
+	'add_multiple_tasks',
+	'modify_own_tasks',
+	'modify_all_tasks',
+	'create_attachments',
+	'delete_attachments',
+	'assign_to_self',
+	'assign_others_to_self',
+	'edit_assignments',
+	'close_own_tasks',
+	'close_other_tasks',
+	'view_roadmap',
+	'view_history',
+	'view_reports',
+	'add_votes',
+	'view_comments',
+	'add_comments',
+	'edit_comments',
+	'edit_own_comments',
+	'delete_comments',
+	'view_estimated_effort',
+	'view_current_effort_done',
+	'track_effort'
+);
+
+$basic_fields_labels = [
+	'item_summary' => 'summary',
+	'detailed_desc' => 'taskdetails',
+	'task_type' => 'tasktype',
+	'product_category' => 'category',
+	'operating_system' => 'operatingsystem',
+	'task_severity' => 'severity',
+	'percent_complete' => 'percentcomplete',
+	'product_version' => 'productversion',
+	'estimated_effort' => 'estimatedeffort'
+];
+
+require_once 'permicons.tpl';
+
+foreach ($projects as $project) {
+?>
+	<div class="box projectperms p<?= $project->id . ($project->id == 0 ? ' globalproject' : '') . ($project->prefs['project_is_active'] == 0 ? ' inactive' : '') ?>">
+		<h3>
+			<?= ($project->id == 0 ? eL('globalpermissions') : Filters::noXSS($project->prefs['project_title'])) ?> <?php  /*(TODO: contributors)*/ ?>
+			<span class="fas fa-globe" title="<?= eL($project->id == 0 ? 'globalproject' : '') ?>"></span>
+			<span class="fas fa-toggle-<?= ($project->prefs['project_is_active'] == 0 ? 'off' : 'on') ?>" title="<?= eL($project->prefs['project_is_active'] == 0 ? 'inactive' : 'active') ?>"></span>
+		</h3>
+<?php
+	unset($perm_tmp, $project_perms);
+
+	foreach ($theuser->perms as $perm_tmp) {
+		if ($perm_tmp['project_id'] == $project->id) {
+			$project_perms = $perm_tmp;
+
+			break;
+		}
+	}
+?>
+		<h4><?= eL('permissions') ?></h4>
+
+		<div class="perms">
+
+<?php
+	foreach ($perm_fields as $p):
+		$direct_grant = ($project_perms[$p] == 1);
+		$admin_grant = false;
+		$pm_grant = false;
+
+		$admin_grant = ($p != 'is_admin' && $project_perms['is_admin'] == 1 && $project_perms[$p] == 0);
+		$pm_grant = (($p != 'is_admin' && $p != 'manage_project') && $project_perms[$p] == 0 && $project_perms['manage_project'] == 1);
+
+		$granted = ($direct_grant || $admin_grant || $pm_grant);
+?>
+			<div class="perm_item perm-<?= ($granted ? 'yes' : 'no') ?>">
+<?php
+// TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+?>
+				<div class="perm_icon">
+					<?= $permicons[$p] ?>
+				</div>
+
+				<div class="perm_info">
+					<p><?php ($direct_grant ? 'Y' : 'N').($admin_grant ? 'Y' : 'N' ).($pm_grant ? 'Y' : 'N' ) ?> <?php echo eL(str_replace('_', '', $p)); ?></p>
+<?php if ($admin_grant): ?>
+					<p class="perm_note">Granted via <span><?= eL('isadmin') ?><span></p>
+<?php elseif ($pm_grant): ?>
+					<p class="perm_note">Granted via <span><?= eL('manageproject') ?></span></p>
+<?php elseif ($project->id != 0 && $p == 'modify_own_tasks' && $granted): ?>
+					<p class="perm_note"><a class="modify_own_tasks" onclick="showhidestuff('modify_own_tasks_p<?= $project->id ?>')"><?= eL('fieldsallowedtochange') ?></a></p>
+					<ul id="modify_own_tasks_p<?= $project->id ?>">
+<?php
+ foreach ($project->prefs['basic_fields'] as $motf): ?>
+						<li><?= eL($basic_fields_labels[$motf]) ?></li>
+<?php endforeach;
+
+?>
+					</ul>
+<?php endif; ?>
+				</div>
+			</div>
+<?php endforeach; ?>
+		</div>
+	</div>
+<?php
+}
+?>
 </div>
 
 <div id="history" class="tab">

@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div id="groups_tab" class="tab">
-		<div>
+		<div class="buttons">
 			<a class="button" href="<?php echo Filters::noXSS(createURL('admin', 'newgroup', $proj->id)); ?>"><span class="fas fa-user-group fa-lg fa-fw"></span><?= eL('newgroup') ?></a>
 		</div>
 
@@ -41,8 +41,8 @@ $perm_fields = array(
 	'is_admin',
 	'manage_project',
 	'view_tasks',
-	'view_groups_tasks', # TODO: What is the definition of "group's task" and how does it effect project views?
-	'view_own_tasks',    # TODO: What is the definition of "own task" and how does it effect project views?
+	'view_groups_tasks', // TODO: What is the definition of "group's task" and how does it effect project views?
+	'view_own_tasks',    // TODO: What is the definition of "own task" and how does it effect project views?
 	'open_new_tasks',
 	'add_multiple_tasks',
 	'modify_own_tasks',
@@ -68,77 +68,54 @@ $perm_fields = array(
 	'track_effort'
 );
 
-$yesno = array(
-	'<td class="perm-no" title="'.eL('no').'"><span class="fas fa-ban fa-2x"></span></td>',
-	'<td class="perm-yes" title="'.eL('yes').'"><span class="good fas fa-check fa-2x"></span></td>'
-);
+require_once 'permicons.tpl';
 
-$perms=array();
-$gmembers='';
-$gnames='';
-$gdesc='';
-$cols='';
 foreach ($groups as $group) {
-	$cols.='<col class="group g'.$group['group_id'].($group['group_open'] == 0 ? ' inactive':'').'"></col>';
-	$gmembers.='<td>'.$group['users'].'</td>';
-	$gnames  .='<td><a class="button" title="'.eL('editgroup').'" href="'.( Filters::noXSS(createURL('editgroup', $group['group_id'], 'admin'))).'">'
-		.Filters::noXSS($group['group_name'])
-		.'<span class="fas fa-pencil fa-lg fa-fw"></span></a></td>';
-	$gdesc   .='<td>'.Filters::noXSS($group['group_desc']).'</td>';
-	foreach ($group as $key => $val) {
-		if (!is_numeric($key) && in_array($key, $perm_fields)) {
-			$perms[$key][]=$val;
-		}
-	}
+?>
+		<div class="box groupinfo g<?= $group['group_id'] . ($group['group_open'] == 0 ? ' inactive' : '') ?>">
+			<h3><?= Filters::noXSS($group['group_name']) ?> (<?= $group['users'] ?></strong> <?= eL('members') ?>) <span class="fas fa-toggle-<?= ($group['group_open'] == 0 ? 'off' : 'on') ?>" title="<?= eL($group['group_open'] == 0 ? 'inactive' : 'active') ?>"></span></h3>
+
+			<div class="buttons">
+				<a class="button" href="<?= Filters::noXSS(createURL('editgroup', $group['group_id'], 'admin')) ?>"><?= eL('editgroup') ?><span class="fas fa-pencil fa-lg fa-fw"></span></a>
+			</div>
+
+			<p><strong><?= eL('description') ?>:</strong> <?= Filters::noXSS($group['group_desc']) ?></p>
+
+			<h4><?= eL('permissions') ?></h4>
+
+			<div class="perms">
+<?php
+	foreach ($perm_fields as $p):
+		$direct_grant = ($group[$p] == 1);
+		$admin_grant = false;
+		$pm_grant = false;
+
+		$admin_grant = ($p != 'is_admin' && $group['is_admin'] == 1 && $group[$p] == 0);
+		$pm_grant = (($p != 'is_admin' && $p != 'manage_project') && $group[$p] == 0 && $group['manage_project'] == 1);
+
+		$granted = ($direct_grant || $admin_grant || $pm_grant);
+?>
+				<div class="perm_item perm-<?= ($granted ? 'yes' : 'no') ?>" data-perm-name="<?= $p ?>">
+<?php
+// TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
+?>
+				<div class="perm_icon">
+					<?= $permicons[$p] ?>
+				</div>
+				<div class="perm_info">
+					<p><?php echo eL(str_replace('_', '', $p)); ?></p>
+<?php if ($admin_grant): ?>
+					<p class="perm_note"><?= eL('grantedvia') ?><span><?= eL('isadmin') ?></span></p>
+<?php elseif ($pm_grant): ?>
+					<p class="perm_note"><?= eL('grantedvia') ?> <span><?= eL('manageproject') ?></span></p>
+<?php endif; ?>
+				</div>
+			</div>
+<?php endforeach; ?>
+		</div>
+	</div>
+<?php
 }
 ?>
-		<table class="perms">
-		<colgroup>
-			<col></col>
-<?php echo $cols; ?>
-		</colgroup>
-		<thead>
-		<tr>
-			<th><?= eL('groupmembers') ?></th>
-			<?php echo $gmembers; ?>
-		</tr>
-		<tr>
-			<th><?= eL('group') ?></th>
-			<?php echo $gnames; ?>
-		</tr>
-		<tr>
-			<th><?= eL('description') ?></th>
-			<?php echo $gdesc; ?>
-		</tr>
-		</thead>
-		<tbody>
-<?php foreach ($perm_fields as $p): ?>
-		<tr>
-			<th><?php echo eL(str_replace('_', '', $p)); ?></th>
-	<?php
-		require_once 'permicons.tpl';
-		$i=0;
-
-		# TODO: make it visible that a granted 'view_tasks' overrules 'view_groups_tasks' and 'own_tasks'. (like is_admin)
-		foreach ($perms[$p] as $val) {
-			if ($perms['is_admin'][$i]==1 && $val == 0) {
-				if (isset($permicons[$p])) {
-					echo '<td title="'.eL('yes').' - Permission granted because of is_admin">( '.$permicons[$p].' )</td>';
-				} else {
-					echo $yesno[1];
-				}
-			} elseif ($val==1 && isset($permicons[$p])) {
-				echo '<td>'.$permicons[$p].'</td>';
-			} else {
-				echo $yesno[$val];
-			}
-
-			$i++;
-		}
-	?>
-		</tr>
-<?php endforeach; ?>
-		</tbody>
-		</table>
 	</div>
 </div>

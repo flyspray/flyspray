@@ -1841,7 +1841,107 @@ a.datelink{
 	white-space:nowrap;
 }
 hr { border: none; border-top: 1px solid #e1e1e1;}
-.perms{display:inline-block;vertical-align:top;}
+
+/* begin new perms layout */
+.groupinfo.globalgroup,
+.projectperms.globalproject { background: #e5fcce; }
+.groupinfo.inactive,
+.projectperms.inactive { background: #eee; }
+.groupinfo.globalgroup.inactive,
+.projectperms.globalproject.inactive { background: #c8dcb3; }
+.groupinfo > h3,
+.projectperms > h3 { margin-bottom: .5em; }
+.groupinfo > h3 span.fa-toggle-on,
+.projectperms > h3 span.fa-toggle-on { color: #090; }
+.groupinfo > h3 span.fa-toggle-off,
+.projectperms > h3 span.fa-toggle-off { color: #666; }
+.groupinfo:not(.globalgroup) > h3 span.fa-globe,
+.projectperms:not(.globalproject) > h3 span.fa-globe { color: #666; }
+.groupinfo.globalgroup > h3 span.fa-globe,
+.projectperms.globalproject > h3 span.fa-globe { color: #090; }
+.groupinfo > p,
+.projectperms > p { margin-bottom: .5em; }
+.groupinfo .perm_item,
+.projectperms .perm_item  {
+	border: 1px solid #e1e1e1;
+	border-radius: 3px;
+	padding: .25em;
+	width: 225px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 5px;
+}
+.perm_item.perm-yes { border-color: #090; background: #fff; }
+.perm_item.perm-no { border-color: #ccc; background: #f0f0f0; }
+
+div.perms {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+.perm_info { flex: 1; position: relative; }
+.perm_info > p:first-child { font-weight: bold; margin: 0; }
+.perm_info a.modify_own_tasks { cursor: pointer; }
+.perm_info > ul {
+	background: #fff;
+	position: absolute;
+	top: calc(100% + .25em);
+	border: 1px solid #e1e1e1;
+	border-radius: 3px;
+	box-shadow: 0 2px 2px #ccc;
+	padding: .25em 1.5em .25em 1.5em;
+	margin: 0;
+	z-index: 100;
+	display: none;
+}
+.perm_info > ul li {
+	margin: .25em 0;
+	white-space: nowrap;
+}
+.perm_icon { /*background: #ffc;*/ flex: 0 0 auto; width: 3em; height: 3em; text-align: center; }
+.perm_icon > span { vertical-align: middle; margin-top: .25em; /*background: #ed0;*/ }
+.perm_icon > span.fa-stack { margin-top: .5em; }
+.perm_item.perm-yes > .perm_icon > span > span:first-child {color: #090;}
+.perm_item.perm-yes > .perm_icon > span > span:nth-child(2) {color: #242; }
+.group.globalgroup {background-color:#ddd;}
+.group.globalgroup.inactive {background-color:#ccc;}
+.perm_item > .perm_icon.perm-no { color:#999; }
+div.perms .perm_item.perm-no, div.perms .perm_item.perm-no * { color: inherit; }
+div.perms .perm_item.perm-no > .perm_icon { color: #999; }
+.perm_item.perm-no > .perm_icon > span > span:first-child {color: #999;}
+.perm_item.perm-no > .perm_icon > span > span:nth-child(2) {color: #333;}
+.perm-yes {}
+.perm_item > .perm_icon .fa-stack *:nth-child(2) {
+	position: absolute;
+	left: 40%;
+	bottom: -40%;
+}
+.perm_item.perm-yes > .perm_icon > span.fa-stack > *:nth-child(2) {
+	text-shadow: 0 -2px 1.5px #fff,
+		1.2px -1.2px 1.5px #fff,
+		2px 0 1.5px #fff,
+		1.2px 1.2px 1.5px #fff,
+		0 2px 1.5px #fff,
+		-1.2px 1.2px 1.5px #fff,
+		-2px 0 1.5px #fff,
+		-1.2px -1.2px 1.5px #fff;
+}
+.perm_item.perm-no > .perm_icon > span.fa-stack > *:nth-child(2) {
+	text-shadow: 0 -2px 1.5px #f0f0f0,
+		1.2px -1.2px 1.5px #f0f0f0,
+		2px 0 1.5px #f0f0f0,
+		1.2px 1.2px 1.5px #f0f0f0,
+		0 2px 1.5px #f0f0f0,
+		-1.2px 1.2px 1.5px #f0f0f0,
+		-2px 0 1.5px #f0f0f0,
+		-1.2px -1.2px 1.5px #f0f0f0;
+}
+.perm_info > .perm_note { font-style: italic; margin: 0; }
+.perm_info > .perm_note > span { font-weight: bold; color: #060; font-style: normal; }
+/* end new perms layout */
+
 .bad{color:#900;}
 .good{color:#090;}
 
@@ -2504,10 +2604,8 @@ span.warning {
 #globoslink .fa, #projoslink .fa{padding-right: 3px;}
 /* typical colorings for task type and permissions */
 .fa-bug{color:#c30;}
-.perms .fa-star{color:#ee0;text-shadow: 0 0 1px rgba(128, 0, 0, 1);}
 .fa-exclamation-triangle{color:#c00;}
 .fa-check{color:#090;}
-.global.fa-check{color:#990;} /* got permission by global settings, not project settings */
 .fa-ban{color:#900;}
 
 button.fakelinkbutton {
