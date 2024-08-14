@@ -94,14 +94,6 @@ ul li.hide-intro, .disp_introdep.hide-intro {
     background-color: #ff9;
 }
 
-.dbtable {background-color:#ccc;}
-.dbtable td {border-bottom:1px solid #999;}
-.dbfield {background-color:#eee;}
-.dbfield em {
-    background-color: #ccc;
-    padding: 0.2em;
-}
-
 .overdue {color:#f00;}
 .duetoday {color:#f00;}
 .duewarn {color:#660;}

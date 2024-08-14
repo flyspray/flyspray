@@ -2,20 +2,16 @@ Event.observe(window,'load',adminInit);
 
 function adminInit() {
 	var toolbox = $('toolbox');
-
-	console.log(toolbox.classNames());
-	console.log($w(toolbox.className));
-
 	var toolbox_class = $w(toolbox.className);
 	var toolbox_area = '';
 
 	for (c of toolbox_class) {
-		console.log('loop : ' + c);
+		//console.log('loop : ' + c);
 		if (c.match(/^toolbox_(\w+)$/)) {
-			console.log('matched: ' + c);
+			//console.log('matched: ' + c);
 			toolbox_area = c.replace(/^toolbox_/, '');
 
-			console.log('area: ' + toolbox_area);
+			//console.log('area: ' + toolbox_area);
 
 			break;
 		}
@@ -123,6 +119,47 @@ function adminInitCat(admin_type) {
 
 function adminInitChecks(admin_type) {
 	if (admin_type != 'admin') { return; }
+
+	$('toggledbfields').observe('click', function (e) {
+		var me = this;
+		var icon = me.firstDescendant();
+
+		 // fields visible
+		var on = !$('dbtables').hasClassName('hidden-fields');
+
+		if (on) {
+			me.childElements()[1].textContent = me.dataset.offText;
+			icon.classList.replace('fa-' + me.dataset.onIcon, 'fa-' + me.dataset.offIcon);
+
+			$('dbtables').addClassName('hidden-fields');
+		} else {
+			me.childElements()[1].textContent = me.dataset.onText;
+			icon.classList.replace('fa-' + me.dataset.offIcon, 'fa-' + me.dataset.onIcon);
+
+			$('dbtables').removeClassName('hidden-fields');
+		}
+	});
+
+	$('toggledbconninfo').observe('click', function (e) {
+		var me = this;
+		var icon = me.firstDescendant();
+
+		 // fields visible
+		var on = !$('dbinfo').hasClassName('hidden-info');
+
+		if (on) {
+			me.childElements()[1].textContent = me.dataset.offText;
+			icon.classList.replace('fa-' + me.dataset.onIcon, 'fa-' + me.dataset.offIcon);
+
+			$('dbinfo').addClassName('hidden-info');
+		} else {
+			me.childElements()[1].textContent = me.dataset.onText;
+			icon.classList.replace('fa-' + me.dataset.offIcon, 'fa-' + me.dataset.onIcon);
+
+			$('dbinfo').removeClassName('hidden-info');
+
+		}
+	});
 }
 
 function adminInitEditAllUsers(admin_type) {
