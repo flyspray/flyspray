@@ -14,21 +14,21 @@
 
 <?php if(isset($registrations)): ?>
 <div class="box">
-<h3><?= $regcount ?> unfinished registrations</h3>
-<table>
+<h3><?= $regcount ?> <?= eL('unfinishedregistrations') ?></h3>
+<table id="unfinishedregistrations" class="userlist">
 <thead>
 <tr>
-<th>reg_time</th>
-<th>user_name</th>
-<th>email_address</th>
+	<th class="regdate"><?= eL('registrationtime') ?></th>
+	<th class="username"><?= eL('username') ?></th>
+	<th class="emailaddress"><?= eL('emailaddress') ?></th>
 </tr>
 </thead>
 <tbody>
 <?php foreach($registrations as $reg): ?>
 <tr>
-<td><?= formatDate($reg['reg_time']) ?></td>
-<td><?= Filters::noXSS($reg['user_name']) ?></td>
-<td><?= Filters::noXSS($reg['email_address']) ?></td>
+	<td class="user_regdate"><?= formatDate($reg['reg_time']) ?></td>
+	<td class="user_username"><?= Filters::noXSS($reg['user_name']) ?></td>
+	<td class="user_emailaddress"><?= Filters::noXSS($reg['email_address']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>

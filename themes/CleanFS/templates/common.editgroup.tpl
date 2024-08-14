@@ -278,14 +278,14 @@
 <table id="manage_users_in_groups" class="userlist">
 <thead>
 <tr>
-	<th>
+	<th class="ttcolumn">
 		<a href="javascript:ToggleSelected('manage_users_in_groups')" title="<?php echo Filters::noXSS(L('toggleselected')); ?>">
 			<span class="fas fa-repeat fa-lg"></span>
 		</a>
 	</th>
-	<th class="text"><?php echo Filters::noXSS(L('username')); ?></th>
-	<th class="text"><?php echo Filters::noXSS(L('realname')); ?></th>
-	<th><?php echo Filters::noXSS(L('accountenabled')); ?></th>
+	<th class="username"><?php echo Filters::noXSS(L('username')); ?></th>
+	<th class="realname"><?php echo Filters::noXSS(L('realname')); ?></th>
+	<th class="accountenabled"><?php echo Filters::noXSS(L('accountenabled')); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -294,13 +294,11 @@
 ?>
 <tr>
 	<td class="ttcolumn"><?php echo tpl_checkbox('users['.$usr['user_id'].']'); ?></td>
-	<td><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>
-	<td><?php echo Filters::noXSS($usr['real_name']); ?></td>
-	<?php if ($usr['account_enabled']) : ?>
-	<td class="imgcol"><span class="fas fa-check" style="color:#090" title="<?php echo L('yes'); ?>"></span></td>
-	<?php else: ?>
-	<td class="imgcol"><span class="fas fa-ban" style="color:#900" title="<?php echo L('no'); ?>"></span></td>
-	<?php endif; ?>
+	<td class="user_username"><a href="<?php echo Filters::noXSS(CreateURL('edituser', $usr['user_id'])); ?>"><?php echo Filters::noXSS($usr['user_name']); ?></a></td>
+	<td class="user_realname"><?php echo Filters::noXSS($usr['real_name']); ?></td>
+	<td class="user_accountenabled">
+		<span class="fas fa-<?php echo ($usr['account_enabled']) ? 'check':'ban'; ?>"></span>
+	</td>
 </tr>
 <?php
 	$users_in[] = $usr['user_id'];

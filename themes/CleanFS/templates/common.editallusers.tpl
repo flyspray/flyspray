@@ -101,57 +101,97 @@ if ($do == 'admin'): ?>
 	<input type="hidden" name="do" value="admin" />
 	<input type="hidden" name="area" value="editallusers" />
 <?php endif; ?>
-<table class="bulkedituser">
+<table class="bulkedituser userlist">
 	<thead>
 	<tr class="account_header">
-		<th></th>
-		<th><span class="fas fa-pencil fa-lg"></span></th>
-		<th><?= tpl_userlistheading('realname') ?></th>
-		<th><?= tpl_userlistheading('username') ?></th>
-		<th><?= tpl_userlistheading('emailaddress') ?></th>
-		<th><?= tpl_userlistheading('jabberid') ?></th>
-		<th><?= tpl_userlistheading('regdate') ?></th>
-		<th><?= tpl_userlistheading('lastlogin') ?></th>
+		<th class="ttcolumn"></th>
+		<th class="actions"><span class="fas fa-pencil fa-lg"></span></th>
+<!-- 		<th class="accountenabled"><?= eL('accountenabled') ?></span></th> -->
+		<th class="realname"><?= tpl_userlistheading('realname') ?></th>
+		<th class="username"><?= tpl_userlistheading('username') ?></th>
+		<th class="emailaddress"><?= tpl_userlistheading('emailaddress') ?></th>
+		<th class="jabberid"><?= tpl_userlistheading('jabberid') ?></th>
+		<th class="regdate"><?= tpl_userlistheading('regdate') ?></th>
+		<th class="lastlogin<?= (($showstats || $showltf) ? ' divider' : '') ?>"><?= tpl_userlistheading('lastlogin') ?></th>
 <?php if($showstats): ?>
-		<th>opened_by</th>
-		<th>closed_by</th>
-		<th>last_edited_by</th>
-		<th>assigned</th>
-		<th>comments</th>
-		<th>votes</th>
+		<th class="tasksopenedby"><?= eL('openedby') ?></th>
+		<th class="tasksclosedby"><?= eL('closedby') ?></th>
+		<th class="taskseditedby"><?= eL('editedby') ?></th>
+		<th class="tasksassignedto"><?= eL('assignedto') ?></th>
+		<th class="commentscount"><?= eL('comments') ?></th>
+		<th class="votescount<?= ($showltf ? ' divider' : '') ?>"><?= eL('votes') ?></th>
 <?php endif; ?>
 <?php if($showltf): ?>
-		<th><?= eL('language') ?></th>
-		<th><?= eL('timezone') ?></th>
-		<th><?= eL('dateformat') ?></th>
-		<th><?= eL('dateformat_extended') ?></th>
+		<th class="language"><?= eL('language') ?></th>
+		<th class="timezone"><?= eL('timezone') ?></th>
+		<th class="dateformat"><?= eL('dateformat') ?></th>
+		<th class="dateformatext"><?= eL('dateformat_extended') ?></th>
 <?php endif; ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php foreach ($users as $usr): ?>
 <tr class="<?php echo ($usr['account_enabled']) ? 'account_enabled':'account_disabled'; ?>" onclick="toggleCheckbox('<?php echo $usr['user_id']; ?>')">
-	<td><input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>"></td>
-	<td><a href="<?= createURL('edituser', $usr['user_id']) ?>" title="Edit user <?= Filters::noXSS($usr['real_name']) ?>"><span class="fas fa-pencil fa-lg"></span></a></td>
-	<td><a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= Filters::noXSS($usr['real_name']) ?></a></td>
-	<td><a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= $usr['user_name'] ?></a></td>
-	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['email_address']); ?></td>
-	<td<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' class="inactive"':''; ?>><?php echo Filters::noXSS($usr['jabber_id']); ?></td>
-	<td><?php echo formatDate($usr['register_date']); ?></td>
-	<td><?php echo formatDate($usr['last_login']); ?></td>
+	<td class="ttcolumn">
+		<input id="<?php echo $usr['user_id'] ?>" onclick="event.stopPropagation()" type="checkbox" name="checkedUsers[]" value="<?php echo $usr['user_id']; ?>">
+	</td>
+	<td class="user_actions">
+		<a href="<?= createURL('edituser', $usr['user_id']) ?>" class="button" title="Edit user <?= Filters::noXSS($usr['real_name']) ?>"><span class="fas fa-pencil"></span></a>
+	</td>
+<!--	<td class="user_accountenabled">
+		<span class="fas fa-<?php echo ($usr['account_enabled']) ? 'check':'ban'; ?>"></span>
+	</td> -->
+	<td class="user_realname">
+		<a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= Filters::noXSS($usr['real_name']) ?></a>
+	</td>
+	<td class="user_username">
+		<a href="<?= createURL('user', $usr['user_id']) ?>" title="View user <?= Filters::noXSS($usr['real_name']).' ('.$usr['user_name'].')' ?>"><?= $usr['user_name'] ?></a>
+	</td>
+	<td class="user_emailaddress<?= ($usr['notify_type']==0 || $usr['notify_type']==2) ? ' inactive':''; ?>">
+		<?php echo Filters::noXSS($usr['email_address']); ?>
+	</td>
+	<td class="user_jabberid<?= ($usr['notify_type']==0 || $usr['notify_type']==1) ? ' inactive':''; ?>">
+		<?php echo Filters::noXSS($usr['jabber_id']); ?>
+	</td>
+	<td class="user_regdate">
+		<?php echo formatDate($usr['register_date']); ?>
+	</td>
+	<td class="user_lastlogin<?= (($showstats || $showltf) ? ' divider' : '') ?>">
+		<?php echo formatDate($usr['last_login']); ?>
+	</td>
 <?php if($showstats): ?>
-	<td><?php echo $usr['countopen']>0 ? $usr['countopen']:''; ?></td>
-	<td><?php echo $usr['countclose']>0 ? $usr['countclose']:''; ?></td>
-	<td><?php echo $usr['countlastedit']>0 ? $usr['countlastedit']:''; ?></td>
-	<td><?php echo $usr['countassign']>0 ? $usr['countassign']:''; ?></td>
-	<td><?php echo $usr['countcomments']>0 ? $usr['countcomments']:''; ?></td>
-	<td><?php echo $usr['countvotes']>0 ? $usr['countvotes']:''; ?></td>
+	<td class="user_tasksopenedby">
+		<?php echo $usr['countopen']>0 ? $usr['countopen']:''; ?>
+	</td>
+	<td class="user_tasksclosedby">
+		<?php echo $usr['countclose']>0 ? $usr['countclose']:''; ?>
+	</td>
+	<td class="user_taskseditedby">
+		<?php echo $usr['countlastedit']>0 ? $usr['countlastedit']:''; ?>
+	</td>
+	<td class="user_tasksassignedto">
+		<?php echo $usr['countassign']>0 ? $usr['countassign']:''; ?>
+	</td>
+	<td class="user_commentscount">
+		<?php echo $usr['countcomments']>0 ? $usr['countcomments']:''; ?>
+	</td>
+	<td class="user_votescount<?= ($showltf ? ' divider' : '') ?>">
+		<?php echo $usr['countvotes']>0 ? $usr['countvotes']:''; ?>
+	</td>
 <?php endif; ?>
 <?php if($showltf): ?>
-	<td><?php echo Filters::noXSS($usr['lang_code']); ?></td>
-	<td><?php echo Filters::noXSS($usr['time_zone']); ?></td>
-	<td><?php echo Filters::noXSS($usr['dateformat']); ?></td>
-	<td><?php echo Filters::noXSS($usr['dateformat_extended']); ?></td>
+	<td class="user_language">
+		<?php echo Filters::noXSS($usr['lang_code']); ?>
+	</td>
+	<td class="user_timezone">
+		<?php echo Filters::noXSS($usr['time_zone']); ?>
+	</td>
+	<td class="user_dateformat">
+		<?php echo Filters::noXSS($usr['dateformat']); ?>
+	</td>
+	<td class="user_dateformatext">
+		<?php echo Filters::noXSS($usr['dateformat_extended']); ?>
+	</td>
 <?php endif; ?>
 	</tr>
 <?php endforeach; ?>

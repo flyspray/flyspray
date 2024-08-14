@@ -862,6 +862,30 @@ a {text-decoration: none;}
 }*/
 
 #tasklist_table thead th {line-height:1;}
+/* begin user table columns */
+table.userlist thead th { white-space: nowrap; padding: 4px 5px; }
+table.userlist .ttcolumn { width: .1%;padding: 4px 5px;text-align: center; }
+table.userlist .ttcolumn input { margin: 0; }
+table.userlist > tbody > tr > td.user_username { white-space: nowrap; min-width: 10em; }
+table.userlist > tbody > tr > td.user_emailaddress { white-space: nowrap; min-width: 10em; }
+table.userlist > tbody > tr > td.user_realname { white-space: nowrap; min-width: 10em; }
+table.userlist > tbody > tr > td.user_jabberid { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_regdate { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_lastlogin { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_tasksopenedby { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_tasksclosedby { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_taskseditedby { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_tasksassignedto { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_commentscount { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_votescount { text-align: right; width: .1%; min-width: 1.5em; }
+table.userlist > tbody > tr > td.user_language { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_timezone { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_dateformat { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_dateformatext { white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_accountenabled { text-align: center; white-space: nowrap; width: .1%; }
+table.userlist > tbody > tr > td.user_actions { white-space: nowrap; padding: 4px 5px; width: .1%; }
+/* end user table columns */
+
 /* begin itemlist table columns */
 table.listtable { width: 100%; max-width: 800px; }
 table.listtable th, table.listtable td { box-sizing: border-box; padding: 4px 5px; }
@@ -1424,21 +1448,12 @@ table.userlist, table.list {
   width: 100%;
   max-width: 800px;
 }
-table.userlist th.text, table.list th.text {
-  width: 50%;
-}
-table.userlist th:not(.text), table.list th:not(.text) {
-  width: .1%;
-  white-space: nowrap;
-}
 table.list tbody tr:hover {
   background: #e1e1e1;
 }
 table.list tbody tr.active:hover {
   background: #78bf34;
 }
-.userlist th {background-color: #e0e0e0;}
-.userlist tbody tr:nth-child(2n) td {background-color: #f1f1f1;}
 .userlist.history a img {vertical-align:middle;height:20px;}
 .relatedwrap {
   display: flex;
