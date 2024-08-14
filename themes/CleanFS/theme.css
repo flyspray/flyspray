@@ -59,6 +59,7 @@ div.denyform,
 div.popup, div#mysearches {
 	background-color:#fafafa;
 }
+td > input[type=checkbox], th > input[type=checkbox], td > input[type=radio], th > input[type=radio] { margin : 0; }
 tr.active,
 body a.button.positive, body button.positive,
 #pm-menu-list a.active, #pm-menu-list a.active:hover,
@@ -503,28 +504,34 @@ td > .button {
   margin: 0;
 }
 /* fa icons within buttons */
-.button .far,
-.button .fa:first-child, button fa:first-child,
+.button .far, button .far,
+.button .fa:first-child, button .fa:first-child,
 .button .fas:first-child, button .fas:first-child,
 .button .fa-solid:first-child, button .fa-solid:first-child,
 .button .far:first-child, button .far:first-child,
-.button .fa-regular:first-child, button .fa-regular:first-child {margin-left: 0;margin-right: .35em;}
-.button .far:last-child,
-.button .fa:last-child, button fa:last-child,
+.button .fa-regular:first-child, button .fa-regular:first-child { margin-left: 0;margin-right: .35em; }
+
+.button .far:last-child, button .far:last-child,
+.button .fa:last-child, button .fa:last-child,
 .button .fas:last-child, button .fas:last-child,
 .button .fa-solid:last-child, button .fa-solid:last-child,
 .button .far:last-child, button .far:last-child,
-.button .fa-regular:last-child, button .fa-regular:last-child {margin-left: .35em;margin-right: 0;}
-.button .far:only-child,
+.button .fa-regular:last-child, button .fa-regular:last-child { margin-left: .35em;margin-right: 0; }
+
+.button .far:only-child, button .far:only-child,
 .button .fa:only-child, button fa:only-child,
 .button .fas:only-child, button .fas:only-child,
 .button .fa-solid:only-child, button .fa-solid:only-child,
 .button .far:only-child, button .far:only-child,
-.button .fa-regular:only-child, button .fa-regular:only-child {margin-left: 0;margin-right: 0;}
+.button .fa-regular:only-child, button .fa-regular:only-child { margin-left: 0 !important;margin-right: 0 !important; }
 
 a.button:hover, button:hover, .button:hover, input[type=submit]:hover {background-color: #f2f2f2;border: 1px solid #a1a1a1;color: #565656;}
 a.button.disabled{background-color: #f2f2f2; border: 1px solid #a1a1a1;color: #9e9e9e;}
 a.button:active, button.button:active {background-color: #6299c5;border: 1px solid #6299c5;color: #fff;}
+
+td > button, td > input[type=button], td > .button { margin: 0 0 0 0; }
+td > * + button, td > * + input[type=button], td > * + .button { margin: 0 0 0 .5em; }
+
 body a.positive, body button.positive {
   border: solid 1px #5a8f27;
   border-top: solid 1px #85cb41;
@@ -898,6 +905,11 @@ table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 #taskeventhistory td.taskevent_event > div.box:empty { display: none; }
 table.taskeventhistorydetails { margin-bottom: 0; }
 table.taskeventhistorydetails th, table.taskeventhistorydetails td { width: 50%; padding: 4px 5px; }
+/* table utilities */
+th.divider, td.divider {
+	border-right: 1px solid #e1e1e1 !important;
+}
+/* end table utilities */
 
 #tasklist_table thead th .fa,
 #tasklist_table thead th .fas,
@@ -1614,7 +1626,7 @@ textarea {width: calc(100% - 6px);border:1px solid #ccc;border-radius: 3px;}
   border-radius: 3px;
 }
 .eventlist.hasresult {height: 150px;}
-table th {vertical-align: middle;}
+table th {vertical-align: top;}
 table td {vertical-align: top;}
 div.box, p.box {
   margin: 10px 0px 10px 0px;
@@ -1804,7 +1816,7 @@ ul.form_elements > li {
 	margin-bottom: 10px;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 5px;
 }
 ul.form_elements > li > label {
@@ -1874,7 +1886,7 @@ ul.form_elements > li .valuemulti input[type=password] + label,
 ul.form_elements > li .valuemulti select + label{
 	margin-left: 2em;
 }
-ul.form_elements > li .valuemulti > .valuemultipair {
+ul.form_elements > li .valuemulti > .valuemultipair:not(:first-child) {
 	margin-left: 20px;
 	white-space: nowrap;
 	display: inline-block;
