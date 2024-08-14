@@ -2230,6 +2230,32 @@ table.requests td .button .fa-circle-check {
 table.requests td .button .fa-square-xmark {
 	color: #900;
 }
+table.requests > tbody > tr > td.request_event {
+	white-space: nowrap;
+	min-width: 30em;
+	max-width: 40em;
+	width: .1%;
+}
+table.requests > tbody > tr > td.request_requestedby { white-space: nowrap; width: .1%; min-width: 12em; }
+table.requests > tbody > tr > td.request_date { white-space: nowrap; width: .1%; }
+table.requests > tbody > tr > td.request_email { white-space: nowrap; width: .1%; }
+table.requests > tbody > tr > td.request_reason {
+	min-width: 20em;
+	max-width: 25em;
+}
+table.requests > tbody > tr > td.request_actions {
+	white-space: nowrap;
+	padding: 4px 5px;
+	width: .1%;
+}
+table.requests thead th { white-space: nowrap; padding: 4px 5px; }
+table.requests > tbody > tr > td.request_event > a:first-of-type {
+	white-space: nowrap;
+	display: inline-block;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 30em;
+}
 div.denyform {
 	visibility:hidden;
 	position:absolute;

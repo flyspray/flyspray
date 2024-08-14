@@ -7,17 +7,17 @@
 	<table class="requests">
 	<thead>
 	<tr>
-		<th><?= eL('eventdesc') ?></th>
-		<th><?= eL('requestedby') ?></th>
-		<th><?= eL('daterequested') ?></th>
-		<th><?= eL('reasongiven') ?></th>
-		<th class="pm-buttons"> </th>
+		<th class="event"><?= eL('eventdesc') ?></th>
+		<th class="requested_by"><?= eL('requestedby') ?></th>
+		<th class="date"><?= eL('daterequested') ?></th>
+		<th class="reason"><?= eL('reasongiven') ?></th>
+		<th class="actions"> </th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php foreach ($pendings as $req): ?>
 	<tr>
-		<td>
+		<td class="request_event">
 			<?php if ($req['request_type'] == 1): ?>
 			<?= eL('closetask') ?> -
 			<a href="<?php echo Filters::noXSS(createURL('details', $req['task_id'])); ?>">FS#<?php echo Filters::noXSS($req['task_id']); ?> :
@@ -30,18 +30,18 @@
 			</a>
 			<?php endif; ?>
 		</td>
-		<td>
+		<td class="request_requestedby">
 			<?php echo tpl_userlink($req['user_id']); ?>
 		</td>
-		<td>
+		<td class="request_date">
 			<?php echo Filters::noXSS(formatDate($req['time_submitted'], true)); ?>
 		</td>
-		<td>
+		<td class="request_reason">
 			<?php echo Filters::noXSS($req['reason_given']); ?>
 		</td>
-		<td>
+		<td class="request_actions">
 			<?php if ($req['request_type'] == 1): ?>
-			<a class="button" onclick="showhidestuff('closeform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><span class="fas fa-circle-check"></span><?= eL('accept') ?> ...</a>
+			<a class="button" onclick="showhidestuff('closeform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><span class="fas fa-circle-check"></span> <?= eL('accept') ?> ...</a>
 			<div id="closeform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 			<?php echo tpl_form(Filters::noXSS(createURL('pm', 'pendingreq', $proj->id))); ?>
 				<div>
@@ -69,10 +69,10 @@
 			<?php echo tpl_form(Filters::noXSS(createUrl('pm', 'pendingreq', $proj->id)), null, null, null, 'style="display:inline"'); ?>
 				<input type="hidden" name="action" value="reopen" />
 				<input type="hidden" name="task_id" value="<?php echo Filters::noXSS($req['task_id']); ?>">
-				<button type="submit" class="button"><span class="fas fa-circle-check"></span><?= eL('accept') ?></button>
+				<button type="submit" class="button"><span class="fas fa-circle-check"></span> <?= eL('accept') ?></button>
 			</form>
 			<?php endif; ?>
-			<a class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><span class="fas fa-square-xmark"></span><?= eL('deny') ?> ...</a>
+			<a class="button" onclick="showhidestuff('denyform<?php echo Filters::noXSS($req['request_id']); ?>');return false;"><span class="fas fa-square-xmark"></span> <?= eL('deny') ?> ...</a>
 			<div id="denyform<?php echo Filters::noXSS($req['request_id']); ?>" class="denyform">
 			<?php echo tpl_form(Filters::noXSS(createUrl('pm', 'pendingreq', $proj->id))); ?>
 				<div>
