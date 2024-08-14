@@ -4,7 +4,7 @@
 <table id="mysearchestable">
 <tbody>
 <?php foreach ($user->searches as $search): ?>
-<tr id="rs<?php echo Filters::noXSS($search['id']); ?>" <?php if($search == end($user->searches)): ?> class="last"<?php endif; ?>>
+<tr id="rs<?php echo Filters::noXSS($search['id']); ?>">
 	<td>
 		<a href="<?php echo Filters::noXSS($baseurl); ?>?do=index&amp;<?php echo http_build_query(unserialize($search['search_string']), '', '&amp;'); ?>"><?php echo Filters::noXSS($search['name']); ?></a>
 	</td>

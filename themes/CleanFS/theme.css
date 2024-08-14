@@ -379,8 +379,8 @@ div#mysearches table#mysearchestable a {color: #3c4041;font-weight: normal;}
 div#mysearches table#mysearchestable a:hover {background: none; text-decoration: underline;}
 div#mysearches .searches_delete {width: .1%; padding: 4px 5px;}
 div#mysearches td:first-child a {padding: 0 0 0 0.2em;font-weight: bold;}
-div#mysearches table tr {border-bottom: dotted 1px gray;text-align: left;padding: 0.1em 0;}
-div#mysearches table tr.last {border: 0;}
+div#mysearches table tr {text-align: left;padding: 0.1em 0;}
+div#mysearches table tr + tr {border-top: dotted 1px #ccc;}
 div#mysearches td {vertical-align: middle;}
 #pmcontrol div {
   vertical-align:middle;
