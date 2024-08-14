@@ -2,15 +2,15 @@
 <table class="attachments">
 <thead>
 <tr>
-	<th><?php echo Filters::noXSS(L('file')); ?></th>
-	<th><?php echo Filters::noXSS(L('size')); ?></th>
-	<th><?php echo Filters::noXSS(L('delete')); ?></th>
+	<th class="wide"><?php echo Filters::noXSS(L('file')); ?></th>
+	<th class="narrow"><?php echo Filters::noXSS(L('size')); ?></th>
+	<th class="narrow"><?php echo Filters::noXSS(L('delete')); ?></th>
 </tr>
 </thead>
 <tbody>
 <?php foreach ($attachments as $attachment): ?>
 <tr>
-	<td>
+	<td class="wide">
 	<?php if (file_exists(BASEDIR . '/attachments/' . $attachment['file_name'])): ?>
 		<a href="<?php echo Filters::noXSS($_SERVER['SCRIPT_NAME']); ?>?getfile=<?php echo Filters::noXSS($attachment['attachment_id']); ?>" title="<?php echo Filters::noXSS($attachment['file_type']); ?>">
 	<?php else: ?>
@@ -35,7 +35,7 @@
 		</del>
 	<?php endif; ?>
 	</td>
-	<td>
+	<td class="narrow ta-e">
 	<?php if ($attachment['file_size'] < 1000000): ?>
 		<?php echo Filters::noXSS(round($attachment['file_size']/1024,1)); ?> <?php echo Filters::noXSS(L('KiB')); ?>
 
@@ -44,7 +44,7 @@
 
 	<?php endif; ?>
 	</td>
-	<td>
+	<td class="narrow ta-c">
 		<input type="checkbox" <?php echo tpl_disableif(!$user->perms('delete_attachments')); ?> name="delete_att[]" value="<?php echo Filters::noXSS($attachment['attachment_id']); ?>" />
 	</td>
 </tr>
