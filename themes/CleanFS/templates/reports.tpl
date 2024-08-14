@@ -104,70 +104,76 @@ $event_chunks = array_chunk($events, ceil(count($events) / 3), true);
 		<?php echo pagenums($pagenum, $perpage, $historycount, 'reports', $proj->id); ?>
 	</div>
 
-	<table id="eventlist_table">
+	<table id="eventlist">
 	<thead>
 	<tr>
-		<th>
+		<th class="event">
 			<a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'type' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'type') + $_GET)); ?>">
 				<?php echo Filters::noXSS(L('event')); ?>
 			</a>
 		</th>
-		<th>
+		<th class="user">
 			<a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'user' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'user') + $_GET)); ?>">
 				<?php echo Filters::noXSS(L('user')); ?>
 			</a>
 		</th>
-		<th>
+		<th class="date">
 			<a href="<?php echo Filters::noXSS(CreateURL('reports', $proj->id, null, array('sort' => (Req::val('order') == 'date' && $sort == 'DESC') ? 'asc' : 'desc', 'order' => 'date') + $_GET)); ?>">
 				<?php echo Filters::noXSS(L('eventdate')); ?>
 			</a>
 		</th>
-		<th><?php echo Filters::noXSS(L('summary')); ?></th>
+		<th class="summary"><?php echo Filters::noXSS(L('summary')); ?></th>
 	</tr>
 	</thead>
 	<tbody>
 <?php foreach ($histories as $history): ?>
 	<?php if (isset($events[$history['event_type']])): ?>
-	<tr class="severity1"><?php /* just for different colors */ ?>
-		<td>
-			<span class="fas fa-<?php echo (($history['event_type'] == 30 || $history['event_type'] == 31) ? 'user' : 'clipboard-list'); ?> fa-lg"></span><?php echo Filters::noXSS($events[$history['event_type']]); ?>
+	<tr class="taskevent event_type_<?= $history['event_type'] ?>">
+		<td class="eventlist_event">
+			<span class="fas fa-clipboard-list fa-lg"></span><?php echo Filters::noXSS($events[$history['event_type']]); ?>
 		</td>
+
 	<?php else: ?>
-	<tr class="severity2">
-		<td>
-			<span class="fas fa-<?php echo (($history['event_type'] == 30 || $history['event_type'] == 31) ? 'user' : 'clipboard-list'); ?> fa-lg"></span><?php echo Filters::noXSS($user_events[$history['event_type']]); ?>
+
+	<tr class="userevent event_type_<?= $history['event_type'] ?>">
+		<td class="eventlist_event">
+			<span class="fas fa-user fa-lg"></span><?php echo Filters::noXSS($user_events[$history['event_type']]); ?>
 		</td>
 	<?php endif; ?>
-		<td><?php echo tpl_userlink($history['user_id']); ?></td>
-		<td><?php echo Filters::noXSS(formatDate($history['event_date'], true)); ?></td>
+
+
+
+
+		<td class="eventlist_user"><?php echo tpl_userlink($history['user_id']); ?></td>
+		<td class="eventlist_date"><?php echo Filters::noXSS(formatDate($history['event_date'], true)); ?></td>
 		<?php if ($history['event_type'] == 30 ||
 					$history['event_type'] == 31):
 				$user_data = unserialize($history['new_value']); ?>
-		<td>
-			<a href="javascript:showhidestuff('h<?php echo Filters::noXSS($history['history_id']); ?>')"><?php echo Filters::noXSS(L('detailedinfo')); ?></a>
+		<td class="eventlist_summary">
+			<a href="javascript:showhidestuff('h<?php echo Filters::noXSS($history['history_id']); ?>')"><?php echo Filters::noXSS(L('detailedinfo')); ?> ...</a>
 			<div class="hide popup" id="h<?php echo Filters::noXSS($history['history_id']); ?>">
-				<table>
-					<tr>
-					<th><?php echo Filters::noXSS(L('username')); ?></th>
-					<td><?php echo Filters::noXSS($user_data['user_name']); ?></td>
-					</tr>
-					<tr>
-					<th><?php echo Filters::noXSS(L('realname')); ?></th>
-					<td><?php echo Filters::noXSS($user_data['real_name']); ?></td>
-					</tr>
-					<tr>
-					<th><?php echo Filters::noXSS(L('email')); ?></th>
-					<td><?php echo Filters::noXSS($user_data['email_address']); ?></td>
-					</tr>
-					<tr>
-					<th><?php echo Filters::noXSS(L('jabber')); ?></th>
-					<td><?php echo Filters::noXSS($user_data['jabber_id']); ?></td>
-					</tr>
-				</table>
+				<ul>
+					<li>
+					<strong><?php echo Filters::noXSS(L('username')); ?></strong>:
+					<span><?php echo Filters::noXSS($user_data['user_name']); ?></span>
+					</li>
+					<li>
+					<strong><?php echo Filters::noXSS(L('realname')); ?></strong>
+					<span><?php echo Filters::noXSS($user_data['real_name']); ?></span>
+					</li>
+					<li>
+					<strong><?php echo Filters::noXSS(L('email')); ?></strong>
+					<span><?php echo Filters::noXSS($user_data['email_address']); ?></span>
+					</li>
+					<li>
+					<strong><?php echo Filters::noXSS(L('jabber')); ?></strong>
+					<span><?php echo Filters::noXSS($user_data['jabber_id']); ?></span>
+					</li>
+				</ul>
 			</div>
 		</td>
 	<?php else: ?>
-		<td><?php echo tpl_tasklink($history); ?></td>
+		<td class="eventlist_summary"><?php echo tpl_tasklink($history); ?></td>
 	<?php endif; ?>
 	</tr>
 <?php endforeach; ?>

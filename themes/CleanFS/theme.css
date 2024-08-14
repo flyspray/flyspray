@@ -895,6 +895,46 @@ table.listtable.listtable_category tr > :first-child { white-space:nowrap; displ
 table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 /* end itemlist table columns */
 
+/* begin eventlist table columns */
+#eventlist {
+	width: 100%;
+	max-width: 800px;
+}
+#eventlist th, #eventlist td { padding: 4px 5px; }
+#eventlist > tbody > tr > td.eventlist_event { width: .1%; white-space: nowrap; }
+#eventlist > tbody > tr > td.eventlist_user { width: 20%; white-space: nowrap; }
+#eventlist > tbody > tr > td.eventlist_date { width: .1%; white-space: nowrap; }
+#eventlist > tbody > tr > td.eventlist_summary { }
+#eventlist > tbody > tr.taskevent {  }
+#eventlist > tbody > tr.userevent {  }
+#eventlist > tbody > tr.taskevent > td:first-child > span:first-child { color: #963; }
+#eventlist > tbody > tr.userevent > td:first-child > span:first-child { color: #369; }
+/*
+ * Event types can be targeted in #eventlist via tr.event_type_N
+ * (event type ID), example: tr.event_type_1 is task opened.
+ *
+ * Combine with tr.taskevent and tr.userevent for narrower targeting.
+ */
+#eventlist td > .fas,
+#eventlist td > .fa-solid,
+#eventlist td > .far,
+#eventlist td > .fa-regular,
+#eventlist td > .fa-brand {
+	margin-right: .35em;
+}
+#eventlist ul, #eventlist ul > li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#eventlist ul {
+	margin: .5em;
+}
+#eventlist ul > li {
+	white-space: nowrap;
+}
+/* end eventlist table columns */
+
 #taskeventhistory, table.taskeventhistorydetails { width: 100%;	max-width: 800px; }
 #taskeventhistory th { white-space: nowrap; padding: 4px 5px; }
 #taskeventhistory td.taskevent_date { white-space: nowrap; width: .1%; }
