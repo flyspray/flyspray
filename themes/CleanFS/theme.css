@@ -959,6 +959,17 @@ table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 }
 /* end eventlist table columns */
 
+#myvotes { width: 100%; min-width: 300px; }
+#myvotes th { white-space: nowrap; }
+#myvotes td:first-child { min-width: 280px; }
+#myvotes td:last-child { width: .1%; text-align: center; padding: 4px 5px;}
+
+#myreminders { width: 100%; min-width: 300px; }
+#myreminders th { white-space: nowrap; }
+#myreminders td:first-child { min-width: 280px; }
+#myreminders td:nth-child(2) { text-align: right; }
+#myreminders td:not(:first-child) { white-space: nowrap; width: .1%; }
+
 #taskreminders {
 	width: 100%;
 	max-width: 800px;

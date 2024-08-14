@@ -1,7 +1,7 @@
 <div class="box">
-	<h2><?= $user->infos['user_name'] ?> (<?php echo $user->infos['real_name']; ?>)</h2>
+	<h2><?= $theuser->infos['user_name'] ?> (<?php echo $theuser->infos['real_name']; ?>)</h2>
 
-	<p>Last login: <?php echo formatDate($user->infos['last_login'], $user->infos['dateformat_extended']); ?></p>
+	<p>Last login: <?php echo formatDate($theuser->infos['last_login'], $theuser->infos['dateformat_extended']); ?></p>
 </div>
 
 <ul id="submenu">
@@ -24,16 +24,17 @@
 			<table id="myvotes">
 			<thead>
 			<tr>
-				<th><?= eL('project') ?></th>
 				<th><?= eL('task') ?></th>
-				<th><?= eL('removevote') ?></th>
+				<th></th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($votes as $vote): ?>
 			<tr<?php echo $vote['is_closed'] ? ' class="closed"':''; ?>>
-				<td><?= Filters::noXSS($vote['project_title']) ?></td>
-				<td class="task_summary"><?= tpl_tasklink($vote) ?></td>
+				<td class="task_summary">
+					<div class="otherprojtitle"><?php echo $vote['project_title'] ?></div>
+					<?= tpl_tasklink($vote) ?>
+				</td>
 				<td>
 					<?php echo tpl_form(Filters::noXSS(createURL('myprofile', $vote['task_id']))); ?>
 					<input type="hidden" name="action" value="removevote" />
@@ -57,7 +58,6 @@
 			<table id="myreminders">
 			<thead>
 			<tr>
-				<th><?= eL('project') ?></th>
 				<th><?= eL('task') ?></th>
 				<th><?= eL('remindinterval') ?></th>
 				<th><?= eL('last_sent') ?></th>
@@ -66,8 +66,10 @@
 			<tbody>
 <?php foreach($myreminders as $reminder): ?>
 			<tr<?php echo $reminder['is_closed'] ? ' class="closed"':''; ?>>
-				<td><?= Filters::noXSS($reminder['project_title']) ?></td>
-				<td class="task_summary"><?= tpl_tasklink($reminder) ?></td>
+				<td class="task_summary">
+					<div class="otherprojtitle"><?= Filters::noXSS($reminder['project_title']) ?></div>
+					<?= tpl_tasklink($reminder) ?>
+				</td>
 				<td><?= ($reminder['how_often']/3600) ?>h</td>
 				<td><?= $reminder['last_sent'] ?></td>
 			</tr>
