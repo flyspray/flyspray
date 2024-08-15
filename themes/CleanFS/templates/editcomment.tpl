@@ -1,6 +1,8 @@
 <div class="box">
 	<div class="comment_container">
+<?php if($fs->prefs['enable_avatars'] == 1): ?>
 		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?></div>
+<?php endif; ?>
 		<div class="comment">
 			<div class="comment_header">
 				<div class="comment_header_actions">
