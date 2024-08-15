@@ -266,6 +266,17 @@ function quick_edit(elem, id)
 					target.getElementsByTagName('span')[0].innerHTML = text;
 					target.getElementsByClassName('progress_bar')[0].style.width = text;
 				} else {
+					if (id == 'severity') {
+						target_classes = $w(target.className);
+
+						for (tc of target_classes) {
+							if (tc.match(/^severity\d+$/)) {
+								target.removeClassName(tc);
+								target.addClassName('severity' + value);
+								break;
+							}
+						}
+					}
 					target.innerHTML = text + ' <span class="fas fa-check"></span>';
 				}
 				//target.className='fas fa-check';
@@ -459,16 +470,16 @@ function quick_edit(elem, id)
 	<?php if (in_array('severity', $fields)): ?>
 	<li>
 		<span class="label"><?= eL('severity') ?></span>
-		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value"><?php echo Filters::noXSS($task_details['severity_name']); ?></span>
+		<span <?php if ($user->can_edit_task($task_details)): ?>onclick="show_hide(this, true)"<?php endif;?> class="value severity<?= $task_details['task_severity'] ?>"><?php echo Filters::noXSS($task_details['severity_name']); ?></span>
 
 		<?php if ($user->can_edit_task($task_details)): ?>
 		<div class="editvalue">
 			<div>
-			<select id="severity" name="task_severity">
-				<?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
-			</select>
-			<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
-			<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
+				<select id="severity" name="task_severity">
+					<?php echo tpl_options($fs->severities, Req::val('task_severity', $task_details['task_severity'])); ?>
+				</select>
+				<a onclick="quick_edit(this.parentNode.parentNode, 'severity')" href="javascript:void(0)" class="button"><?= eL('confirmedit') ?></a>
+				<a href="javascript:void(0)" onclick="show_hide(this.parentNode.parentNode, false)" class="button"><?= eL('canceledit') ?></a>
 			</div>
 		</div>
 		<?php endif; ?>
