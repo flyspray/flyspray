@@ -1036,6 +1036,7 @@ table.listtable.listtable_category .depthmark{ letter-spacing: .2em; }
 }
 /* end eventlist table columns */
 
+/* begin miscellaneous tables */
 #myvotes { width: 100%; min-width: 300px; }
 #myvotes th { white-space: nowrap; }
 #myvotes td:first-child { min-width: 280px; }
@@ -1084,6 +1085,8 @@ nowrap; width: 20%; }
 #taskeventhistory td.taskevent_event > div.box:empty { display: none; }
 table.taskeventhistorydetails { margin-bottom: 0; }
 table.taskeventhistorydetails th, table.taskeventhistorydetails td { width: 50%; padding: 4px 5px; }
+/* end miscellaneous tables */
+
 /* table utilities */
 th.divider, td.divider {
 	border-right: 1px solid #e1e1e1 !important;
@@ -2085,7 +2088,6 @@ overflow-y: scroll;
 /* --------------------------- FORMS -----------------------*/
 
 .bulkedituser td.inactive{color:#888;}
-.account_header {background-color: #ddd;}
 .account_enabled {background-color: #efd;}
 .account_enabled:nth-child(2n) {background-color: #dfb;}
 .account_enabled:hover, .account_enabled:nth-child(2n):hover {background-color: #af8;}
