@@ -189,3 +189,7 @@ h1.error {
   margin:0;
   background-color: #F1F3F5;
 }
+
+textarea[name=configcode] {
+  width: 100%;
+}
