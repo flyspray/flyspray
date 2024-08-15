@@ -3,6 +3,7 @@ Event.observe(window,'load',searchInit);
 
 function tasklistInit() {
   Caret.init();
+  colToggleInit();
 }
 
 function searchInit() {
@@ -32,6 +33,50 @@ function searchInit() {
        }
     });
   }
+}
+
+// initialize toggle for column display
+function colToggleInit() {
+	$$('input[type=checkbox][id^=tasklist_colshow_]').invoke('observe', 'change', function () {
+		var me = this;
+		var col = me.id.split('_').pop();
+
+		$$('#tasklist_table th.' + col + ', #tasklist_table td.task_' + col).invoke('setStyle', {display: (me.checked ? 'table-cell' : 'none')});
+	});
+
+	$('tasklist_colshow_all').observe('click', function (e) {
+		var me = this;
+		var icon = me.firstDescendant();
+		var on =icon.hasClassName('fa-' + me.dataset.onIcon);
+
+		if (on) {
+			me.childElements()[1].textContent = me.dataset.offText;
+			icon.classList.replace('fa-' + me.dataset.onIcon, 'fa-' + me.dataset.offIcon);
+		} else {
+			me.childElements()[1].textContent = me.dataset.onText;
+			icon.classList.replace('fa-' + me.dataset.offIcon, 'fa-' + me.dataset.onIcon);
+		}
+
+		me.parentElement.select('input[type=checkbox]').each(function (el) {
+			el.checked = on;
+			el.dispatchEvent(new Event('change', {bubbles: true}));
+		});
+	});
+
+	// Set up legend as toggler
+	$('tasklist_cols').firstDescendant().observe('click', function (e) {
+		var me = this;
+		var w = $('coldisplay');
+		var i = me.firstDescendant();
+
+		if (w.visible()) {
+			w.hide();
+			i.classList.replace('fa-caret-down', 'fa-caret-up');
+		} else {
+			w.show();
+			i.classList.replace('fa-caret-up', 'fa-caret-down');
+		}
+	});
 }
 
 // convenience for users with enabled javascript in browser

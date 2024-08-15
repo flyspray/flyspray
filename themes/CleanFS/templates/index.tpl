@@ -459,6 +459,23 @@ foreach ($tasks as $task): ?>
 <?php endforeach; ?>
 </tbody>
 </table>
+
+<fieldset id="tasklist_cols">
+	<legend><?= eL('visiblecolumns'); ?> <span class="fas fa-caret-down fa-lg"></span></legend>
+
+	<div id="coldisplay">
+		<a class="button" id="tasklist_colshow_all" data-on-text="<?= el('showall') ?>" data-off-text="<?= eL('hideall') ?>" data-on-icon="eye" data-off-icon="eye-slash"> <span class="fas fa-eye-slash fa-lg"></span><span><?= eL('hideall') ?></span></a>
+<?php
+foreach ($visible as $vc) {
+	if ($vc != 'summary') {
+?>
+		<label for="tasklist_colshow_<?= $vc; ?>" class="button"><input type="checkbox" id="tasklist_colshow_<?= $vc; ?>" checked="checked"> <?= eL($vc); ?></label>
+<?php
+	}
+}
+?>
+	</div>
+</fieldset>
 <?php if ($total): ?>
 	<span class="taskrange"><?php echo sprintf(L('taskrange'), $offset + 1, ($offset + $perpage > $total ? $total : $offset + $perpage), $total); ?></span>
 	<?php echo pagenums($pagenum, $perpage, $total); ?>

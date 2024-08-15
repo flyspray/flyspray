@@ -2028,6 +2028,25 @@ div.perms .perm_item.perm-no > .perm_icon { color: #999; }
 .perm_info > .perm_note > span { font-weight: bold; color: #060; font-style: normal; }
 /* end new perms layout */
 
+/* begin index task column toggles */
+#coldisplay {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+#coldisplay > label {
+	white-space: nowrap;
+}
+#coldisplay > label > input[type=checkbox] {
+	margin: 0;
+}
+#coldisplay > a > span.fas {
+	margin-right: .35em;
+}
+#tasklist_cols > legend { cursor: pointer; }
+/* end index task column toggles */
+
 .bad{color:#900;}
 .good{color:#090;}
 
