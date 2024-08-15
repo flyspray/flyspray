@@ -752,43 +752,32 @@ function quick_edit(elem, id)
 <?php if(count($deps) > 0): ?>
 	<h3><?php echo (count($deps)==1) ? eL('taskdependsontask') : eL('taskdependsontasks'); ?></h3>
 
-	<table id="dependency_table" class="table" width="100%">
+	<table id="dependency_table" class="tasklist">
 	<thead>
 	<tr>
-<?php /*
-		<th><?= eL('id') ?></th>
-		<th><?= eL('project') ?></th>
-*/ ?>
-		<th><?= eL('summary') ?></th>
-		<th><?= eL('priority') ?></th>
-		<th><?= eL('severity') ?></th>
-		<th><?= eL('assignedto') ?></th>
-		<th><?= eL('progress') ?></th>
-		<th></th>
+		<th class="summary"><?= eL('summary') ?></th>
+		<th class="priority"><?= eL('priority') ?></th>
+		<th class="severity"><?= eL('severity') ?></th>
+		<th class="assignedto"><?= eL('assignedto') ?></th>
+		<th class="progress"><?= eL('progress') ?></th>
+		<th class="actions"></th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php foreach ($deps as $dependency): ?>
 	<tr class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>">
-<?php /*
-	<td><?php echo $dependency['task_id'] ?></td>
-	<td><?php echo $dependency['project_title'] ?></td>
-*/ ?>
-	<td class="task_summary">
+		<td class="task_summary">
 		<?php if ($task_details['project_id'] != $dependency['project_id']) : ?>
 		<div class="otherprojtitle"><?php echo $dependency['project_title'] ?></div>
 		<?php endif; ?>
 		<?php echo tpl_tasklink($dependency['task_id']); ?>
-	</td>
-	<td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
-	<td class="task_severity"><?php echo $fs->severities[$dependency['task_severity']] ?></td>
-	<td><?php
+		</td>
+		<td class="task_priority"><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
+		<td class="task_severity"><?php echo $fs->severities[$dependency['task_severity']] ?></td>
+		<td class="task_assignedto"><?php
 		$assignedcount=count($dependency['assigned_to']);
 		if ($assignedcount> 0) {
 			for ($i=0; $i< $assignedcount; $i++) {
-				if ($i>0) {
-					echo ", ";
-				}
 				echo $dependency['assigned_to'][$i];
 			}
 		}
@@ -796,20 +785,20 @@ function quick_edit(elem, id)
 			echo eL('noone');
 		}
 	?></td>
-	<td class="task_progress">
-		<div class="progress_bar_container">
-			<span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
-			<div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
-		</div>
-	</td>
-	<td>
-		<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
-		<input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
-		<input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-		<input type="hidden" name="action" value="removedep" />
-		<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
-		</form>
-	</td>
+		<td class="task_progress">
+			<div class="progress_bar_container">
+				<span><?php echo Filters::noXSS($dependency['percent_complete']); ?>%</span>
+				<div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
+			</div>
+		</td>
+		<td class="task_actions">
+			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+			<input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
+			<input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
+			<input type="hidden" name="action" value="removedep" />
+			<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
+			</form>
+		</td>
 	</tr>
 	<?php endforeach; ?>
 	</tbody>
@@ -820,43 +809,32 @@ function quick_edit(elem, id)
 <?php if(count($blocks) > 0): ?>
 	<h3><?php echo (count($blocks)==1) ? eL('taskblock') : eL('taskblocks'); ?></h3>
 
-	<table id="blocking_table" class="table" width="100%">
+	<table id="blocking_table" class="tasklist">
 	<thead>
 	<tr>
-<?php /*
-		<th><?= eL('id') ?></th>
-		<th><?= eL('project') ?></th>
-*/ ?>
-		<th><?= eL('summary') ?></th>
-		<th><?= eL('priority') ?></th>
-		<th><?= eL('severity') ?></th>
-		<th><?= eL('assignedto') ?></th>
-		<th><?= eL('progress') ?></th>
-		<th></th>
+		<th class="summary"><?= eL('summary') ?></th>
+		<th class="priority"><?= eL('priority') ?></th>
+		<th class="severity"><?= eL('severity') ?></th>
+		<th class="assignedto"><?= eL('assignedto') ?></th>
+		<th class="progress"><?= eL('progress') ?></th>
+		<th class="actions"></th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php foreach ($blocks as $dependency): ?>
 	<tr class="severity<?php echo Filters::noXSS($dependency['task_severity']); ?>">
-<?php /*
-		<td><?php echo $dependency['task_id'] ?></td>
-		<td><?php echo $dependency['project_title'] ?></td>
-*/ ?>
 		<td class="task_summary">
 			<?php if ($task_details['project_id'] != $dependency['project_id']) : ?>
 			<div class="otherprojtitle"><?php echo $dependency['project_title'] ?></div>
 			<?php endif; ?>
 			<?php echo tpl_tasklink($dependency['task_id']); ?>
 		</td>
-		<td><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
+		<td class="task_priority"><?php echo $fs->priorities[$dependency['task_priority']] ?></td>
 		<td class="task_severity"><?php echo $fs->severities[$dependency['task_severity']] ?></td>
-		<td><?php
+		<td class="task_assignedto"><?php
 		$depassignedcount = count($dependency['assigned_to']);
 		if ($depassignedcount > 0) {
 			for ($i = 0; $i < $depassignedcount; $i++) {
-				if ($i>0) {
-					echo ", ";
-				}
 				echo $dependency['assigned_to'][$i];
 			}
 		} else {
@@ -869,7 +847,7 @@ function quick_edit(elem, id)
 			<div class="progress_bar" style="width:<?php echo Filters::noXSS($dependency['percent_complete']); ?>%"></div>
 			</div>
 		</td>
-		<td>
+		<td class="task_actions">
 		<?php echo tpl_form(Filters::noXSS(createURL('details', $dependency['task_id']))); ?>
 			<input type="hidden" name="depend_id" value="<?php echo Filters::noXSS($dependency['depend_id']); ?>" />
 			<input type="hidden" name="return_task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
@@ -877,7 +855,7 @@ function quick_edit(elem, id)
 			<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
 		</form>
 		</td>
-		</tr>
+	</tr>
 	<?php endforeach; ?>
 	</tbody>
 	</table>
@@ -888,46 +866,33 @@ function quick_edit(elem, id)
 <?php if(!count($subtasks)==0): ?>
 	<h3><?php echo (count($subtasks)==1) ? eL('taskhassubtask') : eL('taskhassubtasks'); ?></h3>
 
-	<table id="subtask_table" class="table" width="100%">
+	<table id="subtask_table" class="tasklist">
 	<thead>
 	<tr>
-<?php /*
-
-		<th><?= eL('id') ?></th>
-		<th><?= eL('project') ?></th>
-*/ ?>
-		<th><?= eL('summary') ?></th>
-		<th><?= eL('priority') ?></th>
-		<th><?= eL('severity') ?></th>
-		<th><?= eL('assignedto') ?></th>
-		<th><?= eL('progress') ?></th>
-		<th></th>
+		<th class="summary"><?= eL('summary') ?></th>
+		<th class="priority"><?= eL('priority') ?></th>
+		<th class="severity"><?= eL('severity') ?></th>
+		<th class="assignedto"><?= eL('assignedto') ?></th>
+		<th class="progress"><?= eL('progress') ?></th>
+		<th class="actions"></th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php foreach ($subtasks as $subtaskOrgin): ?>
 		<?php $subtask = $fs->getTaskDetails($subtaskOrgin['task_id']); ?>
-		<tr id="task<?php echo $subtask['task_id']; ?>" class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>">
-<?php /*
-
-		<td><?php echo $subtask['task_id'] ?></td>
-		<td><?php echo $subtask['project_title'] ?></td>
-*/ ?>
+	<tr id="task<?php echo $subtask['task_id']; ?>" class="severity<?php echo Filters::noXSS($subtask['task_severity']); ?>">
 		<td class="task_summary">
 			<?php if ($task_details['project_id'] != $subtask['project_id']) : ?>
 			<div class="otherprojtitle"><?php echo $subtask['project_title'] ?></div>
 			<?php endif; ?>
 			<?php echo tpl_tasklink($subtask['task_id']); ?>
 		</td>
-		<td><?php echo $fs->priorities[$subtask['task_priority']] ?></td>
+		<td class="task_priority"><?php echo $fs->priorities[$subtask['task_priority']] ?></td>
 		<td class="task_severity"><?php echo $fs->severities[$subtask['task_severity']] ?></td>
-		<td><?php
+		<td class="task_assignedto"><?php
 			$subassignedcount = count($subtaskOrgin['assigned_to']);
 			if ($subassignedcount > 0) {
 				for ($i=0; $i < $subassignedcount; $i++) {
-					if ($i>0) {
-						echo ", ";
-					}
 					echo $subtaskOrgin['assigned_to'][$i];
 				}
 			}
@@ -941,13 +906,13 @@ function quick_edit(elem, id)
 				<div class="progress_bar" style="width:<?php echo Filters::noXSS($subtask['percent_complete']); ?>%"></div>
 			</div>
 		</td>
-		<td><?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
+		<td class="task_actions"><?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id']))); ?>
 			<input type="hidden" name="subtaskid" value="<?php echo Filters::noXSS($subtask['task_id']); ?>" />
 			<input type="hidden" name="action" value="removesubtask" />
 			<button type="submit" title="<?= eL('remove') ?>" class="fas fa-link-slash"></button>
 			</form>
 		</td>
-		</tr>
+	</tr>
 	<?php endforeach; ?>
 	</tbody>
 	</table>

@@ -551,18 +551,6 @@ a.negative:active {background-color: #d12f19;border: 1px solid #d12f19;color: #f
   border: solid 1px #e1e1e1;
   border-radius: 3px;
 }
-#tasklist_table {width: 100%;}
-#eventlist_table {
-	width: 100%;
-	max-width: 800px;
-}
-#eventlist_table td > .fas,
-#eventlist_table td > .fa-solid,
-#eventlist_table td > .far,
-#eventlist_table td > .fa-regular,
-#eventlist_table td > .fa-brand {
-	margin-right: .35em;
-}
 div.pagination {
 	margin: 1em 0;
 	display: flex;
@@ -840,20 +828,117 @@ background: #fff;
 }
 td.task_progress .progress_bar_container {width: 100%;box-sizing:border-box;}
 a {text-decoration: none;}
+table.tasklist {width: 100%;background: #fff;}
 #tasklist_table th img {position: relative;top: 2px;}
-#tasklist_table .caret {width:10px; padding-left:2px; padding-right:0px;}
+table.tasklist tbody td {padding: 4px 5px;}
+table.tasklist .caret {min-width:10px; max-width: 10px; width: 10px; padding-left:2px; padding-right:0px;}
 /* #tasklist_table tr.current_row td.caret::after {
 	font-family: "Font Awesome 6 Free";
 	content: '\f054'; *//* fa-chevron-right *//*
 } */
-#tasklist_table .ttcolumn {width: 10px;text-align: center;}
 #tasklist_table .ttcolumn input {margin: 0;}
 /* #tasklist_table .ttcolumn a::after , a.toggle_selected::after  {
         font-family: "Font Awesome 6 Free";
         content: '\f0ec'; *//* fa-exchange *//*
 }*/
 
-#tasklist_table thead th {line-height:1;}
+/* begin task table columns */
+table.tasklist { width: 100%; }
+table.tasklist .ttcolumn { width: .1%;padding: 4px 5px;text-align: center; }
+table.tasklist .ttcolumn input { margin: 0; }
+table.tasklist thead th { white-space: nowrap; }
+#tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.4;vertical-align:top;}
+table.tasklist > tbody > tr > td.task_id { text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_project, table.tasklist > tbody > tr > td.task_categoryproject {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 12em;
+	min-width: .1%;
+}
+table.tasklist > tbody > tr > td.task_parent { text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_tasktype {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 10em;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_category {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 10em;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_severity {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 5em;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_priority {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 5em;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_summary {  }
+table.tasklist > tbody > tr > td.task_dateopened { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_status {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 10em;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_openedby { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_private {  }
+table.tasklist > tbody > tr > td.task_assignedto { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_lastedit { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_editedby { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_reportedin {  }
+table.tasklist > tbody > tr > td.task_dueversion {  }
+table.tasklist > tbody > tr > td.task_duedate { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_comments { text-align: right; width: .1%; min-width: 1.5em; }
+table.tasklist > tbody > tr > td.task_attachments { text-align: right; width: .1%; min-width: 1.5em; }
+table.tasklist > tbody > tr > td.task_progress { min-width: 4em; }
+table.tasklist > tbody > tr > td.task_dateclosed { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_closedby { white-space: nowrap; width: .1%; }
+table.tasklist > tbody > tr > td.task_os {  }
+table.tasklist > tbody > tr > td.task_votes { text-align: right; width: .1%; min-width: 1.5em; }
+table.tasklist > tbody > tr > td.task_estimatedeffort { white-space: nowrap; text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_effort { white-space: nowrap; text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_projectid { text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_categoryprojectid { text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_categoryid { text-align: right; width: .1%; }
+table.tasklist > tbody > tr > td.task_closed { width: .1%; }
+table.tasklist > tbody > tr > td.task_categoryerror {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 25em;
+	width: .1%;
+}
+
+
+table.tasklist > tbody > tr > td.task_actions {
+	white-space: nowrap;
+	padding: 4px 5px;
+	width: .1%;
+}
+table.tasklist > tbody > tr > td.task_summary > a:first-of-type,
+td.task_summary > a:first-of-type {
+	white-space: nowrap;
+	display: inline-block;
+	text-overflow: ellipsis;
+	overflow: clip;
+	max-width: 20em;
+}
+/* end task table columns */
+
 /* begin user table columns */
 table.userlist thead th { white-space: nowrap; padding: 4px 5px; }
 table.userlist .ttcolumn { width: .1%;padding: 4px 5px;text-align: center; }
@@ -1026,20 +1111,18 @@ th.divider, td.divider {
 	color: #999;
 }
 
-#tasklist_table tbody td {border-top:1px solid transparent;border-bottom:1px solid transparent;line-height:1.2;vertical-align:middle;}
-.task_summary {word-wrap:break-word;word-wrap:anywhere;/* css3, ff65+ */}
 #tasklist_table tbody tr:hover td {border-color:#ddd;}
 #tasklist_table tr.closed, #myvotes tr.closed {background-color:#ddd;}
-tr.severity1 .task_severity {background-color: #fff;}
-tr.severity2 .task_severity {background-color: #fff;}
-tr.severity3 .task_severity {background-color: #f5e7e7;}
-tr.severity4 .task_severity {background-color: #f5dddd;}
-tr.severity5 .task_severity {background-color: #f5d1d1;}
+*:not(tr).severity1, tr.severity1 .task_severity {background-color: #fff;}
+*:not(tr).severity2, tr.severity2 .task_severity {background-color: #fff5f5;}
+*:not(tr).severity3, tr.severity3 .task_severity {background-color: #ffeaea;}
+*:not(tr).severity4, tr.severity4 .task_severity {background-color: #ffe1e1;}
+*:not(tr).severity5, tr.severity5 .task_severity {background-color: #ffd6d6;color: #900;}
 
-
-td.task_openedby > a, td.task_editedby > a,  td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:block;padding:3px;}
+td.task_openedby > a,
+td.task_editedby > a,
+td.task_assignedto > a {white-space:nowrap;position:relative;line-height:1;display:block;padding:3px 0;}
 td.task_openedby > a .fa-user, td.task_editedby > a .fa-user {color:#eee;}
-td.task_assignedto > a {margin-right:2px;}
 /* small names over avatars */
 td.task_openedby > a::after, td.task_editedby > a::after, td.task_assignedto > a::after {
 	background-color: rgba(255, 255, 255, 0);
@@ -2742,6 +2825,17 @@ fieldset { margin-left: 5px;margin-right: 5px;}
 #projectselector select{height:40px;padding-right:4px;max-width:100%;}
 #content {padding:0 5px 5px;min-width:unset;}
 #tasklist {padding:0;}
+#tasklist_table tbody td { padding: 4px 2px; }
+#tasklist_table > tbody > tr > td + td { border-left: 1px solid #e1e1e1; }
+#tasklist_table tr > *:first-child { display: none; }
+/* #tasklist_table tbody tr > *:not(.ttcolumn):not(.task_summary), #tasklist_table thead tr > *:not(.ttcolumn):not(.summary) { display: none; } */
+/* portray severity on summary */
+tr.severity1 .task_summary {background-color: #fff;}
+tr.severity2 .task_summary {background-color: #fff5f5;}
+tr.severity3 .task_summary {background-color: #ffeaea;}
+tr.severity4 .task_summary {background-color: #ffe1e1;}
+tr.severity5 .task_summary {background-color: #ffd6d6;color: #900;}
+
 .pagenums a.distancefar {display:none;}
 .pagenums .distancefargap::after {content:'…';padding-left:0.5em;padding-right:0.5em;}
 div.box, p.box {padding:5px;}

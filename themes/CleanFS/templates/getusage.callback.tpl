@@ -1,15 +1,15 @@
 <table class="tasklist">
 <thead>
 <tr>
-	<th><?= eL('task') ?></th>
-	<th><?= eL('summary') ?></th>
+	<th class="id"><?= eL('task') ?></th>
+	<th class="summary"><?= eL('summary') ?></th>
 </tr>
 </thead>
 <tbody>
 <?php foreach($tasks as $task): ?>
 <tr>
-	<td><?= $task['task_id'] ?></td>
-	<td><?= Filters::noXSS($task['item_summary']) ?></td>
+	<td class="task_id"><?= $task['task_id'] ?></td>
+	<td class="task_summary"><?= Filters::noXSS($task['item_summary']) ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>

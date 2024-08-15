@@ -397,7 +397,7 @@ echo tpl_checkboxlist('percent', $percentages, $selected);
 		document.getElementById("desc_"+id).style.display = "none";
 	}
 </script>
-<table id="tasklist_table">
+<table id="tasklist_table" class="tasklist">
 <colgroup>
 	<col class="caret" />
 	<?php if (!$user->isAnon() && $proj->id !=0 && $total): ?><col class="toggle" /><?php endif; ?>

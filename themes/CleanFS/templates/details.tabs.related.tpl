@@ -2,15 +2,15 @@
 	<div class="relatedwrap">
 		<div class="related">
 			<?php echo tpl_form(Filters::noXSS(createURL('details', $task_details['task_id'])).'#related');?>
-			<table id="tasks_related" class="userlist">
+			<table id="tasks_related" class="tasklist">
 			<thead>
 			<tr>
-				<th>
-					<a class="toggle_selected" href="javascript:ToggleSelected('tasks_related')">
-<?php /* <img title="<?php echo Filters::noXSS(L('toggleselected')); ?>" alt="<?php echo Filters::noXSS(L('toggleselected')); ?>" src="<?php echo Filters::noXSS($this->get_image('kaboodleloop')); ?>" width="16" height="16" /> */ ?>
+				<th class="ttcolumn">
+					<a class="toggle_selected" href="javascript:ToggleSelected('tasks_related')" title="<?php echo Filters::noXSS(L('toggleselected')); ?>">
+						<span class="fas fa-exchange"></span>
 					</a>
 				</th>
-				<th class="text">
+				<th class="summary">
 					<?php echo Filters::noXSS(L('tasksrelated')); ?> (<?php echo Filters::noXSS(count($related)); ?>)
 				</th>
 			</tr>
@@ -21,7 +21,7 @@
 				<td class="ttcolumn">
 					<input type="checkbox" name="related_id[]" <?php echo tpl_disableif(!$user->can_edit_task($task_details)); ?> value="<?php echo Filters::noXSS($row['related_id']); ?>" />
 				</td>
-				<td>
+				<td class="task_summary">
 					<?php echo tpl_tasklink($row); ?>
 				</td>
 			</tr>
@@ -39,10 +39,10 @@
 			</form>
 		</div>
 		<div class="related">
-			<table id="duplicate_tasks" class="userlist">
+			<table id="duplicate_tasks" class="tasklist">
 			<thead>
 			<tr>
-				<th>
+				<th class="summary">
 					<?php echo Filters::noXSS(L('duplicatetasks')); ?> (<?php echo Filters::noXSS(count($duplicates)); ?>)
 				</th>
 			</tr>
@@ -50,7 +50,7 @@
 			<tbody>
 <?php foreach ($duplicates as $row): ?>
 			<tr>
-				<td>
+				<td class="task_summary">
 					<?php echo tpl_tasklink($row); ?>
 				</td>
 			</tr>

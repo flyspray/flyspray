@@ -175,7 +175,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 		$html='<span class="fas fa-comments fa-lg" title="'.$title.'"></span>';
 	}
 	if ($colname == 'votes') {
-		$html='<span class="far fa-star fa-lg" title="'.$title.'"></span>';
+		$html='<span class="far fa-thumbs-up fa-lg" title="'.$title.'"></span>';
 	}
 
     if (Get::val('order') == $colname) {
