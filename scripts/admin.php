@@ -30,16 +30,21 @@ function tpl_userlistheading($colname)
 	if (isset($_GET['order']) && $_GET['order'] === $colname) {
 		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
 			$sort1 = 'asc';
-			$coltitle .=' <span class="fa fa-sort-desc"></span>';
+			$coltitle .=' <span class="fas fa-arrow-down-wide-short"></span>';
 		} else {
 			$sort1 = 'desc';
-			$coltitle .=' <span class="fa fa-sort-asc"></span>';
+			$coltitle .=' <span class="fas fa-arrow-up-short-wide"></span>';
 		}
 	} else {
-		if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
+		if (!isset($_GET['order']) && $colname === 'username') {
+			$coltitle .=' <span class="fas fa-arrow-up-short-wide"></span>';
 			$sort1 = 'desc';
 		} else {
-			$sort1 = 'asc';
+			if (isset($_GET['sort']) && $_GET['sort'] == 'desc') {
+				$sort1 = 'desc';
+			} else {
+				$sort1 = 'asc';
+			}
 		}
 	}
 
@@ -128,6 +133,8 @@ switch ($area) {
 				if (in_array($_GET['order'], $sortings)) {
 					$listopts['order'] = $_GET['order'];
 				}
+			} else {
+				$listopts['order'] = 'username';
 			}
 
 			if (isset($_GET['sort']) && is_string($_GET['sort']) && $_GET['sort'] == 'desc') {
