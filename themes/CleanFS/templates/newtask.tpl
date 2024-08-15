@@ -4,34 +4,36 @@
         $supertask_id = 0;
     }
 ?>
-  <script type="text/javascript">
-	function checkContent()
-	{
-		var instance;
-		for(instance in CKEDITOR.instances){
+<script type="text/javascript">
+function checkContent() {
+	var instance;
+	if(typeof(CKEDITOR) === 'object') {
+		for(instance in CKEDITOR.instances) {
 			CKEDITOR.instances[instance].updateElement();
 		}
-		var summary = document.getElementById("itemsummary").value;
-		if(summary.trim().length == 0){
-			return true;
-		}
-		var detail = document.getElementById("details").value;
-		var project_id = document.getElementsByName('project_id')[0].value;
-
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
-		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
-		if(xmlHttp.status === 200) {
-			if(xmlHttp.responseText > 0) {
-				var res = confirm("There is already a similar task, do you still want to create?");
-				return res;
-			}
-			return true;
-		}
-		return false;
 	}
-  </script>
+
+	var summary = document.getElementById("itemsummary").value;
+	if(summary.trim().length == 0) {
+		return true;
+	}
+	var detail = document.getElementById("details").value;
+	var project_id = document.getElementsByName('project_id')[0].value;
+
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
+	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
+	if(xmlHttp.status === 200) {
+		if(xmlHttp.responseText > 0) {
+			var res = confirm("There is already a similar task, do you still want to create?");
+			return res;
+		}
+		return true;
+	}
+	return false;
+}
+</script>
 <?php echo tpl_form(Filters::noXSS(createUrl('newtask', $proj->id, $supertask_id)), 'newtask', 'post', 'multipart/form-data', 'onsubmit="return checkContent()"'); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <div id="actionbar"><div class="clear"></div></div>
