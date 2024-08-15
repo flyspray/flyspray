@@ -91,7 +91,7 @@ is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
  * developers or advanced users only
  *
  * Beside setting to true/false, the nonboolean values -1, -99, 99 are allowed too.
-* @see https://adodb.org/dokuwiki/doku.php?id=v5:userguide:debug
+ * @see https://adodb.org/dokuwiki/doku.php?id=v5:userguide:debug
  *
  * -1: same as true, but <hr> line separation is suppressed (historical output HTML formatting of ADOdb)
  * 99: with backtrace printed, so means verbose output
