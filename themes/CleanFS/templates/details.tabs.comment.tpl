@@ -2,7 +2,7 @@
 <div id="comments" class="tab active">
 <?php foreach($comments as $comment): ?>
 	<div class="comment_container" id="<?php echo 'comment' . $comment['comment_id']; ?>">
-		<div class="comment_avatar"><?php echo tpl_userlinkavatar($comment['user_id'], $fs->prefs['max_avatar_size'], 'av_comment'); ?></div>
+		<div class="comment_avatar"><?php echo tpl_userlinkavatar($comment['user_id'], 48, 'av_comment'); ?></div>
 		<div class="comment">
 			<div class="comment_header">
 				<div class="comment_header_actions">
@@ -50,7 +50,7 @@
 <?php endforeach; ?>
 <?php if ($user->perms('add_comments') && (!$task_details['is_closed'] || $proj->prefs['comment_closed'])): ?>
 	<div class="comment_container">
-		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?></div>
+		<div class="comment_avatar"><?php echo tpl_userlinkavatar($user->id, 48, 'av_comment'); ?></div>
 		<div class="comment">
 			<div class="comment_header"><?= eL('addcomment') ?></div>
 			<div class="commenttext">

@@ -79,7 +79,7 @@ function ShowHidePassword(id) {
 
         <li>
           <label for="emailNoHTML"><?= eL('emailNoHTML') ?></label>
-        	<?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
+          <?php echo tpl_checkbox('emailNoHTML', $fs->prefs['emailNoHTML'], 'emailNoHTML'); ?>
         </li>
 
         <li>
@@ -116,12 +116,14 @@ function ShowHidePassword(id) {
 
         <li>
           <label for="max_avatar_size"><?= eL('maxavatarsize') ?></label>
-          <input id="max_avatar_size" name="max_avatar_size" type="text" class="text" size="3" maxlength="3" value="<?php echo Filters::noXSS($fs->prefs['max_avatar_size']); ?>" />
+          <select id="max_avatar_size" name="max_avatar_size">
+            <?php echo tpl_avatar_sizes($fs->prefs['max_avatar_size']); ?>
+          </select>
         </li>
 
         <li>
           <label for="hide_emails"><?= eL('hideemails') ?></label>
-	  <?php echo tpl_checkbox('hide_emails', $fs->prefs['hide_emails'], 'hide_emails'); ?>
+          <?php echo tpl_checkbox('hide_emails', $fs->prefs['hide_emails'], 'hide_emails'); ?>
         </li>
 
         <li>

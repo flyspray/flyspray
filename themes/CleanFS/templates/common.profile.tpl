@@ -25,7 +25,7 @@
       <?php if ($fs->prefs['enable_avatars']): ?>
       <li>
         <label for="profileimage"><?= eL('profileimage') ?></label>
-        <?php echo tpl_userlinkavatar($theuser->id, $fs->prefs['max_avatar_size'], 'av_comment'); ?>
+        <?php echo tpl_userlinkavatar($theuser->id, max(240, $fs->prefs['max_avatar_size']), 'av_comment'); ?>
       </li>
       <li>
         <label for="profileimage_input">&nbsp;</label>

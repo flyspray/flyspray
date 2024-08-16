@@ -148,7 +148,7 @@ if (Post::val('upgrade')) {
 
 function execute_upgrade_file($folder, $installed_version)
 {
-    global $db, $page, $conf;
+    global $db, $page, $conf, $uplog;
     // At first the config file
     $upgrade_path = BASEDIR . '/upgrade/' . $folder;
     new ConfUpdater(CONFIG_PATH, $upgrade_path);
@@ -199,6 +199,46 @@ function execute_upgrade_file($folder, $installed_version)
                 $db->query('DELETE FROM {prefs} WHERE pref_name = ?', array($name));
             }
         }
+
+        // Correct what may be wrong
+        // Re-fetch all to be sure
+        $sql = $db->query('SELECT pref_id, pref_name, pref_value FROM {prefs}');
+
+		while ($row = $db->fetchRow($sql)) {
+			$name = $row['pref_name'];
+
+			// only attempt if the pref exists in upgrade_info
+			if (!array_key_exists($name, $upgrade_info['fsprefs'])) {
+				continue;
+			}
+
+			$id = $row['pref_id'];
+			$val = $row['pref_value'];
+
+			$sanity_log = "Checking pref #$id <code>$name</code> = <code>$val</code>: ";
+
+			// Addresses issue #842
+			if ($name == 'max_avatar_size') {
+				// Measures pixels, should be a positive integer
+				$val = (int) $val;
+
+				$valid_val = $page->get_nearest_avatar_size($val);
+
+				if ($valid_val != $val) {
+					// Correct the errant value
+					$db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_id = ?', array($valid_val, $id));
+
+					$sanity_log .= "set to <code>$val</code>";
+				}
+				else {
+					$sanity_log .= "no change.";
+				}
+
+				$uplog[] = $sanity_log;
+			}
+
+			// Add more code blocks as necessary
+		}
     }
 
     $db->query('UPDATE {prefs} SET pref_value = ? WHERE pref_name = ?', array(basename($upgrade_path), 'fs_ver'));
