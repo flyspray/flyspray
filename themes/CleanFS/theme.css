@@ -966,7 +966,7 @@ div.comment_container .comment {
 	width: 700px;
 	border-radius: 3px;
 }
-div.comment_container .comment:before {
+div.comment_container > div.comment_avatar + .comment:before {
 	content: ' ';
 	position: absolute;
 	width: 0;
@@ -976,7 +976,7 @@ div.comment_container .comment:before {
 	border: 8px solid;
 	border-color: transparent #e1e1e1 transparent transparent;
 }
-div.comment_container .comment:after {
+div.comment_container > div.comment_avatar + .comment:after {
 	content: ' ';
 	position: absolute;
 	width: 0;
