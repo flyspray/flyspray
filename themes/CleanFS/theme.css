@@ -299,9 +299,9 @@ th.wide, td.wide {
 	width: calc(100% - 6px) !important;
 }
 /* textarea "txta" */
-.txta-small { height: 7em; background: #fdf; }
-.txta-medium { height: 10em; background: #dff; }
-.txta-large { height: 20em; background: #ffd; }
+.txta-small { height: 7em; }
+.txta-medium { height: 10em; }
+.txta-large { height: 20em; }
 /* ------------------ STYLE -------------------- */
 body {background: #f9f9f9; /* direction:rtl;*/}
 a {color: #336699;}
