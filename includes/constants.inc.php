@@ -87,8 +87,17 @@ define('FS_CACHE_DIR', Flyspray::get_tmp_dir() . DIRECTORY_SEPARATOR . FS_DOMAIN
 
 is_dir(FS_CACHE_DIR) || @mkdir(FS_CACHE_DIR, 0700);
 
-// developers or advanced users only
-//define('DEBUG_SQL',true);
+/** 
+ * developers or advanced users only
+ *
+ * Beside setting to true/false, the nonboolean values -1, -99, 99 are allowed too.
+ * @see https://adodb.org/dokuwiki/doku.php?id=v5:userguide:debug
+ *
+ * -1: same as true, but <hr> line separation is suppressed (historical output HTML formatting of ADOdb)
+ * 99: with backtrace printed, so means verbose output
+ * -99: only when a sql statement failed
+ */
+//define('DEBUG_SQL', true);
 //define('DEBUG_EXCEPTION', true);
 
 # 201508: Currently without usage! Was once used in file fsjabber.php (not in src anymore), but not within class.jabber2.php.

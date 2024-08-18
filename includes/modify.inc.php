@@ -109,9 +109,22 @@ switch ($action = Req::val('action'))
             if ($user->isAnon()) {
                 Flyspray::redirect(createURL('details', $task_id, null, array('task_token' => $token)));
             } else {
-                Flyspray::redirect(createURL('details', $task_id));
+                if (Post::val('addanother') != 1) {
+                    if (array_key_exists('addanothertask', $_SESSION)) {
+                        unset($_SESSION['addanothertask']);
+                    }
+
+                    Flyspray::redirect(createURL('details', $task_id));
+                } else {
+                    $_SESSION['addanothertask'] = 1;
+                    Flyspray::redirect(createURL('newtask', Post::val('project_id')));
+                }
             }
         } else {
+            if (array_key_exists('addanothertask', $_SESSION)) {
+                unset($_SESSION['addanothertask']);
+            }
+
             Flyspray::show_error(L('databasemodfailed'));
             break;
         }
@@ -2489,12 +2502,13 @@ switch ($action = Req::val('action'))
             Flyspray::show_error(L('nopermission'));//TODO: create a better error message
             break;
         }
-        if (!is_array(Post::val('related_id'))) {
+        if (!isset($_POST['related_id']) or !is_array($_POST['related_id'])) {
             Flyspray::show_error(L('formnotcomplete'));
             break;
         }
+        $listremoverelated = array_filter($_POST['related_id'], function($val, $key) { return (is_int($key) && is_numeric($val));}, ARRAY_FILTER_USE_BOTH);
 
-        foreach (Post::val('related_id') as $related) {
+        foreach ($listremoverelated as $related) {
             $sql = $db->query('SELECT this_task, related_task FROM {related} WHERE related_id = ?',
                               array($related));
             $db->query('DELETE FROM {related} WHERE related_id = ? AND (this_task = ? OR related_task = ?)',

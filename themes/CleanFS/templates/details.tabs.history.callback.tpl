@@ -21,7 +21,7 @@
   <tr>
     <td><?php echo Filters::noXSS(formatDate($history['event_date'], false)); ?></td>
     <?php if($fs->prefs['enable_avatars'] == 1) { ?>
-    <td><?php echo tpl_userlinkavatar($history['user_id'], $fs->prefs['max_avatar_size'] / 2, 'left', '0px 5px 0px 0px'); ?> <?php echo tpl_userlink($history['user_id']); ?></td>
+    <td><?php echo tpl_userlinkavatar($history['user_id'], $fs->prefs['max_avatar_size'] / 2); ?> <?php echo tpl_userlink($history['user_id']); ?></td>
     <?php } else { ?>
     <td><?php echo tpl_userlink($history['user_id']); ?></td>
     <?php } ?>

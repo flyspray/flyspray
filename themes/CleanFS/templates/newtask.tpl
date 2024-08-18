@@ -4,34 +4,36 @@
         $supertask_id = 0;
     }
 ?>
-  <script type="text/javascript">
-	function checkContent()
-	{
-		var instance;
-		for(instance in CKEDITOR.instances){
+<script type="text/javascript">
+function checkContent() {
+	var instance;
+	if(typeof(CKEDITOR) === 'object') {
+		for(instance in CKEDITOR.instances) {
 			CKEDITOR.instances[instance].updateElement();
 		}
-		var summary = document.getElementById("itemsummary").value;
-		if(summary.trim().length == 0){
-			return true;
-		}
-		var detail = document.getElementById("details").value;
-    		var project_id = document.getElementsByName('project_id')[0].value;
-
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
-		xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
-		if(xmlHttp.status === 200) {
-			if(xmlHttp.responseText > 0) {
-				var res = confirm("There is already a similar task, do you still want to create?");
-				return res;
-			}
-			return true;
-		}
-		return false;
 	}
-  </script>
+
+	var summary = document.getElementById("itemsummary").value;
+	if(summary.trim().length == 0) {
+		return true;
+	}
+	var detail = document.getElementById("details").value;
+	var project_id = document.getElementsByName('project_id')[0].value;
+
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("POST", "<?php echo Filters::noXSS($baseurl); ?>js/callbacks/searchtask.php", false);
+	xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlHttp.send("summary=" + summary + "&detail=" + detail +"&project_id=" + project_id);
+	if(xmlHttp.status === 200) {
+		if(xmlHttp.responseText > 0) {
+			var res = confirm("There is already a similar task, do you still want to create?");
+			return res;
+		}
+		return true;
+	}
+	return false;
+}
+</script>
 <?php echo tpl_form(Filters::noXSS(createUrl('newtask', $proj->id, $supertask_id)), 'newtask', 'post', 'multipart/form-data', 'onsubmit="return checkContent()"'); ?>
   <input type="hidden" name="supertask_id" value="<?php echo Filters::noXSS($supertask_id); ?>" />
   <div id="actionbar"><div class="clear"></div></div>
@@ -168,14 +170,14 @@
           <?php endif; ?>
 
         <?php if($proj->prefs['use_effort_tracking']) {
-        	if ($user->perms('view_effort')) {
+				if ($user->perms('view_effort')) {
         ?>
-        	<li>
+			<li>
                 <label for="estimatedeffort"><?= eL('estimatedeffort') ?></label>
                 <input id="estimated_effort" name="estimated_effort" class="text" type="text" size="5" maxlength="100" value="0" />
                 <?= eL('hours') ?>
-        	</li>
-        	<?php }
+			</li>
+			<?php }
         } ?>
 
           <?php if ($user->perms('manage_project')): ?>
@@ -234,6 +236,13 @@
           &nbsp;&nbsp;<input class="text" type="checkbox" id="notifyme" name="notifyme"
           value="1" checked="checked" />&nbsp;<label class="inline left" for="notifyme"><?= eL('notifyme') ?></label>
           <?php endif; ?>
+
+          <?php if (!$user->isAnon()): ?>
+          <span style="margin-top: 1em;display: block;">
+          &nbsp;&nbsp;<input class="text" type="checkbox" id="addanother" name="addanother"
+          value="1"<?php echo ($addanothertask == 1 ? ' checked="checked"' : ''); ?> />&nbsp;<label class="inline left" for="addanother"><?= eL('addanother') ?></label>
+          </span>
+          <?php endif; ?>
       </p>
 
         <?php if ($user->perms('create_attachments')): ?>
@@ -274,7 +283,6 @@
 
 <button class="button positive" style="display:block;margin-top:20px" accesskey="s" type="submit"><?= eL('addthistask') ?></button>
       </div>
-
     <div class="clear"></div>
   </div>
 </form>

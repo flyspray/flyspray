@@ -130,9 +130,22 @@ class Database
 			$this->dblink->setCharSet('utf8');
 		}
 
-		// enable debug if constant DEBUG_SQL is defined.
-		!defined('DEBUG_SQL') || $this->dblink->debug = true;
-            
+		// enable debug if constant DEBUG_SQL is defined AND true
+		if (defined('DEBUG_SQL') && DEBUG_SQL) {
+			/**
+   			 * Beside true/false; 3 other non-boolean modes are possible for ADOdb.
+			 * @see https://adodb.org/dokuwiki/doku.php?id=v5:userguide:debug
+			 * -1:like true, suppress line separators
+			 * -99: show only failed statements
+			 * 99: backtrace of every statement
+			 */
+			if (in_array(DEBUG_SQL, [-1, -99, 99])) {
+				$this->dblink->debug = DEBUG_SQL;
+			} else {
+				$this->dblink->debug = true;
+			}
+		}
+
 		if ($dbtype === 'mysql' || $dbtype === 'mysqli') {
 			$dbinfo = $this->dblink->serverInfo();
 			if (isset($dbinfo['version']) && version_compare($dbinfo['version'], '5.0.2', '>=')) {

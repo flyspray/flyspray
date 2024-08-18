@@ -923,6 +923,7 @@ max-width:40em;
 #comments h4 {margin:1em 0 0.5em 0;}
 .userlist th {background-color: #e0e0e0;}
 .userlist tbody tr:nth-child(2n) td {background-color: #f1f1f1;}
+.userlist.history a img {vertical-align:middle;height:20px;}
 #related .related {display:inline-block;vertical-align:top;margin-right: 0;}
 #submenu {margin-bottom: 0;height: 25px;}
 #submenu a {
@@ -965,7 +966,7 @@ div.comment_container .comment {
 	width: 700px;
 	border-radius: 3px;
 }
-div.comment_container .comment:before {
+div.comment_container > div.comment_avatar + .comment:before {
 	content: ' ';
 	position: absolute;
 	width: 0;
@@ -975,7 +976,7 @@ div.comment_container .comment:before {
 	border: 8px solid;
 	border-color: transparent #e1e1e1 transparent transparent;
 }
-div.comment_container .comment:after {
+div.comment_container > div.comment_avatar + .comment:after {
 	content: ' ';
 	position: absolute;
 	width: 0;
