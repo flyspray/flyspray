@@ -13,6 +13,8 @@ if (Cookie::has('flyspray_userid') && Cookie::has('flyspray_passhash')) {
     $user = new User(0, $proj);
 }
 
+load_translations(); // to load $fs severities and priorities for dokuwiki fslink plugin tpl_tasklink()
+
 # TODO csrftoken checking
 # peterdd: Well, not sure if we need anti CSRF token check here.
 # But whenever a user looses their session when editing a task or comment over a loooong time
