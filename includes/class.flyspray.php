@@ -520,11 +520,21 @@ class Flyspray
 		$orderby = '';
 		
 		if (isset($opts['status']) && ($opts['status']===1 || $opts['status']===0)) {
-			$filter[] = 'account_enabled = '.$opts['status'];
+			if (isset($opts['stats'])) { 
+				// Postgresql needs it
+				$filter[] = 'MIN(u.account_enabled) = '.$opts['status'];
+			} else { 
+				$filter[] = 'account_enabled = '.$opts['status'];
+			}
 		}
 
 		if (isset($opts['namesearch']) && is_string($opts['namesearch']) && ($opts['namesearch']!='')) {
-			$filter[] = "(user_name LIKE ? OR real_name LIKE ?)";
+			if (isset($opts['stats'])) {
+				// Postgresql needs it
+				$filter[] = '(MIN(u.user_name) LIKE ? OR MIN(u.real_name) LIKE ?)';
+			} else {
+				$filter[] = '(user_name LIKE ? OR real_name LIKE ?)';
+			}
 			$params[] = $opts['namesearch'];
 			$params[] = $opts['namesearch'];
 		}
@@ -534,16 +544,18 @@ class Flyspray
 		 * @todo when doing table user_emails review, see reopened FS#1812
 		 */
 		if (isset($opts['mailsearch']) && is_string($opts['mailsearch']) && ($opts['mailsearch']!='')) {
-			$filter[] = "email_address LIKE ?";
+			if (isset($opts['stats'])) {
+				// Postgresql needs it
+				$filter[] = 'MIN(u.email_address) LIKE ?';
+			} else {
+				$filter[] = 'email_address LIKE ?';
+			}
 			$params[] = $opts['mailsearch'];
 		}
 
 		if (count($filter)) {
 			$where = "\nWHERE ".implode( "\nAND " , $filter);
 			$having = "\nHAVING ".implode( "\nAND " , $filter);
-		} else {
-			$where = '';
-			$having = '';
 		}
 
 		if (isset($opts['order']) && is_string($opts['order']) && array_key_exists($opts['order'], $sortable)) {
