@@ -136,7 +136,7 @@ function createTestData()
 		$real_name = "Admin $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different one!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 1, 1);
 	}
@@ -147,7 +147,7 @@ function createTestData()
 		$real_name = "Project Manager $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different one!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, 2, 1);
 	}
@@ -196,7 +196,7 @@ function createTestData()
 		$real_name = "Developer $i";
 		$password = $user_name;
 		$time_zone = 0;
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 		$group = rand(7, 9);
 
 		if($i==1){
@@ -307,7 +307,7 @@ function createTestData()
 	    $real_name = "Corporate user $i";
 	    $password = $user_name;
 	    $time_zone = 0; // Assign different ones!
-	    $email = null; // $user_name . '@example.com';
+	    $email = $user_name . '@example.com';
 	    $group = 10;
 
 	    Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
@@ -341,7 +341,7 @@ function createTestData()
 		$real_name = "Individual user $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 		$group = rand(11, 12);
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
@@ -355,7 +355,7 @@ function createTestData()
 		$real_name = "Basic $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 		$group = 4;
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $group, 1);
