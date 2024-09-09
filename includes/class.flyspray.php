@@ -515,6 +515,9 @@ class Flyspray
 
 		$filter = array();
 		$params = array();
+		$having = '';
+		$where = '';
+		$orderby = '';
 		
 		if (isset($opts['status']) && ($opts['status']===1 || $opts['status']===0)) {
 			$filter[] = 'account_enabled = '.$opts['status'];
@@ -678,7 +681,6 @@ UNION
 GROUP BY u.user_id';
 
 			$sql .= $having;
-			$orderby = "\nORDER BY MIN(u.account_enabled) DESC, MIN(u.user_name) ASC";
 			$sql .= $orderby;
 		}
 
