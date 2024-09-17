@@ -242,7 +242,12 @@ class Flyspray
         }
 
         if (empty($protocol)) {
-            if (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
+            if(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])){
+                $protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+                if($protocol =='https'){
+                   $port=443;
+                }
+            }elseif (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
                 $protocol = 'https';
             } else {
                 $protocol = 'http';
@@ -390,6 +395,11 @@ class Flyspray
             $get_details['assigned_to_name'] = $assignees[1];
         }
 	
+		global $proj;
+		if($proj->prefs['use_effort_tracking']){
+			$ef = $db->fetchRow($db->query('SELECT  SUM(ef.effort) as effort FROM {effort} ef WHERE ef.task_id = ?',array($task_id)));
+			$get_details['effort']=$ef['effort'];
+		}
 		/**
 		 * prevent RAM growing array like creating 100000 tasks with Backend::create_task() in a loop (Tests)
 		 * Costs maybe some SQL queries if getTaskDetails is called first without $cache_enabled
