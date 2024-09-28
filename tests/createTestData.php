@@ -166,7 +166,7 @@ function createTestData()
 		$real_name = "Admin $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different one!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		$admingroupid=1;
 
@@ -179,7 +179,7 @@ function createTestData()
 		$real_name = "Project Manager $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different one!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		$pmgroupid=2; // In a default Flyspray install thist group is named 'Developers', mmhh..
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $pmgroupid, 1);
@@ -235,7 +235,8 @@ function createTestData()
 		$real_name = 'Developer '.$i.' '.$timestamp;
 		$password = $user_name;
 		$time_zone = 0;
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
+
 
 		if ($i==0) {
 			$registered = time() - rand($timerange-3600, $timerange);
@@ -359,7 +360,7 @@ function createTestData()
 	    $real_name = "Corporate user $i";
 	    $password = $user_name;
 	    $time_zone = 0; // Assign different ones!
-	    $email = null; // $user_name . '@example.com';
+	    $email = $user_name . '@example.com';
 	    $group = 10;
 
 	    Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $corpgroup, 1);
@@ -392,7 +393,7 @@ function createTestData()
 		$real_name = "Individual user $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $trustedgroup, 1);
 	}
@@ -403,7 +404,7 @@ function createTestData()
 		$real_name = "Basic $i";
 		$password = $user_name;
 		$time_zone = 0; // Assign different ones!
-		$email = null; // $user_name . '@example.com';
+		$email = $user_name . '@example.com';
 
 		Backend::create_user($user_name, $password, $real_name, '', $email, 0, $time_zone, $nontrustedgroup, 1);
 	}

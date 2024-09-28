@@ -637,17 +637,12 @@ class Doku_Renderer_xhtml extends Doku_Renderer
      */
     function windowssharelink($url, $name = NULL) {
         global $conf;
-        global $lang;
+
         //simple setup
         $link['target'] = $conf['target']['windows'];
         $link['pre']    = '';
         $link['suf']   = '';
         $link['style']  = '';
-        //Display error on browsers other than IE
-        $link['more'] = 'onclick="if(document.all == null){alert(\''.
-                        $this->_xmlEntities($lang['nosmblinks'],ENT_QUOTES).
-                        '\');}" onkeypress="if(document.all == null){alert(\''.
-                        $this->_xmlEntities($lang['nosmblinks'],ENT_QUOTES).'\');}"';
 
         $link['name'] = $this->_getLinkTitle($name, $url, $isImage);
         if ( !$isImage ) {
@@ -655,7 +650,6 @@ class Doku_Renderer_xhtml extends Doku_Renderer
         } else {
             $link['class'] = 'media';
         }
-
 
         $link['title'] = $this->_xmlEntities($url);
         $url = str_replace('\\','/',$url);

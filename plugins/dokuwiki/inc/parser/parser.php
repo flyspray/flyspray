@@ -845,7 +845,7 @@ class Doku_Parser_Mode_externallink extends Doku_Parser_Mode {
     function preConnect() {
 
         $ltrs = '\w';
-        $gunk = '/\#~:.?+=&%@!\-';
+        $gunk = '/\#~:.?+=&%@!\-\[\]';
         $punc = '.:?\-;,';
         $host = $ltrs.$punc;
         $any  = $ltrs.$gunk.$punc;
