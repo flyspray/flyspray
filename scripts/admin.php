@@ -357,14 +357,7 @@ switch ($area = Req::val('area', 'prefs')) {
 		}
 		$page->assign('adodbversion', $db->dblink->version());
 		$page->assign('htmlpurifierversion', HTMLPurifier::VERSION);
-
-		# swiftmailer 5.4.* version not set for class when installed with composer, so test for a VERSION file in swiftmailer directory first:
-		if (file_exists('./vendor/swiftmailer/swiftmailer/VERSION')) {
-			$page->assign('swiftmailerversion', file_get_contents('./vendor/swiftmailer/swiftmailer/VERSION'));
-		} else {
-			# maybe	later versions get it right
-			$page->assign('swiftmailerversion', Swift::VERSION);
-		}
+		$page->assign('phpmailerversion', \PHPMailer\PHPMailer\PHPMailer::VERSION);
 
 		$page->pushTpl('admin.'.$area.'.tpl');
 		break;
