@@ -234,7 +234,7 @@
 	<option value="0"><?php echo Filters::noXSS(L('nogroup')); ?></option>
         <?php /* user must stay alway in one global group */
 	else: ?>
-	<option value=""><?php echo Filters::noXSS(L('selecttargetgroup')); ?></option>
+	<option value=""><?= eL('selectmovetogroup') ?></option>
 	<?php endif; ?>
 	<?php echo tpl_options(Flyspray::listGroups($proj->id), null, false, null, $group_details['group_id']); ?>
         </select>
@@ -255,7 +255,7 @@
 	<h3>Delete group <em><?= Filters::noXSS($group_details['group_name']) ?></em></h3>
 	<label>and move their members to group</label>
 	<select name="move_to" required="required">
-		<option value=""><?= eL('selecttargetgroup') ?></option>
+		<option value=""><?= eL('selectmovetogroup') ?></option>
 		<?php echo tpl_options( array_merge( ($proj->id) ? array(L('nogroup')) : array(), Flyspray::listGroups($proj->id)), null, false, null, $group_details['group_id']); ?>
 	</select>
 	<input type="hidden" name="project_id" value="<?php echo Filters::noXSS($proj->id); ?>" />
