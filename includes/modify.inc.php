@@ -1402,6 +1402,7 @@ switch ($action = Req::val('action'))
                                  VALUES  (". $db->fill_placeholders($cols, 1) . ')', $params);
 
                 $_SESSION['SUCCESS'] = L('newgroupadded');
+		Flyspray::redirect(createURL($proj->id ? 'pm':'admin', 'groups', $proj->id));
             }
         }
 
@@ -1697,7 +1698,7 @@ switch ($action = Req::val('action'))
 			}
 		}
 		$args[] = implode(' ', $notify_types);
-	
+
 		$cols[] = 'last_updated';
 		$args[] = time();
 		$cols[] = 'disp_intro';
@@ -1949,82 +1950,139 @@ switch ($action = Req::val('action'))
 
         }
         break;
-        // ##################
-        // updating a group definition
-        // ##################
-    case 'pm.editgroup':
-    case 'admin.editgroup':
-        if (!$user->perms('manage_project')) {
-            break;
-        }
 
-        if (!Post::val('group_name')) {
-            Flyspray::show_error(L('groupanddesc'));
-            break;
-        }
+	/**
+	 * update group name, description and permissions
+         */
+	case 'pm.editgroup':
+	case 'admin.editgroup':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
 
-        $cols = array('group_name', 'group_desc');
+		if (!Post::val('group_name')) {
+			Flyspray::show_error(L('groupanddesc'));
+			break;
+		}
 
-        // Add a user to a group
-        if ($uid = Post::val('uid')) {
-            $uids = preg_split('/[,;]+/', $uid, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($uids as $uid) {
-                $uid = Flyspray::usernameToId($uid);
-                if (!$uid) {
-                    continue;
-                }
+		$cols = array('group_name', 'group_desc');
 
-                // If user is already a member of one of the project's groups, **move** (not add) him to the new group
-                $sql = $db->query('SELECT g.group_id
-                                     FROM {users_in_groups} uig, {groups} g
-                                    WHERE g.group_id = uig.group_id AND uig.user_id = ? AND project_id = ?',
-                array($uid, $proj->id));
-                if ($db->countRows($sql)) {
-                    $oldid = $db->fetchOne($sql);
-                    $db->query('UPDATE {users_in_groups} SET group_id = ? WHERE user_id = ? AND group_id = ?',
-                                array(Post::val('group_id'), $uid, $oldid));
-                } else {
-                    $db->query('INSERT INTO {users_in_groups} (group_id, user_id) VALUES(?, ?)',
-                                array(Post::val('group_id'), $uid));
-                }
-            }
-        }
+		// deprecated here: handled by separate action 'pm.deletegroup', 'admin.deletegroup'
+		if (Post::val('delete_group') && Post::val('group_id') != '1') {
+			$db->query('DELETE FROM {groups} WHERE group_id = ?', Post::val('group_id'));
 
-        if (Post::val('delete_group') && Post::val('group_id') != '1') {
-            $db->query('DELETE FROM {groups} WHERE group_id = ?', Post::val('group_id'));
+			if (Post::val('move_to')) {
+				$db->query('UPDATE {users_in_groups} SET group_id = ? WHERE group_id = ?',
+				array(Post::val('move_to'), Post::val('group_id')));
+			}
 
-            if (Post::val('move_to')) {
-                $db->query('UPDATE {users_in_groups} SET group_id = ? WHERE group_id = ?',
-                            array(Post::val('move_to'), Post::val('group_id')));
-            }
+			$_SESSION['SUCCESS'] = L('groupupdated');
+			Flyspray::redirect(createURL( (($proj->id) ? 'pm' : 'admin'), 'groups', $proj->id));
+		}
 
-            $_SESSION['SUCCESS'] = L('groupupdated');
-            Flyspray::redirect(createURL( (($proj->id) ? 'pm' : 'admin'), 'groups', $proj->id));
-        }
-        // Allow all groups to update permissions except for global Admin
-        if (Post::val('group_id') != '1') {
-            $cols = array_merge($cols,
-            array('manage_project', 'view_tasks', 'edit_own_comments',
-              'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks',
-              'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
-              'create_attachments', 'delete_attachments', 'show_as_assignees',
-              'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
-              'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
-              'add_votes', 'group_open', 'view_estimated_effort', 'track_effort',
-              'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap',
-              'view_own_tasks', 'view_groups_tasks'));
-        }
+		// Allow all groups to update permissions except for global Admin
+		if (Post::val('group_id') != '1') {
+			$cols = array_merge($cols,
+			array(
+				'manage_project', 'view_tasks', 'edit_own_comments',
+				'open_new_tasks', 'modify_own_tasks', 'modify_all_tasks',
+				'view_comments', 'add_comments', 'edit_comments', 'delete_comments',
+				'create_attachments', 'delete_attachments', 'show_as_assignees',
+				'view_history', 'close_own_tasks', 'close_other_tasks', 'edit_assignments',
+				'assign_to_self', 'assign_others_to_self', 'add_to_assignees', 'view_reports',
+				'add_votes', 'group_open', 'view_estimated_effort', 'track_effort',
+				'view_current_effort_done', 'add_multiple_tasks', 'view_roadmap',
+				'view_own_tasks', 'view_groups_tasks'));
+		}
 
-        $args = array_map('Post_to0', $cols);
-        $args[] = Post::val('group_id');
-        $args[] = $proj->id;
+		$args = array_map('Post_to0', $cols);
+		$args[] = Post::val('group_id');
+		$args[] = $proj->id;
 
-        $db->query("UPDATE  {groups}
-                       SET  ".join('=?,', $cols)."=?
-                     WHERE  group_id = ? AND project_id = ?", $args);
+		$db->query("UPDATE {groups}
+			SET  ".join('=?,', $cols)."=?
+			WHERE  group_id = ? AND project_id = ?", $args);
 
-        $_SESSION['SUCCESS'] = L('groupupdated');
-        break;
+		$_SESSION['SUCCESS'] = L('groupupdated');
+		break;
+
+	case 'pm.addusertogroup':
+	case 'admin.addusertogroup':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
+
+		$groupid = Req::num('id');
+
+		// original this seemded to support , or ; separated usernames to add multiple, but the current js-userselect only allows choosing 1 user?
+		if ($uid = Post::val('uid')) {
+			$uids = preg_split('/[,;]+/', $uid, -1, PREG_SPLIT_NO_EMPTY);
+			$movedgroupmembers=0;
+			$addedgroupmembers=0;
+			foreach ($uids as $uid) {
+				$uid = Flyspray::usernameToId($uid);
+				if (!$uid) {
+					continue;
+				}
+
+				// If user is already a member of one of the project's groups, **move** (not add) him to the new group
+				$sql = $db->query('SELECT g.group_id
+					FROM {users_in_groups} uig, {groups} g
+					WHERE g.group_id = uig.group_id AND uig.user_id = ? AND project_id = ?',
+				array($uid, $proj->id));
+				if ($db->countRows($sql)) {
+					$oldgroupid = $db->fetchOne($sql);
+					$db->query('UPDATE {users_in_groups} SET group_id = ? WHERE user_id = ? AND group_id = ?',
+					//array(Post::val('group_id'), $uid, $oldid));
+					array($groupid, $uid, $oldgroupid));
+					$movedgroupmembers+=$db->affectedRows();
+				} else {
+					$db->query('INSERT INTO {users_in_groups} (group_id, user_id) VALUES(?, ?)',
+					//array(Post::val('group_id'), $uid));
+					array($groupid, $uid));
+					$addedgroupmembers+=$db->affectedRows();
+				}
+			}
+		}
+		$_SESSION['SUCCESS']='Added '. $addedgroupmembers.' user to group '. $groupid. '. ';
+		$_SESSION['SUCCESS'].='Moved '. $movedgroupmembers.' user to group '. $groupid. '.';
+		Flyspray::redirect(createURL('editgroup', $groupid, ($proj->id) ? 'pm' : 'admin'));
+	break;
+
+	case 'pm.deletegroup':
+	case 'admin.deletegroup':
+		if (!$user->perms('manage_project')) {
+			break;
+		}
+		$_SESSION['SUCCESS'] = L('handling deletegroup form is TODO');
+
+		$groupid = (int) Req::num('id');
+		$movetogroupid = (int) Post::val('move_to');
+
+		$groupquery=$db->query("SELECT project_id FROM {groups} WHERE group_id=?", $groupid);
+		$groupprojectid=$db->fetchone($groupquery);
+		$movetogroupquery=$db->query("SELECT project_id FROM {groups} WHERE group_id=?", $movetogroupid);
+		$movetogroupprojectid=$db->fetchone($movetogroupquery);
+
+		if ($groupprojectid !== $movetogroupprojectid) {
+			$_SESSION['ERRORS'][]='target group not in same project';
+		}
+
+		if ($groupid !== 1) {
+			if ($movetogroupid) {
+				$db->query('UPDATE {users_in_groups} SET group_id = ? WHERE group_id = ?', [$movetogroupid, $groupid]);
+			}
+
+			// delete group after update users_in_groups better for future (e.g. foreign constraint updates)
+			$db->query('DELETE FROM {groups} WHERE group_id = ?', $groupid);
+
+			$_SESSION['SUCCESS'] = L('groupupdated');
+			Flyspray::redirect(createURL( (($proj->id) ? 'pm' : 'admin'), 'groups', $proj->id));
+		}
+
+
+		Flyspray::redirect(createURL(($proj->id) ? 'pm' : 'admin', 'groups', $proj->id));
+	break;
 
 	/**
 	 * updating a list
@@ -2709,7 +2767,7 @@ switch ($action = Req::val('action'))
 	// redirect on success after POST so browser backbutton works.
 	Flyspray::redirect(createURL('details', $task['task_id']));
 	break;
-	
+
         // ##################
         // removing a reminder
         // ##################
@@ -2757,19 +2815,31 @@ switch ($action = Req::val('action'))
             break;
         }
 
-        if (!$user->perms('manage_project', $old_pr) || !is_array(Post::val('users'))) {
-            break;
-        }
+	if (!$user->perms('manage_project', $old_pr)) {
+		break;
+	}
 
-	foreach (Post::val('users') as $user_id => $val) {
-                if($user->id!=$user_id || $proj->id!=0){
+	if (!isset($_POST['users']) || !is_array($_POST['users'])) {
+		break;
+	}
+
+	foreach ($_POST['users'] as $uid => $val) {
+		if (is_numeric($uid)) {
+			if (settype($uid, 'int') && $uid > 0) {
+				$validuids[] = $uid;
+			}
+		}
+	}
+
+	foreach ($validuids as $user_id) {
+		if($user->id!=$user_id || $proj->id!=0){
 			if (Post::val('switch_to_group') == '0') {
 				$db->query('DELETE FROM {users_in_groups} WHERE user_id=? AND group_id=?',
 					array($user_id, Post::val('old_group'))
 				);
 			} else {
-				# special case: user exists in multiple global groups (shouldn't, but happened)
-				# avoids duplicate entry error
+				// special case: user exists in multiple global groups (shouldn't, but happened)
+				// avoids duplicate entry error
 				if($old_pr==0){
 					$sql = $db->query('SELECT group_id FROM {users_in_groups} WHERE user_id = ? AND group_id = ?',
 						array($user_id, Post::val('switch_to_group'))
@@ -2791,10 +2861,11 @@ switch ($action = Req::val('action'))
 		}
 	}
 
-        // TODO: Log event in a later version.
+	// TODO: Log event in a later version.
 
-        $_SESSION['SUCCESS'] = L('groupswitchupdated');
-        break;
+	$_SESSION['SUCCESS'] = L('groupswitchupdated');
+	Flyspray::redirect(createURL('editgroup', (int)Post::val('old_group'), ($proj->id) ? 'pm' : 'admin'));
+	break;
 
         // ##################
         // taking ownership
