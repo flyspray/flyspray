@@ -1,4 +1,11 @@
-<?php if (!$task_details['is_closed']): ?>
+<?php if (!$task_details['is_closed']):
+
+$reminder_intervals = [ 'hours' => 3600, 'days' => 86400, 'weeks' => 604800 ];
+
+$desc_intervals = $reminder_intervals;
+arsort($desc_intervals);
+
+?>
   <div id="remind" class="tab">
   <?php echo tpl_form(Filters::noXSS(CreateUrl('details', $task_details['task_id'])).'#remind'); ?>
     <?php if (count($reminders)): ?>
@@ -25,12 +32,23 @@
      <td><?php echo Filters::noXSS(formatDate($row['start_time'])); ?></td>
      <?php
       // Work out the unit of time to display
-      if ($row['how_often'] < 86400) {
-          $how_often = $row['how_often'] / 3600 . ' ' . L('hours');
-      } elseif ($row['how_often'] < 604800) {
-          $how_often = $row['how_often'] / 86400 . ' ' . L('days');
-      } else {
-          $how_often = $row['how_often'] / 604800 . ' ' . L('weeks');
+      unset($how_often, $r_h, $r_m, $r_s);
+
+      foreach ($desc_intervals as $intvl_unit => $intvl_time) {
+        if ($row['how_often'] % $intvl_time == 0) {
+          $how_often = floor($row['how_often'] / $intvl_time) . ' ' . L($intvl_unit);
+          break;
+        }
+      }
+
+      if (!isset($how_often)) {
+        $r_d = floor($row['how_often'] / 86400);
+        $r_h = floor(($row['how_often'] - ($r_d * 86400)) / 3600);
+        $r_m = floor(($row['how_often'] - ($r_d * 86400) - ($r_h * 3600)) / 60);
+        $r_s = (($row['how_often'] - ($r_d * 86400) - ($r_h * 3600) - $r_m * 60)) % 60;
+
+        //$how_often = sprintf("%1d " . L('days') . " %02d:%02d:%02d", $r_d, $r_h, $r_m, $r_s);
+        $how_often = sprintf("%1d %s %02d:%02d:%02d", $r_d, L('days'), $r_h, $r_m, $r_s);
       }
      ?>
      <td><?php echo Filters::noXSS($how_often); ?></td>
@@ -54,16 +72,16 @@
     <div>
       <input type="hidden" name="action" value="details.addreminder" />
       <input type="hidden" name="task_id" value="<?php echo Filters::noXSS($task_details['task_id']); ?>" />
-      <label class="default multisel" for="to_user_id"><?php echo Filters::noXSS(L('remindthisuser')); ?></label>
-      <?php echo tpl_userselect('to_user_id', Req::val('to_user_id'), 'to_user_id'); ?>
+      <label class="default multisel" for="reminder_user"><?php echo Filters::noXSS(L('remindthisuser')); ?></label>
+      <?php echo tpl_userselect('reminder_user', Req::val('reminder_user'), 'reminder_user'); ?>
       <br />
-      <label for="timeamount1"><?php echo Filters::noXSS(L('thisoften')); ?></label>
-      <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('timeamount1')); ?>" id="timeamount1" name="timeamount1" size="3" maxlength="3" />
-      <select class="adminlist" name="timetype1">
-        <?php echo tpl_options(array(3600 => L('hours'), 86400 => L('days'), 604800 => L('weeks')), Req::val('timetype1')); ?>
+      <label for="reminder_repeat"><?php echo Filters::noXSS(L('thisoften')); ?></label>
+      <input class="text" type="text" value="<?php echo Filters::noXSS(Req::val('reminder_repeat')); ?>" id="reminder_repeat" name="reminder_repeat" size="3" maxlength="3" />
+      <select class="adminlist" name="reminder_interval">
+        <?php echo tpl_options(array(3600 => L('hours'), 86400 => L('days'), 604800 => L('weeks')), Req::val('reminder_interval')); ?>
       </select>
       <br />
-      <?php echo tpl_datepicker('timeamount2', L('startat'), Req::val('timeamount2', formatDate(time()))); ?>
+      <?php echo tpl_datepicker('reminder_start_date', L('startat'), Req::val('reminder_start_date', formatDate(time()))); ?>
       <br />
       <textarea class="text" name="reminder_message"
         rows="10" cols="72"><?php echo Filters::noXSS(Req::val('reminder_message', L('defaultreminder') . "\n\n" . CreateURL('details', $task_details['task_id']))); ?></textarea>
