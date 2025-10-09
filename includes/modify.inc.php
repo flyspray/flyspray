@@ -234,7 +234,7 @@ switch ($action = Req::val('action'))
 		$parentcheck = $db->fetchRow($result);
 		if ($parentcheck && $parentcheck['task_id']) {
 			if ($parentcheck['project_id'] != Post::val('project_id')) {
-				$errors['denymovehasparent']=L('denymovehasparent');
+				$errors['denymovehasparent']=1;
 			}
 		}
 
@@ -249,7 +249,7 @@ switch ($action = Req::val('action'))
 
 		# if there are any subtasks, check that the project is not changed
 		if ($subcheck && $subcheck['task_id']) {
-			$errors['denymovehassub']=L('denymovehassub');
+			$errors['denymovehassub']=1;
 		}
 	}
 
@@ -258,7 +258,7 @@ switch ($action = Req::val('action'))
 		# description can be empty now
 		#Flyspray::show_error(L('summaryanddetails'));
 		#Flyspray::show_error(L('summaryrequired'));
-		$errors['summaryrequired']=L('summaryrequired');
+		$errors['summaryrequired']=1;
         }
 
 	# ids of severity and priority are (probably!) intentional fixed in Flyspray.
