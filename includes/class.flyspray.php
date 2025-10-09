@@ -1359,7 +1359,7 @@ GROUP BY u.user_id';
         global $modes, $baseurl;
 
         if (!is_int($error_message)) {
-            // in modify.inc.php
+            // Probably a language key, could be a literal string
             $_SESSION['ERROR'] = $error_message;
         } else {
             $_SESSION['ERROR'] = L('error#') . $error_message . ': ' . L('error' . $error_message);
