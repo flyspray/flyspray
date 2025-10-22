@@ -97,7 +97,7 @@ switch ($action = Req::val('action'))
 
 		if (count($newtaskerrors)>0){
 			$_SESSION['ERRORS']=$newtaskerrors;
-			$_SESSION['ERROR']=L('invalidnewtask');
+			Flyspray::show_error(L('invalidnewtask'));
 			break;
 		}
 
@@ -234,7 +234,7 @@ switch ($action = Req::val('action'))
 		$parentcheck = $db->fetchRow($result);
 		if ($parentcheck && $parentcheck['task_id']) {
 			if ($parentcheck['project_id'] != Post::val('project_id')) {
-				$errors['denymovehasparent']=L('denymovehasparent');
+				$errors['denymovehasparent']=1;
 			}
 		}
 
@@ -249,7 +249,7 @@ switch ($action = Req::val('action'))
 
 		# if there are any subtasks, check that the project is not changed
 		if ($subcheck && $subcheck['task_id']) {
-			$errors['denymovehassub']=L('denymovehassub');
+			$errors['denymovehassub']=1;
 		}
 	}
 
@@ -258,7 +258,7 @@ switch ($action = Req::val('action'))
 		# description can be empty now
 		#Flyspray::show_error(L('summaryanddetails'));
 		#Flyspray::show_error(L('summaryrequired'));
-		$errors['summaryrequired']=L('summaryrequired');
+		$errors['summaryrequired']=1;
         }
 
 	# ids of severity and priority are (probably!) intentional fixed in Flyspray.
@@ -385,7 +385,7 @@ switch ($action = Req::val('action'))
 	if(count($errors)>0){
 		# some invalid input by the user. Do not save the input and in the details-edit-template show the user where in the form the invalid values are.
 		$_SESSION['ERRORS']=$errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
-		$_SESSION['ERROR']=L('invalidinput');
+		Flyspray::show_error(L('invalidinput'));
 		# pro and contra http 303 redirect here:
                 # - good: browser back button works, browser history.
                 # -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
@@ -867,7 +867,7 @@ switch ($action = Req::val('action'))
 			if ($effort->startTracking()) {
 				$_SESSION['SUCCESS'] = L('efforttrackingstarted');
 			} else {
-				$_SESSION['ERROR'] = L('efforttrackingnotstarted');
+				Flyspray::show_error(L('efforttrackingnotstarted'));
 			}
 		}
 
@@ -1637,7 +1637,7 @@ switch ($action = Req::val('action'))
 			if (Backend::delete_project($proj->id, Post::val('move_to'))) {
 				$_SESSION['SUCCESS'] = L('projectdeleted');
 			} else {
-				$_SESSION['ERROR'] = L('projectnotdeleted');
+				Flyspray::show_error(L('projectnotdeleted'));
 			}
 
 			if (Post::val('move_to')) {
@@ -2710,7 +2710,7 @@ switch ($action = Req::val('action'))
 
 	if (count($errors)>0) {
 		$_SESSION['ERRORS'] = $errors; # $_SESSION['ERROR'] is very limited, holds only one string and often just overwritten
-		$_SESSION['ERROR'] = L('invalidinput');
+		Flyspray::show_error(L('invalidinput'));
 		# pro and contra http 303 redirect here:
 		# - good: browser back button works, browser history.
 		# -  bad: form inputs of user not preserved (at the moment). Annoying if user wrote a long description and then the form submit gets denied because of other reasons.
@@ -2749,7 +2749,7 @@ switch ($action = Req::val('action'))
 		}
 
 		if ($errors > 0) {
-			$_SESSION['ERROR'] = L('invalidinput');
+			Flyspray::show_error(L('invalidinput'));
 			break;
 		}
 
