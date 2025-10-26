@@ -242,13 +242,19 @@ class Flyspray
         }
 
         if (empty($protocol)) {
-            if (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https')) {
+                $protocol = 'https';
+            } elseif (isset($_SERVER['HTTPS']) && !strcasecmp($_SERVER['HTTPS'], 'on')) {
                 $protocol = 'https';
             } else {
                 $protocol = 'http';
             }
             if (!isset($port) || $port != intval($port)) {
-                $port = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+                if (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && !strcasecmp($_SERVER['HTTP_X_FORWARDED_PORT'], '443')) {
+                    $port = '443';
+                } else {
+                    $port = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+                }
             }
         }
 
