@@ -45,7 +45,7 @@ endif; ?>
 <th><?= eL('project') ?></th>
 <th><?= eL('task') ?></th>
 <th><?= eL('remindinterval') ?></th>
-<th><?= eL('last_sent') ?></th>
+<th><?= eL('remindlastsent') ?></th>
 </tr>
 </thead>
 <tbody>

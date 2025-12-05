@@ -2721,25 +2721,49 @@ switch ($action = Req::val('action'))
     case 'details.addreminder':
 
 	$errors = array();
-	// TODO Naming of the vars of this form is terrible, fix in later (1.1?) version.
 
 	// repeats
-	if (!is_string($_POST['timeamount1']) or intval($_POST['timeamount1'])<1) {
+	$time_amount = Post::val('reminder_repeat');
+
+	if (!is_string($time_amount) or intval($time_amount) < 1) {
 		$errors['addreminder_minimalrepeaterror'] = 1;
 	}
 
-	// at least 1 hour (3600sec) minimal interval submitted
-	if (!is_string($_POST['timetype1']) or intval($_POST['timetype1'])<3600) {
+	// one of the intervals presented
+	$time_type = Post::val('reminder_interval');
+	$reminder_intervals = [3600, 86400, 604800]; // hour, day, week
+
+	if (!is_string($time_type) or !in_array($time_type, $reminder_intervals)) {
 		$errors['addreminder_minimalintervalerror'] = 1;
 	}
 
 	// startdate
-	if (!is_string($_POST['timeamount2'])) {
+	$start_date = Post::val('reminder_start_date', 0);
+	$start_date = Flyspray::strtotime($start_date);
+
+	if (!is_int($start_date) or $start_date < 1) {
 		$errors['addreminder_starterror'] = 1;
 	}
 
-	if (!is_string($_POST['to_user_id'])) {
+	// reminded username
+	$to_user = Post::val('reminder_user');
+	$to_user = trim($to_user);
+
+	if (!is_string($to_user)) {
 		$errors['addreminder_datetimeerror'] = 1;
+	}
+
+	$to_user_id = Flyspray::usernameToId($to_user);
+
+	if ($to_user_id < 1) {
+		$errors['usernotexist'] = 1;
+	}
+
+	$reminder_message = Post::val('reminder_message');
+	$reminder_message = trim($reminder_message);
+
+	if ($reminder_message == '') {
+		$errors['addreminder_messageerror'] = 1;
 	}
 
 	if (count($errors)>0) {
@@ -2752,11 +2776,10 @@ switch ($action = Req::val('action'))
 		break;
 	}
 
-	$to_user_id = Flyspray::usernameToId(Post::val('to_user_id'));
-	$start_time = Flyspray::strtotime(Post::val('timeamount2', 0));
-	$how_often = intval(Post::val('timeamount1', 1)) * Post::val('timetype1');
+	$start_time = $start_date;
+	$how_often = intval($time_amount) * intval($time_type);
 
-	if (!Backend::add_reminder($task['task_id'], Post::val('reminder_message'), $how_often, $start_time, $to_user_id)) {
+	if (!Backend::add_reminder($task['task_id'], $reminder_message, $how_often, $start_time, $to_user_id)) {
 		Flyspray::show_error(L('usernotexist'));
 		break;
 	}
