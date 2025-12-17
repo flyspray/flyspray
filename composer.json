@@ -41,6 +41,15 @@
             "url": "https://github.com/jamiebicknell/Sparkline"
         }
     ],
+    "config": {
+        "audit": {
+            "ignore": {
+                "PKSA-rfc1-gnmf-7kkz" : "ADOdb: vulnerable sqlite3 driver not used by Flyspray",
+                "PKSA-jm5q-b4t5-4pm4" : "ADOdb: vulnerable function pg_insert_id() in PostgreSQL driver not used by Flyspray",
+                "PKSA-tzjk-yn1s-49ds" : "swiftmailer: not affected"
+            }
+        }
+    },
     "scripts": {
         "post-update-cmd": [
             "rm -rf vendor/dapphp/securimage/captcha.html vendor/dapphp/securimage/example_form.php vendor/dapphp/securimage/example_form.ajax.php vendor/dapphp/securimage/securimage_play.swf vendor/dapphp/securimage/examples/",
